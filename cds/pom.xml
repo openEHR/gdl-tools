@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>se.cambio.cds</groupId>
+	<artifactId>cds</artifactId>
+	<packaging>pom</packaging>
+	<version>0.9</version>
+	<name>Clinical Decision Support System</name>
+	<organization>
+		<name>Cambio</name>
+	</organization>
+	<profiles>
+		<profile>
+			<id>graph</id>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>mvnplugins.fusesource.org</id>
+					<url>http://mvnplugins.fusesource.org/repo/release</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</pluginRepository>
+			</pluginRepositories>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.fusesource.mvnplugins</groupId>
+						<artifactId>maven-graph-plugin</artifactId>
+						<version>1.0</version>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>1.9</version>
+				<configuration>
+					<source>1.6</source>
+					<aggregate>true</aggregate>
+					<doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+					<docletArtifact>
+						<groupId>gr.spinellis</groupId>
+						<artifactId>UmlGraph</artifactId>
+						<version>4.6</version>
+					</docletArtifact>
+					<additionalparam>
+						-inferrel -inferdep -quiet -hide java.*
+						-collpackages java.util.* -qualify
+						-postfixpackage -nodefontsize 9
+						-nodefontpackagesize 7
+						-edgefontname "Trebuchet MS"
+						-nodefontabstractname "Trebuchet MS"
+						-nodefontclassabstractname
+						"Trebuchet MS"
+						-nodefontclassname "Trebuchet MS"
+						-nodefontname
+						"Trebuchet MS"
+						-nodefontpackagename "Trebuchet MS"
+						-nodefonttagname
+						"Trebuchet MS"
+					</additionalparam>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.fusesource.mvnplugins</groupId>
+				<artifactId>maven-graph-plugin</artifactId>
+				<version>1.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<scmCommentPrefix>(CDS)</scmCommentPrefix>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>cds-common</module>
+		<module>cds-model</module>
+		<module>gdl-model</module>
+		<module>cds-persistence</module>
+		<module>gdl-parser</module>
+		<module>terminology-service</module>
+		<module>cds-core</module>
+		<module>cds-openehr</module>
+		<module>cds-form-generator</module>
+		<module>gdl-drools-converter</module>
+		<module>gdl-editor</module>
+	</modules>
+</project>

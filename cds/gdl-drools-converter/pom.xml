@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>se.cambio.cds</groupId>
+		<artifactId>cds</artifactId>
+		<version>0.9</version>
+	</parent>
+	<artifactId>gdl-drools-converter</artifactId>
+	<name>gdl-drools-converter</name>
+	<description>GDL Drools converter</description>
+	<dependencies>
+		<dependency>
+			<groupId>se.cambio.cds</groupId>
+			<artifactId>gdl-model</artifactId>
+			<version>0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>se.cambio.cds</groupId>
+			<artifactId>gdl-parser</artifactId>
+			<version>0.9</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.cambio.cds</groupId>
+			<artifactId>cds-openehr</artifactId>
+			<version>0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>5.5.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>5.5.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+	</dependencies>
+</project>

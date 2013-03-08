@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>openehr</groupId>
+	<artifactId>ref_impl_java</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.2</version>
+	<name>The openEHR Reference Java Implementation</name>
+	<organization>
+		<name>The openEHR Foundation</name>
+	</organization>
+	<properties>
+		<parent.smc.url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr</parent.smc.url>
+	</properties>
+	<scm>
+		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2</connection>
+		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2</developerConnection>
+		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2</url>
+	</scm>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<scmCommentPrefix>(CDS)</scmCommentPrefix>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+		<module>openehr-rm-core</module>
+		<module>openehr-rm-domain</module>
+		<module>openehr-aom</module>
+		<module>openehr-ap</module>
+		<module>adl-parser</module>
+		<module>dadl-parser</module>
+		<module>oet-parser</module>
+		<module>adl-serializer</module>
+		<module>xml-serializer</module>
+		<module>measure-serv</module>
+		<module>mini-termserv</module>
+		<module>rm-builder</module>
+		<module>rm-skeleton</module>
+		<module>xml-binding</module>
+		<module>dadl-binding</module>
+	</modules>
+</project>

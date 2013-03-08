@@ -1,0 +1,100 @@
+ /**
+ * Expression parser
+ *
+ * @author rong.chen    
+ */options{  JDK_VERSION = "1.5";  LOOKAHEAD= 1;  DEBUG_PARSER = false;  DEBUG_TOKEN_MANAGER = false;  DEBUG_LOOKAHEAD = false;  UNICODE_INPUT = true;  static = false;}PARSER_BEGIN(ExpressionParser)package se.cambio.cds.gdl.parser;import java.io.*;import java.util.*;import se.cambio.cds.gdl.model.expression.*;import org.openehr.rm.datatypes.text.CodePhrase;import org.openehr.rm.datatypes.quantity.*;import org.openehr.rm.datatypes.basic.DataValue;public class ExpressionParser{  private static final String CHARSET = "UTF-8";  /* =========================  public interface ======================== */  /* execute the parsing */  public List < ExpressionItem > parseBooleanExpressions() throws ParseException  {    return expressions();  }  public List < ExpressionItem > parseArithmeticExpressions() throws ParseException  {    return expressions();  }  public ExpressionItem parse() throws ParseException  {    return expression_item();  }  /* re-initial the parser */  public void reInit(File file) throws IOException  {    ReInit(new FileInputStream(file), CHARSET);  }  /* re-initial the parser */  public void reInit(InputStream input) throws IOException  {    ReInit(new BufferedInputStream(input));  }  public static void main(String args []) throws ParseException  {}}PARSER_END(ExpressionParser)<* >SKIP : /* WHITE SPACE */{  " "| "\t"| "\n"| "\r"| "\f"}<* >SPECIAL_TOKEN : /* COMMENTS */{  < SINGLE_LINE_COMMENT : "--" (~[ "\n", "\r" ])* >}<* >TOKEN : /* SYMBOLS - common */{  < SYM_MINUS : "-" >| < SYM_PLUS : "+" >| < SYM_STAR : "*" >| < SYM_SLASH : "/" >| < SYM_CARET : "^" >| < SYM_DOT : "." >| < SYM_SEMICOLON : ";" >| < SYM_COMMA : "," >| < SYM_TWO_COLONS : "::" >| < SYM_COLON : ":" >| < SYM_EXCLAMATION : "!" >| < SYM_L_PARENTHESIS : "(" >| < SYM_R_PARENTHESIS : ")" >| < SYM_DOLLAR : "$" >| < SYM_QUESTION : "?" >| < SYM_L_BRACKET : "[" >| < SYM_R_BRACKET : "]" >| < SYM_INTERVAL_DELIM : "|" >| < SYM_EQ : "==" >| < SYM_GE : ">=" >| < SYM_LE : "<=" >| < SYM_LT : "<" >| < SYM_GT : ">" >| < SYM_NE : "!=" >| < SYM_NOT : "not" >| < SYM_AND :    "and"  | "&&" >| < SYM_OR :    "or"  | "||" >| < SYM_FALSE : "false" >| < SYM_TRUE : "true" >| < SYM_NULL : "null" >| < SYM_IS_A : "is_a" >| < SYM_IS_NOT_A : "!is_a" >| < SYM_FOR_ALL : "for_all" >| < SYM_CURRENT_DATETIME : "currentDateTime" >| < SYM_ASSIGNMENT : "=" >| < SYM_MODULO : "\\" >| < SYM_DIV : "//" >| < SYM_ELLIPSIS : ".." >| < SYM_LIST_CONTINUE : "..." >}<* >TOKEN :{  < #V_LOCAL_CODE_CORE : "g" [ "c", "t" ] ([ "0"-"9", "." ])+ [ "0"-"9" ] >| < V_LOCAL_CODE : < V_LOCAL_CODE_CORE > >| < V_QUANTITY :    (      < V_REAL >    | < V_INTEGER >    )    "," ([ "a"-"z", "A"-"Z", "µ", "°", "%", "0"-"9", "[", "]", "/" ])+
+        ([ "a"-"z", "A"-"Z", "µ", "°", "%", "0"-"9", "[", "]", "/" ])*
+        ([ "a"-"z", "A"-"Z", "µ", "°", "%", "0"-"9", "[", "]"])* >
+| < V_PROPORTION :
+    (
+      < V_REAL >
+    | < V_INTEGER >
+    )
+    ","
+    (
+      < V_REAL >
+    | < V_INTEGER >
+    )
+    ","
+    (["0"-"4"]) >| < V_INTEGER :    (< DIG >)+  |
+    "(-" (< DIG >)+ ")"
+  |
+    (< DIG >)    {      1, 3    }    (      "," (< DIG >)      {        3      }    )+ >
+|
+  < V_ISO8601_DURATION: ("-")? "P"((<DIG>)+["m","M"])?((<DIG>)+["w","W"])?
+  ((<DIG>)+["d","D"])?("T"((<DIG>)+["h","H"])?((<DIG>)+["m","M"])?
+  ((<DIG>)+["s","S"])?)?>
+|
+  < V_ISO8601_DURATION_CONSTRAINT_PATTERN: "P"(["y","Y"])?(["m","M"])?
+  (["w","W"])?(["d","D"])?"T"(["h","H"])?(["m","M"])?(["s","S"])? 
+  |"P"(["y","Y"])?(["m","M"])?(["w","W"])?(["d","D"])?>
+|
+  < V_DATE: (["0"-"9"]){4} "-" ( "0"["1"-"9"] | "1"["0"-"2"] ) "-"
+            ( "0"["1"-"9"] | ["1"-"2"]["0"-"9"]|"3"["0"-"1"] ) >
+|
+  < V_HHMM_TIME: <HOUR_MINUTE> >
+|
+  < V_HHMMSS_TIME: < HOUR_MINUTE> <SECOND> >
+|
+  < V_HHMMSSss_TIME: < HOUR_MINUTE> <SECOND> <MILLI_SECOND> >
+|
+  < V_HHMMSSZ_TIME: < HOUR_MINUTE> <SECOND> <TIME_ZONE> >
+|
+  < V_HHMMSSssZ_TIME: < HOUR_MINUTE> <SECOND> <MILLI_SECOND> <TIME_ZONE> >
+|
+  < V_TIME: <HOUR_MINUTE> <SECOND> >
+|
+  
+  < V_DATE_TIME_MS: <DATE_TIME> <MILLI_SECOND> >
+|
+  < V_DATE_TIME_Z: "("<DATE_TIME> <TIME_ZONE> ")" >
+|
+  < V_DATE_TIME: "("<DATE_TIME> ")" >
+|
+   < V_DATE_TIME_MSZ: <DATE_TIME> <MILLI_SECOND> <TIME_ZONE> >
+|
+   < #DATE_TIME: <V_DATE>"T"<V_TIME>>
+|  < #TIME_ZONE: ["-","+"](["0"-"9"]){2}":"(["0"-"9"]){2} | "Z" >
+|
+  < #SECOND: ":" ["0"-"5"]["0"-"9"] >
+|
+  < #MILLI_SECOND: "."(["0"-"9"]){2, 3} >
+|
+  < #HOUR_MINUTE: ["0"-"9"]["0"-"9"] ":" ["0"-"5"]["0"-"9"] >| < V_CODE_PHRASE : "[" (< LET_DIG_DUDSLR >)+ "::" (< LET_DIG_DUDS >)+ "]" >| < V_CODE_PHRASE_RAW : (< LET_DIG_DUDSLR >)+ "::" (< LET_DIG_DUDS >)+ >| < V_ORDINAL : < V_INTEGER > "|" < V_CODE_PHRASE_RAW > < V_LABEL > >| < V_ATTRIBUTE_IDENTIFIER : [ "a"-"z" ] (< LET_DIG_U >)* >| < V_LABEL : "|" ([ "a"-"z", "A"-"Z", "0"-"9", ",", "/", "\\", "*", " ", "-",
+   "+", "&", "?", "@", "!", "#", "^", "~", ":", ";", ".", "[", "]", "(", ")",
+   ">", "<", "=" ])+ "|" >| < V_REAL :    (< DIG >)+ "./" ~[ ".", "0"-"9" ]  | (< DIG >)+ "." (< DIG >)* [ "e", "E" ] ([ "+", "-" ])? (< DIG >)+  | (< DIG >)* "." (< DIG >)+    (      [ "e", "E" ] ([ "+", "-" ])? (< DIG >)+    )?  | "(-" (< DIG >)* "." (< DIG >)+
+    (
+      [ "e", "E" ] ([ "+", "-" ])? (< DIG >)+
+    )? ")"
+  | (< DIG >)    {      1, 3    }    (      "_" (< DIG >)      {        3      }    )+    "./" ~[ ".", "0"-"9" ]  | (< DIG >)    {      1, 3    }    (      "_" (< DIG >)      {        3      }    )*    "."    (      (< DIG >)      {        1, 3      }      (        "_" (< DIG >)        {          3        }      )*    )?    [ "e", "E" ] ([ "+", "-" ])? (< DIG >)    {      1, 3    }    (      "_" (< DIG >)      {        3      }    )*  |    (      (< DIG >)      {        1, 3      }      (        "_" (< DIG >)        {          3        }      )*    )?    "." (< DIG >)    {      1, 3    }    (      "_" (< DIG >)      {        3      }    )*    (      [ "e", "E" ] ([ "+", "-" ])? (< DIG >)      {        1, 3      }      (        "_" (< DIG >)        {          3        }      )*    )? >| < V_STRING :    "'"    (      (        "\\\"" (~[ "\"", "\n", "\\" ])*      )    |      (        "\\\\" (~[ "\"", "\n", "\\" ])*      )    |      (        "\n" ([ "\r", " ", "\t" ])*      )    | (~[ "\\", "\n", "\"" ])*    )*    "'" >}<* >TOKEN : /* LOCAL TOKENS */{  < #DIG : [ "0"-"9" ] >| < #LET_DIG : [ "a"-"z", "A"-"Z", "0"-"9" ] >| < #LET_DIG_DD :    < LET_DIG >  | "."
+  | "_"  | "-" >| < #LET_DIG_U :    < LET_DIG >  | "_" >| < #LET_DIG_DU :    < LET_DIG_U >  | "-" >| < #LET_DIG_DUDS :    < LET_DIG_DU >  | "."  | "\\" >| < #LET_DIG_DUDSLR :    < LET_DIG_DUDS >  | "("  | ")" >| < V_LOCAL_TERM_CODE_REF : "[" < LET_DIG > (< LET_DIG_DD >)* "]" >| < #PATH_SEGMENT : < V_ATTRIBUTE_IDENTIFIER > (< V_LOCAL_TERM_CODE_REF >)? >| < V_ABSOLUTE_PATH : < SYM_SLASH > < PATH_SEGMENT > (< SYM_SLASH > < PATH_SEGMENT >)* >}List < ExpressionItem > expressions() :{  List < ExpressionItem > items = new ArrayList < ExpressionItem > ();  ExpressionItem item = null;}{  item = expression_item()  {    items.add(item);  }  (    LOOKAHEAD(2)    < SYM_COMMA > item = expression_item()    {      items.add(item);    }  )*  {    return items;  }}ExpressionItem expression_item() :{  ExpressionItem item = null;}{  (    LOOKAHEAD(4)    item = expression_node()  | LOOKAHEAD(4)    item = expression_leaf()  )  {    return item;  }  {    return item;  }}CodePhrase code_phrase() :{  Token t;  String lang = null;  String langTerm = null;  String langCode = null;}{  t = < V_CODE_PHRASE >  {    lang = t.image;    int i = lang.indexOf("::");    langTerm = lang.substring(1, i);    langCode = lang.substring(i + 2, lang.length() - 1);  }  {    return new CodePhrase(langTerm, langCode);  }}CodePhrase code_phrase_raw() :{  Token t;  String lang = null;  String langTerm = null;  String langCode = null;}{  t = < V_CODE_PHRASE_RAW >  {    lang = t.image;    int i = lang.indexOf("::");    langTerm = lang.substring(0, i);    langCode = lang.substring(i + 2);  }  {    return new CodePhrase(langTerm, langCode);  }}/* ----------------------- expressions ----------------------- */ExpressionItem expression_node() :{  ExpressionItem ret = null;  ExpressionItem item = null;  ExpressionItem item2 = null;  OperatorKind op = null;  boolean precedenceOverridden = false; // TODO
+  Token t = null;  String attrId = null;}{  (    < SYM_FOR_ALL > item = expression_leaf()
+    {      return new UnaryExpression(item, OperatorKind.FOR_ALL);
+  	}  |    (      item = expression_leaf()      (        < SYM_EQ >        {          op = OperatorKind.EQUALITY;        }      | < SYM_NE >        {          op = OperatorKind.INEQUAL;        }      | < SYM_LT >        {          op = OperatorKind.LESS_THAN;        }      | < SYM_GT >        {          op = OperatorKind.GREATER_THAN;        }      | < SYM_LE >        {          op = OperatorKind.LESS_THAN_OR_EQUAL;        }      | < SYM_GE >        {          op = OperatorKind.GREATER_THAN_OR_EQUAL;        }      | < SYM_PLUS >        {          op = OperatorKind.ADDITION;        }      | < SYM_MINUS >        {          op = OperatorKind.SUBSTRATION;        }      | < SYM_STAR >        {          op = OperatorKind.MULTIPLICATION;        }      | < SYM_SLASH >        {          op = OperatorKind.DIVISION;        }      | < SYM_CARET >        {          op = OperatorKind.EXPONENT;        }      | < SYM_AND >        {          op = OperatorKind.AND;        }      | < SYM_OR >        {          op = OperatorKind.OR;        }      | < SYM_IS_A >        {          op = OperatorKind.IS_A;        }      | < SYM_IS_NOT_A >        {          op = OperatorKind.IS_NOT_A;        }      | LOOKAHEAD(4)        < SYM_ASSIGNMENT >        {          op = OperatorKind.ASSIGNMENT;        }        item2 = expression_leaf()        {          return new AssignmentExpression((Variable) item, item2);        }      )      item2 = expression_leaf()      {        ret = new BinaryExpression(item, item2, op);      }    )  )  {    return ret;  }}ExpressionItem expression_leaf() :{  ExpressionItem item = null;  Token t = null;}{  (    < SYM_L_PARENTHESIS >    (      LOOKAHEAD(expression_node())      item = expression_node()    | LOOKAHEAD(variable())      item = variable()    | LOOKAHEAD(constant_expression())      item = constant_expression()    )    < SYM_R_PARENTHESIS >  | item = constant_expression()  | item = variable()  )  {    return item;  }}ConstantExpression constant_expression() :{  Token t = null;  CodePhrase code = null;  String text = null;  String units = null;  Integer order = null;}{  (    t = < V_STRING >    {      String str = t.image;      return new StringConstant(str.substring(1, str.length() - 1));    }  | t = < V_ORDINAL >    {      String value = "DV_ORDINAL," + t.image;      DvOrdinal ordinal = (DvOrdinal) DataValue.parseValue(value);      return new OrdinalConstant(ordinal);
+    }
+  | t = < V_REAL >
+  | t = < V_INTEGER >
+  | t = < V_PROPORTION >
+  | t = <V_DATE>
+  | t = <V_DATE_TIME_Z>
+    {
+      text = t.image;
+      text = text.replace("(","");
+      text = text.replace(")","");
+      return new DateTimeConstant(text);
+     }
+  | t = <V_DATE_TIME>
+    {
+      text = t.image;
+      text = text.replace("(","");
+      text = text.replace(")","");
+      return new DateTimeConstant(text);
+     }
+  | t = <V_TIME>
+  | t = <V_ISO8601_DURATION>
+  | t = < SYM_NULL >  | t = < SYM_TRUE >  | t = < SYM_FALSE >  | LOOKAHEAD(2)    code = code_phrase_raw() [ text = label() ]    {      if (text != null)      {        return new CodedTextConstant(text, code);      }      else      {        return new CodePhraseConstant(code);      }    }  | t = < V_QUANTITY >    {      text = t.image;
+      text = text.replace("(","");
+      text = text.replace(")","");
+      DvQuantity q = new DvQuantity("m",1,0).parse(text);
+      return new QuantityConstant(q);
+    }  )  {    return new ConstantExpression(t.image);  }}Variable variable() :{  Variable v;  Token t;  String code = null;  String path = null;  String label = null;  String attribute = null;}{  (    < SYM_DOLLAR >    (      t = < V_LOCAL_CODE >    | t = < SYM_CURRENT_DATETIME >    )    {      code = t.image;    }    [ label = label() ]  | t = < V_ABSOLUTE_PATH >    {      path = t.image;    }  )  [    < SYM_DOT > t = < V_ATTRIBUTE_IDENTIFIER >    {      attribute = t.image;    }  ]  {    return new Variable(code, label, path, attribute);  }}String label() :{  Token t;  String label = null;}{  t = < V_LABEL >  {    label = t.image;    label = label.substring(1, label.length() - 1);    return label;  }}double real() :{  Token t;  String value = null;}{  t = < V_REAL >  {    value = t.image;    return Double.parseDouble(value);  }}int integer() :{  Token t;  String value = null;}{  t = < V_INTEGER >  {    value = t.image;    return Integer.parseInt(value);  }}

@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="openEHR/v1/Template">
+  <id>b990314d-ea85-45b1-a20e-19185cd9ae69</id>
+  <name>diagnosis_chadvas_icd10</name>
+  <description>
+    <lifecycle_state>Initial</lifecycle_state>
+    <details>
+      <purpose />
+      <use />
+      <misuse />
+    </details>
+    <other_details>
+      <item>
+        <key>MetaDataSet:Sample Set </key>
+        <value>Template metadata sample set </value>
+      </item>
+      <item>
+        <key>Acknowledgements</key>
+        <value />
+      </item>
+      <item>
+        <key>Business Process Level</key>
+        <value />
+      </item>
+      <item>
+        <key>Care setting</key>
+        <value />
+      </item>
+      <item>
+        <key>Client group</key>
+        <value />
+      </item>
+      <item>
+        <key>Clinical Record Element</key>
+        <value />
+      </item>
+      <item>
+        <key>Copyright</key>
+        <value />
+      </item>
+      <item>
+        <key>Issues</key>
+        <value />
+      </item>
+      <item>
+        <key>Owner</key>
+        <value />
+      </item>
+      <item>
+        <key>Sign off</key>
+        <value />
+      </item>
+      <item>
+        <key>Speciality</key>
+        <value />
+      </item>
+      <item>
+        <key>User roles</key>
+        <value />
+      </item>
+    </other_details>
+  </description>
+  <definition xsi:type="EVALUATION" archetype_id="openEHR-EHR-EVALUATION.problem-diagnosis.v1" concept_name="Diagnosis">
+    <Rule path="/data[at0001]/items[at0002.1]">
+      <constraint xsi:type="textConstraint">
+        <includedValues>ICD10::I48::Atrial fibrillation and flutter</includedValues>
+        <includedValues>ICD10::I50::Congestive heart failure</includedValues>
+        <includedValues>ICD10::I10::Hypertension</includedValues>
+        <includedValues>ICD10::I11::Hypertension</includedValues>
+        <includedValues>ICD10::I12::Hypertension</includedValues>
+        <includedValues>ICD10::I13::Hypertension</includedValues>
+        <includedValues>ICD10::I15::Hypertension</includedValues>
+        <includedValues>ICD10::E10::Diabetes</includedValues>
+        <includedValues>ICD10::E11::Diabetes</includedValues>
+        <includedValues>ICD10::E12::Diabetes</includedValues>
+        <includedValues>ICD10::E13::Diabetes</includedValues>
+        <includedValues>ICD10::E14::Diabetes</includedValues>
+        <includedValues>ICD10::I61::Stroke</includedValues>
+        <includedValues>ICD10::I62::Stroke</includedValues>
+        <includedValues>ICD10::I63::Stroke</includedValues>
+        <includedValues>ICD10::I64::Stroke</includedValues>
+        <includedValues>ICD10::G459::TIA</includedValues>
+        <includedValues>ICD10::I80::Thrombo-embolism</includedValues>
+        <includedValues>ICD10::I81::Thrombo-embolism</includedValues>
+        <includedValues>ICD10::I82::Thrombo-embolism</includedValues>
+        <includedValues>ICD10::I21::Vascular disease (Prior myocardial infarction)</includedValues>
+        <includedValues>ICD10::I22::Vascular disease (Prior myocardial infarction)</includedValues>
+        <includedValues>ICD10::I739::Vascular disease (Peripheral artery disease)</includedValues>
+        <includedValues>ICD10::I70::Vascular disease (Atherosclerosis)</includedValues>
+      </constraint>
+    </Rule>
+  </definition>
+</template>

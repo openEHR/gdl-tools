@@ -1,0 +1,164 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"BSA_Calculation.v2">
+	concept = <"gt0015">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"Cambio">
+				keywords = <"Body surface area", "BSA", "Height", "Weight">
+				misuse = <"test misuse">
+				purpose = <"test purpose">
+				use = <"test use">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Committee draft">
+		original_author = <
+			["date"] = <"13-09-2012">
+			["email"] = <"rong.chen@cambio.se">
+			["name"] = <"Rong Chen">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_details = <
+			["references"] = <"test reference">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				function = <"LAST">
+			>
+			[2] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.height.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+				function = <"LAST">
+			>
+			[3] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_surface_area.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0011"] = (ELEMENT_BINDING) <
+						path = <"/protocol[at0005]/items[at0006]">
+					>
+				>
+				function = <"LAST">
+			>
+			[4] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_surface_area.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0013"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0017"] = (RULE) <
+                when = <"$gt0011 is_a local::gt0008|Dubois and Dubois|",...>
+                then = <"$gt0013.magnitude=((($gt0005.magnitude^0.425)*($gt0006.magnitude^0.725))*(7.184/1000))", "$gt0013.precision=2">
+                priority = <1>
+            >
+			["gt0009"] = (RULE) <
+				when = <"$gt0011==local::at0009|Mosteller|",...>
+				then = <"$gt0013.magnitude=((($gt0005.magnitude*$gt0006.magnitude)/3600)^0.5)", "$gt0013.precision=2">
+				priority = <3>
+			>
+			["gt0016"] = (RULE) <
+				when = <"$gt0011==local::at0008|Dubois and Dubois|",...>
+				then = <"$gt0013.magnitude=((($gt0005.magnitude^0.425)*($gt0006.magnitude^0.725))*(7.184/1000))", "$gt0013.precision=2">
+				priority = <2>
+			>			
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY)<
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Body weight">
+						description = <"Body weight">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Height/Length">
+						description = <"Height/Length">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Weight">
+						description = <"The weight of the individual.">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Height/Length">
+						description = <"The length of the body from crown of head to sole of foot.">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Body surface area">
+						description = <"Body surface area">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Body surface area">
+						description = <"The calculated body surface area.">
+					>
+					["gt0009"] = (TERM) <
+						text = <"The Mosteller formula">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Formula name">
+						description = <"The name of the formula employed to calculate Body Surface Area.">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Body surface area">
+						description = <"Body surface area">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Body surface area">
+						description = <"The calculated body surface area.">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Body surface area calculation">
+						description = <"Body surface area calculation">
+					>
+					["gt0016"] = (TERM) <
+						text = <"The Du Bois and Du Bois formula">
+					>
+					["gt0017"] = (TERM) <
+                        text = <"Test bindings rule">
+                    >
+				>
+			>
+		>
+		term_bindings = <
+		    ["ICD10"] = (TERM_BINDING) <
+                bindings = <
+                    ["gt0008"] = (BINDING) <
+                        codes =<[ICD10::E10], [ICD10::E11], [ICD10::E12]>
+                    >
+                >
+            >
+            ["SNOMED-CT"] = (TERM_BINDING) <
+                bindings = <
+                    ["gt0008"] = (BINDING) <
+                        codes =<[SNOMED-CT::123456], [SNOMED-CT::234567]>
+                    >
+                >
+            >
+        >         
+	>
+>
