@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./CodedTextVO.html" title="se.cambio.cds.openehr.model.codedtext.vo.CodedTextVO" alt="" coords="521,209,618,233"/>
+<area shape="rect" id="node1" href="./CodedTextVO.html" title="&lt;TABLE&gt;" alt="" coords="510,197,629,245"/>
+<area shape="rect" id="node2_1" href="../../facade/archetype/plain/PlainArchetypeFacadeDelegate.html" title="se.cambio.cds.openehr.model.facade.archetype.plain.PlainArchetypeFacadeDelegate" alt="" coords="33,11,274,47"/>
+<area shape="rect" id="node2" href="../../facade/archetype/plain/PlainArchetypeFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="22,5,285,53"/>
+<area shape="rect" id="node5_2" href="../../facade/archetype/vo/ArchetypeObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.ArchetypeObjectBundleCustomVO" alt="" coords="38,107,270,143"/>
+<area shape="rect" id="node5" href="../../facade/archetype/vo/ArchetypeObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="27,101,280,149"/>
+<area shape="rect" id="node3_3" href="../../facade/archetype/vo/TemplateObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.TemplateObjectBundleCustomVO" alt="" coords="315,107,547,143"/>
+<area shape="rect" id="node3" href="../../facade/archetype/vo/TemplateObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="304,101,558,149"/>
+<area shape="rect" id="node4_4" href="../../facade/archetype/vo/PathableVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.PathableVO" alt="" coords="592,107,824,143"/>
+<area shape="rect" id="node4" href="../../facade/archetype/vo/PathableVO.html" title="&lt;TABLE&gt;" alt="" coords="582,101,835,149"/>
+<area shape="rect" id="node6_5" href="../../../view/applicationobjects/CodedTexts.html" title="se.cambio.cds.openehr.view.applicationobjects.CodedTexts" alt="" coords="870,107,1088,143"/>
+<area shape="rect" id="node6" href="../../../view/applicationobjects/CodedTexts.html" title="&lt;TABLE&gt;" alt="" coords="860,101,1098,149"/>
+<area shape="rect" id="node7_6" href="../../../view/panels/DVHierarchyCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVHierarchyCodedTextPanel" alt="" coords="1134,107,1312,143"/>
+<area shape="rect" id="node7" href="../../../view/panels/DVHierarchyCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="1123,101,1323,149"/>
+</map>

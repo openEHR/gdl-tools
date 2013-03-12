@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/DataSourceDTO.html" title="se.cambio.cds.model.dataSource.dto.DataSourceDTO" alt="" coords="155,302,327,338"/>
+<area shape="rect" id="node1" href="../dto/DataSourceDTO.html" title="&lt;TABLE&gt;" alt="" coords="145,296,338,344"/>
+<area shape="rect" id="node2_1" href="./StandardSQLDataSourceDAO.html" title="se.cambio.cds.model.dataSource.dao.StandardSQLDataSourceDAO" alt="" coords="15,212,193,236"/>
+<area shape="rect" id="node2" href="./StandardSQLDataSourceDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,200,203,248"/>
+<area shape="rect" id="node3_2" href="./SQLGenericDataSourceDAO.html" title="se.cambio.cds.model.dataSource.dao.SQLGenericDataSourceDAO" alt="" coords="150,17,322,41"/>
+<area shape="rect" id="node3" href="./SQLGenericDataSourceDAO.html" title="&lt;TABLE&gt;" alt="" coords="139,5,333,53"/>
+<area shape="rect" id="node4_3" href="./SQLDataSourceDAO.html" title="se.cambio.cds.model.dataSource.dao.SQLDataSourceDAO" alt="" coords="116,107,244,146"/>
+<area shape="rect" id="node4" href="./SQLDataSourceDAO.html" title="&lt;TABLE&gt;" alt="" coords="105,102,255,151"/>
+</map>

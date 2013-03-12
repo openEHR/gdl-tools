@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../model/codedtext/vo/CodedTextVO.html" title="se.cambio.cds.openehr.model.codedtext.vo.CodedTextVO" alt="" coords="227,299,429,335"/>
+<area shape="rect" id="node1" href="../../model/codedtext/vo/CodedTextVO.html" title="&lt;TABLE&gt;" alt="" coords="217,293,439,341"/>
+<area shape="rect" id="node2_1" href="./DVHierarchyCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVHierarchyCodedTextPanel" alt="" coords="43,209,221,233"/>
+<area shape="rect" id="node2" href="./DVHierarchyCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="32,197,232,245"/>
+<area shape="rect" id="node5_2" href="../trees/SelectableNode.html" title="se.cambio.cds.openehr.view.trees.SelectableNode" alt="" coords="16,299,181,335"/>
+<area shape="rect" id="node5" href="../trees/SelectableNode.html" title="&lt;TABLE&gt;" alt="" coords="5,293,192,341"/>
+<area shape="rect" id="node7_3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="org.openehr.rm.datatypes.basic.DataValue" alt="" coords="475,299,632,335"/>
+<area shape="rect" id="node7" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="&lt;TABLE&gt;" alt="" coords="464,293,643,341"/>
+<area shape="rect" id="node3_4" href="./DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="172,17,281,41"/>
+<area shape="rect" id="node3" href="./DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="161,5,292,53"/>
+<area shape="rect" id="node4_5" href="./DVCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVCodedTextPanel" alt="" coords="325,113,451,137"/>
+<area shape="rect" id="node4" href="./DVCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="315,101,461,149"/>
+<area shape="rect" id="node6_6" href="../util/SelectCodeActionListener.html" title="se.cambio.cds.openehr.view.util.SelectCodeActionListener" alt="" coords="115,107,280,143"/>
+<area shape="rect" id="node6" href="../util/SelectCodeActionListener.html" title="&lt;TABLE&gt;" alt="" coords="104,101,291,149"/>
+</map>

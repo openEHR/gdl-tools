@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="297,107,490,143"/>
+<area shape="rect" id="node1" href="../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="286,101,501,149"/>
+<area shape="rect" id="node2_1" href="../../model/archetypeelement/vo/ArchetypeElementVO.html" title="se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO" alt="" coords="15,107,251,143"/>
+<area shape="rect" id="node2" href="../../model/archetypeelement/vo/ArchetypeElementVO.html" title="&lt;TABLE&gt;" alt="" coords="5,101,262,149"/>
+<area shape="rect" id="node3_2" href="./ArchetypeElements.html" title="se.cambio.cds.openehr.view.applicationobjects.ArchetypeElements" alt="" coords="69,17,197,41"/>
+<area shape="rect" id="node3" href="./ArchetypeElements.html" title="&lt;TABLE&gt;" alt="" coords="59,5,208,53"/>
+</map>

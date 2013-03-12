@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../controller/FormGeneratorViewer.html" title="se.cambio.cds.formgen.controller.FormGeneratorViewer" alt="" coords="125,11,286,61"/>
+<area shape="rect" id="node1" href="../../controller/FormGeneratorViewer.html" title="&lt;TABLE&gt;" alt="" coords="114,5,297,67"/>
+<area shape="rect" id="node4_1" href="./CDSFormGenFrame.html" title="se.cambio.cds.formgen.view.frame.CDSFormGenFrame" alt="" coords="64,127,187,151"/>
+<area shape="rect" id="node4" href="./CDSFormGenFrame.html" title="&lt;TABLE&gt;" alt="" coords="53,115,197,163"/>
+<area shape="rect" id="node2_2" href="../../controller/FormGeneratorController.html" title="se.cambio.cds.formgen.controller.FormGeneratorController" alt="" coords="230,217,391,253"/>
+<area shape="rect" id="node2" href="../../controller/FormGeneratorController.html" title="&lt;TABLE&gt;" alt="" coords="219,211,402,259"/>
+<area shape="rect" id="node3_3" href="../dialog/InfoDialog.html" title="se.cambio.cds.formgen.view.dialog.InfoDialog" alt="" coords="16,217,184,253"/>
+<area shape="rect" id="node3" href="../dialog/InfoDialog.html" title="&lt;TABLE&gt;" alt="" coords="5,211,195,259"/>
+</map>

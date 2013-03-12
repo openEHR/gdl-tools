@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../util/CDSSwingWorker.html" title="se.cambio.cds.util.CDSSwingWorker" alt="" coords="108,11,220,47"/>
+<area shape="rect" id="node1" href="../../../../util/CDSSwingWorker.html" title="&lt;TABLE&gt;" alt="" coords="97,5,231,53"/>
+<area shape="rect" id="node4_1" href="./LoadGuideFromFileRSW.html" title="se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW" alt="" coords="90,113,238,137"/>
+<area shape="rect" id="node4" href="./LoadGuideFromFileRSW.html" title="&lt;TABLE&gt;" alt="" coords="79,101,249,149"/>
+<area shape="rect" id="node2_2" href="../../../model/Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="104,299,224,335"/>
+<area shape="rect" id="node2" href="../../../model/Guide.html" title="&lt;TABLE&gt;" alt="" coords="93,293,235,341"/>
+<area shape="rect" id="node3_3" href="../GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="15,203,182,239"/>
+<area shape="rect" id="node3" href="../GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,197,193,245"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/readable/rule/lines/ArchetypeElementInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine" alt="" coords="45,299,283,335"/>
+<area shape="rect" id="node1" href="../../../model/readable/rule/lines/ArchetypeElementInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="34,293,294,341"/>
+<area shape="rect" id="node2_1" href="../../controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="15,203,182,239"/>
+<area shape="rect" id="node2" href="../../controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,197,193,245"/>
+<area shape="rect" id="node3_2" href="./DialogSelection.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogSelection" alt="" coords="111,17,217,41"/>
+<area shape="rect" id="node3" href="./DialogSelection.html" title="&lt;TABLE&gt;" alt="" coords="101,5,227,53"/>
+<area shape="rect" id="node4_3" href="./DialogElementAttributeFunctionInstanceSelection.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogElementAttributeFunctionInstanceSelection" alt="" coords="16,113,312,137"/>
+<area shape="rect" id="node4" href="./DialogElementAttributeFunctionInstanceSelection.html" title="&lt;TABLE&gt;" alt="" coords="5,101,323,149"/>
+</map>

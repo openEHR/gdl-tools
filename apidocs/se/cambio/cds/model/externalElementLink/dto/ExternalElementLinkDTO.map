@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./ExternalElementLinkDTO.html" title="se.cambio.cds.model.externalElementLink.dto.ExternalElementLinkDTO" alt="" coords="237,428,392,452"/>
+<area shape="rect" id="node1" href="./ExternalElementLinkDTO.html" title="&lt;TABLE&gt;" alt="" coords="227,416,403,464"/>
+<area shape="rect" id="node2_1" href="../dao/StandardSQLExternalElementLinkDAO.html" title="se.cambio.cds.model.externalElementLink.dao.StandardSQLExternalElementLinkDAO" alt="" coords="15,326,241,362"/>
+<area shape="rect" id="node2" href="../dao/StandardSQLExternalElementLinkDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,320,251,368"/>
+<area shape="rect" id="node3_2" href="../dao/SQLGenericExternalElementLinkDAO.html" title="se.cambio.cds.model.externalElementLink.dao.SQLGenericExternalElementLinkDAO" alt="" coords="122,121,342,157"/>
+<area shape="rect" id="node3" href="../dao/SQLGenericExternalElementLinkDAO.html" title="&lt;TABLE&gt;" alt="" coords="111,115,353,163"/>
+<area shape="rect" id="node4_3" href="../dao/SQLExternalElementLinkDAO.html" title="se.cambio.cds.model.externalElementLink.dao.SQLExternalElementLinkDAO" alt="" coords="77,216,291,267"/>
+<area shape="rect" id="node4" href="../dao/SQLExternalElementLinkDAO.html" title="&lt;TABLE&gt;" alt="" coords="66,211,302,272"/>
+<area shape="rect" id="node5_4" href="../dao/GenericExternalElementLinkDAO.html" title="se.cambio.cds.model.externalElementLink.dao.GenericExternalElementLinkDAO" alt="" coords="203,11,418,61"/>
+<area shape="rect" id="node5" href="../dao/GenericExternalElementLinkDAO.html" title="&lt;TABLE&gt;" alt="" coords="193,5,429,67"/>
+</map>

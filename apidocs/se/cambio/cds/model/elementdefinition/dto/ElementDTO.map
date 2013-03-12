@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./ElementDTO.html" title="se.cambio.cds.model.elementdefinition.dto.ElementDTO" alt="" coords="247,428,335,452"/>
+<area shape="rect" id="node1" href="./ElementDTO.html" title="&lt;TABLE&gt;" alt="" coords="236,416,345,464"/>
+<area shape="rect" id="node2_1" href="../dao/StandardSQLElementDAO.html" title="se.cambio.cds.model.elementdefinition.dao.StandardSQLElementDAO" alt="" coords="15,326,217,362"/>
+<area shape="rect" id="node2" href="../dao/StandardSQLElementDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,320,227,368"/>
+<area shape="rect" id="node3_2" href="../dao/SQLGenericElementDAO.html" title="se.cambio.cds.model.elementdefinition.dao.SQLGenericElementDAO" alt="" coords="117,121,318,157"/>
+<area shape="rect" id="node3" href="../dao/SQLGenericElementDAO.html" title="&lt;TABLE&gt;" alt="" coords="106,115,329,163"/>
+<area shape="rect" id="node4_3" href="../dao/SQLElementDAO.html" title="se.cambio.cds.model.elementdefinition.dao.SQLElementDAO" alt="" coords="66,216,267,267"/>
+<area shape="rect" id="node4" href="../dao/SQLElementDAO.html" title="&lt;TABLE&gt;" alt="" coords="55,211,278,272"/>
+<area shape="rect" id="node5_4" href="../dao/GenericElementDAO.html" title="se.cambio.cds.model.elementdefinition.dao.GenericElementDAO" alt="" coords="191,11,393,61"/>
+<area shape="rect" id="node5" href="../dao/GenericElementDAO.html" title="&lt;TABLE&gt;" alt="" coords="181,5,403,67"/>
+</map>

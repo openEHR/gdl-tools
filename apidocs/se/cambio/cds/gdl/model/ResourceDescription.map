@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./ResourceDescriptionItem.html" title="se.cambio.cds.gdl.model.ResourceDescriptionItem" alt="" coords="136,305,296,329"/>
+<area shape="rect" id="node1" href="./ResourceDescriptionItem.html" title="&lt;TABLE&gt;" alt="" coords="125,293,307,341"/>
+<area shape="rect" id="node2_1" href="./ResourceDescription.html" title="se.cambio.cds.gdl.model.ResourceDescription" alt="" coords="16,209,152,233"/>
+<area shape="rect" id="node2" href="./ResourceDescription.html" title="&lt;TABLE&gt;" alt="" coords="5,197,163,245"/>
+<area shape="rect" id="node3_2" href="./Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="115,113,168,137"/>
+<area shape="rect" id="node3" href="./Guide.html" title="&lt;TABLE&gt;" alt="" coords="104,101,179,149"/>
+<area shape="rect" id="node4_3" href="../editor/controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="58,11,225,47"/>
+<area shape="rect" id="node4" href="../editor/controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="47,5,235,53"/>
+</map>

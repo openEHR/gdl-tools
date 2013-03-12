@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TerminologyServicePlugin.html" title="se.cambio.cds.ts.TerminologyServicePlugin" alt="" coords="34,11,195,50"/>
+<area shape="rect" id="node1" href="./TerminologyServicePlugin.html" title="&lt;TABLE&gt;" alt="" coords="23,6,206,55"/>
+<area shape="rect" id="node2_1" href="./DummyTerminologyServicePlugin.html" title="se.cambio.cds.ts.DummyTerminologyServicePlugin" alt="" coords="15,116,214,140"/>
+<area shape="rect" id="node2" href="./DummyTerminologyServicePlugin.html" title="&lt;TABLE&gt;" alt="" coords="5,104,225,152"/>
+<area shape="rect" id="node3_2" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="org.openehr.rm.datatypes.text.CodePhrase" alt="" coords="37,206,192,242"/>
+<area shape="rect" id="node3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="&lt;TABLE&gt;" alt="" coords="27,200,203,248"/>
+</map>

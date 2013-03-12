@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../gdl/model/TermDefinition.html" title="se.cambio.cds.gdl.model.TermDefinition" alt="" coords="216,107,336,143"/>
+<area shape="rect" id="node1" href="../../gdl/model/TermDefinition.html" title="&lt;TABLE&gt;" alt="" coords="205,101,347,149"/>
+<area shape="rect" id="node2_1" href="../../gdl/model/Term.html" title="se.cambio.cds.gdl.model.Term" alt="" coords="269,203,389,239"/>
+<area shape="rect" id="node2" href="../../gdl/model/Term.html" title="&lt;TABLE&gt;" alt="" coords="259,197,400,245"/>
+<area shape="rect" id="node3_2" href="./DVUIUtil.html" title="se.cambio.cds.openehr.util.DVUIUtil" alt="" coords="297,17,362,41"/>
+<area shape="rect" id="node3" href="./DVUIUtil.html" title="&lt;TABLE&gt;" alt="" coords="286,5,373,53"/>
+<area shape="rect" id="node4_3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="org.openehr.rm.datatypes.text.CodePhrase" alt="" coords="16,107,171,143"/>
+<area shape="rect" id="node4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="&lt;TABLE&gt;" alt="" coords="5,101,181,149"/>
+<area shape="rect" id="node5_4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="org.openehr.rm.datatypes.basic.DataValue" alt="" coords="432,107,589,143"/>
+<area shape="rect" id="node5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="&lt;TABLE&gt;" alt="" coords="421,101,600,149"/>
+</map>

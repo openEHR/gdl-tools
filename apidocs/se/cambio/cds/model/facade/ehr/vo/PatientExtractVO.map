@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./PatientExtractVO.html" title="se.cambio.cds.model.facade.ehr.vo.PatientExtractVO" alt="" coords="16,17,133,41"/>
+<area shape="rect" id="node1" href="./PatientExtractVO.html" title="&lt;TABLE&gt;" alt="" coords="5,5,144,53"/>
+<area shape="rect" id="node2_1" href="./ExtractItemVO.html" title="se.cambio.cds.model.facade.ehr.vo.ExtractItemVO" alt="" coords="24,113,125,137"/>
+<area shape="rect" id="node2" href="./ExtractItemVO.html" title="&lt;TABLE&gt;" alt="" coords="13,101,136,149"/>
+</map>

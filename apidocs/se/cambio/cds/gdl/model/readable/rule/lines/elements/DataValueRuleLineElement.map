@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../Term.html" title="se.cambio.cds.gdl.model.Term" alt="" coords="479,299,599,335"/>
+<area shape="rect" id="node1" href="../../../../Term.html" title="&lt;TABLE&gt;" alt="" coords="468,293,609,341"/>
+<area shape="rect" id="node2_1" href="../WithElementPredicateAttributeDefinitionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine" alt="" coords="15,107,310,143"/>
+<area shape="rect" id="node2" href="../WithElementPredicateAttributeDefinitionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,101,321,149"/>
+<area shape="rect" id="node6_2" href="./DataValueRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.DataValueRuleLineElement" alt="" coords="547,209,712,233"/>
+<area shape="rect" id="node6" href="./DataValueRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="536,197,723,245"/>
+<area shape="rect" id="node3_3" href="../SetElementWithDataValueActionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.SetElementWithDataValueActionRuleLine" alt="" coords="356,107,601,143"/>
+<area shape="rect" id="node3" href="../SetElementWithDataValueActionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="345,101,612,149"/>
+<area shape="rect" id="node4_4" href="../ElementComparisonWithDVConditionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ElementComparisonWithDVConditionRuleLine" alt="" coords="647,107,913,143"/>
+<area shape="rect" id="node4" href="../ElementComparisonWithDVConditionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="636,101,924,149"/>
+<area shape="rect" id="node5_5" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="959,113,1145,137"/>
+<area shape="rect" id="node5" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="949,101,1155,149"/>
+<area shape="rect" id="node8_6" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="org.openehr.rm.datatypes.text.CodePhrase" alt="" coords="644,299,799,335"/>
+<area shape="rect" id="node8" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="&lt;TABLE&gt;" alt="" coords="633,293,809,341"/>
+<area shape="rect" id="node7_7" href="../../../../../editor/controller/RuleElementEditor.html" title="se.cambio.cds.gdl.editor.controller.RuleElementEditor" alt="" coords="1039,11,1206,47"/>
+<area shape="rect" id="node7" href="../../../../../editor/controller/RuleElementEditor.html" title="&lt;TABLE&gt;" alt="" coords="1029,5,1217,53"/>
+</map>

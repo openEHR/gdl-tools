@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="33,203,226,239"/>
+<area shape="rect" id="node1" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="22,197,237,245"/>
+<area shape="rect" id="node2_1" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="37,17,222,41"/>
+<area shape="rect" id="node2" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="26,5,233,53"/>
+<area shape="rect" id="node3_2" href="./ArchetypeReferenceRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineElement" alt="" coords="15,113,243,137"/>
+<area shape="rect" id="node3" href="./ArchetypeReferenceRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="5,101,254,149"/>
+</map>

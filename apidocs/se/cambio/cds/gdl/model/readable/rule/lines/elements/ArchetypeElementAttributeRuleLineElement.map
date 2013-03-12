@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="321,299,514,335"/>
+<area shape="rect" id="node1" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="310,293,525,341"/>
+<area shape="rect" id="node2_1" href="../SetElementAttributeActionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.SetElementAttributeActionRuleLine" alt="" coords="15,107,233,143"/>
+<area shape="rect" id="node2" href="../SetElementAttributeActionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,101,243,149"/>
+<area shape="rect" id="node5_2" href="./ArchetypeElementAttributeRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementAttributeRuleLineElement" alt="" coords="285,209,550,233"/>
+<area shape="rect" id="node5" href="./ArchetypeElementAttributeRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="274,197,561,245"/>
+<area shape="rect" id="node3_3" href="../ElementAttributeComparisonConditionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ElementAttributeComparisonConditionRuleLine" alt="" coords="278,107,557,143"/>
+<area shape="rect" id="node3" href="../ElementAttributeComparisonConditionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="267,101,567,149"/>
+<area shape="rect" id="node4_4" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="654,113,839,137"/>
+<area shape="rect" id="node4" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="643,101,850,149"/>
+<area shape="rect" id="node6_5" href="../../../../../editor/controller/RuleElementEditor.html" title="se.cambio.cds.gdl.editor.controller.RuleElementEditor" alt="" coords="593,11,759,47"/>
+<area shape="rect" id="node6" href="../../../../../editor/controller/RuleElementEditor.html" title="&lt;TABLE&gt;" alt="" coords="582,5,770,53"/>
+</map>

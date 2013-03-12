@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../archetypeelement/vo/ArchetypeElementVO.html" title="se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO" alt="" coords="15,107,251,143"/>
+<area shape="rect" id="node1" href="../../../archetypeelement/vo/ArchetypeElementVO.html" title="&lt;TABLE&gt;" alt="" coords="5,101,262,149"/>
+<area shape="rect" id="node2_1" href="../../../archetypeslot/vo/ArchetypeSlotVO.html" title="se.cambio.cds.openehr.model.archetypeslot.vo.ArchetypeSlotVO" alt="" coords="297,107,514,143"/>
+<area shape="rect" id="node2" href="../../../archetypeslot/vo/ArchetypeSlotVO.html" title="&lt;TABLE&gt;" alt="" coords="286,101,525,149"/>
+<area shape="rect" id="node3_2" href="../../../cluster/vo/ClusterVO.html" title="se.cambio.cds.openehr.model.cluster.vo.ClusterVO" alt="" coords="559,107,747,143"/>
+<area shape="rect" id="node3" href="../../../cluster/vo/ClusterVO.html" title="&lt;TABLE&gt;" alt="" coords="549,101,758,149"/>
+<area shape="rect" id="node4_3" href="../../../codedtext/vo/CodedTextVO.html" title="se.cambio.cds.openehr.model.codedtext.vo.CodedTextVO" alt="" coords="793,107,994,143"/>
+<area shape="rect" id="node4" href="../../../codedtext/vo/CodedTextVO.html" title="&lt;TABLE&gt;" alt="" coords="782,101,1005,149"/>
+<area shape="rect" id="node5_4" href="./PathableVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.PathableVO" alt="" coords="611,17,696,41"/>
+<area shape="rect" id="node5" href="./PathableVO.html" title="&lt;TABLE&gt;" alt="" coords="600,5,707,53"/>
+<area shape="rect" id="node6_5" href="../../../ordinal/vo/OrdinalVO.html" title="se.cambio.cds.openehr.model.ordinal.vo.OrdinalVO" alt="" coords="1040,107,1229,143"/>
+<area shape="rect" id="node6" href="../../../ordinal/vo/OrdinalVO.html" title="&lt;TABLE&gt;" alt="" coords="1029,101,1240,149"/>
+</map>

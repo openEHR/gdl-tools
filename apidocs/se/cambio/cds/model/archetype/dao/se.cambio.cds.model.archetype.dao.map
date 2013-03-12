@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./InJarArchetypeDAO.html" title="se.cambio.cds.model.archetype.dao.InJarArchetypeDAO" alt="" coords="15,116,145,140"/>
+<area shape="rect" id="node1" href="./InJarArchetypeDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,155,152"/>
+<area shape="rect" id="node2_1" href="./GenericArchetypeFactory.html" title="se.cambio.cds.model.archetype.dao.GenericArchetypeFactory" alt="" coords="284,19,449,43"/>
+<area shape="rect" id="node2" href="./GenericArchetypeFactory.html" title="&lt;TABLE&gt;" alt="" coords="273,7,460,55"/>
+<area shape="rect" id="node3_2" href="./GenericArchetypeDAO.html" title="se.cambio.cds.model.archetype.dao.GenericArchetypeDAO" alt="" coords="93,11,238,50"/>
+<area shape="rect" id="node3" href="./GenericArchetypeDAO.html" title="&lt;TABLE&gt;" alt="" coords="82,6,249,55"/>
+<area shape="rect" id="node4_3" href="./FileArchetypeDAO.html" title="se.cambio.cds.model.archetype.dao.FileArchetypeDAO" alt="" coords="190,116,311,140"/>
+<area shape="rect" id="node4" href="./FileArchetypeDAO.html" title="&lt;TABLE&gt;" alt="" coords="179,104,322,152"/>
+</map>

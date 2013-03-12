@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./InJarTerminologyDAO.html" title="se.cambio.cds.model.terminology.dao.InJarTerminologyDAO" alt="" coords="15,116,153,140"/>
+<area shape="rect" id="node1" href="./InJarTerminologyDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,163,152"/>
+<area shape="rect" id="node2_1" href="./GenericTerminologyDAO.html" title="se.cambio.cds.model.terminology.dao.GenericTerminologyDAO" alt="" coords="96,11,251,50"/>
+<area shape="rect" id="node2" href="./GenericTerminologyDAO.html" title="&lt;TABLE&gt;" alt="" coords="85,6,261,55"/>
+<area shape="rect" id="node3_2" href="./FileTerminologyDAO.html" title="se.cambio.cds.model.terminology.dao.FileTerminologyDAO" alt="" coords="198,116,327,140"/>
+<area shape="rect" id="node3" href="./FileTerminologyDAO.html" title="&lt;TABLE&gt;" alt="" coords="187,104,338,152"/>
+</map>

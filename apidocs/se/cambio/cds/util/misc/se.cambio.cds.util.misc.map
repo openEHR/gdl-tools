@@ -1,0 +1,20 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./CSVReader.html" title="se.cambio.cds.util.misc.CSVReader" alt="" coords="281,17,361,41"/>
+<area shape="rect" id="node1" href="./CSVReader.html" title="&lt;TABLE&gt;" alt="" coords="271,5,372,53"/>
+<area shape="rect" id="node5_1" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/UserSettings.html" title="se.cambio.cds.util.misc.CSVReader.UserSettings" alt="" coords="15,113,105,137"/>
+<area shape="rect" id="node5" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/UserSettings.html" title="&lt;TABLE&gt;" alt="" coords="5,101,115,149"/>
+<area shape="rect" id="node6_2" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/DataBuffer.html" title="se.cambio.cds.util.misc.CSVReader.DataBuffer" alt="" coords="150,113,229,137"/>
+<area shape="rect" id="node6" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/DataBuffer.html" title="&lt;TABLE&gt;" alt="" coords="139,101,239,149"/>
+<area shape="rect" id="node7_3" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/ColumnBuffer.html" title="se.cambio.cds.util.misc.CSVReader.ColumnBuffer" alt="" coords="274,113,369,137"/>
+<area shape="rect" id="node7" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/ColumnBuffer.html" title="&lt;TABLE&gt;" alt="" coords="263,101,379,149"/>
+<area shape="rect" id="node8_4" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/RawRecordBuffer.html" title="se.cambio.cds.util.misc.CSVReader.RawRecordBuffer" alt="" coords="415,113,532,137"/>
+<area shape="rect" id="node8" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/RawRecordBuffer.html" title="&lt;TABLE&gt;" alt="" coords="404,101,543,149"/>
+<area shape="rect" id="node9_5" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/HeadersHolder.html" title="se.cambio.cds.util.misc.CSVReader.HeadersHolder" alt="" coords="578,113,681,137"/>
+<area shape="rect" id="node9" href="http://java.sun.com/j2se/1.4.2/docs/api/se/cambio/cds/util/misc/CSVReader/HeadersHolder.html" title="&lt;TABLE&gt;" alt="" coords="567,101,691,149"/>
+<area shape="rect" id="node2_6" href="./ConfigurationParametersManager.html" title="se.cambio.cds.util.misc.ConfigurationParametersManager" alt="" coords="407,17,611,41"/>
+<area shape="rect" id="node2" href="./ConfigurationParametersManager.html" title="&lt;TABLE&gt;" alt="" coords="397,5,622,53"/>
+<area shape="rect" id="node3_7" href="./CDSSEnviroment.html" title="se.cambio.cds.util.misc.CDSSEnviroment" alt="" coords="657,17,765,41"/>
+<area shape="rect" id="node3" href="./CDSSEnviroment.html" title="&lt;TABLE&gt;" alt="" coords="646,5,775,53"/>
+<area shape="rect" id="node4_8" href="./ByteUtils.html" title="se.cambio.cds.util.misc.ByteUtils" alt="" coords="811,17,880,41"/>
+<area shape="rect" id="node4" href="./ByteUtils.html" title="&lt;TABLE&gt;" alt="" coords="800,5,891,53"/>
+</map>

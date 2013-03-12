@@ -1,0 +1,28 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./Units.html" title="se.cambio.cds.openehr.view.applicationobjects.Units" alt="" coords="17,17,66,41"/>
+<area shape="rect" id="node1" href="./Units.html" title="&lt;TABLE&gt;" alt="" coords="5,5,77,53"/>
+<area shape="rect" id="node2_1" href="./Templates.html" title="se.cambio.cds.openehr.view.applicationobjects.Templates" alt="" coords="112,17,189,41"/>
+<area shape="rect" id="node2" href="./Templates.html" title="&lt;TABLE&gt;" alt="" coords="101,5,200,53"/>
+<area shape="rect" id="node3_2" href="./ProportionTypesUI.html" title="se.cambio.cds.openehr.view.applicationobjects.ProportionTypesUI" alt="" coords="235,17,359,41"/>
+<area shape="rect" id="node3" href="./ProportionTypesUI.html" title="&lt;TABLE&gt;" alt="" coords="225,5,370,53"/>
+<area shape="rect" id="node4_3" href="./Overviews.html" title="se.cambio.cds.openehr.view.applicationobjects.Overviews" alt="" coords="405,17,481,41"/>
+<area shape="rect" id="node4" href="./Overviews.html" title="&lt;TABLE&gt;" alt="" coords="394,5,491,53"/>
+<area shape="rect" id="node5_4" href="./Ordinals.html" title="se.cambio.cds.openehr.view.applicationobjects.Ordinals" alt="" coords="526,17,591,41"/>
+<area shape="rect" id="node5" href="./Ordinals.html" title="&lt;TABLE&gt;" alt="" coords="515,5,602,53"/>
+<area shape="rect" id="node6_5" href="./DomainsUI.html" title="se.cambio.cds.openehr.view.applicationobjects.DomainsUI" alt="" coords="637,17,713,41"/>
+<area shape="rect" id="node6" href="./DomainsUI.html" title="&lt;TABLE&gt;" alt="" coords="626,5,723,53"/>
+<area shape="rect" id="node7_6" href="./CodedTexts.html" title="se.cambio.cds.openehr.view.applicationobjects.CodedTexts" alt="" coords="759,17,844,41"/>
+<area shape="rect" id="node7" href="./CodedTexts.html" title="&lt;TABLE&gt;" alt="" coords="748,5,855,53"/>
+<area shape="rect" id="node8_7" href="./Clusters.html" title="se.cambio.cds.openehr.view.applicationobjects.Clusters" alt="" coords="890,17,955,41"/>
+<area shape="rect" id="node8" href="./Clusters.html" title="&lt;TABLE&gt;" alt="" coords="879,5,966,53"/>
+<area shape="rect" id="node9_8" href="./Archetypes.html" title="se.cambio.cds.openehr.view.applicationobjects.Archetypes" alt="" coords="1001,17,1085,41"/>
+<area shape="rect" id="node9" href="./Archetypes.html" title="&lt;TABLE&gt;" alt="" coords="990,5,1095,53"/>
+<area shape="rect" id="node10_9" href="./ArchetypeSlots.html" title="se.cambio.cds.openehr.view.applicationobjects.ArchetypeSlots" alt="" coords="1130,17,1235,41"/>
+<area shape="rect" id="node10" href="./ArchetypeSlots.html" title="&lt;TABLE&gt;" alt="" coords="1119,5,1246,53"/>
+<area shape="rect" id="node11_10" href="./ArchetypeReferences.html" title="se.cambio.cds.openehr.view.applicationobjects.ArchetypeReferences" alt="" coords="1281,17,1423,41"/>
+<area shape="rect" id="node11" href="./ArchetypeReferences.html" title="&lt;TABLE&gt;" alt="" coords="1271,5,1433,53"/>
+<area shape="rect" id="node12_11" href="./ArchetypeElements.html" title="se.cambio.cds.openehr.view.applicationobjects.ArchetypeElements" alt="" coords="1468,17,1596,41"/>
+<area shape="rect" id="node12" href="./ArchetypeElements.html" title="&lt;TABLE&gt;" alt="" coords="1457,5,1607,53"/>
+<area shape="rect" id="node13_12" href="./AggregationFunctionsUI.html" title="se.cambio.cds.openehr.view.applicationobjects.AggregationFunctionsUI" alt="" coords="1642,17,1793,41"/>
+<area shape="rect" id="node13" href="./AggregationFunctionsUI.html" title="&lt;TABLE&gt;" alt="" coords="1631,5,1803,53"/>
+</map>

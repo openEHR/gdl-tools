@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./LogLineDTO.html" title="se.cambio.cds.model.logLine.dto.LogLineDTO" alt="" coords="229,223,315,247"/>
+<area shape="rect" id="node1" href="./LogLineDTO.html" title="&lt;TABLE&gt;" alt="" coords="219,211,325,259"/>
+<area shape="rect" id="node2_1" href="../../../controller/logs/LogManager.html" title="se.cambio.cds.controller.logs.LogManager" alt="" coords="16,121,157,157"/>
+<area shape="rect" id="node2" href="../../../controller/logs/LogManager.html" title="&lt;TABLE&gt;" alt="" coords="5,115,168,163"/>
+<area shape="rect" id="node3_2" href="../../../controller/util/ExceptionManager.html" title="se.cambio.cds.controller.util.ExceptionManager" alt="" coords="203,121,341,157"/>
+<area shape="rect" id="node3" href="../../../controller/util/ExceptionManager.html" title="&lt;TABLE&gt;" alt="" coords="192,115,352,163"/>
+<area shape="rect" id="node4_3" href="../../facade/administration/interfaces/Logs.html" title="se.cambio.cds.model.facade.administration.interfaces.Logs" alt="" coords="148,11,396,61"/>
+<area shape="rect" id="node4" href="../../facade/administration/interfaces/Logs.html" title="&lt;TABLE&gt;" alt="" coords="137,5,407,67"/>
+</map>

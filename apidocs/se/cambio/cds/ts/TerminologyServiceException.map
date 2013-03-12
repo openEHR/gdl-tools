@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./UnsupportedTerminologyException.html" title="se.cambio.cds.ts.UnsupportedTerminologyException" alt="" coords="15,113,230,137"/>
+<area shape="rect" id="node1" href="./UnsupportedTerminologyException.html" title="&lt;TABLE&gt;" alt="" coords="5,101,241,149"/>
+<area shape="rect" id="node2_1" href="./UnsupportedLanguageException.html" title="se.cambio.cds.ts.UnsupportedLanguageException" alt="" coords="275,113,474,137"/>
+<area shape="rect" id="node2" href="./UnsupportedLanguageException.html" title="&lt;TABLE&gt;" alt="" coords="265,101,485,149"/>
+<area shape="rect" id="node3_2" href="./UnknownPropertyException.html" title="se.cambio.cds.ts.UnknownPropertyException" alt="" coords="520,113,696,137"/>
+<area shape="rect" id="node3" href="./UnknownPropertyException.html" title="&lt;TABLE&gt;" alt="" coords="509,101,707,149"/>
+<area shape="rect" id="node4_3" href="./TerminologyServiceException.html" title="se.cambio.cds.ts.TerminologyServiceException" alt="" coords="399,17,582,41"/>
+<area shape="rect" id="node4" href="./TerminologyServiceException.html" title="&lt;TABLE&gt;" alt="" coords="389,5,593,53"/>
+<area shape="rect" id="node5_4" href="./InvalidCodeException.html" title="se.cambio.cds.ts.InvalidCodeException" alt="" coords="742,113,879,137"/>
+<area shape="rect" id="node5" href="./InvalidCodeException.html" title="&lt;TABLE&gt;" alt="" coords="731,101,890,149"/>
+</map>

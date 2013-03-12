@@ -1,0 +1,24 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DVTimePanel.html" title="se.cambio.cds.openehr.view.panels.DVTimePanel" alt="" coords="16,308,107,332"/>
+<area shape="rect" id="node1" href="./DVTimePanel.html" title="&lt;TABLE&gt;" alt="" coords="5,296,117,344"/>
+<area shape="rect" id="node11_1" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="org.openehr.rm.datatypes.basic.DataValue" alt="" coords="349,494,507,530"/>
+<area shape="rect" id="node11" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="&lt;TABLE&gt;" alt="" coords="339,488,517,536"/>
+<area shape="rect" id="node2_2" href="./DVPanelInterface.html" title="se.cambio.cds.openehr.view.panels.DVPanelInterface" alt="" coords="462,11,578,50"/>
+<area shape="rect" id="node2" href="./DVPanelInterface.html" title="&lt;TABLE&gt;" alt="" coords="451,6,589,55"/>
+<area shape="rect" id="node3_3" href="./DVOrdinalPanel.html" title="se.cambio.cds.openehr.view.panels.DVOrdinalPanel" alt="" coords="325,404,430,428"/>
+<area shape="rect" id="node3" href="./DVOrdinalPanel.html" title="&lt;TABLE&gt;" alt="" coords="314,392,441,440"/>
+<area shape="rect" id="node4_4" href="./DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="599,116,708,140"/>
+<area shape="rect" id="node4" href="./DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="588,104,719,152"/>
+<area shape="rect" id="node5_5" href="./DVDateTimePanel.html" title="se.cambio.cds.openehr.view.panels.DVDateTimePanel" alt="" coords="203,212,319,236"/>
+<area shape="rect" id="node5" href="./DVDateTimePanel.html" title="&lt;TABLE&gt;" alt="" coords="193,200,330,248"/>
+<area shape="rect" id="node6_6" href="./DVDatePanel.html" title="se.cambio.cds.openehr.view.panels.DVDatePanel" alt="" coords="870,116,959,140"/>
+<area shape="rect" id="node6" href="./DVDatePanel.html" title="&lt;TABLE&gt;" alt="" coords="859,104,970,152"/>
+<area shape="rect" id="node7_7" href="./DVComboBoxPanel.html" title="se.cambio.cds.openehr.view.panels.DVComboBoxPanel" alt="" coords="529,308,650,332"/>
+<area shape="rect" id="node7" href="./DVComboBoxPanel.html" title="&lt;TABLE&gt;" alt="" coords="518,296,661,344"/>
+<area shape="rect" id="node8_8" href="./DVCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVCodedTextPanel" alt="" coords="416,212,541,236"/>
+<area shape="rect" id="node8" href="./DVCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="405,200,552,248"/>
+<area shape="rect" id="node9_9" href="./DVBooleanPanel.html" title="se.cambio.cds.openehr.view.panels.DVBooleanPanel" alt="" coords="535,404,644,428"/>
+<area shape="rect" id="node9" href="./DVBooleanPanel.html" title="&lt;TABLE&gt;" alt="" coords="524,392,655,440"/>
+<area shape="rect" id="node10_10" href="./DVAnyPanel.html" title="se.cambio.cds.openehr.view.panels.DVAnyPanel" alt="" coords="688,212,773,236"/>
+<area shape="rect" id="node10" href="./DVAnyPanel.html" title="&lt;TABLE&gt;" alt="" coords="677,200,784,248"/>
+</map>

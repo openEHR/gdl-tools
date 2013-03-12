@@ -1,0 +1,22 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../ts/Node.html" title="se.cambio.cds.ts.Node" alt="" coords="133,107,221,143"/>
+<area shape="rect" id="node1" href="../../../../ts/Node.html" title="&lt;TABLE&gt;" alt="" coords="123,101,232,149"/>
+<area shape="rect" id="node2_1" href="../../../model/readable/rule/lines/ArchetypeInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine" alt="" coords="1158,107,1359,143"/>
+<area shape="rect" id="node2" href="../../../model/readable/rule/lines/ArchetypeInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="1147,101,1370,149"/>
+<area shape="rect" id="node5_2" href="../../../model/readable/rule/lines/elements/ArchetypeReferenceRuleLineDefinitionElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineDefinitionElement" alt="" coords="1118,203,1399,239"/>
+<area shape="rect" id="node5" href="../../../model/readable/rule/lines/elements/ArchetypeReferenceRuleLineDefinitionElement.html" title="&lt;TABLE&gt;" alt="" coords="1107,197,1410,245"/>
+<area shape="rect" id="node3_3" href="../../../model/readable/rule/lines/ArchetypeElementInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine" alt="" coords="318,107,557,143"/>
+<area shape="rect" id="node3" href="../../../model/readable/rule/lines/ArchetypeElementInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="307,101,567,149"/>
+<area shape="rect" id="node6_4" href="../../../model/readable/rule/lines/elements/ArchetypeElementRuleLineDefinitionElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineDefinitionElement" alt="" coords="304,203,571,239"/>
+<area shape="rect" id="node6" href="../../../model/readable/rule/lines/elements/ArchetypeElementRuleLineDefinitionElement.html" title="&lt;TABLE&gt;" alt="" coords="293,197,581,245"/>
+<area shape="rect" id="node4_5" href="../../../model/readable/rule/lines/elements/GTCodeRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement" alt="" coords="16,203,259,239"/>
+<area shape="rect" id="node4" href="../../../model/readable/rule/lines/elements/GTCodeRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="5,197,269,245"/>
+<area shape="rect" id="node7_6" href="../../../../openehr/model/archetypeelement/vo/ArchetypeElementVO.html" title="se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO" alt="" coords="617,203,853,239"/>
+<area shape="rect" id="node7" href="../../../../openehr/model/archetypeelement/vo/ArchetypeElementVO.html" title="&lt;TABLE&gt;" alt="" coords="606,197,863,245"/>
+<area shape="rect" id="node8_7" href="../../../../openehr/view/trees/SelectableNodeWithIcon.html" title="se.cambio.cds.openehr.view.trees.SelectableNodeWithIcon" alt="" coords="898,203,1073,239"/>
+<area shape="rect" id="node8" href="../../../../openehr/view/trees/SelectableNodeWithIcon.html" title="&lt;TABLE&gt;" alt="" coords="887,197,1083,245"/>
+<area shape="rect" id="node9_8" href="../../../../openehr/view/trees/SelectableNode.html" title="se.cambio.cds.openehr.view.trees.SelectableNode" alt="" coords="833,107,999,143"/>
+<area shape="rect" id="node9" href="../../../../openehr/view/trees/SelectableNode.html" title="&lt;TABLE&gt;" alt="" coords="823,101,1009,149"/>
+<area shape="rect" id="node10_9" href="./NodeDefinitionConversor.html" title="se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor" alt="" coords="837,17,995,41"/>
+<area shape="rect" id="node10" href="./NodeDefinitionConversor.html" title="&lt;TABLE&gt;" alt="" coords="827,5,1005,53"/>
+</map>

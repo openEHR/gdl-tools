@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./SaveGuideOnFileRSW.html" title="se.cambio.cds.gdl.editor.controller.sw.SaveGuideOnFileRSW" alt="" coords="15,17,150,41"/>
+<area shape="rect" id="node1" href="./SaveGuideOnFileRSW.html" title="&lt;TABLE&gt;" alt="" coords="5,5,161,53"/>
+<area shape="rect" id="node2_1" href="./LoadGuideFromFileRSW.html" title="se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW" alt="" coords="195,17,343,41"/>
+<area shape="rect" id="node2" href="./LoadGuideFromFileRSW.html" title="&lt;TABLE&gt;" alt="" coords="185,5,354,53"/>
+<area shape="rect" id="node3_2" href="./LoadEditorSW.html" title="se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW" alt="" coords="389,17,485,41"/>
+<area shape="rect" id="node3" href="./LoadEditorSW.html" title="&lt;TABLE&gt;" alt="" coords="379,5,496,53"/>
+<area shape="rect" id="node4_3" href="./CompileGuideSW.html" title="se.cambio.cds.gdl.editor.controller.sw.CompileGuideSW" alt="" coords="531,17,643,41"/>
+<area shape="rect" id="node4" href="./CompileGuideSW.html" title="&lt;TABLE&gt;" alt="" coords="520,5,653,53"/>
+</map>

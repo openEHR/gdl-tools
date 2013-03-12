@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../facade/archetype/vo/TemplateObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.TemplateObjectBundleCustomVO" alt="" coords="16,11,248,47"/>
+<area shape="rect" id="node1" href="../../facade/archetype/vo/TemplateObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="5,5,259,53"/>
+<area shape="rect" id="node3_1" href="./ProportionTypeVO.html" title="se.cambio.cds.openehr.model.proportiontype.vo.ProportionTypeVO" alt="" coords="347,113,471,137"/>
+<area shape="rect" id="node3" href="./ProportionTypeVO.html" title="&lt;TABLE&gt;" alt="" coords="337,101,482,149"/>
+<area shape="rect" id="node2_2" href="../../facade/archetype/vo/ArchetypeObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.ArchetypeObjectBundleCustomVO" alt="" coords="293,11,525,47"/>
+<area shape="rect" id="node2" href="../../facade/archetype/vo/ArchetypeObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="283,5,536,53"/>
+<area shape="rect" id="node4_3" href="../../../view/applicationobjects/ProportionTypesUI.html" title="se.cambio.cds.openehr.view.applicationobjects.ProportionTypesUI" alt="" coords="571,11,789,47"/>
+<area shape="rect" id="node4" href="../../../view/applicationobjects/ProportionTypesUI.html" title="&lt;TABLE&gt;" alt="" coords="561,5,799,53"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../tables/BindingTable.html" title="se.cambio.cds.gdl.editor.view.tables.BindingTable" alt="" coords="16,203,189,239"/>
+<area shape="rect" id="node1" href="../tables/BindingTable.html" title="&lt;TABLE&gt;" alt="" coords="5,197,200,245"/>
+<area shape="rect" id="node2_1" href="./GTCodeButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.GTCodeButtonEditor" alt="" coords="35,113,170,137"/>
+<area shape="rect" id="node2" href="./GTCodeButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="25,101,181,149"/>
+<area shape="rect" id="node3_2" href="./ButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.ButtonEditor" alt="" coords="57,17,149,41"/>
+<area shape="rect" id="node3" href="./ButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="46,5,159,53"/>
+</map>

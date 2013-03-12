@@ -1,0 +1,20 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../TerminologyPanel.html" title="se.cambio.cds.gdl.editor.view.panels.TerminologyPanel" alt="" coords="15,110,190,146"/>
+<area shape="rect" id="node1" href="../TerminologyPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,104,201,152"/>
+<area shape="rect" id="node2_1" href="../RulesPanel.html" title="se.cambio.cds.gdl.editor.view.panels.RulesPanel" alt="" coords="235,110,410,146"/>
+<area shape="rect" id="node2" href="../RulesPanel.html" title="&lt;TABLE&gt;" alt="" coords="225,104,421,152"/>
+<area shape="rect" id="node3_2" href="../RuleLinesPanel.html" title="se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel" alt="" coords="455,110,630,146"/>
+<area shape="rect" id="node3" href="../RuleLinesPanel.html" title="&lt;TABLE&gt;" alt="" coords="445,104,641,152"/>
+<area shape="rect" id="node4_3" href="../HTMLPanel.html" title="se.cambio.cds.gdl.editor.view.panels.HTMLPanel" alt="" coords="675,110,850,146"/>
+<area shape="rect" id="node4" href="../HTMLPanel.html" title="&lt;TABLE&gt;" alt="" coords="665,104,861,152"/>
+<area shape="rect" id="node5_4" href="../GuideExportPluginPanel.html" title="se.cambio.cds.gdl.editor.view.panels.GuideExportPluginPanel" alt="" coords="895,110,1070,146"/>
+<area shape="rect" id="node5" href="../GuideExportPluginPanel.html" title="&lt;TABLE&gt;" alt="" coords="885,104,1081,152"/>
+<area shape="rect" id="node6_5" href="../GDLPanel.html" title="se.cambio.cds.gdl.editor.view.panels.GDLPanel" alt="" coords="1115,110,1290,146"/>
+<area shape="rect" id="node6" href="../GDLPanel.html" title="&lt;TABLE&gt;" alt="" coords="1105,104,1301,152"/>
+<area shape="rect" id="node7_6" href="../BindingsPanel.html" title="se.cambio.cds.gdl.editor.view.panels.BindingsPanel" alt="" coords="1335,110,1510,146"/>
+<area shape="rect" id="node7" href="../BindingsPanel.html" title="&lt;TABLE&gt;" alt="" coords="1325,104,1521,152"/>
+<area shape="rect" id="node8_7" href="../BindingPanel.html" title="se.cambio.cds.gdl.editor.view.panels.BindingPanel" alt="" coords="1403,206,1578,242"/>
+<area shape="rect" id="node8" href="../BindingPanel.html" title="&lt;TABLE&gt;" alt="" coords="1393,200,1589,248"/>
+<area shape="rect" id="node9_8" href="./RefreshablePanel.html" title="se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel" alt="" coords="814,11,930,50"/>
+<area shape="rect" id="node9" href="./RefreshablePanel.html" title="&lt;TABLE&gt;" alt="" coords="803,6,941,55"/>
+</map>

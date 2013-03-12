@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TerminologyServiceImpl.html" title="se.cambio.cds.ts.TerminologyServiceImpl" alt="" coords="537,17,687,41"/>
+<area shape="rect" id="node1" href="./TerminologyServiceImpl.html" title="&lt;TABLE&gt;" alt="" coords="527,5,697,53"/>
+<area shape="rect" id="node3_1" href="./TerminologyService.html" title="se.cambio.cds.ts.TerminologyService" alt="" coords="16,113,144,151"/>
+<area shape="rect" id="node3" href="./TerminologyService.html" title="&lt;TABLE&gt;" alt="" coords="5,107,155,157"/>
+<area shape="rect" id="node2_2" href="./TerminologyServiceConfiguration.html" title="se.cambio.cds.ts.TerminologyServiceConfiguration" alt="" coords="190,120,391,144"/>
+<area shape="rect" id="node2" href="./TerminologyServiceConfiguration.html" title="&lt;TABLE&gt;" alt="" coords="179,108,402,156"/>
+<area shape="rect" id="node4_3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/model/OWLOntology.html" title="org.semanticweb.owlapi.model.OWLOntology" alt="" coords="437,107,589,157"/>
+<area shape="rect" id="node4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/model/OWLOntology.html" title="&lt;TABLE&gt;" alt="" coords="427,101,600,163"/>
+<area shape="rect" id="node5_4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/model/OWLDataFactory.html" title="org.semanticweb.owlapi.model.OWLDataFactory" alt="" coords="635,107,787,157"/>
+<area shape="rect" id="node5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/model/OWLDataFactory.html" title="&lt;TABLE&gt;" alt="" coords="624,101,797,163"/>
+<area shape="rect" id="node6_5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/reasoner/OWLReasoner.html" title="org.semanticweb.owlapi.reasoner.OWLReasoner" alt="" coords="832,107,997,157"/>
+<area shape="rect" id="node6" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/reasoner/OWLReasoner.html" title="&lt;TABLE&gt;" alt="" coords="821,101,1008,163"/>
+<area shape="rect" id="node7_6" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="org.openehr.rm.datatypes.text.CodePhrase" alt="" coords="213,217,368,253"/>
+<area shape="rect" id="node7" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="&lt;TABLE&gt;" alt="" coords="203,211,379,259"/>
+<area shape="rect" id="node8_7" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/model/OWLClass.html" title="org.semanticweb.owlapi.model.OWLClass" alt="" coords="1093,107,1245,157"/>
+<area shape="rect" id="node8" href="http://java.sun.com/j2se/1.4.2/docs/api/org/semanticweb/owlapi/model/OWLClass.html" title="&lt;TABLE&gt;" alt="" coords="1083,101,1256,163"/>
+</map>

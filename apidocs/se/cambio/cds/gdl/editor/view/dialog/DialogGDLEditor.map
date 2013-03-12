@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="15,313,182,349"/>
+<area shape="rect" id="node1" href="../../controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,307,193,355"/>
+<area shape="rect" id="node2_1" href="../../controller/EditorManager.html" title="se.cambio.cds.gdl.editor.controller.EditorManager" alt="" coords="77,11,243,47"/>
+<area shape="rect" id="node2" href="../../controller/EditorManager.html" title="&lt;TABLE&gt;" alt="" coords="66,5,254,53"/>
+<area shape="rect" id="node5_2" href="../menubar/MainMenuBar.html" title="se.cambio.cds.gdl.editor.view.menubar.MainMenuBar" alt="" coords="228,313,415,349"/>
+<area shape="rect" id="node5" href="../menubar/MainMenuBar.html" title="&lt;TABLE&gt;" alt="" coords="217,307,425,355"/>
+<area shape="rect" id="node3_3" href="../../controller/interfaces/EditorViewer.html" title="se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer" alt="" coords="131,107,344,157"/>
+<area shape="rect" id="node3" href="../../controller/interfaces/EditorViewer.html" title="&lt;TABLE&gt;" alt="" coords="120,101,355,163"/>
+<area shape="rect" id="node4_4" href="./DialogGDLEditor.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogGDLEditor" alt="" coords="167,223,273,247"/>
+<area shape="rect" id="node4" href="./DialogGDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="156,211,284,259"/>
+</map>

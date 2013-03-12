@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./OverviewDTO.html" title="se.cambio.cds.model.overview.dto.OverviewDTO" alt="" coords="396,223,489,247"/>
+<area shape="rect" id="node1" href="./OverviewDTO.html" title="&lt;TABLE&gt;" alt="" coords="385,211,500,259"/>
+<area shape="rect" id="node2_1" href="../dao/InJarOverviewDAO.html" title="se.cambio.cds.model.overview.dao.InJarOverviewDAO" alt="" coords="15,121,182,157"/>
+<area shape="rect" id="node2" href="../dao/InJarOverviewDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,115,193,163"/>
+<area shape="rect" id="node3_2" href="../dao/GenericOverviewDAO.html" title="se.cambio.cds.model.overview.dao.GenericOverviewDAO" alt="" coords="227,11,394,61"/>
+<area shape="rect" id="node3" href="../dao/GenericOverviewDAO.html" title="&lt;TABLE&gt;" alt="" coords="217,5,405,67"/>
+<area shape="rect" id="node4_3" href="../dao/FileOverviewDAO.html" title="se.cambio.cds.model.overview.dao.FileOverviewDAO" alt="" coords="227,121,394,157"/>
+<area shape="rect" id="node4" href="../dao/FileOverviewDAO.html" title="&lt;TABLE&gt;" alt="" coords="217,115,405,163"/>
+<area shape="rect" id="node5_4" href="../../../openehr/view/applicationobjects/Overviews.html" title="se.cambio.cds.openehr.view.applicationobjects.Overviews" alt="" coords="491,121,709,157"/>
+<area shape="rect" id="node5" href="../../../openehr/view/applicationobjects/Overviews.html" title="&lt;TABLE&gt;" alt="" coords="481,115,719,163"/>
+</map>

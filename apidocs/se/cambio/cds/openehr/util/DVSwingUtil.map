@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../gdl/model/TermDefinition.html" title="se.cambio.cds.gdl.model.TermDefinition" alt="" coords="255,107,375,143"/>
+<area shape="rect" id="node1" href="../../gdl/model/TermDefinition.html" title="&lt;TABLE&gt;" alt="" coords="244,101,385,149"/>
+<area shape="rect" id="node2_1" href="../../model/facade/execution/vo/ElementInstance.html" title="se.cambio.cds.model.facade.execution.vo.ElementInstance" alt="" coords="15,107,209,143"/>
+<area shape="rect" id="node2" href="../../model/facade/execution/vo/ElementInstance.html" title="&lt;TABLE&gt;" alt="" coords="5,101,219,149"/>
+<area shape="rect" id="node3_2" href="../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="15,203,209,239"/>
+<area shape="rect" id="node3" href="../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="5,197,219,245"/>
+<area shape="rect" id="node4_3" href="../model/archetypeelement/vo/ArchetypeElementVO.html" title="se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO" alt="" coords="919,107,1155,143"/>
+<area shape="rect" id="node4" href="../model/archetypeelement/vo/ArchetypeElementVO.html" title="&lt;TABLE&gt;" alt="" coords="909,101,1166,149"/>
+<area shape="rect" id="node5_4" href="../model/cluster/vo/ClusterVO.html" title="se.cambio.cds.openehr.model.cluster.vo.ClusterVO" alt="" coords="634,107,822,143"/>
+<area shape="rect" id="node5" href="../model/cluster/vo/ClusterVO.html" title="&lt;TABLE&gt;" alt="" coords="623,101,833,149"/>
+<area shape="rect" id="node6_5" href="./DVSwingUtil.html" title="se.cambio.cds.openehr.util.DVSwingUtil" alt="" coords="573,17,659,41"/>
+<area shape="rect" id="node6" href="./DVSwingUtil.html" title="&lt;TABLE&gt;" alt="" coords="563,5,669,53"/>
+<area shape="rect" id="node7_6" href="../view/panels/DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="420,107,588,143"/>
+<area shape="rect" id="node7" href="../view/panels/DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="409,101,599,149"/>
+</map>

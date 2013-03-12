@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DVTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVTextPanel" alt="" coords="458,308,547,332"/>
+<area shape="rect" id="node1" href="./DVTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="447,296,558,344"/>
+<area shape="rect" id="node7_1" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="org.openehr.rm.datatypes.basic.DataValue" alt="" coords="333,398,491,434"/>
+<area shape="rect" id="node7" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="&lt;TABLE&gt;" alt="" coords="323,392,501,440"/>
+<area shape="rect" id="node2_2" href="./DVPanelInterface.html" title="se.cambio.cds.openehr.view.panels.DVPanelInterface" alt="" coords="230,11,346,50"/>
+<area shape="rect" id="node2" href="./DVPanelInterface.html" title="&lt;TABLE&gt;" alt="" coords="219,6,357,55"/>
+<area shape="rect" id="node4_3" href="./DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="285,116,395,140"/>
+<area shape="rect" id="node4" href="./DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="275,104,405,152"/>
+<area shape="rect" id="node5_4" href="./DVComboBoxPanel.html" title="se.cambio.cds.openehr.view.panels.DVComboBoxPanel" alt="" coords="15,308,137,332"/>
+<area shape="rect" id="node5" href="./DVComboBoxPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,296,147,344"/>
+<area shape="rect" id="node6_5" href="./DVCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVCodedTextPanel" alt="" coords="175,212,300,236"/>
+<area shape="rect" id="node6" href="./DVCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="164,200,311,248"/>
+<area shape="rect" id="node3_6" href="./DVHierarchyCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVHierarchyCodedTextPanel" alt="" coords="233,308,412,332"/>
+<area shape="rect" id="node3" href="./DVHierarchyCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="223,296,423,344"/>
+</map>

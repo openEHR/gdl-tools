@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TerminologyServicePlugin.html" title="se.cambio.cds.ts.TerminologyServicePlugin" alt="" coords="151,110,313,149"/>
+<area shape="rect" id="node1" href="./TerminologyServicePlugin.html" title="&lt;TABLE&gt;" alt="" coords="141,105,323,154"/>
+<area shape="rect" id="node3_1" href="./DummyTerminologyServicePlugin.html" title="se.cambio.cds.ts.DummyTerminologyServicePlugin" alt="" coords="15,215,214,239"/>
+<area shape="rect" id="node3" href="./DummyTerminologyServicePlugin.html" title="&lt;TABLE&gt;" alt="" coords="5,203,225,251"/>
+<area shape="rect" id="node4_2" href="./CSVTerminologyServicePlugin.html" title="se.cambio.cds.ts.CSVTerminologyServicePlugin" alt="" coords="260,215,441,239"/>
+<area shape="rect" id="node4" href="./CSVTerminologyServicePlugin.html" title="&lt;TABLE&gt;" alt="" coords="249,203,452,251"/>
+<area shape="rect" id="node2_3" href="./TerminologyService.html" title="se.cambio.cds.ts.TerminologyService" alt="" coords="168,11,296,50"/>
+<area shape="rect" id="node2" href="./TerminologyService.html" title="&lt;TABLE&gt;" alt="" coords="157,6,307,55"/>
+</map>

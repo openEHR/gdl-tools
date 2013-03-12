@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DVPanelInterface.html" title="se.cambio.cds.openehr.view.panels.DVPanelInterface" alt="" coords="181,11,297,50"/>
+<area shape="rect" id="node1" href="./DVPanelInterface.html" title="&lt;TABLE&gt;" alt="" coords="170,6,307,55"/>
+<area shape="rect" id="node2_1" href="./DVOrdinalPanel.html" title="se.cambio.cds.openehr.view.panels.DVOrdinalPanel" alt="" coords="15,404,121,428"/>
+<area shape="rect" id="node2" href="./DVOrdinalPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,392,131,440"/>
+<area shape="rect" id="node3_2" href="./DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="81,116,191,140"/>
+<area shape="rect" id="node3" href="./DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="71,104,201,152"/>
+<area shape="rect" id="node4_3" href="./DVComboBoxPanel.html" title="se.cambio.cds.openehr.view.panels.DVComboBoxPanel" alt="" coords="126,308,247,332"/>
+<area shape="rect" id="node4" href="./DVComboBoxPanel.html" title="&lt;TABLE&gt;" alt="" coords="115,296,258,344"/>
+<area shape="rect" id="node5_4" href="./DVCodedTextPanel.html" title="se.cambio.cds.openehr.view.panels.DVCodedTextPanel" alt="" coords="124,212,249,236"/>
+<area shape="rect" id="node5" href="./DVCodedTextPanel.html" title="&lt;TABLE&gt;" alt="" coords="113,200,260,248"/>
+<area shape="rect" id="node6_5" href="./DVBooleanPanel.html" title="se.cambio.cds.openehr.view.panels.DVBooleanPanel" alt="" coords="208,404,317,428"/>
+<area shape="rect" id="node6" href="./DVBooleanPanel.html" title="&lt;TABLE&gt;" alt="" coords="197,392,328,440"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../gdl/model/Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="210,299,330,335"/>
+<area shape="rect" id="node1" href="../../gdl/model/Guide.html" title="&lt;TABLE&gt;" alt="" coords="199,293,340,341"/>
+<area shape="rect" id="node2_1" href="./CDSManager.html" title="se.cambio.cds.controller.cds.CDSManager" alt="" coords="27,17,115,41"/>
+<area shape="rect" id="node2" href="./CDSManager.html" title="&lt;TABLE&gt;" alt="" coords="16,5,126,53"/>
+<area shape="rect" id="node5_2" href="../guide/ElementInstanceCollection.html" title="se.cambio.cds.controller.guide.ElementInstanceCollection" alt="" coords="120,203,288,239"/>
+<area shape="rect" id="node5" href="../guide/ElementInstanceCollection.html" title="&lt;TABLE&gt;" alt="" coords="110,197,299,245"/>
+<area shape="rect" id="node4_3" href="../guide/GeneratedArchetypeReference.html" title="se.cambio.cds.controller.guide.GeneratedArchetypeReference" alt="" coords="46,107,242,143"/>
+<area shape="rect" id="node4" href="../guide/GeneratedArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="36,101,253,149"/>
+<area shape="rect" id="node3_4" href="../guide/GuideManager.html" title="se.cambio.cds.controller.guide.GuideManager" alt="" coords="288,107,436,143"/>
+<area shape="rect" id="node3" href="../guide/GuideManager.html" title="&lt;TABLE&gt;" alt="" coords="277,101,446,149"/>
+</map>

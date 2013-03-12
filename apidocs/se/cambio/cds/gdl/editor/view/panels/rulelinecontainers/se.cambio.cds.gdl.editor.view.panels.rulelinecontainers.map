@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./SingleRuleLinePanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.SingleRuleLinePanel" alt="" coords="15,212,145,236"/>
+<area shape="rect" id="node1" href="./SingleRuleLinePanel.html" title="&lt;TABLE&gt;" alt="" coords="5,200,155,248"/>
+<area shape="rect" id="node2_1" href="./RuleLineContainerPanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.RuleLineContainerPanel" alt="" coords="295,116,447,140"/>
+<area shape="rect" id="node2" href="./RuleLineContainerPanel.html" title="&lt;TABLE&gt;" alt="" coords="284,104,457,152"/>
+<area shape="rect" id="node4_2" href="./OrOperatorRuleLinePanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.OrOperatorRuleLinePanel" alt="" coords="191,212,353,236"/>
+<area shape="rect" id="node4" href="./OrOperatorRuleLinePanel.html" title="&lt;TABLE&gt;" alt="" coords="180,200,364,248"/>
+<area shape="rect" id="node6_3" href="./MultipleRuleLinePanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.MultipleRuleLinePanel" alt="" coords="399,212,542,236"/>
+<area shape="rect" id="node6" href="./MultipleRuleLinePanel.html" title="&lt;TABLE&gt;" alt="" coords="389,200,553,248"/>
+<area shape="rect" id="node8_4" href="./BaseRuleLineContainerPanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineContainerPanel" alt="" coords="587,212,765,236"/>
+<area shape="rect" id="node8" href="./BaseRuleLineContainerPanel.html" title="&lt;TABLE&gt;" alt="" coords="577,200,775,248"/>
+<area shape="rect" id="node3_5" href="./RuleLineContainer.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.RuleLineContainer" alt="" coords="310,11,431,50"/>
+<area shape="rect" id="node3" href="./RuleLineContainer.html" title="&lt;TABLE&gt;" alt="" coords="299,6,442,55"/>
+<area shape="rect" id="node5_6" href="./OperatorRuleLineContainer.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.OperatorRuleLineContainer" alt="" coords="384,404,557,428"/>
+<area shape="rect" id="node5" href="./OperatorRuleLineContainer.html" title="&lt;TABLE&gt;" alt="" coords="373,392,568,440"/>
+<area shape="rect" id="node7_7" href="./MultipleRuleLineContainerWithHeader.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.MultipleRuleLineContainerWithHeader" alt="" coords="355,308,587,332"/>
+<area shape="rect" id="node7" href="./MultipleRuleLineContainerWithHeader.html" title="&lt;TABLE&gt;" alt="" coords="344,296,597,344"/>
+</map>
