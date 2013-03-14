@@ -9,8 +9,8 @@
 		<name>The openEHR Foundation</name>
 	</organization>
 	<properties>
-		<parent.smc.url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr</parent.smc.url>
-	</properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 	<build>
 		<plugins>
             <plugin>
