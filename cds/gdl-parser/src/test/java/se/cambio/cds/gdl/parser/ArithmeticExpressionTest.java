@@ -183,9 +183,9 @@ public class ArithmeticExpressionTest extends ExpressionTestBase {
 	}
 	
 	public void testParseSpecialUnits() throws Exception {
-		parseSingleExpression("$gt0010|Creatinine| > 62,µmol/l");
+		parseSingleExpression("$gt0010|Creatinine| > 62,Âµmol/l");
 		Variable var1 = new Variable("gt0010", "Creatinine");
-		QuantityConstant var2 = new QuantityConstant(new DvQuantity("µmol/l", 62.0, 0));
+		QuantityConstant var2 = new QuantityConstant(new DvQuantity("Âµmol/l", 62.0, 0));
 		expected = new BinaryExpression(var1, var2, OperatorKind.GREATER_THAN);
 		check();
 	}

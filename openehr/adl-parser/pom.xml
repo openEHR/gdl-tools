@@ -10,11 +10,6 @@
 	<packaging>jar</packaging>
 	<name>java ADL Parser</name>
 	<url>http://www.openehr.org/projects/java.html</url>   
-    <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/adl-parser</connection>
-        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/adl-parser</developerConnection>
-        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/adl-parser</url>
-    </scm>
 	<organization>
 		<name>openEHR</name>
 		<url>http://www.openehr.org/</url>
