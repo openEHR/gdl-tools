@@ -11,29 +11,6 @@
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-	<profiles>
-		<profile>
-			<id>graph</id>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>mvnplugins.fusesource.org</id>
-					<url>http://mvnplugins.fusesource.org/repo/release</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-				</pluginRepository>
-			</pluginRepositories>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.fusesource.mvnplugins</groupId>
-						<artifactId>maven-graph-plugin</artifactId>
-						<version>1.0</version>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -45,47 +22,6 @@
 					 <encoding>UTF-8</encoding>
 					 <compilerArgument></compilerArgument>
 				 </configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<source>1.6</source>
-					<aggregate>true</aggregate>
-					<doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-					<docletArtifact>
-						<groupId>gr.spinellis</groupId>
-						<artifactId>UmlGraph</artifactId>
-						<version>4.6</version>
-					</docletArtifact>
-					<additionalparam>
-						-inferrel -inferdep -quiet -hide java.*
-						-collpackages java.util.* -qualify
-						-postfixpackage -nodefontsize 9
-						-nodefontpackagesize 7
-						-edgefontname "Trebuchet MS"
-						-nodefontabstractname "Trebuchet MS"
-						-nodefontclassabstractname "Trebuchet MS"
-						-nodefontclassname "Trebuchet MS"
-						-nodefontname "Trebuchet MS"
-						-nodefontpackagename "Trebuchet MS"
-						-nodefonttagname "Trebuchet MS"
-					</additionalparam>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.fusesource.mvnplugins</groupId>
-				<artifactId>maven-graph-plugin</artifactId>
-				<version>1.4</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<scmCommentPrefix>(CDS)</scmCommentPrefix>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
