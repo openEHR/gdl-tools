@@ -4,16 +4,16 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>openehr-aom</artifactId>
 	<packaging>jar</packaging>
 	<name>openEHR Archetype Object Model</name>	
 	<url>http://www.openehr.org/projects/java.html</url>   
     <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/openehr-aom</connection>
-        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/openehr-aom</developerConnection>
-        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/openehr-aom</url>
+        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/openehr-aom</connection>
+        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/openehr-aom</developerConnection>
+        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/openehr-aom</url>
     </scm>
 	<organization>
 		<name>openEHR</name>

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.9</version>
+		<version>0.91-SNAPSHOT</version>
 	</parent>
 	<artifactId>cds-persistence</artifactId>
 	<packaging>jar</packaging>
@@ -40,12 +40,12 @@
 		<dependency>
 			<groupId>se.cambio.cds</groupId>
 			<artifactId>cds-common</artifactId>
-			<version>0.9</version>
+			<version>0.91-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>se.cambio.cds</groupId>
 			<artifactId>cds-model</artifactId>
-			<version>0.9</version>
+			<version>0.91-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

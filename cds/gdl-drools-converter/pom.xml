@@ -3,23 +3,12 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.9</version>
+		<version>0.91-SNAPSHOT</version>
 	</parent>
 	<artifactId>gdl-drools-converter</artifactId>
 	<name>gdl-drools-converter</name>
 	<description>GDL Drools converter</description>
 	<dependencies>
-		<dependency>
-			<groupId>se.cambio.cds</groupId>
-			<artifactId>gdl-model</artifactId>
-			<version>0.9</version>
-		</dependency>
-		<dependency>
-			<groupId>se.cambio.cds</groupId>
-			<artifactId>gdl-parser</artifactId>
-			<version>0.9</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>se.cambio.cds</groupId>
 			<artifactId>cds-openehr</artifactId>
@@ -34,11 +23,6 @@
 			<groupId>org.drools</groupId>
 			<artifactId>drools-compiler</artifactId>
 			<version>5.5.0.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
 		</dependency>
 	</dependencies>
 </project>

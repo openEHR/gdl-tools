@@ -113,6 +113,8 @@ public class ImageUtil {
 	public static final ImageIcon FOLDER_OBJECT_ICON = ImageUtil.getIcon("folder_object.png");
 	public static final ImageIcon FOLDER_ICON = ImageUtil.getIcon("folder.png");
 	public static final ImageIcon SOURCE_ICON = ImageUtil.getIcon("source.gif");
+	public static final ImageIcon OVERVIEW_ICON = ImageUtil.getIcon("layout_content.png");
+	
 
 	/* Aggregation functions */
 	public static final ImageIcon AF_ALL_ICON = ImageUtil.getIcon("af_all.png");
@@ -175,10 +177,10 @@ public class ImageUtil {
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
- *  Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
  *  The contents of this file are subject to the Mozilla Public License Version
- *  1.1 (the 'License'); you may not use this file except in compliance with
+ *  2.0 (the 'License'); you may not use this file except in compliance with
  *  the License. You may obtain a copy of the License at
  *  http://www.mozilla.org/MPL/
  *

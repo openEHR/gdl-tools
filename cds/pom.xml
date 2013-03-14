@@ -3,7 +3,7 @@
 	<groupId>se.cambio.cds</groupId>
 	<artifactId>cds</artifactId>
 	<packaging>pom</packaging>
-	<version>0.9</version>
+	<version>0.91-SNAPSHOT</version>
 	<name>Clinical Decision Support System</name>
 	<organization>
 		<name>Cambio</name>
@@ -36,7 +36,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>1.9</version>
+				<version>2.9</version>
 				<configuration>
 					<source>1.6</source>
 					<aggregate>true</aggregate>
@@ -53,14 +53,11 @@
 						-nodefontpackagesize 7
 						-edgefontname "Trebuchet MS"
 						-nodefontabstractname "Trebuchet MS"
-						-nodefontclassabstractname
-						"Trebuchet MS"
+						-nodefontclassabstractname "Trebuchet MS"
 						-nodefontclassname "Trebuchet MS"
-						-nodefontname
-						"Trebuchet MS"
+						-nodefontname "Trebuchet MS"
 						-nodefontpackagename "Trebuchet MS"
-						-nodefonttagname
-						"Trebuchet MS"
+						-nodefonttagname "Trebuchet MS"
 					</additionalparam>
 				</configuration>
 			</plugin>

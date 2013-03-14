@@ -14,14 +14,14 @@
  */
 package org.openehr.rm.datatypes.text;
 
+import java.util.List;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.openehr.rm.Attribute;
 import org.openehr.rm.FullConstructor;
 import org.openehr.rm.datatypes.basic.ReferenceModelName;
 import org.openehr.rm.datatypes.uri.DvURI;
 import org.openehr.rm.support.terminology.TerminologyService;
-
-import java.util.List;
 
 /**
  * A text item whose value must be the rubric from a controlled

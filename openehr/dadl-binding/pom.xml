@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>dadl-binding</artifactId>
 	<packaging>jar</packaging>
@@ -16,9 +16,9 @@
 	</organization>
 	<inceptionYear>2008</inceptionYear>
 	<scm>
-		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/dadl-binding</connection>
-		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/dadl-binding</developerConnection>
-		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/dadl-binding</url>
+		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/dadl-binding</connection>
+		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/dadl-binding</developerConnection>
+		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/dadl-binding</url>
 	</scm>
 	<description>java openEHR RM and dADL Binding Component</description>
 	

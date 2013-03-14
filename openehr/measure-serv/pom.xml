@@ -4,16 +4,16 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>measure-serv</artifactId>
 	<packaging>jar</packaging>
 	<name>openEHR Measurement Service Implementation</name>
 	<url>http://www.openehr.org/projects/java.html</url>   
     <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/measure-serv</connection>
-        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/measure-serv</developerConnection>
-        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/measure-serv</url>
+        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/measure-serv</connection>
+        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/measure-serv</developerConnection>
+        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/measure-serv</url>
     </scm>
     <organization>
 		<name>openEHR</name>

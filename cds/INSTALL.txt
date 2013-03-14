@@ -13,7 +13,9 @@ mvn install:install-file -Dfile=org.semanticweb.HermiT.jar -DgroupId=hermit -Dar
 
 INSTALLATION:
 
-mvn clean install
+gdl-tools/openehr/mvn clean install
+
+gdl-tools/openehr/cds clean install
 
 
 GENERATE FULL APPLICATION:

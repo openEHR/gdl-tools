@@ -15,6 +15,7 @@ import javax.swing.AbstractAction;
 
 import se.cambio.cds.gdl.editor.util.LanguageManager;
 import se.cambio.cds.openehr.util.ExceptionHandler;
+import se.cambio.cds.util.UserConfigurationManager;
 
 
 
@@ -38,7 +39,11 @@ public class ViewReleaseNotesMenuAction extends AbstractAction {
      */
     public void actionPerformed(ActionEvent e) {
 	try {
-	    Desktop.getDesktop().open(new File("release-notes.txt"));
+	    String path = 
+		    UserConfigurationManager.getDocumentsFolder().getCanonicalPath()+
+		    File.separator+
+		    "release-notes.txt";
+	    Desktop.getDesktop().open(new File(path));
 	} catch (IOException e1) {
 	    ExceptionHandler.handle(e1);
 	}
@@ -46,10 +51,10 @@ public class ViewReleaseNotesMenuAction extends AbstractAction {
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
- *  Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
  *  The contents of this file are subject to the Mozilla Public License Version
- *  1.1 (the 'License'); you may not use this file except in compliance with
+ *  2.0 (the 'License'); you may not use this file except in compliance with
  *  the License. You may obtain a copy of the License at
  *  http://www.mozilla.org/MPL/
  *

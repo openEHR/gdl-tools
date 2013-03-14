@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.9</version>
+		<version>0.91-SNAPSHOT</version>
 	</parent>
 	<artifactId>gdl-parser</artifactId>
 	<name>gdl-parser</name>
@@ -65,27 +65,22 @@
 		<dependency>
 			<groupId>se.cambio.cds</groupId>
 			<artifactId>gdl-model</artifactId>
-			<version>0.9</version>
-		</dependency>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>openehr-rm-core</artifactId>
-			<version>1.0.2</version>
+			<version>0.91-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>mini-termserv</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>rm-builder</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>dadl-parser</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

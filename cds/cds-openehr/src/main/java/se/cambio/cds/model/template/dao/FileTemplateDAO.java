@@ -21,6 +21,7 @@ import org.openehr.am.template.OETParser;
 import se.cambio.cds.model.template.dto.TemplateDTO;
 import se.cambio.cds.openehr.view.applicationobjects.Archetypes;
 import se.cambio.cds.util.IOUtils;
+import se.cambio.cds.util.InitialLoadingObservable;
 import se.cambio.cds.util.UserConfigurationManager;
 import se.cambio.cds.util.exceptions.FolderNotFoundException;
 import se.cambio.cds.util.exceptions.InstanceNotFoundException;
@@ -52,9 +53,11 @@ public class FileTemplateDAO implements GenericTemplateDAO{
 			byte[] aomByteArray = IOUtils.getBytes(flattened);
 			templateVOs.add(new TemplateDTO(idTemplate, null, idTemplate, idTemplate, null, aomByteArray, null));
 		    }
-		}catch(Exception e){
+		}catch(Throwable e){
 		    Logger.getLogger(FileTemplateDAO.class).warn("Problem loading template '"+fileName+"'");
 		    ExceptionHandler.handle(e);
+		    //TODO Fix
+		    InitialLoadingObservable.addLoadingException(new InternalErrorException(new Exception(e.getMessage())));
 		}
 	    }
 	}
@@ -119,10 +122,10 @@ public class FileTemplateDAO implements GenericTemplateDAO{
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
- *  Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
  *  The contents of this file are subject to the Mozilla Public License Version
- *  1.1 (the 'License'); you may not use this file except in compliance with
+ *  2.0 (the 'License'); you may not use this file except in compliance with
  *  the License. You may obtain a copy of the License at
  *  http://www.mozilla.org/MPL/
  *

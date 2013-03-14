@@ -3,102 +3,63 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.9</version>
+		<version>0.91-SNAPSHOT</version>
 	</parent>
 	<artifactId>cds-openehr</artifactId>
 	<name>CDS OpenEHR</name>
 	<organization>
 		<name>Cambio</name>
 	</organization>
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-		</testResources>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencies>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>adl-parser</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>oet-parser</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>openehr-aom</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>openehr-ap</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>openehr-rm-domain</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>se.cambio.cds</groupId>
 			<artifactId>cds-core</artifactId>
-			<version>0.9</version>
+			<version>0.91-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>dadl-binding</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>xml-binding</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>adl-serializer</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>dadl-parser</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>rm-builder</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>openehr-rm-core</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>rm-skeleton</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.toedter</groupId>

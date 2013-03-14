@@ -4,16 +4,16 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>rm-skeleton</artifactId>
 	<packaging>jar</packaging>
 	<name>openEHR RM Skeleton Instance Generator</name>
 	
 	<scm>
-		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/rm-skeleton</connection>
-		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/rm-skeleton</developerConnection>
-		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/rm-skeleton</url>
+		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/rm-skeleton</connection>
+		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/rm-skeleton</developerConnection>
+		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/rm-skeleton</url>
 	</scm>
 
 	<dependencies>

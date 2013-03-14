@@ -4,16 +4,16 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>rm-builder</artifactId>
 	<packaging>jar</packaging>
 	<name>openEHR Reference Model Object Builder</name>
 	<url>http://www.openehr.org/projects/java.html</url>   
     <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/rm-builder</connection>
-        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/rm-builder</developerConnection>
-        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/builder</url>
+        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/rm-builder</connection>
+        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/rm-builder</developerConnection>
+        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/builder</url>
     </scm>
     <organization>
 		<name>openEHR</name>

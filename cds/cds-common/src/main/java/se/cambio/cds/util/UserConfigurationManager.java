@@ -31,6 +31,8 @@ public class UserConfigurationManager {
     public static String TEMPLATES_FOLDER_KW = "TemplatesFolder";
     public static String TERMINOLOGIES_FOLDER_KW = "TerminologiesFolder";
     public static String ONTOLOGIES_FOLDER_KW = "OntologiesFolder";
+    public static String DOCUMENTS_FOLDER_KW = "DocumentsFolder";
+    public static String OVERVIEWS_FOLDER_KW = "OverviewsFolder";
     public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
 
     public static final String LANGUAGE = "Messages/Language";
@@ -49,6 +51,8 @@ public class UserConfigurationManager {
 	_defaultValues.put(TEMPLATES_FOLDER_KW, "Templates");
 	_defaultValues.put(TERMINOLOGIES_FOLDER_KW, "Terminologies");
 	_defaultValues.put(ONTOLOGIES_FOLDER_KW, "Ontologies");
+	_defaultValues.put(OVERVIEWS_FOLDER_KW, "Overviews");
+	_defaultValues.put(DOCUMENTS_FOLDER_KW, "docs");
 	_defaultValues.put(CURRENT_DATE_TIME_KW, null);
 	_defaultValues.put(LANGUAGE, DEFAULT_LANGUAGE);
 	_defaultValues.put(COUNTRY, DEFAULT_COUNTRY);
@@ -175,6 +179,16 @@ public class UserConfigurationManager {
 	return new File(folderStr);
     }
 
+    public static File getDocumentsFolder(){
+	String folderStr = getParameterWithDefault(DOCUMENTS_FOLDER_KW);
+	return new File(folderStr);
+    }
+
+    public static File getOverviewsFolder(){
+	String folderStr = getParameterWithDefault(OVERVIEWS_FOLDER_KW);
+	return new File(folderStr);
+    }
+    
     public static String getLanguage(){
 	return getParameterWithDefault(LANGUAGE);
     }
@@ -211,10 +225,10 @@ public class UserConfigurationManager {
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
- *  Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
  *  The contents of this file are subject to the Mozilla Public License Version
- *  1.1 (the 'License'); you may not use this file except in compliance with
+ *  2.0 (the 'License'); you may not use this file except in compliance with
  *  the License. You may obtain a copy of the License at
  *  http://www.mozilla.org/MPL/
  *

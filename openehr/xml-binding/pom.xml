@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>xml-binding</artifactId>
 	<packaging>jar</packaging>
@@ -12,9 +12,9 @@
 	<url>http://www.openehr.org/svn/ref_impl_java/TRUNK/project_page.htm</url>
 	
 	<scm>
-		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/xml-binding</connection>
-		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/xml-binding</developerConnection>
-		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/xml-binding</url>
+		<connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/xml-binding</connection>
+		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/xml-binding</developerConnection>
+		<url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/xml-binding</url>
 	</scm>
 	
 	<developers>

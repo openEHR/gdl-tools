@@ -3,16 +3,16 @@
 	<parent>
 		<groupId>openehr</groupId>
 		<artifactId>ref_impl_java</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>xml-serializer</artifactId>
 	<packaging>jar</packaging>
 	<name>XML Serializer</name>
 	<url>http://www.openehr.org/projects/java.html</url>   
     <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/xml-serializer</connection>
-        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/xml-serializer</developerConnection>
-        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/tags/ref_impl_java-1.0.2/xml-serializer</url>
+        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/xml-serializer</connection>
+        <developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/xml-serializer</developerConnection>
+        <url>https://subversion.cambio.se/PC/Standard/ClinicalDecisionSupport/trunk/openehr/xml-serializer</url>
     </scm>
 	<organization>
 		<name>openEHR</name>

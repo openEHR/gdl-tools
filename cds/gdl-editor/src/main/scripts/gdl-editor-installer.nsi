@@ -69,6 +69,7 @@ Section "GDL editor (required)"
   ${WriteLineToFile} "$INSTDIR\UserConfig.properties" "TemplatesFolder=$INSTDIR\Templates"
   ${WriteLineToFile} "$INSTDIR\UserConfig.properties" "TerminologiesFolder=$INSTDIR\Terminologies"
   ${WriteLineToFile} "$INSTDIR\UserConfig.properties" "OntologiesFolder=$INSTDIR\Ontologies"
+  ${WriteLineToFile} "$INSTDIR\UserConfig.properties" "DocumentsFolder=$INSTDIR\docs"
   
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\GDLEditor" "DisplayName" "NSIS GDLEditor"

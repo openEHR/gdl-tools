@@ -210,6 +210,10 @@ public final class DvOrdinal extends DvOrdered<DvOrdinal> {
 	return getSymbol().getCode();
     }
     
+    public String getSymbolValue(){
+	return getSymbol().getValue();
+    }
+    
     // POJO start
     private DvOrdinal() {
     }

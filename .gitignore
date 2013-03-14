@@ -1,3 +1,14 @@
-/.project
+.project
 cds/dist
 */target/**
+cds/**/target/*
+cds/**/.project
+cds/**/.classpath
+cds/**/.settings/*
+openehr/**/target/*
+openehr/**/.project
+openehr/**/.classpath
+openehr/**/.settings/*
+**/.project
+**/.classpath
+**/.settings/*
