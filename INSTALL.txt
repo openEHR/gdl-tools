@@ -15,7 +15,7 @@ INSTALLATION:
 
 gdl-tools/openehr/mvn clean install
 
-gdl-tools/openehr/cds clean install
+gdl-tools/cds/mvn clean install
 
 
 GENERATE FULL APPLICATION:
