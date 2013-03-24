@@ -1,11 +1,14 @@
 package se.cambio.cds.openehr.model.facade.archetype.plain;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import openEHR.v1.template.TEMPLATE;
 
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
@@ -23,6 +26,8 @@ import org.openehr.am.openehrprofile.datatypes.quantity.CDvQuantity;
 import org.openehr.am.openehrprofile.datatypes.quantity.CDvQuantityItem;
 import org.openehr.am.openehrprofile.datatypes.quantity.Ordinal;
 import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
+import org.openehr.am.template.Flattener;
+import org.openehr.am.template.OETParser;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
@@ -108,8 +113,11 @@ public class PlainArchetypeFacadeDelegate implements ArchetypeFacadeDelegate{
 		    ar = (Archetype) IOUtils.getObject(aomByteArray);
 		}
 		if (ar==null){
-		    ADLParser adlParser = new ADLParser(templateDTO.getArchetype());
-		    ar = adlParser.parse();
+		    OETParser parser = new OETParser();
+		    InputStream is = IOUtils.toInputStream(templateDTO.getArchetype());
+		    TEMPLATE template = parser.parseTemplate(is).getTemplate();
+		    Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
+		    ar = new Flattener().toFlattenedArchetype(template, archetypeMap);
 		}
 		templateObjectBundleCustomVOs.add(getTemplateObjectBundleCustomVO(templateDTO.getIdTemplate(), ar, templateDTO.getArchetype(), true));
 		InitialLoadingObservable.setCurrentProgress((double)count++/total);
@@ -293,9 +301,6 @@ public class PlainArchetypeFacadeDelegate implements ArchetypeFacadeDelegate{
 		    }
 		}
 		if (OpenEHRDataValuesUI.isManaged(type)){
-		    if (type.equals(OpenEHRDataValues.DV_COUNT) && archId.equals("CHADVAS_Score_ICD10.v1")){
-			System.out.println();
-		    }
 		    ArchetypeElementVO archetypeElementVO =
 			    new ArchetypeElementVO(text, desc, type, getIdParentCluster(path, clusterVOs), archId, idTemplate, path);
 		    archetypeElementVO.setLowerCardinality(cObject.getOccurrences().getLower());
