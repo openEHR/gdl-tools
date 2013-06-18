@@ -141,6 +141,12 @@ public class PlainArchetypeFacadeDelegate implements ArchetypeFacadeDelegate{
 	    language = DEFAULT_LANGUAGE;
 	    conceptTerm = ar.getOntology().termDefinition(language, ar.getConcept());
 	}
+	if(conceptTerm == null){
+		//IF default is null - fallback to Archetype default language
+		Logger.getLogger(PlainArchetypeFacadeDelegate.class).warn("Fallback to ADL default language:" +  language);
+		language = ar.getOriginalLanguage().getCodeString();
+		conceptTerm = ar.getOntology().termDefinition(language, ar.getConcept());
+	}
 	String name = conceptTerm.getText();
 	String description = conceptTerm.getText();
 	byte[] aomByteArray = IOUtils.getBytes(ar);
