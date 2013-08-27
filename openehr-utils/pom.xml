@@ -3,7 +3,7 @@
 	<groupId>org.openehr.utils</groupId>
 	<artifactId>openehr-utils</artifactId>
 	<packaging>pom</packaging>
-	<version>0.6</version>
+	<version>0.7-SNAPSHOT</version>
 	<name>OpenEHR Utils</name>
 	<organization>
 		<name>OpenEHR</name>
