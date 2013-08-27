@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TerminologyTable.html" title="se.cambio.cds.gdl.editor.view.tables.TerminologyTable" alt="" coords="16,17,133,41"/>
+<area shape="rect" id="node1" href="./TerminologyTable.html" title="&lt;TABLE&gt;" alt="" coords="5,5,144,53"/>
+<area shape="rect" id="node2_1" href="./TerminologyTable.TerminologyTableModel.html" title="se.cambio.cds.gdl.editor.view.tables.TerminologyTable.TerminologyTableModel" alt="" coords="179,17,331,41"/>
+<area shape="rect" id="node2" href="./TerminologyTable.TerminologyTableModel.html" title="&lt;TABLE&gt;" alt="" coords="168,5,341,53"/>
+<area shape="rect" id="node3_2" href="./BindingTable.html" title="se.cambio.cds.gdl.editor.view.tables.BindingTable" alt="" coords="376,17,467,41"/>
+<area shape="rect" id="node3" href="./BindingTable.html" title="&lt;TABLE&gt;" alt="" coords="365,5,477,53"/>
+<area shape="rect" id="node4_3" href="./BindingTable.BindingTableModel.html" title="se.cambio.cds.gdl.editor.view.tables.BindingTable.BindingTableModel" alt="" coords="512,17,637,41"/>
+<area shape="rect" id="node4" href="./BindingTable.BindingTableModel.html" title="&lt;TABLE&gt;" alt="" coords="501,5,648,53"/>
+</map>

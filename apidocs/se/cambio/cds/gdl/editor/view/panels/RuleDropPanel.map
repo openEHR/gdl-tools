@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/readable/rule/ReadableRule.html" title="se.cambio.cds.gdl.model.readable.rule.ReadableRule" alt="" coords="89,203,269,239"/>
+<area shape="rect" id="node1" href="../../../model/readable/rule/ReadableRule.html" title="&lt;TABLE&gt;" alt="" coords="78,197,279,245"/>
+<area shape="rect" id="node2_1" href="./RulesPanel.html" title="se.cambio.cds.gdl.editor.view.panels.RulesPanel" alt="" coords="139,17,219,41"/>
+<area shape="rect" id="node2" href="./RulesPanel.html" title="&lt;TABLE&gt;" alt="" coords="128,5,229,53"/>
+<area shape="rect" id="node3_2" href="./RuleDropPanel.html" title="se.cambio.cds.gdl.editor.view.panels.RuleDropPanel" alt="" coords="79,113,180,137"/>
+<area shape="rect" id="node3" href="./RuleDropPanel.html" title="&lt;TABLE&gt;" alt="" coords="68,101,191,149"/>
+<area shape="rect" id="node4_3" href="./DropPanel.html" title="se.cambio.cds.gdl.editor.view.panels.DropPanel" alt="" coords="16,17,93,41"/>
+<area shape="rect" id="node4" href="./DropPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,5,104,53"/>
+</map>

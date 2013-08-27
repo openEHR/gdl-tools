@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/GuideDTO.html" title="se.cambio.cds.model.guide.dto.GuideDTO" alt="" coords="74,206,222,242"/>
+<area shape="rect" id="node1" href="../dto/GuideDTO.html" title="&lt;TABLE&gt;" alt="" coords="63,200,233,248"/>
+<area shape="rect" id="node2_1" href="./StandardSQLGuideDAO.html" title="se.cambio.cds.model.guide.dao.StandardSQLGuideDAO" alt="" coords="15,116,161,140"/>
+<area shape="rect" id="node2" href="./StandardSQLGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,171,152"/>
+<area shape="rect" id="node3_2" href="./SQLGuideDAO.html" title="se.cambio.cds.model.guide.dao.SQLGuideDAO" alt="" coords="99,11,197,50"/>
+<area shape="rect" id="node3" href="./SQLGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="89,6,207,55"/>
+</map>

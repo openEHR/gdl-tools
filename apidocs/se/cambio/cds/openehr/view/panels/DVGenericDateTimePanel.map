@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DVTimePanel.html" title="se.cambio.cds.openehr.view.panels.DVTimePanel" alt="" coords="16,209,107,233"/>
+<area shape="rect" id="node1" href="./DVTimePanel.html" title="&lt;TABLE&gt;" alt="" coords="5,197,117,245"/>
+<area shape="rect" id="node2_1" href="./DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="304,17,413,41"/>
+<area shape="rect" id="node2" href="./DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="293,5,424,53"/>
+<area shape="rect" id="node3_2" href="./DVGenericDateTimePanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericDateTimePanel" alt="" coords="279,113,439,137"/>
+<area shape="rect" id="node3" href="./DVGenericDateTimePanel.html" title="&lt;TABLE&gt;" alt="" coords="268,101,449,149"/>
+<area shape="rect" id="node4_3" href="./DVDateTimePanel.html" title="se.cambio.cds.openehr.view.panels.DVDateTimePanel" alt="" coords="153,209,269,233"/>
+<area shape="rect" id="node4" href="./DVDateTimePanel.html" title="&lt;TABLE&gt;" alt="" coords="142,197,279,245"/>
+<area shape="rect" id="node5_4" href="./DVDatePanel.html" title="se.cambio.cds.openehr.view.panels.DVDatePanel" alt="" coords="314,209,403,233"/>
+<area shape="rect" id="node5" href="./DVDatePanel.html" title="&lt;TABLE&gt;" alt="" coords="303,197,414,245"/>
+<area shape="rect" id="node6_5" href="http://java.sun.com/j2se/1.4.2/docs/api/com/toedter/calendar/JDateChooser.html" title="com.toedter.calendar.JDateChooser" alt="" coords="449,203,559,239"/>
+<area shape="rect" id="node6" href="http://java.sun.com/j2se/1.4.2/docs/api/com/toedter/calendar/JDateChooser.html" title="&lt;TABLE&gt;" alt="" coords="438,197,570,245"/>
+</map>

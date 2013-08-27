@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../expression/ExpressionItem.html" title="se.cambio.cds.gdl.model.expression.ExpressionItem" alt="" coords="663,217,833,253"/>
+<area shape="rect" id="node1" href="../../../expression/ExpressionItem.html" title="&lt;TABLE&gt;" alt="" coords="653,211,843,259"/>
+<area shape="rect" id="node2_1" href="./OrOperatorRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.OrOperatorRuleLine" alt="" coords="411,127,544,151"/>
+<area shape="rect" id="node2" href="./OrOperatorRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="400,115,555,163"/>
+<area shape="rect" id="node4_2" href="./BranchRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.BranchRuleLine" alt="" coords="424,223,531,247"/>
+<area shape="rect" id="node4" href="./BranchRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="413,211,541,259"/>
+<area shape="rect" id="node3_3" href="./ExpressionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ExpressionRuleLine" alt="" coords="904,24,1029,48"/>
+<area shape="rect" id="node3" href="./ExpressionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="893,12,1040,60"/>
+<area shape="rect" id="node5_4" href="./interfaces/OperatorRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine" alt="" coords="309,11,557,61"/>
+<area shape="rect" id="node5" href="./interfaces/OperatorRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="299,5,568,67"/>
+<area shape="rect" id="node6_5" href="./interfaces/ConditionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine" alt="" coords="16,11,264,61"/>
+<area shape="rect" id="node6" href="./interfaces/ConditionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,5,275,67"/>
+<area shape="rect" id="node7_6" href="../../../../editor/view/panels/rulelinecontainers/OrOperatorRuleLinePanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.OrOperatorRuleLinePanel" alt="" coords="603,18,858,54"/>
+<area shape="rect" id="node7" href="../../../../editor/view/panels/rulelinecontainers/OrOperatorRuleLinePanel.html" title="&lt;TABLE&gt;" alt="" coords="593,12,869,60"/>
+</map>

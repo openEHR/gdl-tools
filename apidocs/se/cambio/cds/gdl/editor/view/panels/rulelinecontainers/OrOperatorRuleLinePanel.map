@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../model/readable/rule/lines/RuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.RuleLine" alt="" coords="262,203,463,239"/>
+<area shape="rect" id="node1" href="../../../../model/readable/rule/lines/RuleLine.html" title="&lt;TABLE&gt;" alt="" coords="251,197,474,245"/>
+<area shape="rect" id="node2_1" href="../../../../model/readable/rule/lines/OrOperatorRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.OrOperatorRuleLine" alt="" coords="15,203,217,239"/>
+<area shape="rect" id="node2" href="../../../../model/readable/rule/lines/OrOperatorRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,197,227,245"/>
+<area shape="rect" id="node3_2" href="./RuleLineContainerPanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.RuleLineContainerPanel" alt="" coords="221,17,373,41"/>
+<area shape="rect" id="node3" href="./RuleLineContainerPanel.html" title="&lt;TABLE&gt;" alt="" coords="211,5,384,53"/>
+<area shape="rect" id="node4_3" href="./OrOperatorRuleLinePanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.OrOperatorRuleLinePanel" alt="" coords="152,113,315,137"/>
+<area shape="rect" id="node4" href="./OrOperatorRuleLinePanel.html" title="&lt;TABLE&gt;" alt="" coords="141,101,325,149"/>
+</map>

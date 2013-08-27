@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../model/recommendation/dto/RecommendationDTO.html" title="se.cambio.cds.model.recommendation.dto.RecommendationDTO" alt="" coords="16,110,213,146"/>
+<area shape="rect" id="node1" href="../../model/recommendation/dto/RecommendationDTO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,224,152"/>
+<area shape="rect" id="node2_1" href="./DeliveredRecomendation.html" title="se.cambio.cds.controller.recommendation.DeliveredRecomendation" alt="" coords="36,11,193,50"/>
+<area shape="rect" id="node2" href="./DeliveredRecomendation.html" title="&lt;TABLE&gt;" alt="" coords="25,6,204,55"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/readable/rule/lines/elements/SingleSelectionRuleElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleElement" alt="" coords="16,107,259,157"/>
+<area shape="rect" id="node1" href="../../../model/readable/rule/lines/elements/SingleSelectionRuleElement.html" title="&lt;TABLE&gt;" alt="" coords="5,101,269,163"/>
+<area shape="rect" id="node2_1" href="./SingleSelectionRuleElementRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.SingleSelectionRuleElementRenderer" alt="" coords="25,17,250,41"/>
+<area shape="rect" id="node2" href="./SingleSelectionRuleElementRenderer.html" title="&lt;TABLE&gt;" alt="" coords="14,5,261,53"/>
+</map>

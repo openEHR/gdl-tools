@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./RuleDTO.html" title="se.cambio.cds.model.rule.dto.RuleDTO" alt="" coords="223,441,291,465"/>
+<area shape="rect" id="node1" href="./RuleDTO.html" title="&lt;TABLE&gt;" alt="" coords="213,429,302,477"/>
+<area shape="rect" id="node2_1" href="../dao/StandardSQLRuleDAO.html" title="se.cambio.cds.model.rule.dao.StandardSQLRuleDAO" alt="" coords="15,333,158,369"/>
+<area shape="rect" id="node2" href="../dao/StandardSQLRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,327,169,375"/>
+<area shape="rect" id="node3_2" href="../dao/SQLRuleDAO.html" title="se.cambio.cds.model.rule.dao.SQLRuleDAO" alt="" coords="66,216,209,267"/>
+<area shape="rect" id="node3" href="../dao/SQLRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="55,211,219,272"/>
+<area shape="rect" id="node4_3" href="../dao/SQLGenericRuleDAO.html" title="se.cambio.cds.model.rule.dao.SQLGenericRuleDAO" alt="" coords="117,121,259,157"/>
+<area shape="rect" id="node4" href="../dao/SQLGenericRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="106,115,270,163"/>
+<area shape="rect" id="node5_4" href="../dao/GenericRuleDAO.html" title="se.cambio.cds.model.rule.dao.GenericRuleDAO" alt="" coords="177,11,319,61"/>
+<area shape="rect" id="node5" href="../dao/GenericRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="166,5,330,67"/>
+<area shape="rect" id="node6_5" href="../../facade/administration/interfaces/Rules.html" title="se.cambio.cds.model.facade.administration.interfaces.Rules" alt="" coords="356,325,604,376"/>
+<area shape="rect" id="node6" href="../../facade/administration/interfaces/Rules.html" title="&lt;TABLE&gt;" alt="" coords="345,320,615,381"/>
+</map>

@@ -1,0 +1,28 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../model/guide/dto/GuideDTO.html" title="se.cambio.cds.model.guide.dto.GuideDTO" alt="" coords="1010,621,1158,657"/>
+<area shape="rect" id="node1" href="../../model/guide/dto/GuideDTO.html" title="&lt;TABLE&gt;" alt="" coords="999,615,1169,663"/>
+<area shape="rect" id="node2_1" href="../../gdl/model/Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="780,723,900,759"/>
+<area shape="rect" id="node2" href="../../gdl/model/Guide.html" title="&lt;TABLE&gt;" alt="" coords="769,717,911,765"/>
+<area shape="rect" id="node3_2" href="../cds/CDSManager.html" title="se.cambio.cds.controller.cds.CDSManager" alt="" coords="942,422,1079,458"/>
+<area shape="rect" id="node3" href="../cds/CDSManager.html" title="&lt;TABLE&gt;" alt="" coords="931,416,1090,464"/>
+<area shape="rect" id="node5_3" href="./ElementInstanceCollection.html" title="se.cambio.cds.controller.guide.ElementInstanceCollection" alt="" coords="523,627,691,651"/>
+<area shape="rect" id="node5" href="./ElementInstanceCollection.html" title="&lt;TABLE&gt;" alt="" coords="512,615,701,663"/>
+<area shape="rect" id="node4_4" href="./GuideManager.html" title="se.cambio.cds.controller.guide.GuideManager" alt="" coords="715,524,815,548"/>
+<area shape="rect" id="node4" href="./GuideManager.html" title="&lt;TABLE&gt;" alt="" coords="705,512,826,560"/>
+<area shape="rect" id="node12_5" href="../../model/facade/execution/vo/ElementInstance.html" title="se.cambio.cds.model.facade.execution.vo.ElementInstance" alt="" coords="525,723,718,759"/>
+<area shape="rect" id="node12" href="../../model/facade/execution/vo/ElementInstance.html" title="&lt;TABLE&gt;" alt="" coords="514,717,729,765"/>
+<area shape="rect" id="node11_6" href="../../model/facade/execution/vo/ExecutionMode.html" title="se.cambio.cds.model.facade.execution.vo.ExecutionMode" alt="" coords="35,613,229,664"/>
+<area shape="rect" id="node11" href="../../model/facade/execution/vo/ExecutionMode.html" title="&lt;TABLE&gt;" alt="" coords="25,608,239,669"/>
+<area shape="rect" id="node6_7" href="../../model/facade/cds/delegate/CDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.delegate.CDSFacadeDelegate" alt="" coords="656,107,845,157"/>
+<area shape="rect" id="node6" href="../../model/facade/cds/delegate/CDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="645,101,856,163"/>
+<area shape="rect" id="node7_8" href="../../model/facade/cds/ejb/EJBCDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.ejb.EJBCDSFacadeDelegate" alt="" coords="206,217,373,253"/>
+<area shape="rect" id="node7" href="../../model/facade/cds/ejb/EJBCDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="195,211,383,259"/>
+<area shape="rect" id="node10_9" href="../../model/facade/cds/plain/PlainCDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.plain.PlainCDSFacadeDelegate" alt="" coords="520,422,693,458"/>
+<area shape="rect" id="node10" href="../../model/facade/cds/plain/PlainCDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="509,416,704,464"/>
+<area shape="rect" id="node9_10" href="../../model/facade/cds/ejb/CDSFacade.html" title="se.cambio.cds.model.facade.cds.ejb.CDSFacade" alt="" coords="206,312,373,363"/>
+<area shape="rect" id="node9" href="../../model/facade/cds/ejb/CDSFacade.html" title="&lt;TABLE&gt;" alt="" coords="195,307,383,368"/>
+<area shape="rect" id="node8_11" href="../../model/facade/cds/ejb/CDSFacadeBean.html" title="se.cambio.cds.model.facade.cds.ejb.CDSFacadeBean" alt="" coords="257,422,423,458"/>
+<area shape="rect" id="node8" href="../../model/facade/cds/ejb/CDSFacadeBean.html" title="&lt;TABLE&gt;" alt="" coords="246,416,434,464"/>
+<area shape="rect" id="node13_12" href="../../formgen/controller/FormGeneratorController.html" title="se.cambio.cds.formgen.controller.FormGeneratorController" alt="" coords="930,11,1091,47"/>
+<area shape="rect" id="node13" href="../../formgen/controller/FormGeneratorController.html" title="&lt;TABLE&gt;" alt="" coords="919,5,1102,53"/>
+</map>

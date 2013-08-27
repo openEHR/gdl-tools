@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../ArchetypeInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine" alt="" coords="298,107,499,143"/>
+<area shape="rect" id="node1" href="../ArchetypeInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="287,101,510,149"/>
+<area shape="rect" id="node3_1" href="./ArchetypeReferenceRuleLineDefinitionElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineDefinitionElement" alt="" coords="258,209,539,233"/>
+<area shape="rect" id="node3" href="./ArchetypeReferenceRuleLineDefinitionElement.html" title="&lt;TABLE&gt;" alt="" coords="247,197,550,245"/>
+<area shape="rect" id="node2_2" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="15,113,201,137"/>
+<area shape="rect" id="node2" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="5,101,211,149"/>
+<area shape="rect" id="node4_3" href="../../../../../editor/controller/RuleElementEditor.html" title="se.cambio.cds.gdl.editor.controller.RuleElementEditor" alt="" coords="65,11,231,47"/>
+<area shape="rect" id="node4" href="../../../../../editor/controller/RuleElementEditor.html" title="&lt;TABLE&gt;" alt="" coords="54,5,242,53"/>
+<area shape="rect" id="node5_4" href="../../../../../editor/view/util/NodeDefinitionConversor.html" title="se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor" alt="" coords="392,11,555,47"/>
+<area shape="rect" id="node5" href="../../../../../editor/view/util/NodeDefinitionConversor.html" title="&lt;TABLE&gt;" alt="" coords="381,5,565,53"/>
+</map>

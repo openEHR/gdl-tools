@@ -1,0 +1,20 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./GuideDTO.html" title="se.cambio.cds.model.guide.dto.GuideDTO" alt="" coords="395,441,471,465"/>
+<area shape="rect" id="node1" href="./GuideDTO.html" title="&lt;TABLE&gt;" alt="" coords="385,429,482,477"/>
+<area shape="rect" id="node2_1" href="../dao/StandardSQLGuideDAO.html" title="se.cambio.cds.model.guide.dao.StandardSQLGuideDAO" alt="" coords="59,333,208,369"/>
+<area shape="rect" id="node2" href="../dao/StandardSQLGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="48,327,219,375"/>
+<area shape="rect" id="node3_2" href="../dao/SQLGuideDAO.html" title="se.cambio.cds.model.guide.dao.SQLGuideDAO" alt="" coords="59,216,208,267"/>
+<area shape="rect" id="node3" href="../dao/SQLGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="48,211,219,272"/>
+<area shape="rect" id="node4_3" href="../dao/SQLGenericGuideDAO.html" title="se.cambio.cds.model.guide.dao.SQLGenericGuideDAO" alt="" coords="16,121,165,157"/>
+<area shape="rect" id="node4" href="../dao/SQLGenericGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,115,176,163"/>
+<area shape="rect" id="node5_4" href="../dao/InJarGuideDAO.html" title="se.cambio.cds.model.guide.dao.InJarGuideDAO" alt="" coords="211,121,360,157"/>
+<area shape="rect" id="node5" href="../dao/InJarGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="200,115,371,163"/>
+<area shape="rect" id="node6_5" href="../dao/GenericGuideDAO.html" title="se.cambio.cds.model.guide.dao.GenericGuideDAO" alt="" coords="211,11,360,61"/>
+<area shape="rect" id="node6" href="../dao/GenericGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="200,5,371,67"/>
+<area shape="rect" id="node7_6" href="../../../controller/guide/GuideManager.html" title="se.cambio.cds.controller.guide.GuideManager" alt="" coords="507,333,655,369"/>
+<area shape="rect" id="node7" href="../../../controller/guide/GuideManager.html" title="&lt;TABLE&gt;" alt="" coords="497,327,666,375"/>
+<area shape="rect" id="node8_7" href="../../facade/administration/interfaces/Guides.html" title="se.cambio.cds.model.facade.administration.interfaces.Guides" alt="" coords="752,325,1000,376"/>
+<area shape="rect" id="node8" href="../../facade/administration/interfaces/Guides.html" title="&lt;TABLE&gt;" alt="" coords="741,320,1011,381"/>
+<area shape="rect" id="node9_8" href="../../../formgen/controller/FormGeneratorController.html" title="se.cambio.cds.formgen.controller.FormGeneratorController" alt="" coords="501,223,662,259"/>
+<area shape="rect" id="node9" href="../../../formgen/controller/FormGeneratorController.html" title="&lt;TABLE&gt;" alt="" coords="490,217,673,265"/>
+</map>

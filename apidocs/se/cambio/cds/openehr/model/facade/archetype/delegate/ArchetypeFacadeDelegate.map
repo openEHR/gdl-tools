@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../model/archetype/dto/ArchetypeDTO.html" title="se.cambio.cds.model.archetype.dto.ArchetypeDTO" alt="" coords="68,302,236,338"/>
+<area shape="rect" id="node1" href="../../../../../model/archetype/dto/ArchetypeDTO.html" title="&lt;TABLE&gt;" alt="" coords="57,296,247,344"/>
+<area shape="rect" id="node2_1" href="../../../../../model/template/dto/TemplateDTO.html" title="se.cambio.cds.model.template.dto.TemplateDTO" alt="" coords="449,302,612,338"/>
+<area shape="rect" id="node2" href="../../../../../model/template/dto/TemplateDTO.html" title="&lt;TABLE&gt;" alt="" coords="439,296,623,344"/>
+<area shape="rect" id="node3_2" href="./ArchetypeFacadeDelegate.html" title="se.cambio.cds.openehr.model.facade.archetype.delegate.ArchetypeFacadeDelegate" alt="" coords="253,11,419,50"/>
+<area shape="rect" id="node3" href="./ArchetypeFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="243,6,429,55"/>
+<area shape="rect" id="node4_3" href="../plain/PlainArchetypeFacadeDelegate.html" title="se.cambio.cds.openehr.model.facade.archetype.plain.PlainArchetypeFacadeDelegate" alt="" coords="215,110,457,146"/>
+<area shape="rect" id="node4" href="../plain/PlainArchetypeFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="205,104,467,152"/>
+<area shape="rect" id="node6_4" href="../vo/ArchetypeObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.ArchetypeObjectBundleCustomVO" alt="" coords="36,206,268,242"/>
+<area shape="rect" id="node6" href="../vo/ArchetypeObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="25,200,279,248"/>
+<area shape="rect" id="node5_5" href="../vo/TemplateObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.TemplateObjectBundleCustomVO" alt="" coords="415,206,647,242"/>
+<area shape="rect" id="node5" href="../vo/TemplateObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="404,200,657,248"/>
+</map>

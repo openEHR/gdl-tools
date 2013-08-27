@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./RecommendationDeliveryVO.html" title="se.cambio.cds.controller.decisiondelivery.RecommendationDeliveryVO" alt="" coords="15,19,190,43"/>
+<area shape="rect" id="node1" href="./RecommendationDeliveryVO.html" title="&lt;TABLE&gt;" alt="" coords="5,7,201,55"/>
+<area shape="rect" id="node2_1" href="./RecommendationDelivery.html" title="se.cambio.cds.controller.decisiondelivery.RecommendationDelivery" alt="" coords="235,11,394,50"/>
+<area shape="rect" id="node2" href="./RecommendationDelivery.html" title="&lt;TABLE&gt;" alt="" coords="225,6,405,55"/>
+<area shape="rect" id="node3_2" href="./DecisionDeliveryManager.html" title="se.cambio.cds.controller.decisiondelivery.DecisionDeliveryManager" alt="" coords="440,19,597,43"/>
+<area shape="rect" id="node3" href="./DecisionDeliveryManager.html" title="&lt;TABLE&gt;" alt="" coords="429,7,608,55"/>
+</map>

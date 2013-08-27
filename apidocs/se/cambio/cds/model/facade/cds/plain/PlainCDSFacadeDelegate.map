@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../controller/guide/GuideManager.html" title="se.cambio.cds.controller.guide.GuideManager" alt="" coords="35,217,183,253"/>
+<area shape="rect" id="node1" href="../../../../controller/guide/GuideManager.html" title="&lt;TABLE&gt;" alt="" coords="25,211,194,259"/>
+<area shape="rect" id="node2_1" href="../../../../controller/guide/ElementInstanceCollection.html" title="se.cambio.cds.controller.guide.ElementInstanceCollection" alt="" coords="25,319,193,355"/>
+<area shape="rect" id="node2" href="../../../../controller/guide/ElementInstanceCollection.html" title="&lt;TABLE&gt;" alt="" coords="15,313,204,361"/>
+<area shape="rect" id="node6_2" href="../../execution/vo/ExecutionMode.html" title="se.cambio.cds.model.facade.execution.vo.ExecutionMode" alt="" coords="239,312,433,363"/>
+<area shape="rect" id="node6" href="../../execution/vo/ExecutionMode.html" title="&lt;TABLE&gt;" alt="" coords="229,307,443,368"/>
+<area shape="rect" id="node3_3" href="../delegate/CDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.delegate.CDSFacadeDelegate" alt="" coords="140,11,329,61"/>
+<area shape="rect" id="node3" href="../delegate/CDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="129,5,340,67"/>
+<area shape="rect" id="node4_4" href="./PlainCDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.plain.PlainCDSFacadeDelegate" alt="" coords="158,127,311,151"/>
+<area shape="rect" id="node4" href="./PlainCDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="147,115,322,163"/>
+<area shape="rect" id="node5_5" href="../../execution/vo/RuleExecutionResult.html" title="se.cambio.cds.model.facade.execution.vo.RuleExecutionResult" alt="" coords="331,217,525,253"/>
+<area shape="rect" id="node5" href="../../execution/vo/RuleExecutionResult.html" title="&lt;TABLE&gt;" alt="" coords="321,211,535,259"/>
+</map>

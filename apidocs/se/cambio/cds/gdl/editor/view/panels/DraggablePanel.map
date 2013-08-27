@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DraggableRulePanel.html" title="se.cambio.cds.gdl.editor.view.panels.DraggableRulePanel" alt="" coords="16,113,144,137"/>
+<area shape="rect" id="node1" href="./DraggableRulePanel.html" title="&lt;TABLE&gt;" alt="" coords="5,101,155,149"/>
+<area shape="rect" id="node2_1" href="./DraggableRuleLinePanel.html" title="se.cambio.cds.gdl.editor.view.panels.DraggableRuleLinePanel" alt="" coords="190,113,341,137"/>
+<area shape="rect" id="node2" href="./DraggableRuleLinePanel.html" title="&lt;TABLE&gt;" alt="" coords="179,101,351,149"/>
+<area shape="rect" id="node3_2" href="./DraggablePanel.html" title="se.cambio.cds.gdl.editor.view.panels.DraggablePanel" alt="" coords="120,17,224,41"/>
+<area shape="rect" id="node3" href="./DraggablePanel.html" title="&lt;TABLE&gt;" alt="" coords="109,5,235,53"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/TemplateDTO.html" title="se.cambio.cds.model.template.dto.TemplateDTO" alt="" coords="49,206,212,242"/>
+<area shape="rect" id="node1" href="../dto/TemplateDTO.html" title="&lt;TABLE&gt;" alt="" coords="39,200,223,248"/>
+<area shape="rect" id="node2_1" href="./GenericTemplateDAO.html" title="se.cambio.cds.model.template.dao.GenericTemplateDAO" alt="" coords="61,11,200,50"/>
+<area shape="rect" id="node2" href="./GenericTemplateDAO.html" title="&lt;TABLE&gt;" alt="" coords="51,6,211,55"/>
+<area shape="rect" id="node3_2" href="./InJarTemplateDAO.html" title="se.cambio.cds.model.template.dao.InJarTemplateDAO" alt="" coords="15,116,137,140"/>
+<area shape="rect" id="node3" href="./InJarTemplateDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,147,152"/>
+</map>

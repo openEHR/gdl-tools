@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../gdl/model/Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="397,107,517,143"/>
+<area shape="rect" id="node1" href="../../gdl/model/Guide.html" title="&lt;TABLE&gt;" alt="" coords="387,101,528,149"/>
+<area shape="rect" id="node2_1" href="../../gdl/model/ArchetypeBinding.html" title="se.cambio.cds.gdl.model.ArchetypeBinding" alt="" coords="16,107,136,143"/>
+<area shape="rect" id="node2" href="../../gdl/model/ArchetypeBinding.html" title="&lt;TABLE&gt;" alt="" coords="5,101,147,149"/>
+<area shape="rect" id="node3_2" href="../../gdl/model/expression/ConstantExpression.html" title="se.cambio.cds.gdl.model.expression.ConstantExpression" alt="" coords="182,107,351,143"/>
+<area shape="rect" id="node3" href="../../gdl/model/expression/ConstantExpression.html" title="&lt;TABLE&gt;" alt="" coords="171,101,362,149"/>
+<area shape="rect" id="node4_3" href="./GuideUtil.html" title="se.cambio.cds.controller.guide.GuideUtil" alt="" coords="421,17,493,41"/>
+<area shape="rect" id="node4" href="./GuideUtil.html" title="&lt;TABLE&gt;" alt="" coords="411,5,504,53"/>
+<area shape="rect" id="node6_4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="org.openehr.rm.datatypes.basic.DataValue" alt="" coords="563,107,720,143"/>
+<area shape="rect" id="node6" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="&lt;TABLE&gt;" alt="" coords="552,101,731,149"/>
+<area shape="rect" id="node5_5" href="../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="766,107,959,143"/>
+<area shape="rect" id="node5" href="../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="755,101,970,149"/>
+</map>

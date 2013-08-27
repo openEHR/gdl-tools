@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./Version.html" title="se.cambio.cds.gdl.editor.util.Version" alt="" coords="16,17,77,41"/>
+<area shape="rect" id="node1" href="./Version.html" title="&lt;TABLE&gt;" alt="" coords="5,5,88,53"/>
+<area shape="rect" id="node2_1" href="./LanguageManager.html" title="se.cambio.cds.gdl.editor.util.LanguageManager" alt="" coords="123,17,242,41"/>
+<area shape="rect" id="node2" href="./LanguageManager.html" title="&lt;TABLE&gt;" alt="" coords="113,5,253,53"/>
+<area shape="rect" id="node3_2" href="./GDLEditorImageUtil.html" title="se.cambio.cds.gdl.editor.util.GDLEditorImageUtil" alt="" coords="288,17,413,41"/>
+<area shape="rect" id="node3" href="./GDLEditorImageUtil.html" title="&lt;TABLE&gt;" alt="" coords="277,5,424,53"/>
+<area shape="rect" id="node4_3" href="./GDLEditorConfigurationParametersManager.html" title="se.cambio.cds.gdl.editor.util.GDLEditorConfigurationParametersManager" alt="" coords="459,17,717,41"/>
+<area shape="rect" id="node4" href="./GDLEditorConfigurationParametersManager.html" title="&lt;TABLE&gt;" alt="" coords="449,5,727,53"/>
+<area shape="rect" id="node5_4" href="./DefinitionDependencyChecker.html" title="se.cambio.cds.gdl.editor.util.DefinitionDependencyChecker" alt="" coords="763,17,952,41"/>
+<area shape="rect" id="node5" href="./DefinitionDependencyChecker.html" title="&lt;TABLE&gt;" alt="" coords="752,5,963,53"/>
+</map>

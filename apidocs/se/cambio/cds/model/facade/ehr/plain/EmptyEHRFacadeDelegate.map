@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../controller/guide/GeneratedElementInstanceCollection.html" title="se.cambio.cds.controller.guide.GeneratedElementInstanceCollection" alt="" coords="47,217,273,253"/>
+<area shape="rect" id="node1" href="../../../../controller/guide/GeneratedElementInstanceCollection.html" title="&lt;TABLE&gt;" alt="" coords="36,211,284,259"/>
+<area shape="rect" id="node2_1" href="../delegate/EHRFacadeDelegate.html" title="se.cambio.cds.model.facade.ehr.delegate.EHRFacadeDelegate" alt="" coords="64,11,256,61"/>
+<area shape="rect" id="node2" href="../delegate/EHRFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="53,5,267,67"/>
+<area shape="rect" id="node3_2" href="./EmptyEHRFacadeDelegate.html" title="se.cambio.cds.model.facade.ehr.plain.EmptyEHRFacadeDelegate" alt="" coords="15,127,177,151"/>
+<area shape="rect" id="node3" href="./EmptyEHRFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="5,115,187,163"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="561,209,754,245"/>
+<area shape="rect" id="node1" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="550,203,765,251"/>
+<area shape="rect" id="node2_1" href="../WithElementPredicateExpressionDefinitionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExpressionDefinitionRuleLine" alt="" coords="16,111,317,147"/>
+<area shape="rect" id="node2" href="../WithElementPredicateExpressionDefinitionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,105,328,153"/>
+<area shape="rect" id="node3_2" href="../WithElementPredicateAttributeDefinitionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine" alt="" coords="363,111,658,147"/>
+<area shape="rect" id="node3" href="../WithElementPredicateAttributeDefinitionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="353,105,669,153"/>
+<area shape="rect" id="node4_3" href="../ArchetypeInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine" alt="" coords="703,111,905,147"/>
+<area shape="rect" id="node4" href="../ArchetypeInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="693,105,915,153"/>
+<area shape="rect" id="node5_4" href="./ArchetypeReferenceRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine" alt="" coords="712,11,896,50"/>
+<area shape="rect" id="node5" href="./ArchetypeReferenceRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="701,6,907,55"/>
+<area shape="rect" id="node6_5" href="./ArchetypeElementRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine" alt="" coords="950,110,1119,149"/>
+<area shape="rect" id="node6" href="./ArchetypeElementRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="939,105,1130,154"/>
+</map>

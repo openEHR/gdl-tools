@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../SetElementWithNullValueActionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.SetElementWithNullValueActionRuleLine" alt="" coords="15,107,257,143"/>
+<area shape="rect" id="node1" href="../SetElementWithNullValueActionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,101,267,149"/>
+<area shape="rect" id="node4_1" href="./NullValueRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.NullValueRuleLineElement" alt="" coords="373,209,536,233"/>
+<area shape="rect" id="node4" href="./NullValueRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="363,197,547,245"/>
+<area shape="rect" id="node2_2" href="../ElementComparisonWithNullValueConditionRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ElementComparisonWithNullValueConditionRuleLine" alt="" coords="303,107,607,143"/>
+<area shape="rect" id="node2" href="../ElementComparisonWithNullValueConditionRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="292,101,617,149"/>
+<area shape="rect" id="node3_3" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="703,113,889,137"/>
+<area shape="rect" id="node3" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="693,101,899,149"/>
+<area shape="rect" id="node5_4" href="../../../../../editor/controller/RuleElementEditor.html" title="se.cambio.cds.gdl.editor.controller.RuleElementEditor" alt="" coords="642,11,809,47"/>
+<area shape="rect" id="node5" href="../../../../../editor/controller/RuleElementEditor.html" title="&lt;TABLE&gt;" alt="" coords="631,5,819,53"/>
+</map>

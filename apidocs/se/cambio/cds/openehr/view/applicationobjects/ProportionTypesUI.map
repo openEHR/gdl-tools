@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../model/proportiontype/vo/ProportionTypeVO.html" title="se.cambio.cds.openehr.model.proportiontype.vo.ProportionTypeVO" alt="" coords="233,114,458,150"/>
+<area shape="rect" id="node1" href="../../model/proportiontype/vo/ProportionTypeVO.html" title="&lt;TABLE&gt;" alt="" coords="222,108,469,156"/>
+<area shape="rect" id="node2_1" href="./ProportionTypesUI.html" title="se.cambio.cds.openehr.view.applicationobjects.ProportionTypesUI" alt="" coords="161,17,285,41"/>
+<area shape="rect" id="node2" href="./ProportionTypesUI.html" title="&lt;TABLE&gt;" alt="" coords="150,5,295,53"/>
+<area shape="rect" id="node3_2" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/quantity/ProportionKind.html" title="org.openehr.rm.datatypes.quantity.ProportionKind" alt="" coords="15,107,187,157"/>
+<area shape="rect" id="node3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/quantity/ProportionKind.html" title="&lt;TABLE&gt;" alt="" coords="5,101,198,163"/>
+</map>

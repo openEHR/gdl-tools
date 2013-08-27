@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./Rule.html" title="se.cambio.cds.gdl.model.Rule" alt="" coords="183,209,228,233"/>
+<area shape="rect" id="node1" href="./Rule.html" title="&lt;TABLE&gt;" alt="" coords="169,197,241,245"/>
+<area shape="rect" id="node5_1" href="./expression/ExpressionItem.html" title="se.cambio.cds.gdl.model.expression.ExpressionItem" alt="" coords="121,299,290,335"/>
+<area shape="rect" id="node5" href="./expression/ExpressionItem.html" title="&lt;TABLE&gt;" alt="" coords="110,293,301,341"/>
+<area shape="rect" id="node2_2" href="./GuideDefinition.html" title="se.cambio.cds.gdl.model.GuideDefinition" alt="" coords="153,113,258,137"/>
+<area shape="rect" id="node2" href="./GuideDefinition.html" title="&lt;TABLE&gt;" alt="" coords="142,101,269,149"/>
+<area shape="rect" id="node4_3" href="./ArchetypeBinding.html" title="se.cambio.cds.gdl.model.ArchetypeBinding" alt="" coords="15,209,134,233"/>
+<area shape="rect" id="node4" href="./ArchetypeBinding.html" title="&lt;TABLE&gt;" alt="" coords="5,197,145,245"/>
+<area shape="rect" id="node3_4" href="./Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="179,17,232,41"/>
+<area shape="rect" id="node3" href="./Guide.html" title="&lt;TABLE&gt;" alt="" coords="168,5,243,53"/>
+</map>

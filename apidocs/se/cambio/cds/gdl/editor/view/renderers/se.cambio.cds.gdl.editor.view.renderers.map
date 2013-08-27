@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TerminologyCodesButtonRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.TerminologyCodesButtonRenderer" alt="" coords="16,17,227,41"/>
+<area shape="rect" id="node1" href="./TerminologyCodesButtonRenderer.html" title="&lt;TABLE&gt;" alt="" coords="5,5,237,53"/>
+<area shape="rect" id="node2_1" href="./SingleSelectionRuleElementRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.SingleSelectionRuleElementRenderer" alt="" coords="273,17,498,41"/>
+<area shape="rect" id="node2" href="./SingleSelectionRuleElementRenderer.html" title="&lt;TABLE&gt;" alt="" coords="262,5,509,53"/>
+<area shape="rect" id="node3_2" href="./LanguageRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.LanguageRenderer" alt="" coords="543,17,667,41"/>
+<area shape="rect" id="node3" href="./LanguageRenderer.html" title="&lt;TABLE&gt;" alt="" coords="533,5,678,53"/>
+<area shape="rect" id="node4_3" href="./GTCodeButtonRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.GTCodeButtonRenderer" alt="" coords="713,17,866,41"/>
+<area shape="rect" id="node4" href="./GTCodeButtonRenderer.html" title="&lt;TABLE&gt;" alt="" coords="702,5,877,53"/>
+</map>

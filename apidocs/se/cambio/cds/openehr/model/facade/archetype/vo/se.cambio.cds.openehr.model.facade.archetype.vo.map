@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TemplateObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.TemplateObjectBundleCustomVO" alt="" coords="16,17,221,41"/>
+<area shape="rect" id="node1" href="./TemplateObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="5,5,232,53"/>
+<area shape="rect" id="node2_1" href="./PathableVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.PathableVO" alt="" coords="267,17,352,41"/>
+<area shape="rect" id="node2" href="./PathableVO.html" title="&lt;TABLE&gt;" alt="" coords="256,5,363,53"/>
+<area shape="rect" id="node3_2" href="./ArchetypeObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.ArchetypeObjectBundleCustomVO" alt="" coords="398,17,610,41"/>
+<area shape="rect" id="node3" href="./ArchetypeObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="387,5,621,53"/>
+</map>

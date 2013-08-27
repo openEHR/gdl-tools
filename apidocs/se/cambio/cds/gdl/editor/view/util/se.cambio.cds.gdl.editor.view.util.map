@@ -1,0 +1,22 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TerminologyCodesButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.TerminologyCodesButtonEditor" alt="" coords="16,17,208,41"/>
+<area shape="rect" id="node1" href="./TerminologyCodesButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,5,219,53"/>
+<area shape="rect" id="node2_1" href="./TerminologyBindingCellEditor.html" title="se.cambio.cds.gdl.editor.view.util.TerminologyBindingCellEditor" alt="" coords="253,17,435,41"/>
+<area shape="rect" id="node2" href="./TerminologyBindingCellEditor.html" title="&lt;TABLE&gt;" alt="" coords="243,5,445,53"/>
+<area shape="rect" id="node3_2" href="./NodeDefinitionConversor.html" title="se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor" alt="" coords="480,17,637,41"/>
+<area shape="rect" id="node3" href="./NodeDefinitionConversor.html" title="&lt;TABLE&gt;" alt="" coords="469,5,648,53"/>
+<area shape="rect" id="node4_3" href="./MultipleIcon.html" title="se.cambio.cds.gdl.editor.view.util.MultipleIcon" alt="" coords="683,17,773,41"/>
+<area shape="rect" id="node4" href="./MultipleIcon.html" title="&lt;TABLE&gt;" alt="" coords="673,5,783,53"/>
+<area shape="rect" id="node5_4" href="./GTCodeButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.GTCodeButtonEditor" alt="" coords="797,113,931,137"/>
+<area shape="rect" id="node5" href="./GTCodeButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="786,101,942,149"/>
+<area shape="rect" id="node6_5" href="./FunctionContainerNode.html" title="se.cambio.cds.gdl.editor.view.util.FunctionContainerNode" alt="" coords="955,17,1109,41"/>
+<area shape="rect" id="node6" href="./FunctionContainerNode.html" title="&lt;TABLE&gt;" alt="" coords="945,5,1119,53"/>
+<area shape="rect" id="node7_6" href="./ExportUtils.html" title="se.cambio.cds.gdl.editor.view.util.ExportUtils" alt="" coords="1154,17,1235,41"/>
+<area shape="rect" id="node7" href="./ExportUtils.html" title="&lt;TABLE&gt;" alt="" coords="1143,5,1246,53"/>
+<area shape="rect" id="node8_7" href="./ClusterNodesUtil.html" title="se.cambio.cds.gdl.editor.view.util.ClusterNodesUtil" alt="" coords="1281,17,1394,41"/>
+<area shape="rect" id="node8" href="./ClusterNodesUtil.html" title="&lt;TABLE&gt;" alt="" coords="1270,5,1405,53"/>
+<area shape="rect" id="node9_8" href="./ButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.ButtonEditor" alt="" coords="818,17,910,41"/>
+<area shape="rect" id="node9" href="./ButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="807,5,921,53"/>
+<area shape="rect" id="node10_9" href="./AttributeFunctionContainerNode.html" title="se.cambio.cds.gdl.editor.view.util.AttributeFunctionContainerNode" alt="" coords="1439,17,1643,41"/>
+<area shape="rect" id="node10" href="./AttributeFunctionContainerNode.html" title="&lt;TABLE&gt;" alt="" coords="1429,5,1654,53"/>
+</map>

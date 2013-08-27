@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../ArchetypeElementInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine" alt="" coords="15,110,254,146"/>
+<area shape="rect" id="node1" href="../ArchetypeElementInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="5,104,265,152"/>
+<area shape="rect" id="node2_1" href="./GTCodeDefiner.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner" alt="" coords="83,11,187,50"/>
+<area shape="rect" id="node2" href="./GTCodeDefiner.html" title="&lt;TABLE&gt;" alt="" coords="72,6,197,55"/>
+</map>

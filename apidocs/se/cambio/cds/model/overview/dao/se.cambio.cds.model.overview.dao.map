@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./InJarOverviewDAO.html" title="se.cambio.cds.model.overview.dao.InJarOverviewDAO" alt="" coords="15,116,137,140"/>
+<area shape="rect" id="node1" href="./InJarOverviewDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,147,152"/>
+<area shape="rect" id="node2_1" href="./GenericOverviewFactory.html" title="se.cambio.cds.model.overview.dao.GenericOverviewFactory" alt="" coords="272,19,429,43"/>
+<area shape="rect" id="node2" href="./GenericOverviewFactory.html" title="&lt;TABLE&gt;" alt="" coords="261,7,440,55"/>
+<area shape="rect" id="node3_2" href="./GenericOverviewDAO.html" title="se.cambio.cds.model.overview.dao.GenericOverviewDAO" alt="" coords="89,11,226,50"/>
+<area shape="rect" id="node3" href="./GenericOverviewDAO.html" title="&lt;TABLE&gt;" alt="" coords="78,6,237,55"/>
+<area shape="rect" id="node4_3" href="./FileOverviewDAO.html" title="se.cambio.cds.model.overview.dao.FileOverviewDAO" alt="" coords="182,116,295,140"/>
+<area shape="rect" id="node4" href="./FileOverviewDAO.html" title="&lt;TABLE&gt;" alt="" coords="171,104,306,152"/>
+</map>

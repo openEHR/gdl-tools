@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="15,203,209,239"/>
+<area shape="rect" id="node1" href="../../../../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="5,197,219,245"/>
+<area shape="rect" id="node2_1" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="149,17,334,41"/>
+<area shape="rect" id="node2" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="138,5,345,53"/>
+<area shape="rect" id="node3_2" href="./CurrentDateTimeRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.CurrentDateTimeRuleLineElement" alt="" coords="139,113,344,137"/>
+<area shape="rect" id="node3" href="./CurrentDateTimeRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="128,101,355,149"/>
+<area shape="rect" id="node4_3" href="../../../../../../openehr/model/archetypeelement/vo/ArchetypeElementVO.html" title="se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO" alt="" coords="254,203,490,239"/>
+<area shape="rect" id="node4" href="../../../../../../openehr/model/archetypeelement/vo/ArchetypeElementVO.html" title="&lt;TABLE&gt;" alt="" coords="243,197,501,245"/>
+</map>

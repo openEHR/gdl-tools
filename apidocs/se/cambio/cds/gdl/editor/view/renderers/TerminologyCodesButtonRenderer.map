@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../panels/TerminologyCodesWithButtonPanel.html" title="se.cambio.cds.gdl.editor.view.panels.TerminologyCodesWithButtonPanel" alt="" coords="16,11,229,47"/>
+<area shape="rect" id="node1" href="../panels/TerminologyCodesWithButtonPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,5,240,53"/>
+<area shape="rect" id="node2_1" href="./TerminologyCodesButtonRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.TerminologyCodesButtonRenderer" alt="" coords="17,113,228,137"/>
+<area shape="rect" id="node2" href="./TerminologyCodesButtonRenderer.html" title="&lt;TABLE&gt;" alt="" coords="7,101,239,149"/>
+</map>

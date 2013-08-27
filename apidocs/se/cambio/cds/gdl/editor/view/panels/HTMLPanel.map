@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="18,217,185,253"/>
+<area shape="rect" id="node1" href="../../controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="7,211,195,259"/>
+<area shape="rect" id="node2_1" href="./HTMLPanel.html" title="se.cambio.cds.gdl.editor.view.panels.HTMLPanel" alt="" coords="106,127,187,151"/>
+<area shape="rect" id="node2" href="./HTMLPanel.html" title="&lt;TABLE&gt;" alt="" coords="95,115,198,163"/>
+<area shape="rect" id="node3_2" href="./GuidePanel.html" title="se.cambio.cds.gdl.editor.view.panels.GuidePanel" alt="" coords="16,24,99,48"/>
+<area shape="rect" id="node3" href="./GuidePanel.html" title="&lt;TABLE&gt;" alt="" coords="5,12,109,60"/>
+<area shape="rect" id="node4_3" href="./interfaces/RefreshablePanel.html" title="se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel" alt="" coords="144,11,365,61"/>
+<area shape="rect" id="node4" href="./interfaces/RefreshablePanel.html" title="&lt;TABLE&gt;" alt="" coords="133,5,376,67"/>
+</map>

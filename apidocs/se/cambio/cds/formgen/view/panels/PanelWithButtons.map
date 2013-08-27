@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../openehr/view/panels/DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="20,203,188,239"/>
+<area shape="rect" id="node1" href="../../../openehr/view/panels/DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="9,197,199,245"/>
+<area shape="rect" id="node2_1" href="./PanelWithButtons.html" title="se.cambio.cds.formgen.view.panels.PanelWithButtons" alt="" coords="45,113,163,137"/>
+<area shape="rect" id="node2" href="./PanelWithButtons.html" title="&lt;TABLE&gt;" alt="" coords="34,101,174,149"/>
+<area shape="rect" id="node3_2" href="./ElementInstanceGroupPanel.html" title="se.cambio.cds.formgen.view.panels.ElementInstanceGroupPanel" alt="" coords="16,17,192,41"/>
+<area shape="rect" id="node3" href="./ElementInstanceGroupPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,5,203,53"/>
+</map>

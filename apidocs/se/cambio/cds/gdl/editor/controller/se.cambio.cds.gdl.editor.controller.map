@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./RuleLineCloner.html" title="se.cambio.cds.gdl.editor.controller.RuleLineCloner" alt="" coords="16,17,120,41"/>
+<area shape="rect" id="node1" href="./RuleLineCloner.html" title="&lt;TABLE&gt;" alt="" coords="5,5,131,53"/>
+<area shape="rect" id="node2_1" href="./RuleElementEditor.html" title="se.cambio.cds.gdl.editor.controller.RuleElementEditor" alt="" coords="166,17,287,41"/>
+<area shape="rect" id="node2" href="./RuleElementEditor.html" title="&lt;TABLE&gt;" alt="" coords="155,5,298,53"/>
+<area shape="rect" id="node3_2" href="./GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="347,113,421,137"/>
+<area shape="rect" id="node3" href="./GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="336,101,432,149"/>
+<area shape="rect" id="node4_3" href="./EditorManager.html" title="se.cambio.cds.gdl.editor.controller.EditorManager" alt="" coords="333,17,435,41"/>
+<area shape="rect" id="node4" href="./EditorManager.html" title="&lt;TABLE&gt;" alt="" coords="323,5,445,53"/>
+</map>

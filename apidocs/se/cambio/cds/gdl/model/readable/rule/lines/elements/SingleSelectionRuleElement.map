@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./SingleSelectionRuleElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleElement" alt="" coords="395,107,586,146"/>
+<area shape="rect" id="node1" href="./SingleSelectionRuleElement.html" title="&lt;TABLE&gt;" alt="" coords="385,102,597,151"/>
+<area shape="rect" id="node2_1" href="./IsAOperatorRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.IsAOperatorRuleLineElement" alt="" coords="15,212,193,236"/>
+<area shape="rect" id="node2" href="./IsAOperatorRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="5,200,203,248"/>
+<area shape="rect" id="node3_2" href="./ExistenceOperatorRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ExistenceOperatorRuleLineElement" alt="" coords="239,212,455,236"/>
+<area shape="rect" id="node3" href="./ExistenceOperatorRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="228,200,465,248"/>
+<area shape="rect" id="node4_3" href="./EqualityComparisonOperatorRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.EqualityComparisonOperatorRuleLineElement" alt="" coords="500,212,769,236"/>
+<area shape="rect" id="node4" href="./EqualityComparisonOperatorRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="489,200,780,248"/>
+<area shape="rect" id="node5_4" href="./AbstractComparisonOperatorRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.AbstractComparisonOperatorRuleLineElement" alt="" coords="815,212,1089,236"/>
+<area shape="rect" id="node5" href="./AbstractComparisonOperatorRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="805,200,1099,248"/>
+<area shape="rect" id="node6_5" href="../../../../../editor/view/renderers/SingleSelectionRuleElementRenderer.html" title="se.cambio.cds.gdl.editor.view.renderers.SingleSelectionRuleElementRenderer" alt="" coords="378,11,603,47"/>
+<area shape="rect" id="node6" href="../../../../../editor/view/renderers/SingleSelectionRuleElementRenderer.html" title="&lt;TABLE&gt;" alt="" coords="367,5,614,53"/>
+</map>

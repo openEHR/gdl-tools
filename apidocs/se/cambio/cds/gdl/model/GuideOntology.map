@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TermDefinition.html" title="se.cambio.cds.gdl.model.TermDefinition" alt="" coords="16,209,117,233"/>
+<area shape="rect" id="node1" href="./TermDefinition.html" title="&lt;TABLE&gt;" alt="" coords="5,197,128,245"/>
+<area shape="rect" id="node2_1" href="./TermBinding.html" title="se.cambio.cds.gdl.model.TermBinding" alt="" coords="163,209,253,233"/>
+<area shape="rect" id="node2" href="./TermBinding.html" title="&lt;TABLE&gt;" alt="" coords="153,197,263,245"/>
+<area shape="rect" id="node3_2" href="./GuideOntology.html" title="se.cambio.cds.gdl.model.GuideOntology" alt="" coords="86,113,189,137"/>
+<area shape="rect" id="node3" href="./GuideOntology.html" title="&lt;TABLE&gt;" alt="" coords="75,101,199,149"/>
+<area shape="rect" id="node4_3" href="./Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="111,17,164,41"/>
+<area shape="rect" id="node4" href="./Guide.html" title="&lt;TABLE&gt;" alt="" coords="100,5,175,53"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../ArchetypeElementInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine" alt="" coords="298,107,537,143"/>
+<area shape="rect" id="node1" href="../ArchetypeElementInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="287,101,547,149"/>
+<area shape="rect" id="node3_1" href="./GTCodeRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement" alt="" coords="508,209,663,233"/>
+<area shape="rect" id="node3" href="./GTCodeRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="497,197,673,245"/>
+<area shape="rect" id="node2_2" href="./RuleLineElementWithValue.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue" alt="" coords="15,113,201,137"/>
+<area shape="rect" id="node2" href="./RuleLineElementWithValue.html" title="&lt;TABLE&gt;" alt="" coords="5,101,211,149"/>
+<area shape="rect" id="node4_3" href="../../../../../editor/controller/RuleElementEditor.html" title="se.cambio.cds.gdl.editor.controller.RuleElementEditor" alt="" coords="119,11,286,47"/>
+<area shape="rect" id="node4" href="../../../../../editor/controller/RuleElementEditor.html" title="&lt;TABLE&gt;" alt="" coords="109,5,297,53"/>
+<area shape="rect" id="node5_4" href="../../../../../editor/view/util/NodeDefinitionConversor.html" title="se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor" alt="" coords="381,11,544,47"/>
+<area shape="rect" id="node5" href="../../../../../editor/view/util/NodeDefinitionConversor.html" title="&lt;TABLE&gt;" alt="" coords="371,5,555,53"/>
+<area shape="rect" id="node6_5" href="../../../../../editor/view/util/FunctionContainerNode.html" title="se.cambio.cds.gdl.editor.view.util.FunctionContainerNode" alt="" coords="633,107,796,143"/>
+<area shape="rect" id="node6" href="../../../../../editor/view/util/FunctionContainerNode.html" title="&lt;TABLE&gt;" alt="" coords="623,101,807,149"/>
+<area shape="rect" id="node7_6" href="../../../../../editor/view/util/AttributeFunctionContainerNode.html" title="se.cambio.cds.gdl.editor.view.util.AttributeFunctionContainerNode" alt="" coords="842,107,1046,143"/>
+<area shape="rect" id="node7" href="../../../../../editor/view/util/AttributeFunctionContainerNode.html" title="&lt;TABLE&gt;" alt="" coords="831,101,1057,149"/>
+</map>

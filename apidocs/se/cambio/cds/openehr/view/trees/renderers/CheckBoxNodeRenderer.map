@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../editors/CheckBoxNodeEditor.html" title="se.cambio.cds.openehr.view.trees.editors.CheckBoxNodeEditor" alt="" coords="15,11,214,47"/>
+<area shape="rect" id="node1" href="../editors/CheckBoxNodeEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,5,225,53"/>
+<area shape="rect" id="node2_1" href="./CheckBoxNodeRenderer.html" title="se.cambio.cds.openehr.view.trees.renderers.CheckBoxNodeRenderer" alt="" coords="141,113,315,137"/>
+<area shape="rect" id="node2" href="./CheckBoxNodeRenderer.html" title="&lt;TABLE&gt;" alt="" coords="131,101,325,149"/>
+<area shape="rect" id="node4_2" href="../SelectableNode.html" title="se.cambio.cds.openehr.view.trees.SelectableNode" alt="" coords="145,203,311,239"/>
+<area shape="rect" id="node4" href="../SelectableNode.html" title="&lt;TABLE&gt;" alt="" coords="135,197,321,245"/>
+<area shape="rect" id="node3_3" href="../SelectionTree.html" title="se.cambio.cds.openehr.view.trees.SelectionTree" alt="" coords="260,11,425,47"/>
+<area shape="rect" id="node3" href="../SelectionTree.html" title="&lt;TABLE&gt;" alt="" coords="249,5,436,53"/>
+</map>

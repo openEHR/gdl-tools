@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/CodedTextDTO.html" title="se.cambio.cds.model.codedText.dto.CodedTextDTO" alt="" coords="105,305,274,341"/>
+<area shape="rect" id="node1" href="../dto/CodedTextDTO.html" title="&lt;TABLE&gt;" alt="" coords="94,299,285,347"/>
+<area shape="rect" id="node2_1" href="./SQLGenericCodedTextDAO.html" title="se.cambio.cds.model.codedText.dao.SQLGenericCodedTextDAO" alt="" coords="22,116,191,140"/>
+<area shape="rect" id="node2" href="./SQLGenericCodedTextDAO.html" title="&lt;TABLE&gt;" alt="" coords="11,104,202,152"/>
+<area shape="rect" id="node3_2" href="./SQLCodedTextDAO.html" title="se.cambio.cds.model.codedText.dao.SQLCodedTextDAO" alt="" coords="16,206,141,245"/>
+<area shape="rect" id="node3" href="./SQLCodedTextDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,201,152,250"/>
+<area shape="rect" id="node4_3" href="./GenericCodedTextDAO.html" title="se.cambio.cds.model.codedText.dao.GenericCodedTextDAO" alt="" coords="99,11,247,50"/>
+<area shape="rect" id="node4" href="./GenericCodedTextDAO.html" title="&lt;TABLE&gt;" alt="" coords="89,6,258,55"/>
+</map>

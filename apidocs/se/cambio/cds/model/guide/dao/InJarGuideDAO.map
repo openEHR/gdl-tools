@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/GuideDTO.html" title="se.cambio.cds.model.guide.dto.GuideDTO" alt="" coords="42,206,190,242"/>
+<area shape="rect" id="node1" href="../dto/GuideDTO.html" title="&lt;TABLE&gt;" alt="" coords="31,200,201,248"/>
+<area shape="rect" id="node2_1" href="./InJarGuideDAO.html" title="se.cambio.cds.model.guide.dao.InJarGuideDAO" alt="" coords="15,116,118,140"/>
+<area shape="rect" id="node2" href="./InJarGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,104,129,152"/>
+<area shape="rect" id="node3_2" href="./GenericGuideDAO.html" title="se.cambio.cds.model.guide.dao.GenericGuideDAO" alt="" coords="56,11,176,50"/>
+<area shape="rect" id="node3" href="./GenericGuideDAO.html" title="&lt;TABLE&gt;" alt="" coords="45,6,187,55"/>
+</map>

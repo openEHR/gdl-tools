@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../util/CDSTerminologyService.html" title="se.cambio.cds.util.CDSTerminologyService" alt="" coords="307,11,455,47"/>
+<area shape="rect" id="node1" href="../util/CDSTerminologyService.html" title="&lt;TABLE&gt;" alt="" coords="297,5,466,53"/>
+<area shape="rect" id="node4_1" href="./TerminologyService.html" title="se.cambio.cds.ts.TerminologyService" alt="" coords="228,107,356,146"/>
+<area shape="rect" id="node4" href="./TerminologyService.html" title="&lt;TABLE&gt;" alt="" coords="217,102,367,151"/>
+<area shape="rect" id="node5_2" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="org.openehr.rm.datatypes.text.CodePhrase" alt="" coords="344,305,499,341"/>
+<area shape="rect" id="node5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/text/CodePhrase.html" title="&lt;TABLE&gt;" alt="" coords="333,299,509,347"/>
+<area shape="rect" id="node2_3" href="./TerminologyServicePlugin.html" title="se.cambio.cds.ts.TerminologyServicePlugin" alt="" coords="211,206,373,245"/>
+<area shape="rect" id="node2" href="./TerminologyServicePlugin.html" title="&lt;TABLE&gt;" alt="" coords="201,201,383,250"/>
+<area shape="rect" id="node3_4" href="./TerminologyServiceImpl.html" title="se.cambio.cds.ts.TerminologyServiceImpl" alt="" coords="16,213,165,237"/>
+<area shape="rect" id="node3" href="./TerminologyServiceImpl.html" title="&lt;TABLE&gt;" alt="" coords="5,201,176,249"/>
+</map>

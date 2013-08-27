@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../gdl/model/TermDefinition.html" title="se.cambio.cds.gdl.model.TermDefinition" alt="" coords="180,203,300,239"/>
+<area shape="rect" id="node1" href="../../../gdl/model/TermDefinition.html" title="&lt;TABLE&gt;" alt="" coords="169,197,311,245"/>
+<area shape="rect" id="node2_1" href="../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="346,203,539,239"/>
+<area shape="rect" id="node2" href="../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="335,197,550,245"/>
+<area shape="rect" id="node3_2" href="./PanelWithButtons.html" title="se.cambio.cds.formgen.view.panels.PanelWithButtons" alt="" coords="15,209,134,233"/>
+<area shape="rect" id="node3" href="./PanelWithButtons.html" title="&lt;TABLE&gt;" alt="" coords="5,197,145,245"/>
+<area shape="rect" id="node4_3" href="./ElementInstanceGroupPanel.html" title="se.cambio.cds.formgen.view.panels.ElementInstanceGroupPanel" alt="" coords="168,113,344,137"/>
+<area shape="rect" id="node4" href="./ElementInstanceGroupPanel.html" title="&lt;TABLE&gt;" alt="" coords="157,101,355,149"/>
+<area shape="rect" id="node5_4" href="./CDSFormPanel.html" title="se.cambio.cds.formgen.view.panels.CDSFormPanel" alt="" coords="275,17,373,41"/>
+<area shape="rect" id="node5" href="./CDSFormPanel.html" title="&lt;TABLE&gt;" alt="" coords="265,5,383,53"/>
+</map>

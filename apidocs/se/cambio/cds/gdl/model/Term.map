@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TermDefinition.html" title="se.cambio.cds.gdl.model.TermDefinition" alt="" coords="401,113,503,137"/>
+<area shape="rect" id="node1" href="./TermDefinition.html" title="&lt;TABLE&gt;" alt="" coords="391,101,513,149"/>
+<area shape="rect" id="node2_1" href="./Term.html" title="se.cambio.cds.gdl.model.Term" alt="" coords="329,209,378,233"/>
+<area shape="rect" id="node2" href="./Term.html" title="&lt;TABLE&gt;" alt="" coords="317,197,389,245"/>
+<area shape="rect" id="node3_2" href="./readable/rule/lines/elements/DataValueRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.DataValueRuleLineElement" alt="" coords="63,107,305,143"/>
+<area shape="rect" id="node3" href="./readable/rule/lines/elements/DataValueRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="52,101,316,149"/>
+<area shape="rect" id="node4_3" href="../../openehr/util/DVUIUtil.html" title="se.cambio.cds.openehr.util.DVUIUtil" alt="" coords="15,11,147,47"/>
+<area shape="rect" id="node4" href="../../openehr/util/DVUIUtil.html" title="&lt;TABLE&gt;" alt="" coords="5,5,158,53"/>
+<area shape="rect" id="node5_4" href="../../formgen/controller/FormGeneratorController.html" title="se.cambio.cds.formgen.controller.FormGeneratorController" alt="" coords="261,11,422,47"/>
+<area shape="rect" id="node5" href="../../formgen/controller/FormGeneratorController.html" title="&lt;TABLE&gt;" alt="" coords="250,5,433,53"/>
+<area shape="rect" id="node6_5" href="../editor/controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="467,11,634,47"/>
+<area shape="rect" id="node6" href="../editor/controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="457,5,645,53"/>
+</map>

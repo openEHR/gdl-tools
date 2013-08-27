@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./GDLBinding.html" title="se.cambio.cds.gdl.parser.GDLBinding" alt="" coords="383,17,465,41"/>
+<area shape="rect" id="node1" href="./GDLBinding.html" title="&lt;TABLE&gt;" alt="" coords="373,5,475,53"/>
+<area shape="rect" id="node2_1" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/PrimitiveObjectBlock.html" title="org.openehr.am.parser.PrimitiveObjectBlock" alt="" coords="15,107,153,143"/>
+<area shape="rect" id="node2" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/PrimitiveObjectBlock.html" title="&lt;TABLE&gt;" alt="" coords="5,101,163,149"/>
+<area shape="rect" id="node3_2" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/KeyedObject.html" title="org.openehr.am.parser.KeyedObject" alt="" coords="199,107,319,143"/>
+<area shape="rect" id="node3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/KeyedObject.html" title="&lt;TABLE&gt;" alt="" coords="188,101,329,149"/>
+<area shape="rect" id="node4_3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/ContentObject.html" title="org.openehr.am.parser.ContentObject" alt="" coords="364,107,484,143"/>
+<area shape="rect" id="node4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/ContentObject.html" title="&lt;TABLE&gt;" alt="" coords="353,101,495,149"/>
+<area shape="rect" id="node5_4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/ComplexObjectBlock.html" title="org.openehr.am.parser.ComplexObjectBlock" alt="" coords="529,107,665,143"/>
+<area shape="rect" id="node5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/ComplexObjectBlock.html" title="&lt;TABLE&gt;" alt="" coords="519,101,676,149"/>
+<area shape="rect" id="node6_5" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/ObjectBlock.html" title="org.openehr.am.parser.ObjectBlock" alt="" coords="711,107,831,143"/>
+<area shape="rect" id="node6" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/parser/ObjectBlock.html" title="&lt;TABLE&gt;" alt="" coords="700,101,841,149"/>
+</map>

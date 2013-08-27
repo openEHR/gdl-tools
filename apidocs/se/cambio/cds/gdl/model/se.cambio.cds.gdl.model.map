@@ -1,0 +1,34 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./TranslationDetails.html" title="se.cambio.cds.gdl.model.TranslationDetails" alt="" coords="16,212,133,236"/>
+<area shape="rect" id="node1" href="./TranslationDetails.html" title="&lt;TABLE&gt;" alt="" coords="5,200,144,248"/>
+<area shape="rect" id="node2_1" href="./TermDefinition.html" title="se.cambio.cds.gdl.model.TermDefinition" alt="" coords="645,212,747,236"/>
+<area shape="rect" id="node2" href="./TermDefinition.html" title="&lt;TABLE&gt;" alt="" coords="635,200,757,248"/>
+<area shape="rect" id="node4_2" href="./Term.html" title="se.cambio.cds.gdl.model.Term" alt="" coords="671,308,721,332"/>
+<area shape="rect" id="node4" href="./Term.html" title="&lt;TABLE&gt;" alt="" coords="660,296,732,344"/>
+<area shape="rect" id="node3_3" href="./TermBinding.html" title="se.cambio.cds.gdl.model.TermBinding" alt="" coords="793,212,882,236"/>
+<area shape="rect" id="node3" href="./TermBinding.html" title="&lt;TABLE&gt;" alt="" coords="782,200,893,248"/>
+<area shape="rect" id="node15_4" href="./Binding.html" title="se.cambio.cds.gdl.model.Binding" alt="" coords="807,308,868,332"/>
+<area shape="rect" id="node15" href="./Binding.html" title="&lt;TABLE&gt;" alt="" coords="796,296,879,344"/>
+<area shape="rect" id="node5_5" href="./Rule.html" title="se.cambio.cds.gdl.model.Rule" alt="" coords="552,212,597,236"/>
+<area shape="rect" id="node5" href="./Rule.html" title="&lt;TABLE&gt;" alt="" coords="539,200,611,248"/>
+<area shape="rect" id="node6_6" href="./ResourceDescriptionItem.html" title="se.cambio.cds.gdl.model.ResourceDescriptionItem" alt="" coords="179,212,339,236"/>
+<area shape="rect" id="node6" href="./ResourceDescriptionItem.html" title="&lt;TABLE&gt;" alt="" coords="168,200,349,248"/>
+<area shape="rect" id="node7_7" href="./ResourceDescription.html" title="se.cambio.cds.gdl.model.ResourceDescription" alt="" coords="200,116,336,140"/>
+<area shape="rect" id="node7" href="./ResourceDescription.html" title="&lt;TABLE&gt;" alt="" coords="189,104,347,152"/>
+<area shape="rect" id="node8_8" href="./Language.html" title="se.cambio.cds.gdl.model.Language" alt="" coords="65,116,137,140"/>
+<area shape="rect" id="node8" href="./Language.html" title="&lt;TABLE&gt;" alt="" coords="55,104,148,152"/>
+<area shape="rect" id="node9_9" href="./GuideOntology.html" title="se.cambio.cds.gdl.model.GuideOntology" alt="" coords="645,116,747,140"/>
+<area shape="rect" id="node9" href="./GuideOntology.html" title="&lt;TABLE&gt;" alt="" coords="634,104,758,152"/>
+<area shape="rect" id="node10_10" href="./GuideDefinition.html" title="se.cambio.cds.gdl.model.GuideDefinition" alt="" coords="391,116,497,140"/>
+<area shape="rect" id="node10" href="./GuideDefinition.html" title="&lt;TABLE&gt;" alt="" coords="381,104,507,152"/>
+<area shape="rect" id="node16_11" href="./ArchetypeBinding.html" title="se.cambio.cds.gdl.model.ArchetypeBinding" alt="" coords="385,212,503,236"/>
+<area shape="rect" id="node16" href="./ArchetypeBinding.html" title="&lt;TABLE&gt;" alt="" coords="374,200,514,248"/>
+<area shape="rect" id="node11_12" href="./Guide.html" title="se.cambio.cds.gdl.model.Guide" alt="" coords="329,19,383,43"/>
+<area shape="rect" id="node11" href="./Guide.html" title="&lt;TABLE&gt;" alt="" coords="319,7,393,55"/>
+<area shape="rect" id="node12_13" href="./Function.html" title="se.cambio.cds.gdl.model.Function" alt="" coords="429,11,531,50"/>
+<area shape="rect" id="node12" href="./Function.html" title="&lt;TABLE&gt;" alt="" coords="418,6,542,55"/>
+<area shape="rect" id="node13_14" href="./ElementBinding.html" title="se.cambio.cds.gdl.model.ElementBinding" alt="" coords="391,308,497,332"/>
+<area shape="rect" id="node13" href="./ElementBinding.html" title="&lt;TABLE&gt;" alt="" coords="381,296,507,344"/>
+<area shape="rect" id="node14_15" href="./Domain.html" title="se.cambio.cds.gdl.model.Domain" alt="" coords="577,11,679,50"/>
+<area shape="rect" id="node14" href="./Domain.html" title="&lt;TABLE&gt;" alt="" coords="566,6,690,55"/>
+</map>

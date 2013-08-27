@@ -1,0 +1,26 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DialogSelection.html" title="se.cambio.cds.openehr.view.dialogs.DialogSelection" alt="" coords="15,113,121,137"/>
+<area shape="rect" id="node1" href="./DialogSelection.html" title="&lt;TABLE&gt;" alt="" coords="5,101,131,149"/>
+<area shape="rect" id="node2_1" href="./DialogLongMessageNotice.html" title="se.cambio.cds.openehr.view.dialogs.DialogLongMessageNotice" alt="" coords="166,113,327,137"/>
+<area shape="rect" id="node2" href="./DialogLongMessageNotice.html" title="&lt;TABLE&gt;" alt="" coords="155,101,338,149"/>
+<area shape="rect" id="node3_2" href="./DialogEditor.html" title="se.cambio.cds.openehr.view.dialogs.DialogEditor" alt="" coords="1073,17,1159,41"/>
+<area shape="rect" id="node3" href="./DialogEditor.html" title="&lt;TABLE&gt;" alt="" coords="1063,5,1169,53"/>
+<area shape="rect" id="node6_3" href="../../../gdl/editor/view/dialog/DialogSetLanguage.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogSetLanguage" alt="" coords="373,107,547,143"/>
+<area shape="rect" id="node6" href="../../../gdl/editor/view/dialog/DialogSetLanguage.html" title="&lt;TABLE&gt;" alt="" coords="363,101,557,149"/>
+<area shape="rect" id="node7_4" href="../../../gdl/editor/view/dialog/DialogSelection.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogSelection" alt="" coords="592,107,765,143"/>
+<area shape="rect" id="node7" href="../../../gdl/editor/view/dialog/DialogSelection.html" title="&lt;TABLE&gt;" alt="" coords="581,101,776,149"/>
+<area shape="rect" id="node8_5" href="../../../gdl/editor/view/dialog/DialogRepositoriesPaths.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogRepositoriesPaths" alt="" coords="811,107,984,143"/>
+<area shape="rect" id="node8" href="../../../gdl/editor/view/dialog/DialogRepositoriesPaths.html" title="&lt;TABLE&gt;" alt="" coords="800,101,995,149"/>
+<area shape="rect" id="node9_6" href="../../../gdl/editor/view/dialog/DialogNameInsert.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert" alt="" coords="1029,107,1203,143"/>
+<area shape="rect" id="node9" href="../../../gdl/editor/view/dialog/DialogNameInsert.html" title="&lt;TABLE&gt;" alt="" coords="1019,101,1213,149"/>
+<area shape="rect" id="node10_7" href="../../../gdl/editor/view/dialog/DialogExpressionEditor.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogExpressionEditor" alt="" coords="1248,107,1421,143"/>
+<area shape="rect" id="node10" href="../../../gdl/editor/view/dialog/DialogExpressionEditor.html" title="&lt;TABLE&gt;" alt="" coords="1237,101,1432,149"/>
+<area shape="rect" id="node11_8" href="../../../gdl/editor/view/dialog/DialogCurrentTimeSelection.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogCurrentTimeSelection" alt="" coords="1467,107,1640,143"/>
+<area shape="rect" id="node11" href="../../../gdl/editor/view/dialog/DialogCurrentTimeSelection.html" title="&lt;TABLE&gt;" alt="" coords="1456,101,1651,149"/>
+<area shape="rect" id="node12_9" href="../../../gdl/editor/view/dialog/DialogComboBoxInsert.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogComboBoxInsert" alt="" coords="1685,107,1859,143"/>
+<area shape="rect" id="node12" href="../../../gdl/editor/view/dialog/DialogComboBoxInsert.html" title="&lt;TABLE&gt;" alt="" coords="1675,101,1869,149"/>
+<area shape="rect" id="node5_10" href="./DialogEditor.AceptarCambiosAction.html" title="se.cambio.cds.openehr.view.dialogs.DialogEditor.AceptarCambiosAction" alt="" coords="1905,113,2050,137"/>
+<area shape="rect" id="node5" href="./DialogEditor.AceptarCambiosAction.html" title="&lt;TABLE&gt;" alt="" coords="1894,101,2061,149"/>
+<area shape="rect" id="node4_11" href="./DialogEditor.CancelarCambiosAction.html" title="se.cambio.cds.openehr.view.dialogs.DialogEditor.CancelarCambiosAction" alt="" coords="2096,113,2245,137"/>
+<area shape="rect" id="node4" href="./DialogEditor.CancelarCambiosAction.html" title="&lt;TABLE&gt;" alt="" coords="2085,101,2256,149"/>
+</map>

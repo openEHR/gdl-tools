@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/expression/ExpressionItem.html" title="se.cambio.cds.gdl.model.expression.ExpressionItem" alt="" coords="518,203,687,239"/>
+<area shape="rect" id="node1" href="../../../model/expression/ExpressionItem.html" title="&lt;TABLE&gt;" alt="" coords="507,197,698,245"/>
+<area shape="rect" id="node2_1" href="../../../model/readable/rule/lines/elements/ExpressionRuleLineElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement" alt="" coords="16,203,259,239"/>
+<area shape="rect" id="node2" href="../../../model/readable/rule/lines/elements/ExpressionRuleLineElement.html" title="&lt;TABLE&gt;" alt="" coords="5,197,269,245"/>
+<area shape="rect" id="node3_2" href="../../../../openehr/view/dialogs/DialogEditor.html" title="se.cambio.cds.openehr.view.dialogs.DialogEditor" alt="" coords="303,11,473,47"/>
+<area shape="rect" id="node3" href="../../../../openehr/view/dialogs/DialogEditor.html" title="&lt;TABLE&gt;" alt="" coords="292,5,484,53"/>
+<area shape="rect" id="node5_3" href="./DialogExpressionEditor.html" title="se.cambio.cds.gdl.editor.view.dialog.DialogExpressionEditor" alt="" coords="316,113,460,137"/>
+<area shape="rect" id="node5" href="./DialogExpressionEditor.html" title="&lt;TABLE&gt;" alt="" coords="305,101,471,149"/>
+<area shape="rect" id="node4_4" href="../../../../openehr/view/panels/SelectionPanel.html" title="se.cambio.cds.openehr.view.panels.SelectionPanel" alt="" coords="304,203,472,239"/>
+<area shape="rect" id="node4" href="../../../../openehr/view/panels/SelectionPanel.html" title="&lt;TABLE&gt;" alt="" coords="293,197,483,245"/>
+</map>

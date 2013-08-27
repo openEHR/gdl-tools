@@ -1,0 +1,22 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../model/facade/execution/vo/ArchetypeReference.html" title="se.cambio.cds.model.facade.execution.vo.ArchetypeReference" alt="" coords="1017,409,1210,445"/>
+<area shape="rect" id="node1" href="../../../../../model/facade/execution/vo/ArchetypeReference.html" title="&lt;TABLE&gt;" alt="" coords="1006,403,1221,451"/>
+<area shape="rect" id="node2_1" href="./RuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.RuleLine" alt="" coords="774,216,842,240"/>
+<area shape="rect" id="node2" href="./RuleLine.html" title="&lt;TABLE&gt;" alt="" coords="763,204,853,252"/>
+<area shape="rect" id="node3_2" href="./ArchetypeInstantiationRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine" alt="" coords="711,319,905,343"/>
+<area shape="rect" id="node3" href="./ArchetypeInstantiationRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="700,307,916,355"/>
+<area shape="rect" id="node4_3" href="./elements/ArchetypeReferenceRuleLineDefinitionElement.html" title="se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineDefinitionElement" alt="" coords="667,409,949,445"/>
+<area shape="rect" id="node4" href="./elements/ArchetypeReferenceRuleLineDefinitionElement.html" title="&lt;TABLE&gt;" alt="" coords="657,403,959,451"/>
+<area shape="rect" id="node5_4" href="./interfaces/DefinitionsRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine" alt="" coords="224,203,472,253"/>
+<area shape="rect" id="node5" href="./interfaces/DefinitionsRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="213,197,483,259"/>
+<area shape="rect" id="node6_5" href="./interfaces/ArchetypeReferenceRuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine" alt="" coords="989,203,1237,253"/>
+<area shape="rect" id="node6" href="./interfaces/ArchetypeReferenceRuleLine.html" title="&lt;TABLE&gt;" alt="" coords="979,197,1248,259"/>
+<area shape="rect" id="node7_6" href="../../util/ReadableArchetypeReferencesUtil.html" title="se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil" alt="" coords="517,210,728,246"/>
+<area shape="rect" id="node7" href="../../util/ReadableArchetypeReferencesUtil.html" title="&lt;TABLE&gt;" alt="" coords="507,204,739,252"/>
+<area shape="rect" id="node8_7" href="../../../../editor/controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="726,107,893,143"/>
+<area shape="rect" id="node8" href="../../../../editor/controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="715,101,903,149"/>
+<area shape="rect" id="node9_8" href="../../../../editor/util/DefinitionDependencyChecker.html" title="se.cambio.cds.gdl.editor.util.DefinitionDependencyChecker" alt="" coords="780,11,969,47"/>
+<area shape="rect" id="node9" href="../../../../editor/util/DefinitionDependencyChecker.html" title="&lt;TABLE&gt;" alt="" coords="769,5,980,53"/>
+<area shape="rect" id="node10_9" href="../../../../editor/view/util/NodeDefinitionConversor.html" title="se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor" alt="" coords="16,210,179,246"/>
+<area shape="rect" id="node10" href="../../../../editor/view/util/NodeDefinitionConversor.html" title="&lt;TABLE&gt;" alt="" coords="5,204,189,252"/>
+</map>

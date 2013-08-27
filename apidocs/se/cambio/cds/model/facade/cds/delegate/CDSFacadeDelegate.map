@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../controller/guide/GuideManager.html" title="se.cambio.cds.controller.guide.GuideManager" alt="" coords="44,302,192,338"/>
+<area shape="rect" id="node1" href="../../../../controller/guide/GuideManager.html" title="&lt;TABLE&gt;" alt="" coords="33,296,202,344"/>
+<area shape="rect" id="node2_1" href="../../../../controller/guide/ElementInstanceCollection.html" title="se.cambio.cds.controller.guide.ElementInstanceCollection" alt="" coords="34,405,202,441"/>
+<area shape="rect" id="node2" href="../../../../controller/guide/ElementInstanceCollection.html" title="&lt;TABLE&gt;" alt="" coords="23,399,212,447"/>
+<area shape="rect" id="node7_2" href="../../execution/vo/ExecutionMode.html" title="se.cambio.cds.model.facade.execution.vo.ExecutionMode" alt="" coords="272,397,465,448"/>
+<area shape="rect" id="node7" href="../../execution/vo/ExecutionMode.html" title="&lt;TABLE&gt;" alt="" coords="261,392,476,453"/>
+<area shape="rect" id="node3_3" href="./CDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.delegate.CDSFacadeDelegate" alt="" coords="220,107,348,146"/>
+<area shape="rect" id="node3" href="./CDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="210,102,359,151"/>
+<area shape="rect" id="node4_4" href="../ejb/EJBCDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.ejb.EJBCDSFacadeDelegate" alt="" coords="309,206,476,242"/>
+<area shape="rect" id="node4" href="../ejb/EJBCDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="298,200,486,248"/>
+<area shape="rect" id="node5_5" href="../plain/PlainCDSFacadeDelegate.html" title="se.cambio.cds.model.facade.cds.plain.PlainCDSFacadeDelegate" alt="" coords="90,206,263,242"/>
+<area shape="rect" id="node5" href="../plain/PlainCDSFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="79,200,274,248"/>
+<area shape="rect" id="node6_6" href="../../execution/vo/RuleExecutionResult.html" title="se.cambio.cds.model.facade.execution.vo.RuleExecutionResult" alt="" coords="529,302,722,338"/>
+<area shape="rect" id="node6" href="../../execution/vo/RuleExecutionResult.html" title="&lt;TABLE&gt;" alt="" coords="518,296,733,344"/>
+<area shape="rect" id="node8_7" href="../../../../formgen/controller/FormGeneratorController.html" title="se.cambio.cds.formgen.controller.FormGeneratorController" alt="" coords="204,11,365,47"/>
+<area shape="rect" id="node8" href="../../../../formgen/controller/FormGeneratorController.html" title="&lt;TABLE&gt;" alt="" coords="193,5,376,53"/>
+</map>

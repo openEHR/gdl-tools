@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./SelectableNodeWithIcon.html" title="se.cambio.cds.openehr.view.trees.SelectableNodeWithIcon" alt="" coords="65,209,239,233"/>
+<area shape="rect" id="node1" href="./SelectableNodeWithIcon.html" title="&lt;TABLE&gt;" alt="" coords="54,197,250,245"/>
+<area shape="rect" id="node2_1" href="./SelectableNode.html" title="se.cambio.cds.openehr.view.trees.SelectableNode" alt="" coords="35,113,160,137"/>
+<area shape="rect" id="node2" href="./SelectableNode.html" title="&lt;TABLE&gt;" alt="" coords="24,101,171,149"/>
+<area shape="rect" id="node3_2" href="../../../gdl/editor/view/util/NodeDefinitionConversor.html" title="se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor" alt="" coords="16,11,179,47"/>
+<area shape="rect" id="node3" href="../../../gdl/editor/view/util/NodeDefinitionConversor.html" title="&lt;TABLE&gt;" alt="" coords="5,5,189,53"/>
+</map>

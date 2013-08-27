@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DVPanelInterface.html" title="se.cambio.cds.openehr.view.panels.DVPanelInterface" alt="" coords="115,11,231,50"/>
+<area shape="rect" id="node1" href="./DVPanelInterface.html" title="&lt;TABLE&gt;" alt="" coords="105,6,242,55"/>
+<area shape="rect" id="node2_1" href="./DVGenericPanel.html" title="se.cambio.cds.openehr.view.panels.DVGenericPanel" alt="" coords="16,116,125,140"/>
+<area shape="rect" id="node2" href="./DVGenericPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,104,136,152"/>
+<area shape="rect" id="node3_2" href="./DVAnyPanel.html" title="se.cambio.cds.openehr.view.panels.DVAnyPanel" alt="" coords="59,212,144,236"/>
+<area shape="rect" id="node3" href="./DVAnyPanel.html" title="&lt;TABLE&gt;" alt="" coords="48,200,155,248"/>
+<area shape="rect" id="node4_3" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="org.openehr.rm.datatypes.basic.DataValue" alt="" coords="84,302,241,338"/>
+<area shape="rect" id="node4" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/rm/datatypes/basic/DataValue.html" title="&lt;TABLE&gt;" alt="" coords="73,296,252,344"/>
+</map>

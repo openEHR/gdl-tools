@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../model/logLine/dto/LogLineDTO.html" title="se.cambio.cds.model.logLine.dto.LogLineDTO" alt="" coords="63,217,217,253"/>
+<area shape="rect" id="node1" href="../../model/logLine/dto/LogLineDTO.html" title="&lt;TABLE&gt;" alt="" coords="52,211,228,259"/>
+<area shape="rect" id="node2_1" href="./ExceptionManager.html" title="se.cambio.cds.controller.util.ExceptionManager" alt="" coords="24,127,147,151"/>
+<area shape="rect" id="node2" href="./ExceptionManager.html" title="&lt;TABLE&gt;" alt="" coords="13,115,157,163"/>
+<area shape="rect" id="node3_2" href="../../model/facade/administration/interfaces/Logs.html" title="se.cambio.cds.model.facade.administration.interfaces.Logs" alt="" coords="16,11,264,61"/>
+<area shape="rect" id="node3" href="../../model/facade/administration/interfaces/Logs.html" title="&lt;TABLE&gt;" alt="" coords="5,5,275,67"/>
+</map>

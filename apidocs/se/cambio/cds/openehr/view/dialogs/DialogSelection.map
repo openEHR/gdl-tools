@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./DialogSelection.html" title="se.cambio.cds.openehr.view.dialogs.DialogSelection" alt="" coords="47,113,153,137"/>
+<area shape="rect" id="node1" href="./DialogSelection.html" title="&lt;TABLE&gt;" alt="" coords="37,101,163,149"/>
+<area shape="rect" id="node3_1" href="../panels/SelectionPanel.html" title="se.cambio.cds.openehr.view.panels.SelectionPanel" alt="" coords="16,203,184,239"/>
+<area shape="rect" id="node3" href="../panels/SelectionPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,197,195,245"/>
+<area shape="rect" id="node4_2" href="../trees/SelectableNode.html" title="se.cambio.cds.openehr.view.trees.SelectableNode" alt="" coords="17,299,183,335"/>
+<area shape="rect" id="node4" href="../trees/SelectableNode.html" title="&lt;TABLE&gt;" alt="" coords="7,293,193,341"/>
+<area shape="rect" id="node2_3" href="./DialogEditor.html" title="se.cambio.cds.openehr.view.dialogs.DialogEditor" alt="" coords="57,17,143,41"/>
+<area shape="rect" id="node2" href="./DialogEditor.html" title="&lt;TABLE&gt;" alt="" coords="47,5,153,53"/>
+</map>

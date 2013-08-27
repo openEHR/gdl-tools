@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/RecommendationDTO.html" title="se.cambio.cds.model.recommendation.dto.RecommendationDTO" alt="" coords="175,302,372,338"/>
+<area shape="rect" id="node1" href="../dto/RecommendationDTO.html" title="&lt;TABLE&gt;" alt="" coords="164,296,383,344"/>
+<area shape="rect" id="node2_1" href="./StandardSQLRecommendationDAO.html" title="se.cambio.cds.model.recommendation.dao.StandardSQLRecommendationDAO" alt="" coords="15,212,225,236"/>
+<area shape="rect" id="node2" href="./StandardSQLRecommendationDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,200,235,248"/>
+<area shape="rect" id="node3_2" href="./SQLRecommendationDAO.html" title="se.cambio.cds.model.recommendation.dao.SQLRecommendationDAO" alt="" coords="116,107,276,146"/>
+<area shape="rect" id="node3" href="./SQLRecommendationDAO.html" title="&lt;TABLE&gt;" alt="" coords="105,102,287,151"/>
+<area shape="rect" id="node4_3" href="./SQLGenericRecommendationDAO.html" title="se.cambio.cds.model.recommendation.dao.SQLGenericRecommendationDAO" alt="" coords="158,17,362,41"/>
+<area shape="rect" id="node4" href="./SQLGenericRecommendationDAO.html" title="&lt;TABLE&gt;" alt="" coords="147,5,373,53"/>
+</map>

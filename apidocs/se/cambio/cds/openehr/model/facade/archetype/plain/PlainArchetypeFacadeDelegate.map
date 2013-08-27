@@ -1,0 +1,24 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../../model/archetype/dto/ArchetypeDTO.html" title="se.cambio.cds.model.archetype.dto.ArchetypeDTO" alt="" coords="69,313,237,349"/>
+<area shape="rect" id="node1" href="../../../../../model/archetype/dto/ArchetypeDTO.html" title="&lt;TABLE&gt;" alt="" coords="58,307,248,355"/>
+<area shape="rect" id="node2_1" href="../../../../../model/template/dto/TemplateDTO.html" title="se.cambio.cds.model.template.dto.TemplateDTO" alt="" coords="1282,313,1445,349"/>
+<area shape="rect" id="node2" href="../../../../../model/template/dto/TemplateDTO.html" title="&lt;TABLE&gt;" alt="" coords="1272,307,1456,355"/>
+<area shape="rect" id="node3_2" href="../../../../../ts/Node.html" title="se.cambio.cds.ts.Node" alt="" coords="544,217,632,253"/>
+<area shape="rect" id="node3" href="../../../../../ts/Node.html" title="&lt;TABLE&gt;" alt="" coords="533,211,642,259"/>
+<area shape="rect" id="node4_3" href="../../../codedtext/vo/CodedTextVO.html" title="se.cambio.cds.openehr.model.codedtext.vo.CodedTextVO" alt="" coords="579,313,780,349"/>
+<area shape="rect" id="node4" href="../../../codedtext/vo/CodedTextVO.html" title="&lt;TABLE&gt;" alt="" coords="568,307,791,355"/>
+<area shape="rect" id="node5_4" href="../delegate/ArchetypeFacadeDelegate.html" title="se.cambio.cds.openehr.model.facade.archetype.delegate.ArchetypeFacadeDelegate" alt="" coords="551,11,808,61"/>
+<area shape="rect" id="node5" href="../delegate/ArchetypeFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="540,5,819,67"/>
+<area shape="rect" id="node6_5" href="./PlainArchetypeFacadeDelegate.html" title="se.cambio.cds.openehr.model.facade.archetype.plain.PlainArchetypeFacadeDelegate" alt="" coords="584,127,776,151"/>
+<area shape="rect" id="node6" href="./PlainArchetypeFacadeDelegate.html" title="&lt;TABLE&gt;" alt="" coords="573,115,786,163"/>
+<area shape="rect" id="node8_6" href="../vo/ArchetypeObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.ArchetypeObjectBundleCustomVO" alt="" coords="37,217,269,253"/>
+<area shape="rect" id="node8" href="../vo/ArchetypeObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="26,211,280,259"/>
+<area shape="rect" id="node7_7" href="../vo/TemplateObjectBundleCustomVO.html" title="se.cambio.cds.openehr.model.facade.archetype.vo.TemplateObjectBundleCustomVO" alt="" coords="1248,217,1480,253"/>
+<area shape="rect" id="node7" href="../vo/TemplateObjectBundleCustomVO.html" title="&lt;TABLE&gt;" alt="" coords="1237,211,1490,259"/>
+<area shape="rect" id="node9_8" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/archetype/ontology/ArchetypeTerm.html" title="org.openehr.am.archetype.ontology.ArchetypeTerm" alt="" coords="728,217,901,253"/>
+<area shape="rect" id="node9" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/archetype/ontology/ArchetypeTerm.html" title="&lt;TABLE&gt;" alt="" coords="717,211,912,259"/>
+<area shape="rect" id="node10_9" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/archetype/constraintmodel/CObject.html" title="org.openehr.am.archetype.constraintmodel.CObject" alt="" coords="946,217,1152,253"/>
+<area shape="rect" id="node10" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/archetype/constraintmodel/CObject.html" title="&lt;TABLE&gt;" alt="" coords="936,211,1162,259"/>
+<area shape="rect" id="node11_10" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/archetype/Archetype.html" title="org.openehr.am.archetype.Archetype" alt="" coords="365,217,498,253"/>
+<area shape="rect" id="node11" href="http://java.sun.com/j2se/1.4.2/docs/api/org/openehr/am/archetype/Archetype.html" title="&lt;TABLE&gt;" alt="" coords="354,211,509,259"/>
+</map>

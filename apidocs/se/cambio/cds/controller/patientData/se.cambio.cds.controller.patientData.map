@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="./PatientDataManager.html" title="se.cambio.cds.controller.patientData.PatientDataManager" alt="" coords="15,17,147,41"/>
+<area shape="rect" id="node1" href="./PatientDataManager.html" title="&lt;TABLE&gt;" alt="" coords="5,5,158,53"/>
+<area shape="rect" id="node2_1" href="./DataValueUtil.html" title="se.cambio.cds.controller.patientData.DataValueUtil" alt="" coords="193,17,287,41"/>
+<area shape="rect" id="node2" href="./DataValueUtil.html" title="&lt;TABLE&gt;" alt="" coords="183,5,297,53"/>
+<area shape="rect" id="node3_2" href="./DataSourcesManager.html" title="se.cambio.cds.controller.patientData.DataSourcesManager" alt="" coords="332,17,468,41"/>
+<area shape="rect" id="node3" href="./DataSourcesManager.html" title="&lt;TABLE&gt;" alt="" coords="321,5,479,53"/>
+</map>

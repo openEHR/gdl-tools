@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/Binding.html" title="se.cambio.cds.gdl.model.Binding" alt="" coords="623,203,743,239"/>
+<area shape="rect" id="node1" href="../../../model/Binding.html" title="&lt;TABLE&gt;" alt="" coords="612,197,753,245"/>
+<area shape="rect" id="node2_1" href="../panels/BindingPanel.html" title="se.cambio.cds.gdl.editor.view.panels.BindingPanel" alt="" coords="689,11,863,47"/>
+<area shape="rect" id="node2" href="../panels/BindingPanel.html" title="&lt;TABLE&gt;" alt="" coords="678,5,874,53"/>
+<area shape="rect" id="node3_2" href="./BindingTable.html" title="se.cambio.cds.gdl.editor.view.tables.BindingTable" alt="" coords="576,113,667,137"/>
+<area shape="rect" id="node3" href="./BindingTable.html" title="&lt;TABLE&gt;" alt="" coords="565,101,677,149"/>
+<area shape="rect" id="node4_3" href="../util/TerminologyCodesButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.TerminologyCodesButtonEditor" alt="" coords="16,11,208,47"/>
+<area shape="rect" id="node4" href="../util/TerminologyCodesButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,5,219,53"/>
+<area shape="rect" id="node5_4" href="../util/TerminologyBindingCellEditor.html" title="se.cambio.cds.gdl.editor.view.util.TerminologyBindingCellEditor" alt="" coords="253,11,435,47"/>
+<area shape="rect" id="node5" href="../util/TerminologyBindingCellEditor.html" title="&lt;TABLE&gt;" alt="" coords="243,5,445,53"/>
+<area shape="rect" id="node6_5" href="../util/GTCodeButtonEditor.html" title="se.cambio.cds.gdl.editor.view.util.GTCodeButtonEditor" alt="" coords="480,11,643,47"/>
+<area shape="rect" id="node6" href="../util/GTCodeButtonEditor.html" title="&lt;TABLE&gt;" alt="" coords="469,5,653,53"/>
+</map>

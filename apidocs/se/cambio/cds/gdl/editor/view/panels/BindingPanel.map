@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../model/Binding.html" title="se.cambio.cds.gdl.model.Binding" alt="" coords="321,409,441,445"/>
+<area shape="rect" id="node1" href="../../../model/Binding.html" title="&lt;TABLE&gt;" alt="" coords="311,403,452,451"/>
+<area shape="rect" id="node2_1" href="../../controller/GDLEditor.html" title="se.cambio.cds.gdl.editor.controller.GDLEditor" alt="" coords="15,313,182,349"/>
+<area shape="rect" id="node2" href="../../controller/GDLEditor.html" title="&lt;TABLE&gt;" alt="" coords="5,307,193,355"/>
+<area shape="rect" id="node3_2" href="./BindingsPanel.html" title="se.cambio.cds.gdl.editor.view.panels.BindingsPanel" alt="" coords="171,127,267,151"/>
+<area shape="rect" id="node3" href="./BindingsPanel.html" title="&lt;TABLE&gt;" alt="" coords="160,115,277,163"/>
+<area shape="rect" id="node4_3" href="./BindingPanel.html" title="se.cambio.cds.gdl.editor.view.panels.BindingPanel" alt="" coords="269,223,360,247"/>
+<area shape="rect" id="node4" href="./BindingPanel.html" title="&lt;TABLE&gt;" alt="" coords="259,211,371,259"/>
+<area shape="rect" id="node6_4" href="../tables/BindingTable.html" title="se.cambio.cds.gdl.editor.view.tables.BindingTable" alt="" coords="228,313,401,349"/>
+<area shape="rect" id="node6" href="../tables/BindingTable.html" title="&lt;TABLE&gt;" alt="" coords="217,307,412,355"/>
+<area shape="rect" id="node5_5" href="./interfaces/RefreshablePanel.html" title="se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel" alt="" coords="156,11,377,61"/>
+<area shape="rect" id="node5" href="./interfaces/RefreshablePanel.html" title="&lt;TABLE&gt;" alt="" coords="145,5,388,67"/>
+</map>

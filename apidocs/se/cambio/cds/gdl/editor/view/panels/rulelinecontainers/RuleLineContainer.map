@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../../../../model/readable/rule/lines/RuleLine.html" title="se.cambio.cds.gdl.model.readable.rule.lines.RuleLine" alt="" coords="53,206,254,242"/>
+<area shape="rect" id="node1" href="../../../../model/readable/rule/lines/RuleLine.html" title="&lt;TABLE&gt;" alt="" coords="42,200,265,248"/>
+<area shape="rect" id="node2_1" href="./RuleLineContainerPanel.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.RuleLineContainerPanel" alt="" coords="16,116,168,140"/>
+<area shape="rect" id="node2" href="./RuleLineContainerPanel.html" title="&lt;TABLE&gt;" alt="" coords="5,104,179,152"/>
+<area shape="rect" id="node3_2" href="./RuleLineContainer.html" title="se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.RuleLineContainer" alt="" coords="93,11,214,50"/>
+<area shape="rect" id="node3" href="./RuleLineContainer.html" title="&lt;TABLE&gt;" alt="" coords="82,6,225,55"/>
+</map>

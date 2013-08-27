@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node1_0" href="../dto/RuleDTO.html" title="se.cambio.cds.model.rule.dto.RuleDTO" alt="" coords="83,305,224,341"/>
+<area shape="rect" id="node1" href="../dto/RuleDTO.html" title="&lt;TABLE&gt;" alt="" coords="72,299,235,347"/>
+<area shape="rect" id="node2_1" href="./SQLRuleDAO.html" title="se.cambio.cds.model.rule.dao.SQLRuleDAO" alt="" coords="15,206,105,245"/>
+<area shape="rect" id="node2" href="./SQLRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="5,201,115,250"/>
+<area shape="rect" id="node3_2" href="./SQLGenericRuleDAO.html" title="se.cambio.cds.model.rule.dao.SQLGenericRuleDAO" alt="" coords="23,116,156,140"/>
+<area shape="rect" id="node3" href="./SQLGenericRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="12,104,167,152"/>
+<area shape="rect" id="node4_3" href="./GenericRuleDAO.html" title="se.cambio.cds.model.rule.dao.GenericRuleDAO" alt="" coords="91,11,203,50"/>
+<area shape="rect" id="node4" href="./GenericRuleDAO.html" title="&lt;TABLE&gt;" alt="" coords="80,6,213,55"/>
+</map>
