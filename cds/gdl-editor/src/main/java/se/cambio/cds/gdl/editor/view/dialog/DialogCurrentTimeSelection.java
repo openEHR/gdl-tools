@@ -11,11 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.ClockPanel;
-import se.cambio.cds.openehr.util.ImageUtil;
-import se.cambio.cds.openehr.view.dialogs.DialogEditor;
-import se.cambio.cds.util.UserConfigurationManager;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.view.dialogs.DialogEditor;
 
 import com.toedter.calendar.JDateChooser;
 /**
@@ -42,7 +42,7 @@ public class DialogCurrentTimeSelection extends DialogEditor {
      */
     public DialogCurrentTimeSelection() {
 	super(EditorManager.getActiveEditorWindow(),
-		LanguageManager.getMessage("SelectRepositories"),
+		GDLEditorLanguageManager.getMessage("DefaultDateTime"),
 		new Dimension(500, 180),true);
 	initialize();
     }
@@ -77,7 +77,7 @@ public class DialogCurrentTimeSelection extends DialogEditor {
     private JRadioButton getRadioButtonDefault(){
 	if (radioButtonDefault==null){
 	    radioButtonDefault= new JRadioButton();
-	    radioButtonDefault.setText(LanguageManager.getMessage("DefaultCurrentDateTime"));
+	    radioButtonDefault.setText(GDLEditorLanguageManager.getMessage("CurrentDateTime"));
 	    if (UserConfigurationManager.getCustomDate()==null){
 		radioButtonDefault.setSelected(true);
 	    }
@@ -88,16 +88,13 @@ public class DialogCurrentTimeSelection extends DialogEditor {
     private JRadioButton getRadioButtonCustom(){
 	if (radioButtonCustom==null){
 	    radioButtonCustom= new JRadioButton();
-	    radioButtonCustom.setText(LanguageManager.getMessage("CustomCurrentDateTime"));
+	    radioButtonCustom.setText(GDLEditorLanguageManager.getMessage("CustomDateTime"));
 	    if (UserConfigurationManager.getCustomDate()!=null){
 		radioButtonCustom.setSelected(true);
 	    }
 	}
 	return radioButtonCustom;
     }
-
-
-
 
     private ClockPanel getClockPanel(){
 	if (_clockPanel==null){
@@ -109,7 +106,7 @@ public class DialogCurrentTimeSelection extends DialogEditor {
     public JDateChooser getDateChooser() {
 	if (dateChooser == null) {
 	    dateChooser = new JDateChooser(DEFAULT_FORMAT, "##/##/#### ##:##:##", '_');
-	    dateChooser.setIcon(ImageUtil.CALENDAR_ICON);
+	    dateChooser.setIcon(OpenEHRImageUtil.CALENDAR_ICON);
 	    Date date = UserConfigurationManager.getCustomDate();
 	    if (date!=null){
 		dateChooser.setDate(date);

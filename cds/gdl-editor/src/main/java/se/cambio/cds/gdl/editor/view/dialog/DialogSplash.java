@@ -20,12 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLLoadingUtility;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.SplashPanel;
-import se.cambio.cds.openehr.util.ImageUtil;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
-import se.cambio.cds.util.InitialLoadingObservable;
-import se.cambio.cds.util.InitialLoadingObservable.LoadingStage;
+import se.cambio.openehr.controller.InitialLoadingObservable;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
 /**
  * @author icorram
  *
@@ -47,7 +47,8 @@ public class DialogSplash extends JDialog implements Observer{
     private JButton cancelButton;
     private boolean _loading = false;
     private JButton closeButton;
-
+    private static Integer NUM_OBJ_TO_LOAD = 4;
+    
     /**
      * This method initializes 
      * 
@@ -117,7 +118,7 @@ public class DialogSplash extends JDialog implements Observer{
     private JButton getCancelButton(){
 	if (cancelButton==null){
 	    cancelButton = new JButton(OpenEHRLanguageManager.getMessage("Cancel"));
-	    cancelButton.setIcon(ImageUtil.STOP_ICON);
+	    cancelButton.setIcon(OpenEHRImageUtil.STOP_ICON);
 	    cancelButton.setBackground(null);
 	    cancelButton.setBorder(BorderFactory.createEmptyBorder());
 	    cancelButton.setVisible(false);
@@ -160,33 +161,24 @@ public class DialogSplash extends JDialog implements Observer{
 
     public void update() {
 	getSplashLabel().setText(_description);
-	_progressValue =  (int)(100*InitialLoadingObservable.getTotalLoadingProgress());
+	_progressValue =  (int)(100*getTotalLoadingProgress());
 	if (_progressValue>=0){
 	    //getJProgressBar().setVisible(true);
 	    getJProgressBar().setValue(_progressValue);
 	}
     }
 
+    public static Double getTotalLoadingProgress(){
+	return ((double)InitialLoadingObservable.getNumLoaded()/NUM_OBJ_TO_LOAD) + 
+		InitialLoadingObservable.getCurrentStageProgress()/NUM_OBJ_TO_LOAD;
+    }
     @Override
     public void update(Observable o, Object arg) {
-	_description = getCurrentLoadingStageName();
+	_description = GDLLoadingUtility.getCurrentLoadingStageName();
 	update();
     }
 
-    private String getCurrentLoadingStageName(){
-	LoadingStage currentLoadingStage = InitialLoadingObservable.getCurrentLoadingStage();
-	if (LoadingStage.ARCHETYPES.equals(currentLoadingStage)){
-	    return LanguageManager.getMessage("LoadingArchetypes")+"...";
-	}else if (LoadingStage.TEMPLATES.equals(currentLoadingStage)){
-	    return LanguageManager.getMessage("LoadingTemplates")+"...";
-	}else if (LoadingStage.TERMINOLOGIES.equals(currentLoadingStage)){
-	    return LanguageManager.getMessage("LoadingTerminologies")+"...";
-	}else if (LoadingStage.ONTOLOGIES.equals(currentLoadingStage)){
-	    return LanguageManager.getMessage("LoadingOntologies")+"...";
-	}else{
-	    return "";
-	}
-    }
+
 
     /*
     private class ProgresoActivo implements Runnable{
@@ -235,7 +227,7 @@ public class DialogSplash extends JDialog implements Observer{
     
     public JButton getCloseButton(){
 	if (closeButton==null){
-	    closeButton = new JButton(LanguageManager.getMessage("Close"));
+	    closeButton = new JButton(GDLEditorLanguageManager.getMessage("Close"));
 	    closeButton.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {

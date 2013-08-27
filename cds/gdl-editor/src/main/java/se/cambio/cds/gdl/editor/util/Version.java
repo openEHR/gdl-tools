@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import se.cambio.cds.openehr.util.ExceptionHandler;
-import se.cambio.cds.util.exceptions.MissingConfigurationParameterException;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 /**
  * @author icorram

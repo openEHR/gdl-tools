@@ -15,7 +15,7 @@ import javax.swing.KeyStroke;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 
 
@@ -28,10 +28,10 @@ public class LoadGuideAction extends AbstractAction {
 
     public LoadGuideAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("LoadGuide")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("LoadGuide")+"...");
 	putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("LoadGuideSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("LoadGuideD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
     }
 

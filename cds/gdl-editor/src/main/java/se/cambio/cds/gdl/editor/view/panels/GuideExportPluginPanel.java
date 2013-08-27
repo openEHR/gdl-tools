@@ -11,6 +11,8 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class GuideExportPluginPanel extends JPanel implements RefreshablePanel{
 
@@ -46,7 +48,11 @@ public class GuideExportPluginPanel extends JPanel implements RefreshablePanel{
 	    textArea = new JTextArea();
 	    Guide guide = _controller.getGuide();
 	    if (guide!=null){
-		textArea.setText(_exportPlugin.getExportedGuide(guide));
+		try {
+		    textArea.setText(_exportPlugin.getExportedGuide(guide));
+		} catch (InternalErrorException e) {
+		    ExceptionHandler.handle(e);
+		}
 	    }
 	    textArea.setEditable(false);
 	}

@@ -8,6 +8,10 @@ package se.cambio.cds.gdl.model.expression;
  */
 public class UnaryExpression extends ExpressionItem {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	public static UnaryExpression create(ExpressionItem operand, 
 			OperatorKind operator) {
 		return new UnaryExpression(operand, operator);

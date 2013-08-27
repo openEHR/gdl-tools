@@ -1,38 +1,21 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.CodePhrase;
-
-import se.cambio.cds.gdl.model.ArchetypeBinding;
-import se.cambio.cds.gdl.model.Binding;
-import se.cambio.cds.gdl.model.ElementBinding;
-import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.Rule;
-import se.cambio.cds.gdl.model.TermBinding;
-import se.cambio.cds.gdl.model.expression.AssignmentExpression;
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.StringConstant;
-import se.cambio.cds.gdl.model.expression.UnaryExpression;
-import se.cambio.cds.gdl.model.expression.Variable;
-import se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO;
-import se.cambio.cds.openehr.util.DVUIUtil;
-import se.cambio.cds.openehr.util.OpenEHRConst;
-import se.cambio.cds.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.cds.openehr.view.applicationobjects.ArchetypeElements;
+import se.cambio.cds.gdl.model.*;
+import se.cambio.cds.gdl.model.expression.*;
+import se.cambio.cds.util.DVDefSerializer;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.OpenEHRDataValues;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRDataValuesUI;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.*;
 
 public class GDLDroolsConverter {
 
@@ -50,12 +33,6 @@ public class GDLDroolsConverter {
     private static String END = "end";
     private static String DEFAULT_CONFIG = "no-loop true";
 
-    private static String ELEMENT_EQUALS_STR = ".equalDV(";
-    private static String SUBCLASS_OF_STR = ".isSubClassOf(";
-    private static String NOT_SUBCLASS_OF_STR = ".isNotSubClassOf(";
-    private static String ELEMENT_COMPARISON_STR = ".compareWithDV($auxDV)";
-    private static String COMPATIBLE_COMPARISON_STR = ".compatibleComparison($auxDV=";
-
     private static String CODE_FUNCTION_SEPARATOR = "#";
 
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
@@ -65,7 +42,7 @@ public class GDLDroolsConverter {
 	REFERENCE, ATT_SET_REF, SET, ATT_FUNCTIONS, ATT_FUNCTIONS_REF
     }
 
-    public String convertToDrools() {
+    public String convertToDrools() throws InternalErrorException{
 	StringBuffer sb = new StringBuffer();
 	sb.append(getGuideHeader());
 
@@ -78,93 +55,98 @@ public class GDLDroolsConverter {
 	Map<Integer, String> archetypeBindingIndexToDefinition = new HashMap<Integer, String>();
 
 	Map<String, Integer> gtElementToArchetypeBindingIndex = new HashMap<String, Integer>();
-	List<ArchetypeBinding> archetypeBindings = guide.getDefinition()
-		.getArchetypeBindings();
+	List<ArchetypeBinding> archetypeBindings = guide.getDefinition().getArchetypeBindings();
 	int arCount = 0;
 	String arID = "archetypeReference";
-	for (int i = 0, j = archetypeBindings.size(); i < j; i++) {
-	    arCount++;
-	    ArchetypeBinding archetypeBinding = archetypeBindings.get(i);
-	    StringBuffer archetypeBindingMVELSB = new StringBuffer();
+	if (archetypeBindings!=null){
+	    for (int i = 0, j = archetypeBindings.size(); i < j; i++) {
+		arCount++;
+		ArchetypeBinding archetypeBinding = archetypeBindings.get(i);
+		StringBuffer archetypeBindingMVELSB = new StringBuffer();
 
-	    archetypeBindingMVELSB.append("   ");
-	    archetypeBindingMVELSB.append("$"+arID+arCount);
-	    String idDomain = archetypeBinding.getDomain();
-	    archetypeBindingMVELSB.append(":ArchetypeReference");
-	    archetypeBindingMVELSB.append("(");
-	    if (idDomain!=null){
-		archetypeBindingMVELSB.append("idDomain==\""+idDomain+"\", ");
-	    }
-	    archetypeBindingMVELSB.append("idArchetype==\""+archetypeBinding.getArchetypeId()+"\"");
-	    if ((Domains.CDS_ID.equals(archetypeBinding.getDomain()))
-		    &&
-		    archetypeBinding.getTemplateId()!=null){
-		archetypeBindingMVELSB.append(", idTemplate==\""+archetypeBinding.getTemplateId()+"\"");
-	    }
-	    if (archetypeBinding.getFunction()!=null){
-		archetypeBindingMVELSB.append(", aggregationFunction==\""+archetypeBinding.getFunction()+"\"");
-	    }
-	    archetypeBindingMVELSB.append(")\n");
+		archetypeBindingMVELSB.append("   ");
+		archetypeBindingMVELSB.append("$"+arID+arCount);
+		String idDomain = archetypeBinding.getDomain();
+		archetypeBindingMVELSB.append(":ArchetypeReference");
+		archetypeBindingMVELSB.append("(");
+		if (idDomain!=null){
+		    archetypeBindingMVELSB.append("idDomain==\""+idDomain+"\", ");
+		}
+		archetypeBindingMVELSB.append("idArchetype==\""+archetypeBinding.getArchetypeId()+"\"");
+		if ((Domains.CDS_ID.equals(archetypeBinding.getDomain()))
+			&&
+			archetypeBinding.getTemplateId()!=null){
+		    archetypeBindingMVELSB.append(", idTemplate==\""+archetypeBinding.getTemplateId()+"\"");
+		}
+		if (archetypeBinding.getFunction()!=null){
+		    archetypeBindingMVELSB.append(", aggregationFunction==\""+archetypeBinding.getFunction()+"\"");
+		}
+		archetypeBindingMVELSB.append(")\n");
 
-	    // Predicates
-	    if (archetypeBinding.getPredicateStatements() != null) {
-		for (ExpressionItem expressionItem : archetypeBinding
-			.getPredicateStatements()) {
-		    if (expressionItem instanceof BinaryExpression) {
-			BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
-			if (binaryExpression.getLeft() instanceof Variable
-				&& binaryExpression.getRight() instanceof ConstantExpression) {
-			    predicateCount++;
-			    Variable variable = (Variable) binaryExpression
-				    .getLeft();
-			    ConstantExpression constantExpression = (ConstantExpression) binaryExpression
-				    .getRight();
-			    String idElement = archetypeBinding
-				    .getArchetypeId() + variable.getPath();
-			    archetypeBindingMVELSB.append("      ");
-			    archetypeBindingMVELSB.append("$predicate"
-				    + predicateCount);
-			    archetypeBindingMVELSB
-			    .append(":ElementInstance(id==\""
-				    + idElement
-				    + "\", archetypeReference==$"
-				    + arID+arCount + ")\n");
-			    ArchetypeElementVO archetypeElement = ArchetypeElements
-				    .getArchetypeElement(
-					    archetypeBinding.getTemplateId(),
-					    idElement);
-			    String rmType = archetypeElement.getRMType();
-			    archetypeBindingMVELSB.append("      ");
-			    archetypeBindingMVELSB
-			    .append("eval("+ 
-				    getOperatorMVELLine(
-					    "$predicate"+ predicateCount,
-					    binaryExpression.getOperator(),
-					    DVUIUtil.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue())), 
-					    true)+
-				    ")\n");
+		// Predicates
+		if (archetypeBinding.getPredicateStatements() != null) {
+		    for (ExpressionItem expressionItem : archetypeBinding
+			    .getPredicateStatements()) {
+			if (expressionItem instanceof BinaryExpression) {
+			    BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
+			    if (binaryExpression.getLeft() instanceof Variable
+				    && binaryExpression.getRight() instanceof ConstantExpression) {
+				predicateCount++;
+				Variable variable = (Variable) binaryExpression
+					.getLeft();
+				ConstantExpression constantExpression = (ConstantExpression) binaryExpression
+					.getRight();
+				String idElement = archetypeBinding
+					.getArchetypeId() + variable.getPath();
+				archetypeBindingMVELSB.append("      ");
+				archetypeBindingMVELSB.append("$predicate"
+					+ predicateCount);
+				archetypeBindingMVELSB
+				.append(":ElementInstance(id==\""
+					+ idElement
+					+ "\", archetypeReference==$"
+					+ arID+arCount + ")\n");
+				ArchetypeElementVO archetypeElement = ArchetypeElements
+					.getArchetypeElement(
+						archetypeBinding.getTemplateId(),
+						idElement);
+				if (archetypeElement!=null){
+				    String rmType = archetypeElement.getRMType();
+				    archetypeBindingMVELSB.append("      ");
+				    archetypeBindingMVELSB
+				    .append("eval("+ 
+					    getOperatorMVELLine(
+						    "$predicate"+ predicateCount,
+						    binaryExpression.getOperator(),
+						    DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue())), 
+						    true)+
+					    ")\n");
+				}else{
+				    throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"));
+				}
+			    }
 			}
-		    }
-		}				
-	    }
+		    }				
+		}
 
-	    archetypeBindingIndexToDefinition.put(i,
-		    archetypeBindingMVELSB.toString());
-	    for (ElementBinding element : archetypeBinding.getElements().values()) {
-		StringBuffer elementDefinitionSB = new StringBuffer();
-		String idElement = archetypeBinding.getArchetypeId()
-			+ element.getPath();
+		archetypeBindingIndexToDefinition.put(i,
+			archetypeBindingMVELSB.toString());
+		for (ElementBinding element : archetypeBinding.getElements().values()) {
+		    StringBuffer elementDefinitionSB = new StringBuffer();
+		    String idElement = archetypeBinding.getArchetypeId()
+			    + element.getPath();
 
-		ArchetypeElementVO value =  ArchetypeElements.getArchetypeElement(
-			archetypeBinding.getTemplateId(), idElement);
+		    ArchetypeElementVO value =  ArchetypeElements.getArchetypeElement(
+			    archetypeBinding.getTemplateId(), idElement);
 
-		elementMap.put(element.getId(), value);				
-		elementDefinitionSB.append("ElementInstance(id==\""+idElement+"\", archetypeReference==$"+arID+arCount+")");
-		//elementDefinitionSB.append(":ElementInstance(id==\""
-		//	+ idElement + "\")\n");
-		_gtElementToDefinition.put(element.getId(),
-			elementDefinitionSB.toString());
-		gtElementToArchetypeBindingIndex.put(element.getId(), i);
+		    elementMap.put(element.getId(), value);				
+		    elementDefinitionSB.append("ElementInstance(id==\""+idElement+"\", archetypeReference==$"+arID+arCount+")");
+		    //elementDefinitionSB.append(":ElementInstance(id==\""
+		    //	+ idElement + "\")\n");
+		    _gtElementToDefinition.put(element.getId(),
+			    elementDefinitionSB.toString());
+		    gtElementToArchetypeBindingIndex.put(element.getId(), i);
+		}
 	    }
 	}
 
@@ -180,55 +162,57 @@ public class GDLDroolsConverter {
 	StringBuffer preconditionInitSB = new StringBuffer();
 
 	String preconditionInitStr = preconditionInitSB.toString();
-	for (Rule rule : guide.getDefinition().getRules().values()) {
-	    Map<RefStat, Set<String>> ruleStats = initStats();
-	    String whenStr = convertExpressionsToMVEL(rule.getWhenStatements(),
-		    elementMap, ruleStats);
-	    String thenStr = convertAssigmentExpressionsToMVEL(
-		    rule.getThenStatements(), elementMap, ruleStats);
-	    Set<String> gtCodesRef = new HashSet<String>();
-	    gtCodesRef.addAll(ruleStats.get(RefStat.REFERENCE));
-	    gtCodesRef.addAll(preconditionStats.get(RefStat.REFERENCE));
-	    gtCodesRef.remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
-	    String definition = 
-		    getDefinitionForRule(gtCodesRef,
-			    archetypeBindingIndexToDefinition,
-			    gtElementToArchetypeBindingIndex);
-	    ruleStats.get(RefStat.ATT_SET_REF).remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
-	    String hasValueChecks = 
-		    getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
-	    //Check if a function is used, add whatever extra code necessary for it (for now, just count)
-	    Set<String> functionsRefs = new HashSet<String>();
-	    functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
-	    functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
-	    String functionExtraCode = getFunctionsExtraCode(functionsRefs);
-	    sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
-	    sb.append("salience " + rule.getPriority() + "\n");
-	    sb.append(DEFAULT_CONFIG + "\n");
-	    sb.append(WHEN + "\n");
-	    if (definition != null){
-		sb.append(definition);
+	if (guide.getDefinition().getRules()!=null){
+	    for (Rule rule : guide.getDefinition().getRules().values()) {
+		Map<RefStat, Set<String>> ruleStats = initStats();
+		String whenStr = convertExpressionsToMVEL(rule.getWhenStatements(),
+			elementMap, ruleStats);
+		String thenStr = convertAssigmentExpressionsToMVEL(
+			rule.getThenStatements(), elementMap, ruleStats);
+		Set<String> gtCodesRef = new HashSet<String>();
+		gtCodesRef.addAll(ruleStats.get(RefStat.REFERENCE));
+		gtCodesRef.addAll(preconditionStats.get(RefStat.REFERENCE));
+		gtCodesRef.remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
+		String definition = 
+			getDefinitionForRule(gtCodesRef,
+				archetypeBindingIndexToDefinition,
+				gtElementToArchetypeBindingIndex);
+		ruleStats.get(RefStat.ATT_SET_REF).remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
+		String hasValueChecks = 
+			getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
+		//Check if a function is used, add whatever extra code necessary for it (for now, just count)
+		Set<String> functionsRefs = new HashSet<String>();
+		functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
+		functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
+		String functionExtraCode = getFunctionsExtraCode(functionsRefs);
+		sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
+		sb.append("salience " + rule.getPriority() + "\n");
+		sb.append(DEFAULT_CONFIG + "\n");
+		sb.append(WHEN + "\n");
+		if (definition != null){
+		    sb.append(definition);
+		}
+		if (functionExtraCode != null){
+		    sb.append(functionExtraCode);
+		}
+		if (hasValueChecks != null){
+		    sb.append(hasValueChecks);
+		}
+		if (preconditionInitStr != null){
+		    sb.append(preconditionInitStr);
+		}
+		if (preconditionStr != null){
+		    sb.append(preconditionStr);
+		}
+		if (whenStr != null){
+		    sb.append(whenStr);
+		}
+		sb.append(THEN + "\n");
+		if (thenStr != null){
+		    sb.append(thenStr);
+		}
+		sb.append(END + "\n\n");
 	    }
-	    if (functionExtraCode != null){
-		sb.append(functionExtraCode);
-	    }
-	    if (hasValueChecks != null){
-		sb.append(hasValueChecks);
-	    }
-	    if (preconditionInitStr != null){
-		sb.append(preconditionInitStr);
-	    }
-	    if (preconditionStr != null){
-		sb.append(preconditionStr);
-	    }
-	    if (whenStr != null){
-		sb.append(whenStr);
-	    }
-	    sb.append(THEN + "\n");
-	    if (thenStr != null){
-		sb.append(thenStr);
-	    }
-	    sb.append(END + "\n\n");
 	}
 	return sb.toString();
     }
@@ -345,7 +329,7 @@ public class GDLDroolsConverter {
 		String rmType = archetypeElementVO.getRMType();
 		DataValue dv = DataValue.parseValue(rmType + "," + dvStr);
 		sb.append(
-			"$"+gtCode+".setDataValue("+ DVUIUtil.getDVInstantiation(dv)+");"+
+			"$"+gtCode+".setDataValue("+ DVDefSerializer.getDVInstantiation(dv)+");"+
 				"$"+gtCode+".setNullFlavour(null);"+
 				"$executionLogger.addLog(drools, $"+gtCode +");");
 	    } else {
@@ -360,7 +344,7 @@ public class GDLDroolsConverter {
 		Map<RefStat, Set<String>> statsAux = initStats();
 		stats.get(RefStat.REFERENCE).addAll(statsAux.get(RefStat.REFERENCE));
 		sb.append("$"+gtCode+ ".setDataValue(null);"+
-			"$"+gtCode+".setNullFlavour("+ DVUIUtil.getDVInstantiation(dv)+");"+
+			"$"+gtCode+".setNullFlavour("+ DVDefSerializer.getDVInstantiation(dv)+");"+
 			"$executionLogger.addLog(drools, $"+gtCode +");");
 	    }else{
 		String rmName = elementMap.get(gtCode).getRMType();
@@ -478,7 +462,7 @@ public class GDLDroolsConverter {
 			}
 			sb.append(getOperatorMVELLine("$"+var.getCode(),
 				binaryExpression.getOperator(),
-				DVUIUtil.getDVInstantiation(dv)));
+				DVDefSerializer.getDVInstantiation(dv)));
 			sb.append(")");
 		    } else {
 			if (OperatorKind.EQUALITY.equals(binaryExpression
@@ -512,7 +496,7 @@ public class GDLDroolsConverter {
 		    DataValue dv = DataValue.parseValue(OpenEHRDataValues.DV_CODED_TEXT + "," + dvStr);
 		    sb.append("eval(");
 		    String opNeg = (binaryExpression.getOperator().equals(OperatorKind.INEQUAL))?"!":"";
-		    sb.append(opNeg+"$"+var.getCode()+".nullValueEquals("+DVUIUtil.getDVInstantiation(dv)+"))");
+		    sb.append(opNeg+"DVUtil.nullValueEquals($"+var.getCode()+".getNullFlavour(), "+DVDefSerializer.getDVInstantiation(dv)+"))");
 		}else{//Expression
 		    Map<RefStat, Set<String>> statsAux = initStats();
 		    String artimeticExpStr = 
@@ -593,9 +577,9 @@ public class GDLDroolsConverter {
 	} else if (OperatorKind.INEQUAL.equals(ok)) {
 	    return "!" + getEqualsString(handle, value, inPredicate);
 	} else if (OperatorKind.IS_A.equals(ok)) {
-	    return handle + SUBCLASS_OF_STR +(inPredicate?"true,":"")+ getTermBindings(value) + ")";
+	    return "DVUtil.isSubClassOf("+ inPredicate+", "+ handle + ", "+ getTermBindings(value) + ")";
 	} else if (OperatorKind.IS_NOT_A.equals(ok)) {
-	    return handle + NOT_SUBCLASS_OF_STR + getTermBindings(value) + ")";
+	    return "DVUtil.isNotSubClassOf(" + inPredicate + ", "+ handle+", "+ getTermBindings(value) + ")";
 	} else if (OperatorKind.GREATER_THAN.equals(ok)) {
 	    return getComparisonString(handle, value) + ">0";
 	} else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(ok)) {
@@ -612,15 +596,15 @@ public class GDLDroolsConverter {
 
     private static String getEqualsString(String handle, String value, boolean inPredicate){
 	StringBuffer sb = new StringBuffer();
-	sb.append(handle + ELEMENT_EQUALS_STR+(inPredicate?"true,":"") + value);
+	sb.append("DVUtil.equalDV("+inPredicate+", "+handle+"," + value);
 	sb.append(getDataValueStrIfNeeded(value)+")");
 	return sb.toString();
     }
 
     private static String getComparisonString(String handle, String value){
 	StringBuffer sb = new StringBuffer();
-	sb.append(handle +COMPATIBLE_COMPARISON_STR+ value+getDataValueStrIfNeeded(value) + ") && ");
-	sb.append(handle + ELEMENT_COMPARISON_STR);
+	sb.append("DVUtil.compatibleComparison(" + handle +getDataValueStrIfNeeded(handle)+ ", $auxDV="+ value+getDataValueStrIfNeeded(value) + ") && ");
+	sb.append("DVUtil.compareDVs("+handle+".getDataValue(), $auxDV)");
 	return sb.toString();
     }
 
@@ -823,7 +807,7 @@ public class GDLDroolsConverter {
 
 	log.debug("Var.code: " + var.getCode() + ", attr: " + var.getAttribute());		
 
-	String dvClassName = DVUIUtil.getDVClassName(rmName);
+	String dvClassName = DVDefSerializer.getDVClassName(rmName);
 	String ret = null;
 
 	// TODO fix setting currentDateTime
@@ -864,9 +848,9 @@ public class GDLDroolsConverter {
 
     private String getGuideHeader() {
 	return "package se.cambio.cds;\n"
-		+ "import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;\n"
-		+ "import se.cambio.cds.model.facade.execution.vo.ElementInstance;\n"
-		+ "import se.cambio.cds.model.facade.execution.vo.ContainerInstance;\n"
+		+ "import se.cambio.cds.model.instance.ArchetypeReference;\n"
+		+ "import se.cambio.cds.model.instance.ElementInstance;\n"
+		+ "import se.cambio.cds.model.instance.ContainerInstance;\n"
 		+ "import se.cambio.cds.util.DVUtil;\n"
 		+ "import org.openehr.rm.datatypes.quantity.DvCount;\n"
 		+ "import org.openehr.rm.datatypes.quantity.DvOrdinal;\n"

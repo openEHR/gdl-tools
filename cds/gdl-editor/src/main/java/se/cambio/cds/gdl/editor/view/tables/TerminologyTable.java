@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.jxpath.JXPathContext;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public class TerminologyTable extends JTable {
 
@@ -26,9 +26,9 @@ public class TerminologyTable extends JTable {
 	_context = context;
 	this.setModel(new TerminologyTableModel());
 	Vector<String> columnIdentifiers = new Vector<String>();
-	columnIdentifiers.add(LanguageManager.getMessage("Code"));
-	columnIdentifiers.add(LanguageManager.getMessage("Text"));
-	columnIdentifiers.add(LanguageManager.getMessage("Description"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Code"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Text"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Description"));
 	getTerminologyTableModel().setColumnIdentifiers(columnIdentifiers);
 	this.getColumnModel().getColumn(0).setMaxWidth(80);
 	OntologyTableCellEditor cellEditor = 

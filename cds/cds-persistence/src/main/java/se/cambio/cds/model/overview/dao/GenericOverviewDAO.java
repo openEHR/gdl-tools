@@ -3,8 +3,8 @@ package se.cambio.cds.model.overview.dao;
 import java.util.Collection;
 
 import se.cambio.cds.model.overview.dto.OverviewDTO;
-import se.cambio.cds.util.exceptions.InstanceNotFoundException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 /**
  * @author iago.corbal

@@ -24,7 +24,7 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable.BindingTableModel;
@@ -123,7 +123,7 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
 	if (addTermBtn == null) {
 	    addTermBtn = new JButton();
 	    addTermBtn.setIcon(GDLEditorImageUtil.ADD_ICON);
-	    addTermBtn.setToolTipText(LanguageManager.getMessage("AddBinding"));
+	    addTermBtn.setToolTipText(GDLEditorLanguageManager.getMessage("AddBinding"));
 	    addTermBtn.setContentAreaFilled(false);
 	    addTermBtn.setPreferredSize(new Dimension(16,16));
 	    addTermBtn.setBorderPainted(false);
@@ -149,7 +149,7 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
     private JButton getDeleteBindingButton() {
 	if (deleteBtn == null) {
 	    deleteBtn = new JButton();
-	    deleteBtn.setToolTipText(LanguageManager.getMessage("DeleteBinding"));
+	    deleteBtn.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteBinding"));
 	    deleteBtn.setIcon(GDLEditorImageUtil.DELETE_ICON);
 	    deleteBtn.setContentAreaFilled(false);
 	    deleteBtn.setPreferredSize(new Dimension(16,16));
@@ -167,12 +167,12 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
 	Set<String> bindingsCodes = _controller.getTermBindings().keySet();
 	if (bindingsCodes == null || bindingsCodes.size() == 0) {
 	    JOptionPane.showMessageDialog(this,
-		    LanguageManager.getMessage("ErrorMessageDeleteTermData"));
+		    GDLEditorLanguageManager.getMessage("ErrorMessageDeleteTermData"));
 	} else {
 	    BindingTableModel otm = null;
 	    int selection = JOptionPane.showConfirmDialog(this,
-		    LanguageManager.getMessage("DeleteTerminologyMessage"), 
-		    LanguageManager.getMessage("DeleteTermPopupTitle"),
+		    GDLEditorLanguageManager.getMessage("DeleteTerminologyMessage"), 
+		    GDLEditorLanguageManager.getMessage("DeleteTermPopupTitle"),
 		    JOptionPane.YES_NO_OPTION);
 
 	    if (selection == JOptionPane.YES_OPTION) {

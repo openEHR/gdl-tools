@@ -14,7 +14,7 @@ import javax.swing.KeyStroke;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 
 
@@ -27,10 +27,10 @@ public class SaveGuideAction extends AbstractAction {
 
     public SaveGuideAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("SaveGuide"));
+	putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuide"));
 	putValue(SMALL_ICON, GDLEditorImageUtil.SAVE_ICON);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("SaveGuideSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("SaveGuideD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
     }
 

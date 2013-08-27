@@ -3,11 +3,11 @@ package se.cambio.cds.model.facade.execution.delegate;
 import java.util.Calendar;
 import java.util.Collection;
 
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.exceptions.PatientNotFoundException;
+import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 
 /**
@@ -17,10 +17,10 @@ import se.cambio.cds.util.exceptions.PatientNotFoundException;
 public interface RuleExecutionFacadeDelegate {
 
     public RuleExecutionResult execute(
-	    Collection<GuideDTO> guides,
-	    Collection<ElementInstance> elementInstances,
-	    Calendar date) 
-		    throws InternalErrorException, PatientNotFoundException;
+            String ehrId,
+            Collection<GuideDTO> guides,
+            Collection<ElementInstance> elementInstances,
+            Calendar date) throws InternalErrorException, PatientNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.util.Version;
 
 public class SplashPanel extends JPanel {
@@ -37,8 +37,8 @@ public class SplashPanel extends JPanel {
 	if (buildNum!=null){
 	    g.drawString(buildNum, 47, 297);
 	}
-	g.drawString(LanguageManager.getMessage("Authors")+": Iago Corbal, Rong Chen", 47, 313);
-	g.drawString(LanguageManager.getMessage("FundedBy")+": Cambio Healthcare Systems (cambio.se)", 47, 329);
+	g.drawString(GDLEditorLanguageManager.getMessage("Authors")+": Iago Corbal, Rong Chen", 47, 313);
+	g.drawString(GDLEditorLanguageManager.getMessage("FundedBy")+": Cambio Healthcare Systems (cambio.se)", 47, 329);
 	
 	/*
 			g.drawString(LanguageManager.getMessage("HospitalCenterName")

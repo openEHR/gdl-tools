@@ -2,6 +2,11 @@ package se.cambio.cds.gdl.model.expression;
 
 public class Variable extends ExpressionItem {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public static Variable createByCode(String code) {
 		return new Variable(code);
 	}

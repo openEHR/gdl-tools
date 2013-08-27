@@ -41,7 +41,7 @@ public class DADLSerializer {
 	 * Serialize an object into DADL format using reflection
 	 * 
 	 * @param obj
-	 * @return
+	 * @return List of serialized strings 
 	 * @throws Exception
 	 */
 	public List<String> toDADL(Object obj) throws Exception {

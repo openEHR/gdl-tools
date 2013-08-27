@@ -1,1 +1,0 @@
-A simple implementation of the openEHR meausrement service

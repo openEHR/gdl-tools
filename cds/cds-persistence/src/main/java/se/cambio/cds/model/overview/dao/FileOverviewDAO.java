@@ -1,68 +1,68 @@
 package se.cambio.cds.model.overview.dao;
 
+import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.FolderNotFoundException;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import se.cambio.cds.model.overview.dto.OverviewDTO;
-import se.cambio.cds.util.IOUtils;
-import se.cambio.cds.util.UserConfigurationManager;
-import se.cambio.cds.util.exceptions.FolderNotFoundException;
-import se.cambio.cds.util.exceptions.InstanceNotFoundException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.handlers.ExceptionHandler;
-
 public class FileOverviewDAO implements GenericOverviewDAO{
 
-    public OverviewDTO search(String idOverview) 
-	    throws InternalErrorException, InstanceNotFoundException {
-	File folder = UserConfigurationManager.getOverviewsFolder();
-	if (!folder.isDirectory()){
-	    throw new FolderNotFoundException(folder.getAbsolutePath());
-	}
-	File[] listOfFiles = folder.listFiles();
-	for (int i = 0; i < listOfFiles.length; i++) {
-	    if (listOfFiles[i].isFile()) {
-		String fileName = listOfFiles[i].getName().toLowerCase();
-		if (fileName.equals(idOverview+".iov")){
-		    try{
-			InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
-			String overviewSrc = IOUtils.toString(fis, "UTF-8");
-			return new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc);
-		    }catch(Exception e){
-			ExceptionHandler.handle(e);
-		    }
-		}
-	    }
-	}
-	throw new InstanceNotFoundException(idOverview, OverviewDTO.class.getName());
+    public OverviewDTO search(String idOverview)
+            throws InternalErrorException, InstanceNotFoundException {
+        File folder = UserConfigurationManager.getOverviewsFolder();
+        if (!folder.isDirectory()){
+            throw new FolderNotFoundException(folder.getAbsolutePath());
+        }
+        File[] listOfFiles = folder.listFiles();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                if (fileName.equals(idOverview+".dsv")){
+                    try{
+                        InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
+                        String overviewSrc = IOUtils.toString(fis, "UTF-8");
+                        return new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc);
+                    }catch(Exception e){
+                        ExceptionHandler.handle(e);
+                    }
+                }
+            }
+        }
+        throw new InstanceNotFoundException(idOverview, OverviewDTO.class.getName());
     }
 
     public Collection<OverviewDTO> searchAll() throws InternalErrorException {
-	File folder = UserConfigurationManager.getOverviewsFolder();
-	if (!folder.isDirectory()){
-	    throw new FolderNotFoundException(folder.getAbsolutePath());
-	}
-	File[] listOfFiles = folder.listFiles();
-	Collection<OverviewDTO> overviewDTOs = new ArrayList<OverviewDTO>();
-	for (int i = 0; i < listOfFiles.length; i++) {
-	    if (listOfFiles[i].isFile()) {
-		String fileName = listOfFiles[i].getName().toLowerCase();
-		if (fileName.endsWith(".iov")){
-		    try{
-			InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
-			String idOverview = fileName.substring(0,fileName.length()-4);
-			String overviewSrc = IOUtils.toString(fis, "UTF-8");
-			overviewDTOs.add(new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc));
-		    }catch(Exception e){
-			ExceptionHandler.handle(e);
-		    }
-		}
-	    }
-	}
-	return overviewDTOs;
+        File folder = UserConfigurationManager.getOverviewsFolder();
+        if (!folder.isDirectory()){
+            throw new FolderNotFoundException(folder.getAbsolutePath());
+        }
+        File[] listOfFiles = folder.listFiles();
+        Collection<OverviewDTO> overviewDTOs = new ArrayList<OverviewDTO>();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                String fileName = listOfFiles[i].getName();
+                if (fileName.endsWith(".dsv")){
+                    try{
+                        InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
+                        String idOverview = fileName.substring(0,fileName.length()-4);
+                        String overviewSrc = IOUtils.toString(fis, "UTF-8");
+                        overviewDTOs.add(new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc));
+                    }catch(Exception e){
+                        ExceptionHandler.handle(e);
+                    }
+                }
+            }
+        }
+        return overviewDTOs;
     }
 }
 /*

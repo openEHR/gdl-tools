@@ -10,9 +10,10 @@ import javax.swing.JDialog;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
-import se.cambio.cds.openehr.util.ImageUtil;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
 public class DialogGTCodeSelection extends DialogSelection{
     /**
@@ -25,7 +26,7 @@ public class DialogGTCodeSelection extends DialogSelection{
     public DialogGTCodeSelection(Window owner, GDLEditor controller) {
 	super(
 		owner, 
-		LanguageManager.getMessage("SelectLocalTerm"), 
+		GDLEditorLanguageManager.getMessage("SelectLocalTerm"), 
 		NodeDefinitionConversor.getNodeGTCodes(controller.getCurrentTermsMap(), controller.getGTCodesUsedInDefinitions()), 
 		true, 
 		new Dimension(500,500));
@@ -34,8 +35,8 @@ public class DialogGTCodeSelection extends DialogSelection{
     
     private JButton getAddGTCodeButton(){
 	if (addGTCodeButton==null){
-	    addGTCodeButton = new JButton(LanguageManager.getMessage("AddLocalTerm"));
-	    addGTCodeButton.setIcon(ImageUtil.ADD_ICON);
+	    addGTCodeButton = new JButton(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
+	    addGTCodeButton.setIcon(OpenEHRImageUtil.ADD_ICON);
 	    addGTCodeButton.addActionListener(new AddGTTermActionListener(this));
 	}
 	return addGTCodeButton;
@@ -55,7 +56,7 @@ public class DialogGTCodeSelection extends DialogSelection{
 	    _dialog = dialog;
 	}
 	public void actionPerformed(ActionEvent e) {
-	    DialogNameInsert dialog = new DialogNameInsert(_dialog, LanguageManager.getMessage("AddLocalTerm"), null);
+	    DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddLocalTerm"), null);
 	    if (dialog.getAnswer()){
 		GDLEditor controller = EditorManager.getActiveGDLEditor();
 		_gtCodeCreated = controller.createNextGTCode();

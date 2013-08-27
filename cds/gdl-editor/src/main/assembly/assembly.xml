@@ -38,51 +38,6 @@
 				<include>*.jar</include>
 			</includes>
 		</fileSet>
-		<!-- add archetype folder -->
-		<fileSet>
-			<directory>../cm/archetypes</directory>
-			<outputDirectory>Archetypes</outputDirectory>
-			<includes>
-				<include>*.adl</include>
-			</includes>
-		</fileSet>
-		<!-- add templates folder -->
-		<fileSet>
-			<directory>../cm/templates</directory>
-			<outputDirectory>Templates</outputDirectory>
-			<includes>
-				<include>*.oet</include>
-			</includes>
-		</fileSet>
-		<!-- add terminologies folder -->
-		<fileSet>
-			<directory>../cm/terminologies</directory>
-			<outputDirectory>Terminologies</outputDirectory>
-			<includes>
-				<include>*.*</include>
-			</includes>
-		</fileSet>
-		<!-- add ontologies folder -->
-		<fileSet>
-			<directory>../cm/ontologies</directory>
-			<outputDirectory>Ontologies</outputDirectory>
-			<!-- UNCOMMENT AND REMOVE EXCLUDES TO ADD ONTOLOGIES
-			<includes>
-				<include>*.owl</include> 
-			</includes>-->
-			<excludes>
-				<exclude>*</exclude>
-			</excludes>
-		</fileSet>
-		<!-- add guides folder -->
-		<fileSet>
-			<directory>../cm/guides</directory>
-			<outputDirectory>Guidelines</outputDirectory>
-			<includes>
-				<include>*.*</include>
-			</includes>
-		</fileSet>
-		<!-- add manual, samples and release notes -->
 		<fileSet>
 			<directory>../docs/gdl-editor</directory>
 			<outputDirectory>docs</outputDirectory>
@@ -100,5 +55,49 @@
 				<include>gdl.ico</include>
 			</includes>
 		</fileSet>
+		<!-- add archetype folder 
+		<fileSet>
+			<directory>../cm/archetypes</directory>
+			<outputDirectory>Archetypes</outputDirectory>
+			<includes>
+				<include>*.adl</include>
+			</includes>
+		</fileSet>-->
+		<!-- add templates folder 
+		<fileSet>
+			<directory>../cm/templates</directory>
+			<outputDirectory>Templates</outputDirectory>
+			<includes>
+				<include>*.oet</include>
+			</includes>
+		</fileSet>-->
+		<!-- add terminologies folder 
+		<fileSet>
+			<directory>../cm/terminologies</directory>
+			<outputDirectory>Terminologies</outputDirectory>
+			<includes>
+				<include>*.*</include>
+			</includes>
+		</fileSet>-->
+		<!-- add ontologies folder 
+		<fileSet>
+			<directory>../cm/ontologies</directory>
+			<outputDirectory>Ontologies</outputDirectory>
+			<includes>
+				<include>*.owl</include> 
+			</includes>
+			<excludes>
+				<exclude>*</exclude>
+			</excludes>
+		</fileSet>-->
+		<!-- add guides folder
+		<fileSet>
+			<directory>../cm/guides</directory>
+			<outputDirectory>Guidelines</outputDirectory>
+			<includes>
+				<include>*.*</include>
+			</includes>
+		</fileSet> -->
+		<!-- add manual, samples and release notes -->
 	</fileSets>
 </assembly>

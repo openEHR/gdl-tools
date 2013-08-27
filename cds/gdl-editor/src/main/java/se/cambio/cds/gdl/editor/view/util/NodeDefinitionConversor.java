@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
@@ -22,33 +22,35 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRule
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineDefinitionElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
-import se.cambio.cds.model.archetype.dto.ArchetypeDTO;
-import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;
-import se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO;
-import se.cambio.cds.openehr.util.OpenEHRConst;
-import se.cambio.cds.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.cds.openehr.view.applicationobjects.AggregationFunctionsUI;
-import se.cambio.cds.openehr.view.applicationobjects.ArchetypeElements;
-import se.cambio.cds.openehr.view.applicationobjects.Archetypes;
-import se.cambio.cds.openehr.view.applicationobjects.DomainsUI;
-import se.cambio.cds.openehr.view.trees.SelectableNode;
-import se.cambio.cds.openehr.view.trees.SelectableNodeWithIcon;
-import se.cambio.cds.ts.Node;
-import se.cambio.cds.ts.UnsupportedLanguageException;
-import se.cambio.cds.ts.UnsupportedTerminologyException;
-import se.cambio.cds.util.CDSTerminologyService;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.OpenEHRDataValues;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.cds.view.swing.applicationobjects.AggregationFunctionsUI;
+import se.cambio.cds.view.swing.applicationobjects.ArchetypeReferences;
+import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRDataValuesUI;
+import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
+import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
 
 public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getElementInstancesSelectionNodes(
 	    Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain){
 	SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(
-		LanguageManager.getMessage("Definitions"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
+		GDLEditorLanguageManager.getMessage("Definitions"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
 	SelectableNode<Object> elementsNode = new SelectableNodeWithIcon<Object>(
-		LanguageManager.getMessage("ElementInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
+		GDLEditorLanguageManager.getMessage("ElementInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
 	root.add(elementsNode);
 	addElementInstanceToNode(definitionRuleLines, elementsNode, onlyCDSDomain);
 	/*
@@ -74,7 +76,7 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getArchetypeInstancesSelectionNodes(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain){
 	SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(
-		LanguageManager.getMessage("ArchetypeInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
+		GDLEditorLanguageManager.getMessage("ArchetypeInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
 	for (RuleLine ruleLine : definitionRuleLines) {
 	    if (ruleLine instanceof ArchetypeInstantiationRuleLine){
 		SelectableNode<Object> node = getArchetypeElementRuleLineElementNode((ArchetypeInstantiationRuleLine)ruleLine, onlyCDSDomain);
@@ -118,14 +120,14 @@ public class NodeDefinitionConversor {
 			true, 
 			false, 
 			getIcons(aeirl.getGTCodeRuleLineElement()),
-			ArchetypeElements.getHTMLTooltip(archetypeElementVO, ar));
+			ArchetypeReferences.getHTMLTooltip(archetypeElementVO, ar));
 	    }
 	}
 	return null;
     }
 
     public static SelectableNode<Object> getCurrentDateTimeArchetypeElementRuleLineElementNode(GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement){
-	String name = LanguageManager.getMessage("CurrentDateTime");
+	String name = GDLEditorLanguageManager.getMessage("CurrentDateTime");
 	return new SelectableNodeWithIcon<Object>(
 		name,
 		currentDateTimeGTCodeRuleLineElement,
@@ -163,13 +165,13 @@ public class NodeDefinitionConversor {
 
     public static ImageIcon getIconsArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde){
 	String af = aerlde.getAggregationFunction();
-	String archReferenceRM = Archetypes.getArchetypeVO(aerlde.getValue().getIdArchetype()).getRMName();
+	String archReferenceRM = Archetypes.getArchetypeDTO(aerlde.getValue().getIdArchetype()).getRMName();
 	String archElementRM = aerlde.getValue().getRMType();
 	MultipleIcon icons = 
 		new MultipleIcon(
 			new Icon[]{
 				DomainsUI.getGroupIconFromArchetypeReference(aerlde.getArchetypeReference()),
-				OpenEHRConst.getIcon(archReferenceRM),
+				OpenEHRConstUI.getIcon(archReferenceRM),
 				AggregationFunctionsUI.getIcon(af),
 				OpenEHRDataValuesUI.getIcon(archElementRM)});
 	return icons;
@@ -179,21 +181,25 @@ public class NodeDefinitionConversor {
     public static ImageIcon getIconsArchetypeReference(ArchetypeReferenceRuleLineDefinitionElement arrlde){
 	String af = arrlde.getAggregationFunction();
 
-	String archReferenceRM = Archetypes.getArchetypeVO(arrlde.getValue().getIdArchetype()).getRMName();
+	String archReferenceRM = Archetypes.getArchetypeDTO(arrlde.getValue().getIdArchetype()).getRMName();
 	MultipleIcon icons = 
 		new MultipleIcon(
 			new Icon[]{
 				DomainsUI.getGroupIconFromArchetypeReference(arrlde.getValue()),
-				OpenEHRConst.getIcon(archReferenceRM),
+				OpenEHRConstUI.getIcon(archReferenceRM),
 				AggregationFunctionsUI.getIcon(af)});
 	return icons;
     }
 
     public static SelectableNode<Object> getElementsInArchetypeNode(String idArchetype, String idTemplate){
-	ArchetypeDTO archetypeVO = Archetypes.getArchetypeVO(idArchetype);
+	return getElementsInArchetypeNode(idArchetype, idTemplate, true);
+    }
+    
+    public static SelectableNode<Object> getElementsInArchetypeNode(String idArchetype, String idTemplate, boolean singleSelection){
+	ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
 	SelectableNode<Object> rootNode = new SelectableNodeWithIcon<Object>(
 		archetypeVO.getName(),
-		null, true, false, 
+		null, singleSelection, false, 
 		Archetypes.getIcon(archetypeVO.getIdArchetype()),
 		archetypeVO.getDescription());
 
@@ -207,16 +213,21 @@ public class NodeDefinitionConversor {
 	Collection<ArchetypeElementVO> archetypeElementVOs = ArchetypeElements.getArchetypeElementsVO(idArchetype, idTemplate);
 	for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
 	    SelectableNode<Object> rmNode = ClusterNodesUtil.getRMNode(rootNode, rmNodes, archetypeElementVO.getPath());
-	    SelectableNode<Object> clusterNode = ClusterNodesUtil.getClusterNode(idTemplate, archetypeElementVO.getIdParent(), rmNode, clusters);
-	    nodoOrigen = createElementNode(archetypeElementVO);
+	    SelectableNode<Object> clusterNode = 
+		    ClusterNodesUtil.getClusterNode(
+			    idTemplate, 
+			    archetypeElementVO.getIdParent(), 
+			    rmNode, clusters,
+			    singleSelection);
+	    nodoOrigen = createElementNode(archetypeElementVO, singleSelection);
 	    clusterNode.add(nodoOrigen);
 	}
 	return rootNode;
     }
 
-    private static SelectableNodeWithIcon<Object> createElementNode(ArchetypeElementVO archetypeElementVO){
+    private static SelectableNodeWithIcon<Object> createElementNode(ArchetypeElementVO archetypeElementVO, boolean singleSelection){
 	return new SelectableNodeWithIcon<Object>(
-		archetypeElementVO.getName(),archetypeElementVO,true, false, 
+		archetypeElementVO.getName(),archetypeElementVO,singleSelection, false, 
 		OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()), archetypeElementVO.getDescription());
     }
 
@@ -275,7 +286,7 @@ public class NodeDefinitionConversor {
     }
 
     public static SelectableNode<Object> getSingleNodeAttributesAndFunctions(){
-	return new SelectableNodeWithIcon<Object>(LanguageManager.getMessage("Attributes")+"/"+LanguageManager.getMessage("Functions"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+	return new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes")+"/"+GDLEditorLanguageManager.getMessage("Functions"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
     }
 
     public static SelectableNode<Object> getNodeAttributesAndFunctions(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain){
@@ -294,7 +305,7 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getNodeGTCodes(Map<String, Term> termsMap, Collection<String> gtCodesToBeIgnored){
 	SelectableNodeWithIcon<Object> root = 
-		new SelectableNodeWithIcon<Object>(LanguageManager.getMessage("LocalTerms"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+		new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("LocalTerms"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
 	ArrayList<String> terms = new ArrayList<String>(termsMap.keySet());
 	Collections.sort(terms);
 	for (String gtCode : terms) {
@@ -311,8 +322,8 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getNodeTerminologyIds(){
 	SelectableNodeWithIcon<Object> root = 
-		new SelectableNodeWithIcon<Object>(LanguageManager.getMessage("Terminologies"), null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
-	for (String terminologyId : CDSTerminologyService.getDelegate().getSupportedTerminologies()) {
+		new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Terminologies"), null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
+	for (String terminologyId : OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies()) {
 	    SelectableNodeWithIcon<Object> nodeAux = 
 		    new SelectableNodeWithIcon<Object>(terminologyId, terminologyId, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
 	    root.add(nodeAux);
@@ -324,15 +335,15 @@ public class NodeDefinitionConversor {
 	SelectableNodeWithIcon<Object> root = 
 		new SelectableNodeWithIcon<Object>(terminologyId, null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
 	try {
-	    List<Node> nodes = CDSTerminologyService.retrieveAll(terminologyId, OpenEHRDataValuesUI.getLanguageCodePhrase());
+	    List<TerminologyNodeVO> nodes = OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveAll(terminologyId, OpenEHRDataValuesUI.getLanguageCodePhrase());
 	    if (nodes!=null){
-		Collections.sort(nodes, new Comparator<Node>() {
+		Collections.sort(nodes, new Comparator<TerminologyNodeVO>() {
 		    @Override
-		    public int compare(Node o1, Node o2) {
+		    public int compare(TerminologyNodeVO o1, TerminologyNodeVO o2) {
 			return o1.getValue().getDefiningCode().getCodeString().compareTo(o2.getValue().getDefiningCode().getCodeString());
 		    }
 		});
-		for (Node node : nodes) {
+		for (TerminologyNodeVO node : nodes) {
 		    root.add(getSelectableNodeTerminologyCodes(node, selectedCodes));
 		}
 	    }
@@ -344,12 +355,12 @@ public class NodeDefinitionConversor {
 	return root;
     }
 
-    public static SelectableNode<Object> getSelectableNodeTerminologyCodes(Node node, Collection<String> selectedCodes){
+    public static SelectableNode<Object> getSelectableNodeTerminologyCodes(TerminologyNodeVO node, Collection<String> selectedCodes){
 	String code = node.getValue().getDefiningCode().getCodeString();
 	SelectableNodeWithIcon<Object> selectableNode = 
 		new SelectableNodeWithIcon<Object>(node.getValue().getValue() +" ("+code+")", node.getValue().getDefiningCode(), false, selectedCodes.contains(code), GDLEditorImageUtil.ONTOLOGY_ICON);
 	selectableNode.setHierarchySelection(false);
-	for (Node node2 : node.getChildren()) {
+	for (TerminologyNodeVO node2 : node.getChildren()) {
 	    selectableNode.add(getSelectableNodeTerminologyCodes(node2, selectedCodes));
 	}
 	return selectableNode;

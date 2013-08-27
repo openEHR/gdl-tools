@@ -13,9 +13,9 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.openehr.util.ExceptionHandler;
-import se.cambio.cds.util.UserConfigurationManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 
@@ -28,10 +28,10 @@ public class ViewUserManualAction extends AbstractAction {
 
     public ViewUserManualAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("UserManual"));
+	putValue(NAME, GDLEditorLanguageManager.getMessage("UserManual"));
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("UserManualD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("UserManualD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("UserManualD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("UserManualD"));
     }
 
     /* (non-Javadoc)

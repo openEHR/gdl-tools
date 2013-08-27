@@ -1,11 +1,17 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 
-public class Binding {
+public class Binding  implements Serializable{
 	
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public Binding(){		
 	}
 

@@ -1,6 +1,13 @@
 package se.cambio.cds.gdl.model;
 
-public class Term {
+import java.io.Serializable;
+
+public class Term implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 	public Term() {
 	}

@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
@@ -9,7 +10,12 @@ import org.openehr.rm.datatypes.text.CodePhrase;
  * 
  * @author rong.chen
  */
-public class ResourceDescriptionItem {
+public class ResourceDescriptionItem implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 	public ResourceDescriptionItem() {
 	}

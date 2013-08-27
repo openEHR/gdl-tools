@@ -4,6 +4,11 @@ import org.openehr.rm.datatypes.quantity.DvQuantity;
 
 public class QuantityConstant extends ConstantExpression {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public QuantityConstant(DvQuantity quantity) {
 		super(quantity.toString());
 		this.quantity = quantity;

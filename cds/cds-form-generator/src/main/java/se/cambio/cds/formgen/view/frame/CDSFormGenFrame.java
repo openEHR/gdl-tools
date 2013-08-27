@@ -13,9 +13,9 @@ import javax.swing.SwingWorker;
 
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.controller.FormGeneratorViewer;
-import se.cambio.cds.formgen.view.dialog.InfoDialog;
-import se.cambio.cds.openehr.util.ImageUtil;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.view.dialogs.InfoDialog;
 
 
 
@@ -64,7 +64,7 @@ public class CDSFormGenFrame extends JFrame implements FormGeneratorViewer{
 	jScrollPane = null;
 	getJTabbedPane().addTab(
 		controller.getName(), 
-		ImageUtil.RULE_ICON,
+		OpenEHRImageUtil.RULE_ICON,
 		controller.getCDSFormPanel(),
 		controller.getDescription());
 	controller.setViewer(this);

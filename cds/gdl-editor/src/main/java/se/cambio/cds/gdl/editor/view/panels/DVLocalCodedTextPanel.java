@@ -16,10 +16,10 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.dialog.DialogGTCodeSelection;
 import se.cambio.cds.gdl.model.Term;
-import se.cambio.cds.openehr.util.ImageUtil;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
-import se.cambio.cds.openehr.util.OpenEHRConst;
-import se.cambio.cds.openehr.view.panels.DVGenericPanel;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.view.panels.DVGenericPanel;
 
 public class DVLocalCodedTextPanel extends DVGenericPanel{
 
@@ -40,7 +40,7 @@ public class DVLocalCodedTextPanel extends DVGenericPanel{
 
     protected JButton getCodedTextButton(){
 	if (codedTextButton==null){
-	    codedTextButton = new JButton(OpenEHRLanguageManager.getMessage("SelectTerm"), ImageUtil.DV_CODED_TEXT_ICON);
+	    codedTextButton = new JButton(OpenEHRLanguageManager.getMessage("SelectTerm"), OpenEHRImageUtil.DV_CODED_TEXT_ICON);
 	    codedTextButton.addActionListener(new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {

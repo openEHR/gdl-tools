@@ -15,7 +15,7 @@ import javax.swing.KeyStroke;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.sw.CompileGuideSW;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public class SaveGuideAsObjectAction extends AbstractAction {
 
@@ -26,10 +26,10 @@ public class SaveGuideAsObjectAction extends AbstractAction {
 
     public SaveGuideAsObjectAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("SaveGuideAsObject")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAsObject")+"...");
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("SaveGuideAsObjectSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("SaveGuideAsObjectD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsObjectSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsObjectD"));
 	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK+ActionEvent.ALT_MASK));
     }
 
@@ -42,12 +42,12 @@ public class SaveGuideAsObjectAction extends AbstractAction {
 	    protected void done() {
 		getController().compilationFinished(getErrorMsg());
 		if (getErrorMsg()==null){
-		    getController().saveCompiledGuideAsObject(getCompiledGuide());
+		    getController().saveCompiledGuideAsObject(getCompiledGuide(), getGuide());
 		}
 	    }
 	};
 	sw.execute();
-	controller.setBusy(LanguageManager.getMessage("Compiling")+"...");
+	controller.setBusy(GDLEditorLanguageManager.getMessage("Compiling")+"...");
     }
 }
 /*

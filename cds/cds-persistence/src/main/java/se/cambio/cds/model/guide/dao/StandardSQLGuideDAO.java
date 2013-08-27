@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.model.util.sql.GeneralOperations;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.exceptions.ModelException;
+import se.cambio.openehr.model.util.conversors.DBConversion;
+import se.cambio.openehr.model.util.sql.GeneralOperations;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 /**
  * @author iago.corbal
@@ -19,189 +19,185 @@ import se.cambio.cds.util.exceptions.ModelException;
  */
 public class StandardSQLGuideDAO implements SQLGuideDAO {
 
-	public GuideDTO search(Connection connection, String idGuide) 
-	throws InternalErrorException, GuideNotFoundException {
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+    public GuideDTO searchByGuideId(Connection connection, String guideId) 
+	    throws InternalErrorException, GuideNotFoundException {
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
 
-		try {
-			/* Create "preparedStatement". */
-			String queryString = "SELECT name, description, guideSrc, compiledGuide FROM guide WHERE idGuide = ?";
-			preparedStatement = connection.prepareStatement(queryString);
+	try {
+	    /* Create "preparedStatement". */
+	    String queryString = "SELECT guideSrc, guideObject, compiledGuide, active FROM cds_guide WHERE guideid = ?";
+	    preparedStatement = connection.prepareStatement(queryString);
 
-			/* Fill "preparedStatement". */
-			int i = 1;
-			preparedStatement.setString(i++, idGuide);
+	    /* Fill "preparedStatement". */
+	    int i = 1;
+	    preparedStatement.setString(i++, guideId);
 
-			/* Execute query. */
-			resultSet = preparedStatement.executeQuery();
+	    /* Execute query. */
+	    resultSet = preparedStatement.executeQuery();
 
-			if (!resultSet.next()) {
-				throw new GuideNotFoundException(idGuide);
-			}
+	    if (!resultSet.next()) {
+		throw new GuideNotFoundException(guideId);
+	    }
 
-			/* Get results. */
-			i = 1;
-			String name = resultSet.getString(i++);
-			String desc = resultSet.getString(i++);
-			String guideSrc = resultSet.getString(i++);
-			byte[] compiledGuide = resultSet.getBytes(i++);
-
-			/* Return the value object. */
-			return new GuideDTO(idGuide, name, desc, guideSrc, compiledGuide);
-		} catch (SQLException e) {
-			throw new InternalErrorException(e);
-		} finally {
-			GeneralOperations.closeResultSet(resultSet);
-			GeneralOperations.closeStatement(preparedStatement);
-		}
+	    /* Get results. */
+	    i = 1;
+	    String guideSrc = resultSet.getString(i++);
+	    byte[] guide = resultSet.getBytes(i++);
+	    byte[] compiledGuide = resultSet.getBytes(i++);
+	    boolean active = DBConversion.toBoolean(resultSet.getShort(i++));
+	    /* Return the value object. */
+	    return new GuideDTO(guideId, guideSrc, guide, compiledGuide, active);
+	} catch (SQLException e) {
+	    throw new InternalErrorException(e);
+	} finally {
+	    GeneralOperations.closeResultSet(resultSet);
+	    GeneralOperations.closeStatement(preparedStatement);
 	}
+    }
 
-	public Collection<GuideDTO> searchAll(Connection connection) 
-	throws InternalErrorException {
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+    public Collection<GuideDTO> searchAll(Connection connection) 
+	    throws InternalErrorException {
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
 
-		try {
+	try {
 
-			/* Create "preparedStatement". */
-			String queryString = 
-				"SELECT idGuide, name, description, guideSrc, compiledGuide FROM guide";
-			preparedStatement = connection.prepareStatement(queryString);
+	    /* Create "preparedStatement". */
+	    String queryString = 
+		    "SELECT guideid, guideSrc, guideObject, compiledGuide, active FROM cds_guide";
+	    preparedStatement = connection.prepareStatement(queryString);
 
-			/* Execute query. */
-			resultSet = preparedStatement.executeQuery();
+	    /* Execute query. */
+	    resultSet = preparedStatement.executeQuery();
 
-			Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
-			if (!resultSet.next()) {
-				return guideDTOs;
-			}
-			do {
-				/* Get results. */
-				int i = 1;
-				String name = resultSet.getString(i++);
-				String desc = resultSet.getString(i++);
-				String idGuide = resultSet.getString(i++);
-				String guideSrc = resultSet.getString(i++);
-				byte[] compiledGuide = resultSet.getBytes(i++);
-				
-				GuideDTO GuideDTO = 
-					new GuideDTO(idGuide, name, desc, guideSrc, compiledGuide);
+	    Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+	    if (!resultSet.next()) {
+		return guideDTOs;
+	    }
+	    do {
+		/* Get results. */
+		int i = 1;
+		String guideId = resultSet.getString(i++);
+		String guideSrc = resultSet.getString(i++);
+		byte[] guide = resultSet.getBytes(i++);
+		byte[] compiledGuide = resultSet.getBytes(i++);
+		boolean active = DBConversion.toBoolean(resultSet.getShort(i++));
+		GuideDTO guideDTO = 
+			new GuideDTO(guideId, guideSrc, guide, compiledGuide, active);
+		guideDTOs.add(guideDTO);
+	    } while (resultSet.next());
 
-				guideDTOs.add(GuideDTO);
-
-			} while (resultSet.next());
-
-			/* Return value objects. */
-			return guideDTOs;
-		} catch (SQLException e) {
-			throw new InternalErrorException(e);
-		} finally {
-			GeneralOperations.closeResultSet(resultSet);
-			GeneralOperations.closeStatement(preparedStatement);
-		}
+	    /* Return value objects. */
+	    return guideDTOs;
+	} catch (SQLException e) {
+	    throw new InternalErrorException(e);
+	} finally {
+	    GeneralOperations.closeResultSet(resultSet);
+	    GeneralOperations.closeStatement(preparedStatement);
 	}
+    }
 
-	public GuideDTO add(Connection connection, GuideDTO guideDTO) 
-	throws InternalErrorException, ModelException {
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+    public GuideDTO insert(Connection connection, GuideDTO guideDTO) 
+	    throws InternalErrorException {
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
 
-		try {
-			/* Create "preparedStatement". */
-			String queryString = "INSERT INTO guide (idGuide, name, description, guideSrc, compiledGuide) VALUES (?, ?, ?)";
-			preparedStatement = connection.prepareStatement(queryString);
+	try {
+	    /* Create "preparedStatement". */
+	    String queryString = "INSERT INTO cds_guide (guideid, guideSrc, guideObject, compiledGuide, active) VALUES (?, ?, ?, ?, ?)";
+	    preparedStatement = connection.prepareStatement(queryString);
 
-			/* Fill "preparedStatement". */
-			int i = 1;
-			preparedStatement.setString(i++, guideDTO.getIdGuide());
-			preparedStatement.setString(i++, guideDTO.getName());
-			preparedStatement.setString(i++, guideDTO.getDescription());
-			preparedStatement.setString(i++, guideDTO.getGuideSrc());
-			preparedStatement.setBytes(i++, guideDTO.getCompiledGuide());
+	    /* Fill "preparedStatement". */
+	    int i = 1;
+	    preparedStatement.setString(i++, guideDTO.getIdGuide());
+	    preparedStatement.setString(i++, guideDTO.getGuideSrc());
+	    preparedStatement.setBytes(i++, guideDTO.getGuideObject());
+	    preparedStatement.setBytes(i++, guideDTO.getCompiledGuide());
+	    preparedStatement.setShort(i++, DBConversion.toShort(guideDTO.isActive()));
+	    
+	    /* Execute query. */
+	    int insertedRows = preparedStatement.executeUpdate();
 
-			/* Execute query. */
-			int insertedRows = preparedStatement.executeUpdate();
+	    if (insertedRows == 0) {
+		throw new SQLException("Can not add row to table 'cds_guide'");
+	    }
 
-			if (insertedRows == 0) {
-				throw new SQLException("Can not add row to table 'guide'");
-			}
-
-			if (insertedRows > 1) {
-				throw new SQLException("Duplicate row in table 'guide'");
-			}
-			return guideDTO;
-		} catch (SQLException e) {
-			throw new InternalErrorException(e);
-		} finally {
-			GeneralOperations.closeResultSet(resultSet);
-			GeneralOperations.closeStatement(preparedStatement);
-		}
+	    if (insertedRows > 1) {
+		throw new SQLException("Duplicate row in table 'cds_guide'");
+	    }
+	    return guideDTO;
+	} catch (SQLException e) {
+	    throw new InternalErrorException(e);
+	} finally {
+	    GeneralOperations.closeResultSet(resultSet);
+	    GeneralOperations.closeStatement(preparedStatement);
 	}
+    }
 
-	public void update(Connection connection, GuideDTO guideDTO) 
-	throws InternalErrorException, GuideNotFoundException {
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+    public void update(Connection connection, GuideDTO guideDTO) 
+	    throws InternalErrorException, GuideNotFoundException {
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
 
-		try {
-			/* Create "preparedStatement". */
-			String queryString = "UPDATE guide SET name = ?, description = ?, guideSrc = ?, compiledGuide = ? WHERE idGuide = ?";
-			preparedStatement = connection.prepareStatement(queryString);
+	try {
+	    /* Create "preparedStatement". */
+	    String queryString = "UPDATE cds_guide SET guideSrc = ?, guideObject = ?, compiledGuide = ?, active = ? WHERE guideid = ?";
+	    preparedStatement = connection.prepareStatement(queryString);
 
-			/* Fill "preparedStatement". */
-			int i = 1;
-			preparedStatement.setString(i++, guideDTO.getName());
-			preparedStatement.setString(i++, guideDTO.getDescription());
-			preparedStatement.setString(i++, guideDTO.getGuideSrc());
-			preparedStatement.setBytes(i++, guideDTO.getCompiledGuide());
-			preparedStatement.setString(i++, guideDTO.getIdGuide());
-			
-			/* Execute query. */
-			int updatedRows = preparedStatement.executeUpdate();
+	    /* Fill "preparedStatement". */
+	    int i = 1;
+	    preparedStatement.setString(i++, guideDTO.getGuideSrc());
+	    preparedStatement.setBytes(i++, guideDTO.getGuideObject());
+	    preparedStatement.setBytes(i++, guideDTO.getCompiledGuide());
+	    preparedStatement.setShort(i++, DBConversion.toShort(guideDTO.isActive()));
+	    preparedStatement.setString(i++, guideDTO.getIdGuide());
 
-			if (updatedRows == 0) {
-				throw new GuideNotFoundException(
-						guideDTO.getIdGuide());
-			}
+	    /* Execute query. */
+	    int updatedRows = preparedStatement.executeUpdate();
 
-			if (updatedRows > 1) {
-				throw new SQLException("Duplicate row in table 'guide'");
-			}
-		} catch (SQLException e) {
-			throw new InternalErrorException(e);
-		} finally {
-			GeneralOperations.closeResultSet(resultSet);
-			GeneralOperations.closeStatement(preparedStatement);
-		}
+	    if (updatedRows == 0) {
+		throw new GuideNotFoundException(
+			guideDTO.getIdGuide());
+	    }
+
+	    if (updatedRows > 1) {
+		throw new SQLException("Duplicate row in table 'cds_guide'");
+	    }
+	} catch (SQLException e) {
+	    throw new InternalErrorException(e);
+	} finally {
+	    GeneralOperations.closeResultSet(resultSet);
+	    GeneralOperations.closeStatement(preparedStatement);
 	}
-	
-	public void remove(Connection connection, String idGuide) 
-	throws InternalErrorException, GuideNotFoundException {
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
+    }
 
-		try {
-			/* Create "preparedStatement". */
-			String queryString = "DELETE FROM guide WHERE idGuide = ?";
-			preparedStatement = connection.prepareStatement(queryString);
+    public void remove(Connection connection, String guideId) 
+	    throws InternalErrorException, GuideNotFoundException {
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
 
-			/* Fill "preparedStatement". */
-			int i = 1;
-			preparedStatement.setString(i++, idGuide);
+	try {
+	    /* Create "preparedStatement". */
+	    String queryString = "DELETE FROM cds_guide WHERE guideid = ?";
+	    preparedStatement = connection.prepareStatement(queryString);
 
-			/* Execute query. */
-			int deletedRows = preparedStatement.executeUpdate();
-			if (deletedRows == 0) {
-				throw new GuideNotFoundException(idGuide);
-			}
-		} catch (SQLException e) {
-			throw new InternalErrorException(e);
-		} finally {
-			GeneralOperations.closeResultSet(resultSet);
-			GeneralOperations.closeStatement(preparedStatement);
-		}
+	    /* Fill "preparedStatement". */
+	    int i = 1;
+	    preparedStatement.setString(i++, guideId);
+
+	    /* Execute query. */
+	    int deletedRows = preparedStatement.executeUpdate();
+	    if (deletedRows == 0) {
+		throw new GuideNotFoundException(guideId);
+	    }
+	} catch (SQLException e) {
+	    throw new InternalErrorException(e);
+	} finally {
+	    GeneralOperations.closeResultSet(resultSet);
+	    GeneralOperations.closeStatement(preparedStatement);
 	}
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

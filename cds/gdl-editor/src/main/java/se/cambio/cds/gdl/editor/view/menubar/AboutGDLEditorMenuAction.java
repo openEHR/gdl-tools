@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 
 
@@ -25,10 +25,10 @@ public class AboutGDLEditorMenuAction extends AbstractAction {
 
     public AboutGDLEditorMenuAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("AboutGDLEditor")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("AboutGDLEditor")+"...");
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("AboutGDLEditorD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("AboutGDLEditorD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("AboutGDLEditorD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AboutGDLEditorD"));
     }
 
     /* (non-Javadoc)

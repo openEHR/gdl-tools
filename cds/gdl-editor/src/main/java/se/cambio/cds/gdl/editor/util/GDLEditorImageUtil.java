@@ -56,6 +56,9 @@ public class GDLEditorImageUtil {
 	public static final ImageIcon SOURCE_ICON = GDLEditorImageUtil.getIcon("source.png");
 	public static final ImageIcon DESCRIPTION_ICON = GDLEditorImageUtil.getIcon("tag_blue.png");
 	public static final ImageIcon HTML_ICON = GDLEditorImageUtil.getIcon("html.png");
+	public static final ImageIcon MAGNIFIER_ICON = GDLEditorImageUtil.getIcon("magnifier.png");
+	public static final ImageIcon REFRESH_ICON = GDLEditorImageUtil.getIcon("arrow_refresh.png");
+	public static final ImageIcon COMPILE_ICON = GDLEditorImageUtil.getIcon("cog_go.png");
 	
 	public static final ImageIcon ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("ontology.png");
 	public static final ImageIcon ADD_ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("add_ontology.png");

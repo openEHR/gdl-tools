@@ -12,15 +12,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.jxpath.JXPathContext;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.GuideImporter;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.openehr.util.ExceptionHandler;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 public class ExportUtils {
 
@@ -53,34 +54,34 @@ public class ExportUtils {
 
     @SuppressWarnings("unchecked")
     public static String convertToHTML(Guide guide, String lang){
-	TermDefinition td = guide.getOntology().getTermDefinitions().get(lang);
+	TermDefinition td = GuideImporter.getTermDefinition(guide, lang);
 	JXPathContext c = JXPathContext.newContext(guide.getDescription());
 	StringBuffer sb = new StringBuffer();
 	sb.append("<HTML>");
 	sb.append("<TITLE>"+guide.getId()+"</TITLE>");
 
 	sb.append("<b><font face='Calibri' size='6'>"+getTermText(guide.getConcept(), td)+"</font></b>");
-	sb.append(getBoxWithTitleStart(LanguageManager.getMessage("GuideDetails")));
+	sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("GuideDetails")));
 	sb.append("<table><font face='Calibri'>");
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getTermDescription(guide.getConcept(), td)+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getTermDescription(guide.getConcept(), td)+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
 	sb.append("</font></table>");
-	sb.append(getBoxWithTitleStart(LanguageManager.getMessage("AuthorDetails")));
+	sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("AuthorDetails")));
 	sb.append("<table><font face='Calibri'>");
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("AuthorshipLyfecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+LanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("AuthorshipLyfecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
+	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
 	sb.append("</font></table>");
 
 	List<String> keywords = (List<String>)c.getValue("/details/"+lang+"/keywords");
-	if (!keywords.isEmpty()){
-	    sb.append(getBoxWithTitleStart(LanguageManager.getMessage("Keywords")));
+	if (keywords!=null && !keywords.isEmpty()){
+	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Keywords")));
 
 	    sb.append("<font face='Calibri'><i>");
 	    boolean first = true;
@@ -96,7 +97,7 @@ public class ExportUtils {
 	
 	List<String> contributors = (List<String>)c.getValue("/otherContributors");
 	if (!contributors.isEmpty()){
-	    sb.append(getBoxWithTitleStart(LanguageManager.getMessage("Contributors")));
+	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Contributors")));
 	    boolean first = true;
 	    sb.append("<font face='Calibri'><i>");
 	    for (String contributor : contributors) {
@@ -112,7 +113,7 @@ public class ExportUtils {
 	ReadableGuide readableGuide = GuideImporter.importGuide(guide, lang);
 
 	if (!readableGuide.getPreconditionRuleLines().isEmpty()){
-	    sb.append(getBoxWithTitleStart(LanguageManager.getMessage("Preconditions")));
+	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Preconditions")));
 	    sb.append("<table width=100%>");
 	    for (RuleLine ruleLine : readableGuide.getPreconditionRuleLines()) {
 		sb.append(TR_TD_FONT_OPEN_WITH_BG);
@@ -124,7 +125,7 @@ public class ExportUtils {
 
 	
 	if (!readableGuide.getReadableRules().isEmpty()){
-	    sb.append(getBoxWithTitleStart(LanguageManager.getMessage("RuleList")));
+	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("RuleList")));
 	    sb.append("<table width=100%>");
 	    for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
 		sb.append(TR_TD_FONT_OPEN_WITH_BG);
@@ -138,7 +139,8 @@ public class ExportUtils {
     }
 
     private static String getTermText(String gtCode, TermDefinition td){
-	String text = td.getTerms().get(gtCode).getText();
+	Term term = td.getTerms().get(gtCode);
+	String text = term!=null?td.getTerms().get(gtCode).getText():null;
 	if (text!=null){
 	    return text;
 	}else{
@@ -147,7 +149,8 @@ public class ExportUtils {
     }
 
     private static String getTermDescription(String gtCode, TermDefinition td){
-	String desc = td.getTerms().get(gtCode).getDescription();
+	Term term = td.getTerms().get(gtCode);
+	String desc = term!=null?td.getTerms().get(gtCode).getDescription():null;
 	if (desc!=null){
 	    return desc;
 	}else{

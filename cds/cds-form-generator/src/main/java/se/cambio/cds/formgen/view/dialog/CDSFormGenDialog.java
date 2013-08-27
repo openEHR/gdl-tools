@@ -14,7 +14,8 @@ import javax.swing.SwingWorker;
 
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.controller.FormGeneratorViewer;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.view.dialogs.InfoDialog;
 
 
 

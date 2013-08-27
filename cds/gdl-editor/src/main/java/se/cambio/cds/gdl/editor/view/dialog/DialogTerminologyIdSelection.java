@@ -9,9 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
-import se.cambio.cds.openehr.util.ImageUtil;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
 public class DialogTerminologyIdSelection extends DialogSelection{
     /**
@@ -24,7 +25,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
     public DialogTerminologyIdSelection(Window owner, GDLEditor controller) {
 	super(
 		owner, 
-		LanguageManager.getMessage("AddTerminologyDesc"), 
+		GDLEditorLanguageManager.getMessage("AddTerminologyDesc"), 
 		NodeDefinitionConversor.getNodeTerminologyIds(),
 		true, 
 		new Dimension(500,500));
@@ -33,8 +34,8 @@ public class DialogTerminologyIdSelection extends DialogSelection{
 
     private JButton getAddTerminologyButton(){
 	if (addTerminologyButton==null){
-	    addTerminologyButton = new JButton(LanguageManager.getMessage("AddTerminology"));
-	    addTerminologyButton.setIcon(ImageUtil.ADD_ICON);
+	    addTerminologyButton = new JButton(GDLEditorLanguageManager.getMessage("AddTerminology"));
+	    addTerminologyButton.setIcon(OpenEHRImageUtil.ADD_ICON);
 	    addTerminologyButton.addActionListener(new AddTerminologyActionListener(this));
 	}
 	return addTerminologyButton;
@@ -54,7 +55,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
 	    _dialog = dialog;
 	}
 	public void actionPerformed(ActionEvent e) {
-	    DialogNameInsert dialog = new DialogNameInsert(_dialog, LanguageManager.getMessage("AddTerminologyDesc"), null);
+	    DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddTerminologyDesc"), null);
 	    if (dialog.getAnswer()){
 		_terminologyIdCreated = dialog.getValue();
 		accept();

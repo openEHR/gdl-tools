@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSetLanguage;
 
 public class ConfigLanguageAction extends AbstractAction {
@@ -22,10 +22,10 @@ public class ConfigLanguageAction extends AbstractAction {
 
     public ConfigLanguageAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("SetEditorLanguage")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("SetEditorLanguage")+"...");
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("SetEditorLanguageSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("SetEditorLanguageD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageD"));
     }
 
     /* (non-Javadoc)

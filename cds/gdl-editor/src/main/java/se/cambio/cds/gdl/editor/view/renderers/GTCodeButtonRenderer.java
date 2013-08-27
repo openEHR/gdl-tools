@@ -12,7 +12,7 @@ import javax.swing.table.TableCellRenderer;
 import org.apache.log4j.Logger;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
 
 public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
@@ -34,7 +34,7 @@ public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
 	    setBackground(UIManager.getColor("Button.background"));
 	}
 	if (value==null || ((String)value).trim().isEmpty()){
-	    setText(LanguageManager.getMessage("Select"));
+	    setText(GDLEditorLanguageManager.getMessage("Select"));
 	}else{
 	    String gtCode = (String)value;
 	    Term term = EditorManager.getActiveGDLEditor().getCurrentTermDefinition().getTerms().get(gtCode);

@@ -1,7 +1,7 @@
 package se.cambio.cds;
-import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
-import se.cambio.cds.model.facade.execution.vo.ContainerInstance;
+import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.model.instance.ContainerInstance;
 import se.cambio.cds.util.DVUtil;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;

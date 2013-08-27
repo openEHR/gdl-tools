@@ -10,6 +10,10 @@ import java.util.*;
  */
 public class FunctionalExpression extends ExpressionItem {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	public static FunctionalExpression create(String function) {
 		return new FunctionalExpression(function);
 	}

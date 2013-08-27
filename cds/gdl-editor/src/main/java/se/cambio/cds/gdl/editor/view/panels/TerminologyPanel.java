@@ -23,7 +23,7 @@ import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable.TerminologyTableModel;
@@ -47,7 +47,6 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
 
     public TerminologyPanel(GDLEditor gdlEditor){
 	_controller = gdlEditor;
-	_context = JXPathContext.newContext(_controller.getCurrentTermsMap());
 	init();
     }
 
@@ -84,6 +83,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
 	getMainPanel().removeAll();
 	terminologyScrollPanel = null;
 	terminologyTable = null;
+	_context = JXPathContext.newContext(_controller.getCurrentTermsMap());
 	getMainPanel().add(getTerminologyScrollPanel(), BorderLayout.CENTER);
 	getMainPanel().add(getAddDeleteButtonPanel(), BorderLayout.WEST);
 	TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
@@ -118,7 +118,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
 	if (addTermBtn == null) {
 	    addTermBtn = new JButton();
 	    addTermBtn.setIcon(GDLEditorImageUtil.ADD_ICON);
-	    addTermBtn.setToolTipText(LanguageManager.getMessage("AddLocalTerm"));
+	    addTermBtn.setToolTipText(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
 	    addTermBtn.setContentAreaFilled(false);
 	    addTermBtn.setPreferredSize(new Dimension(16,16));
 	    addTermBtn.setBorderPainted(false);
@@ -142,7 +142,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
     private JButton getDeleteBindingButton() {
 	if (deleteBtn == null) {
 	    deleteBtn = new JButton();
-	    deleteBtn.setToolTipText(LanguageManager.getMessage("DeleteLocalTerm"));
+	    deleteBtn.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteLocalTerm"));
 	    deleteBtn.setIcon(GDLEditorImageUtil.DELETE_ICON);
 	    deleteBtn.setContentAreaFilled(false);
 	    deleteBtn.setPreferredSize(new Dimension(16,16));
@@ -166,16 +166,16 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
 	    if (gtCodesUsed.contains(gtCode)){
 		JOptionPane.showMessageDialog(
 			EditorManager.getActiveEditorWindow(),
-			LanguageManager.getMessage("ReferenceBeingUsedMsg"),
-			LanguageManager.getMessage("ReferenceBeingUsedTitle"),
+			GDLEditorLanguageManager.getMessage("ReferenceBeingUsedMsg"),
+			GDLEditorLanguageManager.getMessage("ReferenceBeingUsedTitle"),
 			JOptionPane.WARNING_MESSAGE);
 		return;
 	    }
 	}
 
 	int selection = JOptionPane.showConfirmDialog(this,
-		LanguageManager.getMessage("DeleteTermDesc"), 
-		LanguageManager.getMessage("DeleteLocalTerm"),
+		GDLEditorLanguageManager.getMessage("DeleteTermDesc"), 
+		GDLEditorLanguageManager.getMessage("DeleteLocalTerm"),
 		JOptionPane.YES_NO_OPTION);
 
 	if (selection == JOptionPane.YES_OPTION) {
@@ -207,7 +207,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
 	return gtCodes;
     }
 
-    public void updateResults() {
+    private void updateResults() {
 	_controller.getCurrentTermsMap().clear();
 	int numRows = getTerminologyTable().getRowCount();
 	for (int i = 0; i < numRows; i++) {

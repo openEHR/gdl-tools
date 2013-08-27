@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 /**
  * @author icorram
@@ -24,29 +24,29 @@ import se.cambio.cds.gdl.editor.util.LanguageManager;
  */
 public class FileSelectionAction extends AbstractAction{ 
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2323804790429232264L;
-	private JFileChooser _fileChooser = null;
-	private JTextField _textField = null;
-	
-	public FileSelectionAction(JFileChooser fileChooser, JTextField textField){ 
-		_fileChooser = fileChooser;
-		_textField = textField;
-        putValue(NAME, LanguageManager.getMessage("SelectFolder"));
-        putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
-        putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("SelectFolderSD"));
-        putValue(LONG_DESCRIPTION, LanguageManager.getMessage("SelectFolderD"));
-        this.setEnabled(true);
-	} 
-	
-	public void actionPerformed(ActionEvent e){ 
-		_fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
-		if (_fileChooser.getSelectedFile()!=null){
-			_textField.setText(_fileChooser.getSelectedFile().getAbsolutePath());
-		}
-	} 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2323804790429232264L;
+    private JFileChooser _fileChooser = null;
+    private JTextField _textField = null;
+
+    public FileSelectionAction(JFileChooser fileChooser, JTextField textField){ 
+	_fileChooser = fileChooser;
+	_textField = textField;
+	putValue(NAME, GDLEditorLanguageManager.getMessage("SelectFolder"));
+	putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderD"));
+	this.setEnabled(true);
+    } 
+
+    public void actionPerformed(ActionEvent e){ 
+	int response = _fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
+	if (response == JFileChooser.APPROVE_OPTION){
+	    _textField.setText(_fileChooser.getSelectedFile().getAbsolutePath());
+	}
+    } 
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

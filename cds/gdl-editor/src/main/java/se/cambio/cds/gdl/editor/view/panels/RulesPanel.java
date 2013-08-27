@@ -19,11 +19,11 @@ import javax.swing.border.EmptyBorder;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
-import se.cambio.cds.gdl.editor.view.labels.JLinkLabel;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.openehr.view.util.JLinkLabel;
 
 public class RulesPanel extends JPanel implements RefreshablePanel{
 
@@ -67,7 +67,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	getRuleListPanel().removeAll();
 	if (_controller.getRenderableRules().isEmpty()){
 	    ruleListPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-	    ruleListPanel.add(new JLabel(LanguageManager.getMessage("NoRulesYetUseAddRuleButtonMsg")), BorderLayout.NORTH);
+	    ruleListPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("NoRulesYetUseAddRuleButtonMsg")), BorderLayout.NORTH);
 	}else{
 	    ruleListPanel.setBorder(null);
 	    ruleListPanel.add(getRuleListDropPanel(), BorderLayout.NORTH);
@@ -119,7 +119,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	}else{
 	    button.setIcon(GDLEditorImageUtil.ACCEPT_ICON);
 	}
-	button.setToolTipText(LanguageManager.getMessage("SetActiveInactive"));
+	button.setToolTipText(GDLEditorLanguageManager.getMessage("SetActiveInactive"));
 	return button;
     }
 
@@ -139,7 +139,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	JButton button = createGenericButton();
 	button.setAction(new DeleteRuleAction(rule));
 	button.setIcon(GDLEditorImageUtil.DELETE_ICON);
-	button.setToolTipText(LanguageManager.getMessage("DeleteRule"));
+	button.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteRule"));
 	return button;
     }
 
@@ -152,8 +152,8 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	public void actionPerformed(ActionEvent e) {
 	    int resp = JOptionPane.showConfirmDialog(
 		    EditorManager.getActiveEditorWindow(), 
-		    LanguageManager.getMessage("AskForRuleDeletionConfirmation"),
-		    LanguageManager.getMessage("DeletingRule"),
+		    GDLEditorLanguageManager.getMessage("AskForRuleDeletionConfirmation"),
+		    GDLEditorLanguageManager.getMessage("DeletingRule"),
 		    JOptionPane.YES_NO_CANCEL_OPTION);
 	    if (resp==JOptionPane.YES_OPTION){
 		_controller.getRenderableRules().remove(_rule.getGTCode());
@@ -166,7 +166,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	JButton button = createGenericButton();
 	button.setAction(new EditRuleNameAction(rule));
 	button.setIcon(GDLEditorImageUtil.EDIT_ICON);
-	button.setToolTipText(LanguageManager.getMessage("EditRuleName"));
+	button.setToolTipText(GDLEditorLanguageManager.getMessage("EditRuleName"));
 	return button;
     }
 
@@ -179,7 +179,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	public void actionPerformed(ActionEvent e) {
 	    DialogNameInsert dialog = new DialogNameInsert(
 		    EditorManager.getActiveEditorWindow(),
-		    LanguageManager.getMessage("EditRuleName"), 
+		    GDLEditorLanguageManager.getMessage("EditRuleName"), 
 		    _controller.getGTName(_rule.getGTCode()));
 	    if (dialog.getAnswer()){
 		_controller.setGTName(_rule.getGTCode(), dialog.getValue());

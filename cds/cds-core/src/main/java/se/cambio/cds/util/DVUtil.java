@@ -3,7 +3,9 @@ package se.cambio.cds.util;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
@@ -22,6 +24,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
+import org.openehr.rm.support.measurement.SimpleMeasurementService;
 
 import se.cambio.cds.gdl.model.expression.CodedTextConstant;
 import se.cambio.cds.gdl.model.expression.ConstantExpression;
@@ -29,8 +32,13 @@ import se.cambio.cds.gdl.model.expression.DateTimeConstant;
 import se.cambio.cds.gdl.model.expression.OrdinalConstant;
 import se.cambio.cds.gdl.model.expression.QuantityConstant;
 import se.cambio.cds.gdl.model.expression.StringConstant;
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InvalidCodeException;
+import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 
 public class DVUtil {
@@ -78,7 +86,9 @@ public class DVUtil {
 	if (attributeName.equals("magnitude")){
 	    magnitude = Double.parseDouble(value.toString());
 	}else if (attributeName.equals("units")){
-	    units = (String)value;
+	    if (value!=null){
+		units = value.toString();
+	    }
 	}else if (attributeName.equals("precision")){
 	    precision = (Integer)value;
 	}
@@ -133,7 +143,13 @@ public class DVUtil {
     public static DvCount create(DvCount dvCount, String attributeName, Object value) throws InternalErrorException{
 	int magnitude = dvCount.getMagnitude();
 	if(attributeName.equals("magnitude")){
-	    magnitude = (Integer)value;
+	    if (value instanceof Integer){
+		magnitude =((Integer)value);
+	    }else if (value instanceof Double){
+		magnitude = ((Double)value).intValue();
+	    }else{
+		Logger.getLogger(DVUtil.class).warn("Unkown class for count: "+value.getClass().getName());
+	    }
 	}
 	return new DvCount(magnitude);
     }
@@ -214,10 +230,10 @@ public class DVUtil {
 	}else if (dv1 instanceof DvQuantity && dv2 instanceof DvQuantity){
 	    DvQuantity dvQuantity1 = (DvQuantity) dv1;
 	    DvQuantity dvQuantity2 = (DvQuantity) dv2;
-	    int precision = Math.min(dvQuantity1.getPrecision(), dvQuantity2.getPrecision());
+	    int precision = Math.max(dvQuantity1.getPrecision(), dvQuantity2.getPrecision());
 	    double magnitude1 = round(dvQuantity1.getMagnitude(), precision);
 	    double magnitude2 = round(dvQuantity2.getMagnitude(), precision);
-	    return (magnitude1==magnitude2) && dvQuantity1.getUnits().equals(dvQuantity2.getUnits());
+	    return SimpleMeasurementService.getInstance().compare(dvQuantity1.getUnits(), magnitude1, dvQuantity2.getUnits(), magnitude2)==0;
 	}else if (dv1 instanceof DvProportion && dv2 instanceof DvProportion){
 	    DvProportion dvProportion1 = (DvProportion) dv1;
 	    DvProportion dvProportion2 = (DvProportion) dv2;
@@ -231,6 +247,109 @@ public class DVUtil {
 		}else{
 		    return false;
 		}
+	    }
+	}
+    }
+
+    public static boolean equalDV(boolean inPredicate, ElementInstance ei, DataValue dv2) {
+	if (!inPredicate && ei instanceof PredicateGeneratedElementInstance){
+	    return false;
+	}else{
+	    if (dv2!=null){
+		if (ei.getDataValue()!=null){
+		    return DVUtil.equalDVs(ei.getDataValue(), dv2);
+		}else{
+		    return false;
+		}
+	    }else{
+		return false;
+	    }
+	}
+    }
+
+    public static boolean nullValueEquals(DvCodedText nullFlavour, Object o) {
+	if (o instanceof DvCodedText){
+	    if (nullFlavour!=null){
+		return DVUtil.equalDVs(nullFlavour, (DataValue)o);
+	    }else{
+		return false;
+	    }
+	}else{
+	    return false;
+	}
+    }
+
+
+    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues) {
+	if (!inPredicate && ei instanceof PredicateGeneratedElementInstance){
+	    return false;
+	}else{
+	    CodePhrase a = getCodePhrase(ei.getDataValue());
+	    Set<CodePhrase>  codePhrases = new HashSet<CodePhrase>();
+	    for (int i = 0; i < dataValues.length; i++) {
+		codePhrases.add(getCodePhrase(dataValues[i]));
+	    }
+	    if (a!=null && !codePhrases.isEmpty()){
+		try {
+		    boolean result= OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
+		    return result;
+		} catch (UnsupportedTerminologyException e) {
+		    ExceptionHandler.handle(e);
+		    return false;
+		} catch (InvalidCodeException e) {
+		    ExceptionHandler.handle(e);
+		    return false;
+		}
+	    }else{
+		return false;
+	    }
+	}
+    }
+
+    private static CodePhrase getCodePhrase(DataValue dv){
+	if (dv instanceof DvCodedText){
+	    return ((DvCodedText)dv).getDefiningCode();
+	}else if (dv instanceof DvOrdinal){
+	    return ((DvOrdinal)dv).getSymbol().getDefiningCode();
+	}else if (dv instanceof DvText){
+	    try{
+		DataValue dvAux = DataValue.parseValue(OpenEHRDataValues.DV_CODED_TEXT+","+((DvText)dv).getValue());
+		if (dvAux instanceof DvCodedText){
+		    return ((DvCodedText)dvAux).getDefiningCode();
+		}else{
+		    return null;
+		}
+	    }catch(Exception e){
+		Logger.getLogger(DVUtil.class).warn("Unable to get CodePhrase from text '"+dv.toString()+"'");
+		return null;
+	    }
+	}else{
+	    return null;
+	}
+    }
+
+    public boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues){
+	if (ei instanceof PredicateGeneratedElementInstance){
+	    return true;
+	}else{
+	    //TODO Remove, exceptions should be handled
+	    CodePhrase a = getCodePhrase(ei.getDataValue());
+	    Set<CodePhrase>  codePhrases = new HashSet<CodePhrase>();
+	    for (int i = 0; i < dataValues.length; i++) {
+		codePhrases.add(getCodePhrase(dataValues[i]));    
+	    }
+	    if (a!=null && !codePhrases.isEmpty()){
+		try {
+		    return !OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
+		} catch (UnsupportedTerminologyException e) {
+		    //TODO Remove, exceptions should be handled
+		    return false;
+		} catch (InvalidCodeException e) {
+		    //TODO Remove, exceptions should be handled
+		    return false;
+		}
+	    }else{
+		return false;
 	    }
 	}
     }
@@ -253,11 +372,17 @@ public class DVUtil {
 	    if (dv2 instanceof DvQuantity){
 		String unit1 = ((DvQuantity)dv1).getUnits();
 		String unit2 = ((DvQuantity)dv2).getUnits();
-		boolean compatible = unit1.equals(unit2);
-		if (!compatible){
-		    Logger.getLogger(DVUtil.class).warn("Comparing two elements with imcompatible units '"+unit1+"'!='"+unit2+"'");
+		boolean compatible = false;
+		try{
+		    compatible = SimpleMeasurementService.getInstance().unitsComparable(unit1, unit2);
+		}catch(IllegalArgumentException e){
+		    Logger.getLogger(DVUtil.class).warn("Illegal argument comparing unit '"+unit1+"' with '"+unit2+"'");
+		    return false;
 		}
-		return compatible; //TODO Quantity unit support
+		if (!compatible){
+		    Logger.getLogger(DVUtil.class).warn("Comparing two elements with incompatible units '"+unit1+"'!='"+unit2+"'");
+		}
+		return compatible;
 	    }else{
 		return false;
 	    }
@@ -291,7 +416,7 @@ public class DVUtil {
 	bd = bd.setScale(precision,BigDecimal.ROUND_HALF_UP);
 	return  bd.doubleValue();
     }
-    
+
     public static ConstantExpression convertToExpression(DataValue dv){
 	String dataValueStr = dv.serialise();
 	dataValueStr = dataValueStr.substring(dataValueStr.indexOf(",")+1);
@@ -313,7 +438,7 @@ public class DVUtil {
 	    return new ConstantExpression(dataValueStr);
 	}
     }
-    
+
     private final static Map<String, DataValue> dataValueMap;
 
     /*

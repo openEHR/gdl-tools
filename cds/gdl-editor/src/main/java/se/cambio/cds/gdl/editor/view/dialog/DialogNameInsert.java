@@ -15,8 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.openehr.view.dialogs.DialogEditor;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.openehr.view.dialogs.DialogEditor;
 /**
  * @author icorram
  *
@@ -48,7 +48,7 @@ public class DialogNameInsert extends DialogEditor {
 	registerComponentWithFirstFocus(getValueTextField());
 	getJPanel().setLayout(new BorderLayout());
 	JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	jPanel1.add(new JLabel(LanguageManager.getMessage("Name")+":"));
+	jPanel1.add(new JLabel(GDLEditorLanguageManager.getMessage("Name")+":"));
 	jPanel1.add(getValueTextField());
 	getJPanel().add(jPanel1, BorderLayout.CENTER);
 	JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));

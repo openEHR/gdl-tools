@@ -90,7 +90,7 @@ public class GDLBinding {
 	 * Binds a parsed generic DADL object model to GDL model
 	 * 
 	 * @param co
-	 * @return
+	 * @return DADL object
 	 * @throws BindingException
 	 */
 	public Object bind(ContentObject co) throws BindingException {

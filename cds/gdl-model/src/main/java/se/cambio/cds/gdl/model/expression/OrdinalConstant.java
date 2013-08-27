@@ -5,6 +5,11 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
 public class OrdinalConstant extends ConstantExpression  {
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public OrdinalConstant(int order, String value, CodePhrase code) {
 		super(order + "|" + code.toString() + "|" + value + "|");
 		this.ordinal = new DvOrdinal(order, new DvCodedText(value, code));

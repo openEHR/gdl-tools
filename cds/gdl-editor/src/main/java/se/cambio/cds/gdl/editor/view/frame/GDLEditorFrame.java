@@ -15,10 +15,10 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.util.Version;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.openehr.util.ExceptionHandler;
 
 
 
@@ -91,7 +91,7 @@ public class GDLEditorFrame extends JFrame implements EditorViewer{
 
     public void initController(GDLEditor controller) {
 	String buildNum = Version.getBuildNum();
-	setTitle(LanguageManager.getMessage("GDLEditor") +" - "+controller.getTitle()+(buildNum!=null?" - ("+buildNum+")":""));
+	setTitle(GDLEditorLanguageManager.getMessage("GDLEditor") +" - "+controller.getTitle()+(buildNum!=null?" - ("+buildNum+")":""));
 	controller.init();
     }
 

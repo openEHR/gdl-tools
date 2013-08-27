@@ -12,13 +12,14 @@ import javax.swing.JButton;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
-import se.cambio.cds.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.dialogs.DialogSelection;
+import se.cambio.openehr.view.trees.SelectableNode;
 
 public class DialogElementAttributeFunctionInstanceSelection extends DialogSelection{
 
@@ -35,7 +36,7 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     public DialogElementAttributeFunctionInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
 	super(
 		owner, 
-		LanguageManager.getMessage("SelectElementInstance"), 
+		GDLEditorLanguageManager.getMessage("SelectElementInstance"), 
 		NodeDefinitionConversor.getNodeAttributesAndFunctions(controller.getDefinitionRuleLines(), onlyCDSDomain), 
 		true, 
 		new Dimension(500,500));
@@ -52,8 +53,8 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     public JButton getAddArchetypeReferenceButton() {
 	if (addArchetypeReferenceButton == null) {
 	    addArchetypeReferenceButton = new JButton();
-	    addArchetypeReferenceButton.setText(LanguageManager.getMessage("AddArchetype"));
-	    addArchetypeReferenceButton.setToolTipText(LanguageManager.getMessage("AddArchetypeD"));
+	    addArchetypeReferenceButton.setText(GDLEditorLanguageManager.getMessage("AddArchetype"));
+	    addArchetypeReferenceButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddArchetypeD"));
 	    addArchetypeReferenceButton.setIcon(GDLEditorImageUtil.ADD_ICON);
 	    addArchetypeReferenceButton.setEnabled(true);
 	    addArchetypeReferenceButton.addActionListener(new ActionListener() {
@@ -78,8 +79,8 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     protected JButton getAddElementButton() {
 	if (addElementButton == null) {
 	    addElementButton = new JButton();
-	    addElementButton.setText(LanguageManager.getMessage("AddElement"));
-	    addElementButton.setToolTipText(LanguageManager.getMessage("AddElementD"));
+	    addElementButton.setText(GDLEditorLanguageManager.getMessage("AddElement"));
+	    addElementButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddElementD"));
 	    addElementButton.setIcon(GDLEditorImageUtil.ADD_ICON);
 	    addElementButton.setEnabled(true);
 	    addElementButton.addActionListener(new ActionListener() {
@@ -127,7 +128,7 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
 	SelectableNode<Object> rootNode = NodeDefinitionConversor.getSingleNodeAttributesAndFunctions();
 	NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain);
 	DialogSelection dialog = 
-		new DialogSelection(this, LanguageManager.getMessage("SelectElementInstance"), rootNode);
+		new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode);
 	dialog.setVisible(true);
 	if (dialog.getAnswer()){
 	    _selectedObject = dialog.getSelectedObject();

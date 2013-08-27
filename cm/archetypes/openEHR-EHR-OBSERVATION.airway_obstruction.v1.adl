@@ -1,0 +1,90 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.airway_obstruction.v1
+
+concept
+	[at0000]	-- Airway obstruction
+language
+	original_language = <[ISO_639-1::en]>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record airway obstruction">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"44CA431A8F87EB157117D76CC268B383">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Airway obstruction
+		data matches {
+			HISTORY[at0001] matches {	-- Event Series
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- vilken händelse som helst
+						data matches {
+							ITEM_TREE[at0003] matches {	-- Träd
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Airway obstruction
+										value matches {
+											0|[local::at0007], 	-- No obstruction
+											1|[local::at0005], 	-- Severe
+											2|[local::at0006]  	-- Mild
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Airway obstruction">
+					description = <"Airway obstruction">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"vilken händelse som helst">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Träd">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Airway obstruction">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"Severe">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"Mild">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"No obstruction">
+					description = <"*">
+				>
+			>
+		>
+	>

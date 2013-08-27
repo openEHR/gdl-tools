@@ -12,7 +12,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 /**
  * @author iago.corbal
@@ -69,7 +69,7 @@ public class MainMenuBar extends JMenuBar {
     public JMenu getFileMenu() {
 	if (fileMenu == null) {
 	    fileMenu = new JMenu();
-	    fileMenu.setText(LanguageManager.getMessage("File"));
+	    fileMenu.setText(GDLEditorLanguageManager.getMessage("File"));
 	    fileMenu.add(getCreateNewGuideAction());
 	    fileMenu.add(getLoadGuideAction());
 	    fileMenu.add(getSaveGuideAction());
@@ -83,7 +83,7 @@ public class MainMenuBar extends JMenuBar {
 
     public JMenu getImportMenu(){
 	if (importMenu ==null){
-	    importMenu = new JMenu(LanguageManager.getMessage("Import"));
+	    importMenu = new JMenu(GDLEditorLanguageManager.getMessage("Import"));
 	    importMenu.add(getImportArchetypeAction());
 	    importMenu.add(getImportTemplateAction());
 	}
@@ -92,7 +92,7 @@ public class MainMenuBar extends JMenuBar {
 
     public JMenu getExportMenu(){
 	if (exportMenu ==null){
-	    exportMenu = new JMenu(LanguageManager.getMessage("Export"));
+	    exportMenu = new JMenu(GDLEditorLanguageManager.getMessage("Export"));
 	    exportMenu.add(getSaveGuideAsObjectAction());
 	    exportMenu.add(getExportToHTMLAction());
 	}
@@ -166,7 +166,7 @@ public class MainMenuBar extends JMenuBar {
     public JMenu getLanguageMenu() {
 	if (languageMenu == null) {
 	    languageMenu = new JMenu();
-	    languageMenu.setText(LanguageManager.getMessage("Language"));
+	    languageMenu.setText(GDLEditorLanguageManager.getMessage("Language"));
 	}
 	return languageMenu;
     }
@@ -210,7 +210,7 @@ public class MainMenuBar extends JMenuBar {
     public JMenu getConfigurationMenu() {
 	if (configurationMenu == null) {
 	    configurationMenu = new JMenu();
-	    configurationMenu.setText(LanguageManager.getMessage("Configuration"));
+	    configurationMenu.setText(GDLEditorLanguageManager.getMessage("Configuration"));
 	    configurationMenu.add(getConfigurationRepositoriesAction());
 	    configurationMenu.add(getCurrentDateAndTimeAction());
 	    configurationMenu.add(new ConfigLanguageAction());
@@ -235,7 +235,7 @@ public class MainMenuBar extends JMenuBar {
     public JMenu getHelpMenu() {
 	if (helpMenu == null) {
 	    helpMenu = new JMenu();
-	    helpMenu.setText(LanguageManager.getMessage("Help"));
+	    helpMenu.setText(GDLEditorLanguageManager.getMessage("Help"));
 	    helpMenu.add(getViewUserManualAction());
 	    helpMenu.add(getViewSamplesAction());
 	    helpMenu.add(getReleaseNotesAction());

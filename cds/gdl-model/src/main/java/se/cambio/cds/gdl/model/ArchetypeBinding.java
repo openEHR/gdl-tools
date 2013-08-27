@@ -1,10 +1,18 @@
 package se.cambio.cds.gdl.model;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 
-public class ArchetypeBinding {
+public class ArchetypeBinding  implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 	public ArchetypeBinding() {
 	}

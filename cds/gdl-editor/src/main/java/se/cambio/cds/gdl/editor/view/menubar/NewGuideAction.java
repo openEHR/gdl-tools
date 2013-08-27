@@ -14,9 +14,10 @@ import javax.swing.KeyStroke;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.openehr.util.ExceptionHandler;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 
 
@@ -29,10 +30,10 @@ public class NewGuideAction extends AbstractAction {
 
     public NewGuideAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("CreateNewGuide"));
+	putValue(NAME, GDLEditorLanguageManager.getMessage("CreateNewGuide"));
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("CreateNewGuideSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("CreateNewGuideD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     }
 
@@ -41,7 +42,7 @@ public class NewGuideAction extends AbstractAction {
      */
     public void actionPerformed(ActionEvent e) {
 	if (EditorManager.getActiveGDLEditor().isOKToExit()){
-	    GDLEditor controller = new GDLEditor();
+	    GDLEditor controller = new GDLEditor(new Guide());
 	    EditorManager.setLastFileLoaded(null);
 	    try {
 		EditorManager.initController(controller);

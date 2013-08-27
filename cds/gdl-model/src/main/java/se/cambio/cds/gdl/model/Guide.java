@@ -1,5 +1,7 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
+
 
 /**
  * Object model of a CDSS guide
@@ -7,7 +9,12 @@ package se.cambio.cds.gdl.model;
  * @author rong.chen
  * 
  */
-public class Guide {
+public class Guide implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 	public Guide() {
 	}

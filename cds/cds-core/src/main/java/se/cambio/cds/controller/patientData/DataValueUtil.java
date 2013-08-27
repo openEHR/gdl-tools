@@ -1,4 +1,4 @@
-package se.cambio.cds.controller.patientData;
+package se.cambio.cds.controller.patientdata;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 

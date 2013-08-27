@@ -12,10 +12,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.panels.interfaces.ClosableTabbebPane;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 
-public class BindingsPanel extends JPanel implements RefreshablePanel{
+public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableTabbebPane{
     private static final long serialVersionUID = 8349466066595869612L;
     private GDLEditor _controller;
     private JTabbedPane termsTabPane = null;
@@ -40,16 +41,16 @@ public class BindingsPanel extends JPanel implements RefreshablePanel{
 	bindingPanels.clear();
 	if (_controller.getTermBindings().isEmpty()){
 	    this.setBorder(new EmptyBorder(10, 10, 10, 10));
-	    this.add(new JLabel(LanguageManager.getMessage("NoBindingsYetUseAddBindingButtonMsg")), BorderLayout.NORTH);
+	    this.add(new JLabel(GDLEditorLanguageManager.getMessage("NoBindingsYetUseAddBindingButtonMsg")), BorderLayout.NORTH);
 	}else{
 	    this.setBorder(null);
-	    this.add(getTermsTabPane(), BorderLayout.CENTER);
+	    this.add(getTabbedPane(), BorderLayout.CENTER);
 	}
 	this.repaint();
 	this.validate();
     }
 
-    public JTabbedPane getTermsTabPane(){
+    public JTabbedPane getTabbedPane(){
 	if (termsTabPane == null){
 	    termsTabPane = new JTabbedPane();
 	    termsTabPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
@@ -59,7 +60,7 @@ public class BindingsPanel extends JPanel implements RefreshablePanel{
 		int i = 0;
 		for (String tabName: bindingsCodes) {
 		    termsTabPane.addTab(tabName, null,getNewBindingPanel(tabName));
-		    termsTabPane.setTabComponentAt(i, new ButtonTabComponent(this));
+		    termsTabPane.setTabComponentAt(i, new ButtonTabComponent(this, GDLEditorLanguageManager.getMessage("DeleteTerminologyDesc")));
 		    i++;
 		}
 	    }
@@ -74,33 +75,33 @@ public class BindingsPanel extends JPanel implements RefreshablePanel{
     }
 
     public void addTermTab() {
-	String terminologyId = _controller.createNewTerminology();
+	String terminologyId = _controller.createNewTerminologyBinding();
 	if (terminologyId!=null){
 	    refresh();
 	    Iterator<BindingPanel> i = bindingPanels.iterator();
 	    while(i.hasNext()){
 		BindingPanel bp = i.next();
 		if (terminologyId.equals(bp.getOwnerTabName())){
-		    getTermsTabPane().setSelectedComponent(bp);
+		    getTabbedPane().setSelectedComponent(bp);
 		}
 	    }
 	}
     }
 
-    public void deleteTermTab(int index) {
+    public void deleteTab(int index) {
 	if (index > -1) {
-	    String titleRef = getTermsTabPane().getTitleAt(index);
+	    String titleRef = getTabbedPane().getTitleAt(index);
 	    int selection = JOptionPane.showConfirmDialog(this,
-		    LanguageManager.getMessage("DeleteTerminologyBindingMessage",titleRef), 
-		    LanguageManager.getMessage("DeleteTermPopupTitle"),
+		    GDLEditorLanguageManager.getMessage("DeleteTerminologyBindingMessage",titleRef), 
+		    GDLEditorLanguageManager.getMessage("DeleteTermPopupTitle"),
 		    JOptionPane.YES_NO_OPTION);
 	    if (selection == JOptionPane.YES_OPTION) {
-		getTermsTabPane().remove(index);
+		getTabbedPane().remove(index);
 		if (index > 0) {
-		    getTermsTabPane().setSelectedIndex(index - 1);
-		} else if (index == 0 && getTermsTabPane().getTabCount() > 1) {
-		    getTermsTabPane().setSelectedIndex(index);
-		} else if (getTermsTabPane().getTabCount() == 0) {
+		    getTabbedPane().setSelectedIndex(index - 1);
+		} else if (index == 0 && getTabbedPane().getTabCount() > 1) {
+		    getTabbedPane().setSelectedIndex(index);
+		} else if (getTabbedPane().getTabCount() == 0) {
 		    //hidePanel(false);
 		}
 		removeReference(titleRef);

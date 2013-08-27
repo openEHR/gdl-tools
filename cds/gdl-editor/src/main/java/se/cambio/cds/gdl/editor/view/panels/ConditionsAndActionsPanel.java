@@ -1,15 +1,12 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
+import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 
-public class ConditionsAndActionsPanel extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+
+public class ConditionsAndActionsPanel extends JPanel implements RefreshablePanel {
 
     /**
      * 
@@ -45,28 +42,23 @@ public class ConditionsAndActionsPanel extends JPanel {
     
     private RuleLinesPanel getConditionsPanel(){
 	if (conditionsPanel==null){
-	    conditionsPanel = 
-		    new RuleLinesPanel(
-			    _controller, 
-			    RuleLineDirectory.getSelectableConditions(),
-			    _controller.getConditionRuleLines(),
-			    LanguageManager.getMessage("Conditions"));
+	    conditionsPanel = new ConditionRuleLinesPanel(_controller);
 	}
 	return conditionsPanel;
     }
     
     private RuleLinesPanel getConsequencesPanel(){
 	if (consequencesPanel==null){
-	    consequencesPanel =
-		    new RuleLinesPanel(
-			    _controller, 
-			    RuleLineDirectory.getSelectableActions(),
-			    _controller.getActionsRuleLines(),
-			    LanguageManager.getMessage("Actions"));
+	    consequencesPanel = new ActionRuleLinesPanel(_controller);
 	}
 	return consequencesPanel;
     }
 
+    @Override
+    public void refresh() {
+        getConditionsPanel().refresh();
+        getConsequencesPanel().refresh();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

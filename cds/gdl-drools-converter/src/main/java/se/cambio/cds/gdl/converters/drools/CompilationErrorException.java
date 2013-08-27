@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CompilationErrorException extends InternalErrorException {
 

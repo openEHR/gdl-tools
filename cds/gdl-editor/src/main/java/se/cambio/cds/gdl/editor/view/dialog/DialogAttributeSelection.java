@@ -3,8 +3,9 @@ package se.cambio.cds.gdl.editor.view.dialog;
 import java.awt.Dimension;
 import java.awt.Window;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.openehr.view.trees.SelectableNode;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.openehr.view.dialogs.DialogSelection;
+import se.cambio.openehr.view.trees.SelectableNode;
 
 public class DialogAttributeSelection extends DialogSelection{
 
@@ -16,7 +17,7 @@ public class DialogAttributeSelection extends DialogSelection{
 
 
     public DialogAttributeSelection(Window owner, SelectableNode<Object> rootNode) {
-	super(owner, LanguageManager.getMessage("SelectAttribute"), rootNode, true, new Dimension(500,500));
+	super(owner, GDLEditorLanguageManager.getMessage("SelectAttribute"), rootNode, true, new Dimension(500,500));
     }
 }
 /*

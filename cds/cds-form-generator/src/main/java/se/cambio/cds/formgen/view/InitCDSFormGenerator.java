@@ -1,33 +1,25 @@
 package se.cambio.cds.formgen.view;
 
 
-import java.util.Collection;
-
-import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.view.frame.CDSFormGenFrame;
-import se.cambio.cds.model.guide.dao.GenericGuideDAO;
-import se.cambio.cds.model.guide.dao.GenericGuideFactory;
-import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.openehr.view.applicationobjects.Archetypes;
-import se.cambio.cds.openehr.view.applicationobjects.Templates;
+import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.controller.session.data.Templates;
 
 public class InitCDSFormGenerator {
 
     public static void main(String[] args) {
-	GenericGuideDAO guideDAO;
+	//GenericGuideDAO guideDAO;
 	try {
 	    Archetypes.loadArchetypes();
 	    Templates.loadTemplates();
-	    guideDAO = GenericGuideFactory.getDAO();
 	    CDSFormGenFrame cdsFormGenFrame = new CDSFormGenFrame();
+	    /*guideDAO = GenericGuideFactory.getDAO();
 	    Collection<GuideDTO> allGuides = guideDAO.searchAll();
-	    GuideManager guideManager = new GuideManager(allGuides);
 	    for (GuideDTO guideDTO : allGuides) {
 		FormGeneratorController controller = 
-			new FormGeneratorController(guideDTO, guideManager, null);
+			new FormGeneratorController(guideDTO, null);
 		cdsFormGenFrame.addFormGeneratorController(controller);
-	    }
+	    }*/
 	    cdsFormGenFrame.setVisible(true);
 	} catch (Exception e) {
 	    e.printStackTrace();

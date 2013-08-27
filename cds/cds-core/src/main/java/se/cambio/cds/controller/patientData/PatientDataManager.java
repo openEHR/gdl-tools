@@ -1,4 +1,4 @@
-package se.cambio.cds.controller.patientData;
+package se.cambio.cds.controller.patientdata;
 
 import java.util.Collection;
 
@@ -8,7 +8,7 @@ public class PatientDataManager {
 
 
 	/**
-	 * @see se.cambio.cds.controller.notification.Notifications#notifyChanges(java.util.Collection)
+	 * @see se.cambio.openehr.controller.notification.Notifications#notifyChanges(java.util.Collection)
 	 */
 	public void notifyChanges(Collection<PatientExtractVO> patientExtracts) {
 

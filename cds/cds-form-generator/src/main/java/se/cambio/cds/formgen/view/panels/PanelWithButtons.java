@@ -12,8 +12,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import se.cambio.cds.openehr.util.DVSwingUtil;
-import se.cambio.cds.openehr.view.panels.DVGenericPanel;
+import se.cambio.cds.view.swing.DVSwingUtil;
+import se.cambio.openehr.view.panels.DVGenericPanel;
 
 public class PanelWithButtons extends JPanel {
 

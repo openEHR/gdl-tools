@@ -1,11 +1,17 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 
-public class Rule {
+public class Rule implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 	public Rule() {
 	}

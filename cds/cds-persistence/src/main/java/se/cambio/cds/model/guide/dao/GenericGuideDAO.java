@@ -4,22 +4,21 @@ import java.util.Collection;
 
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.exceptions.ModelException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 /**
  * @author iago.corbal
  */
 public interface GenericGuideDAO {
 
-	public GuideDTO search(String idGuide)
+	public GuideDTO searchByGuideId(String idGuide)
 	throws InternalErrorException, GuideNotFoundException;
 	
 	public Collection<GuideDTO> searchAll()
 	throws InternalErrorException;
 
 	public GuideDTO add(GuideDTO guideDTO)
-	throws InternalErrorException, ModelException;
+	throws InternalErrorException;
 
 	public void update(GuideDTO guideDTO)
 	throws InternalErrorException, GuideNotFoundException;

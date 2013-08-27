@@ -1,28 +1,25 @@
 package se.cambio.cds.model.facade.execution.plain;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import org.apache.log4j.Logger;
 import se.cambio.cds.controller.execution.GuideExecutionManager;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegate;
-import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ExecutionLogger;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.exceptions.PatientNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.PatientNotFoundException;
+
+import java.util.*;
 
 public class PlainRuleExecutionFacadeDelegate implements RuleExecutionFacadeDelegate{
 
     public RuleExecutionResult execute(
+	    String ehrId,
 	    Collection<GuideDTO> guides, 
 	    Collection<ElementInstance> elementInstances,
 	    Calendar date)
@@ -36,6 +33,7 @@ public class PlainRuleExecutionFacadeDelegate implements RuleExecutionFacadeDele
 	
 	ExecutionLogger executionLogger = new ExecutionLogger();
 	if (!guides.isEmpty()){
+	    Logger.getLogger(PlainRuleExecutionFacadeDelegate.class).info("Executing "+guides.size()+" guides using "+workingMemoryObjects.size()+" objects.");
 	    GuideExecutionManager.executeGuides(
 		    guides, date, workingMemoryObjects, executionLogger);
 	}
@@ -66,7 +64,7 @@ public class PlainRuleExecutionFacadeDelegate implements RuleExecutionFacadeDele
 	}*/
 	List<RuleReference> ruleReferences = 
 		GuideUtil.getRuleReferences(executionLogger.getFiredRules());
-	return new RuleExecutionResult(elementInstances, executionLogger.getLog(), ruleReferences);
+	return new RuleExecutionResult(ehrId, elementInstances, executionLogger.getLog(), ruleReferences);
     }
 
 }

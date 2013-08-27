@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.91-SNAPSHOT</version>
+		<version>0.92</version>
 	</parent>
 	<artifactId>cds-form-generator</artifactId>
 	<name>CDS Form Generator</name>
@@ -13,8 +13,18 @@
 	<dependencies>
 		<dependency>
 			<groupId>se.cambio.cds</groupId>
-			<artifactId>cds-openehr</artifactId>
-			<version>0.91-SNAPSHOT</version>
+			<artifactId>cds-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-gui-swing</artifactId>
+			<version>${openehr-utils-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>se.cambio.cds</groupId>
+			<artifactId>cds-gui-swing</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

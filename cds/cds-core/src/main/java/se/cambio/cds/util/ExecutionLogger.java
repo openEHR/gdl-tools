@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.drools.spi.KnowledgeHelper;
 
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
+import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
+import se.cambio.cds.model.instance.ElementInstance;
 
 
 public class ExecutionLogger {

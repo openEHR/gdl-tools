@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public abstract class DraggablePanel extends JPanel implements MouseListener, MouseMotionListener {
     private static final long serialVersionUID = 1L;
@@ -34,7 +34,7 @@ public abstract class DraggablePanel extends JPanel implements MouseListener, Mo
 	if (_dragLabel==null){
 	    _dragLabel = new JLabel();
 	    _dragLabel.setIcon(GDLEditorImageUtil.DRAG_ICON);
-	    _dragLabel.setToolTipText(LanguageManager.getMessage("MoveLine"));
+	    _dragLabel.setToolTipText(GDLEditorLanguageManager.getMessage("MoveLine"));
 	}
 	return _dragLabel;
     }

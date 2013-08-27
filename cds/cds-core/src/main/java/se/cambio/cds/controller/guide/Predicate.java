@@ -11,9 +11,9 @@ import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.util.CDSTerminologyService;
 import se.cambio.cds.util.DVUtil;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.ExceptionHandler;
 
 public class Predicate {
     private OperatorKind operatorKind = null;
@@ -64,7 +64,7 @@ public class Predicate {
 		}
 		if (!codePhrases.isEmpty()){
 		    try{
-			return CDSTerminologyService.isSubclassOf(elementCodePhrase, codePhrases);
+			return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
 		    }catch(Exception e){
 			ExceptionHandler.handle(e);
 		    }

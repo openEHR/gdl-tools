@@ -5,6 +5,11 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 
 public class CodedTextConstant extends ConstantExpression {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public CodedTextConstant(String value, CodePhrase code) {
 		super(code.toString() + "|" + value + "|");
 		this.codedText = new DvCodedText(value, code);

@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import se.cambio.cds.openehr.util.ImageUtil;
+import se.cambio.openehr.util.OpenEHRImageUtil;
 
 public class TerminologyCodesWithButtonPanel extends JPanel{
 
@@ -33,7 +33,7 @@ public class TerminologyCodesWithButtonPanel extends JPanel{
     public JButton getSearchButton(){
 	if  (button==null){
 	    button = new JButton();
-	    button.setIcon(ImageUtil.SEARCH_ICON);
+	    button.setIcon(OpenEHRImageUtil.SEARCH_ICON);
 	    button.setContentAreaFilled(false);
 	    button.setBorderPainted(false);
 	}

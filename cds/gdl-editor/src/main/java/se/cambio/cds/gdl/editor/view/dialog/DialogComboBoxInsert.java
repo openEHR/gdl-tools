@@ -16,7 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import se.cambio.cds.openehr.view.dialogs.DialogEditor;
+import se.cambio.openehr.view.dialogs.DialogEditor;
 /**
  * @author icorram
  *

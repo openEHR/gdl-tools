@@ -8,18 +8,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.util.IOUtils;
-import se.cambio.cds.util.Resources;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.exceptions.ModelException;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.Resources;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class InJarGuideDAO implements GenericGuideDAO{
 
     private static String GUIDES_FOLDER = "Guides";
 
-    public GuideDTO search(String idGuide) throws InternalErrorException,
+    public GuideDTO searchByGuideId(String idGuide) throws InternalErrorException,
     GuideNotFoundException {
 	String fileName = GUIDES_FOLDER+"/"+idGuide+".guide";
 	InputStream is = InJarGuideDAO.class.getClassLoader().getResourceAsStream(fileName);
@@ -90,8 +89,7 @@ public class InJarGuideDAO implements GenericGuideDAO{
 	return guides;
     }
 
-    public GuideDTO add(GuideDTO guideDTO) throws InternalErrorException,
-    ModelException {
+    public GuideDTO add(GuideDTO guideDTO) throws InternalErrorException{
 	return null;
     }
 

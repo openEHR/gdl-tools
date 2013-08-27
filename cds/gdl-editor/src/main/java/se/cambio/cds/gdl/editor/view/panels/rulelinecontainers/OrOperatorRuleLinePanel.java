@@ -7,9 +7,9 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
+import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.OrOperatorRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
@@ -49,7 +49,7 @@ public class OrOperatorRuleLinePanel extends RuleLineContainerPanel{
 	orMainPanel.add(aux, BorderLayout.SOUTH);
 	JPanel orPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
 	orPanel.add(Box.createHorizontalStrut(19));
-	JLabel orLabel = new JLabel(") "+LanguageManager.getMessage("OrRLE")+" (");
+	JLabel orLabel = new JLabel(") "+GDLEditorLanguageManager.getMessage("OrRLE")+" (");
 	orPanel.add(orLabel);
 	if (ruleLine.isCommented()){
 	    orLabel.setEnabled(false);

@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.AttributeFunctionContainerNode;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
@@ -37,11 +37,11 @@ import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLin
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
 import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
 import se.cambio.cds.gdl.parser.ExpressionParser;
-import se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO;
-import se.cambio.cds.openehr.view.dialogs.DialogEditor;
-import se.cambio.cds.openehr.view.panels.SelectionPanel;
-import se.cambio.cds.openehr.view.trees.SelectableNode;
-import se.cambio.cds.openehr.view.util.NodeConversor;
+import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.view.dialogs.DialogEditor;
+import se.cambio.openehr.view.panels.SelectionPanel;
+import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.util.NodeConversor;
 /**
  * @author icorram
  */
@@ -66,7 +66,7 @@ public class DialogExpressionEditor extends DialogEditor {
      * This is the default constructor
      */
     public DialogExpressionEditor(Window owner, ArchetypeElementVO archetypeElementVO, ExpressionRuleLineElement expressionRuleLineElement) {
-	super(owner, LanguageManager.getMessage("ExpressionEditor"), new Dimension(700,400), true, true);
+	super(owner, GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700,400), true, true);
 	_expressionRuleLineElement = expressionRuleLineElement;
 	if (_expressionRuleLineElement.getValue()!=null){
 	    _expressionItem = _expressionRuleLineElement.getValue();
@@ -143,7 +143,7 @@ public class DialogExpressionEditor extends DialogEditor {
     public JPanel getRenderedExpressionPanel(){
 	if (renderedExpressionPanel==null){
 	    renderedExpressionPanel = new JPanel(new BorderLayout());
-	    renderedExpressionPanel.setBorder(BorderFactory.createTitledBorder(LanguageManager.getMessage("ExpressionViewer")));
+	    renderedExpressionPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionViewer")));
 	    JScrollPane jScrollPane = new JScrollPane();
 	    jScrollPane.setViewportView(getRenderedExpresionTextComponent());
 	    jScrollPane.setPreferredSize(new Dimension(300,150));
@@ -165,7 +165,7 @@ public class DialogExpressionEditor extends DialogEditor {
     public JPanel getExpressionEditorPanel(){
 	if (expressionEditorPanel==null){
 	    expressionEditorPanel = new JPanel(new BorderLayout());
-	    expressionEditorPanel.setBorder(BorderFactory.createTitledBorder(LanguageManager.getMessage("ExpressionEditor")));
+	    expressionEditorPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionEditor")));
 	    JScrollPane jScrollPane = new JScrollPane();
 	    jScrollPane.setViewportView(getExpressionEditorTextComponent());
 	    expressionEditorPanel.add(jScrollPane, BorderLayout.CENTER);
@@ -237,8 +237,8 @@ public class DialogExpressionEditor extends DialogEditor {
     protected JButton getAddElementButton() {
 	if (addElementButton == null) {
 	    addElementButton = new JButton();
-	    addElementButton.setText(LanguageManager.getMessage("AddElement"));
-	    addElementButton.setToolTipText(LanguageManager.getMessage("AddElementD"));
+	    addElementButton.setText(GDLEditorLanguageManager.getMessage("AddElement"));
+	    addElementButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddElementD"));
 	    addElementButton.setIcon(GDLEditorImageUtil.ADD_ICON);
 	    addElementButton.setEnabled(true);
 	    addElementButton.addActionListener(new ActionListener() {

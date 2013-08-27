@@ -6,18 +6,18 @@ public class GuideDTO implements Serializable{
 
     private static final long serialVersionUID = 20120412L;
     private String idGuide;
-    private String name;
-    private String description;
     private String guideSrc;
+    private byte[] guideObject;
     private byte[] compiledGuide;
+    private boolean active;
 
-    public GuideDTO(String idGuide, String name, String description, String guideSrc, byte[] compiledGuide) {
+    public GuideDTO(String idGuide, String guideSrc, byte[] guideObject, byte[] compiledGuide, boolean active) {
 	super();
 	this.idGuide = idGuide;
-	this.name = name;
-	this.description = description;
 	this.guideSrc = guideSrc;
+	this.guideObject = guideObject;
 	this.compiledGuide = compiledGuide;
+	this.active = active;
     }
     public String getIdGuide() {
 	return idGuide;
@@ -25,29 +25,29 @@ public class GuideDTO implements Serializable{
     public void setIdGuide(String idGuide) {
 	this.idGuide = idGuide;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
     public String getGuideSrc() {
 	return guideSrc;
     }
     public void setGuideSrc(String guideSrc) {
 	this.guideSrc = guideSrc;
     }
+    public byte[] getGuideObject() {
+        return guideObject;
+    }
+    public void setGuideObject(byte[] guideObject) {
+        this.guideObject = guideObject;
+    }
     public byte[] getCompiledGuide() {
 	return compiledGuide;
     }
     public void setCompiledGuide(byte[] compiledGuide) {
 	this.compiledGuide = compiledGuide;
+    }
+    public boolean isActive() {
+        return active;
+    }
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
 /*

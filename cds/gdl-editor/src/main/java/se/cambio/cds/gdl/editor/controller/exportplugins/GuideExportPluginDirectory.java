@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class GuideExportPluginDirectory {
 

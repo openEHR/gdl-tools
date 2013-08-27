@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.cambio.cds.model.overview.dto.OverviewDTO;
-import se.cambio.cds.util.IOUtils;
-import se.cambio.cds.util.Resources;
-import se.cambio.cds.util.exceptions.InstanceNotFoundException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.Resources;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class InJarOverviewDAO implements GenericOverviewDAO{
 
-    private static String OVERVIEWS_FOLDER = "Overviews";
 
     public OverviewDTO search(String idOverview) 
 	    throws InternalErrorException, InstanceNotFoundException {
-	String fileName = OVERVIEWS_FOLDER+"/"+idOverview+".iov";
-	InputStream is = InJarOverviewDAO.class.getClassLoader().getResourceAsStream(fileName);
+	InputStream is = InJarOverviewDAO.class.getClassLoader().getResourceAsStream(idOverview+".dsv");
 	if (is!=null){
 	    try {
 		String overviewSrc = IOUtils.toString(is, "UTF-8");
@@ -39,7 +37,7 @@ public class InJarOverviewDAO implements GenericOverviewDAO{
 		String resourceList = IOUtils.toString(is, "UTF-8");
 		for (String string : resourceList.split("\n")) {
 		    string = string.trim();
-		    if (string.endsWith(".iov")){
+		    if (string.endsWith(".dsv")){
 			//Remove the leading '\'
 			string = string.replaceAll("\\\\", "/");
 			fileNames.add(string.substring(1, string.length()));
@@ -51,7 +49,8 @@ public class InJarOverviewDAO implements GenericOverviewDAO{
 			if (is!=null){
 			    try {
 				String overviewSrc = IOUtils.toString(is, "UTF-8");
-				overviews.add(new OverviewDTO(fileName, fileName, fileName, overviewSrc));
+				String idOverview = fileName.substring(fileName.lastIndexOf("/")+1,fileName.length()-4);
+				overviews.add(new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc));
 			    } catch (IOException e) {
 				throw new InternalErrorException(e);
 			    }

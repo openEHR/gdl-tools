@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.openehr.view.applicationobjects.Archetypes;
+import se.cambio.openehr.controller.session.data.Archetypes;
 
 
 public class TestConvertToDrools extends TestCase {

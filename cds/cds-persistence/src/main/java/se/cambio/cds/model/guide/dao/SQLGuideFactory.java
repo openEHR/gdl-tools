@@ -1,6 +1,6 @@
 package se.cambio.cds.model.guide.dao;
 
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 /**
  * @author iago.corbal

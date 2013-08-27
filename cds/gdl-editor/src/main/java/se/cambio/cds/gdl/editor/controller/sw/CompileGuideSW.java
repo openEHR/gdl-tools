@@ -6,46 +6,51 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CompileGuideSW extends CDSSwingWorker{
     private String _errorMsg = null;
     private GDLEditor _controller = null;
     private byte[] _compiledGuide = null;
+    private Guide _guide = null;
 
     public CompileGuideSW(GDLEditor controller){
-	_controller = controller;
+        _controller = controller;
     }
 
     @Override
     protected void executeCDSSW() throws InternalErrorException{
-	try{
-	    Guide guide = _controller.getGuide();
-	    if (guide!=null){
-		_compiledGuide = GuideExportPluginDirectory.compile(guide);
-	    }
-	}catch(Throwable e){
-	    _errorMsg = e.getMessage();
-	    Logger.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getGuide().getId()+"': "+e.getMessage());
-	    ExceptionHandler.handle(e);
-	}
+        try{
+            _guide = _controller.getGuide();
+            if (_guide!=null){
+                _compiledGuide = GuideExportPluginDirectory.compile(_guide);
+            }
+        }catch(Throwable e){
+            _errorMsg = e.getMessage();
+            Logger.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getGuide().getId()+"': "+e.getMessage());
+            ExceptionHandler.handle(e);
+        }
     }
 
     public byte[] getCompiledGuide(){
-	return _compiledGuide;
+        return _compiledGuide;
+    }
+
+    public Guide getGuide(){
+        return _guide;
     }
 
     public String getErrorMsg(){
-	return _errorMsg;
+        return _errorMsg;
     }
 
     public GDLEditor getController(){
-	return _controller;
+        return _controller;
     }
 
     protected void done() {
-	_controller.compilationFinished(_errorMsg);
+        _controller.compilationFinished(_errorMsg);
     }
 }
 /*

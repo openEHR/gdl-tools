@@ -1,5 +1,7 @@
 package se.cambio.cds.gdl.editor.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,13 +11,17 @@ import java.util.Properties;
 
 import javax.naming.InitialContext;
 
-import se.cambio.cds.util.exceptions.MissingConfigurationParameterException;
+import org.apache.log4j.Logger;
+
+import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
 public final class GDLEditorConfigurationParametersManager {
 
     private static final String JNDI_PREFIX = "java:comp/env/";
 
     private static final String CONFIGURATION_FILE = "GDLEditor.properties";
+    private static final String CONFIGURATION_FOLDER = "conf";
 
     private static boolean usesJNDI;
     private static Map <Object,Object> parameters;
@@ -24,84 +30,109 @@ public final class GDLEditorConfigurationParametersManager {
 	/*         
 	 * We use a synchronized map because it will be filled by using a 
 	 * lazy strategy.
-	 */             
-	parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
-	try {
-	    /* Read property file (if exists).*/    
-	    Class<GDLEditorConfigurationParametersManager> configurationParametersManagerClass = 
-		    GDLEditorConfigurationParametersManager.class;
-	    ClassLoader classLoader =
-		    configurationParametersManagerClass.getClassLoader();
-	    InputStream inputStream =
-		    classLoader.getResourceAsStream(CONFIGURATION_FILE);
-	    Properties properties = new Properties();
-	    properties.load(inputStream);
-	    inputStream.close();
+	 */
+        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
+        try {
+	    /* Read property file (if exists).*/
+            Class<GDLEditorConfigurationParametersManager> configurationParametersManagerClass =
+                    GDLEditorConfigurationParametersManager.class;
+            ClassLoader classLoader =
+                    configurationParametersManagerClass.getClassLoader();
+            File configFile = getConfigFile();
+            InputStream inputStream = null;
+            if (configFile!=null){
+                inputStream = new FileInputStream(configFile);
+                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
+            }else{
+                inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
+                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+            }
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            inputStream.close();
 
 	    /* We have been able to read the file. */
-	    usesJNDI = false;
-	    parameters.putAll(properties);
-
-	    System.out.println("*** Using '" + CONFIGURATION_FILE +
-		    "' file for configuration ***");
-	} catch (Exception e) {
+            usesJNDI = false;
+            parameters.putAll(properties);
+        } catch (Exception e) {
 	    /* We have not been able to read the file. */
-	    usesJNDI = true;
-	}
+            usesJNDI = true;
+            Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
+        }
     }
 
     private GDLEditorConfigurationParametersManager() {}
 
-    public static String getParameter(String name) 
-	    throws MissingConfigurationParameterException {
+    private static File getConfigFile(){
+        try{
+            File jarFile = new File(GDLEditorConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            //../conf
+            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
+                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
+                    for (File file2:file.listFiles()){
+                        if (file2.getName().equals(CONFIGURATION_FILE)){
+                            return file2;
+                        }
+                    }
+                }
+            }
+        }catch(Throwable t){
+            //Problem finding config folder
+            //Logger.getLogger(GDLEditorConfigurationParametersManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+        return null;
+    }
 
-	String value = (String) parameters.get(name);
+    public static String getParameter(String name)
+            throws MissingConfigurationParameterException {
 
-	if (value == null) {
-	    //System.out.println("Missing "+name);
-	    if (usesJNDI) {
-		try {
-		    InitialContext initialContext = new InitialContext();
-		    value = (String) initialContext.lookup(
-			    JNDI_PREFIX + name);
-		    parameters.put(name, value);
-		} catch (Exception e) {
-		    throw new MissingConfigurationParameterException(name);
-		}
-	    } else {
-		throw new MissingConfigurationParameterException(name);
+        String value = (String) parameters.get(name);
 
-	    }
-	}
+        if (value == null) {
+            //System.out.println("Missing "+name);
+            if (usesJNDI) {
+                try {
+                    InitialContext initialContext = new InitialContext();
+                    value = (String) initialContext.lookup(
+                            JNDI_PREFIX + name);
+                    parameters.put(name, value);
+                } catch (Exception e) {
+                    throw new MissingConfigurationParameterException(name);
+                }
+            } else {
+                throw new MissingConfigurationParameterException(name);
 
-	return value;
+            }
+        }
+
+        return value;
 
     }
-    
+
     public static void loadParameters(Hashtable<Object,Object> usrConfig){
-	parameters.putAll(usrConfig);
+        parameters.putAll(usrConfig);
     }
 
-    public static Object getObjectParameter(String name) 
-	    throws MissingConfigurationParameterException {
+    public static Object getObjectParameter(String name)
+            throws MissingConfigurationParameterException {
 
-	Object value = (Object) parameters.get(name);
+        Object value = (Object) parameters.get(name);
 
-	if (value == null) {
-	    if (usesJNDI) {
-		try {
-		    InitialContext initialContext = new InitialContext();
-		    value = (Object) initialContext.lookup(JNDI_PREFIX + name);
-		    parameters.put(name, value);
-		} catch (Exception e) {
-		    throw new MissingConfigurationParameterException(name);
-		}
-	    } else {
-		throw new MissingConfigurationParameterException(name);
+        if (value == null) {
+            if (usesJNDI) {
+                try {
+                    InitialContext initialContext = new InitialContext();
+                    value = (Object) initialContext.lookup(JNDI_PREFIX + name);
+                    parameters.put(name, value);
+                } catch (Exception e) {
+                    throw new MissingConfigurationParameterException(name);
+                }
+            } else {
+                throw new MissingConfigurationParameterException(name);
 
-	    }
-	}
-	return value;
+            }
+        }
+        return value;
     }
 
 }

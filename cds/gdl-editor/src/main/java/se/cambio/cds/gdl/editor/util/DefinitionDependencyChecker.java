@@ -12,7 +12,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRule
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
-import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;
+import se.cambio.cds.model.instance.ArchetypeReference;
 
 public class DefinitionDependencyChecker {
     
@@ -20,7 +20,7 @@ public class DefinitionDependencyChecker {
      * Checks if the definition of a Archetype Reference is used inside any rule line (preconditions, conditions or actions)
      * @param airl
      * @param controller
-     * @return
+     * @return true is the reference is beign used
      */
     public static boolean isBeingUsed(ArchetypeInstantiationRuleLine airl, GDLEditor controller){
 	boolean found = false;

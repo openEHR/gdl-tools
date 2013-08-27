@@ -1,0 +1,83 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.corrected_calcium_level.v1
+
+concept
+	[at0000]	-- Corrected calcium level
+language
+	original_language = <[ISO_639-1::en]>
+description
+	original_author = <
+		["name"] = <"Rong Chen">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record Corrected calcium level">
+			use = <"">
+			misuse = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["references"] = <"">
+		["MD5-CAM-1.0.1"] = <"5F512D4CC8B56E814192BAD346368515">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Corrected calcium level
+		data matches {
+			HISTORY[at0001] matches {	-- Event Series
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- vilken händelse som helst
+						data matches {
+							ITEM_TREE[at0003] matches {	-- Träd
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Corrected calcium level
+										value matches {
+											C_DV_QUANTITY <
+												property = <[openehr::384]>
+												list = <
+													["1"] = <
+														units = <"µmol">
+													>
+												>
+											>
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Corrected calcium level">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"vilken händelse som helst">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Träd">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Corrected calcium level">
+					description = <"*">
+				>
+			>
+		>
+	>

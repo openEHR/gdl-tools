@@ -13,8 +13,8 @@ import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.openehr.view.util.ImportUtils;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.openehr.view.util.ImportUtils;
 
 public class ImportArchetypeAction extends AbstractAction {
 
@@ -25,10 +25,10 @@ public class ImportArchetypeAction extends AbstractAction {
 
     public ImportArchetypeAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("ImportArchetype"));
+	putValue(NAME, GDLEditorLanguageManager.getMessage("ImportArchetype"));
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("ImportArchetypeD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("ImportArchetypeD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
 	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 

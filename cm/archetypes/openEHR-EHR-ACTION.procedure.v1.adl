@@ -1,0 +1,808 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-ACTION.procedure.v1
+
+concept
+	[at0000]	-- Procedure undertaken
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["ar-sy"] = <
+			language = <[ISO_639-1::ar-sy]>
+			author = <
+				["name"] = <"Mona Saleh">
+			>
+		>
+		["pt-br"] = <
+			language = <[ISO_639-1::pt-br]>
+			author = <
+				["organisation"] = <"FMRP-USP">
+				["name"] = <"Thiago F. F. Dias">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"Ian McNicoll">
+		["organisation"] = <"Ocean Informatics, United Kingdom">
+		["email"] = <"ian.mcnicoll@oceaninformatics.com">
+		["date"] = <"2009-12-03">
+	>
+	details = <
+		["ar-sy"] = <
+			language = <[ISO_639-1::ar-sy]>
+			purpose = <"?????? ?????? ??? ????? ??? ?? ?????? ??????">
+			use = <"?????? ??????? ??????? ??? ????? ??? ?? ?????? ??? ??? ??. ? ????? ????? ????????? ??? ???????? ???????? ????????? ???????? ???????? ?????, ??? ??????? ?? ????? ??????? ?? ????? (???) ??????.">
+			keywords = <"??????? ?????", ...>
+			misuse = <"">
+			copyright = <"© openEHR Foundation">
+		>
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record details about a procedure that has been performed.">
+			use = <"Use to record detailed information about the procedure that has been carried out on an individual. 
+Information about activities related to the procedure, such as anaesthesia or administration of medications, should be recorded in separate ACTION archetypes.">
+			keywords = <"procedure", ...>
+			misuse = <"">
+			copyright = <"© openEHR Foundation">
+		>
+		["pt-br"] = <
+			language = <[ISO_639-1::pt-br]>
+			purpose = <"Para registrar os detalhes sobre um procedimento realizado.">
+			use = <"Usado para registrar informações detalhadas sobre o procedimento realizado em um indivíduo.
+Informações sobre atividades relacionadas ao procedimento, como a anestesia ou a administração de medicamentos, devem ser registrados em arquétipos de ACTION separados.">
+			keywords = <"procedimento", ...>
+			misuse = <"">
+			copyright = <"© openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <"Heather Leslie, Ocean Informatics, Australia (Editor)", "Ian McNicoll, Ocean Informatics, United Kingdom (Editor)", "Nadim Anani, Karolinska Institutet, Sweden">
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"EAE7920580C66C5EA8B4E1769CA3E78A">
+	>
+
+definition
+	ACTION[at0000] matches {	-- Procedure undertaken
+		ism_transition matches {
+			ISM_TRANSITION[at0034] matches {	-- Request initiated
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::524]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0034]}		-- Request initiated
+					}
+				}
+			}
+			ISM_TRANSITION[at0035] matches {	-- Request sent
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::524]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0035]}		-- Request sent
+					}
+				}
+			}
+			ISM_TRANSITION[at0038] matches {	-- Request postponed
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::527]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0038]}		-- Request postponed
+					}
+				}
+			}
+			ISM_TRANSITION[at0039] matches {	-- Request cancelled
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::528]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0039]}		-- Request cancelled
+					}
+				}
+			}
+			ISM_TRANSITION[at0036] matches {	-- Procedure scheduled
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::529]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0036]}		-- Procedure scheduled
+					}
+				}
+			}
+			ISM_TRANSITION[at0047] matches {	-- In progress
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::245]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0047]}		-- In progress
+					}
+				}
+			}
+			ISM_TRANSITION[at0040] matches {	-- Procedure suspended
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::530]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0040]}		-- Procedure suspended
+					}
+				}
+			}
+			ISM_TRANSITION[at0041] matches {	-- Procedure aborted
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::531]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0041]}		-- Procedure aborted
+					}
+				}
+			}
+			ISM_TRANSITION[at0043] matches {	-- Completed
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::532]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0043]}		-- Completed
+					}
+				}
+			}
+			ISM_TRANSITION[at0044] matches {	-- Report authored
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::532]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0044]}		-- Report authored
+					}
+				}
+			}
+			ISM_TRANSITION[at0045] matches {	-- Report attested
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::532]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0045]}		-- Report attested
+					}
+				}
+			}
+			ISM_TRANSITION[at0046] matches {	-- Report sent
+				current_state matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[openehr::532]}
+					}
+				}
+				careflow_step matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {[local::at0046]}		-- Report sent
+					}
+				}
+			}
+		}
+		description matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {1..*; unordered} matches {
+					ELEMENT[at0002] matches {	-- Procedure
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0014] occurrences matches {0..*} matches {	-- Reason/s for procedure
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0051] occurrences matches {0..*} matches {	-- Method/Technique
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0049] occurrences matches {0..1} matches {	-- Description
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					allow_archetype CLUSTER[at0003] occurrences matches {0..1} matches {	-- Procedure Details
+						include
+							archetype_id/value matches {/.*/}
+					}
+					allow_archetype CLUSTER[at0050] occurrences matches {0..1} matches {	-- Anatomical site details
+						include
+							archetype_id/value matches {/.*/}
+					}
+					CLUSTER[at0030] occurrences matches {0..1} matches {	-- Additional tasks
+						items cardinality matches {1..*; unordered} matches {
+							ELEMENT[at0052] occurrences matches {0..1} matches {	-- Task
+								value matches {
+									DV_TEXT matches {*}
+								}
+							}
+							ELEMENT[at0031] occurrences matches {0..*} matches {	-- Task description
+								value matches {
+									DV_TEXT matches {*}
+								}
+							}
+							ELEMENT[at0032] occurrences matches {0..*} matches {	-- Record of additional task
+								value matches {
+									DV_EHR_URI matches {*}
+								}
+							}
+						}
+					}
+					ELEMENT[at0048] occurrences matches {0..1} matches {	-- Outcome
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0004] occurrences matches {0..1} matches {	-- Procedure unsuccessful
+						value matches {
+							DV_BOOLEAN matches {
+								value matches {True}
+							}
+						}
+					}
+					-- TODO - NOT WORKING!! -->> ELEMENT[at0018] occurrences matches {0..1} matches {*}
+					ELEMENT[at0015] occurrences matches {0..*} matches {	-- Unplanned event
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0006] occurrences matches {0..*} matches {	-- Complication
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0058] occurrences matches {0..1} matches {	-- Emergency?
+						value matches {
+							DV_BOOLEAN matches {
+								value matches {True, False}
+							}
+						}
+					}
+					ELEMENT[at0005] occurrences matches {0..1} matches {	-- Comments
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0013] occurrences matches {0..*} matches {	-- Multimedia
+						value matches {
+							DV_MULTIMEDIA matches {
+								media_type matches {[openEHR::]}
+							}
+						}
+					}
+					ELEMENT[at0059] occurrences matches {0..1} matches {	-- Date of Procedure
+						value matches {
+							DV_DATE matches {*}
+						}
+					}
+				}
+			}
+		}
+		protocol matches {
+			ITEM_TREE[at0053] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0054] occurrences matches {0..1} matches {	-- Requestor order identifier
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					allow_archetype CLUSTER[at0055] occurrences matches {0..1} matches {	-- Requestor
+						include
+							archetype_id/value matches {/.*/}
+					}
+					ELEMENT[at0056] occurrences matches {0..1} matches {	-- Receiver order identifier
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					allow_archetype CLUSTER[at0057] occurrences matches {0..1} matches {	-- Receiver
+						include
+							archetype_id/value matches {/.*/}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["ar-sy"] = <
+			items = <
+				["at0000"] = <
+					text = <"??????? ????? ???? ?? ????">
+					description = <"???? ????? ?? ?????? ?????? ??????? ?? ??????.">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"??????? ?????">
+					description = <"??? ??????? ?????">
+				>
+				["at0003"] = <
+					text = <"?????? ??????? ?????">
+					description = <"???? ?????? ??? ??????? ????? ???? ?? ??????, ??? ?? ??? ??????? ? ?????? ??? ??????? ? ???????/??????? ???? ?? ?????????">
+				>
+				["at0004"] = <
+					text = <"?? ???? ??????? ?????">
+					description = <"?? ??? ??????? ????? ?? ?????? ??? ????? - ??????? ?????  ???? ???? ??? ?? ??? ?????">
+				>
+				["at0005"] = <
+					text = <"?????">
+					description = <"??????? ??? ??????? ?????">
+				>
+				["at0006"] = <
+					text = <"?????????">
+					description = <"?????? ??? ??? ??????? ???? ?? ????? ??????? ?????">
+				>
+				["at0013"] = <
+					text = <"??????? ????????">
+					description = <"????? ??????? ???????? ??????? ?????, ??? ?? ??? ?????">
+				>
+				["at0014"] = <
+					text = <"???/????? ??????? ?????">
+					description = <"????? ?? ?????? ??? ????? ??????? ?????">
+				>
+				["at0015"] = <
+					text = <"????? ??? ???? ???">
+					description = <"????? ??? ???? ??? ???? ?? ????? ???????? ?????, ? ???? ?? ???? ??? ??????, ???? ??? ????????? ?????? ?????????? ?????.">
+				>
+				["at0018"] = <
+					text = <"????????? ???????">
+					description = <"??? ????????? ??????? ?????? ??????? ?????">
+				>
+				["at0030"] = <
+					text = <"???????/??????? ????????">
+					description = <"?????? ????????? ??? ??????? ??? ?????? ??? ?? ??? ???????? ???? ?? ???????? ??? ????? ?? ????? ??????? ?????. ??? ????? ??? ??????/??????? ? ????? ?? ???? ??? ???????, ? ??? ????? ????? ???????? ?? ????? ????? ?????? ???? ??????? ?? ??? ????? ????????? ?? ?????.">
+				>
+				["at0031"] = <
+					text = <"??? ??????/???????">
+					description = <"??? ???????/?????? ???????? ???? ?? ??????? ?? ????? ????? ??????? ?????">
+				>
+				["at0032"] = <
+					text = <"????? ??????/??????? ????????">
+					description = <"???? ???? ??? ??? ?????? ??? ??????/??????? ????????">
+				>
+				["at0034"] = <
+					text = <"?? ????? ?? ?????">
+					description = <"?? ????? ?? ??? ??????? ?????">
+				>
+				["at0035"] = <
+					text = <"?? ????? ?????">
+					description = <"?? ????? ??? ??????? ?????">
+				>
+				["at0036"] = <
+					text = <"?? ????? ???? ??????? ?????">
+					description = <"?? ????? ???? ????? ??????? ?????">
+				>
+				["at0038"] = <
+					text = <"?? ????? ?????">
+					description = <"?? ????? ??? ??????? ?????">
+				>
+				["at0039"] = <
+					text = <"?? ????? ?????">
+					description = <"?? ????? ??? ??????? ?????">
+				>
+				["at0040"] = <
+					text = <"?? ????? ??????? ?????">
+					description = <"?? ????? ??????? ?????">
+				>
+				["at0041"] = <
+					text = <"?? ????? ??????? ????? ????">
+					description = <"?? ????? ??????? ????? ????">
+				>
+				["at0043"] = <
+					text = <"?????">
+					description = <"?? ????? ??????? ?????">
+				>
+				["at0044"] = <
+					text = <"??? ????? ???????">
+					description = <"?? ????? ????? ??????? ?????">
+				>
+				["at0045"] = <
+					text = <"?? ??????? ???/????? ???????">
+					description = <"?? ??????? ???/????? ????? ??????? ?????">
+				>
+				["at0046"] = <
+					text = <"?? ????? ???????">
+					description = <"?? ????? ????? ??????? ?????">
+				>
+				["at0047"] = <
+					text = <"???? - ???? ?????">
+					description = <"??? ????? ????? ??????? ?????">
+				>
+				["at0048"] = <
+					text = <"??????">
+					description = <"???? ??????? ????? ???? ?? ??????">
+				>
+				["at0049"] = <
+					text = <"?????">
+					description = <"??? ?????? ??? ??????? ????? ???? ?? ??????">
+				>
+				["at0050"] = <
+					text = <"?????? ?????? ????????">
+					description = <"?????? ??? ?????? ???????? ??????? ???????? ?????">
+				>
+				["at0051"] = <
+					text = <"???????/???????">
+					description = <"????? ??????? ?? ??????? ??????? ????????? ?? ????? ??????? ?????">
+				>
+				["at0052"] = <
+					text = <"??????/???????">
+					description = <"??? ???????/?????? ???????? ???? ??? ??????? ?? ????? ????? ??????? ?????">
+				>
+				["at0053"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0054"] = <
+					text = <"???? ?????? ???? ?????? ???? ????????">
+					description = <"?????? ???????? ?????? ?????? ???? ??? ?????? ????? ????????? ?????? ???? ?????? ?????? ?? ??????? ???? ???? ??????.">
+				>
+				["at0055"] = <
+					text = <"??????">
+					description = <"?????? ??? ???? ?????? ?????? ?? ??????? ???? ???? ??????">
+				>
+				["at0056"] = <
+					text = <"???? ?????? ???? ?????? ??????? ?????">
+					description = <"?????? ???????? ???? ??? ?????? ????? ????????? ?????? ???? ?????? ?????? ?? ??????? ???? ?????? ??? ??????. ? ?????? ???? ??????? ?????? ???? ?????? ???? ????????">
+				>
+				["at0057"] = <
+					text = <"?????????">
+					description = <"?????? ??? ???? ?????? ?????? ?? ??????? ???? ?????? ??? ??????.">
+				>
+				["at0058"] = <
+					text = <"???? ?????">
+					description = <"?? ??? ??????? ???? ?? ?????? ???? ????? - ??????? ????? ???? ??? ??? ?????? ???? ???? ?????">
+				>
+				["at0059"] = <
+					text = <"*Nytt element(en)">
+					description = <"**(en)">
+				>
+			>
+		>
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Procedure undertaken">
+					description = <"A clinical activity that has been carried out for therapeutic or diagnostic purposes.">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Procedure">
+					description = <"The name of the procedure.">
+				>
+				["at0003"] = <
+					text = <"Procedure Details">
+					description = <"Detailed structure describing the procedure carried out, including preparation and details about the method and equipment/devices used.">
+				>
+				["at0004"] = <
+					text = <"Procedure unsuccessful">
+					description = <"Was the procedure ultimately unsuccessful? True if unsuccessful.">
+				>
+				["at0005"] = <
+					text = <"Comments">
+					description = <"Comments about the procedure.">
+				>
+				["at0006"] = <
+					text = <"Complication">
+					description = <"Details about any complication arising from the procedure.">
+				>
+				["at0013"] = <
+					text = <"Multimedia">
+					description = <"Multimedia representation of the procedure, including images.">
+				>
+				["at0014"] = <
+					text = <"Reason/s for procedure">
+					description = <"The reason or indication for the procedure.">
+				>
+				["at0015"] = <
+					text = <"Unplanned event">
+					description = <"An unplanned event prior to or related to the procedure, which may affect its execution e.g patient self-removed cannula.">
+				>
+				["at0018"] = <
+					text = <"Failed attempts">
+					description = <"The number of failed attempts to perform the procedure.">
+				>
+				["at0030"] = <
+					text = <"Additional tasks">
+					description = <"Record information about unplanned or unexpected activities that needed to be done during the procedure. Record the name of the task and a description within this archetype, but detail should be recorded in specific linked INSTRUCTION or ACTION archetypes.">
+				>
+				["at0031"] = <
+					text = <"Task description">
+					description = <"Description of additional task performed during the procedure.">
+				>
+				["at0032"] = <
+					text = <"Record of additional task">
+					description = <"Link to a detailed record of the additional task.">
+				>
+				["at0034"] = <
+					text = <"Request initiated">
+					description = <"Request for procedure is initiated.">
+				>
+				["at0035"] = <
+					text = <"Request sent">
+					description = <"Request for procedure sent.">
+				>
+				["at0036"] = <
+					text = <"Procedure scheduled">
+					description = <"Procedure has been scheduled.">
+				>
+				["at0038"] = <
+					text = <"Request postponed">
+					description = <"Request for procedure is postponed.">
+				>
+				["at0039"] = <
+					text = <"Request cancelled">
+					description = <"Procedure request has been cancelled.">
+				>
+				["at0040"] = <
+					text = <"Procedure suspended">
+					description = <"Procedure has been suspended.">
+				>
+				["at0041"] = <
+					text = <"Procedure aborted">
+					description = <"Procedure has been aborted.">
+				>
+				["at0043"] = <
+					text = <"Completed">
+					description = <"Procedure has been completed.">
+				>
+				["at0044"] = <
+					text = <"Report authored">
+					description = <"Procedure report has been written.">
+				>
+				["at0045"] = <
+					text = <"Report attested">
+					description = <"Procedure report has been attested.">
+				>
+				["at0046"] = <
+					text = <"Report sent">
+					description = <"Procedure report has been distributed.">
+				>
+				["at0047"] = <
+					text = <"In progress">
+					description = <"Procedure is being carried out.">
+				>
+				["at0048"] = <
+					text = <"Outcome">
+					description = <"Outcome of procedure performed.">
+				>
+				["at0049"] = <
+					text = <"Description">
+					description = <"Narrative description about the procedure carried out.">
+				>
+				["at0050"] = <
+					text = <"Anatomical site details">
+					description = <"Details about the anatomical site of procedure.">
+				>
+				["at0051"] = <
+					text = <"Method/Technique">
+					description = <"Identification of specific method or technique used for procedure.">
+				>
+				["at0052"] = <
+					text = <"Task">
+					description = <"Name of additional task performed during the procedure.">
+				>
+				["at0053"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0054"] = <
+					text = <"Requestor order identifier">
+					description = <"The local ID assigned to the order by the healthcare provider or organisation requesting the service.">
+				>
+				["at0055"] = <
+					text = <"Requestor">
+					description = <"Details about the healthcare provider or organisation requesting the service.">
+				>
+				["at0056"] = <
+					text = <"Receiver order identifier">
+					description = <"The ID assigned to the order by the healthcare provider or organisation receiving the request for service. This is also referred to as Filler Order Identifier.">
+				>
+				["at0057"] = <
+					text = <"Receiver">
+					description = <"Details about the healthcare provider or organisation receiving the request for service.">
+				>
+				["at0058"] = <
+					text = <"Emergency?">
+					description = <"Was this procedure performed as an emergency? True if Yes.">
+				>
+				["at0059"] = <
+					text = <"Date of Procedure">
+					description = <"*">
+				>
+			>
+		>
+		["pt-br"] = <
+			items = <
+				["at0000"] = <
+					text = <"Procedimento realizado">
+					description = <"Atividade clínica que foi realizada para fins terapêuticos ou diagnósticos.">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Procedimento">
+					description = <"Nome do procedimento.">
+				>
+				["at0003"] = <
+					text = <"Detalhes do procedimento">
+					description = <"Estrutura detalhada descrevendo o procedimento realizado, incluindo a preparação e detalhes sobre os equipamentos/dispositivos utilizados.">
+				>
+				["at0004"] = <
+					text = <"Procedimento mal sucedido">
+					description = <"O procedimento foi realmente mal sucedido? Verdadeiro se foi mal sucedido.">
+				>
+				["at0005"] = <
+					text = <"Comentários">
+					description = <"Comentários sobre o procedimento.">
+				>
+				["at0006"] = <
+					text = <"Complicação">
+					description = <"Detalhes sobre qualquer complicação provinda do pocedimento.">
+				>
+				["at0013"] = <
+					text = <"Multimídia">
+					description = <"Representação multimídia do procedimento, incluindo imagens.">
+				>
+				["at0014"] = <
+					text = <"Razão(ões) para o procedimento">
+					description = <"A razão ou indicação para o procedimento.">
+				>
+				["at0015"] = <
+					text = <"Evento não planejado">
+					description = <"Um evento não planejado prioritário ou relacionado ao procedimento, o qual pode afetar a sua execução, ex. o próprio paciente removeu a cânula.">
+				>
+				["at0018"] = <
+					text = <"Tentativas fracassadas">
+					description = <"Número de tentativas fracassadas para realizar o procedimento.">
+				>
+				["at0030"] = <
+					text = <"Tarefas adicionais">
+					description = <"Registro das informações sobre atividades não planejadas ou não esperadas realizadas, que foram necessárias durante o procedimento. Registro do nome da tarefa e a descrição neste arquétipo, mas os detalhes devem ser registrados em um arquétipo específico de INSTRUCTION ou ACTION, ligado a este.">
+				>
+				["at0031"] = <
+					text = <"Descrição da tarefa">
+					description = <"Descrição da tarefa realizada durante o procedimento.">
+				>
+				["at0032"] = <
+					text = <"Registro da tarefa adicional">
+					description = <"Link para o registro detalhado da tarefa adicional.">
+				>
+				["at0034"] = <
+					text = <"Pedido iniciado">
+					description = <"Pedido para o procedimento é iniciado.">
+				>
+				["at0035"] = <
+					text = <"Pedido enviado">
+					description = <"Pedido para o procedimento enviado.">
+				>
+				["at0036"] = <
+					text = <"Procedimento agendado">
+					description = <"Procedimento foi agendado.">
+				>
+				["at0038"] = <
+					text = <"Pedido adiado">
+					description = <"Pedido para o procedimento é adiado.">
+				>
+				["at0039"] = <
+					text = <"Pedido cancelado">
+					description = <"Pedido para o procedimento foi cancelado.">
+				>
+				["at0040"] = <
+					text = <"Procedimento suspenso">
+					description = <"Procedimento foi suspenso.">
+				>
+				["at0041"] = <
+					text = <"Procedimento abortado">
+					description = <"Procedimento foi abortado.">
+				>
+				["at0043"] = <
+					text = <"Concluido">
+					description = <"Procedimento foi concluído.">
+				>
+				["at0044"] = <
+					text = <"Autoria do relatório">
+					description = <"Relatório do procedimento foi escrito.">
+				>
+				["at0045"] = <
+					text = <"Relatório atestado">
+					description = <"Relatório do procedimento foi atestado.">
+				>
+				["at0046"] = <
+					text = <"Relatório enviado">
+					description = <"Relatório do procedimento foi distribuído.">
+				>
+				["at0047"] = <
+					text = <"Em progresso">
+					description = <"Procedimento está sendo realizado.">
+				>
+				["at0048"] = <
+					text = <"Resultado">
+					description = <"Resultado do procedimento realizado.">
+				>
+				["at0049"] = <
+					text = <"Descrição">
+					description = <"Narração descritiva sobre o procedimento realizado.">
+				>
+				["at0050"] = <
+					text = <"Detalhes da região anatômica">
+					description = <"Detalhes sobre a região anatômica do procedimento.">
+				>
+				["at0051"] = <
+					text = <"Método/Técnica">
+					description = <"Identificação do método ou técnica específica utilizada no procedimento.">
+				>
+				["at0052"] = <
+					text = <"Tarefa">
+					description = <"Nome da tarefa adicional realizada durante o procedimento.">
+				>
+				["at0053"] = <
+					text = <"Tree(en)">
+					description = <"@ internal @">
+				>
+				["at0054"] = <
+					text = <"Identificador do solicitante do pedido">
+					description = <"ID local atribuído ao pedido pela profissional ou organização de saúde solicitante do serviço.">
+				>
+				["at0055"] = <
+					text = <"Solicitante">
+					description = <"Detalhes sobre o profissional ou organização de saúde que solicitou o serviço.">
+				>
+				["at0056"] = <
+					text = <"Identificador do destinatário do pedido">
+					description = <"O ID atribuído ao pedido pelo profissional ou organização de saúde que está recebendo a requisição do serviço. Isto também é referenciado como o Identificador de Preenchimento do Pedido.">
+				>
+				["at0057"] = <
+					text = <"Destinatário">
+					description = <"Detalhes sobre o profissional ou organização de saúde que recebeu o requerimento para o serviço.">
+				>
+				["at0058"] = <
+					text = <"Emergência?">
+					description = <"Este procedimento foi realizado como urgência? Verdadeiro se Sim.">
+				>
+				["at0059"] = <
+					text = <"*Nytt element(en)">
+					description = <"**(en)">
+				>
+			>
+		>
+	>

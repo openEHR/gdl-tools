@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogRepositoriesPaths;
 
 public class ConfigRepositoriesAction extends AbstractAction {
@@ -22,10 +22,10 @@ public class ConfigRepositoriesAction extends AbstractAction {
 
     public ConfigRepositoriesAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("Repositories")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("Repositories")+"...");
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("RepositoriesSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("RepositoriesD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
     }
 
     /* (non-Javadoc)

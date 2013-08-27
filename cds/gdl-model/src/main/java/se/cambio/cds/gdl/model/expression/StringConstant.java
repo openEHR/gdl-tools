@@ -2,6 +2,11 @@ package se.cambio.cds.gdl.model.expression;
 
 public class StringConstant extends ConstantExpression {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
 	public StringConstant(String string) {
 		super(string);
 		this.string = string;

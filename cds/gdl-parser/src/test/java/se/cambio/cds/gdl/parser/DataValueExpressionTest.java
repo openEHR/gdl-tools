@@ -69,9 +69,9 @@ public class DataValueExpressionTest extends ExpressionTestBase {
 	}
 	
 	public void testParseQuantityUnitsWithDegree() throws Exception {
-		parseSingleExpression("$gt0012>=36.1,ºC" );	
+		parseSingleExpression("$gt0012>=36.1,°C" );		
 		check(36.1, "/right/quantity/magnitude");
-		check("ºC", "/right/quantity/units");
+		check("°C", "/right/quantity/units");
 		check("gt0012", "/left/code");
 	}
 	

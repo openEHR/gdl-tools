@@ -12,7 +12,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public class AddLanguageToGuideAction extends AbstractAction {
 
@@ -23,10 +23,10 @@ public class AddLanguageToGuideAction extends AbstractAction {
 
     public AddLanguageToGuideAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("AddLanguageToGuide")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("AddLanguageToGuide")+"...");
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("AddLanguageToGuideSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("AddLanguageToGuideD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideSD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideD"));
     }
 
     /* (non-Javadoc)
@@ -35,13 +35,13 @@ public class AddLanguageToGuideAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
 	boolean invalidCode = true;
 	while (invalidCode){
-	    String lang = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), LanguageManager.getMessage("EnterNewLanguageCode"));
+	    String lang = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));
 	    if (lang!=null){
 		if (lang.length()==2 && Character.isLetter(lang.charAt(0)) && Character.isLetter(lang.charAt(1))){
 		    invalidCode = false;
 		    EditorManager.getActiveGDLEditor().changeLanguage(lang);
 		}else{
-		    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), LanguageManager.getMessage("InvalidLanguageCode", lang));
+		    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("InvalidLanguageCode", lang));
 		}
 	    }else{
 		break;

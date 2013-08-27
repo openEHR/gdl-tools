@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.labels.JLinkRuleElementLabel;
 import se.cambio.cds.gdl.editor.view.listeners.PluginTypeLinkListener;
 import se.cambio.cds.gdl.editor.view.listeners.RuleLineElementItemListener;
@@ -129,7 +129,7 @@ public class ReadableRuleLineFactory {
 	JButton button = createGenericButton();
 	button.setAction(new DeleteAction(ruleLine, ruleLinesPanel));
 	button.setIcon(GDLEditorImageUtil.DELETE_ICON);
-	button.setToolTipText(LanguageManager.getMessage("DeleteLine"));
+	button.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteLine"));
 	return button;
     }
 
@@ -147,8 +147,8 @@ public class ReadableRuleLineFactory {
 	    if (controller.checkRuleLineDelete(_ruleLine)){
 		int resp = JOptionPane.showConfirmDialog(
 			EditorManager.getActiveEditorWindow(),
-			LanguageManager.getMessage("AskForRuleLineDeletionConfirmation"),
-			LanguageManager.getMessage("DeletingRuleLine"),
+			GDLEditorLanguageManager.getMessage("AskForRuleLineDeletionConfirmation"),
+			GDLEditorLanguageManager.getMessage("DeletingRuleLine"),
 			JOptionPane.YES_NO_CANCEL_OPTION);
 		if (resp==JOptionPane.YES_OPTION){
 
@@ -172,7 +172,7 @@ public class ReadableRuleLineFactory {
 	}else{
 	    button.setIcon(GDLEditorImageUtil.ACCEPT_ICON);
 	}
-	button.setToolTipText(LanguageManager.getMessage("SetActiveInactive"));
+	button.setToolTipText(GDLEditorLanguageManager.getMessage("SetActiveInactive"));
 	return button;
     }
 

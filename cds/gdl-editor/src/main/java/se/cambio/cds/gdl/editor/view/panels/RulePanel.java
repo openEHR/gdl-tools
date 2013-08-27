@@ -1,14 +1,13 @@
 package se.cambio.cds.gdl.editor.view.panels;
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 
-public class RulePanel extends JPanel{
+import javax.swing.*;
+import java.awt.*;
+
+public class RulePanel extends JPanel implements RefreshablePanel{
 
     private static final long serialVersionUID = 1L;
 
@@ -17,30 +16,30 @@ public class RulePanel extends JPanel{
 
     //private JPanel configurationPanel;
 
-    private JPanel conditionsAndActionsPanel;
+    private ConditionsAndActionsPanel conditionsAndActionsPanel;
 
     public RulePanel(GDLEditor controller){
-	_controller=controller;
-	initialize();
+        _controller=controller;
+        initialize();
     }
 
     private void initialize(){
-	this.setLayout(new BorderLayout());
-	this.add(getRuleEditorTabPane());
+        this.setLayout(new BorderLayout());
+        this.add(getRuleEditorTabPane());
     }
 
     private JTabbedPane getRuleEditorTabPane(){
-	if (ruleEditorTabPane == null){
-	    ruleEditorTabPane = new JTabbedPane();
+        if (ruleEditorTabPane == null){
+            ruleEditorTabPane = new JTabbedPane();
 	    /*TODO
 	    ruleEditorTabPane.addTab(
 		    LanguageManager.getMessage("Configuration"),
 		    ImageUtil.RULE_ICON, 
 		    getConfigurationPanel());*/
-	    ruleEditorTabPane.addTab(
-		    LanguageManager.getMessage("ConditionsAndActions"), 
-		    GDLEditorImageUtil.RULE_ICON, 
-		    getConditionsAndActionsPanel());
+            ruleEditorTabPane.addTab(
+                    GDLEditorLanguageManager.getMessage("ConditionsAndActions"),
+                    GDLEditorImageUtil.RULE_ICON,
+                    getConditionsAndActionsPanel());
 		    /*
 	    SwingUtilities.invokeLater(new Runnable() {
 		public void run() {
@@ -48,22 +47,27 @@ public class RulePanel extends JPanel{
 		}
 	    });*/
 
-	}
-	return ruleEditorTabPane;
+        }
+        return ruleEditorTabPane;
     }
-/*
-    private JPanel getConfigurationPanel(){
-	if (configurationPanel==null){
-	    configurationPanel = new JPanel();
-	}
-	return configurationPanel;
+    /*
+        private JPanel getConfigurationPanel(){
+        if (configurationPanel==null){
+            configurationPanel = new JPanel();
+        }
+        return configurationPanel;
+        }
+    */
+    private ConditionsAndActionsPanel getConditionsAndActionsPanel(){
+        if (conditionsAndActionsPanel==null){
+            conditionsAndActionsPanel = new ConditionsAndActionsPanel(_controller);
+        }
+        return conditionsAndActionsPanel;
     }
-*/
-    private JPanel getConditionsAndActionsPanel(){
-	if (conditionsAndActionsPanel==null){
-	    conditionsAndActionsPanel = new ConditionsAndActionsPanel(_controller);
-	}
-	return conditionsAndActionsPanel;
+
+    @Override
+    public void refresh() {
+        getConditionsAndActionsPanel().refresh();
     }
 }
 

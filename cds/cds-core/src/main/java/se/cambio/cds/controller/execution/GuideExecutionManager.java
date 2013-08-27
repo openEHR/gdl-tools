@@ -1,140 +1,179 @@
 /**
- * @author iago.corbal  
+ * @author iago.corbal
  */
 package se.cambio.cds.controller.execution;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-
+import org.apache.log4j.Logger;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.definition.KnowledgePackage;
 import org.drools.runtime.StatelessKnowledgeSession;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
-
-import se.cambio.cds.model.facade.execution.util.RuleExecutionWMLogger;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.ExecutionLogger;
-import se.cambio.cds.util.exceptions.GuideNotCompiledException;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.cds.util.RuleExecutionWMLogger;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.util.*;
 
 public class GuideExecutionManager {
 
-    public  KnowledgeBase _knowledgeBase = null;
-    private String _lastGuideStr = null;
-    private static GuideExecutionManager _instance = null; 
+    public LinkedHashMap<String, KnowledgeBase> _knowledgeBaseCache = null;
+    private static GuideExecutionManager _instance = null;
+    private static final short MAX_KNOWLEDGE_BASE_CACHE = 10;
+    private boolean _useCache = true;
 
     private GuideExecutionManager(){
-	
+        _knowledgeBaseCache = new LinkedHashMap<String, KnowledgeBase>();
     }
 
     public static void executeGuides(
-	    Collection<GuideDTO> guideDTOs, 
-	    Calendar date, 
-	    Collection<Object> workingMemoryObjects,
-	    ExecutionLogger executionLogger)
-		    throws InternalErrorException{
-	executeGuides(getKnowledgeBase(guideDTOs), date, workingMemoryObjects, executionLogger);
+            Collection<GuideDTO> guideDTOs,
+            Calendar date,
+            Collection<Object> workingMemoryObjects,
+            ExecutionLogger executionLogger)
+            throws InternalErrorException{
+        KnowledgeBase kb = null;
+        if (getDelegate()._useCache){
+            kb =  getKnowledgeBase(guideDTOs);
+        }else{
+            kb = generateKnowledgeBase(guideDTOs);
+        }
+        executeGuides(kb, date, workingMemoryObjects, executionLogger);
+    }
+
+    public static void setUseCache(boolean useCache){
+        getDelegate()._useCache = useCache;
     }
 
     public static void executeGuides(
-	    KnowledgeBase knowledgeBase,  
-	    Calendar date, 
-	    Collection<Object> workingMemoryObjects,
-	    ExecutionLogger executionLogger)
-		    throws InternalErrorException{
-	try{
-	    final StatelessKnowledgeSession session = knowledgeBase.newStatelessKnowledgeSession();
-	    final RuleExecutionWMLogger ruleExecutionWMLogger = new RuleExecutionWMLogger();
-	    session.addEventListener(ruleExecutionWMLogger);
-	    if (date==null){
-		date = Calendar.getInstance();
-	    }
-	    session.setGlobal("$currentDateTime", 
-		    new DvDateTime(
-			    date.get(Calendar.YEAR),
-			    date.get(Calendar.MONTH)+1,
-			    date.get(Calendar.DAY_OF_MONTH),
-			    date.get(Calendar.HOUR_OF_DAY),
-			    date.get(Calendar.MINUTE),
-			    date.get(Calendar.SECOND),
-			    date.getTimeZone())); 
-	    session.setGlobal("$executionLogger", executionLogger);
-	    session.execute(workingMemoryObjects);
-	    executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
-	}catch(Exception e){
-		e.printStackTrace();
-	    throw new InternalErrorException(e);
-	}
+            KnowledgeBase knowledgeBase,
+            Calendar date,
+            Collection<Object> workingMemoryObjects,
+            ExecutionLogger executionLogger)
+            throws InternalErrorException{
+        try{
+            final StatelessKnowledgeSession session = knowledgeBase.newStatelessKnowledgeSession();
+            final RuleExecutionWMLogger ruleExecutionWMLogger = new RuleExecutionWMLogger();
+            session.addEventListener(ruleExecutionWMLogger);
+            if (date==null){
+                date = Calendar.getInstance();
+            }
+            session.setGlobal("$currentDateTime",
+                    new DvDateTime(
+                            date.get(Calendar.YEAR),
+                            date.get(Calendar.MONTH)+1,
+                            date.get(Calendar.DAY_OF_MONTH),
+                            date.get(Calendar.HOUR_OF_DAY),
+                            date.get(Calendar.MINUTE),
+                            date.get(Calendar.SECOND),
+                            date.getTimeZone()));
+            session.setGlobal("$executionLogger", executionLogger);
+            session.execute(workingMemoryObjects);
+            executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new InternalErrorException(e);
+        }
     }
 
+    public static KnowledgeBase getKnowledgeBase(Collection<GuideDTO> guideDTOs)
+            throws InternalErrorException{
+        if (guideDTOs==null || guideDTOs.isEmpty()){
+            return null;
+        }
+        String guideIdsId = getGuideIdsId(guideDTOs);
+        KnowledgeBase kb = getDelegate()._knowledgeBaseCache.get(guideIdsId);
+        if (kb==null){
+            kb = GuideExecutionManager.generateKnowledgeBase(guideDTOs);
+            getDelegate()._knowledgeBaseCache.put(guideIdsId, kb);
+            if (getDelegate()._knowledgeBaseCache.size()>MAX_KNOWLEDGE_BASE_CACHE){
+                //Remove oldest KB in cache
+                String oldestGuideIdsId = getDelegate()._knowledgeBaseCache.keySet().iterator().next();
+                getDelegate()._knowledgeBaseCache.remove(oldestGuideIdsId);
+                Logger.getLogger(GuideExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: "+guideIdsId);
+            }
+        }
+        return kb;
+    }
 
-    public static KnowledgeBase getKnowledgeBase(Collection<GuideDTO> guideDTOs) 
-	    throws InternalErrorException{
-	if (guideDTOs==null || guideDTOs.isEmpty()){
-	    return null;
-	}
-	String guideStr = getGuideString(guideDTOs);
-	if (getDelegate()._knowledgeBase==null || !guideStr.equals(getDelegate()._lastGuideStr)){
-	    getDelegate()._knowledgeBase = GuideExecutionManager.generateKnowledgeBase(guideDTOs);
-	    getDelegate()._lastGuideStr = guideStr;
-	}
-	return getDelegate()._knowledgeBase;
+    public static void clearCacheWithGuideId(String guideId){
+        Collection<String> guideIdsIdsToBeRemoved = new ArrayList<String>();
+        for (String guideIdsId : getDelegate()._knowledgeBaseCache.keySet()) {
+            if (guideIdsId.contains(guideId)){
+                guideIdsIdsToBeRemoved.add(guideIdsId);
+            }
+        }
+        for (String guideIdsIdToBeRemoved : guideIdsIdsToBeRemoved) {
+            getDelegate()._knowledgeBaseCache.remove(guideIdsIdToBeRemoved);
+        }
+    }
+
+    private static String getGuideIdsId(Collection<GuideDTO> guideDTOs) {
+        List<String> guideIdsIdList = new ArrayList<String>();
+        for (GuideDTO guideDTO : guideDTOs) {
+            guideIdsIdList.add(guideDTO.getIdGuide());
+        }
+        Collections.sort(guideIdsIdList);
+        StringBuffer guideIdsIdSB = new StringBuffer();
+        for (String guideId : guideIdsIdList) {
+            guideIdsIdSB.append(guideId);
+        }
+        return guideIdsIdSB.toString();
     }
 
     public static KnowledgeBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) {
-	ArrayList<KnowledgePackage> knowledgePackages = new ArrayList<KnowledgePackage>();
-	for (GuideDTO guideDTO : guideDTOs) {
-	    if (guideDTO.getCompiledGuide()==null){
-		ExceptionHandler.handle(new GuideNotCompiledException(guideDTO.getIdGuide(), guideDTO.getName()));
-	    };
-	    KnowledgePackage knowledgePackage = 
-		    GuideExecutionManager.getKnowledgePackage(guideDTO.getCompiledGuide());
-	    if (knowledgePackage!=null){
-		knowledgePackages.add(knowledgePackage);
-	    }
-	}
-	final KnowledgeBase knowledgeBase = KnowledgeBaseFactory.newKnowledgeBase();
-	if (!knowledgePackages.isEmpty()){
-	    knowledgeBase.addKnowledgePackages(knowledgePackages);
-	}
-	return knowledgeBase;
+        ArrayList<KnowledgePackage> knowledgePackages = new ArrayList<KnowledgePackage>();
+        for (GuideDTO guideDTO : guideDTOs) {
+            if (guideDTO.getCompiledGuide()==null){
+                Logger.getLogger(GuideExecutionManager.class).warn("Guide '"+guideDTO.getIdGuide()+"' is not compiled.");
+            };
+            KnowledgePackage knowledgePackage =
+                    GuideExecutionManager.getKnowledgePackage(guideDTO.getCompiledGuide());
+            if (knowledgePackage!=null){
+                knowledgePackages.add(knowledgePackage);
+            }
+        }
+        final KnowledgeBase knowledgeBase = KnowledgeBaseFactory.newKnowledgeBase();
+        if (!knowledgePackages.isEmpty()){
+            knowledgeBase.addKnowledgePackages(knowledgePackages);
+        }
+        return knowledgeBase;
     }
 
     public static KnowledgePackage getKnowledgePackage(byte[] guiaCompilada){
-	if (guiaCompilada==null){
-	    return null;
-	}
-	ByteArrayInputStream bais = new ByteArrayInputStream(guiaCompilada);
-	ObjectInputStream objInput = null;
-	KnowledgePackage knowledgePackage = null;
-	try {
-	    objInput = new ObjectInputStream(bais);
-	    knowledgePackage = (KnowledgePackage)objInput.readObject();
-	} catch (Exception e) {
-	    ExceptionHandler.handle(e);
-	    return null;
-	}
-	return knowledgePackage;
+        if (guiaCompilada==null){
+            return null;
+        }
+        ByteArrayInputStream bais = new ByteArrayInputStream(guiaCompilada);
+        ObjectInputStream objInput = null;
+        KnowledgePackage knowledgePackage = null;
+        try {
+            objInput = new ObjectInputStream(bais);
+            knowledgePackage = (KnowledgePackage)objInput.readObject();
+        } catch (Exception e) {
+            ExceptionHandler.handle(e);
+            return null;
+        }
+        return knowledgePackage;
     }
-    
+
     public static String getGuideString(Collection<GuideDTO> guides){
-	StringBuffer guidesStr = new StringBuffer();
-	for (GuideDTO guideDTO : guides) {
-	    guidesStr.append(guideDTO.getGuideSrc());
-	}
-	return guidesStr.toString();
+        StringBuffer guidesStr = new StringBuffer();
+        for (GuideDTO guideDTO : guides) {
+            guidesStr.append(guideDTO.getGuideSrc());
+        }
+        return guidesStr.toString();
     }
-    
+
     public static GuideExecutionManager getDelegate(){
-	if (_instance==null){
-	    _instance = new GuideExecutionManager();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new GuideExecutionManager();
+        }
+        return _instance;
     }
 }
 /*

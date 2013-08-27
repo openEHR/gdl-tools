@@ -22,22 +22,24 @@ import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.view.panels.interfaces.ClosableTabbebPane;
 
 public class ButtonTabComponent extends JPanel {
 
     private static final long serialVersionUID = 3156550658557495889L;
     //private final JTabbedPane pane;
-    private BindingsPanel panel;
+    private ClosableTabbebPane closableTabbebPane;
+    private String _tooltip = null;
 
-    public ButtonTabComponent(BindingsPanel tabPanel) {
+    public ButtonTabComponent(ClosableTabbebPane tabPanel, String closeButtonTooltip) {
 	//unset default FlowLayout' gaps
 	super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+	_tooltip = closeButtonTooltip;
 	if (tabPanel == null) {
 	    throw new NullPointerException("TabbedPane is null");
 	}
-	this.panel = tabPanel;
-	final JTabbedPane pane = panel.getTermsTabPane();
+	this.closableTabbebPane = tabPanel;
+	final JTabbedPane pane = closableTabbebPane.getTabbedPane();
 	setOpaque(false);
 
 	//make JLabel read titles from JTabbedPane
@@ -72,7 +74,7 @@ public class ButtonTabComponent extends JPanel {
 	public TabButton() {
 	    int size = 17;
 	    setPreferredSize(new Dimension(size, size));
-	    setToolTipText(LanguageManager.getMessage("DeleteTerminologyDesc"));
+	    setToolTipText(_tooltip);
 	    //Make the button looks the same for all Laf's
 	    setUI(new BasicButtonUI());
 	    //Make it transparent
@@ -90,8 +92,8 @@ public class ButtonTabComponent extends JPanel {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-	    int index = panel.getTermsTabPane().indexOfTabComponent(ButtonTabComponent.this);
-	    panel.deleteTermTab(index);
+	    int index = closableTabbebPane.getTabbedPane().indexOfTabComponent(ButtonTabComponent.this);
+	    closableTabbebPane.deleteTab(index);
 	}
 
 	//we don't want to update UI for this button

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.openehr.util.ExceptionHandler;
 
 public class ByteUtils {
 

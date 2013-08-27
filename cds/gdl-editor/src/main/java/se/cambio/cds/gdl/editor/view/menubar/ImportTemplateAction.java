@@ -13,8 +13,8 @@ import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
-import se.cambio.cds.openehr.view.util.ImportUtils;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.openehr.view.util.ImportUtils;
 
 public class ImportTemplateAction extends AbstractAction {
 
@@ -25,10 +25,10 @@ public class ImportTemplateAction extends AbstractAction {
 
     public ImportTemplateAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("ImportTemplate"));
+	putValue(NAME, GDLEditorLanguageManager.getMessage("ImportTemplate"));
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("ImportTemplateD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("ImportTemplateD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportTemplateD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportTemplateD"));
 	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 

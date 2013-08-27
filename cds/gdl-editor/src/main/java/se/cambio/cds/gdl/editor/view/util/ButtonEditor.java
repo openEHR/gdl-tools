@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public abstract class ButtonEditor extends DefaultCellEditor {
 
@@ -38,7 +38,7 @@ public abstract class ButtonEditor extends DefaultCellEditor {
 	    button.setBackground(table.getBackground());
 	}
 	if (value==null || ((String)value).trim().isEmpty()){
-	    button.setText(LanguageManager.getMessage("Select"));
+	    button.setText(GDLEditorLanguageManager.getMessage("Select"));
 	}else{
 	    button.setText((String)value);
 	}	

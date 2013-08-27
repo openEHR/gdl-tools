@@ -1,5 +1,7 @@
 package se.cambio.cds.util.exceptions;
 
+import se.cambio.openehr.util.exceptions.ModelException;
+
 public class GuideNotFoundException extends ModelException {
 
     /**

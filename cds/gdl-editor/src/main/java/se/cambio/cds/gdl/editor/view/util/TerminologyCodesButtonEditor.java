@@ -17,9 +17,9 @@ import javax.swing.JTextField;
 import org.openehr.rm.datatypes.text.CodePhrase;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.view.dialog.DialogSelection;
 import se.cambio.cds.gdl.editor.view.panels.TerminologyCodesWithButtonPanel;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
 public class TerminologyCodesButtonEditor extends DefaultCellEditor {
 

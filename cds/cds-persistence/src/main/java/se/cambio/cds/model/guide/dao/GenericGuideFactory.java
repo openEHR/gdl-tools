@@ -1,7 +1,7 @@
 package se.cambio.cds.model.guide.dao;
 
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.misc.ConfigurationParametersManager;
+import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 /**
  * @author iago.corbal
@@ -17,10 +17,10 @@ public class GenericGuideFactory {
 	Class<?> theClass = null;
 	try {
 	    String delegateClassName = 
-		    ConfigurationParametersManager.getParameter(DAO_CLASS_GUIDE);
+		    CDSConfigurationParametersManager.getParameter(DAO_CLASS_GUIDE);
 	    theClass = Class.forName(delegateClassName);
 	} catch (Exception e) {
-	    new InternalErrorException(e);
+	    throw new InternalErrorException(e);
 	}
 	return theClass;
     }

@@ -1,17 +1,5 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import java.awt.BorderLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.Collection;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.listeners.SelectableRuleLineDragMouseListener;
@@ -20,10 +8,17 @@ import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineConta
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 
-public class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.Collection;
+import java.util.List;
+
+public abstract class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -32,7 +27,6 @@ public class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
     private JPanel _selectionPanel = null;
     private GDLEditor _controller = null;
     private JScrollPane jScrollPaneCond;
-    private List<RuleLine> _ruleLines = null;
     private Collection<RuleLine> _selectableRuleLines = null;
     private String _title = null;
     private JPanel mainPanel;
@@ -40,73 +34,74 @@ public class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
     private BaseRuleLineContainerPanel _baseRuleLinePanel;
     private RuleLine _ruleLineCheck = null;
 
-    public RuleLinesPanel(GDLEditor controller, Collection<RuleLine> selectableRuleLines, List<RuleLine> ruleLines, String title){
-	_controller = controller;
-	_selectableRuleLines = selectableRuleLines;
-	_ruleLines = ruleLines;
-	_title = title;
-	init();
+    public RuleLinesPanel(GDLEditor controller, Collection<RuleLine> selectableRuleLines,String title){
+        _controller = controller;
+        _selectableRuleLines = selectableRuleLines;
+        _title = title;
+        init();
     }
 
     private void init(){
-	addComponentListener(new ComponentAdapter() {
-	    public void componentResized(ComponentEvent e) {
-		getMainPanel().setBounds(0,0, getWidth(),getHeight());
-		revalidate();
-		repaint();
-	    }
-	});
-	this.add(getMainPanel(), JLayeredPane.DEFAULT_LAYER);
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                getMainPanel().setBounds(0,0, getWidth(),getHeight());
+                revalidate();
+                repaint();
+            }
+        });
+        this.add(getMainPanel(), JLayeredPane.DEFAULT_LAYER);
     }
 
     public JPanel getMainPanel(){
-	if (mainPanel==null){
-	    mainPanel = new JPanel(new BorderLayout());
-	    mainPanel.add(getRuleLinesJScrollPane(), BorderLayout.CENTER);
-	    mainPanel.add(getToolsPanel(), BorderLayout.EAST);
-	}
-	return mainPanel;
+        if (mainPanel==null){
+            mainPanel = new JPanel(new BorderLayout());
+            mainPanel.add(getRuleLinesJScrollPane(), BorderLayout.CENTER);
+            mainPanel.add(getToolsPanel(), BorderLayout.EAST);
+        }
+        return mainPanel;
     }
 
 
     public JPanel getToolsPanel(){
-	if (toolsPanel==null){
-	    toolsPanel = new JPanel(new BorderLayout());
-	    toolsPanel.add(getSelectionPanel(), BorderLayout.NORTH);
-	}
-	return toolsPanel;
+        if (toolsPanel==null){
+            toolsPanel = new JPanel(new BorderLayout());
+            toolsPanel.add(getSelectionPanel(), BorderLayout.NORTH);
+        }
+        return toolsPanel;
     }
 
     private JPanel getSelectionPanel(){
-	if (_selectionPanel==null){
-	    _selectionPanel = new JPanel(new BorderLayout());
-	    _selectionPanel.setBorder(BorderFactory.createTitledBorder(_title));
-	    JPanel aux = new JPanel();
-	    aux.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-	    aux.setLayout(new BoxLayout(aux, BoxLayout.Y_AXIS));
-	    _selectionPanel.add(aux, BorderLayout.NORTH);
-	    for (RuleLine ruleLine : _selectableRuleLines) {
-		DraggableSelectableRuleLinePanel label = new DraggableSelectableRuleLinePanel(ruleLine);
-		label.addMouseListener(getSelectableRuleLineDragMouseListener());
-		label.addMouseMotionListener(getSelectableRuleLineDragMouseListener());
-		aux.add(label);
-	    }
-	}
-	return _selectionPanel;
+        if (_selectionPanel==null){
+            _selectionPanel = new JPanel(new BorderLayout());
+            _selectionPanel.setBorder(BorderFactory.createTitledBorder(_title));
+            JPanel aux = new JPanel();
+            aux.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            aux.setLayout(new BoxLayout(aux, BoxLayout.Y_AXIS));
+            _selectionPanel.add(aux, BorderLayout.NORTH);
+            for (RuleLine ruleLine : _selectableRuleLines) {
+                DraggableSelectableRuleLinePanel label = new DraggableSelectableRuleLinePanel(ruleLine);
+                label.addMouseListener(getSelectableRuleLineDragMouseListener());
+                label.addMouseMotionListener(getSelectableRuleLineDragMouseListener());
+                aux.add(label);
+            }
+        }
+        return _selectionPanel;
     }
 
     public SelectableRuleLineDragMouseListener getSelectableRuleLineDragMouseListener(){
-	if (selectableRuleLineDragMouseListener==null){ 
-	    selectableRuleLineDragMouseListener =
-		    new SelectableRuleLineDragMouseListener(this);
-	}
-	return selectableRuleLineDragMouseListener;
+        if (selectableRuleLineDragMouseListener==null){
+            selectableRuleLineDragMouseListener =
+                    new SelectableRuleLineDragMouseListener(this);
+        }
+        return selectableRuleLineDragMouseListener;
     }
 
+    protected abstract List<RuleLine> getRuleLines();
+
     public void addRuleLine(RuleLine ruleLine){
-	ruleLine = RuleLineCloner.clone(ruleLine);
-	_ruleLines.add(0, ruleLine);
-	ruleLineAdded(ruleLine);
+        ruleLine = RuleLineCloner.clone(ruleLine);
+        getRuleLines().add(0, ruleLine);
+        ruleLineAdded(ruleLine);
     }
 
     public void ruleLineAdded(RuleLine ruleLine){
@@ -124,53 +119,53 @@ public class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
 	    RuleElementEditor.edit(rlewv);
 	}*/
     }
-    
+
     public void removeRuleLine(RuleLine ruleLine){
-	_ruleLines.remove(ruleLine);
+        getRuleLines().remove(ruleLine);
     }
 
     public JScrollPane getRuleLinesJScrollPane() {
-	if (jScrollPaneCond == null) {
-	    jScrollPaneCond = new JScrollPane();
-	    jScrollPaneCond.setViewportView(getBaseRuleLinePanel());
-	}
-	return jScrollPaneCond;
+        if (jScrollPaneCond == null) {
+            jScrollPaneCond = new JScrollPane();
+            jScrollPaneCond.setViewportView(getBaseRuleLinePanel());
+        }
+        return jScrollPaneCond;
     }
 
     public BaseRuleLineContainerPanel getBaseRuleLinePanel(){
-	if (_baseRuleLinePanel==null){
-	    _baseRuleLinePanel = new BaseRuleLineContainerPanel(this, _ruleLines);
-	    _baseRuleLinePanel.setBorder(BorderFactory.createTitledBorder(_title));
-	}
-	return _baseRuleLinePanel;
+        if (_baseRuleLinePanel==null){
+            _baseRuleLinePanel = new BaseRuleLineContainerPanel(this, getRuleLines());
+            _baseRuleLinePanel.setBorder(BorderFactory.createTitledBorder(_title));
+        }
+        return _baseRuleLinePanel;
     }
 
 
     public void showCompatibility(RuleLine ruleLine){
-	_ruleLineCheck = ruleLine;
-	refresh();
-	_ruleLineCheck = null;
+        _ruleLineCheck = ruleLine;
+        refresh();
+        _ruleLineCheck = null;
     }
 
     public RuleLine getRuleLineCheck(){
-	return _ruleLineCheck;
+        return _ruleLineCheck;
     }
 
     public void refresh(){
-	_baseRuleLinePanel = null;
-	getRuleLinesJScrollPane().setViewportView(getBaseRuleLinePanel());
+        _baseRuleLinePanel = null;
+        getRuleLinesJScrollPane().setViewportView(getBaseRuleLinePanel());
     }
 
     public GDLEditor getController(){
-	return _controller;
+        return _controller;
     }
-    
+
     public String getDescription(RuleLineElementWithValue<?> ruleLineElementWithValue){
-	if (ruleLineElementWithValue!=null){
-	    return ruleLineElementWithValue.getDescription();
-	}else{
-	    return null;
-	}
+        if (ruleLineElementWithValue!=null){
+            return ruleLineElementWithValue.getDescription();
+        }else{
+            return null;
+        }
     }
 }
 /*

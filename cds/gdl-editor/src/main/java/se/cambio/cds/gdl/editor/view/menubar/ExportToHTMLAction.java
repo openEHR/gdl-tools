@@ -12,7 +12,7 @@ import javax.swing.AbstractAction;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.ExportUtils;
 import se.cambio.cds.gdl.model.Guide;
 
@@ -25,10 +25,10 @@ public class ExportToHTMLAction extends AbstractAction {
 
     public ExportToHTMLAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("ExportToHTML")+"...");
+	putValue(NAME, GDLEditorLanguageManager.getMessage("ExportToHTML")+"...");
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("ExportToHTMLD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("ExportToHTMLD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
 	//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 

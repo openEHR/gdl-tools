@@ -4,6 +4,10 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 
 public class CodePhraseConstant extends ConstantExpression {
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	public CodePhraseConstant(CodePhrase code) {
 		super(code.toString());
 		this.codePhrase = code;

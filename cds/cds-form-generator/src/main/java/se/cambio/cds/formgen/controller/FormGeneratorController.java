@@ -4,11 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import se.cambio.cds.controller.guide.ElementInstanceCollection;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.formgen.view.panels.CDSFormPanel;
 import se.cambio.cds.gdl.model.Guide;
@@ -17,22 +17,25 @@ import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.GuideImporter;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.model.facade.cds.delegate.CDSFacadeDelegate;
-import se.cambio.cds.model.facade.cds.delegate.CDSFacadeDelegateFactory;
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
+import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegate;
+import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegateFactory;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
+import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.UserConfigurationManager;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.handlers.ExceptionHandler;
+import se.cambio.cds.util.ElementInstanceCollection;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class FormGeneratorController {
 
     private GuideDTO _guideDTO = null;
-    private CDSFacadeDelegate cdsfd;
+    private Guide _guide = null;
+    private GuideManager _guideManager = null;
+    private CDSExecutionFacadeDelegate cdsfd;
     private CDSFormPanel _cdsFormPanel = null;
     private FormGeneratorViewer _viewer = null;
     private Map<String, Map<String, ReadableGuide>> _readableGuideMap;
@@ -49,14 +52,8 @@ public class FormGeneratorController {
 
     public FormGeneratorController(
 	    GuideDTO guideDTO, 
-	    GuideManager guideManager,
 	    String lang){
 	_guideDTO = guideDTO;
-	try{
-	    getCDSFacadeDelegate().setGuideManager(guideManager);
-	} catch (InternalErrorException e) {
-	    ExceptionHandler.handle(e);
-	} 
 	_lang = lang;
 	init();
     }
@@ -104,13 +101,20 @@ public class FormGeneratorController {
     public TermDefinition getTermDefinition(){
 	TermDefinition termDefinition = getGuide().getOntology().getTermDefinitions().get(getLanguage());
 	if (termDefinition==null){
-	    termDefinition = getGuide().getOntology().getTermDefinitions().get(UserConfigurationManager.DEFAULT_LANGUAGE);
+	    termDefinition = getGuide().getOntology().getTermDefinitions().get(getGuide().getLanguage().getOriginalLanguage().getCodeString());
 	}
 	return termDefinition;
     }
 
     public Guide getGuide(){
-	return getGuideManager().getGuide(getGuideDTO().getIdGuide());
+	if(_guide==null){
+	    try {
+		_guide = getGuideManager().getGuide(getGuideDTO().getIdGuide());
+	    } catch (Exception e) {
+		ExceptionHandler.handle(e);
+	    }
+	}
+	return _guide;
     }
 
     public CDSFormPanel getCDSFormPanel(){
@@ -122,12 +126,10 @@ public class FormGeneratorController {
 
 
     public GuideManager getGuideManager(){
-	try{
-	    return getCDSFacadeDelegate().getGuideManager();
-	} catch (InternalErrorException e) {
-	    ExceptionHandler.handle(e);
-	    return null;
+	if (_guideManager==null){
+	    _guideManager = new GuideManager(Collections.singletonList(getGuideDTO()));
 	}
+	return _guideManager;
     }
 
     public Calendar getCurrentDate(){
@@ -236,20 +238,16 @@ public class FormGeneratorController {
 	return _readableGuideMap;
     }
 
-    public CDSFacadeDelegate getCDSFacadeDelegate(){
+    public CDSExecutionFacadeDelegate getCDSFacadeDelegate() throws InternalErrorException{
 	if (cdsfd==null){
-	    try {
-		cdsfd = CDSFacadeDelegateFactory.getDelegate();
-	    } catch (InternalErrorException e) {
-		ExceptionHandler.handle(e);
-	    } 
+	    cdsfd = CDSExecutionFacadeDelegateFactory.getDelegate();
 	}
 	return cdsfd;
     }
 
     public String getLanguage(){
 	if (_lang==null){
-	    _lang = OpenEHRLanguageManager.getLanguage();
+	    _lang = UserConfigurationManager.getLanguage();
 	}
 	return _lang;
     }

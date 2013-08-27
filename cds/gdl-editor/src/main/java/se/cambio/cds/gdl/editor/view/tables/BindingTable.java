@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.renderers.GTCodeButtonRenderer;
 import se.cambio.cds.gdl.editor.view.renderers.TerminologyCodesButtonRenderer;
 import se.cambio.cds.gdl.editor.view.util.GTCodeButtonEditor;
@@ -29,9 +29,9 @@ public class BindingTable extends JTable {
 	_bindings = bindings;
 	this.setModel(new BindingTableModel());
 	Vector<String> columnIdentifiers = new Vector<String>();
-	columnIdentifiers.add(LanguageManager.getMessage("LocalTerms"));
-	columnIdentifiers.add(LanguageManager.getMessage("Terminology_Codes"));
-	columnIdentifiers.add(LanguageManager.getMessage("Uri"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("LocalTerms"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Terminology_Codes"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Uri"));
 	getBindingTableModel().setColumnIdentifiers(columnIdentifiers);
 	this.getColumnModel().getColumn(0).setPreferredWidth(200);
 	this.getColumnModel().getColumn(1).setPreferredWidth(400);

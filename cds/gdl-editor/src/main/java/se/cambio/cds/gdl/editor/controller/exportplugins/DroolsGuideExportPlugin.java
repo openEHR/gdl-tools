@@ -4,7 +4,7 @@ import se.cambio.cds.gdl.converters.drools.CompilationErrorException;
 import se.cambio.cds.gdl.converters.drools.CompilationManager;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class DroolsGuideExportPlugin implements GuideExportPlugin{
 
@@ -18,7 +18,7 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin{
     }
 
     @Override
-    public String getExportedGuide(Guide guide) {
+    public String getExportedGuide(Guide guide) throws InternalErrorException {
 	return new GDLDroolsConverter(guide).convertToDrools();
     }
 

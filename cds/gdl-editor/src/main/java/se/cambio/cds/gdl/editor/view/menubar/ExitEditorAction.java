@@ -13,7 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public class ExitEditorAction extends AbstractAction {
 
@@ -24,10 +24,10 @@ public class ExitEditorAction extends AbstractAction {
 
     public ExitEditorAction(){
 	super();
-	putValue(NAME, LanguageManager.getMessage("ExitEditor"));
+	putValue(NAME, GDLEditorLanguageManager.getMessage("ExitEditor"));
 	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("ExitEditorD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("ExitEditorD"));
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
 	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
     }
 

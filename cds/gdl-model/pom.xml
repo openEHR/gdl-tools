@@ -4,14 +4,10 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.91-SNAPSHOT</version>
+		<version>0.92</version>
 	</parent>
 	<artifactId>gdl-model</artifactId>
-	<name>gdl-model</name>
-	<url>http://maven.apache.org</url>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	<name>GDL model</name>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -22,7 +18,7 @@
 		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>openehr-rm-core</artifactId>
-			<version>1.0.3-SNAPSHOT</version>
+			<version>${openehr-java-libs-version}</version>
 		</dependency>
 	</dependencies>
 </project>

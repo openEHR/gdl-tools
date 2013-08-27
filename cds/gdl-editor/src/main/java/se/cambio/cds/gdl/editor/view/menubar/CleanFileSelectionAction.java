@@ -13,7 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 /**
  * @author icorram
@@ -33,10 +33,10 @@ public class CleanFileSelectionAction extends AbstractAction{
 	public CleanFileSelectionAction(JFileChooser fileChooser, JTextField textField){ 
 		_fileChooser = fileChooser;
 		_textField = textField;
-		putValue(NAME, LanguageManager.getMessage("CleanSelectFolder"));
+		putValue(NAME, GDLEditorLanguageManager.getMessage("CleanSelectFolder"));
 		putValue(SMALL_ICON, GDLEditorImageUtil.CLEAR_ICON);
-		putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("CleanSelectFolderSD"));
-		putValue(LONG_DESCRIPTION, LanguageManager.getMessage("CleanSelectFolderD"));
+		putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CleanSelectFolderSD"));
+		putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CleanSelectFolderD"));
 		this.setEnabled(true);
 	} 
 

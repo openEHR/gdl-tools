@@ -1,9 +1,14 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class GuideOntology {
+public class GuideOntology implements Serializable{
 	
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	private Map<String, TermDefinition> termDefinitions;
 	private Map<String, TermBinding> termBindings;
 	/**

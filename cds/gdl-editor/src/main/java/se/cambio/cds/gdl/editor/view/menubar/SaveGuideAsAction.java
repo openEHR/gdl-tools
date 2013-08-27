@@ -6,30 +6,28 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
-
-import se.cambio.cds.gdl.editor.controller.sw.SaveGuideOnFileRSW;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
 
 
 
 public class SaveGuideAsAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3561842193285119707L;
 
     public SaveGuideAsAction(){
-	super();
-	putValue(NAME, LanguageManager.getMessage("SaveGuideAs")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, LanguageManager.getMessage("SaveGuideAsSD"));
-	putValue(LONG_DESCRIPTION, LanguageManager.getMessage("SaveGuideAsD"));
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAs")+"...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
@@ -37,7 +35,7 @@ public class SaveGuideAsAction extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	new SaveGuideOnFileRSW(null).execute();
+        EditorManager.getActiveGDLEditor().saveGuideAs();
     }
 
 

@@ -1,20 +1,14 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.*;
 
 /**
  * @author iago.corbal
@@ -22,94 +16,97 @@ import se.cambio.cds.util.exceptions.InternalErrorException;
 public class SaveGuideOnFileRSW extends CDSSwingWorker {
 
     private File _guideFile = null;
-    private GDLEditor _controller = null; 
+    private GDLEditor _controller = null;
     private String _guideStr = null;
 
     public SaveGuideOnFileRSW(File guideFile) {
-	super();
-	_guideFile = guideFile;
-	_controller = EditorManager.getActiveGDLEditor();
-	if (_guideFile==null){
-	    JFileChooser fileChooser = new JFileChooser(EditorManager.getLastFolderLoaded());
-	    FileNameExtensionFilter filter = 
-		    new FileNameExtensionFilter(
-			    LanguageManager.getMessage("Guide"),new String[]{"gdl"});
-	    fileChooser.setDialogTitle(LanguageManager.getMessage("SaveGuide"));
-	    fileChooser.setFileFilter(filter);
-
-	    File file = new File("guide.gdl");
-	    fileChooser.setSelectedFile(file);
-	    int result = fileChooser.showSaveDialog(EditorManager.getActiveEditorWindow());
-	    _guideFile = fileChooser.getSelectedFile();
-	    if (result == JFileChooser.CANCEL_OPTION){
-		_guideFile = null;
-	    }else{
-		//All files must end with .gdl
-		String absolutePath = _guideFile.getAbsolutePath();
-		if (!absolutePath.toLowerCase().endsWith(".gdl")){
-		    _guideFile = new File(absolutePath+".gdl");
-		}
-		//Set guide Id
-		String guideId = getGuideIdFromFile(_guideFile);
-		_controller.setIdGuide(guideId);
-	    }
-	}
-	if (_guideFile!=null){
-	    //Check guide Id
-	    String guideId = getGuideIdFromFile(_guideFile);
-	    if (!guideId.equals(_controller.getIdGuide())){
-		int result = 
-			JOptionPane.showConfirmDialog(
-				EditorManager.getActiveEditorWindow(), 
-				LanguageManager.getMessage("ChangeOfGuideIdFound", new String[]{_controller.getIdGuide(), guideId}));
-		if (result==JOptionPane.CANCEL_OPTION){
-		    _guideFile = null;
-		}else{
-		    if (result==JOptionPane.YES_OPTION){
-			_controller.setIdGuide(guideId);
-		    }
-		}
-	    }
-	    _guideStr = _controller.serializeCurrentGuide();
-	}
+        super();
+        _guideFile = guideFile;
+        _controller = EditorManager.getActiveGDLEditor();
+        if (_guideFile==null){
+            JFileChooser fileChooser = new JFileChooser(EditorManager.getLastFolderLoaded());
+            FileNameExtensionFilter filter =
+                    new FileNameExtensionFilter(
+                            GDLEditorLanguageManager.getMessage("Guide"),new String[]{"gdl"});
+            fileChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SaveGuide"));
+            fileChooser.setFileFilter(filter);
+            String guideId = _controller.getIdGuide();
+            if (guideId==null){
+                GDLEditorLanguageManager.getMessage("Guide");
+            }
+            File file = new File(guideId+".gdl");
+            fileChooser.setSelectedFile(file);
+            int result = fileChooser.showSaveDialog(EditorManager.getActiveEditorWindow());
+            _guideFile = fileChooser.getSelectedFile();
+            if (result == JFileChooser.CANCEL_OPTION){
+                _guideFile = null;
+            }else{
+                //All files must end with .gdl
+                String absolutePath = _guideFile.getAbsolutePath();
+                if (!absolutePath.toLowerCase().endsWith(".gdl")){
+                    _guideFile = new File(absolutePath+".gdl");
+                }
+                //Set guide Id
+                guideId = getGuideIdFromFile(_guideFile);
+                _controller.setIdGuide(guideId);
+            }
+        }
+        if (_guideFile!=null){
+            //Check guide Id
+            String guideId = getGuideIdFromFile(_guideFile);
+            if (!guideId.equals(_controller.getIdGuide())){
+                int result =
+                        JOptionPane.showConfirmDialog(
+                                EditorManager.getActiveEditorWindow(),
+                                GDLEditorLanguageManager.getMessage("ChangeOfGuideIdFound", new String[]{_controller.getIdGuide(), guideId}));
+                if (result==JOptionPane.CANCEL_OPTION){
+                    _guideFile = null;
+                }else{
+                    if (result==JOptionPane.YES_OPTION){
+                        _controller.setIdGuide(guideId);
+                    }
+                }
+            }
+            _guideStr = _controller.serializeCurrentGuide();
+        }
     }
 
     protected void executeCDSSW()  throws InternalErrorException{
-	if (_guideFile != null && _guideStr!=null && !_guideStr.isEmpty()){
-	    try {
-		FileOutputStream fos = new FileOutputStream(_guideFile);
-		OutputStreamWriter output = new OutputStreamWriter(fos, "UTF-8");
-		//FileWriter always assumes default encoding is OK!
-		output.write(_guideStr);
-		output.close();
-	    } catch (FileNotFoundException e) {
-		new InternalErrorException(e);
-	    } catch (IOException e) {
-		new InternalErrorException(e);
-	    }
-	}else{
-	    this.cancel(true);
-	}
+        if (_guideFile != null && _guideStr!=null && !_guideStr.isEmpty()){
+            try {
+                FileOutputStream fos = new FileOutputStream(_guideFile);
+                OutputStreamWriter output = new OutputStreamWriter(fos, "UTF-8");
+                //FileWriter always assumes default encoding is OK!
+                output.write(_guideStr);
+                output.close();
+            } catch (FileNotFoundException e) {
+                new InternalErrorException(e);
+            } catch (IOException e) {
+                new InternalErrorException(e);
+            }
+        }else{
+            this.cancel(true);
+        }
     }
 
     public File getFile(){
-	return _guideFile;
+        return _guideFile;
     }
 
     private static String getGuideIdFromFile(File guideFile){
-	String guideId = guideFile.getName();
-	if (guideId.toLowerCase().endsWith(".gdl")){
-	    guideId = guideId.substring(0, guideId.length()-4);
-	}
-	return guideId;
+        String guideId = guideFile.getName();
+        if (guideId.toLowerCase().endsWith(".gdl")){
+            guideId = guideId.substring(0, guideId.length()-4);
+        }
+        return guideId;
     }
 
     protected void done() {
-	if (_guideFile!=null && _guideStr!=null && !_guideStr.isEmpty()){
-	    EditorManager.getActiveGDLEditor().updateOriginal();
-	    EditorManager.setLastFileLoaded(_guideFile);
-	    EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
-	}
+        if (_guideFile!=null && _guideStr!=null && !_guideStr.isEmpty()){
+            EditorManager.getActiveGDLEditor().updateOriginal();
+            EditorManager.setLastFileLoaded(_guideFile);
+            EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
+        }
     }
 }
 /*

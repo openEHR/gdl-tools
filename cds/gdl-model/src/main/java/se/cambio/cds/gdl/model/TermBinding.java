@@ -1,9 +1,14 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class TermBinding {
+public class TermBinding implements Serializable{
 	
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	private String id;
 	private Map<String, Binding> bindings;
 

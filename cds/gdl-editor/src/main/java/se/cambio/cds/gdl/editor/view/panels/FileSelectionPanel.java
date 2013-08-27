@@ -24,9 +24,9 @@ public class FileSelectionPanel extends JPanel{
     private static final long serialVersionUID = 8614448310448465673L;
     private JPanel jPanel;
     private JFileChooser _fileChooser = null;
-    private JTextField nombreFicheroJTextField = null;
-    private JButton seleccionarFicheroButton = null;
-    private JButton limpiarSeleccionButton = null;
+    private JTextField fileNameJTextField = null;
+    private JButton selectFileButton = null;
+    private JButton cleanSelectionButton = null;
 
     public FileSelectionPanel(JFileChooser fileChooser) {
 	super();
@@ -49,10 +49,10 @@ public class FileSelectionPanel extends JPanel{
 	    gbc.weightx = 1.0;
 	    gbc.insets = new Insets(5,5,5,5);
 	    gbc.fill = java.awt.GridBagConstraints.BOTH;
-	    jPanel.add(getNombreFicheroJTextField(),gbc);
+	    jPanel.add(getFileNameJTextField(),gbc);
 	    gbc.gridx++;
 	    gbc.weightx = 0;
-	    jPanel.add(getSeleccionarFicheroButton(),gbc);
+	    jPanel.add(getSelectFileButton(),gbc);
 	    gbc.gridx++;
 	    gbc.weightx = 0;
 	    jPanel.add(getLimpiarSeleccionButton(),gbc);
@@ -60,33 +60,31 @@ public class FileSelectionPanel extends JPanel{
 	return jPanel;
     }
 
-    public JTextField getNombreFicheroJTextField(){
-	if (nombreFicheroJTextField==null){
-	    nombreFicheroJTextField = new JTextField();
+    public JTextField getFileNameJTextField(){
+	if (fileNameJTextField==null){
+	    fileNameJTextField = new JTextField();
 	    if (_fileChooser.getSelectedFile()!=null){
 		String path = getRelativePath(_fileChooser.getSelectedFile().getAbsolutePath());
-		nombreFicheroJTextField.setText(path);
+		fileNameJTextField.setText(path);
 	    }
-	    //nombreFicheroJTextField.setEnabled(false);
-	    //nombreFicheroJTextField.setEditable(false);
 	}
-	return nombreFicheroJTextField;
+	return fileNameJTextField;
     }
 
-    private JButton getSeleccionarFicheroButton(){
-	if (seleccionarFicheroButton==null){
-	    seleccionarFicheroButton = new JButton(new FileSelectionAction(_fileChooser, getNombreFicheroJTextField()));
-	    seleccionarFicheroButton.setText("");
+    public JButton getSelectFileButton(){
+	if (selectFileButton==null){
+	    selectFileButton = new JButton(new FileSelectionAction(_fileChooser, getFileNameJTextField()));
+	    selectFileButton.setText("");
 	}
-	return seleccionarFicheroButton;
+	return selectFileButton;
     }
 
-    private JButton getLimpiarSeleccionButton(){
-	if (limpiarSeleccionButton==null){
-	    limpiarSeleccionButton = new JButton(new CleanFileSelectionAction(_fileChooser, getNombreFicheroJTextField()));
-	    limpiarSeleccionButton.setText("");
+    public JButton getLimpiarSeleccionButton(){
+	if (cleanSelectionButton==null){
+	    cleanSelectionButton = new JButton(new CleanFileSelectionAction(_fileChooser, getFileNameJTextField()));
+	    cleanSelectionButton.setText("");
 	}
-	return limpiarSeleccionButton;
+	return cleanSelectionButton;
     }
 
     private String getRelativePath(String path){

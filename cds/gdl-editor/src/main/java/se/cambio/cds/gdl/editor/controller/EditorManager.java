@@ -7,7 +7,8 @@ import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.view.dialog.DialogGDLEditor;
 import se.cambio.cds.gdl.editor.view.frame.GDLEditorFrame;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
-import se.cambio.cds.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class EditorManager {
     private static EditorManager _instance = null;
@@ -85,6 +86,9 @@ public class EditorManager {
     }
 
     public static File getLastFolderLoaded() {
+	if (getDelegate()._lastFolderLoaded==null){
+	    getDelegate()._lastFolderLoaded = UserConfigurationManager.getGuidesFolder();
+	}
 	return getDelegate()._lastFolderLoaded;
     }
 

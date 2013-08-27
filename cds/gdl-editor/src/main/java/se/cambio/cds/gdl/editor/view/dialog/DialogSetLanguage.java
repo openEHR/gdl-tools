@@ -11,11 +11,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.Languages;
 import se.cambio.cds.gdl.editor.view.renderers.LanguageRenderer;
-import se.cambio.cds.openehr.view.dialogs.DialogEditor;
-import se.cambio.cds.util.UserConfigurationManager;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.view.dialogs.DialogEditor;
 /**
  * @author icorram
  *
@@ -35,7 +35,7 @@ public class DialogSetLanguage extends DialogEditor {
      */
     public DialogSetLanguage() {
 	super(EditorManager.getActiveEditorWindow(),
-		LanguageManager.getMessage("SetEditorLanguage"),
+		GDLEditorLanguageManager.getMessage("SetEditorLanguage"),
 		new Dimension(250, 110),true);
 	initialize();
     }
@@ -49,7 +49,7 @@ public class DialogSetLanguage extends DialogEditor {
 	getJPanel().add(panelAux, BorderLayout.NORTH);
 	
 	JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	panelAux1.add(new JLabel(LanguageManager.getMessage("SetEditorLanguage")+":"));
+	panelAux1.add(new JLabel(GDLEditorLanguageManager.getMessage("SetEditorLanguage")+":"));
 	panelAux1.add(getLanguageSelectorComboBox());
 	panelAux.add(panelAux1, BorderLayout.NORTH);
 	JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -76,7 +76,7 @@ public class DialogSetLanguage extends DialogEditor {
 	String language = (String)getLanguageSelectorComboBox().getSelectedItem();
 	UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.LANGUAGE, language);
 	UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.COUNTRY, language.toUpperCase());
-	JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), LanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
+	JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
 	return UserConfigurationManager.saveConfig();
     }
 } 

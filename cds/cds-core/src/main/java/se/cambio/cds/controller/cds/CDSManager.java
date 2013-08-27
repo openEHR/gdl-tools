@@ -1,45 +1,96 @@
 package se.cambio.cds.controller.cds;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
-import se.cambio.cds.controller.guide.ElementInstanceCollection;
-import se.cambio.cds.controller.guide.GeneratedArchetypeReference;
-import se.cambio.cds.controller.guide.GeneratedElementInstanceCollection;
+import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.model.facade.ehr.delegate.EHRFacadeDelegateFactory;
-import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.ElementInstance;
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegate;
 import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegateFactory;
-import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.exceptions.InternalErrorException;
-import se.cambio.cds.util.exceptions.PatientNotFoundException;
+import se.cambio.cds.util.ElementInstanceCollection;
+import se.cambio.cds.util.GeneratedElementInstanceCollection;
+import se.cambio.cds.util.PredicateGeneratedElementInstance;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 public class CDSManager {
 
     public static Collection<ElementInstance> getElementInstances(
-	    String idPatient, 
-	    ElementInstanceCollection elementInstanceCollection, 
-	    Collection<GuideDTO> guideDTOs, 
+	    String ehrId, 
+	    Collection<String> guideIds,
+	    Collection<ArchetypeReference> ehrData, 
 	    GuideManager guideManager) 
 		    throws PatientNotFoundException, InternalErrorException{
 
+	ElementInstanceCollection eic = new ElementInstanceCollection();
+	if (ehrData!=null){
+	    eic.addAll(ehrData, guideManager);
+	}
+
+	GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
 
 	//Search for EHR elements
 	//Query EHR for elements
-	if (idPatient!=null){
-	    GeneratedElementInstanceCollection ehrGeneratedElementInstances = new GeneratedElementInstanceCollection();
-	    //TODO Should not be the complete collection but only those collections on the guideDTOs passed
-	    ElementInstanceCollection completeEIC = guideManager.getCompleteElementInstanceCollection();
-	    ehrGeneratedElementInstances.addAll(completeEIC.getAllElementInstancesByDomain(Domains.EHR_ID));
-	    ehrGeneratedElementInstances.addAll(completeEIC.getAllElementInstancesByDomain(ElementInstanceCollection.EMPTY_CODE));
-	    elementInstanceCollection = new ElementInstanceCollection();
-	    elementInstanceCollection.addAll(EHRFacadeDelegateFactory.getDelegate().queryEHRElements(idPatient, ehrGeneratedElementInstances));
+	if (ehrId!=null){
+	    Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
+	    eic.addAll(CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(ehrId, ars));
 	}
 
+	return getElementInstances(eic, completeEIC, guideManager);
+    }
+
+    public static Map<String,Collection<ElementInstance>> getElementInstancesForPopulation(
+	    Collection<String> ehrIds, 
+	    Collection<String> guideIds,
+	    Collection<ArchetypeReference> ehrData, 
+	    GuideManager guideManager) throws PatientNotFoundException, InternalErrorException{
+	GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
+	Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
+	Map<String,Collection<ElementInstance>> ehrMap =
+		CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(ehrIds, ars);
+	Map<String,Collection<ElementInstance>> cdsEIMap = new HashMap<String, Collection<ElementInstance>>();
+	for (String ehrId : ehrIds) {
+	    ElementInstanceCollection eic = new ElementInstanceCollection();
+	    //TODO If the data existed in ehrData, it should not query for it again to EHR
+	    if (!ars.isEmpty()){
+		Collection<ElementInstance> eis = ehrMap.get(ehrId);
+		if (eis!=null){
+		    eic.addAll(eis);
+		}
+	    }
+	    cdsEIMap.put(ehrId, getElementInstances(eic, completeEIC, guideManager));
+	}
+	return cdsEIMap;
+    }
+
+
+    public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection eic){
+	Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+	ars.addAll(eic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
+	ars.addAll(eic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
+	Map<String, ArchetypeReference> resultARsMap = new HashMap<String, ArchetypeReference>();
+	//TODO Predicates, element selection
+	for (ArchetypeReference ar : ars) {
+	    ArchetypeReference preAR = resultARsMap.get(ar.getIdArchetype());
+	    if (preAR==null || preAR.getAggregationFunction()!=null){
+		resultARsMap.put(ar.getIdArchetype(), ar);
+	    }
+	}
+	return resultARsMap.values();
+    }
+
+    private static Collection<ElementInstance> getElementInstances(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager) 
+	    throws InternalErrorException{
 	KBFacadeDelegate kbfd = KBFacadeDelegateFactory.getDelegate();
 
 	//Search for CDS templates (not looking into 'ANY' Domain)
@@ -54,25 +105,39 @@ public class CDSManager {
 
 	//Query KB for CDS elements
 	if (!idTemplates.isEmpty()){
-	    elementInstanceCollection.addAll(kbfd.getKBElementsByIdTemplate(idTemplates));
+	    eic.addAll(kbfd.getKBElementsByIdTemplate(idTemplates));
 	}
 
 	//Check for missing elements
-	checkForMissingElements(elementInstanceCollection, guideManager);
-	return elementInstanceCollection.getAllElementInstances();
+	checkForMissingElements(eic, completeEIC, guideManager);
+	return eic.getAllElementInstances();
     }
 
     public static void checkForMissingElements(
 	    ElementInstanceCollection elementInstanceCollection, 
+	    ElementInstanceCollection completeEIC, 
 	    GuideManager guideManager){
 	//Check for guide elements, if not present, create archetype reference
-	for (ArchetypeReference archetypeReference : guideManager.getCompleteElementInstanceCollection().getAllArchetypeReferences()) {
-	    GeneratedArchetypeReference generatedArchetypeReference = (GeneratedArchetypeReference)archetypeReference;
-	    boolean matches = elementInstanceCollection.matches(generatedArchetypeReference, guideManager);
+	for (ArchetypeReference archetypeReference : completeEIC.getAllArchetypeReferences()) {
+	    GeneratedArchetypeReference gar = (GeneratedArchetypeReference)archetypeReference;
+	    Guide referencedGuide = getReferencedGuideInPredicate(gar, guideManager);
+	    boolean matches = elementInstanceCollection.matches(gar, referencedGuide);
 	    if (!matches){
 		elementInstanceCollection.add(archetypeReference, guideManager);
 	    }
 	}
+    }
+
+    private static Guide getReferencedGuideInPredicate(GeneratedArchetypeReference gar, GuideManager gm){
+	Iterator<ElementInstance> i = gar.getElementInstancesMap().values().iterator();
+	while(i.hasNext()){
+	    ElementInstance ei = i.next();
+	    if (ei instanceof PredicateGeneratedElementInstance){
+		String idGuide = ((PredicateGeneratedElementInstance)ei).getGuideId();
+		return gm.getGuide(idGuide);
+	    }
+	}
+	return null;
     }
 }
 /*

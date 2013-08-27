@@ -3,18 +3,22 @@
  */
 package se.cambio.cds.gdl.editor.view.labels;
 
-import java.awt.Color;
-import java.awt.Cursor;
+import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
+import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.swing.JLabel;
-
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 
 public class JLinkRuleElementLabel extends JLabel implements MouseListener{
 
@@ -38,134 +42,147 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener{
     private static final Color LINK_COLOR_COMMENTED = Color.GRAY;
 
     public JLinkRuleElementLabel(RuleLineElementWithValue<?> ruleLineElementWithValue){
-	_ruleLineElementWithValue = ruleLineElementWithValue;
-	linkColorVarSet = LINK_COLOR_VARSET;
-	linkColorVarUnSet = LINK_COLOR_VARUNSET;
-	hoverColor = new Color(128, 0, 128);
-	pressColor = Color.BLUE;
-	listeners = new ArrayList<ActionListener>();
-	refresh();
-	addMouseListener(this);
+        _ruleLineElementWithValue = ruleLineElementWithValue;
+        linkColorVarSet = LINK_COLOR_VARSET;
+        linkColorVarUnSet = LINK_COLOR_VARUNSET;
+        hoverColor = new Color(128, 0, 128);
+        pressColor = Color.BLUE;
+        listeners = new ArrayList<ActionListener>();
+        refresh();
+        addMouseListener(this);
     }
 
     public void setCommented(boolean commented){
-	if (commented){
-	    linkColorVarSet = LINK_COLOR_COMMENTED;
-	    linkColorVarUnSet = LINK_COLOR_COMMENTED;
-	}else{
-	    linkColorVarSet = LINK_COLOR_VARSET;
-	    linkColorVarUnSet = LINK_COLOR_VARUNSET;
-	}
+        if (commented){
+            linkColorVarSet = LINK_COLOR_COMMENTED;
+            linkColorVarUnSet = LINK_COLOR_COMMENTED;
+        }else{
+            linkColorVarSet = LINK_COLOR_VARSET;
+            linkColorVarUnSet = LINK_COLOR_VARUNSET;
+        }
     }
 
 
     public void addActionListener(ActionListener listener){
-	listeners.add(listener);
+        listeners.add(listener);
     }
 
     public void removeActionListener(ActionListener listener){
-	listeners.remove(listener);
+        listeners.remove(listener);
     }
 
     public RuleLineElementWithValue<?> getRuleLineElementWithValue(){
-	return _ruleLineElementWithValue;
+        return _ruleLineElementWithValue;
     }
 
     public void setRuleLineElementWithValue(RuleLineElementWithValue<?> ruleLineElementWithValue){
-	_ruleLineElementWithValue = ruleLineElementWithValue;
+        _ruleLineElementWithValue = ruleLineElementWithValue;
     }
 
     private void mouseClickedAction(String actionCommand){
-	ActionEvent event = new ActionEvent(this, 0, actionCommand);
-	ActionListener listener;
-	for(Iterator<ActionListener> i$ = listeners.iterator(); i$.hasNext(); listener.actionPerformed(event))
-	    listener = (ActionListener)i$.next();
+        ActionEvent event = new ActionEvent(this, 0, actionCommand);
+        ActionListener listener;
+        for(Iterator<ActionListener> i$ = listeners.iterator(); i$.hasNext(); listener.actionPerformed(event))
+            listener = (ActionListener)i$.next();
     }
 
     public void setLinkVarSetColor(Color color){
-	linkColorVarSet = color;
-	refresh();
+        linkColorVarSet = color;
+        refresh();
     }
 
     public Color getLinkVarSetColor(){
-	return linkColorVarSet;
+        return linkColorVarSet;
     }
 
     public void setLinkVarUnSetColor(Color color){
-	linkColorVarUnSet = color;
-	refresh();
+        linkColorVarUnSet = color;
+        refresh();
     }
 
     public Color getLinkVarUnSetColor(){
-	return linkColorVarUnSet;
+        return linkColorVarUnSet;
     }
 
     public void setHoverColor(Color color){
-	hoverColor = color;
+        hoverColor = color;
     }
 
     public Color getHoverColor(){
-	return hoverColor;
+        return hoverColor;
     }
 
     public void setPressColor(Color color){
-	pressColor = color;
+        pressColor = color;
     }
 
     public Color getPressColor(){
-	return pressColor;
+        return pressColor;
     }
 
     public void setText(String text){
-	if(text != null && text.length() > 0){
-	    super.setText("<html><u>"+text+"</u></html>");
-	}else{
-	    super.setText("");
-	}
+        if(text != null && text.length() > 0){
+            super.setText("<html><u>"+text+"</u></html>");
+        }else{
+            super.setText("");
+        }
     }
 
     public void mouseClicked(MouseEvent e){
-	if(super.isEnabled()){
-	    if (e.getButton()==MouseEvent.BUTTON1){
-		mouseClickedAction(ACTION_LEFT_CLICK);
-	    }else if (e.getButton()==MouseEvent.BUTTON3){
-		mouseClickedAction(ACTION_RIGHT_CLICK);
-	    }
-	}
+        if(super.isEnabled()){
+            if (e.getButton()==MouseEvent.BUTTON1){
+                mouseClickedAction(ACTION_LEFT_CLICK);
+            }else if (e.getButton()==MouseEvent.BUTTON3){
+                mouseClickedAction(ACTION_RIGHT_CLICK);
+            }
+        }
     }
 
     public void mousePressed(MouseEvent e){
-	if(super.isEnabled()){
-	    setForeground(pressColor);
-	}
+        if(super.isEnabled()){
+            setForeground(pressColor);
+        }
     }
 
     public void mouseReleased(MouseEvent e){
-	if(super.isEnabled()){
-	    setForeground(hoverColor);
-	}
+        if(super.isEnabled()){
+            setForeground(hoverColor);
+        }
     }
 
     public void mouseEntered(MouseEvent e){
-	if(super.isEnabled()){
-	    setForeground(hoverColor);
-	    setCursor(Cursor.getPredefinedCursor(12));
-	}
+        if(super.isEnabled()){
+            setForeground(hoverColor);
+            setCursor(Cursor.getPredefinedCursor(12));
+        }
     }
 
     public void mouseExited(MouseEvent e){
-	refresh();
-	setCursor(Cursor.getPredefinedCursor(0));
+        refresh();
+        setCursor(Cursor.getPredefinedCursor(0));
     }
 
     public void refresh(){
-	String text = "<HTML>"+_ruleLineElementWithValue.toString()+"</HTML>";
-	setText(text);
-	if (_ruleLineElementWithValue.getValue()!=null){
-	    setForeground(linkColorVarSet);
-	}else{
-	    setForeground(linkColorVarUnSet);
-	}
+        String text = _ruleLineElementWithValue.toString();
+        setText(text);
+        if (_ruleLineElementWithValue.getValue() instanceof ArchetypeReference){
+            String domainId = ((ArchetypeReference)_ruleLineElementWithValue.getValue()).getIdDomain();
+            setIcon(DomainsUI.getIcon(domainId));
+        }else if (_ruleLineElementWithValue.getValue() instanceof ArchetypeElementRuleLineElement){
+            String domainId = ((ArchetypeElementRuleLineElement)_ruleLineElementWithValue.getValue()).getDomainId();
+            setIcon(DomainsUI.getIcon(domainId));
+        }else if (_ruleLineElementWithValue.getValue() instanceof GTCodeRuleLineElement){
+            RuleLine parentRuleLine = ((GTCodeRuleLineElement)_ruleLineElementWithValue.getValue()).getParentRuleLine();
+            if (parentRuleLine instanceof ArchetypeElementInstantiationRuleLine){
+                String domainId = ((ArchetypeElementInstantiationRuleLine)parentRuleLine).getArchetypeReference().getIdDomain();
+                setIcon(DomainsUI.getIcon(domainId));
+            }
+        }
+        if (_ruleLineElementWithValue.getValue()!=null){
+            setForeground(linkColorVarSet);
+        }else{
+            setForeground(linkColorVarUnSet);
+        }
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

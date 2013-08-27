@@ -1,68 +1,73 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-
+import jsyntaxpane.DefaultSyntaxKit;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.util.GDLSyntaxKit;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class GDLPanel extends JPanel implements RefreshablePanel{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private JScrollPane mainScrollPanel;
-    private JTextArea textArea;
+    private JEditorPane editorPane;
     private GDLEditor _controller = null;
+
     public GDLPanel(GDLEditor controller){
-	_controller = controller;
-	init();
+        _controller = controller;
+        init();
     }
 
     public void init(){
-	this.setLayout(new BorderLayout());
-	refresh();
+        this.setLayout(new BorderLayout());
+        DefaultSyntaxKit.initKit();
+        DefaultSyntaxKit.registerContentType("text/gdl", GDLSyntaxKit.class.getCanonicalName());
+        refresh();
     }
 
     private JScrollPane getMainScrollPanel(){
-	if (mainScrollPanel==null){
-	    mainScrollPanel = new JScrollPane();
-	    mainScrollPanel.setViewportView(getTextArea());
-	}
-	return mainScrollPanel;
+        if (mainScrollPanel==null){
+            mainScrollPanel = new JScrollPane(getEditorPane());
+        }
+        return mainScrollPanel;
     }
 
-    private JTextArea getTextArea(){
-	if (textArea==null){
-	    textArea = new JTextArea();
-	    String gdlStr = _controller.serializeCurrentGuide();
-	    if (gdlStr!=null){
-		textArea.setText(gdlStr);
-	    }
-	    textArea.setEditable(false);
-	    textArea.setTabSize(4);
-	}
-	return textArea;
+    private JEditorPane getEditorPane(){
+        if (editorPane ==null){
+            editorPane = new JEditorPane();
+            editorPane.setEditable(true);
+            //editorPane.setTabSize(4);
+        }
+        return editorPane;
+    }
+
+    public String getGuideStr(){
+        return getEditorPane().getText();
     }
 
     public void refresh(){
-	if (mainScrollPanel!=null){
-	    remove(mainScrollPanel);
-	    mainScrollPanel = null;
-	    textArea = null;
-	}
-	this.add(getMainScrollPanel());
-	SwingUtilities.invokeLater(new Runnable() {
-	    @Override
-	    public void run() {
-		getMainScrollPanel().getVerticalScrollBar().setValue(0);
-	    }
-	});
+        if (mainScrollPanel!=null){
+            remove(mainScrollPanel);
+            mainScrollPanel = null;
+            editorPane = null;
+        }
+        this.add(getMainScrollPanel());
+        getEditorPane().setContentType("text/gdl");
+        String gdlStr = _controller.serializeCurrentGuide();
+        if (gdlStr!=null){
+            editorPane.setText(gdlStr);
+        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                getMainScrollPanel().getVerticalScrollBar().setValue(0);
+            }
+        });
     }
 }
 /*

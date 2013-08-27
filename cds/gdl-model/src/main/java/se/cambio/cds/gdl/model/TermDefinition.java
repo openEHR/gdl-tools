@@ -1,8 +1,14 @@
 package se.cambio.cds.gdl.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class TermDefinition {
+public class TermDefinition implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
 	public TermDefinition() {
 	}

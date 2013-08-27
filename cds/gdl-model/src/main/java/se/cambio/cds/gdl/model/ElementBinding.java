@@ -1,7 +1,13 @@
 package se.cambio.cds.gdl.model;
 
-public class ElementBinding {
+import java.io.Serializable;
 
+public class ElementBinding  implements Serializable{
+
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	public ElementBinding() {
 	}
 

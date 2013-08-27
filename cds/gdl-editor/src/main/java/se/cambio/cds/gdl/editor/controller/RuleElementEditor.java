@@ -35,17 +35,17 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
-import se.cambio.cds.model.facade.execution.vo.ArchetypeReference;
-import se.cambio.cds.openehr.model.archetypeelement.vo.ArchetypeElementVO;
-import se.cambio.cds.openehr.util.OpenEHRLanguageManager;
-import se.cambio.cds.openehr.view.applicationobjects.Units;
-import se.cambio.cds.openehr.view.dialogs.DVDialogEditor;
-import se.cambio.cds.openehr.view.dialogs.DialogArchetypeChooser;
-import se.cambio.cds.openehr.view.dialogs.DialogEditorNullValue;
-import se.cambio.cds.openehr.view.trees.SelectableNode;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.AggregationFunctions;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.OpenEHRDataValues;
+import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
+import se.cambio.openehr.controller.session.data.Units;
+import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.view.dialogs.DVDialogEditor;
+import se.cambio.openehr.view.dialogs.DialogEditorNullValue;
+import se.cambio.openehr.view.trees.SelectableNode;
 
 public class RuleElementEditor {
 

@@ -10,6 +10,10 @@ package se.cambio.cds.gdl.model.expression;
  */
 public class BinaryExpression extends ExpressionItem {
 	
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	public static BinaryExpression create(ExpressionItem left, ExpressionItem right,
 			OperatorKind operator) {
 		return new BinaryExpression(left, right, operator);

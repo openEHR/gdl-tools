@@ -9,10 +9,11 @@ import javax.swing.JButton;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.util.LanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
 public class DialogElementInstanceSelection extends DialogSelection{
 
@@ -26,7 +27,7 @@ public class DialogElementInstanceSelection extends DialogSelection{
     private boolean _onlyCDSDomain;
     public DialogElementInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
 	super(owner, 
-		LanguageManager.getMessage("SelectElementInstance"), 
+		GDLEditorLanguageManager.getMessage("SelectElementInstance"), 
 		NodeDefinitionConversor.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain), 
 		true, 
 		new Dimension(500,500));
@@ -46,8 +47,8 @@ public class DialogElementInstanceSelection extends DialogSelection{
     public JButton getAddArchetypeReferenceButton() {
 	if (addArchetypeReferenceButton == null) {
 	    addArchetypeReferenceButton = new JButton();
-	    addArchetypeReferenceButton.setText(LanguageManager.getMessage("AddArchetype"));
-	    addArchetypeReferenceButton.setToolTipText(LanguageManager.getMessage("AddArchetypeD"));
+	    addArchetypeReferenceButton.setText(GDLEditorLanguageManager.getMessage("AddArchetype"));
+	    addArchetypeReferenceButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddArchetypeD"));
 	    addArchetypeReferenceButton.setIcon(GDLEditorImageUtil.ADD_ICON);
 	    addArchetypeReferenceButton.setEnabled(true);
 	    addArchetypeReferenceButton.addActionListener(new ActionListener() {
