@@ -1,39 +1,13 @@
 package se.cambio.openehr.view.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.openehr.util.*;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.StyledEditorKit;
-
-import org.openehr.rm.datatypes.text.DvCodedText;
-
-import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
+import java.awt.*;
+import java.awt.event.*;
 
 public class DialogEditorNullValue  extends JDialog {
     private static final long serialVersionUID = 1L;
@@ -46,7 +20,7 @@ public class DialogEditorNullValue  extends JDialog {
     private JButton acceptButton;
     private JButton cancelButton;
     private JTextPane jTextPane;
-    private JComboBox comboBox;
+    private JComboBox<String> comboBox;
 
     public DialogEditorNullValue(Window owner){
 	super(owner, OpenEHRLanguageManager.getMessage("NullValue"), ModalityType.APPLICATION_MODAL);
@@ -115,7 +89,7 @@ public class DialogEditorNullValue  extends JDialog {
 
     protected JComboBox getComboBox(){
 	if (comboBox==null){
-	    comboBox = new JComboBox();
+	    comboBox = new JComboBox<String>();
 	    comboBox.setRenderer(new DVComboBoxRendered());
 	    for (String nullFlavourCode : OpenEHRConstUI.NULL_FLAVOUR_MAP.keySet()) {
 		comboBox.addItem(nullFlavourCode);
