@@ -1,15 +1,6 @@
 package se.cambio.cds.gdl.editor;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import junit.framework.TestCase;
-
 import org.apache.log4j.Logger;
-
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.converters.drools.CompilationErrorException;
 import se.cambio.cds.gdl.converters.drools.CompilationManager;
@@ -23,6 +14,13 @@ import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class GDLEditorMainTest extends TestCase {
@@ -54,7 +52,7 @@ public class GDLEditorMainTest extends TestCase {
 		    Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '"+file.getName()+"'");
 		    FileInputStream fis = new FileInputStream(file);
 		    InputStreamReader in = new InputStreamReader(fis, "UTF-8");
-		    String guideStr = IOUtils.toString(in);
+		    String guideStr = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
 		    Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
 		    GDLEditor editor = new GDLEditor(guide);
 		    String guideStr2 = editor.serializeCurrentGuide();

@@ -1,23 +1,16 @@
 package se.cambio.cds.gdl.parser;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.Rule;
 import se.cambio.cds.gdl.model.TranslationDetails;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class GDLOutputTest extends TestCase {
 	
@@ -98,7 +91,7 @@ public class GDLOutputTest extends TestCase {
 	public static void roundTrip(String guideFilename) throws Exception {
 	    InputStream is = load(guideFilename);
 	    InputStreamReader in = new InputStreamReader(is, "UTF-8");
-	    String str1 = IOUtils.toString(in);
+	    String str1 = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
 	    GDLParser parser = new GDLParser();
 	    Guide guide = parser.parse(new ByteArrayInputStream(str1.getBytes()));
 	    StringBuffer sb = new StringBuffer();
