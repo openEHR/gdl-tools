@@ -20,7 +20,7 @@ public class DVISACodedTextPanel extends DVGenericPanel{
 
     private GDLEditor _controller = null;
     private JPanel buttonPanel;
-    private JComboBox<String> comboBox = null;
+    private JComboBox comboBox = null;
     private DVGenericPanel _defaultDVGenericPanel = null;
     private DVGenericPanel _bindingDVGenericPanel = null;
     private DataValue _dataValue = null;
@@ -63,7 +63,7 @@ public class DVISACodedTextPanel extends DVGenericPanel{
 
     private JComboBox getJComboBox(){
 	if (comboBox==null){
-	    comboBox = new JComboBox<String>();
+	    comboBox = new JComboBox();
 	    comboBox.addItem(GDLEditorLanguageManager.getMessage("Default"));
 	    comboBox.addItem(GDLEditorLanguageManager.getMessage("Binding"));
 	    comboBox.addActionListener(new ActionListener() {

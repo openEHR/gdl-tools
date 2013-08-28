@@ -20,7 +20,7 @@ public class DialogEditorNullValue  extends JDialog {
     private JButton acceptButton;
     private JButton cancelButton;
     private JTextPane jTextPane;
-    private JComboBox<String> comboBox;
+    private JComboBox comboBox;
 
     public DialogEditorNullValue(Window owner){
 	super(owner, OpenEHRLanguageManager.getMessage("NullValue"), ModalityType.APPLICATION_MODAL);
@@ -89,7 +89,7 @@ public class DialogEditorNullValue  extends JDialog {
 
     protected JComboBox getComboBox(){
 	if (comboBox==null){
-	    comboBox = new JComboBox<String>();
+	    comboBox = new JComboBox();
 	    comboBox.setRenderer(new DVComboBoxRendered());
 	    for (String nullFlavourCode : OpenEHRConstUI.NULL_FLAVOUR_MAP.keySet()) {
 		comboBox.addItem(nullFlavourCode);

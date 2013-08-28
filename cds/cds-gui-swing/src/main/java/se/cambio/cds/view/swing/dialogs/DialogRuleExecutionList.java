@@ -25,7 +25,7 @@ public class DialogRuleExecutionList extends JDialog{
     private static final long serialVersionUID = 1L;
     private JPanel jPanel;
     private Map<String,Map<String, String>> _rulesViewMap = null;
-    private JComboBox<String> languageComboBox;
+    private JComboBox languageComboBox;
     private JPanel rulesPanel;
     private JPanel mainPanel;
     private Collection<Integer> expandedRules = new ArrayList<Integer>();
@@ -135,7 +135,7 @@ public class DialogRuleExecutionList extends JDialog{
 
     public JComboBox getLanguageComboBox(){
 	if (languageComboBox==null){
-	    languageComboBox = new JComboBox<String>();
+	    languageComboBox = new JComboBox();
 	    for (String lang : _rulesViewMap.keySet()) {
 		languageComboBox.addItem(lang);
 	    }
