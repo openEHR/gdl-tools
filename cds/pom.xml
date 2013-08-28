@@ -9,9 +9,9 @@
 		<name>Cambio</name>
 	</organization>
 	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openehr-java-libs-version>1.0.5-SNAPSHOT</openehr-java-libs-version>
 		<openehr-utils-version>0.7-SNAPSHOT</openehr-utils-version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
     <scm>
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
