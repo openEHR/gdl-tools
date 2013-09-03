@@ -56,7 +56,7 @@ public class GDLEditor {
     private ReadableRule _ruleAtEdit = null;
     private Map<String, TermDefinition> _termDefinitions = null;
     private Map<String, TermBinding> _termBindings = null;
-    private int _termCount = 0;
+    //private int _termCount = 0;
     private Language _language;
     private Map<String, String> _originalAuthor;
     private List<String> _otherContributors;
@@ -482,27 +482,47 @@ public class GDLEditor {
     }
 
     public String createNextGTCode() {
-        Collection<String> gtCodesInUse = getGTCodesUsedInGuide();
+        //Collection<String> gtCodesInUse = getGTCodesUsedInGuide();
         String gtCode = generateNextGTCode();
-        if (gtCodesInUse.contains(gtCode)) {
-            _termCount++;
-            gtCode = generateNextGTCode();
-        } else {
-            getTerm(gtCode).setText(null);
-            getTerm(gtCode).setDescription(null);
-        }
+        //if (gtCodesInUse.contains(gtCode)) {
+        //_termCount++;
+        //    gtCode = generateNextGTCode();
+        //} else {
+        getTerm(gtCode).setText(null);
+        getTerm(gtCode).setDescription(null);
+        //}
 
         return gtCode;
     }
 
     private String generateNextGTCode() {
         String nextGTCode = GT_HEADER
-                + StringUtils.leftPad("" + (_termCount), 4, "0");
+                + StringUtils.leftPad("" + (getNextTermNumber()), 4, "0");
         // Generate codes for all terminologies
         for (String langCode : getTermDefinitions().keySet()) {
             getTerm(langCode, nextGTCode);
         }
         return nextGTCode;
+    }
+
+    private int getNextTermNumber(){
+        TermDefinition termDefinition = getTermDefinition(getLanguage()
+                .getOriginalLanguage().getCodeString());
+        int termCount = 0;
+        if (termDefinition.getTerms() != null) {
+            for (String gtCode : termDefinition.getTerms().keySet()) {
+                try {
+                    int codeNum = Integer.parseInt(gtCode.substring(2));
+                    if (codeNum > termCount) {
+                        termCount = codeNum;
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger(this.getClass()).warn(
+                            "Unable to parse code '" + gtCode + "'");
+                }
+            }
+        }
+        return ++termCount;
     }
 
     public String getConceptGTCode() {
@@ -855,7 +875,7 @@ public class GDLEditor {
         _termBindings = null;
         _readableGuide = null;
         _ruleAtEdit = null;
-        _termCount = 0;
+        //_termCount = 0;
     }
 
     public boolean setGuide(Guide guide) {
@@ -885,7 +905,7 @@ public class GDLEditor {
         _readableGuide =
                 GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
         initResourceDescription();
-        countTermDefinitions();
+        //countTermDefinitions();
         updateOriginal();
         return true;
     }
@@ -930,24 +950,6 @@ public class GDLEditor {
             return true;
         } else {
             return false;
-        }
-    }
-
-    private void countTermDefinitions() {
-        TermDefinition termDefinition = getTermDefinition(getLanguage()
-                .getOriginalLanguage().getCodeString());
-        if (termDefinition.getTerms() != null) {
-            for (String gtCode : termDefinition.getTerms().keySet()) {
-                try {
-                    int codeNum = Integer.parseInt(gtCode.substring(2));
-                    if (codeNum > _termCount) {
-                        _termCount = codeNum;
-                    }
-                } catch (Exception e) {
-                    Logger.getLogger(this.getClass()).warn(
-                            "Unable to parse code '" + gtCode + "'");
-                }
-            }
         }
     }
 

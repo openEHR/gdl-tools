@@ -1,12 +1,5 @@
 package se.cambio.cds.formgen.controller.sw;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.swing.SwingWorker;
-
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.controller.guide.GuideUtil;
@@ -21,6 +14,13 @@ import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.PredicateGeneratedElementInstance;
 import se.cambio.openehr.util.ExceptionHandler;
 
+import javax.swing.*;
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author iago.corbal
  *
@@ -31,56 +31,57 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
     private RuleExecutionResult _result = null;
     private FormGeneratorController _controller = null;
     public ExecuteRSW(FormGeneratorController controller) {
-	super();
-	_controller = controller;
+        super();
+        _controller = controller;
     }
 
     public ExecuteRSW(File file) {
-	super();
+        super();
     }
     protected Object doInBackground() {
-	_result = executeGuides(_controller);
-	return null;
+        _result = executeGuides(_controller);
+        return null;
     }
 
 
     public static RuleExecutionResult executeGuides(FormGeneratorController controller) {
-	//Long executionTime = null;
-	try{
-	    //Calendar timeStart = Calendar.getInstance();
-	    //Execute
-	    //timeStart= Calendar.getInstance();
-	    Collection<String> guideIds = controller.getGuideManager().getAllGuideIds();
-	    Collection<ArchetypeReference> archetypeReferences = new ArrayList<ArchetypeReference>();
-	    for (ElementInstance elementInstance : controller.getAllElementInstances()) {
-		ArchetypeReference ar = elementInstance.getArchetypeReference();
-		archetypeReferences.add(ar);
-		if (Domains.CDS_ID.equals(ar.getIdDomain()) && !(elementInstance instanceof PredicateGeneratedElementInstance)){
-		    elementInstance.setDataValue(null);
-		    elementInstance.setNullFlavour(GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
-		}
-	    }
-	    Collection<GuideDTO> guideDTOs = Collections.singleton(controller.getGuideDTO());
-	    GuideManager guideManager = new GuideManager(guideDTOs);
-	    Collection<ElementInstance> elementInstances = 
-		    CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager);
-	    RuleExecutionFacadeDelegate refd = RuleExecutionFacadeDelegateFactory.getDelegate();
-	    RuleExecutionResult result = refd.execute(null, guideDTOs, elementInstances, controller.getCurrentDate());
-	    //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
-	    return result;
-	}catch(Throwable e){
-	    ExceptionHandler.handle(e);
-	    return null;
-	}
+        //Long executionTime = null;
+        try{
+            //Calendar timeStart = Calendar.getInstance();
+            //Execute
+            //timeStart= Calendar.getInstance();
+            Collection<String> guideIds = controller.getGuideManager().getAllGuideIds();
+            Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
+            for (ElementInstance elementInstance : controller.getAllElementInstances()) {
+                ArchetypeReference ar = elementInstance.getArchetypeReference();
+                archetypeReferences.add(ar);
+                if (Domains.CDS_ID.equals(ar.getIdDomain()) && !(elementInstance instanceof PredicateGeneratedElementInstance)){
+                    elementInstance.setDataValue(null);
+                    elementInstance.setNullFlavour(GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
+                }
+            }
+
+            Collection<GuideDTO> guideDTOs = Collections.singleton(controller.getGuideDTO());
+            GuideManager guideManager = new GuideManager(guideDTOs);
+            Collection<ElementInstance> elementInstances =
+                    CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager);
+            RuleExecutionFacadeDelegate refd = RuleExecutionFacadeDelegateFactory.getDelegate();
+            RuleExecutionResult result = refd.execute(null, guideDTOs, elementInstances, controller.getCurrentDate());
+            //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
+            return result;
+        }catch(Throwable e){
+            ExceptionHandler.handle(e);
+            return null;
+        }
     }
 
     public FormGeneratorController getController(){
-	return _controller;
+        return _controller;
     }
 
     protected void done() {
-	_controller.getViewer().setFree();
-	_controller.updateResults(_result);
+        _controller.getViewer().setFree();
+        _controller.updateResults(_result);
     }
 }
 /*

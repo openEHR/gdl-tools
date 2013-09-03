@@ -57,7 +57,7 @@ public final class CDSConfigurationParametersManager {
 
     private static File getConfigFile(){
         try{
-            File jarFile = new File(CDSConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            File jarFile = new File( CDSConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
             for (File file:jarFile.getParentFile().getParentFile().listFiles()){
                 if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
@@ -70,7 +70,18 @@ public final class CDSConfigurationParametersManager {
             }
         }catch(Throwable t){
             //Problem finding config folder
-            //Logger.getLogger(CDSConfigurationParametersManager.class).warn("CONF Folder not found "+t.getMessage());
+            //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+        try{
+            //Current folder
+            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
+            if (file.exists()){
+                return file;
+            }
+
+        }catch(Throwable t2){
+            //Problem finding config folder
+            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
         return null;
     }

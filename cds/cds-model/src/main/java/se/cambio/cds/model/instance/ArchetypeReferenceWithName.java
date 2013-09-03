@@ -11,6 +11,7 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
     private static final long serialVersionUID = 1L;
     private String name = null;
     private String rmName = null;
+    private boolean modified = false;
     //private Map<String, Collection<ElementInstance>> elementInstancesVOsByPath = null;
     //private Map<ClusterVO, ContainerInstance> containerInstancesMap = null;
 
@@ -153,4 +154,13 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
 	String path = id.substring(id.indexOf(Locatable.PATH_SEPARATOR));
 	elementInstancesVOsByPath.get(path).remove(elementInstance);
     }*/
+
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
+    }
 }

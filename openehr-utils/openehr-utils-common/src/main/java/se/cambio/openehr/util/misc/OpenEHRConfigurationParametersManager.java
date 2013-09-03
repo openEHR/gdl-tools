@@ -1,6 +1,7 @@
 package se.cambio.openehr.util.misc;
 
 import org.apache.log4j.Logger;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import javax.naming.InitialContext;
@@ -58,9 +59,9 @@ public final class OpenEHRConfigurationParametersManager {
     private OpenEHRConfigurationParametersManager() {}
 
     private static File getConfigFile(){
-        File jarFile = new File(OpenEHRConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-        //../conf
         try{
+            File jarFile = new File(OpenEHRConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            //../conf
             for (File file:jarFile.getParentFile().getParentFile().listFiles()){
                 if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
                     for (File file2:file.listFiles()){
@@ -70,10 +71,20 @@ public final class OpenEHRConfigurationParametersManager {
                     }
                 }
             }
-
         }catch(Throwable t){
-            //Problem findint config folder
-            //Logger.getLogger(OpenEHRConfigurationParametersManager.class).warn("CONF Folder not found "+t.getMessage());
+            //Problem finding config folder
+            //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+        try{
+            //Current folder
+            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
+            if (file.exists()){
+                return file;
+            }
+
+        }catch(Throwable t2){
+            //Problem finding config folder
+            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
         return null;
     }

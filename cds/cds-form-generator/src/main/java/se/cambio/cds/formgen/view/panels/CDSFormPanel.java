@@ -166,26 +166,6 @@ public class CDSFormPanel extends JPanel{
         }
         return elementInstances;
     }
-    /*
-    private void addElement(JPanel panel, GridBagConstraints gbc, ElementInstance elementInstance){
-	gbc.gridx = 0;
-	String idDomain =  elementInstance.getArchetypeReference().getIdDomain();
-	String idAggregationFunction =  elementInstance.getArchetypeReference().getAggregationFunction();
-	Logger.getLogger(CDSFormPanel.class).debug("Loading in panel: "+elementInstance);
-	if (Domains.EHR_ID.equals(idDomain) && idAggregationFunction==null){
-	    addElementToGroupPanel(panel, gbc, elementInstance);
-	}else{
-	    gbc.weightx = 0;
-	    panel.add(createLabelForElement(elementInstance), gbc);
-	    JPanel panelAux = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	    JComponent comp = createDVGenericPanel(elementInstance);
-	    panelAux.add(comp);
-	    gbc.gridx++;
-	    gbc.weightx = 1;
-	    panel.add(panelAux,gbc);
-	    gbc.gridy++;
-	}
-    }*/
 
     public JPanel getInputPanel(){
         if (inputPanel==null){
@@ -227,52 +207,6 @@ public class CDSFormPanel extends JPanel{
         }
         return  resultPanel;
     }
-
-    /*
-
-    private ReadableGuide getReadableGuide(String lang, String guideId){
-	if(guideId==null){
-	    guideId= _formGenerator.getGuideDTO().getIdGuide();
-	}
-	return _formGenerator.getReadableGuideMap().get(guideId).get(lang);
-    }
-
-
-    private void addElementToGroupPanel(JPanel panel, GridBagConstraints gbc, ElementInstance elementInstance){
-	JLabel label = createLabelForElement(elementInstance);
-	JPanel groupPanel = getElementGroupPanelMap().get(elementInstance.getId());
-	boolean first = groupPanel==null; 
-	if (first){
-	    CollapsablePanel collapsablePanel = new CollapsablePanel(label.getText());
-	    collapsablePanel.setCollapsed(false);
-	    groupPanel = collapsablePanel.getContentPane();
-	    groupPanel.setLayout(new BoxLayout(groupPanel, BoxLayout.Y_AXIS));
-	    gbc.gridwidth = 2;
-	    gbc.weightx = 1;
-	    panel.add(collapsablePanel, gbc);
-	    gbc.gridwidth = 1;
-	    gbc.gridy++;
-	    getElementGroupPanelMap().put(elementInstance.getId(),groupPanel);
-	}
-	JPanel panelAux = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	panelAux.add(label);
-	JComponent comp = createDVGenericPanel(elementInstance);
-	panelAux.add(comp);
-	if (first){
-	    panelAux.add(createAddButton(elementInstance));
-	}
-	panelAux.add(createRemoveButton(elementInstance));
-	groupPanel.add(panelAux);
-    }
-
-    private Map<String, JPanel> getElementGroupPanelMap(){
-	if (elementGroupPanelMap==null){
-	    elementGroupPanelMap = new HashMap<String, JPanel>();
-	}
-	return elementGroupPanelMap;
-    }
-     */
-
 
     private JPanel getExecutionButtonPanel(){
         if (executionButtonPanel==null){

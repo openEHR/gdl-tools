@@ -24,4 +24,5 @@ public class EHRInstance extends ArchetypeReferenceWithName{
     public void init(){
 	super.init();
     }
+
 }

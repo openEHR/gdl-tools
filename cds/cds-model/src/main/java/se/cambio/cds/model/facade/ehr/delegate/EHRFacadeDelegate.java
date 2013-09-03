@@ -34,10 +34,10 @@ public interface EHRFacadeDelegate {
 	    Collection<ArchetypeReference> archetypeReferences) 
 		    throws InternalErrorException, PatientNotFoundException;    
    
-    public boolean storeEHRElements(
-	    String ehrId,
-	    Collection<String> guideIds,
-	    Collection<ArchetypeReference> archetypeReferences) 
+    public boolean storeCDSResults(
+            String ehrId,
+            Collection<String> guideIds,
+            Collection<ArchetypeReference> archetypeReferences)
 		    throws InternalErrorException, PatientNotFoundException;
     
     public void upsertEHRTriggerVO(EHRTriggerVO ehrTriggerVO)
