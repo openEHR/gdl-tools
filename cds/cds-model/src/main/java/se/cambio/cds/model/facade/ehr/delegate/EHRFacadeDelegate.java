@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public interface EHRFacadeDelegate {
 
-    public Collection<String> getEHRIds(Collection<String> externalEHRIds) 
+    public Map<String,String> getEHRIds(Collection<String> externalEHRIds)
 	    throws InternalErrorException, PatientNotFoundException; 
 
     public Collection<String> queryForEHRIds(String aql) 

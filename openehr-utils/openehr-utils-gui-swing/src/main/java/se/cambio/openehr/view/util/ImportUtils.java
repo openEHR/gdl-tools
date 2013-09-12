@@ -1,19 +1,7 @@
 package se.cambio.openehr.view.util;
 
-import java.awt.Window;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import openEHR.v1.template.TEMPLATE;
-
 import org.openehr.am.template.OETParser;
-
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
@@ -26,89 +14,94 @@ import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice.MessageType;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.*;
+
 public class ImportUtils {
 
     public static int showImportArchetypeDialog(Window owner, File selectedFile){
-	JFileChooser fileChooser = new JFileChooser();
-	FileNameExtensionFilter filter = new FileNameExtensionFilter(
-		OpenEHRLanguageManager.getMessage("Archetype"),new String[]{"adl"});
-	fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ImportArchetype"));
-	fileChooser.setFileFilter(filter);
-	if (selectedFile!=null){
-	    fileChooser.setSelectedFile(selectedFile);
-	}
-	int result = fileChooser.showOpenDialog(owner);
-	if (result != JFileChooser.CANCEL_OPTION){
-	    addArchetype(owner,fileChooser.getSelectedFile());
-	}
-	return result;
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                OpenEHRLanguageManager.getMessage("Archetype"),new String[]{"adl"});
+        fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ImportArchetype"));
+        fileChooser.setFileFilter(filter);
+        if (selectedFile!=null){
+            fileChooser.setSelectedFile(selectedFile);
+        }
+        int result = fileChooser.showOpenDialog(owner);
+        if (result != JFileChooser.CANCEL_OPTION){
+            addArchetype(owner,fileChooser.getSelectedFile());
+        }
+        return result;
     }
 
     public static int showImportTemplateDialog(Window owner, File selectedFile){
-	JFileChooser fileChooser = new JFileChooser();
-	FileNameExtensionFilter filter = new FileNameExtensionFilter(
-		OpenEHRLanguageManager.getMessage("Template"),new String[]{"oet"});
-	fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ImportTemplate"));
-	fileChooser.setFileFilter(filter);
-	if (selectedFile!=null){
-	    fileChooser.setSelectedFile(selectedFile);
-	}
-	int result = fileChooser.showOpenDialog(owner);
-	if (result != JFileChooser.CANCEL_OPTION){
-	    addTemplate(owner, fileChooser.getSelectedFile());
-	}
-	return result;
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                OpenEHRLanguageManager.getMessage("Template"),new String[]{"oet"});
+        fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ImportTemplate"));
+        fileChooser.setFileFilter(filter);
+        if (selectedFile!=null){
+            fileChooser.setSelectedFile(selectedFile);
+        }
+        int result = fileChooser.showOpenDialog(owner);
+        if (result != JFileChooser.CANCEL_OPTION){
+            addTemplate(owner, fileChooser.getSelectedFile());
+        }
+        return result;
     }
 
     //TODO Should be on a SW
     private static void addArchetype(Window owner, File file){
-	String fileName = file.getName().toLowerCase();
-	if (fileName.endsWith(".adl")){
-	    InputStream fis = null;
-	    try{
-		fis = new FileInputStream(file.getAbsolutePath());
-		UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-		ubis.skipBOM();
-		String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-		String idArchetype = fileName.substring(0, fileName.length()-4);
-		ArchetypeDTO archetypeDTO = 
-			new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null);
-		OpenEHRObjectBundleManager.addArchetype(archetypeDTO);
-		Archetypes.loadArchetypeDTO(archetypeDTO);
-		
-	    }catch(Exception e){
-		ExceptionHandler.handle(e);
-		DialogLongMessageNotice dialog = 
-			new DialogLongMessageNotice(
-				owner,
-				OpenEHRLanguageManager.getMessage("ErrorParsingArchetypeT"),
-				OpenEHRLanguageManager.getMessage("ErrorParsingArchetype"),
-				e.getMessage(),
-				MessageType.ERROR
-				);
-		dialog.setVisible(true);
-	    }finally{
-		if (fis!=null){
-		    try {
-			fis.close();
-		    } catch (IOException e) {
-			ExceptionHandler.handle(e);
-		    }
-		}
-	    }
-	}
+        String fileName = file.getName().toLowerCase();
+        if (fileName.endsWith(".adl")){
+            InputStream fis = null;
+            try{
+                fis = new FileInputStream(file.getAbsolutePath());
+                UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+                ubis.skipBOM();
+                String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
+                String idArchetype = fileName.substring(0, fileName.length()-4);
+                ArchetypeDTO archetypeDTO =
+                        new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null);
+                OpenEHRObjectBundleManager.addArchetype(archetypeDTO);
+                Archetypes.loadArchetypeDTO(archetypeDTO);
+
+            }catch(Exception e){
+                ExceptionHandler.handle(e);
+                DialogLongMessageNotice dialog =
+                        new DialogLongMessageNotice(
+                                owner,
+                                OpenEHRLanguageManager.getMessage("ErrorParsingArchetypeT"),
+                                OpenEHRLanguageManager.getMessage("ErrorParsingArchetype"),
+                                e.getMessage(),
+                                MessageType.ERROR
+                        );
+                dialog.setVisible(true);
+            }finally{
+                if (fis!=null){
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        ExceptionHandler.handle(e);
+                    }
+                }
+            }
+        }
     }
 
     private static void addTemplate(Window owner, File file){
-	String fileName = file.getName().toLowerCase();
-	InputStream fis = null;
-	if (fileName.endsWith(".oet")){
-	    try{
-		fis = new FileInputStream(file.getAbsolutePath());
-		UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-		ubis.skipBOM();
-		String idTemplate = fileName.substring(0,fileName.length()-4);
-		String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
+        String fileName = file.getName().toLowerCase();
+        InputStream fis = null;
+        if (fileName.endsWith(".oet")){
+            try{
+                fis = new FileInputStream(file.getAbsolutePath());
+                UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+                ubis.skipBOM();
+                String idTemplate = fileName.substring(0,fileName.length()-4);
+                String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
 
 		/*
   		if (idArchetype.toLowerCase().equals(idTemplate.toLowerCase())){
@@ -128,48 +121,48 @@ public class ImportUtils {
   			    JOptionPane.ERROR_MESSAGE);
   		    return;
   		}*/
-		importTemplate(owner, idTemplate, archetypeSrc);
-	    }catch(Exception e){
-		ExceptionHandler.handle(e);
-		DialogLongMessageNotice dialog = 
-			new DialogLongMessageNotice(
-				owner,
-				OpenEHRLanguageManager.getMessage("ErrorParsingTemplateT"),
-				OpenEHRLanguageManager.getMessage("ErrorParsingTemplate"),
-				e.getMessage(),
-				MessageType.ERROR
-				);
-		dialog.setVisible(true);
-	    }finally{
-		if (fis!=null){
-		    try {
-			fis.close();
-		    } catch (IOException e) {
-			ExceptionHandler.handle(e);
-		    }
-		}
-	    }
-	}
+                importTemplate(owner, idTemplate, archetypeSrc);
+            }catch(Exception e){
+                ExceptionHandler.handle(e);
+                DialogLongMessageNotice dialog =
+                        new DialogLongMessageNotice(
+                                owner,
+                                OpenEHRLanguageManager.getMessage("ErrorParsingTemplateT"),
+                                OpenEHRLanguageManager.getMessage("ErrorParsingTemplate"),
+                                e.getMessage(),
+                                MessageType.ERROR
+                        );
+                dialog.setVisible(true);
+            }finally{
+                if (fis!=null){
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        ExceptionHandler.handle(e);
+                    }
+                }
+            }
+        }
     }
 
     public static TemplateDTO importTemplate(Window owner, String idTemplate, String archetypeSrc) throws Exception{
-	TemplateDTO templateDTO = 
-		new TemplateDTO(idTemplate, null, null, archetypeSrc, null, null);
-	OETParser parser = new OETParser();
-	InputStream bis = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
-	TEMPLATE template = parser.parseTemplate(bis).getTemplate();
-	String idArchetype = template.getDefinition().getArchetypeId();
-	ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
-	if (archetypeVO==null){
-	    int result = showImportArchetypeDialog(owner, new File(idArchetype+".adl"));
-	    if (result==JFileChooser.CANCEL_OPTION){
-		return null;
-	    }
-	}
-	templateDTO.setIdArchetype(idArchetype);
-	OpenEHRObjectBundleManager.addTemplate(templateDTO);
-	Templates.loadTemplateObjectBundle(templateDTO);
-	return templateDTO;
+        TemplateDTO templateDTO =
+                new TemplateDTO(idTemplate, null, null, archetypeSrc, null, null);
+        OETParser parser = new OETParser();
+        InputStream bis = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
+        TEMPLATE template = parser.parseTemplate(bis).getTemplate();
+        String idArchetype = template.getDefinition().getArchetypeId();
+        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
+        if (archetypeVO==null){
+            int result = showImportArchetypeDialog(owner, new File(idArchetype+".adl"));
+            if (result==JFileChooser.CANCEL_OPTION){
+                return null;
+            }
+        }
+        templateDTO.setIdArchetype(idArchetype);
+        OpenEHRObjectBundleManager.addTemplate(templateDTO);
+        Templates.loadTemplateObjectBundle(templateDTO);
+        return templateDTO;
     }
 }
 /*

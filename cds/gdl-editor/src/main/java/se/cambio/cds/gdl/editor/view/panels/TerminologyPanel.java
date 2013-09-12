@@ -1,25 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import org.apache.commons.jxpath.JXPathContext;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
@@ -29,10 +10,17 @@ import se.cambio.cds.gdl.editor.view.tables.TerminologyTable;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable.TerminologyTableModel;
 import se.cambio.cds.gdl.model.Term;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
+
 public class TerminologyPanel extends JPanel implements RefreshablePanel{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private GDLEditor _controller = null;
@@ -46,189 +34,189 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
     private JPanel editButtonPanel;
 
     public TerminologyPanel(GDLEditor gdlEditor){
-	_controller = gdlEditor;
-	init();
+        _controller = gdlEditor;
+        init();
     }
 
     public void init(){
-	this.setLayout(new BorderLayout());
-	this.add(getEditButtonPanel(), BorderLayout.EAST);
-	this.add(getMainPanel(), BorderLayout.CENTER);
-	refresh();
+        this.setLayout(new BorderLayout());
+        this.add(getEditButtonPanel(), BorderLayout.EAST);
+        this.add(getMainPanel(), BorderLayout.CENTER);
+        refresh();
     }
 
     private JScrollPane getTerminologyScrollPanel(){
-	if (terminologyScrollPanel==null){
-	    terminologyScrollPanel = new JScrollPane();
-	    terminologyScrollPanel.setViewportView(getTerminologyTable());
-	}
-	return terminologyScrollPanel;
+        if (terminologyScrollPanel==null){
+            terminologyScrollPanel = new JScrollPane();
+            terminologyScrollPanel.setViewportView(getTerminologyTable());
+        }
+        return terminologyScrollPanel;
     }
 
     private TerminologyTable getTerminologyTable(){
-	if (terminologyTable==null){
-	    terminologyTable = new TerminologyTable(_context);
-	}
-	return terminologyTable;
+        if (terminologyTable==null){
+            terminologyTable = new TerminologyTable(_context);
+        }
+        return terminologyTable;
     }
 
     private JPanel getMainPanel(){
-	if (mainPanel==null){
-	    mainPanel = new JPanel(new BorderLayout());
-	}
-	return mainPanel;
+        if (mainPanel==null){
+            mainPanel = new JPanel(new BorderLayout());
+        }
+        return mainPanel;
     }
 
     public void refresh(){
-	getMainPanel().removeAll();
-	terminologyScrollPanel = null;
-	terminologyTable = null;
-	_context = JXPathContext.newContext(_controller.getCurrentTermsMap());
-	getMainPanel().add(getTerminologyScrollPanel(), BorderLayout.CENTER);
-	getMainPanel().add(getAddDeleteButtonPanel(), BorderLayout.WEST);
-	TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
-	Map<String, Term> termMap = _controller.getCurrentTermsMap();
-	List<String> gtCodes = 
-		new ArrayList<String>(termMap.keySet());
-	Collections.sort(gtCodes);
-	for (String gtCode : gtCodes) {
-	    Term term = termMap.get(gtCode);
-	    Vector<String> v = new Vector<String>();
-	    v.add(term.getId());
-	    v.add(term.getText());
-	    v.add(term.getDescription());
-	    ttm.addRow(v);
-	}
-	getMainPanel().revalidate();
-	getMainPanel().repaint();
+        getMainPanel().removeAll();
+        terminologyScrollPanel = null;
+        terminologyTable = null;
+        _context = JXPathContext.newContext(_controller.getCurrentTermsMap());
+        getMainPanel().add(getTerminologyScrollPanel(), BorderLayout.CENTER);
+        getMainPanel().add(getAddDeleteButtonPanel(), BorderLayout.WEST);
+        TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
+        Map<String, Term> termMap = _controller.getCurrentTermsMap();
+        List<String> gtCodes =
+                new ArrayList<String>(termMap.keySet());
+        Collections.sort(gtCodes);
+        for (String gtCode : gtCodes) {
+            Term term = termMap.get(gtCode);
+            Vector<String> v = new Vector<String>();
+            v.add(term.getId());
+            v.add(term.getText());
+            v.add(term.getDescription());
+            ttm.addRow(v);
+        }
+        getMainPanel().revalidate();
+        getMainPanel().repaint();
     }
 
     private JPanel getAddDeleteButtonPanel(){
-	if (addDeleteButtonPanel==null){
-	    addDeleteButtonPanel = new JPanel();
-	    addDeleteButtonPanel.setLayout(new BoxLayout(addDeleteButtonPanel, BoxLayout.Y_AXIS));
-	    addDeleteButtonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-	    addDeleteButtonPanel.add(getAddBindingButton());
-	    addDeleteButtonPanel.add(getDeleteBindingButton());
-	}
-	return addDeleteButtonPanel;
+        if (addDeleteButtonPanel==null){
+            addDeleteButtonPanel = new JPanel();
+            addDeleteButtonPanel.setLayout(new BoxLayout(addDeleteButtonPanel, BoxLayout.Y_AXIS));
+            addDeleteButtonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            addDeleteButtonPanel.add(getAddBindingButton());
+            addDeleteButtonPanel.add(getDeleteBindingButton());
+        }
+        return addDeleteButtonPanel;
     }
 
     private JButton getAddBindingButton() {
-	if (addTermBtn == null) {
-	    addTermBtn = new JButton();
-	    addTermBtn.setIcon(GDLEditorImageUtil.ADD_ICON);
-	    addTermBtn.setToolTipText(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
-	    addTermBtn.setContentAreaFilled(false);
-	    addTermBtn.setPreferredSize(new Dimension(16,16));
-	    addTermBtn.setBorderPainted(false);
-	    addTermBtn.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    addTermDefinitionInModel();
-		}
-	    });
-	}
-	return addTermBtn;
+        if (addTermBtn == null) {
+            addTermBtn = new JButton();
+            addTermBtn.setIcon(GDLEditorImageUtil.ADD_ICON);
+            addTermBtn.setToolTipText(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
+            addTermBtn.setContentAreaFilled(false);
+            addTermBtn.setPreferredSize(new Dimension(16,16));
+            addTermBtn.setBorderPainted(false);
+            addTermBtn.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    addTermDefinitionInModel();
+                }
+            });
+        }
+        return addTermBtn;
     }
 
     private void addTermDefinitionInModel() {
-	Vector<String> v = new Vector<String>();
-	v.add(_controller.createNextGTCode());
-	v.add("");
-	v.add("");
-	getTerminologyTable().getTerminologyTableModel().addRow(v);
+        Vector<String> v = new Vector<String>();
+        v.add(_controller.createNextGTCode());
+        v.add("");
+        v.add("");
+        getTerminologyTable().getTerminologyTableModel().addRow(v);
     }
 
     private JButton getDeleteBindingButton() {
-	if (deleteBtn == null) {
-	    deleteBtn = new JButton();
-	    deleteBtn.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteLocalTerm"));
-	    deleteBtn.setIcon(GDLEditorImageUtil.DELETE_ICON);
-	    deleteBtn.setContentAreaFilled(false);
-	    deleteBtn.setPreferredSize(new Dimension(16,16));
-	    deleteBtn.setBorderPainted(false);
-	    deleteBtn.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    deleteTermDefinitionInModel();
-		}
-	    });
-	}
-	return deleteBtn;
+        if (deleteBtn == null) {
+            deleteBtn = new JButton();
+            deleteBtn.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteLocalTerm"));
+            deleteBtn.setIcon(GDLEditorImageUtil.DELETE_ICON);
+            deleteBtn.setContentAreaFilled(false);
+            deleteBtn.setPreferredSize(new Dimension(16,16));
+            deleteBtn.setBorderPainted(false);
+            deleteBtn.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    deleteTermDefinitionInModel();
+                }
+            });
+        }
+        return deleteBtn;
     }
 
     private void deleteTermDefinitionInModel() {
-	TerminologyTableModel ttm = null;
-	//Look for referenced codes
-	Collection<String> gtCodesUsed = new ArrayList<String>();
-	gtCodesUsed.addAll(_controller.getGTCodesUsedInDefinitions());
-	gtCodesUsed.addAll(_controller.getGTCodesUsedInBindings());
-	for (String gtCode : getSelectedGTCodes()) {
-	    if (gtCodesUsed.contains(gtCode)){
-		JOptionPane.showMessageDialog(
-			EditorManager.getActiveEditorWindow(),
-			GDLEditorLanguageManager.getMessage("ReferenceBeingUsedMsg"),
-			GDLEditorLanguageManager.getMessage("ReferenceBeingUsedTitle"),
-			JOptionPane.WARNING_MESSAGE);
-		return;
-	    }
-	}
+        TerminologyTableModel ttm = null;
+        //Look for referenced codes
+        Collection<String> gtCodesUsed = new ArrayList<String>();
+        gtCodesUsed.addAll(_controller.getGTCodesUsedInDefinitions());
+        gtCodesUsed.addAll(_controller.getGTCodesUsedInBindings());
+        for (String gtCode : getSelectedGTCodes()) {
+            if (gtCodesUsed.contains(gtCode)){
+                JOptionPane.showMessageDialog(
+                        EditorManager.getActiveEditorWindow(),
+                        GDLEditorLanguageManager.getMessage("ReferenceBeingUsedMsg"),
+                        GDLEditorLanguageManager.getMessage("ReferenceBeingUsedTitle"),
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
 
-	int selection = JOptionPane.showConfirmDialog(this,
-		GDLEditorLanguageManager.getMessage("DeleteTermDesc"), 
-		GDLEditorLanguageManager.getMessage("DeleteLocalTerm"),
-		JOptionPane.YES_NO_OPTION);
+        int selection = JOptionPane.showConfirmDialog(this,
+                GDLEditorLanguageManager.getMessage("DeleteTermDesc"),
+                GDLEditorLanguageManager.getMessage("DeleteLocalTerm"),
+                JOptionPane.YES_NO_OPTION);
 
-	if (selection == JOptionPane.YES_OPTION) {
-	    ttm = getTerminologyTable().getTerminologyTableModel();
-	    int rows[] = getTerminologyTable().getSelectedRows();
-	    if (ttm != null) {
-		if (rows.length >= 0) {
-		    for (int i = rows.length - 1; i >= 0; i--) {
-			ttm.removeRow(rows[i]);
-		    }
-		}
-		ttm.fireTableDataChanged();
-		updateResults();
-	    }
-	}
+        if (selection == JOptionPane.YES_OPTION) {
+            ttm = getTerminologyTable().getTerminologyTableModel();
+            int rows[] = getTerminologyTable().getSelectedRows();
+            if (ttm != null) {
+                if (rows.length >= 0) {
+                    for (int i = rows.length - 1; i >= 0; i--) {
+                        ttm.removeRow(rows[i]);
+                    }
+                }
+                ttm.fireTableDataChanged();
+                updateResults();
+            }
+        }
     }
 
     public Collection<String> getSelectedGTCodes(){
-	Collection<String> gtCodes = new ArrayList<String>();
-	TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
-	int rows[] = getTerminologyTable().getSelectedRows();
-	if (ttm != null) {
-	    if (rows.length >= 0) {
-		for (int i = rows.length - 1; i >= 0; i--) {
-		    gtCodes.add((String)ttm.getValueAt(rows[i], 0));
-		}
-	    }
-	}
-	return gtCodes;
+        Collection<String> gtCodes = new ArrayList<String>();
+        TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
+        int rows[] = getTerminologyTable().getSelectedRows();
+        if (ttm != null) {
+            if (rows.length >= 0) {
+                for (int i = rows.length - 1; i >= 0; i--) {
+                    gtCodes.add((String)ttm.getValueAt(rows[i], 0));
+                }
+            }
+        }
+        return gtCodes;
     }
 
     private void updateResults() {
-	_controller.getCurrentTermsMap().clear();
-	int numRows = getTerminologyTable().getRowCount();
-	for (int i = 0; i < numRows; i++) {
-	    Term term = new Term();
-	    String gtCode = (String)getTerminologyTable().getValueAt(i, 0);
-	    String text = (String)getTerminologyTable().getValueAt(i, 1);
-	    String desc = (String)getTerminologyTable().getValueAt(i, 2);
-	    term.setId(gtCode);
-	    term.setText(text);
-	    term.setDescription(desc);
-	    _controller.getCurrentTermsMap().put(gtCode, term);
-	}
+        _controller.getCurrentTermsMap().clear();
+        int numRows = getTerminologyTable().getRowCount();
+        for (int i = 0; i < numRows; i++) {
+            Term term = new Term();
+            String gtCode = (String)getTerminologyTable().getValueAt(i, 0);
+            String text = (String)getTerminologyTable().getValueAt(i, 1);
+            String desc = (String)getTerminologyTable().getValueAt(i, 2);
+            term.setId(gtCode);
+            term.setText(text);
+            term.setDescription(desc);
+            _controller.getCurrentTermsMap().put(gtCode, term);
+        }
     }
 
     private JPanel getEditButtonPanel() {
-	if (editButtonPanel == null) {
-	    editButtonPanel = new JPanel();
-	    editButtonPanel.setLayout(new BoxLayout(editButtonPanel, BoxLayout.Y_AXIS));
-	    editButtonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-	}
-	return editButtonPanel;
+        if (editButtonPanel == null) {
+            editButtonPanel = new JPanel();
+            editButtonPanel.setLayout(new BoxLayout(editButtonPanel, BoxLayout.Y_AXIS));
+            editButtonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        }
+        return editButtonPanel;
     }
 }
 /*

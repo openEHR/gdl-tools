@@ -501,7 +501,7 @@ public class OpenEHRObjectBundleManager {
                             OpenEHRLanguageManager.getMessage("ExpireTimeDesc"),
                             OpenEHRDataValues.DV_DATE_TIME, null,
                             idArchetype, idTemplate, "/expiry_time"));
-            //Expiry Time
+            //Narrative Description
             archetypeElementVOs.add(
                     new ArchetypeElementVO(
                             OpenEHRLanguageManager.getMessage("NarrativeDescription"),

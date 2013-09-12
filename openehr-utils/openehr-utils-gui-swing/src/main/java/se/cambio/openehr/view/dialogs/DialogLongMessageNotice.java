@@ -1,30 +1,21 @@
 package se.cambio.openehr.view.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Window;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
 import se.cambio.openehr.util.OpenEHRImageUtil;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 public class DialogLongMessageNotice extends DialogEditor{
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     public static enum MessageType{
-	NORMAL,
-	WARNING,
-	WARNING_WITH_CANCEL,
-	ERROR
+        NORMAL,
+        WARNING,
+        WARNING_WITH_CANCEL,
+        ERROR
     }
     private JPanel panelMsg = null;
     private JPanel panelException = null;
@@ -34,73 +25,73 @@ public class DialogLongMessageNotice extends DialogEditor{
     private MessageType _type = null;
 
     public DialogLongMessageNotice(Window owner, String title, String msg, String longMsg, MessageType type) {
-	super(owner, title, new Dimension(400, 400), true, true);
-	_msg = msg;
-	_longMsg = longMsg;
-	_type = type;
-	init();
+        super(owner, title, new Dimension(400, 400), true, true);
+        _msg = msg;
+        _longMsg = longMsg;
+        _type = type;
+        init();
     }
 
     private void init(){
-	getJPanel().setLayout(new BorderLayout());
-	getJPanel().add(getPanelMsg(), BorderLayout.NORTH);
-	getJPanel().add(getPanelException(), BorderLayout.CENTER);
-	getJPanel().add(getPanelButtons(), BorderLayout.SOUTH);
+        getJPanel().setLayout(new BorderLayout());
+        getJPanel().add(getPanelMsg(), BorderLayout.NORTH);
+        getJPanel().add(getPanelException(), BorderLayout.CENTER);
+        getJPanel().add(getPanelButtons(), BorderLayout.SOUTH);
     }
 
 
     private JPanel getPanelMsg(){
-	if(panelMsg==null){
-	    panelMsg = new JPanel(new BorderLayout());
-	    JPanel aux = new JPanel();
-	    aux.add(new JLabel(getImageIcon()));
-	    panelMsg.add(aux, BorderLayout.WEST);
-	    JTextPane textPane = new JTextPane();
-	    textPane.setText(_msg);
-	    textPane.setFont(textPane.getFont().deriveFont(Font.BOLD));
-	    textPane.setBackground(null);
-	    textPane.setEditable(false);
-	    panelMsg.add(textPane, BorderLayout.CENTER);
-	}
-	return panelMsg;
+        if(panelMsg==null){
+            panelMsg = new JPanel(new BorderLayout());
+            JPanel aux = new JPanel();
+            aux.add(new JLabel(getImageIcon()));
+            panelMsg.add(aux, BorderLayout.WEST);
+            JTextPane textPane = new JTextPane();
+            textPane.setText(_msg);
+            textPane.setFont(textPane.getFont().deriveFont(Font.BOLD));
+            textPane.setBackground(null);
+            textPane.setEditable(false);
+            panelMsg.add(textPane, BorderLayout.CENTER);
+        }
+        return panelMsg;
     }
 
     private JPanel getPanelException(){
-	if(panelException==null){
-	    panelException = new JPanel();
-	    panelException = new JPanel(new BorderLayout());
-	    JScrollPane scrollPane = new JScrollPane();
-	    JTextPane textPane = new JTextPane();
-	    textPane.setText(_longMsg);
-	    textPane.setEditable(false);
-	    JPanel noWrapPanel = new JPanel( new BorderLayout() );
-	    noWrapPanel.add(textPane);
-	    textPane.setBackground(null);
-	    scrollPane.setViewportView(noWrapPanel);
-	    panelException.add(scrollPane);
-	}
-	return panelException;
+        if(panelException==null){
+            panelException = new JPanel();
+            panelException = new JPanel(new BorderLayout());
+            JScrollPane scrollPane = new JScrollPane();
+            JTextPane textPane = new JTextPane();
+            textPane.setText(_longMsg);
+            textPane.setEditable(false);
+            JPanel noWrapPanel = new JPanel( new BorderLayout() );
+            noWrapPanel.add(textPane);
+            textPane.setBackground(null);
+            scrollPane.setViewportView(noWrapPanel);
+            panelException.add(scrollPane);
+        }
+        return panelException;
     }
 
     private JPanel getPanelButtons(){
-	if(panelButtons==null){
-	    panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	    panelButtons.add(getAcceptButton());
-	    if (MessageType.WARNING_WITH_CANCEL.equals(_type)){
-		panelButtons.add(getCancelButton());
-	    }
-	}
-	return panelButtons;
+        if(panelButtons==null){
+            panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            panelButtons.add(getAcceptButton());
+            if (MessageType.WARNING_WITH_CANCEL.equals(_type)){
+                panelButtons.add(getCancelButton());
+            }
+        }
+        return panelButtons;
     }
 
     private ImageIcon getImageIcon(){
-	if (MessageType.ERROR.equals(_type)){
-	    return OpenEHRImageUtil.CANCEL_ICON;
-	}else if (MessageType.WARNING.equals(_type)|| MessageType.WARNING_WITH_CANCEL.equals(_type)){
-	    return OpenEHRImageUtil.WARNING_ICON;
-	}else{
-	    return OpenEHRImageUtil.EMPTY_ICON;
-	}
+        if (MessageType.ERROR.equals(_type)){
+            return OpenEHRImageUtil.CANCEL_ICON;
+        }else if (MessageType.WARNING.equals(_type)|| MessageType.WARNING_WITH_CANCEL.equals(_type)){
+            return OpenEHRImageUtil.WARNING_ICON;
+        }else{
+            return OpenEHRImageUtil.EMPTY_ICON;
+        }
     }
 }
 /*
