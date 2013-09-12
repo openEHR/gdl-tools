@@ -12,7 +12,6 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>C:\Users\iago.corbal\Documents\eclipse\cds\gdl-editor\src\main\resources\img\editor.ico</icon>
   <jre>
     <path>jre</path>
     <minVersion>1.6.0</minVersion>
