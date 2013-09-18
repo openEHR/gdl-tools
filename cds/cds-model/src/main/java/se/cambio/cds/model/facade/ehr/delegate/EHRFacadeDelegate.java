@@ -9,6 +9,7 @@ import se.cambio.openehr.util.exceptions.InvalidAQLForEHRIdsException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
@@ -23,7 +24,10 @@ public interface EHRFacadeDelegate {
 
     public Collection<String> queryForEHRIds(String aql) 
 	    throws InternalErrorException, InvalidAQLForEHRIdsException;
-    
+
+    public List<List<Object>> query(String aql)
+            throws InternalErrorException, InvalidAQLForEHRIdsException;
+
     public Collection<ElementInstance> queryEHRElements(
 	    String ehrId,
 	    Collection<ArchetypeReference> archetypeReferences) 
