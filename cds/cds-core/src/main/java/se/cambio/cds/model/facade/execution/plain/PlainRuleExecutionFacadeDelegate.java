@@ -33,7 +33,7 @@ public class PlainRuleExecutionFacadeDelegate implements RuleExecutionFacadeDele
 	
 	ExecutionLogger executionLogger = new ExecutionLogger();
 	if (!guides.isEmpty()){
-	    Logger.getLogger(PlainRuleExecutionFacadeDelegate.class).info("Executing "+guides.size()+" guides using "+workingMemoryObjects.size()+" objects.");
+	    Logger.getLogger(PlainRuleExecutionFacadeDelegate.class).debug("Executing "+guides.size()+" guides using "+workingMemoryObjects.size()+" objects.");
 	    GuideExecutionManager.executeGuides(
 		    guides, date, workingMemoryObjects, executionLogger);
 	}

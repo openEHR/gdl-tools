@@ -1,13 +1,9 @@
 package se.cambio.cds.util;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+
+import java.util.*;
 
 /**
  * @author Jure Grom
@@ -18,7 +14,8 @@ public class AqlUtil
     {
 	Map<ArchetypeReference, String> aqlsMap = new HashMap<ArchetypeReference, String>();
 	for (ArchetypeReference archetypeReference : archetypeReferences) {
-	    aqlsMap.put(archetypeReference, getAql(ehrIds, Collections.singleton(archetypeReference)));
+        String aql = getAql(ehrIds, Collections.singleton(archetypeReference));
+	    aqlsMap.put(archetypeReference, aql);
 	}
 	return aqlsMap;
     }

@@ -158,6 +158,10 @@ public class GuideManager {
         return new ArrayList<Guide>(_allGuidesMap.values());
     }
 
+    public final Map<String,Guide> getAllGuidesMap(){
+        return _allGuidesMap;
+    }
+
     public Collection<String> getGuidesKey(Collection<GuideDTO> guides){
         ArrayList<String> idGuides = new ArrayList<String>();
         for (GuideDTO guideDTO : guides) {
