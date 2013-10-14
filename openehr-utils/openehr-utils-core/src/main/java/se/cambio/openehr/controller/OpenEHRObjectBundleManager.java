@@ -183,8 +183,8 @@ public class OpenEHRObjectBundleManager {
                         ordinalVOs,
                         unitVOs,
                         proportionTypeVOs);
-						
-		templateDTO.setIdArchetype(ar.getArchetypeId().getValue());
+
+        templateDTO.setIdArchetype(ar.getArchetypeId().getValue());
         templateDTO.setRMName(ar.getArchetypeId().rmEntity());
         templateDTO.setAom(IOUtils.getBytes(ar));
         templateDTO.setTobcVO(IOUtils.getBytes(templateObjectBundleCustomVO));
@@ -237,8 +237,12 @@ public class OpenEHRObjectBundleManager {
                 String type =null;
                 CObject childCObject = null;
                 if (att!=null){
-                    childCObject = att.getChildren().get(0);
-                    type = childCObject.getRmTypeName();
+                    if (att.getChildren()!=null && !att.getChildren().isEmpty()){
+                        childCObject = att.getChildren().get(0);
+                        type = childCObject.getRmTypeName();
+                    }else{
+                        type = cObject.getRmTypeName();
+                    }
                 }else{
                     type = cObject.getRmTypeName();
                 }
