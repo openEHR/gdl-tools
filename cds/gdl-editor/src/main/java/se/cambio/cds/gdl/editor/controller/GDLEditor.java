@@ -900,8 +900,17 @@ public class GDLEditor {
         _conceptGTCode = guide.getConcept();
         _guideOntology = guide.getOntology();
         _termDefinitions = getGuideOntology().getTermDefinitions();
-        check(getOriginalLanguageCode(), getTermDefinitions());
+        if (_termDefinitions==null){
+            _termDefinitions = new HashMap<String, TermDefinition>();
+        }else{
+            check(getOriginalLanguageCode(), getTermDefinitions());
+        }
         _termBindings = getGuideOntology().getTermBindings();
+        if (_termBindings==null){
+            _termBindings = new HashMap<String, TermBinding>();
+        }
+        _guideOntology.setTermDefinitions(_termDefinitions);
+        _guideOntology.setTermBindings(_termBindings);
         _readableGuide =
                 GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
         initResourceDescription();
@@ -980,6 +989,7 @@ public class GDLEditor {
         Collection<String> gtCodes = new ArrayList<String>();
         gtCodes.add(getConceptGTCode());
         gtCodes.addAll(getRenderableRules().keySet());
+        /* TODO Allow reuse of archetype element codes
         for (RuleLine ruleLine : getDefinitionRuleLines()) {
             for (RuleLine ruleLineAux : ruleLine.getChildrenRuleLines()) {
                 if (ruleLineAux instanceof ArchetypeElementInstantiationRuleLine) {
@@ -987,7 +997,7 @@ public class GDLEditor {
                             .getGTCode());
                 }
             }
-        }
+        }*/
         return gtCodes;
     }
 

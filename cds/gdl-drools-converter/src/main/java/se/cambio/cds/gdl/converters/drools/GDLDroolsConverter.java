@@ -35,6 +35,7 @@ public class GDLDroolsConverter {
 
     private static String CODE_FUNCTION_SEPARATOR = "#";
 
+    private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToElementId = new HashMap<String, String>();
 
@@ -99,7 +100,7 @@ public class GDLDroolsConverter {
                 Set<String> functionsRefs = new HashSet<String>();
                 functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
                 functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
-                String functionExtraCode = getFunctionsExtraCode(functionsRefs, definition);
+                String functionExtraCode = getFunctionsExtraCode(functionsRefs);
                 sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
                 sb.append("salience " + rule.getPriority() + "\n");
                 sb.append(DEFAULT_CONFIG + "\n");
@@ -261,6 +262,13 @@ public class GDLDroolsConverter {
         for (StringBuffer definition : archetypeDefinitions.values()) {
             resultSB.append(definition.toString());
         }
+
+        for (String elementGtCode: gtCodesRef){
+            Integer archetypeBindingIndex = gtElementToArchetypeBindingIndex
+                    .get(elementGtCode);
+            _gtElementToWholeDefinition.put(elementGtCode, archetypeDefinitions.get(archetypeBindingIndex).toString());
+        }
+
         return resultSB.toString();
     }
 
@@ -571,7 +579,7 @@ public class GDLDroolsConverter {
     }
 
 
-    private String getFunctionsExtraCode(Collection<String> gtCodesWithFunctions, String definition){
+    private String getFunctionsExtraCode(Collection<String> gtCodesWithFunctions){
         StringBuffer sb = new StringBuffer();
         for (String gtCodesWithFunction : gtCodesWithFunctions) {
             String[] codeSplit = gtCodesWithFunction.split(CODE_FUNCTION_SEPARATOR);
@@ -580,9 +588,21 @@ public class GDLDroolsConverter {
             if (isFunction(att)){
                 if (OpenEHRDataValues.FUNCTION_COUNT.equals(att)){
                     String elementId = _gtElementToElementId.get(code);
-                    String def = "ElementInstance(id==\""+elementId+"\", dataValue!=null)";
-                    String defAux = definition.replace("\n"," and\n").replace("$","$count_").replace("eval(DVUtil.equalDV(true, $count_predicate", "eval(DVUtil.equalDV(false, $count_predicate");
-                    sb.append("   Number($"+code+att+":intValue) from accumulate ("+defAux+" eval(true), count($count_"+code+"))\n   ");
+                    //String def = "ElementInstance(id==\""+elementId+"\", dataValue!=null)";
+                    /*TODO HACK - Should be done in a propper way...*/
+                    String definition = _gtElementToWholeDefinition.get(code);
+                    String defAux =
+                            definition
+                                    .replace("\n"," and\n")
+                                    .replace("$","$count_")
+                                    .replace("eval(DVUtil.equalDV(true, $count_predicate", "eval(DVUtil.equalDV(false, $count_predicate")
+                                    .replace("eval(DVUtil.isSubClassOf(true, $count_predicate", "eval(DVUtil.isSubClassOf(false, $count_predicate")
+                                    .replace("$count_"+code+":ElementInstance(", "$count_"+code+":ElementInstance(!predicate, ");
+                    if (defAux.length()>5){
+                        //Remove last 'and'
+                        defAux = defAux.substring(0, defAux.length()-5);
+                    }
+                    sb.append("   Number($"+code+att+":intValue) from accumulate ("+defAux+", count($count_"+code+"))\n   ");
                 }
             }
         }

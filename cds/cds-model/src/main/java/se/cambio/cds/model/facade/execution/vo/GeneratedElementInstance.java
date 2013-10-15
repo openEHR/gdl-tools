@@ -42,7 +42,11 @@ public class GeneratedElementInstance extends ElementInstance{
     public GeneratedElementInstance clone(){
 	return new GeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour(), guideId, gtCode);
     }
-    
+
+    public boolean isPredicate(){
+        return false;
+    }
+
     public String toString(){
 	return "(G)"+super.toString();
     }

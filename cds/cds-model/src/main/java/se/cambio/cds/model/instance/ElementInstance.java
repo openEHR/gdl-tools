@@ -88,6 +88,10 @@ public class ElementInstance implements Serializable{
         return new ElementInstance(id, dataValue, archetypeReference.clone(), containerInstance, nullFlavour);
     }
 
+    public boolean isPredicate(){
+        return false;
+    }
+
     public String toString(){
         return "id="+id+"\n"+
                 "dataValue="+dataValue+"\n"+

@@ -42,7 +42,11 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
     public boolean hasValue(){
 	return false;
     }
-    
+
+    public boolean isPredicate(){
+        return true;
+    }
+
     public boolean hasNoValue(){
 	return true;
     }
