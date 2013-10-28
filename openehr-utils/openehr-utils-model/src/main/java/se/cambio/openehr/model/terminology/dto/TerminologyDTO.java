@@ -1,13 +1,18 @@
 package se.cambio.openehr.model.terminology.dto;
 
-public class TerminologyDTO {
+import java.io.Serializable;
+
+public class TerminologyDTO implements Serializable{
+
+    private static final long serialVersionUID = 2303245012L;
+
     private String terminologyId = null;
     private byte[] src = null;
 
     public TerminologyDTO(String terminologyId, byte[] src) {
-	super();
-	this.terminologyId = terminologyId;
-	this.src = src;
+        super();
+        this.terminologyId = terminologyId;
+        this.src = src;
     }
     public String getTerminologyId() {
         return terminologyId;

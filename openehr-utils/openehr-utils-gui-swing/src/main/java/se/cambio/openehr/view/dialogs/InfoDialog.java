@@ -1,25 +1,14 @@
 
 package se.cambio.openehr.view.dialogs;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Toolkit;
-import java.awt.Window;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.Future;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 /**
  * @author icorram
  *
@@ -116,6 +105,7 @@ public class InfoDialog extends JDialog{
 	    cancelButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    _currentThread.cancel(true);
+
 		    stop();
 		}
 	    });

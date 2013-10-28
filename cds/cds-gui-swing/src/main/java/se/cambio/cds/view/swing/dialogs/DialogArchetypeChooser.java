@@ -196,7 +196,7 @@ public class DialogArchetypeChooser extends JDialog{
         }
 
         public void actionPerformed(ActionEvent e) {
-            ImportUtils.showImportArchetypeDialog(_dialog, null);
+            ImportUtils.showImportArchetypeDialogAndAddToRepo(_dialog, null);
             refreshArchetypeSelectionPanel();
         }
     }

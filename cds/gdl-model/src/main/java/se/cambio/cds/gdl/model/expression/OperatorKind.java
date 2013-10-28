@@ -42,7 +42,9 @@ public enum OperatorKind {
 	/**
 	 * Conditional operators
 	 */
-	FOR_ALL("for all","for_all");
+	FOR_ALL("for all","for_all"),
+    MAX("max","max"),
+    MIN("min","min");
 	
 	private OperatorKind(String name, String symbol) {
 		this.name = name;

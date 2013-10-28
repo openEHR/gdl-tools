@@ -10,7 +10,7 @@ import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
  */
 public class GenericArchetypeFactory {
 
-    private static String DAO_CLASS_GUIDE = "GenericArchetypeDAO/Class";
+    private static String DAO_CLASS_ARCHETYPE = "GenericArchetypeDAO/Class";
 
     private GenericArchetypeFactory() {
     }
@@ -19,7 +19,7 @@ public class GenericArchetypeFactory {
 	Class<?> theClass = null;
 	try {
 	    String delegateClassName = 
-		    OpenEHRConfigurationParametersManager.getParameter(DAO_CLASS_GUIDE);
+		    OpenEHRConfigurationParametersManager.getParameter(DAO_CLASS_ARCHETYPE);
 	    theClass = Class.forName(delegateClassName);
 	} catch (Exception e) {
 	    throw new InternalErrorException(e);

@@ -67,6 +67,11 @@ public class PlainRuleExecutionFacadeDelegate implements RuleExecutionFacadeDele
 	return new RuleExecutionResult(ehrId, elementInstances, executionLogger.getLog(), ruleReferences);
     }
 
+    @Override
+    public void cancelExecution() {
+        GuideExecutionManager.cancelCurrentExecution();
+    }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

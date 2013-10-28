@@ -135,8 +135,14 @@ public class ElementInstanceCollectionUtil {
                     return false;
                 }
             }
-        }else{
+        }else if (OperatorKind.EQUALITY.equals(operatorKind)){
             return DVUtil.equalDVs(dv1, dv2);
+        }else if (OperatorKind.MAX.equals(operatorKind)|| (OperatorKind.MIN.equals(operatorKind))){
+            if(dv2==null){
+                return false;
+            }else{
+                return true;
+            }
         }
         return false;
     }

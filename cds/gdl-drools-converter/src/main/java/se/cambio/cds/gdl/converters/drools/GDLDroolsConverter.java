@@ -132,8 +132,6 @@ public class GDLDroolsConverter {
                 sb.append(END + "\n\n");
             }
         }
-        sb.append("query test\n$test:ElementInstance()\nend");
-
         return sb.toString();
     }
 
@@ -212,6 +210,65 @@ public class GDLDroolsConverter {
                                     throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"));
                                 }
                             }
+                        }else if (expressionItem instanceof UnaryExpression) {
+                            UnaryExpression unaryExpression = (UnaryExpression) expressionItem;
+                            predicateCount++;
+                            Variable variable = (Variable) unaryExpression.getOperand();
+                            String idElement = archetypeBinding
+                                    .getArchetypeId() + variable.getPath();
+                            archetypeBindingMVELSB.append("      ");
+                            archetypeBindingMVELSB
+                                    .append("ElementInstance(id==\""
+                                            + idElement
+                                            + "\", archetypeReference==$"
+                                            + arID+arCount +", "
+                                            + "predicate || dataValue instanceof Comparable, "
+                                            + "$predDV"+ predicateCount+":dataValue"
+                                            + ")\n");
+                            ArchetypeElementVO archetypeElement = ArchetypeElements
+                                    .getArchetypeElement(
+                                            archetypeBinding.getTemplateId(),
+                                            idElement);
+                            OperatorKind op = unaryExpression.getOperator();
+                            String opStr = null;
+                            if (OperatorKind.MAX.equals(op)){
+                                opStr=">";
+                            }else if (OperatorKind.MIN.equals(op)){
+                                opStr="<";
+                            }else{
+                                Logger.getLogger(GDLDroolsConverter.class).warn("Operator for predicate '"+op+"' is not valid.");
+                            }
+                            if (archetypeElement!=null && opStr!=null){
+
+                                String predAuxDef = getComparisonPredicateChecks(archetypeBinding, predicateCount);
+                                String predicateArchetypeRef = "";
+                                archetypeBindingMVELSB.append("      ");
+                                archetypeBindingMVELSB.append("not(\n");
+                                if (predAuxDef!=null){
+                                    archetypeBindingMVELSB.append(predAuxDef);
+                                    predicateArchetypeRef = "archetypeReference==$archetypeReferencePredicate"+predicateCount+",";
+                                }
+                                archetypeBindingMVELSB.append("      ");
+                                archetypeBindingMVELSB
+                                        .append("ElementInstance(id==\""
+                                                + idElement + "\", "
+                                                + predicateArchetypeRef
+                                                + "(dataValue instanceof DvOrdered) && "
+                                                + "((DvOrdered)dataValue)"+opStr+"((DvOrdered)$predDV"+ predicateCount+")"
+                                                +"))\n");
+                                /*
+                                String rmType = archetypeElement.getRMType();
+                                archetypeBindingMVELSB.append("      ");
+                                archetypeBindingMVELSB.append("eval("+
+                                                getOperatorMVELLine(
+                                                        "$predicate"+ predicateCount,
+                                                        unaryExpression.getOperator(),
+                                                        true)+
+                                                ")\n");
+                                                */
+                            }else{
+                                throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"));
+                            }
                         }
                     }
                 }
@@ -240,6 +297,53 @@ public class GDLDroolsConverter {
 
     }
 
+
+    private String getComparisonPredicateChecks(ArchetypeBinding archetypeBinding, Integer predicateCount){
+        StringBuffer sb = new StringBuffer();
+        for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
+            if (expressionItem instanceof BinaryExpression) {
+                BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
+                if (binaryExpression.getLeft() instanceof Variable
+                        && binaryExpression.getRight() instanceof ConstantExpression) {
+                    Variable variable = (Variable) binaryExpression.getLeft();
+                    ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
+                    String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
+                    sb.append("      ");
+                    sb.append("$predicateAux"+ predicateCount);
+                    sb.append(":ElementInstance(id==\"");
+                    sb.append(idElement);
+                    sb.append("\", archetypeReference==$archetypeReferencePredicate"+predicateCount+") and \n");
+                    ArchetypeElementVO archetypeElement = ArchetypeElements
+                            .getArchetypeElement(
+                                    archetypeBinding.getTemplateId(),
+                                    idElement);
+                    if (archetypeElement!=null){
+                        String rmType = archetypeElement.getRMType();
+                        sb.append("      ");
+                        sb.append("eval("+
+                                getOperatorMVELLine(
+                                        "$predicateAux"+ predicateCount,
+                                        binaryExpression.getOperator(),
+                                        DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue())),
+                                        true)+
+                                ") and \n");
+                    }
+                }
+            }
+        }
+        String predicateDef = sb.toString();
+        if (!predicateDef.isEmpty()){
+            sb = new StringBuffer();
+            sb.append("      ");
+            sb.append("$archetypeReferencePredicate"+predicateCount+":ArchetypeReference(idDomain==\"EHR\",");
+            sb.append("idArchetype==\""+archetypeBinding.getArchetypeId()+"\") and \n");
+            return sb.toString()+predicateDef;
+        }else{
+            return null;
+        }
+    }
+
+
     private String getDefinitionForRule(Set<String> gtCodesRef,
                                         Map<Integer, String> archetypeBindingIndexToDefinition,
                                         Map<String, Integer> gtElementToArchetypeBindingIndex) {
@@ -252,8 +356,7 @@ public class GDLDroolsConverter {
                     .get(archetypeBindingIndex);
             if (definition == null) {
                 definition = new StringBuffer();
-                definition.append(archetypeBindingIndexToDefinition
-                        .get(archetypeBindingIndex));
+                definition.append(archetypeBindingIndexToDefinition.get(archetypeBindingIndex));
                 archetypeDefinitions.put(archetypeBindingIndex, definition);
             }
             definition.append("      $"+elementGtCode+":"+_gtElementToDefinition.get(elementGtCode)+"\n");
@@ -346,11 +449,14 @@ public class GDLDroolsConverter {
         stats.get(RefStat.SET).add(gtCode);
         if (attribute == null) {
             if (expressionItemAux instanceof Variable) {
-                String gtCodeAux = ((Variable) expressionItemAux).getCode();
+                Variable var2 = (Variable) expressionItemAux;
+                String gtCodeAux = var2.getCode();
+                stats.get(RefStat.REFERENCE).add(gtCodeAux);
                 sb.append(
-                        "$"+gtCode+"setDataValue($"+gtCodeAux+getDataValueMethod(gtCode)+");"+
+                        "$"+gtCode+".setDataValue($"+gtCodeAux+getDataValueMethod(gtCode)+");"+
                                 "$"+gtCode+".setNullFlavour(null);"+
                                 "$executionLogger.addLog(drools, $"+ gtCode + ");");
+
             } else if (expressionItemAux instanceof ConstantExpression) {
                 String dvStr =
                         ((ConstantExpression) expressionItemAux).getValue();
@@ -589,7 +695,7 @@ public class GDLDroolsConverter {
                 if (OpenEHRDataValues.FUNCTION_COUNT.equals(att)){
                     String elementId = _gtElementToElementId.get(code);
                     //String def = "ElementInstance(id==\""+elementId+"\", dataValue!=null)";
-                    /*TODO HACK - Should be done in a propper way...*/
+                    /*TODO HACK - Should be done in a proper way...*/
                     String definition = _gtElementToWholeDefinition.get(code);
                     String defAux =
                             definition
@@ -597,7 +703,7 @@ public class GDLDroolsConverter {
                                     .replace("$","$count_")
                                     .replace("eval(DVUtil.equalDV(true, $count_predicate", "eval(DVUtil.equalDV(false, $count_predicate")
                                     .replace("eval(DVUtil.isSubClassOf(true, $count_predicate", "eval(DVUtil.isSubClassOf(false, $count_predicate")
-                                    .replace("$count_"+code+":ElementInstance(", "$count_"+code+":ElementInstance(!predicate, ");
+                                    .replace("$count_"+code+":ElementInstance(", "$count_"+code+":ElementInstance(!predicate, dataValue!=null, ");
                     if (defAux.length()>5){
                         //Remove last 'and'
                         defAux = defAux.substring(0, defAux.length()-5);
@@ -897,6 +1003,7 @@ public class GDLDroolsConverter {
                 + "import se.cambio.cds.model.instance.ElementInstance;\n"
                 + "import se.cambio.cds.model.instance.ContainerInstance;\n"
                 + "import se.cambio.cds.util.DVUtil;\n"
+                + "import org.openehr.rm.datatypes.quantity.DvOrdered;\n"
                 + "import org.openehr.rm.datatypes.quantity.DvCount;\n"
                 + "import org.openehr.rm.datatypes.quantity.DvOrdinal;\n"
                 + "import org.openehr.rm.datatypes.quantity.DvQuantity;\n"

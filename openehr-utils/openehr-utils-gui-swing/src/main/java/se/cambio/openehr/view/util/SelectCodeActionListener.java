@@ -1,15 +1,15 @@
 package se.cambio.openehr.view.util;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.panels.DVHierarchyCodedTextPanel;
 import se.cambio.openehr.view.util.NodeConversor.SearchType;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class SelectCodeActionListener implements ActionListener {
 
@@ -17,29 +17,29 @@ public class SelectCodeActionListener implements ActionListener {
     private DVHierarchyCodedTextPanel _panel = null;
 
     public SelectCodeActionListener(DVHierarchyCodedTextPanel panel){
-	_panel = panel;
+        _panel = panel;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-	if (_enable){
-	    DialogSelection dialog = 
-		    new DialogSelection(null, OpenEHRLanguageManager.getMessage("SelectTerm"), _panel.getRootNode());
-	    dialog.setVisible(true);
-	    if (dialog.getAnswer()){
-		Collection<Object> objs = NodeConversor.getSelectedObjects(_panel.getRootNode(), SearchType.SEARCH_ONLY_PARENT);
-		Collection<CodedTextVO> codedTextVOs = new ArrayList<CodedTextVO>();
-		for (Object object : objs) {
-		    if (object instanceof CodedTextVO){
-			codedTextVOs.add((CodedTextVO)object);
-		    }
-		}
-		_panel.addCodedTextCollection(codedTextVOs);
-	    }
-	}
+        if (_enable){
+            DialogSelection dialog =
+                    new DialogSelection(null, OpenEHRLanguageManager.getMessage("SelectTerm"), _panel.getRootNode());
+            dialog.setVisible(true);
+            if (dialog.getAnswer()){
+                Collection<Object> objs = NodeConversor.getSelectedObjects(_panel.getRootNode(), SearchType.SEARCH_ONLY_PARENT);
+                Collection<CodedTextVO> codedTextVOs = new ArrayList<CodedTextVO>();
+                for (Object object : objs) {
+                    if (object instanceof CodedTextVO){
+                        codedTextVOs.add((CodedTextVO)object);
+                    }
+                }
+                _panel.addCodedTextCollection(codedTextVOs);
+            }
+        }
     }
 
     public void setEnable(boolean enable){
-	_enable = enable;
+        _enable = enable;
     }
 }
 /*

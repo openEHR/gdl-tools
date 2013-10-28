@@ -1,13 +1,13 @@
 package se.cambio.cds.model.facade.execution.delegate;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
+
+import java.util.Calendar;
+import java.util.Collection;
 
 
 /**
@@ -21,6 +21,8 @@ public interface RuleExecutionFacadeDelegate {
             Collection<GuideDTO> guides,
             Collection<ElementInstance> elementInstances,
             Calendar date) throws InternalErrorException, PatientNotFoundException;
+
+    public void cancelExecution();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

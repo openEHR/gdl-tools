@@ -10,30 +10,30 @@ import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
  */
 public class GenericTemplateFactory {
 
-    private static String DAO_CLASS_GUIDE = "GenericTemplateDAO/Class";
+    private static String DAO_CLASS_TEMPLATE = "GenericTemplateDAO/Class";
 
     private GenericTemplateFactory() {
     }
 
     private static Class<?> getDAOClass() throws InternalErrorException {
-	Class<?> theClass = null;
-	try {
-	    String delegateClassName = 
-		    OpenEHRConfigurationParametersManager.getParameter(DAO_CLASS_GUIDE);
-	    theClass = Class.forName(delegateClassName);
-	} catch (Exception e) {
-	    throw new InternalErrorException(e);
-	}
-	return theClass;
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    OpenEHRConfigurationParametersManager.getParameter(DAO_CLASS_TEMPLATE);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+        return theClass;
     }
-    
-    public static GenericTemplateDAO getDAO() 
-	    throws InternalErrorException {
-	try {
-	    return (GenericTemplateDAO)getDAOClass().newInstance();
-	} catch (Exception e) {
-	    throw new InternalErrorException(e);
-	} 
+
+    public static GenericTemplateDAO getDAO()
+            throws InternalErrorException {
+        try {
+            return (GenericTemplateDAO)getDAOClass().newInstance();
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
     }
 }
 /*

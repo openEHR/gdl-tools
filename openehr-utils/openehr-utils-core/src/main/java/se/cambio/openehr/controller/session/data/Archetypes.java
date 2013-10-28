@@ -1,14 +1,6 @@
 package se.cambio.openehr.controller.session.data;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
-
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -18,6 +10,12 @@ import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Archetypes {
     private static Archetypes _instance = null;
@@ -26,15 +24,25 @@ public class Archetypes {
     public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
 
     private Archetypes(){
-        _archetypesById = new HashMap<String, ArchetypeDTO>();
-        _archetypeAOM = new HashMap<String, Archetype>();
     }
 
     public static void loadArchetypes() throws InternalErrorException{
+        loadArchetypes(true);
+    }
+
+    public static void loadArchetypes(boolean generate) throws InternalErrorException{
+        init();
         Collection<ArchetypeDTO> archetypeDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllArchetypes();
-        OpenEHRObjectBundleManager.generateArchetypesObjectBundles(archetypeDTOs);
+        if (generate){
+            OpenEHRObjectBundleManager.generateArchetypesObjectBundles(archetypeDTOs);
+        }
         loadArchetypesObjectBundle(archetypeDTOs);
+    }
+
+    private static void init(){
+        getDelegate()._archetypesById = new HashMap<String, ArchetypeDTO>();
+        getDelegate()._archetypeAOM = new HashMap<String, Archetype>();
     }
 
     public static void registerArchertype(ArchetypeDTO archetypeVO){

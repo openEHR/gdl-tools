@@ -36,7 +36,7 @@ public class ImportArchetypeAction extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	ImportUtils.showImportArchetypeDialog(EditorManager.getActiveEditorWindow(), null);
+	ImportUtils.showImportArchetypeDialogAndAddToRepo(EditorManager.getActiveEditorWindow(), null);
     }
 }
 /*

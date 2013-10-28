@@ -23,124 +23,125 @@ import se.cambio.openehr.view.trees.SelectableNode;
 public class NodeConversor {
 
     public static enum SearchType{
-	SEARCH_ONLY_LEAVES, SEARCH_ONLY_PARENT, SEARCH_ALL
+        SEARCH_ONLY_LEAVES, SEARCH_ONLY_PARENT, SEARCH_ALL
     }
-    
+
     public static void  setAllVisible(SelectableNode<?> raizNodo){
-	raizNodo.setVisible(true);
-	Enumeration<?> e = raizNodo.getAllchildren();
-	while (e.hasMoreElements()){
-	    NodeConversor.setAllVisible((SelectableNode<?>)e.nextElement());
-	}
+        raizNodo.setVisible(true);
+        Enumeration<?> e = raizNodo.getAllchildren();
+        while (e.hasMoreElements()){
+            NodeConversor.setAllVisible((SelectableNode<?>)e.nextElement());
+        }
     }
 
     public static void filterByText(SelectableNode<?> raizNodo, String filtro){
-	boolean visible = false;
-	if (raizNodo.getDescripcion()!=null){
-	    if (filtro.trim().length()>0){
-		String desc1 = Normalizer.normalize(raizNodo.getDescripcion(), Normalizer.Form.NFD);
-		desc1 = FormatConverter.textoSinPuntuacionMin(desc1);
-		String desc2 = Normalizer.normalize(filtro, Normalizer.Form.NFD);
-		desc2 = FormatConverter.textoSinPuntuacionMin(desc2);
-		visible = desc1.contains(desc2);
-	    }else{
-		visible = true;
-	    }
-	}
-	if (raizNodo.getSeleccionUnica()){
-	    raizNodo.setSeleccionado(false);
-	}
-	raizNodo.setVisible(visible);
-	if (visible){
-	    filtro = new String();
-	}
-	if (!raizNodo.isLeaf()){
-	    Enumeration<?> e = raizNodo.getAllchildren();
-	    while (e.hasMoreElements()){
-		NodeConversor.filterByText(
-			(SelectableNode<?>)e.nextElement(), 
-			filtro);
-	    }
-	    if (raizNodo.getChildCount()!=0) {
-		raizNodo.setVisible(true);
-	    }
-	}
+        boolean visible = false;
+        if (raizNodo.getDescripcion()!=null){
+            if (filtro.trim().length()>0){
+                String desc1 = Normalizer.normalize(raizNodo.getDescripcion(), Normalizer.Form.NFD);
+                desc1 = FormatConverter.textoSinPuntuacionMin(desc1);
+                String desc2 = Normalizer.normalize(filtro, Normalizer.Form.NFD);
+                desc2 = FormatConverter.textoSinPuntuacionMin(desc2);
+                visible = desc1.contains(desc2);
+            }else{
+                visible = true;
+            }
+        }
+        if (raizNodo.getSeleccionUnica()){
+            raizNodo.setSeleccionado(false);
+        }
+        raizNodo.setVisible(visible);
+        if (visible){
+            filtro = new String();
+        }
+        if (!raizNodo.isLeaf()){
+            Enumeration<?> e = raizNodo.getAllchildren();
+            while (e.hasMoreElements()){
+                NodeConversor.filterByText(
+                        (SelectableNode<?>)e.nextElement(),
+                        filtro);
+            }
+            if (raizNodo.getChildCount()!=0) {
+                raizNodo.setVisible(true);
+            }
+        }
     }
 
     public static Object getSelectedObject(SelectableNode<?> nodoRaiz){
-	SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, false);
-	return selectedNode!=null?selectedNode.getObjeto():null;
+        SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, false);
+        return selectedNode!=null?selectedNode.getObjeto():null;
     }
-    
+
     public static Object getSelectedObject(SelectableNode<?> nodoRaiz, boolean allowParent){
-	SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, allowParent);
-	return selectedNode!=null?selectedNode.getObjeto():null;
+        SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, allowParent);
+        return selectedNode!=null?selectedNode.getObjeto():null;
     }
 
     public static SelectableNode<?> getSelectedNode(SelectableNode<?> nodoRaiz, boolean allowParent){
-	Enumeration<?> e = nodoRaiz.getAllchildren();
-	while (e.hasMoreElements()){
-	    SelectableNode<?> nodo = (SelectableNode<?>)e.nextElement();
-	    if (nodo.getSeleccionado() && (allowParent || nodo.isLeaf() || !nodo.getSeleccionUnica())){
-		return nodo;
-	    }else {
-		if (!nodo.isLeaf() && nodo.getContineneSeleccionado()){
-		    return getSelectedNode(nodo, allowParent);
-		}
-	    }
-	}
-	return null;
+        Enumeration<?> e = nodoRaiz.getAllchildren();
+        while (e.hasMoreElements()){
+            SelectableNode<?> nodo = (SelectableNode<?>)e.nextElement();
+            if (nodo.getSeleccionado() && (allowParent || nodo.isLeaf() || !nodo.getSeleccionUnica())){
+                return nodo;
+            }else {
+                if (!nodo.isLeaf() && nodo.getContineneSeleccionado()){
+                    return getSelectedNode(nodo, allowParent);
+                }
+            }
+        }
+        return null;
     }
 
     public static Collection<Object> getSelectedObjects(SelectableNode<?> nodoRaiz){
-	return getSelectedObjects(nodoRaiz, SearchType.SEARCH_ALL);
-    }
-    public static Collection<Object> getSelectedObjects(SelectableNode<?> nodoRaiz, SearchType searchType){
-	Collection<SelectableNode<?>> selectedNodes = new ArrayList<SelectableNode<?>>();
-	addSelectedNodes(nodoRaiz, selectedNodes, searchType);
-	Collection<Object> objs = new ArrayList<Object>();
-	for (SelectableNode<?> nodoSeleccionable : selectedNodes) {
-	    objs.add(nodoSeleccionable.getObjeto());
-	}
-	return objs;
-    }
-    
-    public static void addSelectedNodes(SelectableNode<?> nodoRaiz, Collection<SelectableNode<?>> selectedNodes, SearchType searchType){
-	Enumeration<?> e = nodoRaiz.getAllchildren();
-	while (e.hasMoreElements()){
-	    SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
-	    if (node.getSeleccionado()){
-		if (searchType!=SearchType.SEARCH_ONLY_LEAVES || node.isLeaf()){
-		    selectedNodes.add(node);
-		}
-		if (searchType!=SearchType.SEARCH_ONLY_PARENT){
-		    addSelectedNodes(node, selectedNodes, searchType);
-		}
-	    }else if (node.getContineneSeleccionado()){
-		if (searchType!=SearchType.SEARCH_ONLY_PARENT || !node.isLeaf()){
-		    addSelectedNodes(node, selectedNodes, searchType);
-		}
-	    }
-	}
+        return getSelectedObjects(nodoRaiz, SearchType.SEARCH_ALL);
     }
 
-    
+    public static Collection<Object> getSelectedObjects(SelectableNode<?> nodoRaiz, SearchType searchType){
+        Collection<SelectableNode<?>> selectedNodes = new ArrayList<SelectableNode<?>>();
+        addSelectedNodes(nodoRaiz, selectedNodes, searchType);
+        Collection<Object> objs = new ArrayList<Object>();
+        for (SelectableNode<?> nodoSeleccionable : selectedNodes) {
+            objs.add(nodoSeleccionable.getObjeto());
+        }
+        return objs;
+    }
+
+    public static void addSelectedNodes(SelectableNode<?> nodoRaiz, Collection<SelectableNode<?>> selectedNodes, SearchType searchType){
+        Enumeration<?> e = nodoRaiz.getAllchildren();
+        while (e.hasMoreElements()){
+            SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
+            if (node.getSeleccionado()){
+                if (searchType!=SearchType.SEARCH_ONLY_LEAVES || node.isLeaf()){
+                    selectedNodes.add(node);
+                }
+                if (searchType!=SearchType.SEARCH_ONLY_PARENT){
+                    addSelectedNodes(node, selectedNodes, searchType);
+                }
+            }else if (node.getContineneSeleccionado()){
+                if (searchType!=SearchType.SEARCH_ONLY_PARENT || !node.isLeaf()){
+                    addSelectedNodes(node, selectedNodes, searchType);
+                }
+            }
+        }
+    }
+
+
     public static boolean selectObject(SelectableNode<?> nodoRaiz, Object obj){
-	Enumeration<?> e = nodoRaiz.getAllchildren();
-	while (e.hasMoreElements()){
-	    SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
-	    if (obj.equals(node.getObjeto())){
-		node.setSeleccionado(true);
-		node.cambioEstado(node);
-		return true;
-	    }else{
-		boolean found = selectObject(node, obj);
-		if (found){
-		    return true;
-		}
-	    }
-	}
-	return false;
+        Enumeration<?> e = nodoRaiz.getAllchildren();
+        while (e.hasMoreElements()){
+            SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
+            if (obj.equals(node.getObjeto())){
+                node.setSeleccionado(true);
+                node.cambioEstado(node);
+                return true;
+            }else{
+                boolean found = selectObject(node, obj);
+                if (found){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 /*

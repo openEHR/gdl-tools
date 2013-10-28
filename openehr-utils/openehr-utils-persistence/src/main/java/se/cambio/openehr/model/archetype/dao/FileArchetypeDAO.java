@@ -1,23 +1,18 @@
 package se.cambio.openehr.model.archetype.dao;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.FolderNotFoundException;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class FileArchetypeDAO implements GenericArchetypeDAO{
 
@@ -105,6 +100,16 @@ public class FileArchetypeDAO implements GenericArchetypeDAO{
 	}catch(IOException e){
 	    throw new InternalErrorException(e);
 	}
+    }
+
+    @Override
+    public void update(ArchetypeDTO ArchetypeDTO) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
+    }
+
+    @Override
+    public void remove(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
     }
 }
 /*

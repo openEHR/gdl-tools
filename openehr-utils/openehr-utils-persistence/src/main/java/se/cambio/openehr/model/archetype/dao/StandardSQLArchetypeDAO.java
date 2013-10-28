@@ -1,5 +1,10 @@
 package se.cambio.openehr.model.archetype.dao;
 
+import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.openehr.model.util.sql.GeneralOperations;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,14 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.util.sql.GeneralOperations;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-
 /**
  * @author icorram
- * 
+ *
  *
  */
 public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
@@ -24,201 +24,201 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
      * @see es.sergas.canalejo.sisegtx.model.archetype.dao.SQLArquetipoDAO#buscar(java.sql.Connection, java.util.Collection)
      * Only loads the compiled archetype
      */
-    public Collection<ArchetypeDTO> searchByArchetypeIds(Connection connection, Collection<String> archetypeIds) 
-	    throws InternalErrorException {
+    public Collection<ArchetypeDTO> searchByArchetypeIds(Connection connection, Collection<String> archetypeIds)
+            throws InternalErrorException {
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	Collection<ArchetypeDTO> archetypesVO = new ArrayList<ArchetypeDTO>();
-	String idsArquetiposStr = "";
-	if (archetypeIds!=null && !archetypeIds.isEmpty()){
-	    for (String archetypeId : archetypeIds) {
-		idsArquetiposStr += archetypeId+",";
-	    }
-	    if (idsArquetiposStr.length()>1){
-		idsArquetiposStr = idsArquetiposStr.substring(0, idsArquetiposStr.length()-1);
-	    }
-	}else{
-	    return archetypesVO;
-	}
-	try {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Collection<ArchetypeDTO> archetypesVO = new ArrayList<ArchetypeDTO>();
+        String idsArquetiposStr = "";
+        if (archetypeIds!=null && !archetypeIds.isEmpty()){
+            for (String archetypeId : archetypeIds) {
+                idsArquetiposStr += archetypeId+",";
+            }
+            if (idsArquetiposStr.length()>1){
+                idsArquetiposStr = idsArquetiposStr.substring(0, idsArquetiposStr.length()-1);
+            }
+        }else{
+            return archetypesVO;
+        }
+        try {
 
 	    /* Create "preparedStatement". */
-	    String queryString = "SELECT archetypeid, rmname, archetype, aom, aobcvo"
-		    + " FROM cds_archetype WHERE archetypeid IN ("+idsArquetiposStr+")";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "SELECT archetypeid, rmname, archetype, aom, aobcvo"
+                    + " FROM openehr_archetype WHERE archetypeid IN ("+idsArquetiposStr+")";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
-	    resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
-	    if (!resultSet.next()) {
-		return archetypesVO;
-	    }
+            if (!resultSet.next()) {
+                return archetypesVO;
+            }
 
 	    /* Get results. */
-	    do {
-		int i = 1;
-		String archetypeId = resultSet.getString(i++);
-		String rmName = resultSet.getString(i++);
-		String archetype = resultSet.getString(i++);
-		byte[] aom = resultSet.getBytes(i++);
-		byte[] aobcvo = resultSet.getBytes(i++);
-		archetypesVO.add(new ArchetypeDTO(archetypeId, archetypeId , archetypeId, rmName, archetype, aom, aobcvo));
-	    } while (resultSet.next());
+            do {
+                int i = 1;
+                String archetypeId = resultSet.getString(i++);
+                String rmName = resultSet.getString(i++);
+                String archetype = resultSet.getString(i++);
+                byte[] aom = resultSet.getBytes(i++);
+                byte[] aobcvo = resultSet.getBytes(i++);
+                archetypesVO.add(new ArchetypeDTO(archetypeId, archetypeId , archetypeId, rmName, archetype, aom, aobcvo));
+            } while (resultSet.next());
 
 	    /* Return the value object. */
-	    return archetypesVO;
+            return archetypesVO;
 
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
 
-    public Collection<ArchetypeDTO> searchAll(Connection connection) 
-	    throws InternalErrorException {
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	Collection<ArchetypeDTO> archetypesVO = new ArrayList<ArchetypeDTO>();
-	try {
+    public Collection<ArchetypeDTO> searchAll(Connection connection)
+            throws InternalErrorException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Collection<ArchetypeDTO> archetypesVO = new ArrayList<ArchetypeDTO>();
+        try {
 	    /* Create "preparedStatement". */
-	    String queryString = 
-		    "SELECT archetypeid, rmname, archetype, aom, aobcvo FROM cds_archetype";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString =
+                    "SELECT archetypeid, rmname, archetype FROM openehr_archetype";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
-	    resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
-	    if (!resultSet.next()) {
-		return archetypesVO;
-	    }
+            if (!resultSet.next()) {
+                return archetypesVO;
+            }
 
 	    /* Get results. */
-	    do {
-		int i = 1;
-		String archetypeId = resultSet.getString(i++);
-		String rmName = resultSet.getString(i++);
-		String archetype = resultSet.getString(i++);
-		byte[] aom = resultSet.getBytes(i++);
-		byte[] aobcvo = resultSet.getBytes(i++);
-		archetypesVO.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, rmName, archetype, aom, aobcvo));
-	    } while (resultSet.next());
+            do {
+                int i = 1;
+                String archetypeId = resultSet.getString(i++);
+                String rmName = resultSet.getString(i++);
+                String archetype = resultSet.getString(i++);
+                byte[] aom = null;//resultSet.getBytes(i++);
+                byte[] aobcvo = null;//resultSet.getBytes(i++);
+                archetypesVO.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, rmName, archetype, aom, aobcvo));
+            } while (resultSet.next());
 	    /* Return the value object. */
-	    return archetypesVO;
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            return archetypesVO;
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
-    public void insert(Connection connection, ArchetypeDTO archetypeDTO) 
-	    throws InternalErrorException {
+    public void insert(Connection connection, ArchetypeDTO archetypeDTO)
+            throws InternalErrorException {
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	try {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
 	    /* Create "preparedStatement". */
-	    String queryString = 
-		    "INSERT INTO cds_archetype (archetypeid, rmname, archetype, aom, aobcvo) VALUES (?, ?, ?, ?, ?)";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString =
+                    "INSERT INTO openehr_archetype (archetypeid, rmname, archetype, aom, aobcvo) VALUES (?, ?, ?, ?, ?)";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
-	    int i = 1;
-	    preparedStatement.setString(i++, archetypeDTO.getIdArchetype());
-	    preparedStatement.setString(i++, archetypeDTO.getRMName());
-	    preparedStatement.setString(i++, archetypeDTO.getArchetype());
-	    preparedStatement.setObject(i++, archetypeDTO.getAom());
-	    preparedStatement.setObject(i++, archetypeDTO.getAobcVO());
+            int i = 1;
+            preparedStatement.setString(i++, archetypeDTO.getIdArchetype());
+            preparedStatement.setString(i++, archetypeDTO.getRMName());
+            preparedStatement.setString(i++, archetypeDTO.getArchetype());
+            preparedStatement.setObject(i++, archetypeDTO.getAom());
+            preparedStatement.setObject(i++, archetypeDTO.getAobcVO());
 	    
 	    /* Execute query. */
-	    int insertedRows = preparedStatement.executeUpdate();
+            int insertedRows = preparedStatement.executeUpdate();
 
-	    if (insertedRows == 0) {
-		throw new SQLException("Cannot add record to 'cds_archetype'");
-	    }
-	    if (insertedRows > 1) {
-		throw new SQLException("Duplicate row at 'cds_archetype'");
-	    }
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            if (insertedRows == 0) {
+                throw new SQLException("Cannot add record to 'openehr_archetype'");
+            }
+            if (insertedRows > 1) {
+                throw new SQLException("Duplicate row at 'openehr_archetype'");
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
-    public void update(Connection connection, ArchetypeDTO archetypeDTO) 
-	    throws InternalErrorException, InstanceNotFoundException {
+    public void update(Connection connection, ArchetypeDTO archetypeDTO)
+            throws InternalErrorException, InstanceNotFoundException {
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	try {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
 	    /* Create "preparedStatement". */
-	    String queryString = "UPDATE cds_archetype set"
-		    + " archetype=?, aom=?, aobcvo=? WHERE archetypeid=?";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "UPDATE openehr_archetype set"
+                    + " archetype=?, aom=?, aobcvo=? WHERE archetypeid=?";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
-	    int i = 1;
-	    preparedStatement.setString(i++, archetypeDTO.getArchetype());
-	    preparedStatement.setObject(i++, archetypeDTO.getAom());
-	    preparedStatement.setObject(i++, archetypeDTO.getAobcVO());
-	    preparedStatement.setString(i++, archetypeDTO.getIdArchetype());
+            int i = 1;
+            preparedStatement.setString(i++, archetypeDTO.getArchetype());
+            preparedStatement.setObject(i++, archetypeDTO.getAom());
+            preparedStatement.setObject(i++, archetypeDTO.getAobcVO());
+            preparedStatement.setString(i++, archetypeDTO.getIdArchetype());
 
 	    /* Execute query. */
-	    int updatedRows = preparedStatement.executeUpdate();
+            int updatedRows = preparedStatement.executeUpdate();
 
-	    if (updatedRows == 0) {
-		throw new InstanceNotFoundException(
-			archetypeDTO.getIdArchetype(), 
-			ArchetypeDTO.class.getName());
-	    }
+            if (updatedRows == 0) {
+                throw new InstanceNotFoundException(
+                        archetypeDTO.getIdArchetype(),
+                        ArchetypeDTO.class.getName());
+            }
 
-	    if (updatedRows > 1) {
-		throw new SQLException("Duplicate row for archetype = '" + 
-			archetypeDTO.getIdArchetype() + "' in table 'cds_archetype'");
-	    }   
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            if (updatedRows > 1) {
+                throw new SQLException("Duplicate row for archetype = '" +
+                        archetypeDTO.getIdArchetype() + "' in table 'openehr_archetype'");
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
     public void remove(Connection connection, String archetypeId)
-	    throws InternalErrorException, InstanceNotFoundException{
+            throws InternalErrorException, InstanceNotFoundException{
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
-	try {
+        try {
 
 	    /* Create "preparedStatement". */
-	    String queryString = "DELETE FROM cds_archetype"
-		    + " WHERE archetypeid = ?";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "DELETE FROM openehr_archetype"
+                    + " WHERE archetypeid = ?";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
-	    int i = 1;
-	    preparedStatement.setString(i++, archetypeId);
+            int i = 1;
+            preparedStatement.setString(i++, archetypeId);
 
 	    /* Execute query. */
-	    int deletedRows = preparedStatement.executeUpdate();
-	    if (deletedRows == 0) {
-		throw new InstanceNotFoundException(archetypeId,
-			ArchetypeDTO.class.getName());
-	    }
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            int deletedRows = preparedStatement.executeUpdate();
+            if (deletedRows == 0) {
+                throw new InstanceNotFoundException(archetypeId,
+                        ArchetypeDTO.class.getName());
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 }

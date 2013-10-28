@@ -1,11 +1,12 @@
 package se.cambio.openehr.model.facade.administration.delegate;
 
-import java.util.Collection;
-
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.util.Collection;
 
 public interface OpenEHRAdministrationFacadeDelegate {
 
@@ -13,10 +14,22 @@ public interface OpenEHRAdministrationFacadeDelegate {
 	    throws InternalErrorException;
     public Collection<TemplateDTO> searchAllTemplates()
 	    throws InternalErrorException;
-    public void addArchetype(ArchetypeDTO archetypeDTO) 
+    public Collection<TerminologyDTO> searchAllTerminologies()
+            throws InternalErrorException;
+
+    public void upsertArchetype(ArchetypeDTO archetypeDTO)
 	    throws InternalErrorException, ModelException;
-    public void addTemplate(TemplateDTO templateDTO) 
+    public void upsertTemplate(TemplateDTO templateDTO)
 	    throws InternalErrorException, ModelException;
+    public void upsertTerminology(TerminologyDTO terminologyDTO)
+            throws InternalErrorException, ModelException;
+
+    public void removeArchetype(String archetypeId)
+            throws InternalErrorException, ModelException;
+    public void removeTemplate(String templateId)
+            throws InternalErrorException, ModelException;
+    public void removeTerminology(String terminologyId)
+            throws InternalErrorException, ModelException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

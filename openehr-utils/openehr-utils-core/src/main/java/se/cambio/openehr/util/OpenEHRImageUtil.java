@@ -6,12 +6,10 @@
  */
 package se.cambio.openehr.util;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-
-import javax.swing.ImageIcon;
 
 /**
  * @author icorram
@@ -69,6 +67,7 @@ public class OpenEHRImageUtil {
 	public static final String ELEMENT_NAME = "element.png";
 	public static final String ARCHETYPE_NAME = "archetype.png";
 	public static final String TEMPLATE_NAME = "template.png";
+    public static final String TERMSET_NAME = "termset.png";
 	
 	public static final ImageIcon SECTION = OpenEHRImageUtil.getIcon(SECTION_NAME);
 	public static final ImageIcon CLUSTER = OpenEHRImageUtil.getIcon(CLUSTER_NAME);
@@ -82,6 +81,7 @@ public class OpenEHRImageUtil {
 	public static final ImageIcon ELEMENT = OpenEHRImageUtil.getIcon(ELEMENT_NAME);
 	public static final ImageIcon ARCHETYPE = OpenEHRImageUtil.getIcon(ARCHETYPE_NAME);
 	public static final ImageIcon TEMPLATE = OpenEHRImageUtil.getIcon(TEMPLATE_NAME);
+    public static final ImageIcon TERMSET = OpenEHRImageUtil.getIcon(TERMSET_NAME);
 	
 	public static final ImageIcon EHR_LABEL_ICON = OpenEHRImageUtil.getIcon("ehr_label.png");
 	public static final ImageIcon KB_LABEL_ICON = OpenEHRImageUtil.getIcon("kb_label.png");
@@ -121,7 +121,7 @@ public class OpenEHRImageUtil {
 	public static final ImageIcon FOLDER_ICON = OpenEHRImageUtil.getIcon("folder.png");
 	public static final ImageIcon BIG_FOLDER_ICON = OpenEHRImageUtil.getIcon("big.folder.png");
 	public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
-	
+    public static final ImageIcon REFRESH_ICON = OpenEHRImageUtil.getIcon("arrow_refresh.png");
 
 	/* Aggregation functions */
 	public static final ImageIcon AF_ALL_ICON = OpenEHRImageUtil.getIcon("af_all.png");

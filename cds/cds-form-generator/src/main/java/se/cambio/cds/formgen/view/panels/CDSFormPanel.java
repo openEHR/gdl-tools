@@ -69,7 +69,9 @@ public class CDSFormPanel extends JPanel{
     public void setResultElements(Collection<ElementInstance> elementInstances){
         this.removeAll();
         resultPanel = null;
-        addElements(getCDSArchetypeReferences(elementInstances), false);
+        if (elementInstances!=null){
+            addElements(getCDSArchetypeReferences(elementInstances), false);
+        }
         getResultPanel().setVisible(true);
         init();
     }

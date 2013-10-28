@@ -2,9 +2,9 @@ package se.cambio.openehr.model.util;
 
 public final class GlobalNames {
 
-    public static final String CDSS_DATA_SOURCE = "jdbc/cds/cdsDS";
+    public static final String CDSS_DATA_SOURCE = "jdbc/openehr/openehrDS";
 
-    public static final String PERSISTENCE_UNIT = "CDSS";
+    public static final String PERSISTENCE_UNIT = "OpenEHRPU";
 
     private GlobalNames () {}
 

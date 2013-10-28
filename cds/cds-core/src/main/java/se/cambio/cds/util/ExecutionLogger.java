@@ -1,41 +1,49 @@
 package se.cambio.cds.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.drools.spi.KnowledgeHelper;
-
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ExecutionLogger {
     private List<ExecutionLog> _log = null;
     private List<String> _firedRules = null;
+    private boolean cancelExecution = false;
 
     public void addLog(KnowledgeHelper drools, ElementInstance elementInstance){
-	ExecutionLog executionLog = 
-		new ExecutionLog(
-			drools.getRule().getName(),
-			elementInstance.getArchetypeReference().getIdTemplate(),
-			elementInstance.getId(),
-			elementInstance.getDataValue()!=null?elementInstance.getDataValue().serialise():null);
-	getLog().add(executionLog);
+        ExecutionLog executionLog =
+                new ExecutionLog(
+                        drools.getRule().getName(),
+                        elementInstance.getArchetypeReference().getIdTemplate(),
+                        elementInstance.getId(),
+                        elementInstance.getDataValue()!=null?elementInstance.getDataValue().serialise():null);
+        getLog().add(executionLog);
+        //TODO This should not be done in the logger
+        if (cancelExecution){
+            drools.halt();
+        }
     }
 
     public List<ExecutionLog> getLog(){
-	if (_log==null){
-	    _log = new ArrayList<ExecutionLog>();
-	}
-	return _log;
+        if (_log==null){
+            _log = new ArrayList<ExecutionLog>();
+        }
+        return _log;
     }
 
     public void setFiredRules(List<String> firedRules){
-	_firedRules = firedRules;
+        _firedRules = firedRules;
     }
-    
+
     public List<String> getFiredRules(){
-	return _firedRules;
+        return _firedRules;
+    }
+
+    public void cancelExecution(){
+        cancelExecution = true;
     }
 }
 /*

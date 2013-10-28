@@ -10,26 +10,30 @@ public class OpenEHRAdministrationFacadeDelegateFactory {
     }
 
     private static Class<?> getDelegateClass() throws InternalErrorException {
-	Class<?> theClass = null;
-	try {
-	    String delegateClassName = 
-		    OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_ADMIN);
-	    theClass = Class.forName(delegateClassName);
-	} catch (Exception e) {
-	    throw new InternalErrorException(e);
-	}
-	return theClass;
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_ADMIN);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        } catch (Throwable th) {
+            throw new InternalErrorException(new Exception(th.getMessage()));
+        }
+        return theClass;
     }
 
     public static OpenEHRAdministrationFacadeDelegate getDelegate()
-	    throws InternalErrorException {
-	try {
-	    return (OpenEHRAdministrationFacadeDelegate)getDelegateClass().newInstance();
-	} catch (InstantiationException e) {
-	    throw new InternalErrorException(e);
-	} catch (IllegalAccessException e) {
-	    throw new InternalErrorException(e);
-	}
+            throws InternalErrorException {
+        try {
+            return (OpenEHRAdministrationFacadeDelegate)getDelegateClass().newInstance();
+        } catch (InstantiationException e) {
+            throw new InternalErrorException(e);
+        } catch (IllegalAccessException e) {
+            throw new InternalErrorException(e);
+        } catch (Throwable th) {
+            throw new InternalErrorException(new Exception(th.getMessage()));
+        }
     }
 }
 /*

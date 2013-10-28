@@ -120,6 +120,8 @@ TOKEN : /* SYMBOLS - common */
 | < SYM_IS_A : "is_a" >
 | < SYM_IS_NOT_A : "!is_a" >
 | < SYM_FOR_ALL : "for_all" >
+| < SYM_MAX : "max" >
+| < SYM_MIN : "min" >
 | < SYM_CURRENT_DATETIME : "currentDateTime" >
 | < SYM_ASSIGNMENT : "=" >
 | < SYM_MODULO : "\\" >
@@ -446,9 +448,22 @@ ExpressionItem expression_node() :
 }
 {
   (
-    < SYM_FOR_ALL > item = expression_leaf()
+    (
+      < SYM_FOR_ALL > item = expression_leaf()
+      {
+        op = OperatorKind.FOR_ALL;
+      }
+    | < SYM_MAX > item = expression_leaf()
+      {
+        op = OperatorKind.MAX;
+      }
+    | < SYM_MIN > item = expression_leaf()
+      {
+        op = OperatorKind.MIN;
+      }
+    )
     {
-      return new UnaryExpression(item, OperatorKind.FOR_ALL);
+      return new UnaryExpression(item, op);
   	}
   |
     (

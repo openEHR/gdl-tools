@@ -1,6 +1,4 @@
-package se.cambio.cds.ts;
-
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+package se.cambio.openehr.controller.terminology.ts;
 
 
 public class FMATest extends TerminologyServiceTestBase {

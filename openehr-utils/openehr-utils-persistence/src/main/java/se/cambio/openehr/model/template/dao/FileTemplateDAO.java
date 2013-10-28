@@ -1,24 +1,18 @@
 package se.cambio.openehr.model.template.dao;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.log4j.Logger;
-
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.FolderNotFoundException;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class FileTemplateDAO implements GenericTemplateDAO{
 
@@ -103,6 +97,16 @@ public class FileTemplateDAO implements GenericTemplateDAO{
         }catch(IOException e){
             throw new InternalErrorException(e);
         }
+    }
+
+    @Override
+    public void update(TemplateDTO templateDTO) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
+    }
+
+    @Override
+    public void remove(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
     }
 }
 /*

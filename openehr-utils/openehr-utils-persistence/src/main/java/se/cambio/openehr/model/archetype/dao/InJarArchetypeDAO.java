@@ -1,9 +1,5 @@
 package se.cambio.openehr.model.archetype.dao;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.Resources;
@@ -11,6 +7,10 @@ import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class InJarArchetypeDAO implements GenericArchetypeDAO{
 
@@ -76,6 +76,16 @@ public class InJarArchetypeDAO implements GenericArchetypeDAO{
     public void insert(ArchetypeDTO archetypeVO)
 	    throws InternalErrorException, ModelException{
 	throw new InternalErrorException(new Exception("It's Not possible to add archetypes into resources!"));
+    }
+
+    @Override
+    public void update(ArchetypeDTO ArchetypeDTO) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("It's Not possible to update archetypes into resources!"));
+    }
+
+    @Override
+    public void remove(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("It's Not possible to remove archetypes from resources!"));
     }
 }
 /*

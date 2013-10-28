@@ -1,12 +1,4 @@
-package se.cambio.cds.ts;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import org.openehr.rm.datatypes.text.CodePhrase;
-import org.openehr.rm.datatypes.text.DvCodedText;
-
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+package se.cambio.openehr.controller.terminology.ts;
 
 public class SNOMEDCTTest extends TerminologyServiceTestBase {
 	

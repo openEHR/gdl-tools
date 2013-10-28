@@ -1,29 +1,14 @@
 package se.cambio.cds.gdl.editor.view.applicationobjects;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.swing.ImageIcon;
-
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ElementAttributeComparisonConditionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ElementComparisonWithDVConditionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ElementComparisonWithElementConditionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ElementComparisonWithNullValueConditionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ElementInitializedConditionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.OrOperatorRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.SetElementAttributeActionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.SetElementWithDataValueActionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.SetElementWithElementActionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.SetElementWithNullValueActionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExpressionDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class RuleLineDirectory {
 
@@ -35,85 +20,86 @@ public class RuleLineDirectory {
 
 
     public static Collection<RuleLine> getSelectableConditions(){
-	Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
-	ruleLines.add(new ElementComparisonWithDVConditionRuleLine());
-	ruleLines.add(new ElementComparisonWithNullValueConditionRuleLine());
-	ruleLines.add(new ElementComparisonWithElementConditionRuleLine());
-	ruleLines.add(new ElementAttributeComparisonConditionRuleLine());
-	ruleLines.add(new ElementInitializedConditionRuleLine());
-	//ruleLines.add(new ForAllOperatorRuleLine()); //Deprecated
-	ruleLines.add(new OrOperatorRuleLine());
-	return ruleLines;
+        Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
+        ruleLines.add(new ElementComparisonWithDVConditionRuleLine());
+        ruleLines.add(new ElementComparisonWithNullValueConditionRuleLine());
+        ruleLines.add(new ElementComparisonWithElementConditionRuleLine());
+        ruleLines.add(new ElementAttributeComparisonConditionRuleLine());
+        ruleLines.add(new ElementInitializedConditionRuleLine());
+        //ruleLines.add(new ForAllOperatorRuleLine()); //Deprecated
+        ruleLines.add(new OrOperatorRuleLine());
+        return ruleLines;
     }
 
     public static Collection<RuleLine> getSelectableDefinitions(){
-	Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
-	ruleLines.add(new ArchetypeInstantiationRuleLine());
-	ruleLines.add(new ArchetypeElementInstantiationRuleLine(null));
-	ruleLines.add(new WithElementPredicateAttributeDefinitionRuleLine());
-	//TODO => ruleLines.add(new WithElementPredicateExpressionDefinitionRuleLine());
-	return ruleLines;
+        Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
+        ruleLines.add(new ArchetypeInstantiationRuleLine());
+        ruleLines.add(new ArchetypeElementInstantiationRuleLine(null));
+        ruleLines.add(new WithElementPredicateAttributeDefinitionRuleLine());
+        ruleLines.add(new WithElementPredicateFunctionDefinitionRuleLine());
+        //TODO => ruleLines.add(new WithElementPredicateExpressionDefinitionRuleLine());
+        return ruleLines;
     }
 
     public static Collection<RuleLine> getSelectableActions(){
-	Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
-	ruleLines.add(new SetElementWithDataValueActionRuleLine());
-	ruleLines.add(new SetElementWithNullValueActionRuleLine());
-	ruleLines.add(new SetElementWithElementActionRuleLine());
-	ruleLines.add(new SetElementAttributeActionRuleLine());
-	return ruleLines;
+        Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
+        ruleLines.add(new SetElementWithDataValueActionRuleLine());
+        ruleLines.add(new SetElementWithNullValueActionRuleLine());
+        ruleLines.add(new SetElementWithElementActionRuleLine());
+        ruleLines.add(new SetElementAttributeActionRuleLine());
+        return ruleLines;
     }
 
     public static ImageIcon getIconForRuleLine(RuleLine ruleLine){
-	if (ruleLine instanceof DefinitionsRuleLine){
-	    return GDLEditorImageUtil.SOURCE_ICON;
-	}else if (ruleLine instanceof ConditionRuleLine){
-	    return GDLEditorImageUtil.CONDITION_ICON;
-	}else if (ruleLine instanceof ActionRuleLine){
-	    return GDLEditorImageUtil.ACTION_ICON;
-	}else{
-	    return GDLEditorImageUtil.EMPTY_ICON;
-	}
+        if (ruleLine instanceof DefinitionsRuleLine){
+            return GDLEditorImageUtil.SOURCE_ICON;
+        }else if (ruleLine instanceof ConditionRuleLine){
+            return GDLEditorImageUtil.CONDITION_ICON;
+        }else if (ruleLine instanceof ActionRuleLine){
+            return GDLEditorImageUtil.ACTION_ICON;
+        }else{
+            return GDLEditorImageUtil.EMPTY_ICON;
+        }
     }
 
     public static RuleLineDirectory getDelegate(){
-	if (_instance==null){
-	    _instance = new RuleLineDirectory();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new RuleLineDirectory();
+        }
+        return _instance;
     }
 
     public static boolean checkRuleLineCompatibility(RuleLine ruleLine, RuleLine ruleLineParent){
-	if (ruleLineParent==null){
-	    if(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
-		    ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
-		return false;
-	    }else{
-		return true;
-	    }
-	}else if (ruleLine instanceof ArchetypeInstantiationRuleLine){
-	    return false;
-	}else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
-	    if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
-		return true;
-	    }else{
-		return false;
-	    }
-	}else if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
-	    if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
-		return true;
-	    }else{
-		return false;
-	    }
-	}else if (ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine){
-	    if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
-		return true;
-	    }else{
-		return false;
-	    }
-	}else{
-	    return true;
-	}
+        if (ruleLineParent==null){
+            if(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
+                    ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
+                return false;
+            }else{
+                return true;
+            }
+        }else if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+            return false;
+        }else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
+            if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
+                return true;
+            }else{
+                return false;
+            }
+        }else if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
+            if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
+                return true;
+            }else{
+                return false;
+            }
+        }else if (ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine){
+            if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return true;
+        }
     }
 }
 /*

@@ -1,11 +1,11 @@
 package se.cambio.openehr.model.template.dao;
 
-import java.util.Collection;
-
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.util.Collection;
 
 
 /**
@@ -21,6 +21,12 @@ public interface GenericTemplateDAO {
     
     public void insert(TemplateDTO templateDTO)
 	    throws InternalErrorException, ModelException;
+
+    public void update(TemplateDTO templateDTO)
+            throws InternalErrorException, InstanceNotFoundException;
+
+    public void remove(String templateId)
+            throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

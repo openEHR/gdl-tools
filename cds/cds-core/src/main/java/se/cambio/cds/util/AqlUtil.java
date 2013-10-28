@@ -1,106 +1,80 @@
 package se.cambio.cds.util;
 
+import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.exceptions.AQLGenerationException;
 
 import java.util.*;
 
-/**
- * @author Jure Grom
- */
-public class AqlUtil
-{
-    public static Map<ArchetypeReference, String> getAQLs(Collection<String> ehrIds, Collection<ArchetypeReference> archetypeReferences)
-    {
-	Map<ArchetypeReference, String> aqlsMap = new HashMap<ArchetypeReference, String>();
-	for (ArchetypeReference archetypeReference : archetypeReferences) {
-        String aql = getAql(ehrIds, Collections.singleton(archetypeReference));
-	    aqlsMap.put(archetypeReference, aql);
-	}
-	return aqlsMap;
+public class AqlUtil{
+
+    public static String getAql(Collection<String> ehrIds, ArchetypeReference archetypeReference)
+            throws AQLGenerationException {
+
+        final StringBuilder sb = new StringBuilder();
+
+        LinkedHashSet<String> elementPaths = new LinkedHashSet<String>();
+        List<String> elementIds = new ArrayList<String>(archetypeReference.getElementInstancesMap().keySet());
+        Collections.sort(elementIds);
+        for (String elementId : elementIds){
+            elementPaths.add(elementId.substring(archetypeReference.getIdArchetype().length()));
+        }
+        sb.append("SELECT\n");
+        sb.append("e/ehr_id/value AS ehrId\n");
+            for (String elementPath : elementPaths){
+                sb.append(", a").append(elementPath).append('\n');
+            }
+        sb.append("FROM\n");
+        sb.append("EHR e CONTAINS (\n");
+        sb.append("COMPOSITION c").append(" CONTAINS ").append(getKind(archetypeReference.getIdArchetype())).append(" a").append(" [").append(archetypeReference.getIdArchetype()).append("]\n");
+        sb.append(")\n");
+        if (ehrIds!=null && !ehrIds.isEmpty()){
+            sb.append("WHERE e/ehr_id/value matches {\n");
+            final Iterator<String> ehrIdsIterator = ehrIds.iterator();
+            sb.append('\'').append(ehrIdsIterator.next()).append("\'\n");
+            while (ehrIdsIterator.hasNext()){
+                sb.append(",\'").append(ehrIdsIterator.next()).append("\'\n");
+            }
+            sb.append("}\n");
+        }else{
+            sb.append("OFFSET 0 FETCH 200\n");
+        }
+        return sb.toString();
     }
 
-    public static String getAql(Collection<String> ehrIds, Collection<ArchetypeReference> archetypeReferences)
-    {
+    public static List<ArchetypeReference> compactArchetypeReferences(Collection <ArchetypeReference> ars){
+        Map<String, Collection<ArchetypeReference>> arsMap = new HashMap<String, Collection<ArchetypeReference>>();
+        for (ArchetypeReference ar : ars){
+            Collection<ArchetypeReference> arsAux = arsMap.get(ar.getIdArchetype());
+            if (arsAux==null){
+                arsAux = new ArrayList<ArchetypeReference>();
+                arsMap.put(ar.getIdArchetype(), arsAux);
+            }
+            arsAux.add(ar);
+        }
 
-	final StringBuilder sb = new StringBuilder();
-	sb.append("SELECT\n");
-	/* TODO AGGREGATION SHOULD BE DONE HERE
-	if (archetypeReferences.size()==1 && AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST.equals(archetypeReferences.iterator().next().getAggregationFunction()))
-	{
-	    sb.append("TOP 1\n");
-	}
-	*/
-	sb.append("e/ehr_id/value AS ehrId\n");
-	int i=0;
-	for (ArchetypeReference archetypeReference : archetypeReferences)
-	{
-	    for (Map.Entry<String, ElementInstance> e : archetypeReference.getElementInstancesMap().entrySet()){
-		sb.append(", a").append(i).append(e.getValue().getId().replace(archetypeReference.getIdArchetype(),"")).append('\n');//.append(" AS ").append(i).append("_").append(e.getKey()).append('\n');
-	    }
-	    i++;
-	}
-	sb.append("FROM\n");
-	sb.append("EHR e CONTAINS (\n");
-
-	final Iterator<ArchetypeReference> archetypeReferenceIterator = archetypeReferences.iterator();
-	i=0;
-	appendCompositionContainsArchetype(sb,archetypeReferenceIterator.next(),i++);
-	while (archetypeReferenceIterator.hasNext())
-	{
-	    sb.append("AND ");
-	    appendCompositionContainsArchetype(sb,archetypeReferenceIterator.next(),i++);
-	}
-
-	sb.append(")\n");
-	if (ehrIds!=null && !ehrIds.isEmpty())
-	{
-	    sb.append("WHERE e/ehr_id/value matches {\n");
-	    final Iterator<String> ehrIdsIterator = ehrIds.iterator();
-	    sb.append('\'').append(ehrIdsIterator.next()).append("\'\n");
-	    while (ehrIdsIterator.hasNext())
-	    {
-		sb.append(",\'").append(ehrIdsIterator.next()).append("\'\n");
-	    }
-	    sb.append("}\n");
-	}
-	sb.append("ORDER BY\n");
-	for (int j = 0; j < archetypeReferences.size(); j++)
-	{
-	    if (j!=0)
-	    {
-		sb.append(',');
-	    }
-	    sb.append("c").append(j).append("/context/start_time DESC\n");
-	}
-
-	if (ehrIds==null || ehrIds.isEmpty())
-	{
-	    sb.append("OFFSET 0 FETCH 200\n");
-	}
-
-	return sb.toString();
+        List<ArchetypeReference > compactARs = new ArrayList<ArchetypeReference>();
+        for (String archetypeId: arsMap.keySet()){
+            ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, archetypeId, null, null);
+            for (ArchetypeReference arAux: arsMap.get(archetypeId)){
+                for (String elementId: arAux.getElementInstancesMap().keySet()){
+                    if (!ar.getElementInstancesMap().containsKey(elementId)){
+                        new ElementInstance(elementId, null, ar, null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO); //The reference to AR is done inside EI initialization
+                    }
+                }
+            }
+            compactARs.add(ar);
+        }
+        return compactARs;
     }
 
-    private static void appendCompositionContainsArchetype(final StringBuilder sb, final ArchetypeReference archetypeReference, final int index)
-    {
-	/* TODO AGGREGATION SHOULD BE DONE HERE
-	if (AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST.equals(archetypeReference.getAggregationFunction()))
-	{
-	    sb.append("TOP 1 ");
-	}
-	*/
-	sb.append("COMPOSITION c").append(index).append(" CONTAINS ").append(getKind(archetypeReference.getIdArchetype())).append(" a").append(index).append(" [").append(archetypeReference.getIdArchetype()).append("]\n");
-    }
-
-    private static String getKind(final String archetypeId)
-    {
-	final int i = archetypeId.indexOf('.');
-	final int j = archetypeId.substring(0,i).lastIndexOf('-');
-	if (j+1<i)
-	{
-	    return archetypeId.substring(j+1,i);
-	}
-	return "OBSERVATION";
+    private static String getKind(final String archetypeId){
+        final int i = archetypeId.indexOf('.');
+        final int j = archetypeId.substring(0,i).lastIndexOf('-');
+        if (j+1<i){
+            return archetypeId.substring(j+1,i);
+        }
+        return "OBSERVATION";
     }
 }

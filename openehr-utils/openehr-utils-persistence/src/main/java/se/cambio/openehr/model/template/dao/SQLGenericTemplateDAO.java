@@ -6,18 +6,17 @@
  */
 package se.cambio.openehr.model.template.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-
-import javax.sql.DataSource;
-
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.util.GlobalNames;
 import se.cambio.openehr.model.util.sql.DataSourceLocator;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
 /**
  * @author icorram
  *
@@ -34,6 +33,8 @@ public class SQLGenericTemplateDAO implements GenericTemplateDAO {
 
 		dao = SQLTemplateFactory.getDAO();
 		dataSource = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
+        //TODO Get proper RepetableRead DS
+        dataSourceRR = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
 	}
 	/* (non-Javadoc)
 	 * @see es.sergas.canalejo.sisegtx.model.diagnostico.dao.GenericDiagnosticoDAO#buscar(java.sql.Connection, java.lang.Short)

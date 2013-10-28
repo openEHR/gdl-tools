@@ -1,4 +1,4 @@
-package se.cambio.cds.ts;
+package se.cambio.openehr.controller.terminology.ts;
 
 import junit.framework.TestCase;
 

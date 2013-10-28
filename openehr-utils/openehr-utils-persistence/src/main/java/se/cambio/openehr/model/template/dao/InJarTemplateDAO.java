@@ -1,15 +1,15 @@
 package se.cambio.openehr.model.template.dao;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.Resources;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class InJarTemplateDAO implements GenericTemplateDAO{
 
@@ -70,6 +70,16 @@ public class InJarTemplateDAO implements GenericTemplateDAO{
     public void insert(TemplateDTO templateVO)
 	    throws InternalErrorException, ModelException{
 	throw new InternalErrorException(new Exception("It's Not possible to add templates into resources!"));
+    }
+
+    @Override
+    public void update(TemplateDTO templateDTO) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("It's Not possible to add templates into resources!"));
+    }
+
+    @Override
+    public void remove(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("It's Not possible to delete templates from resources!"));
     }
 }
 /*

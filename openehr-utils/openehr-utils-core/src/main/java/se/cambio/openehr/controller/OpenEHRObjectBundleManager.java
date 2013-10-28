@@ -28,7 +28,6 @@ import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
 import java.io.InputStream;
@@ -607,10 +606,7 @@ public class OpenEHRObjectBundleManager {
     public static void addArchetype(ArchetypeDTO archetypeDTO)
             throws InternalErrorException, ModelException{
         try{
-            generateArchetypeObjectBundleCustomVO(archetypeDTO);
-            OpenEHRSessionManager.getAdministrationFacadeDelegate().addArchetype(archetypeDTO);
-        }catch(MissingConfigurationParameterException e){
-            throw new InternalErrorException(e);
+            OpenEHRSessionManager.getAdministrationFacadeDelegate().upsertArchetype(archetypeDTO);
         }catch(Exception e){
             throw new InternalErrorException(e);
         }
@@ -619,11 +615,7 @@ public class OpenEHRObjectBundleManager {
     public static void addTemplate(TemplateDTO templateDTO)
             throws InternalErrorException, ModelException{
         try{
-            Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
-            generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
-            OpenEHRSessionManager.getAdministrationFacadeDelegate().addTemplate(templateDTO);
-        }catch(MissingConfigurationParameterException e){
-            throw new InternalErrorException(e);
+            OpenEHRSessionManager.getAdministrationFacadeDelegate().upsertTemplate(templateDTO);
         }catch(Exception e){
             throw new InternalErrorException(e);
         }

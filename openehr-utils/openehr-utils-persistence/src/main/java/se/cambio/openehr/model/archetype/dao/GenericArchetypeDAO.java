@@ -1,11 +1,11 @@
 package se.cambio.openehr.model.archetype.dao;
 
-import java.util.Collection;
-
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
+
+import java.util.Collection;
 
 
 /**
@@ -21,6 +21,12 @@ public interface GenericArchetypeDAO {
     
     public void insert(ArchetypeDTO archetypeDTO)
 	    throws InternalErrorException, ModelException;
+
+    public void update(ArchetypeDTO ArchetypeDTO)
+            throws InternalErrorException, InstanceNotFoundException;
+
+    public void remove(String archetypeId)
+            throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

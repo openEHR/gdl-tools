@@ -1,46 +1,44 @@
-package se.cambio.openehr.model.facade.administration;
 
-import se.cambio.openehr.model.archetype.dao.GenericArchetypeDAO;
-import se.cambio.openehr.model.archetype.dao.GenericArchetypeFactory;
+package se.cambio.openehr.model.facade.administration.ejb;
+
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegate;
-import se.cambio.openehr.model.template.dao.GenericTemplateDAO;
-import se.cambio.openehr.model.template.dao.GenericTemplateFactory;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
+import javax.ejb.Remote;
+import java.rmi.RemoteException;
 import java.util.Collection;
 
-public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministrationFacadeDelegate{
 
-    @Override
+/**
+ * @author icorram
+ *
+ */
+@Remote
+public interface OpenEHRAdministrationFacade{
+
     public Collection<ArchetypeDTO> searchAllArchetypes()
-	    throws InternalErrorException {
-	GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-	return dao.searchAll();
-    }
-
-    @Override
+            throws InternalErrorException, RemoteException;
     public Collection<TemplateDTO> searchAllTemplates()
-	    throws InternalErrorException {
-	GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-	return dao.searchAll();
-    }
+            throws InternalErrorException, RemoteException;
+    public Collection<TerminologyDTO> searchAllTerminologies()
+            throws InternalErrorException, RemoteException;
 
-    @Override
-    public void addArchetype(ArchetypeDTO archetypeDTO)
-	    throws InternalErrorException, ModelException {
-	GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-	dao.insert(archetypeDTO);
-    }
+    public void upsertArchetype(ArchetypeDTO archetypeDTO)
+            throws InternalErrorException, ModelException, RemoteException;
+    public void upsertTemplate(TemplateDTO templateDTO)
+            throws InternalErrorException, ModelException, RemoteException;
+    public void upsertTerminology(TerminologyDTO terminologyDTO)
+            throws InternalErrorException, ModelException, RemoteException;
 
-    @Override
-    public void addTemplate(TemplateDTO templateDTO)
-	    throws InternalErrorException, ModelException {
-	GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-	dao.insert(templateDTO);
-    }
+    public void removeArchetype(String archetypeId)
+            throws InternalErrorException, ModelException, RemoteException;
+    public void removeTemplate(String templateId)
+            throws InternalErrorException, ModelException, RemoteException;
+    public void removeTerminology(String terminologyId)
+            throws InternalErrorException, ModelException, RemoteException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

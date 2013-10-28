@@ -14,34 +14,34 @@ public class OpenEHRSessionManager {
 
     private OpenEHRSessionManager(){
     }
-    
+
     public static OpenEHRAdministrationFacadeDelegate getAdministrationFacadeDelegate(){
-	if (getDelegate()._afd==null){
-	    try {
-		getDelegate()._afd = OpenEHRAdministrationFacadeDelegateFactory.getDelegate();
-	    } catch (InternalErrorException e) {
-		ExceptionHandler.handle(e);
-	    }
-	}
-	return getDelegate()._afd;
+        if (getDelegate()._afd==null){
+            try {
+                getDelegate()._afd = OpenEHRAdministrationFacadeDelegateFactory.getDelegate();
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
+        }
+        return getDelegate()._afd;
     }
-    
+
 
     public static TerminologyFacadeDelegate getTerminologyFacadeDelegate(){
-	if (getDelegate()._tfd==null){
-	    try {
-		getDelegate()._tfd = TerminologyFacadeDelegateFactory.getDelegate();
-	    } catch (InternalErrorException e) {
-		ExceptionHandler.handle(e);
-	    }
-	}
-	return getDelegate()._tfd;
+        if (getDelegate()._tfd==null){
+            try {
+                getDelegate()._tfd = TerminologyFacadeDelegateFactory.getDelegate();
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
+        }
+        return getDelegate()._tfd;
     }
-    
+
     private static OpenEHRSessionManager getDelegate(){
-	if (_delegate==null){
-	    _delegate = new OpenEHRSessionManager();
-	}
-	return _delegate;
+        if (_delegate==null){
+            _delegate = new OpenEHRSessionManager();
+        }
+        return _delegate;
     }
 }

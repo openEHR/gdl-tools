@@ -30,6 +30,7 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
     //private long _executionTime = 0;
     private RuleExecutionResult _result = null;
     private FormGeneratorController _controller = null;
+    private RuleExecutionFacadeDelegate _refd = null;
     public ExecuteRSW(FormGeneratorController controller) {
         super();
         _controller = controller;
@@ -44,7 +45,7 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
     }
 
 
-    public static RuleExecutionResult executeGuides(FormGeneratorController controller) {
+    public RuleExecutionResult executeGuides(FormGeneratorController controller) {
         //Long executionTime = null;
         try{
             //Calendar timeStart = Calendar.getInstance();
@@ -65,8 +66,8 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
             GuideManager guideManager = new GuideManager(guideDTOs);
             Collection<ElementInstance> elementInstances =
                     CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager);
-            RuleExecutionFacadeDelegate refd = RuleExecutionFacadeDelegateFactory.getDelegate();
-            RuleExecutionResult result = refd.execute(null, guideDTOs, elementInstances, controller.getCurrentDate());
+            _refd = RuleExecutionFacadeDelegateFactory.getDelegate();
+            RuleExecutionResult result = _refd.execute(null, guideDTOs, elementInstances, controller.getCurrentDate());
             //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
             return result;
         }catch(Throwable e){
@@ -80,8 +81,12 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
     }
 
     protected void done() {
+        if (isCancelled()){
+            _refd.cancelExecution();
+        }
         _controller.getViewer().setFree();
         _controller.updateResults(_result);
+
     }
 }
 /*

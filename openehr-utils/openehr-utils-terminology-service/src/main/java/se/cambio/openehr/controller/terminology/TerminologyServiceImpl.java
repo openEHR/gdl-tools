@@ -1,31 +1,19 @@
 package se.cambio.openehr.controller.terminology;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
 import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.model.terminology.dao.GenericTerminologyDAO;
-import se.cambio.openehr.model.terminology.dao.GenericTerminologyFactory;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
-import se.cambio.openehr.util.exceptions.UnknownPropertyException;
-import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+import se.cambio.openehr.util.exceptions.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.*;
 
 public class TerminologyServiceImpl implements TerminologyService {
 
@@ -36,7 +24,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     private Map<String, OWLReasoner> reasoners;
      */
     private Set<String> _supportedTerminologies = null;
-    private static TerminologyService soleInstance;
+    private static TerminologyServiceImpl soleInstance;
     private static Logger log = Logger.getLogger(TerminologyServiceImpl.class);
 
     public TerminologyServiceImpl(){
@@ -92,54 +80,42 @@ public class TerminologyServiceImpl implements TerminologyService {
 	    ExceptionHandler.handle(e);
 	}
 	 */
-        //TODO Remove
-        //InitialLoadingObservable.setCurrentLoadingStageFinished();
-        try{
-            //Load terminologies
-            //TODO Remove
-            //InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.TERMINOLOGIES);
-            GenericTerminologyDAO terminologyDAO = GenericTerminologyFactory.getDAO();
-            Collection<TerminologyDTO> terminologyDTOs =  terminologyDAO.searchAll();
-            //int total = terminologyDTOs.size();
-            //int count = 1;
-            for (TerminologyDTO terminologyDTO : terminologyDTOs) {
-                try{
-                    log.debug("Loading terminology : " + terminologyDTO.getTerminologyId());
-                    InputStream input = new ByteArrayInputStream(terminologyDTO.getSrc());
-                    String clazz = TerminologyServiceConfiguration.getPluginSourceClass(terminologyDTO.getTerminologyId());
-                    TerminologyServicePlugin terminologyServicePlugin = null;
-                    if(clazz != null) {
-                        try {
-                            terminologyServicePlugin = (TerminologyServicePlugin)Class.forName(clazz).newInstance();
-                        } catch (Exception e) {
-                            Logger.getLogger(TerminologyServiceImpl.class).error("ERROR instantiating class '"+clazz+"'");
-                        }
-                    } else {
-                        terminologyServicePlugin =
-                                new CSVTerminologyServicePlugin(terminologyDTO.getTerminologyId());
-                    }
-                    if (terminologyServicePlugin!=null){
-                        terminologyServicePlugin.init(input);
-                        this.registerTerminologyServicePlugin(terminologyServicePlugin);
-                        _supportedTerminologies.add(terminologyDTO.getTerminologyId());
-                    }
-                    //TODO Remove
-                    //InitialLoadingObservable.setCurrentProgress((double)count++/total);
-                } catch (Exception e) {
-                    InternalErrorException iee = new InternalErrorException(new Exception("failed to load terminology '"+terminologyDTO.getTerminologyId()+"'", e));
-                    ExceptionHandler.handle(iee);
-                    //TODO Remove
-                    //InitialLoadingObservable.addLoadingException(iee);
-                }
+        if (!Terminologies.isLoaded()){
+            try {
+                Terminologies.loadTerminologies();
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
             }
-        }catch(InternalErrorException e){
-            ExceptionHandler.handle(e);
         }
-        //TODO Remove
-        //InitialLoadingObservable.setCurrentLoadingStageFinished();
+        for (TerminologyDTO terminologyDTO : Terminologies.getAllTerminologies()) {
+            try{
+                log.debug("Loading terminology : " + terminologyDTO.getTerminologyId());
+                InputStream input = new ByteArrayInputStream(terminologyDTO.getSrc());
+                String clazz = TerminologyServiceConfiguration.getPluginSourceClass(terminologyDTO.getTerminologyId());
+                TerminologyServicePlugin terminologyServicePlugin = null;
+                if(clazz != null) {
+                    try {
+                        terminologyServicePlugin = (TerminologyServicePlugin)Class.forName(clazz).newInstance();
+                    } catch (Exception e) {
+                        Logger.getLogger(TerminologyServiceImpl.class).error("ERROR instantiating class '"+clazz+"'");
+                    }
+                } else {
+                    terminologyServicePlugin =
+                            new CSVTerminologyServicePlugin(terminologyDTO.getTerminologyId());
+                }
+                if (terminologyServicePlugin!=null){
+                    terminologyServicePlugin.init(input);
+                    this.registerTerminologyServicePlugin(terminologyServicePlugin);
+                    _supportedTerminologies.add(terminologyDTO.getTerminologyId());
+                }
+            } catch (Exception e) {
+                InternalErrorException iee = new InternalErrorException(new Exception("failed to load terminology '"+terminologyDTO.getTerminologyId()+"'", e));
+                ExceptionHandler.handle(iee);
+            }
+        }
     }
 
-    public static TerminologyService getInstance(){
+    public static TerminologyServiceImpl getInstance(){
         if (soleInstance == null) {
             soleInstance = new TerminologyServiceImpl();
         }

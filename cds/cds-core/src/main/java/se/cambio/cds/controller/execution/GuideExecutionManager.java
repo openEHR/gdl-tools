@@ -25,6 +25,9 @@ public class GuideExecutionManager {
     private static GuideExecutionManager _instance = null;
     private static final short MAX_KNOWLEDGE_BASE_CACHE = 10;
     private boolean _useCache = true;
+    private ExecutionLogger _logger = null;
+
+    private static int TIMEOUT_IN_SECONDS = 30;
 
     private GuideExecutionManager(){
         _knowledgeBaseCache = new LinkedHashMap<String, KnowledgeBase>();
@@ -57,6 +60,7 @@ public class GuideExecutionManager {
             throws InternalErrorException{
         try{
             final StatelessKnowledgeSession session = knowledgeBase.newStatelessKnowledgeSession();
+
             final RuleExecutionWMLogger ruleExecutionWMLogger = new RuleExecutionWMLogger();
             session.addEventListener(ruleExecutionWMLogger);
             if (date==null){
@@ -71,7 +75,9 @@ public class GuideExecutionManager {
                             date.get(Calendar.MINUTE),
                             date.get(Calendar.SECOND),
                             date.getTimeZone()));
+            getDelegate()._logger = executionLogger;
             session.setGlobal("$executionLogger", executionLogger);
+            session.setGlobal("$execute", true);
             session.execute(workingMemoryObjects);
             executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
         }catch(Exception e){
@@ -79,6 +85,14 @@ public class GuideExecutionManager {
             throw new InternalErrorException(e);
         }
     }
+
+    public static void cancelCurrentExecution(){
+        if (getDelegate()._logger!=null){
+            //TODO Cancel current execution is done through the logger... should change this behaviour
+            getDelegate()._logger.cancelExecution();
+        }
+    }
+
 
     public static KnowledgeBase getKnowledgeBase(Collection<GuideDTO> guideDTOs)
             throws InternalErrorException{

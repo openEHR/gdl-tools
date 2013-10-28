@@ -1,5 +1,10 @@
 package se.cambio.openehr.model.template.dao;
 
+import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.util.sql.GeneralOperations;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,14 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.util.sql.GeneralOperations;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-
 /**
  * @author icorram
- * 
+ *
  *
  */
 public class StandardSQLTemplateDAO implements SQLTemplateDAO {
@@ -24,206 +24,206 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
      * @see es.sergas.canalejo.sisegtx.model.Template.dao.SQLTemplateDAO#buscar(java.sql.Connection, java.util.Collection)
      * Only loads the compiled archetype
      */
-    public Collection<TemplateDTO> searchByTemplateIds(Connection connection, Collection<String> templateIds) 
-	    throws InternalErrorException {
+    public Collection<TemplateDTO> searchByTemplateIds(Connection connection, Collection<String> templateIds)
+            throws InternalErrorException {
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	Collection<TemplateDTO> templateDTO = new ArrayList<TemplateDTO>();
-	String templateIdsStr = "";
-	if (templateIds!=null && !templateIds.isEmpty()){
-	    for (String idTemplate : templateIds) {
-		templateIdsStr += "'"+idTemplate+"',";
-	    }
-	    if (templateIdsStr.length()>1){
-		templateIdsStr = templateIdsStr.substring(0, templateIdsStr.length()-1);
-	    }
-	}else{
-	    return templateDTO;
-	}
-	try {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Collection<TemplateDTO> templateDTO = new ArrayList<TemplateDTO>();
+        String templateIdsStr = "";
+        if (templateIds!=null && !templateIds.isEmpty()){
+            for (String idTemplate : templateIds) {
+                templateIdsStr += "'"+idTemplate+"',";
+            }
+            if (templateIdsStr.length()>1){
+                templateIdsStr = templateIdsStr.substring(0, templateIdsStr.length()-1);
+            }
+        }else{
+            return templateDTO;
+        }
+        try {
 
 	    /* Create "preparedStatement". */
-	    String queryString = "SELECT templateid, archetypeid, rmname, archetype, aom, tobcvo"
-		    + " FROM cds_template WHERE templateid IN ("+templateIdsStr+")";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "SELECT templateid, archetypeid, rmname, archetype, aom, tobcvo"
+                    + " FROM openehr_template WHERE templateid IN ("+templateIdsStr+")";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
-	    resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
-	    if (!resultSet.next()) {
-		return templateDTO;
-	    }
+            if (!resultSet.next()) {
+                return templateDTO;
+            }
 
 	    /* Get results. */
-	    do {
-		int i = 1;
-		String templateId = resultSet.getString(i++);
-		String idArchetype = resultSet.getString(i++);
-		String rmName = resultSet.getString(i++);
-		String archetype = resultSet.getString(i++);
-		byte[] aom = resultSet.getBytes(i++);
-		byte[] tobcvo = resultSet.getBytes(i++);
-		templateDTO.add(new TemplateDTO(templateId, idArchetype, rmName, archetype, aom, tobcvo));
-	    } while (resultSet.next());
+            do {
+                int i = 1;
+                String templateId = resultSet.getString(i++);
+                String idArchetype = resultSet.getString(i++);
+                String rmName = resultSet.getString(i++);
+                String archetype = resultSet.getString(i++);
+                byte[] aom = resultSet.getBytes(i++);
+                byte[] tobcvo = resultSet.getBytes(i++);
+                templateDTO.add(new TemplateDTO(templateId, idArchetype, rmName, archetype, aom, tobcvo));
+            } while (resultSet.next());
 
 	    /* Return the value object. */
-	    return templateDTO;
+            return templateDTO;
 
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
 
-    public Collection<TemplateDTO> searchAll(Connection connection) 
-	    throws InternalErrorException {
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
-	try {
+    public Collection<TemplateDTO> searchAll(Connection connection)
+            throws InternalErrorException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
+        try {
 	    /* Create "preparedStatement". */
-	    String queryString = 
-		    "SELECT templateid, archetypeid, rmname, archetype, aom, tobcvo FROM cds_template";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString =
+                    "SELECT templateid, archetypeid, rmname, archetype FROM openehr_template";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
-	    resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
-	    if (!resultSet.next()) {
-		return templateDTOs;
-	    }
+            if (!resultSet.next()) {
+                return templateDTOs;
+            }
 
 	    /* Get results. */
-	    do {
-		int i = 1;
-		String idTemplate = resultSet.getString(i++);
-		String idArchetype = resultSet.getString(i++);
-		String rmName = resultSet.getString(i++);
-		String archetype = resultSet.getString(i++);
-		byte[] aom = resultSet.getBytes(i++);
-		byte[] tobcvo = resultSet.getBytes(i++);
-		templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, aom, tobcvo));
-	    } while (resultSet.next());
+            do {
+                int i = 1;
+                String idTemplate = resultSet.getString(i++);
+                String idArchetype = resultSet.getString(i++);
+                String rmName = resultSet.getString(i++);
+                String archetype = resultSet.getString(i++);
+                byte[] aom = null;//resultSet.getBytes(i++);
+                byte[] tobcvo = null;//resultSet.getBytes(i++);
+                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, aom, tobcvo));
+            } while (resultSet.next());
 
 	    /* Return the value object. */
-	    return templateDTOs;
+            return templateDTOs;
 
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
-    public void insert(Connection connection, TemplateDTO templateDTO) 
-	    throws InternalErrorException {
+    public void insert(Connection connection, TemplateDTO templateDTO)
+            throws InternalErrorException {
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	try {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
 	    /* Create "preparedStatement". */
-	    String queryString = "INSERT INTO cds_template (templateid, archetypeid, rmname, archetype, aom, tobcvo)"
-		    + " VALUES (?, ?, ?, ?, ?)";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "INSERT INTO openehr_template (templateid, archetypeid, rmname, archetype, aom, tobcvo)"
+                    + " VALUES (?, ?, ?, ?, ?, ?)";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
-	    int i = 1;
-	    preparedStatement.setString(i++, templateDTO.getIdTemplate());
-	    preparedStatement.setString(i++, templateDTO.getIdArchetype());
-	    preparedStatement.setString(i++, templateDTO.getRMName());
-	    preparedStatement.setString(i++, templateDTO.getArchetype());
-	    preparedStatement.setObject(i++, templateDTO.getAom());
-	    preparedStatement.setObject(i++, templateDTO.getTobcVO());
+            int i = 1;
+            preparedStatement.setString(i++, templateDTO.getIdTemplate());
+            preparedStatement.setString(i++, templateDTO.getIdArchetype());
+            preparedStatement.setString(i++, templateDTO.getRMName());
+            preparedStatement.setString(i++, templateDTO.getArchetype());
+            preparedStatement.setObject(i++, templateDTO.getAom());
+            preparedStatement.setObject(i++, templateDTO.getTobcVO());
 
 	    /* Execute query. */
-	    int insertedRows = preparedStatement.executeUpdate();
+            int insertedRows = preparedStatement.executeUpdate();
 
-	    if (insertedRows == 0) {
-		throw new SQLException("Cannot add row to 'cds_template'");
-	    }
-	    if (insertedRows > 1) {
-		throw new SQLException("Duplicate row at 'cds_template'");
-	    }
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            if (insertedRows == 0) {
+                throw new SQLException("Cannot add row to 'openehr_template'");
+            }
+            if (insertedRows > 1) {
+                throw new SQLException("Duplicate row at 'openehr_template'");
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
-    public void update(Connection connection, TemplateDTO templateDTO) 
-	    throws InternalErrorException, InstanceNotFoundException {
+    public void update(Connection connection, TemplateDTO templateDTO)
+            throws InternalErrorException, InstanceNotFoundException {
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
-	try {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
 	    /* Create "preparedStatement". */
-	    String queryString = "UPDATE cds_template set"
-		    + " template=?, aom=?, tobcvo=? WHERE templateid=?";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "UPDATE openehr_template set"
+                    + " archetype=?, aom=?, tobcvo=? WHERE templateid=?";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
-	    int i = 1;
-	    preparedStatement.setString(i++, templateDTO.getArchetype());
-	    preparedStatement.setObject(i++, templateDTO.getAom());
-	    preparedStatement.setObject(i++, templateDTO.getTobcVO());
-	    preparedStatement.setString(i++, templateDTO.getIdTemplate());
+            int i = 1;
+            preparedStatement.setString(i++, templateDTO.getArchetype());
+            preparedStatement.setObject(i++, templateDTO.getAom());
+            preparedStatement.setObject(i++, templateDTO.getTobcVO());
+            preparedStatement.setString(i++, templateDTO.getIdTemplate());
 
 	    /* Execute query. */
-	    int updatedRows = preparedStatement.executeUpdate();
+            int updatedRows = preparedStatement.executeUpdate();
 
-	    if (updatedRows == 0) {
-		throw new InstanceNotFoundException(
-			templateDTO.getIdTemplate(), 
-			TemplateDTO.class.getName());
-	    }
+            if (updatedRows == 0) {
+                throw new InstanceNotFoundException(
+                        templateDTO.getIdTemplate(),
+                        TemplateDTO.class.getName());
+            }
 
-	    if (updatedRows > 1) {
-		throw new SQLException("Duplicate row for template = '" + 
-			templateDTO.getIdTemplate() + "' in table 'cds_template'");
-	    }   
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            if (updatedRows > 1) {
+                throw new SQLException("Duplicate row for template = '" +
+                        templateDTO.getIdTemplate() + "' in table 'openehr_template'");
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 
     public void remove(Connection connection, String templateId)
-	    throws InternalErrorException, InstanceNotFoundException{
+            throws InternalErrorException, InstanceNotFoundException{
 
-	PreparedStatement preparedStatement = null;
-	ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
-	try {
+        try {
 
 	    /* Create "preparedStatement". */
-	    String queryString = "DELETE FROM cds_template"
-		    + " WHERE templateid = ?";
-	    preparedStatement = connection.prepareStatement(queryString);
+            String queryString = "DELETE FROM openehr_template"
+                    + " WHERE templateid = ?";
+            preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
-	    int i = 1;
-	    preparedStatement.setString(i++, templateId);
+            int i = 1;
+            preparedStatement.setString(i++, templateId);
 
 	    /* Execute query. */
-	    int removedRows = preparedStatement.executeUpdate();
-	    if (removedRows == 0) {
-		throw new InstanceNotFoundException(templateId,
-			TemplateDTO.class.getName());
-	    }
-	} catch (SQLException e) {
-	    throw new InternalErrorException(e);
-	} finally {
-	    GeneralOperations.closeResultSet(resultSet);
-	    GeneralOperations.closeStatement(preparedStatement);
-	}
+            int removedRows = preparedStatement.executeUpdate();
+            if (removedRows == 0) {
+                throw new InstanceNotFoundException(templateId,
+                        TemplateDTO.class.getName());
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
     }
 }

@@ -627,12 +627,13 @@ public class GDLEditor {
                                     }
                                 } else if (ruleLineAux instanceof WithElementPredicateAttributeDefinitionRuleLine) {
                                     WithElementPredicateAttributeDefinitionRuleLine wepadrl = (WithElementPredicateAttributeDefinitionRuleLine) ruleLineAux;
-                                    predicateStatements.add(wepadrl
-                                            .toExpressionItem());
+                                    predicateStatements.add(wepadrl.toExpressionItem());
                                 } else if (ruleLineAux instanceof WithElementPredicateExpressionDefinitionRuleLine) {
                                     WithElementPredicateExpressionDefinitionRuleLine wepedrl = (WithElementPredicateExpressionDefinitionRuleLine) ruleLineAux;
-                                    predicateStatements.add(wepedrl
-                                            .toExpressionItem());
+                                    predicateStatements.add(wepedrl.toExpressionItem());
+                                } else if (ruleLineAux instanceof WithElementPredicateFunctionDefinitionRuleLine) {
+                                    WithElementPredicateFunctionDefinitionRuleLine wepfdrl = (WithElementPredicateFunctionDefinitionRuleLine) ruleLineAux;
+                                    predicateStatements.add(wepfdrl.toExpressionItem());
                                 }
                             }
                         }
@@ -1126,7 +1127,7 @@ public class GDLEditor {
             String templateId = archetypeBinding.getTemplateId();
             if (templateId == null) {
                 if (Archetypes.getArchetypeDTO(archetypeId) == null) {
-                    int result = ImportUtils.showImportArchetypeDialog(
+                    int result = ImportUtils.showImportArchetypeDialogAndAddToRepo(
                             EditorManager.getActiveEditorWindow(), new File(
                             archetypeId + ".adl"));
                     if (result == JFileChooser.CANCEL_OPTION) {

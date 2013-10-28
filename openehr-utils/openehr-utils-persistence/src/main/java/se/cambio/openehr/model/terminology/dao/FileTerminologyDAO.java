@@ -1,12 +1,5 @@
 package se.cambio.openehr.model.terminology.dao;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -14,54 +7,82 @@ import se.cambio.openehr.util.exceptions.FolderNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class FileTerminologyDAO implements GenericTerminologyDAO{
 
-    public InputStream search(String terminologyId)
-	    throws InternalErrorException, InstanceNotFoundException{
-	
-	File terminologyFolder = UserConfigurationManager.getTerminologiesFolder();
-	if (terminologyFolder.exists() && terminologyFolder.isDirectory()){
-	    for (File file : terminologyFolder.listFiles()) {
-		if (file.isFile()) {
-		    String fileName = file.getName();
-		    if (fileName.equals(terminologyId+".csv")){
-			try {
-			    return new FileInputStream(file);
-			} catch (FileNotFoundException e) {
-			    throw new InternalErrorException(e);
-			}
-		    }
-		}
-	    }
-	}else{
-	    throw new FolderNotFoundException(terminologyFolder.toString());
-	}
-	throw new InstanceNotFoundException(terminologyId, FileTerminologyDAO.class.getName());
+
+    public Collection<TerminologyDTO> searchByTerminologyIds(Collection<String> terminologyIds)
+            throws InternalErrorException{
+
+        Collection<TerminologyDTO> terminologyDTOs = new ArrayList<TerminologyDTO>();
+        File terminologyFolder = UserConfigurationManager.getTerminologiesFolder();
+        if (terminologyFolder.exists() && terminologyFolder.isDirectory()){
+            for (File file : terminologyFolder.listFiles()) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    if (fileName.endsWith(".csv")){
+                        String terminologyId = fileName.substring(0, fileName.length()-4);
+                        if (terminologyIds.contains(terminologyId)){
+                            try {
+                                FileInputStream fis = new FileInputStream(file);
+                                byte[] src = IOUtils.toByteArray(fis);
+                                terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
+                            } catch (FileNotFoundException e) {
+                                throw new InternalErrorException(e);
+                            } catch (IOException e) {
+                                throw new InternalErrorException(e);
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            throw new FolderNotFoundException(terminologyFolder.toString());
+        }
+        return terminologyDTOs;
     }
 
     public Collection<TerminologyDTO> searchAll() throws InternalErrorException {
-	try{
-	    Collection<TerminologyDTO> terminologiesDTO = new ArrayList<TerminologyDTO>();
-	    File terminologyFolder = UserConfigurationManager.getTerminologiesFolder();
-	    if (terminologyFolder.exists() && terminologyFolder.isDirectory()){
-		for (File file : terminologyFolder.listFiles()) {
-		    if (file.isFile()) {
-			String fileName = file.getName();
-			if (fileName.endsWith(".csv")){
-			    String terminologyId = fileName.substring(0, fileName.length()-4);
-			    InputStream is = new FileInputStream(file);
-			    byte[] terminologySrc = IOUtils.toByteArray(is);
-			    terminologiesDTO.add(new TerminologyDTO(terminologyId, terminologySrc));
-			}
-		    }
-		}
-	    }else{
-		throw new FolderNotFoundException(terminologyFolder.toString());
-	    }
-	    return terminologiesDTO;
-	}catch(Exception e){
-	    throw new InternalErrorException(e);
-	}
+        try{
+            Collection<TerminologyDTO> terminologiesDTO = new ArrayList<TerminologyDTO>();
+            File terminologyFolder = UserConfigurationManager.getTerminologiesFolder();
+            if (terminologyFolder.exists() && terminologyFolder.isDirectory()){
+                for (File file : terminologyFolder.listFiles()) {
+                    if (file.isFile()) {
+                        String fileName = file.getName();
+                        if (fileName.endsWith(".csv")){
+                            String terminologyId = fileName.substring(0, fileName.length()-4);
+                            InputStream is = new FileInputStream(file);
+                            byte[] terminologySrc = IOUtils.toByteArray(is);
+                            terminologiesDTO.add(new TerminologyDTO(terminologyId, terminologySrc));
+                        }
+                    }
+                }
+            }else{
+                throw new FolderNotFoundException(terminologyFolder.toString());
+            }
+            return terminologiesDTO;
+        }catch(Exception e){
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public void insert(TerminologyDTO TerminologyDTO) throws InternalErrorException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
+    }
+
+    @Override
+    public void update(TerminologyDTO TerminologyDTO) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
+    }
+
+    @Override
+    public void remove(String terminologyId) throws InternalErrorException, InstanceNotFoundException {
+        throw new InternalErrorException(new Exception("Not implemented!"));
     }
 }
 /*

@@ -111,6 +111,18 @@ public class GuideImporter {
                                     wepdrl.getExpressionRuleLineElement().setValue(expressionItemAux);
                                     wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
                                 }
+                            }else if (expressionItem instanceof UnaryExpression){
+                                UnaryExpression unaryExpression = (UnaryExpression)expressionItem;
+                                WithElementPredicateFunctionDefinitionRuleLine wefd = new WithElementPredicateFunctionDefinitionRuleLine();
+                                Variable variable = (Variable)unaryExpression.getOperand();
+                                airl.addChildRuleLine(wefd);
+                                String path = variable.getPath();
+                                ArchetypeElementVO archetypeElementVO =
+                                        ArchetypeElements.getArchetypeElement(
+                                                archetypeBinding.getTemplateId(),
+                                                archetypeBinding.getArchetypeId()+path);
+                                wefd.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                                wefd.getFunctionRuleLineElement().setValue(unaryExpression.getOperator());
                             }
                         }
                     }

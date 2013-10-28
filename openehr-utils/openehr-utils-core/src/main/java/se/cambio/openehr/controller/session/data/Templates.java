@@ -1,11 +1,4 @@
 package se.cambio.openehr.controller.session.data;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.vo.TemplateObjectBundleCustomVO;
@@ -15,6 +8,12 @@ import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Templates {
     private static Templates _instance = null;
@@ -22,14 +21,24 @@ public class Templates {
     public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
 
     private Templates(){
-        _templatessById = new HashMap<String, TemplateDTO>();
     }
 
     public static void loadTemplates() throws InternalErrorException{
+        loadTemplates(true);
+    }
+
+    public static void loadTemplates(boolean generate) throws InternalErrorException{
+        init();
         Collection<TemplateDTO> templateDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllTemplates();
-        OpenEHRObjectBundleManager.generateTemplateObjectBundles(templateDTOs);
+        if(generate){
+            OpenEHRObjectBundleManager.generateTemplateObjectBundles(templateDTOs);
+        }
         loadTemplateObjectBundles(templateDTOs);
+    }
+
+    private static void init(){
+        getDelegate()._templatessById = new HashMap<String, TemplateDTO>();
     }
 
     public static void registerTemplate(TemplateDTO templateVO){

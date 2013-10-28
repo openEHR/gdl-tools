@@ -1,17 +1,30 @@
 package se.cambio.openehr.model.terminology.dao;
 
-import java.util.Collection;
-
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.Collection;
 
 /**
  * @author iago.corbal
  */
 public interface GenericTerminologyDAO {
 
-	public Collection<TerminologyDTO> searchAll()
-	throws InternalErrorException;
+    public Collection<TerminologyDTO> searchByTerminologyIds(Collection<String> terminologyIds)
+            throws InternalErrorException;
+
+    public Collection<TerminologyDTO> searchAll()
+            throws InternalErrorException;
+
+    public void insert(TerminologyDTO TerminologyDTO)
+            throws InternalErrorException;
+
+    public void update(TerminologyDTO TerminologyDTO)
+            throws InternalErrorException, InstanceNotFoundException;
+
+    public void remove(String terminologyId)
+            throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
