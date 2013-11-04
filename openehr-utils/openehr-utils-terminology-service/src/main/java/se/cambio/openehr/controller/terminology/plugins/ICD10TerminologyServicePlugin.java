@@ -8,40 +8,47 @@ import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 
 public class ICD10TerminologyServicePlugin extends CSVTerminologyServicePlugin{
-    
+
     private static String TERMINOLOGY_ID = "ICD10";
-    
+
     public ICD10TerminologyServicePlugin() {
-	super(TERMINOLOGY_ID);
+        super(TERMINOLOGY_ID);
     }
 
     protected boolean checkSubclassOf(String as, String bs)
-	    throws UnsupportedTerminologyException, InvalidCodeException {
-	as = cleanUpCode(as);
-	bs = cleanUpCode(bs);
-	return super.checkSubclassOf(as, bs);
+            throws UnsupportedTerminologyException, InvalidCodeException {
+        String cleanAS = cleanUpCode(as);
+        if (invalidCode(cleanAS)){
+            throw new InvalidCodeException("Invalid ICD10 code: " + as);
+        }
+        String cleanBS = cleanUpCode(bs);
+        if (invalidCode(cleanBS)){
+            throw new InvalidCodeException("Invalid ICD10 code: " + bs);
+        }
+        return cleanAS.contains(cleanBS); //No need to check parent nodes
+        //return super.checkSubclassOf(cleanAS, cleanBS);
     }
 
 
     public String retrieveTerm(String code, CodePhrase language)
-	    throws UnsupportedTerminologyException,
-	    UnsupportedLanguageException {
-	code = cleanUpCode(code);
-	return super.getDescription(code);
+            throws UnsupportedTerminologyException,
+            UnsupportedLanguageException {
+        code = cleanUpCode(code);
+        return super.getDescription(code);
     }
 
     private String cleanUpCode(String code) {
-	code = code.replace("-", "");
-	code = code.replace(".", "");
-	while (code.length()>1 && invalidCode(code)){
-	    code = code.substring(0, code.length()-1);
-	}
-	return code;
+        code = code.replace("-", "");
+        code = code.replace(".", "");
+        while (code.length()>1 && invalidCode(code)){
+            code = code.substring(0, code.length()-1);
+        }
+        return code;
     }
-    
+
     public boolean isValidCodePhrase(CodePhrase codePhrase) {
-	String code = cleanUpCode(codePhrase.getCodeString());
-	return  TERMINOLOGY_ID.equals(codePhrase.getTerminologyId().getValue()) && !invalidCode(code);
+        String code = cleanUpCode(codePhrase.getCodeString());
+        return  TERMINOLOGY_ID.equals(codePhrase.getTerminologyId().getValue()) && !invalidCode(code);
     }
 }
 /*

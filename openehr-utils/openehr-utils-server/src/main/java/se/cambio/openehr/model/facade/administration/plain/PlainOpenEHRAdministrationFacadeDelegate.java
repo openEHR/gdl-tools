@@ -10,11 +10,14 @@ import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.terminology.dao.GenericTerminologyDAO;
 import se.cambio.openehr.model.terminology.dao.GenericTerminologyFactory;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
+import se.cambio.openehr.model.util.comparators.TemplateComparator;
+import se.cambio.openehr.model.util.comparators.TerminologyComparator;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
-import java.util.Collection;
+import java.util.*;
 
 public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministrationFacadeDelegate{
 
@@ -36,6 +39,54 @@ public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
     public Collection<TerminologyDTO> searchAllTerminologies() throws InternalErrorException {
         GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
         return dao.searchAll();
+    }
+
+    @Override
+    public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
+        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
+        return dao.searchAllDefinitions();
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchAllTemplatesDefinitions() throws InternalErrorException {
+        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
+        return dao.searchAllDefinitions();
+    }
+
+    @Override
+    public int getArchetypesHashCode() throws InternalErrorException {
+        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
+        List<ArchetypeDTO> archetypeDTOs = new ArrayList<ArchetypeDTO>(dao.searchAllDefinitions());
+        Collections.sort(archetypeDTOs, new ArchetypeComparator());
+        List<String> defs = new ArrayList<String>();
+        for (ArchetypeDTO archetypeDTO: archetypeDTOs){
+            defs.add(archetypeDTO.getArchetype());
+        }
+        return defs.hashCode();
+    }
+
+    @Override
+    public int getTemplatesHashCode() throws InternalErrorException {
+        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
+        List<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>(dao.searchAll());
+        Collections.sort(templateDTOs, new TemplateComparator());
+        List<String> defs = new ArrayList<String>();
+        for (TemplateDTO templateDTO: templateDTOs){
+            defs.add(templateDTO.getArchetype());
+        }
+        return defs.hashCode();
+    }
+
+    @Override
+    public int getTerminologiesHashCode() throws InternalErrorException {
+        GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
+        List<TerminologyDTO> terminologyDTOs = new ArrayList<TerminologyDTO>(dao.searchAll());
+        Collections.sort(terminologyDTOs, new TerminologyComparator());
+        List<Integer> defs = new ArrayList<Integer>();
+        for (TerminologyDTO terminologyDTO: terminologyDTOs){
+            defs.add(terminologyDTO.getTerminologyId().hashCode()+ Arrays.hashCode(terminologyDTO.getSrc()));
+        }
+        return defs.hashCode();
     }
 
     @Override

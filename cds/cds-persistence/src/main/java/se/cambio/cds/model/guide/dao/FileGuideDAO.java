@@ -1,12 +1,5 @@
 package se.cambio.cds.model.guide.dao;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -15,6 +8,13 @@ import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.FolderNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class FileGuideDAO implements GenericGuideDAO{
 
@@ -61,6 +61,11 @@ public class FileGuideDAO implements GenericGuideDAO{
             }
         }
         return guides;
+    }
+
+    @Override
+    public Collection<GuideDTO> searchAllDefinitions() throws InternalErrorException {
+        return searchAll();
     }
 
     public GuideDTO add(GuideDTO guideDTO) throws InternalErrorException {

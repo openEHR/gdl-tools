@@ -69,7 +69,7 @@ public class AqlUtil{
         return compactARs;
     }
 
-    private static String getKind(final String archetypeId){
+    public static String getKind(final String archetypeId){
         final int i = archetypeId.indexOf('.');
         final int j = archetypeId.substring(0,i).lastIndexOf('-');
         if (j+1<i){

@@ -5,16 +5,14 @@ import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Archetypes {
@@ -27,39 +25,42 @@ public class Archetypes {
     }
 
     public static void loadArchetypes() throws InternalErrorException{
-        loadArchetypes(true);
-    }
-
-    public static void loadArchetypes(boolean generate) throws InternalErrorException{
-        init();
         Collection<ArchetypeDTO> archetypeDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllArchetypes();
-        if (generate){
-            OpenEHRObjectBundleManager.generateArchetypesObjectBundles(archetypeDTOs);
-        }
+        loadArchetypes(archetypeDTOs);
+    }
+
+    public static void loadArchetypes(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException{
+        init();
+        OpenEHRObjectBundleManager.generateArchetypesObjectBundles(archetypeDTOs);
         loadArchetypesObjectBundle(archetypeDTOs);
     }
 
-    private static void init(){
-        getDelegate()._archetypesById = new HashMap<String, ArchetypeDTO>();
-        getDelegate()._archetypeAOM = new HashMap<String, Archetype>();
+    public static void loadArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException{
+        OpenEHRObjectBundleManager.generateArchetypesObjectBundles(Collections.singleton(archetypeDTO));
+        registerArchertype(archetypeDTO);
     }
 
-    public static void registerArchertype(ArchetypeDTO archetypeVO){
-        getDelegate()._archetypesById.put(archetypeVO.getIdArchetype(), archetypeVO);
+    private static void init(){
+        getArchetypeDTOMap().clear();
+        getAOMMap().clear();
+    }
+
+    private static void registerArchertype(ArchetypeDTO archetypeDTO){
+        getArchetypeDTOMap().put(archetypeDTO.getIdArchetype(), archetypeDTO);
     }
 
     public static ArchetypeDTO getArchetypeDTO(String idArchetype){
-        return getDelegate()._archetypesById.get(idArchetype);
+        return getArchetypeDTOMap().get(idArchetype);
     }
 
     public static Archetype getArchetypeAOM(String idArchetype){
-        Archetype aom = getDelegate()._archetypeAOM.get(idArchetype);
+        Archetype aom = getAOMMap().get(idArchetype);
         if(aom==null){
             ArchetypeDTO archetypeDTO = getArchetypeDTO(idArchetype);
             if (archetypeDTO!=null && archetypeDTO.getAom()!=null){
                 aom = (Archetype)IOUtils.getObject(archetypeDTO.getAom());
-                getDelegate()._archetypeAOM.put(idArchetype, aom);
+                getAOMMap().put(idArchetype, aom);
             }else {
                 Logger.getLogger(Archetype.class).debug("Archetype '"+idArchetype+"' not found.");
             }
@@ -71,8 +72,7 @@ public class Archetypes {
         return getArchetypeDTO(idArchetype).getArchetype();
     }
 
-    public static void loadArchetypesObjectBundle(Collection<ArchetypeDTO> archetypeDTOs){
-        getDelegate()._archetypesById.clear();
+    private static void loadArchetypesObjectBundle(Collection<ArchetypeDTO> archetypeDTOs){
         for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
             loadArchetypeDTO(archetypeDTO);
         }
@@ -92,7 +92,7 @@ public class Archetypes {
 
     public static ArrayList<ArchetypeDTO> getArchetypes(String entryType){
         ArrayList<ArchetypeDTO> list = new ArrayList<ArchetypeDTO>();
-        for (ArchetypeDTO archetypeVO : getDelegate()._archetypesById.values()) {
+        for (ArchetypeDTO archetypeVO : getArchetypeDTOMap().values()) {
             if (entryType.equals(archetypeVO.getRMName())){
                 list.add(archetypeVO);
             }
@@ -110,8 +110,8 @@ public class Archetypes {
         }
     }
 
-    public static Collection<ArchetypeDTO> getAllArchetypes(){
-        return new ArrayList<ArchetypeDTO>(getDelegate()._archetypesById.values());
+    public static List<ArchetypeDTO> getAllArchetypes(){
+        return new ArrayList<ArchetypeDTO>(getArchetypeDTOMap().values());
     }
 
     public static Map<String, Archetype> getArchetypeMap(){
@@ -122,8 +122,32 @@ public class Archetypes {
         return archetypeMap;
     }
 
-    public static Collection<String> getAllArchetypeIds(){
-        return new ArrayList<String>(getDelegate()._archetypesById.keySet());
+    public static List<String> getAllArchetypeIds(){
+        return new ArrayList<String>(getArchetypeDTOMap().keySet());
+    }
+
+    public static Map<String, Archetype> getAOMMap(){
+        if (getDelegate()._archetypeAOM == null){
+            getDelegate()._archetypeAOM = new HashMap<String, Archetype>();
+        }
+        return getDelegate()._archetypeAOM;
+    }
+
+    public static Map<String, ArchetypeDTO> getArchetypeDTOMap(){
+        if (getDelegate()._archetypesById == null){
+            getDelegate()._archetypesById = new HashMap<String, ArchetypeDTO>();
+        }
+        return getDelegate()._archetypesById;
+    }
+
+    public int hashCode(){
+        List<ArchetypeDTO> archetypeDTOs = getAllArchetypes();
+        Collections.sort(archetypeDTOs, new ArchetypeComparator());
+        List<String> defs = new ArrayList<String>();
+        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+            defs.add(archetypeDTO.getArchetype());
+        }
+        return defs.hashCode();
     }
 
     public static Archetypes getDelegate(){

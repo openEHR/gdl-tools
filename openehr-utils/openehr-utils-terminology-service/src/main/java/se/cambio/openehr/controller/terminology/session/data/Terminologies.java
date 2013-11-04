@@ -1,54 +1,72 @@
-package se.cambio.openehr.controller.session.data;
+package se.cambio.openehr.controller.terminology.session.data;
 import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegateFactory;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.model.util.comparators.TerminologyComparator;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Terminologies {
     private static Terminologies _instance = null;
     private Map<String, TerminologyDTO> _terminologiesById = null;
-    public boolean _loaded = false;
+
     private Terminologies(){
     }
 
     public static void loadTerminologies() throws InternalErrorException{
-        init();
         Collection<TerminologyDTO> terminologyDTOs =
                 OpenEHRAdministrationFacadeDelegateFactory.getDelegate().searchAllTerminologies();
+        loadTerminologies(terminologyDTOs);
+    }
+
+    public static void loadTerminologies(Collection<TerminologyDTO> terminologyDTOs) throws InternalErrorException{
+        init();
         for (TerminologyDTO terminologyDTO: terminologyDTOs){
             registerTerminology(terminologyDTO);
         }
-        getDelegate()._loaded = true;
     }
 
     public static boolean isLoaded(){
-        return getDelegate()._loaded;
+        return !getTerminologiesMap().isEmpty();
     }
 
     private static void init(){
-        getDelegate()._terminologiesById = new HashMap<String, TerminologyDTO>();
+        getTerminologiesMap().clear();
     }
 
     public static void registerTerminology(TerminologyDTO terminologyDTO){
-        getDelegate()._terminologiesById.put(terminologyDTO.getTerminologyId(), terminologyDTO);
+        getTerminologiesMap().put(terminologyDTO.getTerminologyId(), terminologyDTO);
     }
 
     public static TerminologyDTO getTerminologyDTO(String terminologyId){
-        return getDelegate()._terminologiesById.get(terminologyId);
+        return getTerminologiesMap().get(terminologyId);
     }
 
-    public static Collection<TerminologyDTO> getAllTerminologies(){
-        return new ArrayList<TerminologyDTO>(getDelegate()._terminologiesById.values());
+    public static List<TerminologyDTO> getAllTerminologies(){
+        return new ArrayList<TerminologyDTO>(getTerminologiesMap().values());
     }
 
 
-    public static Collection<String> getAllTerminologyIds(){
-        return new ArrayList<String>(getDelegate()._terminologiesById.keySet());
+    public static List<String> getAllTerminologyIds(){
+        return new ArrayList<String>(getTerminologiesMap().keySet());
+    }
+
+    public static Map<String, TerminologyDTO> getTerminologiesMap(){
+        if (getDelegate()._terminologiesById == null){
+            getDelegate()._terminologiesById = new HashMap<String, TerminologyDTO>();
+        }
+        return getDelegate()._terminologiesById;
+    }
+
+    public int hashCode(){
+        List<TerminologyDTO> terminologyDTOs = getAllTerminologies();
+        Collections.sort(terminologyDTOs, new TerminologyComparator());
+        List<Integer> defs = new ArrayList<Integer>();
+        for (TerminologyDTO terminologyDTO: terminologyDTOs){
+            defs.add(terminologyDTO.getTerminologyId().hashCode()+ Arrays.hashCode(terminologyDTO.getSrc()));
+        }
+        return defs.hashCode();
     }
 
     public static Terminologies getDelegate(){

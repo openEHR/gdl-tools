@@ -58,7 +58,7 @@ public class LocatableUtil {
 	}
 	Archetype archetype = null;
 	if (archetypeReference.getIdTemplate()!=null){
-	    TemplateDTO templateDTO = Templates.getTemplateVO(archetypeReference.getIdTemplate());
+	    TemplateDTO templateDTO = Templates.getTemplateDTO(archetypeReference.getIdTemplate());
 	    archetype = (Archetype) IOUtils.getObject(templateDTO.getAom());
 	}else{
 	    archetype = Archetypes.getArchetypeAOM(archetypeReference.getIdArchetype());

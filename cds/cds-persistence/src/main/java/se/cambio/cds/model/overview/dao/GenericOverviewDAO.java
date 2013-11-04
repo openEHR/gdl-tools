@@ -1,21 +1,30 @@
 package se.cambio.cds.model.overview.dao;
 
-import java.util.Collection;
-
 import se.cambio.cds.model.overview.dto.OverviewDTO;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.Collection;
 
 /**
  * @author iago.corbal
  */
 public interface GenericOverviewDAO {
 
-	public OverviewDTO search(String idOverview)
-	throws InternalErrorException, InstanceNotFoundException;
-	
-	public Collection<OverviewDTO> searchAll()
-	throws InternalErrorException;
+    public OverviewDTO search(String overviewId)
+            throws InternalErrorException, InstanceNotFoundException;
+
+    public Collection<OverviewDTO> searchAll()
+            throws InternalErrorException;
+
+    public void insert(OverviewDTO overviewDTO)
+            throws InternalErrorException;
+
+    public void update(OverviewDTO overviewDTO)
+            throws InternalErrorException, InstanceNotFoundException;
+
+    public void delete(String overviewId)
+            throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -1,15 +1,11 @@
 package se.cambio.openehr.controller.session.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+
+import java.util.*;
 
 public class ArchetypeElements {
     private static ArchetypeElements _instance = null;
@@ -20,86 +16,85 @@ public class ArchetypeElements {
 
     //Add current time
     public static ArchetypeElementVO CURRENT_DATE_TIME =
-	    new ArchetypeElementVO(
-		    OpenEHRLanguageManager.getMessage("CurrentDateTime"), 
-		    OpenEHRLanguageManager.getMessage("CurrentDateTime"), 
-		    OpenEHRDataValues.DV_DATE_TIME, null, null, null, null);
+            new ArchetypeElementVO(
+                    OpenEHRLanguageManager.getMessage("CurrentDateTime"),
+                    OpenEHRLanguageManager.getMessage("CurrentDateTime"),
+                    OpenEHRDataValues.DV_DATE_TIME, null, null, null, null);
 
     private ArchetypeElements(){
-	_archetypeElementsById = new LinkedHashMap<String, ArchetypeElementVO>();
-	_templateElementsByTemplateIdAndId = new HashMap<String, Map<String, ArchetypeElementVO>>();
+        _archetypeElementsById = new LinkedHashMap<String, ArchetypeElementVO>();
+        _templateElementsByTemplateIdAndId = new HashMap<String, Map<String, ArchetypeElementVO>>();
 
     }
 
     public static void loadArchetypeElements(Collection<ArchetypeElementVO> archetypeElementVOs){
-	for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
-	    registerArchetypeElement(archetypeElementVO);
-	}
+        for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
+            registerArchetypeElement(archetypeElementVO);
+        }
     }
 
     public static void registerArchetypeElement(ArchetypeElementVO archetypeElementVO){
-	if (archetypeElementVO.getIdTemplate()==null){
-	    getDelegate()._archetypeElementsById.put(archetypeElementVO.getId(), archetypeElementVO);    
-	}else{
-	    getArchetypeElementsInTemplate(archetypeElementVO.getIdTemplate()).put(archetypeElementVO.getId(), archetypeElementVO);
-	}
-
+        if (archetypeElementVO.getIdTemplate()==null){
+            getDelegate()._archetypeElementsById.put(archetypeElementVO.getId(), archetypeElementVO);
+        }else{
+            getArchetypeElementsInTemplate(archetypeElementVO.getIdTemplate()).put(archetypeElementVO.getId(), archetypeElementVO);
+        }
     }
 
     public static ArchetypeElementVO getArchetypeElement(String idTemplate, String idElement){
-	if (idTemplate==null){
-	    return getDelegate()._archetypeElementsById.get(idElement);
-	}else{
-	    return getArchetypeElementsInTemplate(idTemplate).get(idElement);
-	}
+        if (idTemplate==null){
+            return getDelegate()._archetypeElementsById.get(idElement);
+        }else{
+            return getArchetypeElementsInTemplate(idTemplate).get(idElement);
+        }
     }
 
     private static Map<String, ArchetypeElementVO> getArchetypeElementsInTemplate(String idTemplate){
-	Map<String, ArchetypeElementVO> elementsInTemplate = 
-		getDelegate()._templateElementsByTemplateIdAndId.get(idTemplate);
-	if (elementsInTemplate==null){
-	    elementsInTemplate = new LinkedHashMap<String, ArchetypeElementVO>();
-	    getDelegate()._templateElementsByTemplateIdAndId.put(idTemplate, elementsInTemplate);
-	}
-	return elementsInTemplate;
+        Map<String, ArchetypeElementVO> elementsInTemplate =
+                getDelegate()._templateElementsByTemplateIdAndId.get(idTemplate);
+        if (elementsInTemplate==null){
+            elementsInTemplate = new LinkedHashMap<String, ArchetypeElementVO>();
+            getDelegate()._templateElementsByTemplateIdAndId.put(idTemplate, elementsInTemplate);
+        }
+        return elementsInTemplate;
     }
 
     public static Collection<ArchetypeElementVO> getArchetypeElementsVO(String idArchetype, String idTemplate){
-	Collection<ArchetypeElementVO> list = new ArrayList<ArchetypeElementVO>();
-	if (idTemplate!=null){
-	    list.addAll(getArchetypeElementsInTemplate(idTemplate).values());
-	}else{
-	    for (ArchetypeElementVO archetypeElementVO : getDelegate()._archetypeElementsById.values()) {
-		if(idArchetype.equals(archetypeElementVO.getIdArchetype())){
-		    list.add(archetypeElementVO);
-		}
-	    }
-	}
-	return list;
+        Collection<ArchetypeElementVO> list = new ArrayList<ArchetypeElementVO>();
+        if (idTemplate!=null){
+            list.addAll(getArchetypeElementsInTemplate(idTemplate).values());
+        }else{
+            for (ArchetypeElementVO archetypeElementVO : getDelegate()._archetypeElementsById.values()) {
+                if(idArchetype.equals(archetypeElementVO.getIdArchetype())){
+                    list.add(archetypeElementVO);
+                }
+            }
+        }
+        return list;
     }
 
     public static ArrayList<ClusterVO> getClusters(ArchetypeElementVO archetypeElementVO){
-	ArrayList<ClusterVO> clusters = new ArrayList<ClusterVO>();
-	String[] pathArray = archetypeElementVO.getPath().split("\\/");
-	StringBuffer clusterPathSB = new StringBuffer();
-	clusterPathSB.append(archetypeElementVO.getIdArchetype());
-	for (String pathNode : pathArray) {
-	    if (!pathNode.isEmpty()){
-		clusterPathSB.append("/"+pathNode);
-		ClusterVO clusterVO = Clusters.getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
-		if (clusterVO!=null){
-		    clusters.add(clusterVO);
-		}
-	    }
-	}
-	return clusters;
+        ArrayList<ClusterVO> clusters = new ArrayList<ClusterVO>();
+        String[] pathArray = archetypeElementVO.getPath().split("\\/");
+        StringBuffer clusterPathSB = new StringBuffer();
+        clusterPathSB.append(archetypeElementVO.getIdArchetype());
+        for (String pathNode : pathArray) {
+            if (!pathNode.isEmpty()){
+                clusterPathSB.append("/"+pathNode);
+                ClusterVO clusterVO = Clusters.getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
+                if (clusterVO!=null){
+                    clusters.add(clusterVO);
+                }
+            }
+        }
+        return clusters;
     }
 
     public static ArchetypeElements getDelegate(){
-	if (_instance == null){
-	    _instance = new ArchetypeElements();
-	}
-	return _instance;
+        if (_instance == null){
+            _instance = new ArchetypeElements();
+        }
+        return _instance;
     }
 }
 /*

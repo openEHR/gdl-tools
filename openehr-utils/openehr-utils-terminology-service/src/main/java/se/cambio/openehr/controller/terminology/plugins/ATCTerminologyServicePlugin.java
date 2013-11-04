@@ -16,12 +16,18 @@ public class ATCTerminologyServicePlugin extends CSVTerminologyServicePlugin{
     }
 
     protected boolean checkSubclassOf(String as, String bs)
-	    throws UnsupportedTerminologyException, InvalidCodeException {
-	as = cleanUpCode(as);
-	bs = cleanUpCode(bs);
-	return super.checkSubclassOf(as, bs);
+            throws UnsupportedTerminologyException, InvalidCodeException {
+        String cleanAS = cleanUpCode(as);
+        if (invalidCode(cleanAS)){
+            throw new InvalidCodeException("Invalid ATC code: " + as);
+        }
+        String cleanBS = cleanUpCode(bs);
+        if (invalidCode(cleanBS)){
+            throw new InvalidCodeException("Invalid ATC code: " + bs);
+        }
+        return cleanAS.contains(cleanBS); //No need to check parent nodes
+        //return super.checkSubclassOf(cleanAS, cleanBS);
     }
-
 
     public String retrieveTerm(String code, CodePhrase language)
 	    throws UnsupportedTerminologyException,

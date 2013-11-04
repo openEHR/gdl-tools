@@ -11,6 +11,7 @@ import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegate;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.util.OpenEHRInitialContext;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 import util.EJBConst;
@@ -19,6 +20,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.rmi.RemoteException;
 import java.util.Collection;
+
 /**
  * @author icorram
  *
@@ -29,7 +31,8 @@ public class EJBOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministra
 
     public EJBOpenEHRAdministrationFacadeDelegate() throws InternalErrorException {
         try {
-            _adminFacade = InitialContext.doLookup(getLookupName());
+            InitialContext ic = OpenEHRInitialContext.getInitialContext();
+            _adminFacade = (OpenEHRAdministrationFacade) ic.lookup(getLookupName());
         } catch (NamingException e) {
             throw new InternalErrorException(e);
         }
@@ -58,6 +61,51 @@ public class EJBOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministra
     public Collection<TerminologyDTO> searchAllTerminologies() throws InternalErrorException {
         try {
             return _adminFacade.searchAllTerminologies();
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
+        try {
+            return _adminFacade.searchAllArchetypesDefinitions();
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchAllTemplatesDefinitions() throws InternalErrorException {
+        try {
+            return _adminFacade.searchAllTemplatesDefinitions();
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public int getArchetypesHashCode() throws InternalErrorException {
+        try {
+            return _adminFacade.getArchetypesHashCode();
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public int getTemplatesHashCode() throws InternalErrorException {
+        try {
+            return _adminFacade.getTemplatesHashCode();
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public int getTerminologiesHashCode() throws InternalErrorException {
+        try {
+            return _adminFacade.getTerminologiesHashCode();
         } catch (RemoteException e) {
             throw new InternalErrorException(e);
         }

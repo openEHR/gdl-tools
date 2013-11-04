@@ -1,14 +1,10 @@
-package se.cambio.cds.openehr.view.comparators;
+package se.cambio.openehr.model.util;
 
-import java.util.Comparator;
+public final class OpenEHRGlobalNames {
 
-import se.cambio.cds.model.guide.dto.GuideDTO;
+    public static final String OPENEHR_DATA_SOURCE = "jdbc/openehr/openehrDS";
 
-public class GuidesComparator implements Comparator<GuideDTO>{
-
-    public int compare(GuideDTO o1, GuideDTO o2) {
-	return o1.getIdGuide().compareTo(o2.getIdGuide());
-    }
+    public static final String PERSISTENCE_UNIT = "openehrPU";
 
 }
 /*

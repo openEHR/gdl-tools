@@ -13,6 +13,9 @@ import java.util.Collection;
 
 public class DummyOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministrationFacadeDelegate{
 
+    public DummyOpenEHRAdministrationFacadeDelegate(){
+    }
+
     @Override
     public Collection<ArchetypeDTO> searchAllArchetypes()
             throws InternalErrorException {
@@ -29,6 +32,31 @@ public class DummyOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
     public Collection<TerminologyDTO> searchAllTerminologies() throws InternalErrorException {
         GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
         return dao.searchAll();
+    }
+
+    @Override
+    public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
+        return null; //Generated
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchAllTemplatesDefinitions() throws InternalErrorException {
+        return null; //Generated
+    }
+
+    @Override
+    public int getArchetypesHashCode() throws InternalErrorException {
+        return 0; //Generated
+    }
+
+    @Override
+    public int getTemplatesHashCode() throws InternalErrorException {
+        return 0; //Generated
+    }
+
+    @Override
+    public int getTerminologiesHashCode() throws InternalErrorException {
+        return 0; //Generated
     }
 
     @Override

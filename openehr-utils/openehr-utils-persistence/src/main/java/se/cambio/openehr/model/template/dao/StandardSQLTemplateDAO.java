@@ -87,6 +87,47 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
         try {
 	    /* Create "preparedStatement". */
             String queryString =
+                    "SELECT templateid, archetypeid, rmname, archetype, aom, tobcvo FROM openehr_template";
+            preparedStatement = connection.prepareStatement(queryString);
+
+	    /* Execute query. */
+            resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.next()) {
+                return templateDTOs;
+            }
+
+	    /* Get results. */
+            do {
+                int i = 1;
+                String idTemplate = resultSet.getString(i++);
+                String idArchetype = resultSet.getString(i++);
+                String rmName = resultSet.getString(i++);
+                String archetype = resultSet.getString(i++);
+                byte[] aom = resultSet.getBytes(i++);
+                byte[] tobcvo = resultSet.getBytes(i++);
+                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, aom, tobcvo));
+            } while (resultSet.next());
+
+	    /* Return the value object. */
+            return templateDTOs;
+
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
+    }
+
+    public Collection<TemplateDTO> searchAllDefinitions(Connection connection)
+            throws InternalErrorException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
+        try {
+	    /* Create "preparedStatement". */
+            String queryString =
                     "SELECT templateid, archetypeid, rmname, archetype FROM openehr_template";
             preparedStatement = connection.prepareStatement(queryString);
 
@@ -104,9 +145,7 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 String idArchetype = resultSet.getString(i++);
                 String rmName = resultSet.getString(i++);
                 String archetype = resultSet.getString(i++);
-                byte[] aom = null;//resultSet.getBytes(i++);
-                byte[] tobcvo = null;//resultSet.getBytes(i++);
-                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, aom, tobcvo));
+                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, null, null));
             } while (resultSet.next());
 
 	    /* Return the value object. */

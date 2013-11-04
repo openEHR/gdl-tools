@@ -66,23 +66,34 @@ public final class EHRConnectorConfigurationParametersManager {
     private EHRConnectorConfigurationParametersManager() {}
 
     private static File getConfigFile(){
-	try{
-	    File jarFile = new File(EHRConnectorConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-	    //../conf
-	    for (File file:jarFile.getParentFile().getParentFile().listFiles()){
-		if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
-		    for (File file2:file.listFiles()){
-			if (file2.getName().equals(CONFIGURATION_FILE)){
-			    return file2;
-			}
-		    }
-		}
-	    }
-	}catch(Throwable t){
-	    //Logger.getLogger(ThinkEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
-	    //t.printStackTrace();
-	}
-	return null;
+        try{
+            File jarFile = new File(OpenEHRConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            //../conf
+            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
+                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
+                    for (File file2:file.listFiles()){
+                        if (file2.getName().equals(CONFIGURATION_FILE)){
+                            return file2;
+                        }
+                    }
+                }
+            }
+        }catch(Throwable t){
+            //Problem finding config folder
+            //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+        try{
+            //Current folder
+            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
+            if (file.exists()){
+                return file;
+            }
+
+        }catch(Throwable t2){
+            //Problem finding config folder
+            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+        return null;
     }
 
     public static String getParameter(String name) 

@@ -1,13 +1,17 @@
-package se.cambio.cds.openehr.view.comparators;
+package se.cambio.cds.util.exceptions;
 
-import java.util.Comparator;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import se.cambio.cds.model.archetype.dto.ArchetypeDTO;
+public class GuideCompilationException extends InternalErrorException {
+    private static final long serialVersionUID = 1L;
+    private String _guideId = null;
+    public GuideCompilationException(String guideId, Throwable th){
+        super(new Exception(th.getMessage()));
+        _guideId = guideId;
+    }
 
-public class ArchetypeComparator implements Comparator<ArchetypeDTO>{
-
-    public int compare(ArchetypeDTO o1, ArchetypeDTO o2) {
-	return o1.getName().compareTo(o2.getName());
+    public String getMessage() {
+        return "Error compiling guide '"+_guideId+"'.";
     }
 
 }

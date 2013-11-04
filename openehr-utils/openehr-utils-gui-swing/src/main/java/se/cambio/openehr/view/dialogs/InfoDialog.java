@@ -1,203 +1,90 @@
 
 package se.cambio.openehr.view.dialogs;
 
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.ProgressManager;
+import se.cambio.openehr.view.panels.ProgressBarPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.Future;
+
 /**
  * @author icorram
  *
  */
-public class InfoDialog extends JDialog{
+public class InfoDialog extends JDialog implements ProgressManager {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -2310821412359230220L;
-    private JProgressBar jProgressBar = null;
-    private JPanel jPanel1 = null;  //  @jve:decl-index=0:visual-constraint="372,178"
-    private JLabel jLabel2 = null;
 
-    private Future<?> _currentThread = null;
-    private boolean _isProgresoActivo = false;
-    private int _progressValue = 0;
-    private String _description = null;
-    private JButton cancelButton;
+    private ProgressBarPanel progressBarPanel = null;  //  @jve:decl-index=0:visual-constraint="372,178"
+
 
     /**
      * This method initializes 
-     * 
+     *
      */
     public InfoDialog(Window owner) {
-	super(owner, "", ModalityType.APPLICATION_MODAL);
-	_description = "";
-	initialize();
+        super(owner, "", ModalityType.APPLICATION_MODAL);
+        initialize();
     }
     /**
      * This method initializes this
      */
     private void initialize() {
-	Dimension screenSize =
-		Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension labelSize = this.getSize();
-	this.setSize(200, 80);
-	int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-	int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-	this.setLocation(locx,locy);
-	this.setContentPane(getJPanel1());
-	this.setUndecorated(true);
-	getSplashLogo().setText(_description);
+        Dimension screenSize =
+                Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension labelSize = this.getSize();
+        this.setSize(200, 80);
+        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
+        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
+        this.setLocation(locx,locy);
+        this.setContentPane(getProgressBarPanel());
+        this.setUndecorated(true);
     }
 
     public void changeLoadingText(String description){
-	_description = description;
-	getSplashLogo().setText(_description);
-	this.repaint();
-	this.validate();
+        getProgressBarPanel().changeLoadingText(description);
     }
 
     public void start(){
-	_isProgresoActivo = true;
-	_progressValue = 1;
-	new Thread(new ProgresoActivo()).start();
-	this.setVisible(true);
+        getProgressBarPanel().start();
+        this.setVisible(true);
     }
 
     public void stop(){
-	_isProgresoActivo = false;
-	_progressValue = -100;
-	_currentThread = null;
-	getCancelButton().setVisible(false);
-	this.setVisible(false);
+        getProgressBarPanel().stop();
+        this.setVisible(false);
     }
 
     public void setCurrentProgress(String msg, double progress){
-	_isProgresoActivo = false;
-	_progressValue = (int)(100*progress);
-	_description = msg;
-	stateUpdated();
+        getProgressBarPanel().setCurrentProgress(msg, progress);
     }
-    
+
     public void setCurrentThread(Future<?> currentThread){
-	_currentThread = currentThread;
-	getCancelButton().setVisible(true);
-	//this.repaint();
-	//this.validate();
+        getProgressBarPanel().setCurrentThread(currentThread);
     }
 
     public Future<?> getCurrentThread(){
-	return _currentThread;
-    }
-
-    private JButton getCancelButton(){
-	if (cancelButton==null){
-	    cancelButton = new JButton(OpenEHRLanguageManager.getMessage("Cancel"));
-	    cancelButton.setIcon(OpenEHRImageUtil.STOP_ICON);
-	    cancelButton.setBackground(null);
-	    cancelButton.setBorder(BorderFactory.createEmptyBorder());
-	    cancelButton.setVisible(false);
-	    cancelButton.setFocusable(false);
-	    cancelButton.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    _currentThread.cancel(true);
-
-		    stop();
-		}
-	    });
-	}
-	return cancelButton;
-    }
-
-    private JLabel getSplashLogo(){
-	if (jLabel2 == null){
-	    jLabel2 = new JLabel();
-	    jLabel2.setText("");
-	}
-	return jLabel2;
-    }
-
-    /**
-     * This method initializes jProgressBar	
-     * 	
-     * @return javax.swing.JProgressBar	
-     */    
-    private JProgressBar getJProgressBar() {
-	if (jProgressBar == null) {
-	    jProgressBar = new JProgressBar();
-	    jProgressBar.setName("jProgressBar");
-	    jProgressBar.setPreferredSize(new java.awt.Dimension(200,14));
-	}
-	return jProgressBar;
-    }
-
-    /* (non-Javadoc)
-     * @see es.sergas.canalejo.sisegtx.model.facade.vo.StatusObserver#stateUpdated()
-     */
-
-
-    public void stateUpdated() {
-	getSplashLogo().setText(_description);
-	if (_progressValue>=0){
-	    //getJProgressBar().setVisible(true);
-	    getJProgressBar().setValue(_progressValue);
-	}
-    }
-
-    private class ProgresoActivo implements Runnable{
-	private boolean up = true;
-	public void run() {
-	    while (_isProgresoActivo){
-		if (up) _progressValue = _progressValue+3;
-		else _progressValue = _progressValue-3;
-		if (_progressValue>=100) up = false;
-		else if (_progressValue<=1) up = true;
-		stateUpdated();
-		try {
-		    Thread.sleep(50);
-		} catch (InterruptedException e) {
-		}
-	    }
-	}
+        return getProgressBarPanel().getCurrentThread();
     }
 
     /**
      * This method initializes jPanel1	
-     * 	
-     * @return javax.swing.JPanel	
-     */    
-    private JPanel getJPanel1() {
-	if (jPanel1 == null) {
-	    GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-	    jPanel1 = new JPanel();
-	    jPanel1.setLayout(new GridBagLayout());
-	    jPanel1.setBackground(Color.WHITE);
-	    jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.LOWERED));
-	    gridBagConstraints1.gridx = 0;
-	    gridBagConstraints1.gridy = 0;
-	    gridBagConstraints1.weightx=1;
-	    gridBagConstraints1.weighty=1;
-	    gridBagConstraints1.insets = new java.awt.Insets(0,5,0,0);
-	    gridBagConstraints1.fill = java.awt.GridBagConstraints.HORIZONTAL;
-	    gridBagConstraints1.anchor = java.awt.GridBagConstraints.WEST;
-	    gridBagConstraints1.insets = new java.awt.Insets(5,10,0,10);
-	    jPanel1.add(getSplashLogo(), gridBagConstraints1);
-	    gridBagConstraints1.gridy++;
-	    jPanel1.add(getJProgressBar(), gridBagConstraints1);
-	    gridBagConstraints1.gridy++;
-	    gridBagConstraints1.fill = java.awt.GridBagConstraints.NONE;
-	    gridBagConstraints1.anchor = java.awt.GridBagConstraints.CENTER;
-	    jPanel1.add(getCancelButton(), gridBagConstraints1);
-	}
-	return jPanel1;
+     *
+     * @return javax.swing.JPanel
+     */
+    private ProgressBarPanel getProgressBarPanel() {
+        if (progressBarPanel == null) {
+            progressBarPanel = new ProgressBarPanel();
+        }
+        return progressBarPanel;
     }
 
     public static void main(String[] args){
-	new InfoDialog(null).setVisible(true);
+        new InfoDialog(null).setVisible(true);
     }
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

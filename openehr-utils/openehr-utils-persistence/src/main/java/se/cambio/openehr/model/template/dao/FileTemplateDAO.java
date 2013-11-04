@@ -44,6 +44,10 @@ public class FileTemplateDAO implements GenericTemplateDAO{
         return templateVOs;
     }
 
+    @Override
+    public Collection<TemplateDTO> searchAllDefinitions() throws InternalErrorException {
+        return searchAll();
+    }
 
 
     public Collection<TemplateDTO> searchByTemplateIds(Collection<String> templateIds)

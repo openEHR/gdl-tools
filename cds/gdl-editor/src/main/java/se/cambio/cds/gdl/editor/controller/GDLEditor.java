@@ -1136,7 +1136,7 @@ public class GDLEditor {
                     }
                 }
             } else {
-                if (Templates.getTemplateVO(templateId) == null) {
+                if (Templates.getTemplateDTO(templateId) == null) {
                     int result = ImportUtils.showImportTemplateDialog(
                             EditorManager.getActiveEditorWindow(), new File(
                             templateId + ".oet"));

@@ -19,63 +19,68 @@ public class InJarArchetypeDAO implements GenericArchetypeDAO{
     }
 
     public Collection<ArchetypeDTO> searchAll()
-	    throws InternalErrorException{
-	try{
-	    InputStream is = InJarArchetypeDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
-	    Collection<ArchetypeDTO> archetypeVOs = new ArrayList<ArchetypeDTO>();
-	    if (is!=null) {
-		Collection<String> archetypeFileNames = new ArrayList<String>();
-		String resourceList = IOUtils.toString(is, "UTF-8");
-		for (String string : resourceList.split("\n")) {
-		    string = string.trim();
-		    if (string.endsWith(".adl")){
-			//Remove the leading '\'
-			string = string.replaceAll("\\\\", "/");
-			archetypeFileNames.add(string.substring(1, string.length()));
-		    }
-		}
-		for (String archetypeFileName : archetypeFileNames) {
-		    try{
-			InputStream fis =InJarArchetypeDAO.class.getClassLoader().getResourceAsStream(archetypeFileName);
-			UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-			ubis.skipBOM();
-			String idArchetype = archetypeFileName.substring(archetypeFileName.lastIndexOf("/")+1,archetypeFileName.length()-4);
-			String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-			archetypeVOs.add(new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null));
-		    }catch(Exception e){
-			throw new InternalErrorException(e);
-		    }
-		}
-	    }else{
-		throw new Exception("Resource list not found!");
-	    }
-	    return archetypeVOs;
-	}catch(Exception e){
-	    throw new InternalErrorException(e);
-	}
+            throws InternalErrorException{
+        try{
+            InputStream is = InJarArchetypeDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
+            Collection<ArchetypeDTO> archetypeVOs = new ArrayList<ArchetypeDTO>();
+            if (is!=null) {
+                Collection<String> archetypeFileNames = new ArrayList<String>();
+                String resourceList = IOUtils.toString(is, "UTF-8");
+                for (String string : resourceList.split("\n")) {
+                    string = string.trim();
+                    if (string.endsWith(".adl")){
+                        //Remove the leading '\'
+                        string = string.replaceAll("\\\\", "/");
+                        archetypeFileNames.add(string.substring(1, string.length()));
+                    }
+                }
+                for (String archetypeFileName : archetypeFileNames) {
+                    try{
+                        InputStream fis =InJarArchetypeDAO.class.getClassLoader().getResourceAsStream(archetypeFileName);
+                        UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+                        ubis.skipBOM();
+                        String idArchetype = archetypeFileName.substring(archetypeFileName.lastIndexOf("/")+1,archetypeFileName.length()-4);
+                        String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
+                        archetypeVOs.add(new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null));
+                    }catch(Exception e){
+                        throw new InternalErrorException(e);
+                    }
+                }
+            }else{
+                throw new Exception("Resource list not found!");
+            }
+            return archetypeVOs;
+        }catch(Exception e){
+            throw new InternalErrorException(e);
+        }
     }
 
     public Collection<ArchetypeDTO> searchByArchetypeIds(Collection<String> archetypeIds)
-	    throws InternalErrorException, InstanceNotFoundException {
-	try{
-	    Collection<ArchetypeDTO> archetypeDTOs = new ArrayList<ArchetypeDTO>();
-	    for (String archetypeId : archetypeIds) {
-		InputStream fis =InJarArchetypeDAO.class.getClassLoader().getResourceAsStream(archetypeId+".adl");
-		UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-		ubis.skipBOM();
-		String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-		archetypeDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, archetypeSrc, null, null));
+            throws InternalErrorException, InstanceNotFoundException {
+        try{
+            Collection<ArchetypeDTO> archetypeDTOs = new ArrayList<ArchetypeDTO>();
+            for (String archetypeId : archetypeIds) {
+                InputStream fis =InJarArchetypeDAO.class.getClassLoader().getResourceAsStream(archetypeId+".adl");
+                UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+                ubis.skipBOM();
+                String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
+                archetypeDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, archetypeSrc, null, null));
 
-	    }
-	    return archetypeDTOs;
-	}catch(Exception e){
-	    throw new InternalErrorException(e);
-	}
+            }
+            return archetypeDTOs;
+        }catch(Exception e){
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public Collection<ArchetypeDTO> searchAllDefinitions() throws InternalErrorException {
+        return searchAll();
     }
 
     public void insert(ArchetypeDTO archetypeVO)
-	    throws InternalErrorException, ModelException{
-	throw new InternalErrorException(new Exception("It's Not possible to add archetypes into resources!"));
+            throws InternalErrorException, ModelException{
+        throw new InternalErrorException(new Exception("It's Not possible to add archetypes into resources!"));
     }
 
     @Override

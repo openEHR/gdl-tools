@@ -15,6 +15,9 @@ public interface GenericTemplateDAO {
 
     public Collection<TemplateDTO> searchAll()
 	    throws InternalErrorException;
+
+    public Collection<TemplateDTO> searchAllDefinitions()
+            throws InternalErrorException;
     
     public Collection<TemplateDTO> searchByTemplateIds(Collection<String> templateIds)
 	    throws InternalErrorException, InstanceNotFoundException;

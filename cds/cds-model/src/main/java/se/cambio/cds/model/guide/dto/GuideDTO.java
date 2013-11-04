@@ -12,24 +12,24 @@ public class GuideDTO implements Serializable{
     private boolean active;
 
     public GuideDTO(String idGuide, String guideSrc, byte[] guideObject, byte[] compiledGuide, boolean active) {
-	super();
-	this.idGuide = idGuide;
-	this.guideSrc = guideSrc;
-	this.guideObject = guideObject;
-	this.compiledGuide = compiledGuide;
-	this.active = active;
+        super();
+        this.idGuide = idGuide;
+        this.guideSrc = guideSrc;
+        this.guideObject = guideObject;
+        this.compiledGuide = compiledGuide;
+        this.active = active;
     }
     public String getIdGuide() {
-	return idGuide;
+        return idGuide;
     }
     public void setIdGuide(String idGuide) {
-	this.idGuide = idGuide;
+        this.idGuide = idGuide;
     }
     public String getGuideSrc() {
-	return guideSrc;
+        return guideSrc;
     }
     public void setGuideSrc(String guideSrc) {
-	this.guideSrc = guideSrc;
+        this.guideSrc = guideSrc;
     }
     public byte[] getGuideObject() {
         return guideObject;
@@ -38,10 +38,10 @@ public class GuideDTO implements Serializable{
         this.guideObject = guideObject;
     }
     public byte[] getCompiledGuide() {
-	return compiledGuide;
+        return compiledGuide;
     }
     public void setCompiledGuide(byte[] compiledGuide) {
-	this.compiledGuide = compiledGuide;
+        this.compiledGuide = compiledGuide;
     }
     public boolean isActive() {
         return active;
@@ -49,6 +49,11 @@ public class GuideDTO implements Serializable{
     public void setActive(boolean active) {
         this.active = active;
     }
+    /*
+    public int hashCode() {
+        return (guideSrc!=null?guideSrc.hashCode():0)+(guideObject!=null?guideObject.hashCode():2)+(compiledGuide!=null?compiledGuide.hashCode():3)+(active?1:0);
+    }
+    */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

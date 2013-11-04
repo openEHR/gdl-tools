@@ -43,6 +43,32 @@ public class OpenEHRAdministrationFacadeBean implements OpenEHRAdministrationFac
     }
 
     @Override
+    public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException, RemoteException {
+        return _delegate.searchAllArchetypesDefinitions();
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchAllTemplatesDefinitions() throws InternalErrorException, RemoteException {
+        return _delegate.searchAllTemplatesDefinitions();
+    }
+
+    @Override
+    public int getArchetypesHashCode() throws InternalErrorException, RemoteException {
+        return _delegate.getArchetypesHashCode();
+    }
+
+    @Override
+    public int getTemplatesHashCode() throws InternalErrorException, RemoteException {
+        return _delegate.getTemplatesHashCode();
+    }
+
+    @Override
+    public int getTerminologiesHashCode() throws InternalErrorException, RemoteException {
+        return _delegate.getTerminologiesHashCode();
+    }
+
+
+    @Override
     public void upsertArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException, ModelException, RemoteException {
         _delegate.upsertArchetype(archetypeDTO);
     }

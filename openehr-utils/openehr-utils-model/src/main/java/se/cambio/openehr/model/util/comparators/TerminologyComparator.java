@@ -1,12 +1,14 @@
-package se.cambio.openehr.model.util;
+package se.cambio.openehr.model.util.comparators;
 
-public final class GlobalNames {
+import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 
-    public static final String CDSS_DATA_SOURCE = "jdbc/openehr/openehrDS";
+import java.util.Comparator;
 
-    public static final String PERSISTENCE_UNIT = "OpenEHRPU";
+public class TerminologyComparator implements Comparator<TerminologyDTO>{
 
-    private GlobalNames () {}
+    public int compare(TerminologyDTO o1, TerminologyDTO o2) {
+	return o1.getTerminologyId().compareTo(o2.getTerminologyId());
+    }
 
 }
 /*

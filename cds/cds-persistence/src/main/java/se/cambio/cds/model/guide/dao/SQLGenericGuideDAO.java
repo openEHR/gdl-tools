@@ -1,17 +1,16 @@
 package se.cambio.cds.model.guide.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-
-import javax.sql.DataSource;
-
+import se.cambio.cds.model.CDSGlobalNames;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
-import se.cambio.openehr.model.util.GlobalNames;
 import se.cambio.openehr.model.util.sql.DataSourceLocator;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * @author iago.corbal
@@ -24,7 +23,7 @@ public class SQLGenericGuideDAO implements GenericGuideDAO {
 
     public SQLGenericGuideDAO() throws InternalErrorException {
 	dao = SQLGuideFactory.getDAO();
-	dataSource = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
+	dataSource = DataSourceLocator.getDataSource(CDSGlobalNames.CDSS_DATA_SOURCE);
     }
 
     public GuideDTO searchByGuideId(String idGuide)
@@ -50,6 +49,19 @@ public class SQLGenericGuideDAO implements GenericGuideDAO {
 	} finally {
 	    GeneralOperations.closeConnection(conexion);
 	}
+    }
+
+    @Override
+    public Collection<GuideDTO> searchAllDefinitions() throws InternalErrorException {
+        Connection conexion = null;
+        try {
+            conexion = dataSource.getConnection();
+            return dao.searchAllDefinitions(conexion);
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeConnection(conexion);
+        }
     }
 
     public GuideDTO add(GuideDTO GuideDTO)

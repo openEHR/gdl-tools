@@ -1,11 +1,11 @@
 package se.cambio.cds.model.guide.dao;
 
-import java.sql.Connection;
-import java.util.Collection;
-
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.sql.Connection;
+import java.util.Collection;
 
 /**
  * @author iago.corbal
@@ -17,6 +17,9 @@ public interface SQLGuideDAO {
 
     public Collection<GuideDTO> searchAll(Connection connection)
 	    throws InternalErrorException;
+
+    public Collection<GuideDTO> searchAllDefinitions(Connection connection)
+            throws InternalErrorException;
 
     public GuideDTO insert(Connection connection, GuideDTO guideDTO)
 	    throws InternalErrorException;

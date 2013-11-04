@@ -7,7 +7,7 @@
 package se.cambio.openehr.model.terminology.dao;
 
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
-import se.cambio.openehr.model.util.GlobalNames;
+import se.cambio.openehr.model.util.OpenEHRGlobalNames;
 import se.cambio.openehr.model.util.sql.DataSourceLocator;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -33,9 +33,9 @@ public class SQLGenericTerminologyDAO implements GenericTerminologyDAO {
     public SQLGenericTerminologyDAO() throws InternalErrorException {
 
         dao = SQLTerminologyFactory.getDAO();
-        dataSource = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
+        dataSource = DataSourceLocator.getDataSource(OpenEHRGlobalNames.OPENEHR_DATA_SOURCE);
         //TODO Get proper RepetableRead DS
-        dataSourceRR = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
+        dataSourceRR = DataSourceLocator.getDataSource(OpenEHRGlobalNames.OPENEHR_DATA_SOURCE);
     }
 
     public Collection<TerminologyDTO> searchByTerminologyIds(Collection<String> terminologyIds)

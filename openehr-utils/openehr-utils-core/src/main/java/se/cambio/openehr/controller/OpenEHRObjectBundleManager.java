@@ -19,7 +19,6 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.acode.openehr.parser.ADLParser;
 import se.acode.openehr.parser.ParseException;
-import se.cambio.openehr.controller.InitialLoadingObservable.LoadingStage;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -38,7 +37,6 @@ public class OpenEHRObjectBundleManager {
 
     public static void generateArchetypesObjectBundles(Collection<ArchetypeDTO> archetypeDTOs)
             throws InternalErrorException {
-        InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.ARCHETYPES);
         int total = archetypeDTOs.size();
         int count = 1;
         for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
@@ -53,20 +51,16 @@ public class OpenEHRObjectBundleManager {
                 Logger.getLogger(OpenEHRObjectBundleManager.class).debug("Parsing archetype '"+archetypeDTO.getIdArchetype()+"'...");
                 try{
                     generateArchetypeObjectBundleCustomVO(archetypeDTO);
-                    InitialLoadingObservable.setCurrentProgress((double)count++/total);
                 }catch(Throwable e){
                     InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getIdArchetype()+"'", e));
                     ExceptionHandler.handle(iee);
-                    InitialLoadingObservable.addLoadingException(iee);
                 }
             }
         }
-        InitialLoadingObservable.setCurrentLoadingStageFinished();
     }
 
     public static void generateTemplateObjectBundles(Collection<TemplateDTO> templateDTOs)
             throws InternalErrorException {
-        InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.TEMPLATES);
         int total = templateDTOs.size();
         int count = 1;
         Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
@@ -82,15 +76,12 @@ public class OpenEHRObjectBundleManager {
             if (templateDTO.getTobcVO()==null){
                 try{
                     generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
-                    InitialLoadingObservable.setCurrentProgress((double)count++/total);
                 }catch(Throwable e){
                     InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getIdTemplate()+"'", e));
                     ExceptionHandler.handle(iee);
-                    InitialLoadingObservable.addLoadingException(iee);
                 }
             }
         }
-        InitialLoadingObservable.setCurrentLoadingStageFinished();
     }
 
     public static void generateArchetypeObjectBundleCustomVO (ArchetypeDTO archetypeDTO)

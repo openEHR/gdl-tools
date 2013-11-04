@@ -64,6 +64,21 @@ public class FileOverviewDAO implements GenericOverviewDAO{
         }
         return overviewDTOs;
     }
+
+    @Override
+    public void insert(OverviewDTO overviewDTO) throws InternalErrorException {
+        //Generated
+    }
+
+    @Override
+    public void update(OverviewDTO overviewDTO) throws InternalErrorException, InstanceNotFoundException {
+        //Generated
+    }
+
+    @Override
+    public void delete(String overviewId) throws InternalErrorException, InstanceNotFoundException {
+        //Generated
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

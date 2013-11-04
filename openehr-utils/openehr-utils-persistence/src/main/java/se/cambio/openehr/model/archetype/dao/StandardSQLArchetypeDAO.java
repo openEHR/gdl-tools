@@ -19,11 +19,46 @@ import java.util.Collection;
  */
 public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
 
+    @Override
+    public Collection<ArchetypeDTO> searchAllDefinitions(Connection connection) throws InternalErrorException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Collection<ArchetypeDTO> archetypesVO = new ArrayList<ArchetypeDTO>();
+        try {
+	    /* Create "preparedStatement". */
+            String queryString =
+                    "SELECT archetypeid, rmname, archetype FROM openehr_archetype";
+            preparedStatement = connection.prepareStatement(queryString);
+
+	    /* Execute query. */
+            resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.next()) {
+                return archetypesVO;
+            }
+
+	    /* Get results. */
+            do {
+                int i = 1;
+                String archetypeId = resultSet.getString(i++);
+                String rmName = resultSet.getString(i++);
+                String archetype = resultSet.getString(i++);
+                archetypesVO.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, rmName, archetype, null, null));
+            } while (resultSet.next());
+	    /* Return the value object. */
+            return archetypesVO;
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
+    }
 
     /* (non-Javadoc)
-     * @see es.sergas.canalejo.sisegtx.model.archetype.dao.SQLArquetipoDAO#buscar(java.sql.Connection, java.util.Collection)
-     * Only loads the compiled archetype
-     */
+         * @see es.sergas.canalejo.sisegtx.model.archetype.dao.SQLArquetipoDAO#buscar(java.sql.Connection, java.util.Collection)
+         * Only loads the compiled archetype
+         */
     public Collection<ArchetypeDTO> searchByArchetypeIds(Connection connection, Collection<String> archetypeIds)
             throws InternalErrorException {
 
@@ -86,7 +121,7 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
         try {
 	    /* Create "preparedStatement". */
             String queryString =
-                    "SELECT archetypeid, rmname, archetype FROM openehr_archetype";
+                    "SELECT archetypeid, rmname, archetype, aom, aobcvo FROM openehr_archetype";
             preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
@@ -102,8 +137,8 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
                 String archetypeId = resultSet.getString(i++);
                 String rmName = resultSet.getString(i++);
                 String archetype = resultSet.getString(i++);
-                byte[] aom = null;//resultSet.getBytes(i++);
-                byte[] aobcvo = null;//resultSet.getBytes(i++);
+                byte[] aom = resultSet.getBytes(i++);
+                byte[] aobcvo = resultSet.getBytes(i++);
                 archetypesVO.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, rmName, archetype, aom, aobcvo));
             } while (resultSet.next());
 	    /* Return the value object. */

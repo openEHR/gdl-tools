@@ -52,6 +52,11 @@ public class InJarTemplateDAO implements GenericTemplateDAO{
 	}
     }
 
+    @Override
+    public Collection<TemplateDTO> searchAllDefinitions() throws InternalErrorException {
+        return searchAll();
+    }
+
     public Collection<TemplateDTO> searchByTemplateIds(Collection<String> templateIds)
 	    throws InternalErrorException, InstanceNotFoundException {
 	try{

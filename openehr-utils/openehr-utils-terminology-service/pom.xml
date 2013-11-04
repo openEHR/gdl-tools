@@ -10,15 +10,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.openehr.utils</groupId>
-			<artifactId>openehr-utils-persistence</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>openehr</groupId>
 			<artifactId>openehr-rm-core</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.openehr.utils</groupId>
+            <artifactId>openehr-utils-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -30,6 +30,12 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.openehr.utils</groupId>
+            <artifactId>openehr-utils-persistence</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 		<!-- TODO Bring back when starting Ontology development -->
 		<!-- dependency> <groupId>net.sourceforge.owlapi</groupId> <artifactId>owlapi-api</artifactId> 
 			<version>3.3</version> </dependency> <dependency> <groupId>net.sourceforge.owlapi</groupId> 

@@ -76,6 +76,12 @@ public class TemplateDTO implements Serializable{
     public void setTobcVO(byte[] tobcVO) {
         this.tobcVO = tobcVO;
     }
+
+    /*
+    public int hashCode() {
+        return (archetype!=null?archetype.hashCode():0)+(aom!=null?aom.hashCode():1)+(tobcVO!=null?tobcVO.hashCode():2);
+    }
+    */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

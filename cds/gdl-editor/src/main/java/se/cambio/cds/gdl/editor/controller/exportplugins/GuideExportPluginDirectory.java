@@ -1,12 +1,11 @@
 package se.cambio.cds.gdl.editor.controller.exportplugins;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.log4j.Logger;
-
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class GuideExportPluginDirectory {
 
@@ -14,30 +13,30 @@ public class GuideExportPluginDirectory {
     public Collection<GuideExportPlugin> _guideExportPlugins = null;
 
     private GuideExportPluginDirectory(){
-	_guideExportPlugins = new ArrayList<GuideExportPlugin>();
-	_guideExportPlugins.add(new DroolsGuideExportPlugin());
+        _guideExportPlugins = new ArrayList<GuideExportPlugin>();
+        _guideExportPlugins.add(new DroolsGuideExportPlugin());
     }
 
     public static Collection<GuideExportPlugin> getGuideExportPlugins(){
-	return getDelegate()._guideExportPlugins;
+        return getDelegate()._guideExportPlugins;
     }
 
     public static byte[] compile(Guide guide) throws InternalErrorException{
-	//TODO Should allow choosing...
-	Logger.getLogger(GuideExportPluginDirectory.class).info("Compiling ...");
-	Collection<GuideExportPlugin> guideExportPlugins = getGuideExportPlugins();
-	if(guideExportPlugins.iterator().hasNext()){
-	    return guideExportPlugins.iterator().next().compile(guide);
-	}else{
-	    return null;
-	}
+        //TODO Should allow choosing...
+        Logger.getLogger(GuideExportPluginDirectory.class).info("Compiling ...");
+        Collection<GuideExportPlugin> guideExportPlugins = getGuideExportPlugins();
+        if(guideExportPlugins.iterator().hasNext()){
+            return guideExportPlugins.iterator().next().compile(guide);
+        }else{
+            return null;
+        }
     }
 
     public static GuideExportPluginDirectory getDelegate(){
-	if (_instance==null){
-	    _instance = new GuideExportPluginDirectory();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new GuideExportPluginDirectory();
+        }
+        return _instance;
     }
 
 }

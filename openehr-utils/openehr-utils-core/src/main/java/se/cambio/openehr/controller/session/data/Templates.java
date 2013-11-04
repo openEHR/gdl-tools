@@ -3,16 +3,14 @@ import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.vo.TemplateObjectBundleCustomVO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.util.comparators.TemplateComparator;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Templates {
@@ -24,29 +22,32 @@ public class Templates {
     }
 
     public static void loadTemplates() throws InternalErrorException{
-        loadTemplates(true);
-    }
-
-    public static void loadTemplates(boolean generate) throws InternalErrorException{
-        init();
         Collection<TemplateDTO> templateDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllTemplates();
-        if(generate){
-            OpenEHRObjectBundleManager.generateTemplateObjectBundles(templateDTOs);
-        }
+        loadTemplates(templateDTOs);
+    }
+
+    public static void loadTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException{
+        init();
+        OpenEHRObjectBundleManager.generateTemplateObjectBundles(templateDTOs);
         loadTemplateObjectBundles(templateDTOs);
     }
 
+    public static void loadTemplate(TemplateDTO templateVO) throws InternalErrorException{
+        OpenEHRObjectBundleManager.generateTemplateObjectBundles(Collections.singleton(templateVO));
+        registerTemplate(templateVO);
+    }
+
     private static void init(){
-        getDelegate()._templatessById = new HashMap<String, TemplateDTO>();
+        getTemplatesMap().clear();
     }
 
-    public static void registerTemplate(TemplateDTO templateVO){
-        getDelegate()._templatessById.put(templateVO.getIdTemplate(), templateVO);
+    private static void registerTemplate(TemplateDTO templateVO){
+        getTemplatesMap().put(templateVO.getIdTemplate(), templateVO);
     }
 
-    public static TemplateDTO getTemplateVO(String idTemplate){
-        return getDelegate()._templatessById.get(idTemplate);
+    public static TemplateDTO getTemplateDTO(String idTemplate){
+        return getTemplatesMap().get(idTemplate);
     }
 
     public static void loadTemplateObjectBundles(Collection<TemplateDTO> templateDTOs){
@@ -69,7 +70,7 @@ public class Templates {
 
     public static ArrayList<TemplateDTO> getTemplates(String entryType){
         ArrayList<TemplateDTO> list = new ArrayList<TemplateDTO>();
-        for (TemplateDTO templateVO : getDelegate()._templatessById.values()) {
+        for (TemplateDTO templateVO : getTemplatesMap().values()) {
             if (entryType.equals(templateVO.getRMName())){
                 list.add(templateVO);
             }
@@ -78,7 +79,7 @@ public class Templates {
     }
 
     public static ImageIcon getIcon(String idTemplate){
-        String entryType = getTemplateVO(idTemplate).getRMName();
+        String entryType = getTemplateDTO(idTemplate).getRMName();
         ImageIcon icon = OpenEHRConstUI.getIcon(entryType);
         if (icon!=null){
             return icon;
@@ -87,12 +88,29 @@ public class Templates {
         }
     }
 
-    public static Collection<TemplateDTO> getAllTemplates(){
-        return new ArrayList<TemplateDTO>(getDelegate()._templatessById.values());
+    public static List<TemplateDTO> getAllTemplates(){
+        return new ArrayList<TemplateDTO>(getTemplatesMap().values());
     }
 
-    public static Collection<String> getAllTemplateIds(){
-        return new ArrayList<String>(getDelegate()._templatessById.keySet());
+    public static List<String> getAllTemplateIds(){
+        return new ArrayList<String>(getTemplatesMap().keySet());
+    }
+
+    private static Map<String, TemplateDTO> getTemplatesMap(){
+        if (getDelegate()._templatessById == null){
+            getDelegate()._templatessById = new HashMap<String, TemplateDTO>();
+        }
+        return getDelegate()._templatessById;
+    }
+
+    public int hashCode(){
+        List<TemplateDTO> templateDTOs = getAllTemplates();
+        Collections.sort(templateDTOs, new TemplateComparator());
+        List<String> defs = new ArrayList<String>();
+        for(TemplateDTO templateDTO: templateDTOs){
+            defs.add(templateDTO.getArchetype());
+        }
+        return defs.hashCode();
     }
 
     public static Templates getDelegate(){

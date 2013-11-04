@@ -1,12 +1,12 @@
 package se.cambio.cds.model.facade.administration.delegate;
 
-import java.util.Collection;
-
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.overview.dto.OverviewDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.Collection;
 
 
 /**
@@ -17,11 +17,15 @@ public interface CDSAdministrationFacadeDelegate {
 
     public Collection<GuideDTO> searchAllGuides() throws InternalErrorException;
 
+    public Collection<GuideDTO> searchAllGuidesDefinitions() throws InternalErrorException;
+
     public Collection<GuideDTO> searchByGuideIds(Collection<String> guideIds) 
 	    throws InternalErrorException, GuideNotFoundException;
     
     public Collection<String> searchInactiveGuideIds() throws InternalErrorException;
-    
+
+    public int getGuidesHashCode() throws InternalErrorException;
+
     public void setActive(String guideId, boolean active) throws InternalErrorException, GuideNotFoundException;
     
     public void upsertGuide(GuideDTO guideDTO) throws InternalErrorException, GuideNotFoundException;

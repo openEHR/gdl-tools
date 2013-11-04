@@ -26,6 +26,12 @@ public class TerminologyDTO implements Serializable{
     public void setSrc(byte[] src) {
         this.src = src;
     }
+
+    /*
+    public int hashCode() {
+        return (terminologyId!=null?terminologyId.hashCode():0)+(src!=null?src.hashCode():1);
+    }
+    */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -207,7 +207,7 @@ public class GDLDroolsConverter {
                                                             true)+
                                                     ")\n");
                                 }else{
-                                    throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"));
+                                    throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"+(archetypeBinding.getTemplateId()!=null?"("+archetypeBinding.getTemplateId()+")":"")));
                                 }
                             }
                         }else if (expressionItem instanceof UnaryExpression) {
@@ -236,7 +236,7 @@ public class GDLDroolsConverter {
                             }else if (OperatorKind.MIN.equals(op)){
                                 opStr="<";
                             }else{
-                                Logger.getLogger(GDLDroolsConverter.class).warn("Operator for predicate '"+op+"' is not valid.");
+                                Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Operator for predicate '"+op+"' is not valid.");
                             }
                             if (archetypeElement!=null && opStr!=null){
 
@@ -462,7 +462,7 @@ public class GDLDroolsConverter {
                         ((ConstantExpression) expressionItemAux).getValue();
                 ArchetypeElementVO archetypeElementVO = elementMap.get(gtCode);
                 if (archetypeElementVO==null){
-                    Logger.getLogger(GDLDroolsConverter.class).warn("Unknown element for gtCode '"+gtCode+"'");
+                    Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Unknown element for gtCode '"+gtCode+"'");
                 }
                 String rmType = archetypeElementVO.getRMType();
                 DataValue dv = DataValue.parseValue(rmType + "," + dvStr);
@@ -777,7 +777,7 @@ public class GDLDroolsConverter {
         } else if (OperatorKind.INEQUAL.equals(ok)) {
             return "!" + handle + ".equals(" + value + ")";
         } else {
-            Logger.getLogger(GDLDroolsConverter.class).warn("Illegar operator '"+ok.getSymbol()+"' used in handle '"+handle+"'.");
+            Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Illegar operator '"+ok.getSymbol()+"' used in handle '"+handle+"'.");
             return "false";
         }
     }
@@ -823,7 +823,7 @@ public class GDLDroolsConverter {
 
     private String getTermBindings(String value) {
         if (value.startsWith("$")){
-            Logger.getLogger(GDLDroolsConverter.class).warn("Subclass comparison between elements is not supported.");
+            Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Subclass comparison between elements is not supported.");
             //TODO Give support to subclass comparison between elements
             return "null";
         }
@@ -831,7 +831,7 @@ public class GDLDroolsConverter {
 
         // TODO log.warn if gt code is unbound to terminologies
         if(termBindings == null) {
-            //Logger.getLogger(GDLDroolsConverter.class).warn("Needed terminology binding not found on guide.");
+            //Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
             return value;
         }
         String code = parseCode(value);

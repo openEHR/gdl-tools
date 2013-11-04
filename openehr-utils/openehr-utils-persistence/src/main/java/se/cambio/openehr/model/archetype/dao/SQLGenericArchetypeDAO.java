@@ -7,7 +7,7 @@
 package se.cambio.openehr.model.archetype.dao;
 
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.util.GlobalNames;
+import se.cambio.openehr.model.util.OpenEHRGlobalNames;
 import se.cambio.openehr.model.util.sql.DataSourceLocator;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -32,9 +32,9 @@ public class SQLGenericArchetypeDAO implements GenericArchetypeDAO {
     public SQLGenericArchetypeDAO() throws InternalErrorException {
 
         dao = SQLArchetypeFactory.getDAO();
-        dataSource = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
+        dataSource = DataSourceLocator.getDataSource(OpenEHRGlobalNames.OPENEHR_DATA_SOURCE);
         //TODO Get proper RepetableRead DS
-        dataSourceRR = DataSourceLocator.getDataSource(GlobalNames.CDSS_DATA_SOURCE);
+        dataSourceRR = DataSourceLocator.getDataSource(OpenEHRGlobalNames.OPENEHR_DATA_SOURCE);
     }
     /* (non-Javadoc)
      * @see es.sergas.canalejo.sisegtx.model.diagnostico.dao.GenericDiagnosticoDAO#buscar(java.sql.Connection, java.lang.Short)
@@ -45,6 +45,19 @@ public class SQLGenericArchetypeDAO implements GenericArchetypeDAO {
         try {
             connection = dataSource.getConnection();
             return dao.searchByArchetypeIds(connection, archetypeIds);
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public Collection<ArchetypeDTO> searchAllDefinitions() throws InternalErrorException {
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            return dao.searchAllDefinitions(connection);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {

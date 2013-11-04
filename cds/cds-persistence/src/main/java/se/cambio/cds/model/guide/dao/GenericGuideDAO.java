@@ -1,10 +1,10 @@
 package se.cambio.cds.model.guide.dao;
 
-import java.util.Collection;
-
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.Collection;
 
 /**
  * @author iago.corbal
@@ -16,6 +16,9 @@ public interface GenericGuideDAO {
 	
 	public Collection<GuideDTO> searchAll()
 	throws InternalErrorException;
+
+    public Collection<GuideDTO> searchAllDefinitions()
+            throws InternalErrorException;
 
 	public GuideDTO add(GuideDTO guideDTO)
 	throws InternalErrorException;

@@ -1,11 +1,11 @@
 package se.cambio.openehr.model.archetype.dao;
 
-import java.sql.Connection;
-import java.util.Collection;
-
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.sql.Connection;
+import java.util.Collection;
 
 /**
  * @author icorram
@@ -19,6 +19,9 @@ public interface SQLArchetypeDAO {
 	
 	public Collection<ArchetypeDTO> searchAll(Connection connection)
 	throws InternalErrorException;
+
+    public Collection<ArchetypeDTO> searchAllDefinitions(Connection connection)
+            throws InternalErrorException;
 	
 	public void insert(Connection connection, ArchetypeDTO ArchetypeDTO)
 	throws InternalErrorException;

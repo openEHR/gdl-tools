@@ -8,83 +8,88 @@ import java.io.Serializable;
  */
 public class ArchetypeDTO implements Serializable{
 
-	private java.lang.String idArchetype;
-	private java.lang.String name;
-	private java.lang.String description;
-	private java.lang.String rmName;
-	private java.lang.String archetype;
-	private byte[] aom;
-	private byte[] aobcVO;
-	
-	private static final long serialVersionUID = 23032012L;
+    private java.lang.String idArchetype;
+    private java.lang.String name;
+    private java.lang.String description;
+    private java.lang.String rmName;
+    private java.lang.String archetype;
+    private byte[] aom;
+    private byte[] aobcVO;
 
-	public ArchetypeDTO(String idArchetype, String name, String description,
-		String entryType, String archetype, byte[] aom, byte[] aobcVO) {
-	    super();
-	    this.idArchetype = idArchetype;
-	    this.name = name;
-	    this.description = description;
-	    this.rmName = entryType;
-	    this.archetype = archetype;
-	    this.aom = aom;
-	    this.aobcVO = aobcVO;
-	}
+    private static final long serialVersionUID = 23032012L;
 
-	public java.lang.String getIdArchetype() {
-	    return idArchetype;
-	}
+    public ArchetypeDTO(String idArchetype, String name, String description,
+                        String entryType, String archetype, byte[] aom, byte[] aobcVO) {
+        super();
+        this.idArchetype = idArchetype;
+        this.name = name;
+        this.description = description;
+        this.rmName = entryType;
+        this.archetype = archetype;
+        this.aom = aom;
+        this.aobcVO = aobcVO;
+    }
 
-	public void setIdArchetype(java.lang.String idArchetype) {
-	    this.idArchetype = idArchetype;
-	}
+    public java.lang.String getIdArchetype() {
+        return idArchetype;
+    }
 
-	public java.lang.String getName() {
-	    return name;
-	}
+    public void setIdArchetype(java.lang.String idArchetype) {
+        this.idArchetype = idArchetype;
+    }
 
-	public void setName(java.lang.String name) {
-	    this.name = name;
-	}
+    public java.lang.String getName() {
+        return name;
+    }
 
-	public java.lang.String getDescription() {
-	    return description;
-	}
+    public void setName(java.lang.String name) {
+        this.name = name;
+    }
 
-	public void setDescription(java.lang.String description) {
-	    this.description = description;
-	}
+    public java.lang.String getDescription() {
+        return description;
+    }
 
-	public java.lang.String getRMName() {
-	    return rmName;
-	}
+    public void setDescription(java.lang.String description) {
+        this.description = description;
+    }
 
-	public void setRMName(java.lang.String entryType) {
-	    this.rmName = entryType;
-	}
+    public java.lang.String getRMName() {
+        return rmName;
+    }
 
-	public byte[] getAom() {
-	    return aom;
-	}
+    public void setRMName(java.lang.String entryType) {
+        this.rmName = entryType;
+    }
 
-	public void setAom(byte[] aom) {
-	    this.aom = aom;
-	}
+    public byte[] getAom() {
+        return aom;
+    }
 
-	public java.lang.String getArchetype() {
-	    return archetype;
-	}
+    public void setAom(byte[] aom) {
+        this.aom = aom;
+    }
 
-	public void setArchetype(java.lang.String archetype) {
-	    this.archetype = archetype;
-	}
+    public java.lang.String getArchetype() {
+        return archetype;
+    }
 
-	public byte[] getAobcVO() {
-	    return aobcVO;
-	}
+    public void setArchetype(java.lang.String archetype) {
+        this.archetype = archetype;
+    }
 
-	public void setAobcVO(byte[] aobcVO) {
-	    this.aobcVO = aobcVO;
-	}
+    public byte[] getAobcVO() {
+        return aobcVO;
+    }
+
+    public void setAobcVO(byte[] aobcVO) {
+        this.aobcVO = aobcVO;
+    }
+    /*
+    public int hashCode() {
+        return (archetype!=null?archetype.hashCode():0)+(aom!=null?aom.hashCode():1)+(aobcVO!=null?aobcVO.hashCode():2);
+    }
+    */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
