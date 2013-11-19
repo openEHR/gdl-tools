@@ -3,6 +3,7 @@ package se.cambio.openehr.view.dialogs;
 
 import se.cambio.openehr.util.ProgressManager;
 import se.cambio.openehr.view.panels.ProgressBarPanel;
+import se.cambio.openehr.view.util.ScreenUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,13 +35,8 @@ public class InfoDialog extends JDialog implements ProgressManager {
      * This method initializes this
      */
     private void initialize() {
-        Dimension screenSize =
-                Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension labelSize = this.getSize();
         this.setSize(200, 80);
-        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-        this.setLocation(locx,locy);
+        ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         this.setContentPane(getProgressBarPanel());
         this.setUndecorated(true);
     }
@@ -50,6 +46,7 @@ public class InfoDialog extends JDialog implements ProgressManager {
     }
 
     public void start(){
+        ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         getProgressBarPanel().start();
         this.setVisible(true);
     }

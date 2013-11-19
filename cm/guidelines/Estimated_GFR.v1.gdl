@@ -42,7 +42,6 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 				>
-				function = <"LAST">
 			>
 			
 			[2] = (ARCHETYPE_BINDING) <
@@ -53,7 +52,6 @@
 						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
 					>
 				>
-				function = <"LAST">
 			>
 			
 			[3] = (ARCHETYPE_BINDING) <
@@ -64,7 +62,6 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 				>
-				function = <"LAST">
 			>
 			
 			[4] = (ARCHETYPE_BINDING) <
@@ -75,7 +72,6 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0078.7]">
 					>
 				>
-				function = <"LAST">
 			>
 			
 			[5] = (ARCHETYPE_BINDING) <

@@ -23,7 +23,7 @@ public class GuidePanel extends JPanel {
     private RulesPanel rulesPanel;
     private RuleLinesPanel preconditionsPanel;
     private RuleLinesPanel definitionsPanel;
-    private TerminologyPanel ontologyPanel;
+    private TerminologyPanel terminologyPanel;
     private BindingsPanel bindingTabPanel;
     private GDLPanel gdlPanel;
     private HTMLPanel htmlPanel;
@@ -127,10 +127,10 @@ public class GuidePanel extends JPanel {
     }
 
     private TerminologyPanel getTerminologyPanel(){
-        if (ontologyPanel==null){
-            ontologyPanel = new TerminologyPanel(_controller);
+        if (terminologyPanel ==null){
+            terminologyPanel = new TerminologyPanel(_controller);
         }
-        return ontologyPanel;
+        return terminologyPanel;
     }
 
     public BindingsPanel getBindingPanel(){

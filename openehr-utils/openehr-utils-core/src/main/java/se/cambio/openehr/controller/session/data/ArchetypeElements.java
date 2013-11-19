@@ -23,7 +23,7 @@ public class ArchetypeElements {
 
     private ArchetypeElements(){
         _archetypeElementsById = new LinkedHashMap<String, ArchetypeElementVO>();
-        _templateElementsByTemplateIdAndId = new HashMap<String, Map<String, ArchetypeElementVO>>();
+        _templateElementsByTemplateIdAndId = new LinkedHashMap<String, Map<String, ArchetypeElementVO>>();
 
     }
 

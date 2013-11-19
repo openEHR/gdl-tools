@@ -10,6 +10,8 @@ public class TemplateDTO implements Serializable{
 
     private java.lang.String idTemplate;
     private java.lang.String idArchetype;
+    private java.lang.String name;
+    private java.lang.String description;
     private java.lang.String rmName;
     private java.lang.String archetype;
     private byte[] aom;
@@ -19,14 +21,17 @@ public class TemplateDTO implements Serializable{
     private static final long serialVersionUID = 23032012L;
 
     public TemplateDTO(String idTemplate, String idArchetype,
-	    String entryType, String archetype, byte[] aom, byte[] tobcVO) {
-	super();
-	this.idTemplate = idTemplate;
-	this.idArchetype = idArchetype;
-	this.rmName = entryType;
-	this.archetype = archetype;
-	this.aom = aom;
-	this.tobcVO = tobcVO;
+                       String name, String description,
+                       String entryType, String archetype, byte[] aom, byte[] tobcVO) {
+        super();
+        this.idTemplate = idTemplate;
+        this.idArchetype = idArchetype;
+        this.name = name;
+        this.description = description;
+        this.rmName = entryType;
+        this.archetype = archetype;
+        this.aom = aom;
+        this.tobcVO = tobcVO;
     }
 
     public java.lang.String getIdTemplate() {
@@ -38,35 +43,51 @@ public class TemplateDTO implements Serializable{
     }
 
     public java.lang.String getIdArchetype() {
-	return idArchetype;
+        return idArchetype;
     }
 
     public void setIdArchetype(java.lang.String idArchetype) {
-	this.idArchetype = idArchetype;
+        this.idArchetype = idArchetype;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public java.lang.String getRMName() {
-	return rmName;
+        return rmName;
     }
 
     public void setRMName(java.lang.String entryType) {
-	this.rmName = entryType;
+        this.rmName = entryType;
     }
 
     public byte[] getAom() {
-	return aom;
+        return aom;
     }
 
     public void setAom(byte[] aom) {
-	this.aom = aom;
+        this.aom = aom;
     }
 
     public java.lang.String getArchetype() {
-	return archetype;
+        return archetype;
     }
 
     public void setArchetype(java.lang.String archetype) {
-	this.archetype = archetype;
+        this.archetype = archetype;
     }
 
     public byte[] getTobcVO() {

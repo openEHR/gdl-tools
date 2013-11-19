@@ -136,7 +136,11 @@ public class OpenEHRObjectBundleManager {
             OETParser parser = new OETParser();
             InputStream is = IOUtils.toInputStream(templateDTO.getArchetype());
             TEMPLATE template = parser.parseTemplate(is).getTemplate();
-
+            templateDTO.setName(template.getName());
+            //TODO
+            if (template.getDescription()!=null && template.getDescription().getDetails()!=null&&template.getDescription().getDetails().getPurpose()!=null){
+                templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
+            }
             ar = new Flattener().toFlattenedArchetype(template, archetypeMap);
         }
         if (!ar.getOriginalLanguage().getCodeString().equals(language) &&
@@ -196,128 +200,159 @@ public class OpenEHRObjectBundleManager {
         Map<String, CObject> pathObjectMap = ar.getPathNodeMap();
         ArrayList<String> paths = new ArrayList<String>(pathObjectMap.keySet());
         //Shortest path first (to populate clusters before children)
-        Collections.sort(paths);
-        for (String path : paths) {
-            CObject cObject = pathObjectMap.get(path);
-            if (!OpenEHRConst.PARSABLE_OPENEHR_RM_NAMES.contains(cObject.getRmTypeName())){
-                continue;
+        //Collections.sort(paths);
+        //for (String path : paths) {
+            //CObject cObject = pathObjectMap.get(path);
+            proccessCObject(ar.getDefinition(), ar, archId, idTemplate, archetypeElementVOs, clusterVOs, codedTextVOs, ordinalVOs, archetypeSlotVOs, unitVOs, proportionTypeVOs, language);
+        //}
+        loadRMElements(archId, idTemplate, rmEntry, archetypeElementVOs);
+    }
+
+    private static void proccessCObject(
+            CObject cObject,
+            Archetype ar,
+            String archId,
+            String idTemplate,
+            Collection<ArchetypeElementVO> archetypeElementVOs,
+            Collection<ClusterVO> clusterVOs,
+            Collection<CodedTextVO> codedTextVOs,
+            Collection<OrdinalVO> ordinalVOs,
+            Collection<ArchetypeSlotVO> archetypeSlotVOs,
+            Collection<UnitVO> unitVOs,
+            Collection<ProportionTypeVO> proportionTypeVOs,
+            String language
+    ){
+        String path = cObject.path();
+        if (!OpenEHRConst.PARSABLE_OPENEHR_RM_NAMES.contains(cObject.getRmTypeName())){
+            return;
+        }
+        if (cObject instanceof CComplexObject){
+            CComplexObject cComplexObject = ((CComplexObject)cObject);
+            CAttribute att = cComplexObject.getAttribute("value");
+            Archetype localAOM = getLocalAOM(ar, path);
+            String text = null;
+            String desc = null;
+            //Is it referencing an inner archetype?
+            ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(cObject.getNodeId());
+            if (archetypeVO==null){
+                text = getText(localAOM, cObject.getNodeId(), language);
+                desc = getDescription(localAOM, cObject.getNodeId(), language);
+            }else{
+                text = archetypeVO.getName();
+                desc = archetypeVO.getDescription();
             }
-            if (cObject instanceof CComplexObject){
-                CAttribute att = ((CComplexObject)cObject).getAttribute("value");
-                Archetype localAOM = getLocalAOM(ar, path);
-                String text = null;
-                String desc = null;
-                //Is it referencing an inner archetype?
-                ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(cObject.getNodeId());
-                if (archetypeVO==null){
-                    text = getText(localAOM, cObject.getNodeId(), language);
-                    desc = getDescription(localAOM, cObject.getNodeId(), language);
-                }else{
-                    text = archetypeVO.getName();
-                    desc = archetypeVO.getDescription();
+            //TODO ????
+            if ("@ internal @".equals(desc) || text==null || text.startsWith("*")){
+                int firstIndex = path.lastIndexOf("/")+1;
+                int finalIndex = path.lastIndexOf("[");
+                if (finalIndex>firstIndex){
+                    text = path.substring(firstIndex, finalIndex);
                 }
-                //TODO ????
-                if ("@ internal @".equals(desc) || text==null || text.startsWith("*")){
-                    int firstIndex = path.lastIndexOf("/")+1;
-                    int finalIndex = path.lastIndexOf("[");
-                    if (finalIndex>firstIndex){
-                        text = path.substring(firstIndex, finalIndex);
-                    }
-                }
-                String type =null;
-                CObject childCObject = null;
-                if (att!=null){
-                    if (att.getChildren()!=null && !att.getChildren().isEmpty()){
-                        childCObject = att.getChildren().get(0);
-                        type = childCObject.getRmTypeName();
-                    }else{
-                        type = cObject.getRmTypeName();
-                    }
+            }
+            String type = null;
+            CObject childCObject = null;
+            if (att!=null){
+                if (att.getChildren()!=null && !att.getChildren().isEmpty()){
+                    childCObject = att.getChildren().get(0);
+                    type = childCObject.getRmTypeName();
                 }else{
                     type = cObject.getRmTypeName();
                 }
-                if (type!=null){
-                    if (type.equals("DvOrdinal")){
-                        type = OpenEHRDataValues.DV_ORDINAL;
-                    }else if (type.equals("DvQuantity")){
-                        type = OpenEHRDataValues.DV_QUANTITY;
-                    }
-                }
-                if (OpenEHRDataValuesUI.isManaged(type)){
-                    ArchetypeElementVO archetypeElementVO =
-                            new ArchetypeElementVO(text, desc, type, getIdParentCluster(path, clusterVOs), archId, idTemplate, path);
-                    archetypeElementVO.setLowerCardinality(cObject.getOccurrences().getLower());
-                    archetypeElementVO.setUpperCardinality(cObject.getOccurrences().getUpper());
-                    archetypeElementVOs.add(archetypeElementVO);
-                    if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)){
-                        if (codedTextVOs!=null){
-                            loadCodedTexts(localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, codedTextVOs);
-                        }
-                    }else if (OpenEHRDataValues.DV_ORDINAL.equals(type)) {
-                        if (ordinalVOs!=null){
-                            loadOrdinals(localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, ordinalVOs);
-                        }
-                    }else if (OpenEHRDataValues.DV_QUANTITY.equals(type)) {
-                        if (unitVOs!=null){
-                            loadUnits(idTemplate, archetypeElementVO.getId(), childCObject, unitVOs);
-                        }
-                    }else if (OpenEHRDataValues.DV_PROPORTION.equals(type)) {
-                        if (proportionTypeVOs!=null){
-                            loadProportionTypes(idTemplate, archetypeElementVO.getId(), childCObject, proportionTypeVOs);
-                        }
-                    }
-                }else{
-                    if (type.equals(OpenEHRConst.SECTION)){
-                        String auxText = getSectionName(path);
-                        //If the user specifies a special name on the template designer
-                        if (auxText!=null){
-                            text = auxText;
-                        }
-                    }
-                    ClusterVO clusterVO = new ClusterVO(text, desc, type, getIdParentCluster(path, clusterVOs), archId, idTemplate, path);
-                    clusterVO.setLowerCardinality(cObject.getOccurrences().getLower());
-                    clusterVO.setUpperCardinality(cObject.getOccurrences().getUpper());
-                    clusterVOs.add(clusterVO);
-                }
-            }else if (cObject instanceof ArchetypeSlot){
-                if (archetypeSlotVOs!=null){
-                    ArchetypeSlot archetypeSlot = (ArchetypeSlot) cObject;
-                    String text = getText(ar, cObject.getNodeId(), language);
-                    if (text==null){
-                        text=OpenEHRLanguageManager.getMessage("UnnamedSlot");
-                    }
-                    String desc = getDescription(ar, cObject.getNodeId(), language);
-                    if (desc==null){
-                        desc=OpenEHRLanguageManager.getMessage("UnnamedSlot");
-                    }
-                    Collection<String> includes = new ArrayList<String>();
-                    if (archetypeSlot.getIncludes()!=null){
-                        for (Assertion assertion : archetypeSlot.getIncludes()) {
-                            String exp = assertion.getStringExpression();
-                            int indexS= exp.indexOf("{");
-                            int indexE= exp.indexOf("}");
-                            exp = exp.substring(indexS+2, indexE-1);
-                            includes.add(exp);
-                        }
-                    }
-                    Collection<String> excludes = new ArrayList<String>();
-                    if (archetypeSlot.getExcludes()!=null){
-                        for (Assertion assertion : archetypeSlot.getExcludes()) {
-                            String exp = assertion.getStringExpression();
-                            int indexS= exp.indexOf("{");
-                            int indexE= exp.indexOf("}");
-                            exp = exp.substring(indexS+2, indexE-1);
-                            excludes.add(exp);
-                        }
-                    }
-                    archetypeSlotVOs.add(
-                            new ArchetypeSlotVO(text, desc, cObject.getRmTypeName(), getIdParentCluster(path, clusterVOs), archId, idTemplate, path, includes, excludes));
-                }
-            }else if (cObject instanceof ArchetypeSlot){
-                Logger.getLogger(OpenEHRObjectBundleManager.class).warn("Unkown CObject '"+cObject+"': Skipped");
+            }else{
+                type = cObject.getRmTypeName();
             }
+            if (type!=null){
+                if (type.equals("DvOrdinal")){
+                    type = OpenEHRDataValues.DV_ORDINAL;
+                }else if (type.equals("DvQuantity")){
+                    type = OpenEHRDataValues.DV_QUANTITY;
+                }
+            }
+            if (OpenEHRDataValuesUI.isManaged(type)){
+                ArchetypeElementVO archetypeElementVO =
+                        new ArchetypeElementVO(text, desc, type, getIdParentCluster(path, clusterVOs), archId, idTemplate, path);
+                setCardinalities(archetypeElementVO, cObject);
+                archetypeElementVOs.add(archetypeElementVO);
+                if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)){
+                    if (codedTextVOs!=null){
+                        loadCodedTexts(localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, codedTextVOs);
+                    }
+                }else if (OpenEHRDataValues.DV_ORDINAL.equals(type)) {
+                    if (ordinalVOs!=null){
+                        loadOrdinals(localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, ordinalVOs);
+                    }
+                }else if (OpenEHRDataValues.DV_QUANTITY.equals(type)) {
+                    if (unitVOs!=null){
+                        loadUnits(idTemplate, archetypeElementVO.getId(), childCObject, unitVOs);
+                    }
+                }else if (OpenEHRDataValues.DV_PROPORTION.equals(type)) {
+                    if (proportionTypeVOs!=null){
+                        loadProportionTypes(idTemplate, archetypeElementVO.getId(), childCObject, proportionTypeVOs);
+                    }
+                }
+            }else{
+                if (type.equals(OpenEHRConst.SECTION)){
+                    String auxText = getSectionName(path);
+                    //If the user specifies a special name on the template designer
+                    if (auxText!=null){
+                        text = auxText;
+                    }
+                }
+                ClusterVO clusterVO = new ClusterVO(text, desc, type, getIdParentCluster(path, clusterVOs), archId, idTemplate, path);
+                setCardinalities(clusterVO, cObject);
+                clusterVOs.add(clusterVO);
+            }
+
+            //Recursive lookup
+            for (CAttribute cAttribute: cComplexObject.getAttributes()){
+                for (CObject cObjectAux : cAttribute.getChildren()){
+                    proccessCObject(cObjectAux, ar, archId, idTemplate, archetypeElementVOs, clusterVOs, codedTextVOs, ordinalVOs, archetypeSlotVOs, unitVOs, proportionTypeVOs, language);
+                }
+            }
+        }else if (cObject instanceof ArchetypeSlot){
+            if (archetypeSlotVOs!=null){
+                ArchetypeSlot archetypeSlot = (ArchetypeSlot) cObject;
+                String text = getText(ar, cObject.getNodeId(), language);
+                if (text==null){
+                    text=OpenEHRLanguageManager.getMessage("UnnamedSlot");
+                }
+                String desc = getDescription(ar, cObject.getNodeId(), language);
+                if (desc==null){
+                    desc=OpenEHRLanguageManager.getMessage("UnnamedSlot");
+                }
+                Collection<String> includes = new ArrayList<String>();
+                if (archetypeSlot.getIncludes()!=null){
+                    for (Assertion assertion : archetypeSlot.getIncludes()) {
+                        String exp = assertion.getStringExpression();
+                        int indexS= exp.indexOf("{");
+                        int indexE= exp.indexOf("}");
+                        exp = exp.substring(indexS+2, indexE-1);
+                        includes.add(exp);
+                    }
+                }
+                Collection<String> excludes = new ArrayList<String>();
+                if (archetypeSlot.getExcludes()!=null){
+                    for (Assertion assertion : archetypeSlot.getExcludes()) {
+                        String exp = assertion.getStringExpression();
+                        int indexS= exp.indexOf("{");
+                        int indexE= exp.indexOf("}");
+                        exp = exp.substring(indexS+2, indexE-1);
+                        excludes.add(exp);
+                    }
+                }
+                archetypeSlotVOs.add(
+                        new ArchetypeSlotVO(text, desc, cObject.getRmTypeName(), getIdParentCluster(path, clusterVOs), archId, idTemplate, path, includes, excludes));
+            }
+        }else {
+            //Archetype internal refs, etc.
+            //Logger.getLogger(OpenEHRObjectBundleManager.class).debug("Unkown CObject '"+cObject+"': Skipped");
         }
-        loadRMElements(archId, idTemplate, rmEntry, archetypeElementVOs);
+    }
+
+    private static void setCardinalities(PathableVO pathableVO, CObject cObject){
+        //TODO
+        pathableVO.setLowerCardinality(cObject.getOccurrences().getLower());
+        pathableVO.setUpperCardinality(cObject.getOccurrences().getUpper());
     }
 
     private static String getIdParentCluster(String path, Collection<ClusterVO> clusterVOs){
@@ -399,6 +434,10 @@ public class OpenEHRObjectBundleManager {
                         OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveAllSubclasses(
                                 new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
                                 OpenEHRDataValuesUI.getLanguageCodePhrase());
+                if (node==null){
+                    Logger.getLogger(OpenEHRObjectBundleManager.class).warn("Terminology code not found '"+codedTextVO.getCode()+"::"+codedTextVO.getTerminology()+"'.");
+                    return;
+                }
                 DvCodedText ct = node.getValue();
                 codedTextVO.setName(getValidCodedTextName(ct.getValue()));
                 codedTextVO.setDescription(getValidCodedTextName(ct.getValue()));

@@ -15,8 +15,7 @@ import java.util.List;
 public class ConditionRuleLinesPanel extends RuleLinesPanel {
 
     public ConditionRuleLinesPanel(GDLEditor controller) {
-        super(
-                controller,
+        super(controller,
                 RuleLineDirectory.getSelectableConditions(),
                 GDLEditorLanguageManager.getMessage("Conditions"));
     }

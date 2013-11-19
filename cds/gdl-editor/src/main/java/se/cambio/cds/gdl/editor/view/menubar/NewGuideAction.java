@@ -6,12 +6,6 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -19,21 +13,25 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 
 
 public class NewGuideAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3561842193285119707L;
 
     public NewGuideAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("CreateNewGuide"));
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideD"));
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("CreateNewGuide"));
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     }
 
@@ -41,18 +39,20 @@ public class NewGuideAction extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	if (EditorManager.getActiveGDLEditor().isOKToExit()){
-	    GDLEditor controller = new GDLEditor(new Guide());
-	    EditorManager.setLastFileLoaded(null);
-	    try {
-		EditorManager.initController(controller);
-	    } catch (InternalErrorException e1) {
-		ExceptionHandler.handle(e1);
-	    }
-	}
+        EditorManager.getActiveGDLEditor().runIfOKToExit(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        GDLEditor controller = new GDLEditor(new Guide());
+                        EditorManager.setLastFileLoaded(null);
+                        try {
+                            EditorManager.initController(controller);
+                        } catch (InternalErrorException e1) {
+                            ExceptionHandler.handle(e1);
+                        }
+                    }
+                });
     }
-
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

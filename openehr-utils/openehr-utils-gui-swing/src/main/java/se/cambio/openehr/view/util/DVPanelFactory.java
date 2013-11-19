@@ -19,35 +19,35 @@ import se.cambio.openehr.view.panels.DVTimePanel;
 public class DVPanelFactory {
 
     public static DVGenericPanel createDVPanel(String idElement, String idTemplate, String rmType, boolean allowNull, boolean enableUnits, boolean requestFocus){
-	if (OpenEHRDataValues.DV_QUANTITY.equals(rmType)){
-	    return new DVQuantityPanel(idElement, idTemplate, allowNull, enableUnits, requestFocus);
-	}else if (OpenEHRDataValues.DV_CODED_TEXT.equals(rmType)){
-	    return new DVCodedTextPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_BOOLEAN.equals(rmType)){
-	    return new DVBooleanPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_COUNT.equals(rmType)){
-	    return new DVCountPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_TIME.equals(rmType)){
-	    return new DVTimePanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_DATE.equals(rmType)){
-	    return new DVDatePanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_DATE_TIME.equals(rmType)){
-	    return new DVDateTimePanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_DURATION.equals(rmType)){
-	    return new DVDurationPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_ORDINAL.equals(rmType)){
-	    return new DVOrdinalPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_PROPORTION.equals(rmType)){
-	    return new DVProportionPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else if (OpenEHRDataValues.DV_TEXT.equals(rmType)){
-	    return new DVTextPanel(idElement, idTemplate, allowNull, requestFocus);
-	}else{
-	    //TODO Types left ??
-	    Logger.getLogger(DVPanelFactory.class).error("Unknown rmType '"+rmType+"'");
-	    return null;
-	}
+        if (OpenEHRDataValues.DV_QUANTITY.equals(rmType)){
+            return new DVQuantityPanel(idElement, idTemplate, allowNull, enableUnits, requestFocus);
+        }else if (OpenEHRDataValues.DV_CODED_TEXT.equals(rmType)){
+            return new DVCodedTextPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_BOOLEAN.equals(rmType)){
+            return new DVBooleanPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_COUNT.equals(rmType)){
+            return new DVCountPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_TIME.equals(rmType)){
+            return new DVTimePanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_DATE.equals(rmType)){
+            return new DVDatePanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_DATE_TIME.equals(rmType)){
+            return new DVDateTimePanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_DURATION.equals(rmType)){
+            return new DVDurationPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_ORDINAL.equals(rmType)){
+            return new DVOrdinalPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_PROPORTION.equals(rmType)){
+            return new DVProportionPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else if (OpenEHRDataValues.DV_TEXT.equals(rmType)){
+            return new DVTextPanel(idElement, idTemplate, allowNull, requestFocus);
+        }else{
+            //TODO Types left ??
+            Logger.getLogger(DVPanelFactory.class).error("Unknown rmType '"+rmType+"'");
+            return null;
+        }
     }
-    
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

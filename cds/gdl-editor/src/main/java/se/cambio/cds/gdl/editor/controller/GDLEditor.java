@@ -9,6 +9,7 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.view.dialog.CDSFormGenDialog;
+import se.cambio.cds.gdl.editor.controller.sw.CheckGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.CompileGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.SaveGuideOnFileRSW;
 import se.cambio.cds.gdl.editor.util.DefinitionDependencyChecker;
@@ -49,6 +50,7 @@ import java.util.List;
 
 public class GDLEditor {
 
+    private static String UNKOWN_GUIDE_ID = "unknown";
     private GDLEditorMainPanel _gdlEditorMainPanel = null;
     private ResourceDescription _resourceDescription = null;
     private GuideOntology _guideOntology = null;
@@ -56,26 +58,29 @@ public class GDLEditor {
     private ReadableRule _ruleAtEdit = null;
     private Map<String, TermDefinition> _termDefinitions = null;
     private Map<String, TermBinding> _termBindings = null;
-    //private int _termCount = 0;
     private Language _language;
     private Map<String, String> _originalAuthor;
     private List<String> _otherContributors;
     private Map<String, ResourceDescriptionItem> _details;
     private Map<String, String> _otherDetails;
     private InfoDialog _infoDialog;
-    private String _idGuide = "unkown";
+    private String _idGuide = UNKOWN_GUIDE_ID;
     private String _conceptGTCode;
     private String _currentGuideLanguageCode = null;
     private String _originalGuide = null;
     private RefreshablePanel _lastRefreshedPanel = null;
 
     private static String LANGUAGE_TERMINOLOGY = "ISO_639-1";
-    private static String GT_HEADER = "gt";// TODO Link to model
+    private static String GT_HEADER = "gt";//TODO Link to model
     private static String GDL_VERSION = "0.1";
     private static String DRAFT = "Author draft";
 
     public GDLEditor(Guide guide) {
-        setGuide(guide);
+        try {
+            setGuide(guide);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e); //TODO
+        }
     }
 
     public void init() {
@@ -138,36 +143,50 @@ public class GDLEditor {
 
     public void saveGuideAs(){
         _gdlEditorMainPanel.requestFocus();
-        checkGDLEditing(null);
-        new SaveGuideOnFileRSW(null).execute();
+        runIfOkWithEditorState(new Runnable() {
+            @Override
+            public void run() {
+                new SaveGuideOnFileRSW(null).execute();
+            }
+        });
     }
 
     public void saveGuide() {
         _gdlEditorMainPanel.requestFocus();
-        checkGDLEditing(null);
-        new SaveGuideOnFileRSW(EditorManager.getLastFileLoaded()).execute();
+        runIfOkWithEditorState(new Runnable() {
+            @Override
+            public void run() {
+                new SaveGuideOnFileRSW(EditorManager.getLastFileLoaded()).execute();
+            }
+        });
     }
 
     public void generateForm(){
         _gdlEditorMainPanel.requestFocus();
-        checkGDLEditing(null);
-        if (!hasActiveRules()){
-            JOptionPane.showInternalMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"), GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        String gdlGuide = serializeCurrentGuide();
-        if (gdlGuide!=null){
-            CompileGuideSW sw = new CompileGuideSW(this){
-                protected void done() {
-                    getController().compilationFinished(getErrorMsg());
-                    if (getErrorMsg()==null){
-                        generateDialogForm(getCompiledGuide(), getGuide());
-                    }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!hasActiveRules()){
+                    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"), GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
-            };
-            sw.execute();
-            setBusy(GDLEditorLanguageManager.getMessage("Compiling") + "...");
-        }
+                String gdlGuide = serializeCurrentGuide();
+                if (gdlGuide!=null){
+                    CompileGuideSW sw = new CompileGuideSW(){
+                        protected void done() {
+                            getController().compilationFinished(getErrorMsg());
+                            if (getErrorMsg()==null){
+                                generateDialogForm(getCompiledGuide(), getGuide());
+                            }
+                        }
+                    };
+                    sw.execute();
+                    setBusy(GDLEditorLanguageManager.getMessage("Compiling") + "...");
+                }
+            }
+        };
+        runIfOkWithEditorState(runnable);
+
     }
 
     private void generateDialogForm(byte[] compiledGuide, Guide guide){
@@ -197,7 +216,7 @@ public class GDLEditor {
     }
 
     public void compile() {
-        new CompileGuideSW(this).execute();
+        new CompileGuideSW().execute();
         setBusy(GDLEditorLanguageManager.getMessage("Compiling"));
     }
 
@@ -371,38 +390,36 @@ public class GDLEditor {
         RuleElementEditor.edit(ruleLineElementWithValue);
     }
 
-    public boolean isOKToExit() {
-        boolean isGDLSourceEditing = checkGDLEditing(null);
-        if (isGDLSourceEditing){
-            return false;
-        }
-        if (isModified()) {
-            int response = JOptionPane.showConfirmDialog(
-                    EditorManager.getActiveEditorWindow(),
-                    GDLEditorLanguageManager.getMessage("SavingChangesMessage"),
-                    GDLEditorLanguageManager.getMessage("SavingChanges"),
-                    JOptionPane.INFORMATION_MESSAGE);
-            if (response == JOptionPane.CANCEL_OPTION) {
-                return false;
-            } else {
-                if (response == JOptionPane.YES_OPTION) {
-                    SaveGuideOnFileRSW rsw = new SaveGuideOnFileRSW(
-                            EditorManager.getLastFileLoaded()) {
-                        protected void done() {
-                            super.done();
-                            if (getFile() != null) {
-                                EditorManager.closeEditor();
+    public void runIfOKToExit(final Runnable pendingRunnable) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isModified()) {
+                    int response = JOptionPane.showConfirmDialog(
+                            EditorManager.getActiveEditorWindow(),
+                            GDLEditorLanguageManager.getMessage("SavingChangesMessage"),
+                            GDLEditorLanguageManager.getMessage("SavingChanges"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    if (response == JOptionPane.YES_OPTION) {
+                        SaveGuideOnFileRSW rsw = new SaveGuideOnFileRSW(
+                                EditorManager.getLastFileLoaded()) {
+                            protected void done() {
+                                super.done();
+                                if (getFile() != null) {
+                                    pendingRunnable.run();
+                                }
                             }
-                        }
-                    };
-                    rsw.execute();
-                    return false;
+                        };
+                        rsw.execute();
+                    }else if (response == JOptionPane.NO_OPTION) {
+                        pendingRunnable.run();
+                    }
+                } else {
+                    pendingRunnable.run();
                 }
-                return true;
             }
-        } else {
-            return true;
-        }
+        };
+        runIfOkWithEditorState(runnable);
     }
 
     private GuideOntology getGuideOntology(){
@@ -482,16 +499,9 @@ public class GDLEditor {
     }
 
     public String createNextGTCode() {
-        //Collection<String> gtCodesInUse = getGTCodesUsedInGuide();
         String gtCode = generateNextGTCode();
-        //if (gtCodesInUse.contains(gtCode)) {
-        //_termCount++;
-        //    gtCode = generateNextGTCode();
-        //} else {
         getTerm(gtCode).setText(null);
         getTerm(gtCode).setDescription(null);
-        //}
-
         return gtCode;
     }
 
@@ -637,13 +647,11 @@ public class GDLEditor {
                                 }
                             }
                         }
-                        String af = ar.getAggregationFunction();
                         ArchetypeBinding archetypeBinding = new ArchetypeBinding();
                         // archetypeBinding.setId(archetypeGTCode);
                         archetypeBinding.setArchetypeId(ar.getIdArchetype());
                         archetypeBinding.setDomain(ar.getIdDomain());
                         archetypeBinding.setTemplateId(ar.getIdTemplate());
-                        archetypeBinding.setFunction(af);
                         archetypeBinding.setElements(elementMap);
                         archetypeBinding.setPredicateStatements(predicateStatements);
                         guideDefinition.getArchetypeBindings().add(archetypeBinding);
@@ -822,48 +830,76 @@ public class GDLEditor {
     }
 
     public void tabChanged(Component comp){
-        boolean gdlEditing = checkGDLEditing(comp);
-        if (!gdlEditing){
-            if (comp instanceof RefreshablePanel && comp!=_lastRefreshedPanel){
-                RefreshablePanel refreshablePanel = (RefreshablePanel)comp;
-                refreshablePanel.refresh();
-                _lastRefreshedPanel = refreshablePanel;
+        final RefreshablePanel refreshablePanel;
+        if (comp instanceof RefreshablePanel && comp!=_lastRefreshedPanel){
+            refreshablePanel = (RefreshablePanel)comp;
+        }else{
+            refreshablePanel = null;
+        }
+        runIfOkWithEditorState(comp, new Runnable() {
+            @Override
+            public void run() {
+                refreshPanel(refreshablePanel);
             }
+        });
+    }
+
+    private void refreshPanel(RefreshablePanel refreshablePanel){
+        if (refreshablePanel!=null){
+            refreshablePanel.refresh();
+            _lastRefreshedPanel = refreshablePanel;
         }
     }
 
-    private boolean checkGDLEditing(Component currentPanel){
-        if (_lastRefreshedPanel instanceof GDLPanel &&
-                _lastRefreshedPanel!=currentPanel){
-            //Take caree of possible changes made
+    private void runIfOkWithEditorState(Runnable pendingRunnable){
+        Component comp = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
+        runIfOkWithEditorState(comp, pendingRunnable);
+    }
+
+    private void runIfOkWithEditorState(Component currentPanel, Runnable pendingRunnable){
+        if (_lastRefreshedPanel instanceof GDLPanel/* &&
+                _lastRefreshedPanel!=currentPanel*/){
+            //Take care of possible changes made
             GDLPanel gdlPanel = (GDLPanel)_lastRefreshedPanel;
             String guideStr = gdlPanel.getGuideStr();
-            ByteArrayInputStream bais = new ByteArrayInputStream(guideStr.getBytes());
-            Guide guide = parseGuide(bais);
-            if (guide!=null){
-                String auxOriginalGuide = _originalGuide;
+            new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+        }else{
+            pendingRunnable.run();
+        }
+    }
+
+    public void gdlEditingChecked(Guide guide, boolean checkOk, Runnable pendingRunnable){
+//        setFree();
+        if (checkOk){
+            String auxOriginalGuide = _originalGuide;
+            try {
                 setGuide(guide);
                 _originalGuide = auxOriginalGuide;
-                return false;
-            }else{
-                int answer = JOptionPane.showConfirmDialog(
-                        EditorManager.getActiveEditorWindow(),
-                        GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChanges"),
-                        GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChangesTitle"),
-                        JOptionPane.YES_NO_OPTION);
-                if (answer==JOptionPane.YES_OPTION){
-                    return false;
-                }else{
-                    _gdlEditorMainPanel.getGuidePanel().getGuideEditorTabPane().setSelectedComponent(gdlPanel);
-                    return true;
+                if (pendingRunnable!=null){
+                    pendingRunnable.run();
                 }
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
+        }else{
+            int answer = JOptionPane.showConfirmDialog(
+                    EditorManager.getActiveEditorWindow(),
+                    GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChanges"),
+                    GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChangesTitle"),
+                    JOptionPane.YES_NO_OPTION);
+            if (answer==JOptionPane.YES_OPTION){
+                if (pendingRunnable!=null){
+                    pendingRunnable.run();
+                }
+            }else{
+                GDLPanel gdlPanel = (GDLPanel)_lastRefreshedPanel;
+                _gdlEditorMainPanel.getGuidePanel().getGuideEditorTabPane().setSelectedComponent(gdlPanel);
             }
         }
-        return false;
     }
 
     private void initGuideVars(){
-        _idGuide = "unkown";
+        _idGuide = UNKOWN_GUIDE_ID;
         _resourceDescription = null;
         _originalAuthor = null;
         _details = null;
@@ -876,10 +912,9 @@ public class GDLEditor {
         _termBindings = null;
         _readableGuide = null;
         _ruleAtEdit = null;
-        //_termCount = 0;
     }
 
-    public boolean setGuide(Guide guide) {
+    public boolean setGuide(Guide guide) throws InternalErrorException {
         try {
             checkGuideArchetypesAndTemplates(guide);
         } catch (InternalErrorException e) {
@@ -915,7 +950,6 @@ public class GDLEditor {
         _readableGuide =
                 GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
         initResourceDescription();
-        //countTermDefinitions();
         updateOriginal();
         return true;
     }

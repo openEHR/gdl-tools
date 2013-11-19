@@ -100,17 +100,15 @@ public class ArchetypeReferences {
     public static String getHTMLTooltip(ArchetypeElementVO archetypeElementVO, ArchetypeReference ar, String extraLines){
         ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(archetypeElementVO.getIdArchetype());
 
-        String aggregationFunction = null;
         String idDomain = null;
         if (ar!=null){
-            aggregationFunction = ar.getAggregationFunction();
             idDomain = ar.getIdDomain();
         }
 
         String archetypeImageName = OpenEHRConstUI.getIconName(archetypeVO.getRMName());
         String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
 
-        String elementName = archetypeElementVO.getName()+(aggregationFunction!=null?" ("+AggregationFunctionsUI.getAggregationFunctionName(aggregationFunction)+")":"");
+        String elementName = archetypeElementVO.getName();
 
         String archetypeName = ArchetypeReferences.getName(ar)+(idDomain!=null?" ("+idDomain+")":"");
         String cardinalityStr = archetypeElementVO.getLowerCardinality()+"..."+(archetypeElementVO.getUpperCardinality()==null?"*":archetypeElementVO.getUpperCardinality());

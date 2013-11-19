@@ -9,7 +9,6 @@ import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.AggregationFunctions;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.PredicateGeneratedElementInstance;
 import se.cambio.cds.view.swing.applicationobjects.ArchetypeReferences;
@@ -51,12 +50,11 @@ public class DVSwingUtil {
 		null, ar, null, GuideUtil.NULL_FLAVOUR_VALUE);
     }
      */
-    public static ArchetypeReference getEHRArchetypeReference(String idArchetype, boolean last){
+    public static ArchetypeReference getEHRArchetypeReference(String idArchetype){
         return new ArchetypeReference(
                 Domains.EHR_ID,
                 idArchetype,
-                null,
-                (last?AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST:null));
+                null);
     }
 
     public static ElementInstance getElementInstance(String elementId, ArchetypeReference ar){
@@ -65,11 +63,11 @@ public class DVSwingUtil {
                 null, ar, null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
     }
 
-    public static ElementInstance getEHRElementInstance(String elementId, boolean last){
+    public static ElementInstance getEHRElementInstance(String elementId){
         String idArchetype = getIdArchetype(elementId);
         return new ElementInstance(
                 elementId,
-                null, getEHRArchetypeReference(idArchetype, last),
+                null, getEHRArchetypeReference(idArchetype),
                 null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
     }
 
@@ -279,11 +277,11 @@ public class DVSwingUtil {
         }
     }
 
-    private static void disable(JComboBox component){
-        component.setFocusable(false);
-        component.setUI(new DisabledComboUI());
-        component.setFont(component.getFont().deriveFont(Font.PLAIN));
-        ComboBoxEditor editor = component.getEditor();
+    private static void disable(JComboBox comboBox){
+        comboBox.setFocusable(false);
+        comboBox.setUI(new DisabledComboUI());
+        comboBox.setFont(comboBox.getFont().deriveFont(Font.PLAIN));
+        ComboBoxEditor editor = comboBox.getEditor();
         if (editor!=null && editor.getEditorComponent() instanceof JTextComponent){
             ((JTextComponent)editor.getEditorComponent()).setEditable(false);
         }

@@ -44,19 +44,19 @@
 				misuse = <"Not to be used for intravenous pressure.
 							Not to be used for the measurement of arterial blood pressure which is NOT a surrogate for arterial pressure in the systemic circulation eg specific measurement of right Pulmonary artery pressure.  
 							Use OBSERVATION.intravascular_pressure and related specialisations in both of these situations.">
-				copyright = <"© openEHR Foundation">
+				copyright = <"ï¿½ openEHR Foundation">
 			>
 			["de"] = (RESOURCE_DESCRIPTION_ITEM) <
 				language = <[ISO_639-1::de]>
 				purpose = <"Dient">
-				use = <"Alle Blutdruckmessungen werden unter Zuhilfenahme dieses Archetypen dokumentiert, unabhängig davon, welche Methode oder Körperstelle zur Messung benutzt wurden. Der Archetyp dient der Dokumentation des Blutdrucks in alle klinischen Szenarien - z.B. durch eine Blutdruckmaschine zuhause; eine Notfallmessung durch Palpation und ein Sphygmomanometer; Messungen beim Hausarzt oder im Rahmen von Belastungstests; sowie einer Serie von Messungen durch eine Maschine auf der Intensivstation.
-	Der Archetyp beinhaltet ein umfassendes Status-Modell, das die Interpretation der Messung unterstützt, indem Position, Anstrengung, Einflussfaktoren, Neigungswinkel angegeben werden können.
-	Benannte Ereignisse wurden auf den 24-stündigen Durchschnitt beschränkt, jedoch können Templates jederzeit das standardmäßig vorhandene Ereignis ('any event') weiter einschränken, um spezifischen Anforderungen gerecht zu werden, wie z.B. der Messung zu bestimmten Zeitpunkten, oder über eine Anzahl von Intervallen (+/- mathematische Funktionen).">
+				use = <"Alle Blutdruckmessungen werden unter Zuhilfenahme dieses Archetypen dokumentiert, unabhï¿½ngig davon, welche Methode oder Kï¿½rperstelle zur Messung benutzt wurden. Der Archetyp dient der Dokumentation des Blutdrucks in alle klinischen Szenarien - z.B. durch eine Blutdruckmaschine zuhause; eine Notfallmessung durch Palpation und ein Sphygmomanometer; Messungen beim Hausarzt oder im Rahmen von Belastungstests; sowie einer Serie von Messungen durch eine Maschine auf der Intensivstation.
+	Der Archetyp beinhaltet ein umfassendes Status-Modell, das die Interpretation der Messung unterstï¿½tzt, indem Position, Anstrengung, Einflussfaktoren, Neigungswinkel angegeben werden kï¿½nnen.
+	Benannte Ereignisse wurden auf den 24-stï¿½ndigen Durchschnitt beschrï¿½nkt, jedoch kï¿½nnen Templates jederzeit das standardmï¿½ï¿½ig vorhandene Ereignis ('any event') weiter einschrï¿½nken, um spezifischen Anforderungen gerecht zu werden, wie z.B. der Messung zu bestimmten Zeitpunkten, oder ï¿½ber eine Anzahl von Intervallen (+/- mathematische Funktionen).">
 				keywords = <"Beobachtungen", "Messungen", "Vitalparameter", "Mittlerer arterieller Druck", "Pulsdruck", "systolisch", "diastolisch", "RR", "Riva-Rocci", "NIBP">
-				misuse = <"Nicht benutzen zur Dokumentation des intravenösen Drucks.
-	Nicht benutzen zur Dokumentation des arteriellen Blutdrucks, welcher KEIN Surrogat für den arteriellen Druck in der systemischen Zirkluation ist, z.B. die spezifische Messung des rechten pulmonaren Arteriendrucks.
+				misuse = <"Nicht benutzen zur Dokumentation des intravenï¿½sen Drucks.
+	Nicht benutzen zur Dokumentation des arteriellen Blutdrucks, welcher KEIN Surrogat fï¿½r den arteriellen Druck in der systemischen Zirkluation ist, z.B. die spezifische Messung des rechten pulmonaren Arteriendrucks.
 	In diesem Fall sollte der OBSERVATION.intravascular_pressure Archetyp bzw. dessen Spezialisierungen verwendet werden.">
-				copyright = <"© openEHR Foundation">
+				copyright = <"ï¿½ openEHR Foundation">
 			>
 		>
 		lifecycle_state = <"AuthorDraft">
@@ -72,7 +72,6 @@
 			[1] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1"> -- Weight Archetype
 				domain = <"ehr">
-				function = <"last">
 				predicates = <
 					"/data[at0001]/events[at0002]/data[at0003]/items[at0007] >= 20",
 					"/data[at0002]/events[at0003]/data[at0001]/items[at0004] == 10"

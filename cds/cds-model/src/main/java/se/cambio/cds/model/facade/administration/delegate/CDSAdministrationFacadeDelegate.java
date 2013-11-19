@@ -35,6 +35,12 @@ public interface CDSAdministrationFacadeDelegate {
     public Collection<OverviewDTO> searchAllOverviews() throws InternalErrorException;
 
     public OverviewDTO searchOverview(String overviewId) throws InternalErrorException, InstanceNotFoundException;
+
+    public int getOverviewsHashCode() throws InternalErrorException;
+
+    public void upsertOverview(OverviewDTO overviewDTO) throws InternalErrorException, InstanceNotFoundException;
+
+    public void removeOverview(String overviewId) throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

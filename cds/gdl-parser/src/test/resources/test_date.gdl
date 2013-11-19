@@ -22,7 +22,6 @@
 						path = <"/event/time">
 					>
 				>
-				function = <"LAST">
 			>
 		>
 		rules = <

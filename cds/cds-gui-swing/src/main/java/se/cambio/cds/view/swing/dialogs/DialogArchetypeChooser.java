@@ -1,6 +1,5 @@
 package se.cambio.cds.view.swing.dialogs;
 
-import se.cambio.cds.util.AggregationFunctions;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.openehr.controller.session.data.Archetypes;
@@ -18,6 +17,7 @@ import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
 import se.cambio.openehr.view.util.ImportUtils;
 import se.cambio.openehr.view.util.NodeConversor;
+import se.cambio.openehr.view.util.ScreenUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,6 @@ public class DialogArchetypeChooser extends JDialog{
     private SelectableNode<Object> archetypeNode = null;
     private SelectableNode<Object> templateNode = null;
     private JComboBox domainComboBox;
-    private String _currentAggregationFunction = null;
     private JTabbedPane tabbedPane;
     private JCheckBox lastCB;
 
@@ -57,12 +56,11 @@ public class DialogArchetypeChooser extends JDialog{
     }
 
 
-    public DialogArchetypeChooser(Window owner, String archetypeId, String domainId,boolean selectTemplates, String aggregationFunction, boolean onlyShowCDS){
+    public DialogArchetypeChooser(Window owner, String archetypeId, String domainId,boolean selectTemplates, boolean onlyShowCDS){
         super(
                 owner,
                 OpenEHRLanguageManager.getMessage("Archetypes")+"/"+OpenEHRLanguageManager.getMessage("Templates"),
                 ModalityType.APPLICATION_MODAL);
-        _currentAggregationFunction = aggregationFunction;
         if (onlyShowCDS){
             getComboBox().setSelectedItem(Domains.CDS_ID);
             getComboBox().setEnabled(false);
@@ -74,18 +72,12 @@ public class DialogArchetypeChooser extends JDialog{
                 getComboBox().setSelectedItem(domainId);
             }
         }
-        getLastCB().setVisible(Domains.EHR_ID.equals( getComboBox().getSelectedItem()));
         init(new Dimension(500,500), selectTemplates);
     }
 
     private void init(Dimension size, boolean selectTemplates){
-        Dimension screenSize =
-                Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension labelSize = this.getSize();
         this.setSize(size);
-        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-        this.setLocation(locx,locy);
+        ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         this.setResizable(true);
         this.addWindowListener(getCancelChangesAction());
         this.setContentPane(getJPanel());
@@ -111,7 +103,6 @@ public class DialogArchetypeChooser extends JDialog{
             jPanel.add(getArchetypeTemplateTabbedPane(), BorderLayout.CENTER);
             JPanel panelAux = new JPanel(new BorderLayout());
             jPanel.add(panelAux, BorderLayout.SOUTH);
-            panelAux.add(getLastCB(), BorderLayout.NORTH);
             panelAux.add(getBottonPanel(), BorderLayout.SOUTH);
         }
         return jPanel;
@@ -125,13 +116,6 @@ public class DialogArchetypeChooser extends JDialog{
             domainComboBox.addItem(Domains.CDS_ID);
             domainComboBox.setRenderer(new DomainComboBoxRenderer());
             domainComboBox.setSelectedItem(Domains.EHR_ID);
-            domainComboBox.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    boolean isEHR = Domains.EHR_ID.equals(e.getItem());
-                    getLastCB().setSelected(isEHR);
-                    getLastCB().setVisible(isEHR);
-                }
-            });
         }
         return domainComboBox;
     }
@@ -391,17 +375,21 @@ public class DialogArchetypeChooser extends JDialog{
 
     public SelectableNode<Object> getTemplateNode(){
         if (templateNode==null){
-            templateNode = new SelectableNodeWithIcon<Object>(
-                    OpenEHRLanguageManager.getMessage("Templates"),
-                    null, true, false,
-                    Templates.ICON
-            );
-            insertTemplateNodes(templateNode, OpenEHRConst.OBSERVATION);
-            insertTemplateNodes(templateNode, OpenEHRConst.ACTION);
-            insertTemplateNodes(templateNode, OpenEHRConst.EVALUATION);
-            insertTemplateNodes(templateNode, OpenEHRConst.INSTRUCTION);
-            insertTemplateNodes(templateNode, OpenEHRConst.COMPOSITION);
+            templateNode = generateTemplateNode();
         }
+        return templateNode;
+    }
+
+    public static SelectableNode<Object> generateTemplateNode(){
+        SelectableNodeWithIcon templateNode = new SelectableNodeWithIcon<Object>(
+                OpenEHRLanguageManager.getMessage("Templates"),
+                null, true, false,
+                Templates.ICON);
+        insertTemplateNodes(templateNode, OpenEHRConst.OBSERVATION);
+        insertTemplateNodes(templateNode, OpenEHRConst.ACTION);
+        insertTemplateNodes(templateNode, OpenEHRConst.EVALUATION);
+        insertTemplateNodes(templateNode, OpenEHRConst.INSTRUCTION);
+        insertTemplateNodes(templateNode, OpenEHRConst.COMPOSITION);
         return templateNode;
     }
 
@@ -412,25 +400,17 @@ public class DialogArchetypeChooser extends JDialog{
                 OpenEHRConstUI.getIcon(rmName),
                 OpenEHRConstUI.getDescription(rmName));
         SelectableNode<Object> nodoOrigen = null;
-        ArrayList<TemplateDTO> templateVOs = Templates.getTemplates(rmName);
-        Collections.sort(templateVOs, new TemplateComparator());
-        for (TemplateDTO templateVO : templateVOs) {
+        ArrayList<TemplateDTO> templateDTOs = Templates.getTemplates(rmName);
+        Collections.sort(templateDTOs, new TemplateComparator());
+        for (TemplateDTO templateDTO : templateDTOs) {
             nodoOrigen = new SelectableNodeWithIcon<Object>(
-                    templateVO.getIdTemplate()+" - "+templateVO.getIdTemplate(),templateVO,true,
+                    templateDTO.getName()+" - "+templateDTO.getIdTemplate(),templateDTO,true,
                     false,
-                    OpenEHRConstUI.getIcon(templateVO.getRMName()),
-                    templateVO.getIdTemplate());
+                    OpenEHRConstUI.getIcon(templateDTO.getRMName()),
+                    templateDTO.getIdTemplate());
             entryRoot.add(nodoOrigen);
         }
         root.add(entryRoot);
-    }
-
-    private JCheckBox getLastCB(){
-        if (lastCB==null){
-            lastCB = new JCheckBox(OpenEHRLanguageManager.getMessage("OnlyMostRecent"));
-            lastCB.setSelected(_currentAggregationFunction!=null && _currentAggregationFunction.equals(AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST));
-        }
-        return lastCB;
     }
 
     public boolean getAnswer(){
@@ -473,11 +453,6 @@ public class DialogArchetypeChooser extends JDialog{
             idDomain = null;
         }
         return idDomain;
-    }
-
-
-    public String getSelectedAggregationFunction(){
-        return getLastCB().isSelected()?AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST:null;
     }
 }
 /*

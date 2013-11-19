@@ -60,6 +60,7 @@ public class OpenEHRImageUtil {
 	public static final String ACTIVITY_NAME = "activity.png";
 	public static final String SLOT_NAME = "slot.png";
 	public static final String STRUCTURE_NAME = "structure.png";
+    public static final String EVENT_NAME = "event.png";
 	public static final String ITEM_TREE_NAME = "structure.png";
 	public static final String ITEM_LIST_NAME = "structure.png";
 	public static final String ITEM_TABLE_NAME = "structure.png";
@@ -82,6 +83,7 @@ public class OpenEHRImageUtil {
 	public static final ImageIcon ARCHETYPE = OpenEHRImageUtil.getIcon(ARCHETYPE_NAME);
 	public static final ImageIcon TEMPLATE = OpenEHRImageUtil.getIcon(TEMPLATE_NAME);
     public static final ImageIcon TERMSET = OpenEHRImageUtil.getIcon(TERMSET_NAME);
+    public static final ImageIcon EVENT = OpenEHRImageUtil.getIcon(EVENT_NAME);
 	
 	public static final ImageIcon EHR_LABEL_ICON = OpenEHRImageUtil.getIcon("ehr_label.png");
 	public static final ImageIcon KB_LABEL_ICON = OpenEHRImageUtil.getIcon("kb_label.png");
@@ -122,6 +124,7 @@ public class OpenEHRImageUtil {
 	public static final ImageIcon BIG_FOLDER_ICON = OpenEHRImageUtil.getIcon("big.folder.png");
 	public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
     public static final ImageIcon REFRESH_ICON = OpenEHRImageUtil.getIcon("arrow_refresh.png");
+    public static final ImageIcon CLINICAL_MODEL_ICON = getIcon("cog.png");
 
 	/* Aggregation functions */
 	public static final ImageIcon AF_ALL_ICON = OpenEHRImageUtil.getIcon("af_all.png");

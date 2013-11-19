@@ -16,7 +16,7 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
     //private Map<ClusterVO, ContainerInstance> containerInstancesMap = null;
 
     public ArchetypeReferenceWithName(String idArchetype, String idTemplate, String name, String rmName, boolean init) {
-	super(null, idArchetype, idTemplate, null);
+	super(null, idArchetype, idTemplate);
 	this.name = name;
 	this.rmName = rmName;
 	//this.elementInstancesVOsByPath = new HashMap<String, Collection<ElementInstance>>();

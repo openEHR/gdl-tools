@@ -42,6 +42,7 @@
 			<artifactId>openehr-utils-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <!--
 		<dependency>
 			<groupId>jboss</groupId>
 			<artifactId>jboss-annotations-ejb3</artifactId>
@@ -58,14 +59,22 @@
             <version>4.2.2.GA</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss.xnio</groupId>
-            <artifactId>xnio-nio</artifactId>
-            <version>3.1.0.Final</version>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-ejb-client</artifactId>
+            <version>1.0.23.Final</version>
         </dependency>
+
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-remote-naming</artifactId>
             <version>1.0.7.Final</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-ejb-client-bom</artifactId>
+            <version>7.2.0.Final</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 </project>

@@ -1,41 +1,38 @@
 package se.cambio.openehr.view.renderers;
 
-import java.awt.Component;
-
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class DVSelectorRenderer extends JLabel implements ListCellRenderer{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
-	    int index, boolean isSelected, boolean cellHasFocus) {
-	if (isSelected) {
-	    setBackground(list.getSelectionBackground());
-	    setForeground(list.getSelectionForeground());
-	}else {
-	    setBackground(list.getBackground());
-	    setForeground(list.getForeground());
-	}
-	if (value instanceof String){
-	    String idDataValue = (String)value;
-	    setText(OpenEHRDataValuesUI.getName(idDataValue));
-	    setToolTipText(OpenEHRDataValuesUI.getDescription(idDataValue));
-	    setIcon(OpenEHRDataValuesUI.getIcon(idDataValue));
-	}else{
-	    setText(null);
-	    setToolTipText(null);
-	    setIcon(null);
-	}
-	return this;
+                                                  int index, boolean isSelected, boolean cellHasFocus) {
+        if (isSelected) {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+        }else {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+        }
+        if (value instanceof String){
+            String idDataValue = (String)value;
+            setText(OpenEHRDataValuesUI.getName(idDataValue));
+            setToolTipText(OpenEHRDataValuesUI.getDescription(idDataValue));
+            setIcon(OpenEHRDataValuesUI.getIcon(idDataValue));
+        }else{
+            setText(null);
+            setToolTipText(null);
+            setIcon(null);
+        }
+        return this;
     }
 
 }

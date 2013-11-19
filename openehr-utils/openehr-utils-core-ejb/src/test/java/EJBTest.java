@@ -10,7 +10,7 @@ public class EJBTest {
     public static void main(String[] args){
         try {
             EJBOpenEHRAdministrationFacadeDelegate ejb = new EJBOpenEHRAdministrationFacadeDelegate();
-            System.out.println(ejb.searchAllArchetypes().size());
+            System.out.println(ejb.searchAllArchetypesDefinitions().size());
         } catch (InternalErrorException e) {
             e.printStackTrace();
         }

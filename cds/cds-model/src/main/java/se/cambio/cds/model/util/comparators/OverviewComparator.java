@@ -1,11 +1,15 @@
-package se.cambio.cds.util;
+package se.cambio.cds.model.util.comparators;
 
+import se.cambio.cds.model.overview.dto.OverviewDTO;
 
+import java.util.Comparator;
 
-public class AggregationFunctions {
-    
-    public final static String ID_AGGREGATION_FUNCTION_LAST = "LAST";
-    public final static String ID_AGGREGATION_FUNCTION_DURATION = "DURATION";
+public class OverviewComparator implements Comparator<OverviewDTO>{
+
+    public int compare(OverviewDTO o1, OverviewDTO o2) {
+	return o1.getIdOverview().compareTo(o2.getIdOverview());
+    }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

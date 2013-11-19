@@ -10,14 +10,12 @@ public class ArchetypeReference implements Serializable{
     private String idDomain = null;
     private String idArchetype = null;
     private String idTemplate = null;
-    private String aggregationFunction = null;
     private Map<String, ElementInstance> elementInstancesMap = null;
 
-    public ArchetypeReference(String idDomain, String idArchetype, String idTemplate, String aggregationFunction) {
+    public ArchetypeReference(String idDomain, String idArchetype, String idTemplate) {
 	this.idDomain = idDomain;
 	this.idArchetype = idArchetype;
 	this.idTemplate = idTemplate;
-	this.aggregationFunction = aggregationFunction;
 	this.elementInstancesMap = new HashMap<String, ElementInstance>();
     }
 
@@ -57,16 +55,9 @@ public class ArchetypeReference implements Serializable{
 	this.idTemplate = idTemplate;
     }
 
-    public String getAggregationFunction() {
-	return aggregationFunction;
-    }
-
-    public void setAggregationFunction(String aggregationFunction) {
-	this.aggregationFunction = aggregationFunction;
-    }
 
     public ArchetypeReference clone(){
-	return new ArchetypeReference(idDomain, idArchetype, idTemplate, aggregationFunction);
+	return new ArchetypeReference(idDomain, idArchetype, idTemplate);
     }
 
     public String toString(){
@@ -74,9 +65,6 @@ public class ArchetypeReference implements Serializable{
 	sb.append(idArchetype+", "+idDomain);
 	if (idTemplate!=null){
 	    sb.append(", "+idTemplate);
-	}
-	if(aggregationFunction!=null){
-	    sb.append(", "+aggregationFunction);
 	}
 	sb.append("\n");
 	for (String idElement : elementInstancesMap.keySet()) {

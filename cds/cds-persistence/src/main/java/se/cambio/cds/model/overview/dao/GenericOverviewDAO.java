@@ -11,7 +11,7 @@ import java.util.Collection;
  */
 public interface GenericOverviewDAO {
 
-    public OverviewDTO search(String overviewId)
+    public OverviewDTO searchByOverviewId(String overviewId)
             throws InternalErrorException, InstanceNotFoundException;
 
     public Collection<OverviewDTO> searchAll()
@@ -23,7 +23,7 @@ public interface GenericOverviewDAO {
     public void update(OverviewDTO overviewDTO)
             throws InternalErrorException, InstanceNotFoundException;
 
-    public void delete(String overviewId)
+    public void remove(String overviewId)
             throws InternalErrorException, InstanceNotFoundException;
 }
 /*

@@ -23,12 +23,14 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
 
     public DVCodedTextPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
         super(idElement, idTemplate, allowNull, requestFocus);
-        this.setLayout(new FlowLayout(0, 0, 0));
+        this.setLayout(new BorderLayout());
+        this.setBackground(null);
+        this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         Collection<CodedTextVO> codedTextsVO =
                 CodedTexts.getCodedTextVOs(idTemplate, idElement);
         if (!codedTextsVO.isEmpty()){
             if (OpenEHRConst.LOCAL.equals(codedTextsVO.iterator().next().getTerminology())){
-                this.add(getDVComboBoxPanel());
+                this.add(getDVComboBoxPanel(), BorderLayout.CENTER);
                 for (CodedTextVO codedTextVO : codedTextsVO) {
                     getDVComboBoxPanel().insertOption(
                             codedTextVO.getCode(),
@@ -36,10 +38,10 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                             codedTextVO.getDescription());
                 }
             }else{
-                this.add(getDvHierarchyPanel());
+                this.add(getDvHierarchyPanel(), BorderLayout.CENTER);
             }
         }else{
-            this.add(getDVTextPanel());
+            this.add(getDVTextPanel(), BorderLayout.CENTER);
         }
     }
 

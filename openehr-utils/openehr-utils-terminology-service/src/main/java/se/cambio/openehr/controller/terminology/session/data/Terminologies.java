@@ -59,6 +59,11 @@ public class Terminologies {
         return getDelegate()._terminologiesById;
     }
 
+    public static void removeTerminology(String terminologyId) throws InternalErrorException{
+        getTerminologiesMap().remove(terminologyId);
+    }
+
+
     public int hashCode(){
         List<TerminologyDTO> terminologyDTOs = getAllTerminologies();
         Collections.sort(terminologyDTOs, new TerminologyComparator());

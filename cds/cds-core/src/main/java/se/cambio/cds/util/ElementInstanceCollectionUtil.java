@@ -129,7 +129,8 @@ public class ElementInstanceCollectionUtil {
                     try{
                         return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
                     }catch(Exception e){
-                        ExceptionHandler.handle(e);
+                        Logger.getLogger(ElementInstanceCollectionUtil.class).warn(e.getMessage());
+                        return false;
                     }
                 }else{
                     return false;

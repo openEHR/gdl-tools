@@ -7,6 +7,7 @@ import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.editor.view.frame.GDLEditorFrame;
+import se.cambio.openehr.util.WindowManager;
 
 import java.io.File;
 
@@ -15,6 +16,7 @@ public class InitGDLEditor {
     public static void main(String[] args) {
         GDLEditorFrame ef = EditorManager.createEditorFrame();
         DialogSplash dialog = new DialogSplash(ef, true);
+        WindowManager.registerMainWindow(ef);
         new LoadEditorSW(dialog).execute();
         dialog.setVisible(true);
         if (args.length>0){

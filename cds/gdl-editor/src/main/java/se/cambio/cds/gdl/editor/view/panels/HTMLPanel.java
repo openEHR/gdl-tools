@@ -1,69 +1,71 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.util.ExportUtils;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class HTMLPanel extends JPanel implements RefreshablePanel{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private JScrollPane mainScrollPanel;
     private JEditorPane editorPanel;
     private GDLEditor _controller = null;
     public HTMLPanel(GDLEditor controller){
-	_controller = controller;
-	init();
+        _controller = controller;
+        init();
     }
 
     public void init(){
-	this.setLayout(new BorderLayout());
-	refresh();
+        this.setLayout(new BorderLayout());
+        refresh();
     }
 
     private JScrollPane getMainScrollPanel(){
-	if (mainScrollPanel==null){
-	    mainScrollPanel = new JScrollPane();
-	    mainScrollPanel.setViewportView(getEditorPanel());
-	}
-	return mainScrollPanel;
+        if (mainScrollPanel==null){
+            mainScrollPanel = new JScrollPane();
+            mainScrollPanel.setViewportView(getEditorPanel());
+        }
+        return mainScrollPanel;
     }
 
     private JEditorPane getEditorPanel(){
-	if (editorPanel==null){
-	    editorPanel = new JEditorPane();
-	    editorPanel.setContentType("text/html");
-	    editorPanel.setEditable(false);
-	    String html = ExportUtils.convertToHTML(_controller.getGuide(), _controller.getCurrentGuideLanguageCode());
-	    if (html!=null){
-		editorPanel.setText(html);
-	    }
-	}
-	return editorPanel;
+        if (editorPanel==null){
+            editorPanel = new JEditorPane();
+            editorPanel.setContentType("text/html");
+            editorPanel.setEditable(false);
+            try{
+                String html = ExportUtils.convertToHTML(_controller.getGuide(), _controller.getCurrentGuideLanguageCode());
+                if (html!=null){
+                    editorPanel.setText(html);
+                }
+            }catch(InternalErrorException e){
+                ExceptionHandler.handle(e);
+            }
+        }
+        return editorPanel;
     }
 
     public void refresh(){
-	if (mainScrollPanel!=null){
-	    remove(mainScrollPanel);
-	    mainScrollPanel = null;
-	    editorPanel = null;
-	}
-	this.add(getMainScrollPanel());
-	SwingUtilities.invokeLater(new Runnable() {
-	    @Override
-	    public void run() {
-		getMainScrollPanel().getVerticalScrollBar().setValue(0);
-	    }
-	});
+        if (mainScrollPanel!=null){
+            remove(mainScrollPanel);
+            mainScrollPanel = null;
+            editorPanel = null;
+        }
+        this.add(getMainScrollPanel());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                getMainScrollPanel().getVerticalScrollBar().setValue(0);
+            }
+        });
     }
 }
 /*

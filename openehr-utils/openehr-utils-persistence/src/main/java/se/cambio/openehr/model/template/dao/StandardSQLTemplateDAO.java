@@ -44,7 +44,7 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
         try {
 
 	    /* Create "preparedStatement". */
-            String queryString = "SELECT templateid, archetypeid, rmname, archetype, aom, tobcvo"
+            String queryString = "SELECT templateid, archetypeid, name, description, rmname, archetype, aom, tobcvo"
                     + " FROM openehr_template WHERE templateid IN ("+templateIdsStr+")";
             preparedStatement = connection.prepareStatement(queryString);
 
@@ -60,11 +60,13 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 int i = 1;
                 String templateId = resultSet.getString(i++);
                 String idArchetype = resultSet.getString(i++);
+                String name = resultSet.getString(i++);
+                String description = resultSet.getString(i++);
                 String rmName = resultSet.getString(i++);
                 String archetype = resultSet.getString(i++);
                 byte[] aom = resultSet.getBytes(i++);
                 byte[] tobcvo = resultSet.getBytes(i++);
-                templateDTO.add(new TemplateDTO(templateId, idArchetype, rmName, archetype, aom, tobcvo));
+                templateDTO.add(new TemplateDTO(templateId, idArchetype, name, description, rmName, archetype, aom, tobcvo));
             } while (resultSet.next());
 
 	    /* Return the value object. */
@@ -87,7 +89,7 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
         try {
 	    /* Create "preparedStatement". */
             String queryString =
-                    "SELECT templateid, archetypeid, rmname, archetype, aom, tobcvo FROM openehr_template";
+                    "SELECT templateid, archetypeid, name, description, rmname, archetype, aom, tobcvo FROM openehr_template";
             preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
@@ -102,11 +104,13 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 int i = 1;
                 String idTemplate = resultSet.getString(i++);
                 String idArchetype = resultSet.getString(i++);
+                String name = resultSet.getString(i++);
+                String description = resultSet.getString(i++);
                 String rmName = resultSet.getString(i++);
                 String archetype = resultSet.getString(i++);
                 byte[] aom = resultSet.getBytes(i++);
                 byte[] tobcvo = resultSet.getBytes(i++);
-                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, aom, tobcvo));
+                templateDTOs.add(new TemplateDTO(idTemplate, name, description, idArchetype, rmName, archetype, aom, tobcvo));
             } while (resultSet.next());
 
 	    /* Return the value object. */
@@ -143,9 +147,11 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 int i = 1;
                 String idTemplate = resultSet.getString(i++);
                 String idArchetype = resultSet.getString(i++);
+                String name = resultSet.getString(i++);
+                String description = resultSet.getString(i++);
                 String rmName = resultSet.getString(i++);
                 String archetype = resultSet.getString(i++);
-                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, rmName, archetype, null, null));
+                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, name, description, rmName, archetype, null, null));
             } while (resultSet.next());
 
 	    /* Return the value object. */
@@ -166,14 +172,16 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
         ResultSet resultSet = null;
         try {
 	    /* Create "preparedStatement". */
-            String queryString = "INSERT INTO openehr_template (templateid, archetypeid, rmname, archetype, aom, tobcvo)"
-                    + " VALUES (?, ?, ?, ?, ?, ?)";
+            String queryString = "INSERT INTO openehr_template (templateid, archetypeid, name, description, rmname, archetype, aom, tobcvo)"
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
             int i = 1;
             preparedStatement.setString(i++, templateDTO.getIdTemplate());
             preparedStatement.setString(i++, templateDTO.getIdArchetype());
+            preparedStatement.setString(i++, templateDTO.getName());
+            preparedStatement.setString(i++, templateDTO.getDescription());
             preparedStatement.setString(i++, templateDTO.getRMName());
             preparedStatement.setString(i++, templateDTO.getArchetype());
             preparedStatement.setObject(i++, templateDTO.getAom());
@@ -204,11 +212,13 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
         try {
 	    /* Create "preparedStatement". */
             String queryString = "UPDATE openehr_template set"
-                    + " archetype=?, aom=?, tobcvo=? WHERE templateid=?";
+                    + " name=?, description=?, archetype=?, aom=?, tobcvo=? WHERE templateid=?";
             preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Fill "preparedStatement". */
             int i = 1;
+            preparedStatement.setString(i++, templateDTO.getName());
+            preparedStatement.setString(i++, templateDTO.getDescription());
             preparedStatement.setString(i++, templateDTO.getArchetype());
             preparedStatement.setObject(i++, templateDTO.getAom());
             preparedStatement.setObject(i++, templateDTO.getTobcVO());

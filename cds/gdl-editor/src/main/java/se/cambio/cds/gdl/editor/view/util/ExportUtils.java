@@ -1,17 +1,6 @@
 package se.cambio.cds.gdl.editor.view.util;
 
-import java.awt.Window;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.apache.commons.jxpath.JXPathContext;
-
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.Term;
@@ -22,6 +11,16 @@ import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 public class ExportUtils {
 
@@ -31,142 +30,144 @@ public class ExportUtils {
     private static String FONT_TD_TR_CLOSE = "</font></td></tr>";
 
     public static void exportToHTML(Window owner, Guide guide, String lang){
-	JFileChooser fileChooser = new JFileChooser();
-	FileNameExtensionFilter filter = new FileNameExtensionFilter(
-		"HTML",new String[]{"html"});
-	fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));
-	fileChooser.setFileFilter(filter);
-	File selectedFile = new File(guide.getId()+".html");
-	fileChooser.setSelectedFile(selectedFile);
-	int result = fileChooser.showSaveDialog(owner);
-	if (result != JFileChooser.CANCEL_OPTION){
-	    try{
-		selectedFile = fileChooser.getSelectedFile();
-		FileWriter fstream = new FileWriter(selectedFile);
-		BufferedWriter out = new BufferedWriter(fstream);
-		out.write(convertToHTML(guide, lang));
-		out.close();
-	    }catch(IOException e){
-		ExceptionHandler.handle(e);
-	    }
-	}
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "HTML",new String[]{"html"});
+        fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));
+        fileChooser.setFileFilter(filter);
+        File selectedFile = new File(guide.getId()+".html");
+        fileChooser.setSelectedFile(selectedFile);
+        int result = fileChooser.showSaveDialog(owner);
+        if (result != JFileChooser.CANCEL_OPTION){
+            try{
+                selectedFile = fileChooser.getSelectedFile();
+                FileWriter fstream = new FileWriter(selectedFile);
+                BufferedWriter out = new BufferedWriter(fstream);
+                out.write(convertToHTML(guide, lang));
+                out.close();
+            }catch(IOException e){
+                ExceptionHandler.handle(e);
+            }catch(InternalErrorException e){
+                ExceptionHandler.handle(e);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
-    public static String convertToHTML(Guide guide, String lang){
-	TermDefinition td = GuideImporter.getTermDefinition(guide, lang);
-	JXPathContext c = JXPathContext.newContext(guide.getDescription());
-	StringBuffer sb = new StringBuffer();
-	sb.append("<HTML>");
-	sb.append("<TITLE>"+guide.getId()+"</TITLE>");
+    public static String convertToHTML(Guide guide, String lang) throws InternalErrorException {
+        TermDefinition td = GuideImporter.getTermDefinition(guide, lang);
+        JXPathContext c = JXPathContext.newContext(guide.getDescription());
+        StringBuffer sb = new StringBuffer();
+        sb.append("<HTML>");
+        sb.append("<TITLE>"+guide.getId()+"</TITLE>");
 
-	sb.append("<b><font face='Calibri' size='6'>"+getTermText(guide.getConcept(), td)+"</font></b>");
-	sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("GuideDetails")));
-	sb.append("<table><font face='Calibri'>");
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getTermDescription(guide.getConcept(), td)+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
-	sb.append("</font></table>");
-	sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("AuthorDetails")));
-	sb.append("<table><font face='Calibri'>");
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("AuthorshipLyfecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
-	sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
-	sb.append("</font></table>");
+        sb.append("<b><font face='Calibri' size='6'>"+getTermText(guide.getConcept(), td)+"</font></b>");
+        sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("GuideDetails")));
+        sb.append("<table><font face='Calibri'>");
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getTermDescription(guide.getConcept(), td)+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
+        sb.append("</font></table>");
+        sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("AuthorDetails")));
+        sb.append("<table><font face='Calibri'>");
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("AuthorshipLyfecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+GDLEditorLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
+        sb.append("</font></table>");
 
-	List<String> keywords = (List<String>)c.getValue("/details/"+lang+"/keywords");
-	if (keywords!=null && !keywords.isEmpty()){
-	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Keywords")));
+        List<String> keywords = (List<String>)c.getValue("/details/"+lang+"/keywords");
+        if (keywords!=null && !keywords.isEmpty()){
+            sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Keywords")));
 
-	    sb.append("<font face='Calibri'><i>");
-	    boolean first = true;
-	    for (String keyword : keywords) {
-		if (!first){
-		    sb.append(", ");
-		}
-		sb.append(keyword);
-		first = false;
-	    }
-	    sb.append("</i></font><br>");
-	}
-	
-	List<String> contributors = (List<String>)c.getValue("/otherContributors");
-	if (!contributors.isEmpty()){
-	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Contributors")));
-	    boolean first = true;
-	    sb.append("<font face='Calibri'><i>");
-	    for (String contributor : contributors) {
-		if (!first){
-		    sb.append(", ");
-		}
-		sb.append(contributor);
-		first = false;
-	    }
-	    sb.append("</i></font><br>");
-	}
+            sb.append("<font face='Calibri'><i>");
+            boolean first = true;
+            for (String keyword : keywords) {
+                if (!first){
+                    sb.append(", ");
+                }
+                sb.append(keyword);
+                first = false;
+            }
+            sb.append("</i></font><br>");
+        }
 
-	ReadableGuide readableGuide = GuideImporter.importGuide(guide, lang);
+        List<String> contributors = (List<String>)c.getValue("/otherContributors");
+        if (!contributors.isEmpty()){
+            sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Contributors")));
+            boolean first = true;
+            sb.append("<font face='Calibri'><i>");
+            for (String contributor : contributors) {
+                if (!first){
+                    sb.append(", ");
+                }
+                sb.append(contributor);
+                first = false;
+            }
+            sb.append("</i></font><br>");
+        }
 
-	if (!readableGuide.getPreconditionRuleLines().isEmpty()){
-	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Preconditions")));
-	    sb.append("<table width=100%>");
-	    for (RuleLine ruleLine : readableGuide.getPreconditionRuleLines()) {
-		sb.append(TR_TD_FONT_OPEN_WITH_BG);
-		sb.append(ruleLine.toHTMLString());
-		sb.append(FONT_TD_TR_CLOSE);
-	    }
-	    sb.append("</table><br>");
-	}
+        ReadableGuide readableGuide = GuideImporter.importGuide(guide, lang);
 
-	
-	if (!readableGuide.getReadableRules().isEmpty()){
-	    sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("RuleList")));
-	    sb.append("<table width=100%>");
-	    for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
-		sb.append(TR_TD_FONT_OPEN_WITH_BG);
-		sb.append(readableRule);
-		sb.append("</font></tr><tr><td></td></tr>"); 
-	    }
-	    sb.append("</table>");
-	}
-	sb.append("</HTML>");
-	return sb.toString();
+        if (!readableGuide.getPreconditionRuleLines().isEmpty()){
+            sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("Preconditions")));
+            sb.append("<table width=100%>");
+            for (RuleLine ruleLine : readableGuide.getPreconditionRuleLines()) {
+                sb.append(TR_TD_FONT_OPEN_WITH_BG);
+                sb.append(ruleLine.toHTMLString());
+                sb.append(FONT_TD_TR_CLOSE);
+            }
+            sb.append("</table><br>");
+        }
+
+
+        if (!readableGuide.getReadableRules().isEmpty()){
+            sb.append(getBoxWithTitleStart(GDLEditorLanguageManager.getMessage("RuleList")));
+            sb.append("<table width=100%>");
+            for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
+                sb.append(TR_TD_FONT_OPEN_WITH_BG);
+                sb.append(readableRule);
+                sb.append("</font></tr><tr><td></td></tr>");
+            }
+            sb.append("</table>");
+        }
+        sb.append("</HTML>");
+        return sb.toString();
     }
 
     private static String getTermText(String gtCode, TermDefinition td){
-	Term term = td.getTerms().get(gtCode);
-	String text = term!=null?td.getTerms().get(gtCode).getText():null;
-	if (text!=null){
-	    return text;
-	}else{
-	    return "";
-	}
+        Term term = td.getTerms().get(gtCode);
+        String text = term!=null?td.getTerms().get(gtCode).getText():null;
+        if (text!=null){
+            return text;
+        }else{
+            return "";
+        }
     }
 
     private static String getTermDescription(String gtCode, TermDefinition td){
-	Term term = td.getTerms().get(gtCode);
-	String desc = term!=null?td.getTerms().get(gtCode).getDescription():null;
-	if (desc!=null){
-	    return desc;
-	}else{
-	    return "";
-	}
+        Term term = td.getTerms().get(gtCode);
+        String desc = term!=null?td.getTerms().get(gtCode).getDescription():null;
+        if (desc!=null){
+            return desc;
+        }else{
+            return "";
+        }
     }
 
     private static String getBoxWithTitleStart(String title){
-	StringBuffer sb = new StringBuffer();
-	sb.append("<br><div style='background-color:#4f81bd; padding:5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
-	return  sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("<br><div style='background-color:#4f81bd; padding:5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
+        return  sb.toString();
     }
 
     public static String getValue(JXPathContext c, String path){
-	String str = (String)c.getValue(path);
-	return str!=null?str:"";
+        String str = (String)c.getValue(path);
+        return str!=null?str:"";
     }
 }
 /*

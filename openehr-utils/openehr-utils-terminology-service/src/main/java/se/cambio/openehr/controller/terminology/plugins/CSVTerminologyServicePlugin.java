@@ -1,27 +1,17 @@
 package se.cambio.openehr.controller.terminology.plugins;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-
 import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
 import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
-import se.cambio.openehr.util.exceptions.UnknownPropertyException;
-import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+import se.cambio.openehr.util.exceptions.*;
 import se.cambio.openehr.util.misc.CSVReader;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
@@ -39,7 +29,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(is)));
             _parentsMap = new HashMap<String, ArrayList<String>>();
             _childrenMap = new HashMap<String, ArrayList<String>>();
-            _descriptionsMap = new HashMap<String, String>();
+            getDescriptionsMap().clear();
             csvReader.readHeaders();
             while (csvReader.readRecord()) {
                 String id = csvReader.get("id");
@@ -48,7 +38,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
                 log.debug("id: " + id + ", description: " + description);
                 if (id != null && !id.isEmpty() && description != null
                         && !description.isEmpty()) {
-                    _descriptionsMap.put(id, description);
+                    getDescriptionsMap().put(id, description);
                     if (parent != null && !parent.isEmpty()) {
                         // Add parent
                         ArrayList<String> parents = new ArrayList<String>();
@@ -68,7 +58,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
                     }
                 }
             }
-            log.debug("Total " + _descriptionsMap.size() + " term(s) loaded..");
+            log.debug("Total " + getDescriptionsMap().size() + " term(s) loaded..");
         } catch (Exception e) {
             Logger.getLogger(TerminologyServiceImpl.class).warn(
                     "Failed to initialize the terminology service '"
@@ -247,7 +237,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return getDescriptionsMap().get(code) == null;
     }
 
-    private Map<String, String> getDescriptionsMap() {
+    public Map<String, String> getDescriptionsMap() {
         if (_descriptionsMap == null) {
             _descriptionsMap = new HashMap<String, String>();
         }

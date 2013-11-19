@@ -21,8 +21,8 @@ public class DVCountPanel extends DVGenericPanel{
     private JTextField valueTextField;
     public DVCountPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
         super(idElement, idTemplate, allowNull, requestFocus);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
-        this.add(getValueTextField());
+        this.setLayout(new BorderLayout());
+        this.add(getValueTextField(), BorderLayout.CENTER);
     }
 
     protected JTextField getValueTextField(){

@@ -6,19 +6,17 @@
  */
 package se.cambio.openehr.view.util;
 
+import se.cambio.openehr.view.trees.SelectableNode;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 
-import se.cambio.openehr.view.trees.SelectableNode;
-
 
 /**
  * @author icorram
  *
-
-
  */
 public class NodeConversor {
 
@@ -39,9 +37,9 @@ public class NodeConversor {
         if (raizNodo.getDescripcion()!=null){
             if (filtro.trim().length()>0){
                 String desc1 = Normalizer.normalize(raizNodo.getDescripcion(), Normalizer.Form.NFD);
-                desc1 = FormatConverter.textoSinPuntuacionMin(desc1);
+                desc1 = FormatConverter.textWithoutPunctuation(desc1);
                 String desc2 = Normalizer.normalize(filtro, Normalizer.Form.NFD);
-                desc2 = FormatConverter.textoSinPuntuacionMin(desc2);
+                desc2 = FormatConverter.textWithoutPunctuation(desc2);
                 visible = desc1.contains(desc2);
             }else{
                 visible = true;

@@ -1,11 +1,10 @@
 package se.cambio.openehr.view.trees;
 
-import java.awt.Color;
-import java.util.Enumeration;
-import java.util.Vector;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.awt.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * @author icorram
@@ -14,7 +13,7 @@ import javax.swing.tree.TreeNode;
 public class SelectableNode<E> extends DefaultMutableTreeNode {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -7670845142505301936L;
     private Boolean _seleccionado = Boolean.FALSE;
@@ -37,217 +36,217 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
      */
 
     public SelectableNode() {
-	super();
+        super();
     }
 
     public SelectableNode(String descripcion) {
-	super(descripcion);
-	_descripcion = descripcion;
+        super(descripcion);
+        _descripcion = descripcion;
     }
 
     public SelectableNode(String descripcion, E objeto) {
-	super(descripcion);
-	_descripcion = descripcion;
-	_objeto = objeto;
+        super(descripcion);
+        _descripcion = descripcion;
+        _objeto = objeto;
     }
 
     public SelectableNode(String descripcion,
-	    E objeto, Boolean seleccionado) {
-	super(descripcion);
-	_seleccionado = seleccionado;
-	_descripcion = descripcion;
-	_objeto = objeto;
+                          E objeto, Boolean seleccionado) {
+        super(descripcion);
+        _seleccionado = seleccionado;
+        _descripcion = descripcion;
+        _objeto = objeto;
     }
 
 
     public SelectableNode(String descripcion,
-	    E objeto, Boolean seleccionUnica, Boolean seleccionado) {
-	super(descripcion);
-	_seleccionado = seleccionado;
-	_seleccionUnica = seleccionUnica;
-	_descripcion = descripcion;
-	_objeto = objeto;
+                          E objeto, Boolean seleccionUnica, Boolean seleccionado) {
+        super(descripcion);
+        _seleccionado = seleccionado;
+        _seleccionUnica = seleccionUnica;
+        _descripcion = descripcion;
+        _objeto = objeto;
     }
 
     public SelectableNode(String descripcion,
-	    E objeto, Boolean seleccionUnica, Boolean seleccionado, String tooltip) {
-	super(descripcion);
-	_seleccionado = seleccionado;
-	_seleccionUnica = seleccionUnica;
-	_descripcion = descripcion;
-	_objeto = objeto;
-	_tooltip = tooltip;
+                          E objeto, Boolean seleccionUnica, Boolean seleccionado, String tooltip) {
+        super(descripcion);
+        _seleccionado = seleccionado;
+        _seleccionUnica = seleccionUnica;
+        _descripcion = descripcion;
+        _objeto = objeto;
+        _tooltip = tooltip;
     }
 
     public Boolean getSeleccionado() {
-	return _seleccionado;
+        return _seleccionado;
     }
 
     public Boolean getSeleccionUnica() {
-	return _seleccionUnica;
+        return _seleccionUnica;
     }
 
     public void setSeleccionUnica(Boolean seleccionUnica) {
-	_seleccionUnica = seleccionUnica;
+        _seleccionUnica = seleccionUnica;
     }
 
     public void setSeleccionado(Boolean seleccionado) {
-	_seleccionado = seleccionado;
+        _seleccionado = seleccionado;
     }
 
     public Boolean getContineneSeleccionado() {
-	return _contineneSeleccionado;
+        return _contineneSeleccionado;
     }
 
     public void setContineneSeleccionado(Boolean seleccionado) {
-	_contineneSeleccionado = seleccionado;
+        _contineneSeleccionado = seleccionado;
     }
 
     public void setHierarchySelection(boolean hierarchySelection){
-	_hierarchySelection = hierarchySelection;
+        _hierarchySelection = hierarchySelection;
     }
 
     public void setAllSeleccionado(Boolean seleccionado) {
-	_seleccionado = seleccionado;
-	_contineneSeleccionado = seleccionado;
-	if (_hierarchySelection){
-	    if (!_seleccionUnica || !seleccionado){
-		Enumeration<?> e = children();
-		while (e.hasMoreElements()){
-		    ((SelectableNode<?>)e.nextElement()).setAllSeleccionado(seleccionado);
-		}
-	    }
-	}
+        _seleccionado = seleccionado;
+        _contineneSeleccionado = seleccionado;
+        if (_hierarchySelection){
+            if (!_seleccionUnica || !seleccionado){
+                Enumeration<?> e = children();
+                while (e.hasMoreElements()){
+                    ((SelectableNode<?>)e.nextElement()).setAllSeleccionado(seleccionado);
+                }
+            }
+        }
     }
 
     public Boolean getVisible() {
-	return _visible;
+        return _visible;
     }
 
     public void setVisible(Boolean visible) {
-	this._visible = visible;
-	if (_parent!=null){
-	    if (visible){
-		if (!_parent.getVisibleChildren().contains(this)){
-		    _parent.getVisibleChildren().add(this);
-		}
-	    }else{
-		_parent.getVisibleChildren().remove(this);
-	    }
-	}
+        this._visible = visible;
+        if (_parent!=null){
+            if (visible){
+                if (!_parent.getVisibleChildren().contains(this)){
+                    _parent.getVisibleChildren().add(this);
+                }
+            }else{
+                _parent.getVisibleChildren().remove(this);
+            }
+        }
     }
 
     public String getDescripcion() {
-	return _descripcion;
+        return _descripcion;
     }
 
     public void setDescripcion(String descripcion) {
-	_descripcion = descripcion;
+        _descripcion = descripcion;
     }
 
     public String getToolTip() {
-	return _tooltip;
+        return _tooltip;
     }
 
     public void setToolTip(String tooltip) {
-	_tooltip = tooltip;
+        _tooltip = tooltip;
     }
 
     public E getObjeto() {
-	return _objeto;
+        return _objeto;
     }
 
     public void setObject(E obj) {
-	_objeto=obj;
+        _objeto=obj;
     }
 
     public Boolean isBold() {
-	return _bold;
+        return _bold;
     }
 
     public void setBold(Boolean bold) {
-	_bold = bold;
+        _bold = bold;
     }
 
     public Color getForeground() {
-	return _foreground;
+        return _foreground;
     }
 
     public void setForeground(Color color) {
-	_foreground = color;
+        _foreground = color;
     }
     public void setCursiva(Boolean cursiva) {
-	_cursiva = cursiva;
+        _cursiva = cursiva;
     }
 
     public Boolean isCursiva() {
-	return _cursiva;
+        return _cursiva;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void cambioEstado(SelectableNode<?> nodoSeleccionable){
-	if (_seleccionUnica && this.equals(nodoSeleccionable)){
-	    SelectableNode<E> nodoRaiz = this;
-	    while (nodoRaiz.getParent()!=null){
-		nodoRaiz = (SelectableNode)nodoRaiz.getParent();
-	    }
+        if (_seleccionUnica && this.equals(nodoSeleccionable)){
+            SelectableNode<E> nodoRaiz = this;
+            while (nodoRaiz.getParent()!=null){
+                nodoRaiz = (SelectableNode)nodoRaiz.getParent();
+            }
 
-	    //Borramos todas las selecciones existentes
-	    nodoRaiz.setAllSeleccionado(false);
-	    if (!this.equals(nodoRaiz)){
-		if (_hierarchySelection){
-		    this.setSeleccionado(true);
-		}
-		this.setContineneSeleccionado(true);
-	    }
-	}
-	if (this.children !=null && this.children.contains(nodoSeleccionable)){
-	    boolean seleccionado = !_seleccionUnica && getChildCount()>0;
-	    boolean contieneSeleccionado = false;
-	    Enumeration<?> e = getAllchildren();
-	    while (e.hasMoreElements()){
-		SelectableNode<?> child = ((SelectableNode<?>)e.nextElement());
-		if (!child.getSeleccionado()){
-		    seleccionado = false;
-		}
-		if (child.getContineneSeleccionado() || child.getSeleccionado()){
-		    contieneSeleccionado = true;
-		}
-	    }
-	    nodoSeleccionable = this;
-	    if (_hierarchySelection){
-		_seleccionado = seleccionado;
-	    }
-	    _contineneSeleccionado = contieneSeleccionado;
-	}
-	if (getParent() instanceof SelectableNode<?>){
-	    ((SelectableNode<E>)getParent()).cambioEstado(nodoSeleccionable);
-	}
+            //Borramos todas las selecciones existentes
+            nodoRaiz.setAllSeleccionado(false);
+            if (!this.equals(nodoRaiz)){
+                if (_hierarchySelection){
+                    this.setSeleccionado(true);
+                }
+                this.setContineneSeleccionado(true);
+            }
+        }
+        if (this.children !=null && this.children.contains(nodoSeleccionable)){
+            boolean seleccionado = !_seleccionUnica && getChildCount()>0;
+            boolean contieneSeleccionado = false;
+            Enumeration<?> e = getAllchildren();
+            while (e.hasMoreElements()){
+                SelectableNode<?> child = ((SelectableNode<?>)e.nextElement());
+                if (!child.getSeleccionado()){
+                    seleccionado = false;
+                }
+                if (child.getContineneSeleccionado() || child.getSeleccionado()){
+                    contieneSeleccionado = true;
+                }
+            }
+            nodoSeleccionable = this;
+            if (_hierarchySelection){
+                _seleccionado = seleccionado;
+            }
+            _contineneSeleccionado = contieneSeleccionado;
+        }
+        if (getParent() instanceof SelectableNode<?>){
+            ((SelectableNode<E>)getParent()).cambioEstado(nodoSeleccionable);
+        }
     }
 
     public void add(SelectableNode<?> newChild) {
-	super.add(newChild);
-	if (newChild.getSeleccionado()){
-	    if (_hierarchySelection && getChildCount()==1 && _seleccionUnica){
-		_seleccionado = true;
-	    }
-	    _contineneSeleccionado = true;
-	}else{
-	    if (_hierarchySelection){
-		_seleccionado = false;
-	    }
-	    if (newChild.getContineneSeleccionado()){
-		_contineneSeleccionado = true;
-	    }
-	}
-	newChild.setParentNode(this);
-	if (newChild.getVisible()){
-	    getVisibleChildren().add(newChild);
-	}
+        super.add(newChild);
+        if (newChild.getSeleccionado()){
+            if (_hierarchySelection && getChildCount()==1 && _seleccionUnica){
+                _seleccionado = true;
+            }
+            _contineneSeleccionado = true;
+        }else{
+            if (_hierarchySelection){
+                _seleccionado = false;
+            }
+            if (newChild.getContineneSeleccionado()){
+                _contineneSeleccionado = true;
+            }
+        }
+        newChild.setParentNode(this);
+        if (newChild.getVisible()){
+            getVisibleChildren().add(newChild);
+        }
     }
 
     public void setParentNode(SelectableNode<?> parent){
-	_parent = parent;
+        _parent = parent;
     }
 
     private Vector<SelectableNode<?>> getVisibleChildren(){
@@ -261,67 +260,67 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
 	    }
 	}
 	return visibleChildren;*/
-	return _visibleChildren;
+        return _visibleChildren;
     }
 
     public Enumeration<?> children() {
-	if (children == null) {
-	    return EMPTY_ENUMERATION;
-	} else {
-	    return getVisibleChildren().elements();
-	}
+        if (children == null) {
+            return EMPTY_ENUMERATION;
+        } else {
+            return getVisibleChildren().elements();
+        }
     }
 
     public Enumeration<?> getAllchildren() {
-	if (children == null) {
-	    return EMPTY_ENUMERATION;
-	} else {
+        if (children == null) {
+            return EMPTY_ENUMERATION;
+        } else {
 
-	    return children.elements();
-	}
+            return children.elements();
+        }
     }
 
     public boolean isLeaf(){
-	return !(children!=null && children.size()>0);
+        return !(children!=null && children.size()>0);
     }
 
     public TreeNode getChildAt(int index) {
-	if (children == null) {
-	    throw new ArrayIndexOutOfBoundsException("node has no children");
-	}
-	return (TreeNode)getVisibleChildren().elementAt(index);
+        if (children == null) {
+            throw new ArrayIndexOutOfBoundsException("node has no children");
+        }
+        return (TreeNode)getVisibleChildren().elementAt(index);
     }
 
     public int getChildCount() {
-	if (children == null) {
-	    return 0;
-	} else {
-	    return getVisibleChildren().size();
-	}
+        if (children == null) {
+            return 0;
+        } else {
+            return getVisibleChildren().size();
+        }
     }
 
 
     public int getAllChildrenCount() {
-	if (children == null) {
-	    return 0;
-	} else {
-	    return children.size();
-	}
+        if (children == null) {
+            return 0;
+        } else {
+            return children.size();
+        }
     }
 
 
     public int getIndex(TreeNode aChild) {
-	if (aChild == null) {
-	    throw new IllegalArgumentException("argument is null");
-	}
-	if (!isNodeChild(aChild)) {
-	    return -1;
-	}
-	return getVisibleChildren().indexOf(aChild);	// linear search
+        if (aChild == null) {
+            throw new IllegalArgumentException("argument is null");
+        }
+        if (!isNodeChild(aChild)) {
+            return -1;
+        }
+        return getVisibleChildren().indexOf(aChild);	// linear search
     }
 
     public SelectableNode<E> clone(){
-	return new SelectableNode<E>(_descripcion, _objeto, _seleccionUnica, _seleccionado);
+        return new SelectableNode<E>(_descripcion, _objeto, _seleccionUnica, _seleccionado);
     }
 
 }

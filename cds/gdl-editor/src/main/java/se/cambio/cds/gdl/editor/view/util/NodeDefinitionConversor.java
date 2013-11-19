@@ -13,7 +13,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElemen
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.view.swing.applicationobjects.AggregationFunctionsUI;
 import se.cambio.cds.view.swing.applicationobjects.ArchetypeReferences;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
@@ -155,7 +154,6 @@ public class NodeDefinitionConversor {
     }
 
     public static ImageIcon getIconsArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde){
-        String af = aerlde.getAggregationFunction();
         String archReferenceRM = Archetypes.getArchetypeDTO(aerlde.getValue().getIdArchetype()).getRMName();
         String archElementRM = aerlde.getValue().getRMType();
         MultipleIcon icons =
@@ -163,30 +161,24 @@ public class NodeDefinitionConversor {
                         new Icon[]{
                                 DomainsUI.getGroupIconFromArchetypeReference(aerlde.getArchetypeReference()),
                                 OpenEHRConstUI.getIcon(archReferenceRM),
-                                AggregationFunctionsUI.getIcon(af),
                                 OpenEHRDataValuesUI.getIcon(archElementRM)});
         return icons;
     }
 
 
     public static ImageIcon getIconsArchetypeReference(ArchetypeReferenceRuleLineDefinitionElement arrlde){
-        String af = arrlde.getAggregationFunction();
 
         String archReferenceRM = Archetypes.getArchetypeDTO(arrlde.getValue().getIdArchetype()).getRMName();
         MultipleIcon icons =
                 new MultipleIcon(
                         new Icon[]{
                                 DomainsUI.getGroupIconFromArchetypeReference(arrlde.getValue()),
-                                OpenEHRConstUI.getIcon(archReferenceRM),
-                                AggregationFunctionsUI.getIcon(af)});
+                                OpenEHRConstUI.getIcon(archReferenceRM)});
         return icons;
     }
 
-    public static SelectableNode<Object> getElementsInArchetypeNode(String idArchetype, String idTemplate){
-        return getElementsInArchetypeNode(idArchetype, idTemplate, true);
-    }
-
-    public static SelectableNode<Object> getElementsInArchetypeNode(String idArchetype, String idTemplate, boolean singleSelection){
+    public static SelectableNode<Object> getElementsInArchetypeNode(
+            String idArchetype, String idTemplate, boolean singleSelection, boolean simplifiedTree){
         ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
         SelectableNode<Object> rootNode = new SelectableNodeWithIcon<Object>(
                 archetypeVO.getName(),
@@ -209,7 +201,8 @@ public class NodeDefinitionConversor {
                             idTemplate,
                             archetypeElementVO.getIdParent(),
                             rmNode, clusters,
-                            singleSelection);
+                            singleSelection,
+                            simplifiedTree);
             nodoOrigen = createElementNode(archetypeElementVO, singleSelection);
             clusterNode.add(nodoOrigen);
         }

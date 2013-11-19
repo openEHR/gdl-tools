@@ -1,19 +1,13 @@
 package se.cambio.cds.formgen.view.panels;
 
-import java.awt.FlowLayout;
+import se.cambio.cds.view.swing.DVSwingUtil;
+import se.cambio.openehr.view.panels.DVGenericPanel;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import se.cambio.cds.view.swing.DVSwingUtil;
-import se.cambio.openehr.view.panels.DVGenericPanel;
 
 public class PanelWithButtons extends JPanel {
 
@@ -33,6 +27,9 @@ public class PanelWithButtons extends JPanel {
 	for (JLabel label : dvGenericPanelsMap.keySet()) {
 	    JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
 	    panelAux2.add(label);
+        panelAux2.add(Box.createHorizontalStrut(5));
+        panelAux2.add(new JLabel("="));
+        panelAux2.add(Box.createHorizontalStrut(5));
 	    panelAux2.add(dvGenericPanelsMap.get(label));
 	    panelAux.add(panelAux2);
 	}

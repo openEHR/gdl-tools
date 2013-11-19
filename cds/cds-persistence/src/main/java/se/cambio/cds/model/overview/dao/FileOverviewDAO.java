@@ -16,7 +16,7 @@ import java.util.Collection;
 
 public class FileOverviewDAO implements GenericOverviewDAO{
 
-    public OverviewDTO search(String idOverview)
+    public OverviewDTO searchByOverviewId(String idOverview)
             throws InternalErrorException, InstanceNotFoundException {
         File folder = UserConfigurationManager.getOverviewsFolder();
         if (!folder.isDirectory()){
@@ -76,7 +76,7 @@ public class FileOverviewDAO implements GenericOverviewDAO{
     }
 
     @Override
-    public void delete(String overviewId) throws InternalErrorException, InstanceNotFoundException {
+    public void remove(String overviewId) throws InternalErrorException, InstanceNotFoundException {
         //Generated
     }
 }

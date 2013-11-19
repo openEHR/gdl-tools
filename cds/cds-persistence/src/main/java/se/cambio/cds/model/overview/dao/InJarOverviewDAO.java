@@ -14,7 +14,7 @@ import java.util.Collection;
 public class InJarOverviewDAO implements GenericOverviewDAO{
 
 
-    public OverviewDTO search(String idOverview) 
+    public OverviewDTO searchByOverviewId(String idOverview)
 	    throws InternalErrorException, InstanceNotFoundException {
 	InputStream is = InJarOverviewDAO.class.getClassLoader().getResourceAsStream(idOverview+".dsv");
 	if (is!=null){
@@ -79,7 +79,7 @@ public class InJarOverviewDAO implements GenericOverviewDAO{
     }
 
     @Override
-    public void delete(String overviewId) throws InternalErrorException, InstanceNotFoundException {
+    public void remove(String overviewId) throws InternalErrorException, InstanceNotFoundException {
         //Generated
     }
 }

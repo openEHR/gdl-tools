@@ -12,42 +12,56 @@ import java.util.Collection;
 
 public class RuleLineDirectory {
 
+    private Collection<RuleLine> _selectableDefinitions = null;
+    private Collection<RuleLine> _selectableConditions = null;
+    private Collection<RuleLine> _selectableActions = null;
     private static RuleLineDirectory _instance =null;
 
     private RuleLineDirectory(){
 
     }
 
-
-    public static Collection<RuleLine> getSelectableConditions(){
-        Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
-        ruleLines.add(new ElementComparisonWithDVConditionRuleLine());
-        ruleLines.add(new ElementComparisonWithNullValueConditionRuleLine());
-        ruleLines.add(new ElementComparisonWithElementConditionRuleLine());
-        ruleLines.add(new ElementAttributeComparisonConditionRuleLine());
-        ruleLines.add(new ElementInitializedConditionRuleLine());
-        //ruleLines.add(new ForAllOperatorRuleLine()); //Deprecated
-        ruleLines.add(new OrOperatorRuleLine());
-        return ruleLines;
-    }
-
     public static Collection<RuleLine> getSelectableDefinitions(){
-        Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
-        ruleLines.add(new ArchetypeInstantiationRuleLine());
-        ruleLines.add(new ArchetypeElementInstantiationRuleLine(null));
-        ruleLines.add(new WithElementPredicateAttributeDefinitionRuleLine());
-        ruleLines.add(new WithElementPredicateFunctionDefinitionRuleLine());
-        //TODO => ruleLines.add(new WithElementPredicateExpressionDefinitionRuleLine());
-        return ruleLines;
+        if (getDelegate()._selectableDefinitions==null){
+            getDelegate()._selectableDefinitions = new ArrayList<RuleLine>();
+            getDelegate()._selectableDefinitions.add(new ArchetypeInstantiationRuleLine());
+            getDelegate()._selectableDefinitions.add(new ArchetypeElementInstantiationRuleLine(null));
+            getDelegate()._selectableDefinitions.add(new WithElementPredicateAttributeDefinitionRuleLine());
+            getDelegate()._selectableDefinitions.add(new WithElementPredicateFunctionDefinitionRuleLine());
+            //TODO => ruleLines.add(new WithElementPredicateExpressionDefinitionRuleLine());
+        }
+        return getDelegate()._selectableDefinitions;
     }
+    public static Collection<RuleLine> getSelectableConditions(){
+        if (getDelegate()._selectableConditions==null){
+            getDelegate()._selectableConditions = new ArrayList<RuleLine>();
+            getDelegate()._selectableConditions.add(new ElementComparisonWithDVConditionRuleLine());
+            getDelegate()._selectableConditions.add(new ElementComparisonWithNullValueConditionRuleLine());
+            getDelegate()._selectableConditions.add(new ElementComparisonWithElementConditionRuleLine());
+            getDelegate()._selectableConditions.add(new ElementAttributeComparisonConditionRuleLine());
+            getDelegate()._selectableConditions.add(new ElementInitializedConditionRuleLine());
+            //getDelegate()._selectableConditions.add(new ForAllOperatorRuleLine()); //Deprecated
+            getDelegate()._selectableConditions.add(new OrOperatorRuleLine());
+        }
+        return getDelegate()._selectableConditions;
+    }
+
 
     public static Collection<RuleLine> getSelectableActions(){
-        Collection<RuleLine> ruleLines = new ArrayList<RuleLine>();
-        ruleLines.add(new SetElementWithDataValueActionRuleLine());
-        ruleLines.add(new SetElementWithNullValueActionRuleLine());
-        ruleLines.add(new SetElementWithElementActionRuleLine());
-        ruleLines.add(new SetElementAttributeActionRuleLine());
-        return ruleLines;
+        if (getDelegate()._selectableActions==null){
+            getDelegate()._selectableActions = new ArrayList<RuleLine>();
+            getDelegate()._selectableActions.add(new SetElementWithDataValueActionRuleLine());
+            getDelegate()._selectableActions.add(new SetElementWithNullValueActionRuleLine());
+            getDelegate()._selectableActions.add(new SetElementWithElementActionRuleLine());
+            getDelegate()._selectableActions.add(new SetElementAttributeActionRuleLine());
+        }
+        return getDelegate()._selectableActions;
+    }
+
+    public static boolean isDirectoryRuleLine(RuleLine ruleLine){
+        return getSelectableDefinitions().contains(ruleLine) ||
+                getSelectableConditions().contains(ruleLine) ||
+                getSelectableActions().contains(ruleLine);
     }
 
     public static ImageIcon getIconForRuleLine(RuleLine ruleLine){

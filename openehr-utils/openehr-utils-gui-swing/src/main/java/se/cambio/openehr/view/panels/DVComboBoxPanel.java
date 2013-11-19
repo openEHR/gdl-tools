@@ -16,10 +16,10 @@ public abstract class DVComboBoxPanel extends DVGenericPanel implements DVPanelI
 
     public DVComboBoxPanel(String idElement, String idTemplate, boolean allowsNull, boolean requestFocus){
         super(idElement, idTemplate, allowsNull, requestFocus);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.setLayout(new BorderLayout());
         _itemsName = new HashMap<String, String>();
         _itemsDescription = new HashMap<String, String>();
-        this.add(getComboBox());
+        this.add(getComboBox(), BorderLayout.CENTER);
     }
 
     protected JComboBox getComboBox(){

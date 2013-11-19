@@ -14,7 +14,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.util.AggregationFunctions;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
 import se.cambio.openehr.controller.session.data.Units;
@@ -64,8 +63,7 @@ public class RuleElementEditor {
         String idTemplate = ar!=null?ar.getIdTemplate():null;
         boolean isTemplate = idTemplate!=null;
         String domainId = ar!=null?ar.getIdDomain():null;
-        String aggregationFunction = ar!=null?ar.getAggregationFunction():AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST;
-        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, aggregationFunction, showOnlyCDS);
+        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS);
         dialog.setVisible(true);
         if (dialog.getAnswer()){
             idArchetype = dialog.getSelectedArchetypeId();
@@ -79,8 +77,7 @@ public class RuleElementEditor {
             }
             if (idArchetype!=null){
                 String idDomain = dialog.getSelectedDomain();
-                aggregationFunction = dialog.getSelectedAggregationFunction();
-                ar = new ArchetypeReference(idDomain, idArchetype, idTemplate, aggregationFunction);
+                ar = new ArchetypeReference(idDomain, idArchetype, idTemplate);
                 arrlde.setValue(ar);
                 //RuleLine ruleLine = arrlde.getParentRuleLine();
             }
@@ -108,7 +105,7 @@ public class RuleElementEditor {
         ArchetypeReference ar = aerlde.getArchetypeReference();
         if (ar!=null){
             SelectableNode<Object> node =
-                    NodeDefinitionConversor.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate());
+                    NodeDefinitionConversor.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), true, true);
             DialogElementSelection dialog = new DialogElementSelection(EditorManager.getActiveEditorWindow(), node);
             dialog.setVisible(true);
             if (dialog.getAnswer()){

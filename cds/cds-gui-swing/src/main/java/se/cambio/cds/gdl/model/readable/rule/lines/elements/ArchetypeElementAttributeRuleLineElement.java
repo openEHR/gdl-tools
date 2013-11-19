@@ -9,50 +9,46 @@ public class ArchetypeElementAttributeRuleLineElement extends RuleLineElementWit
     private String _attribute = null;
 
     public ArchetypeElementAttributeRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("ElementAttribute"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("ElementAttribute"));
     }
 
     public ArchetypeReference getArchetypeReference() {
-	return getValue().getArchetypeReference();
+        return getValue().getArchetypeReference();
     }
 
     @Override
     public String getDescription() {
-	if (getValue()!=null){
-	    return getValue().getDescription();
-	}else{
-	    return getText(); 
-	}
+        if (getValue()!=null){
+            return getValue().getDescription();
+        }else{
+            return getText();
+        }
     }
 
     public String getDomainId(){
-	return getArchetypeReference().getIdDomain();
+        return getArchetypeReference().getIdDomain();
     }
 
     public String toString(){
-	if (getValue()!=null && getAttribute()!=null){
-	    String name = getName(getValue().getValue().getValue());
-	    return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
-	}else{
-	    return getText();
-	}
+        if (getValue()!=null && getAttribute()!=null){
+            String name = getName(getValue().getValue().getValue());
+            return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
+        }else{
+            return getText();
+        }
     }
-    
+
     @Override
     public String toHTMLString() {
-	return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
+        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
     }
 
     public String getAttribute() {
-	return _attribute;
+        return _attribute;
     }
 
     public void setAttributeFunction(String attribute) {
-	this._attribute = attribute;
-    }
-
-    public String getAggregationFunction(){
-	return getArchetypeReference().getAggregationFunction();
+        this._attribute = attribute;
     }
 
 }

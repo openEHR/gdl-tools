@@ -11,8 +11,8 @@ public class GeneratedArchetypeReference extends ArchetypeReference{
     private static final long serialVersionUID = 1L;
     
     public GeneratedArchetypeReference(String idDomain, String idArchetype,
-	    String idTemplate, String aggregationFunction) {
-	super(idDomain, idArchetype, idTemplate, aggregationFunction);
+	    String idTemplate) {
+	super(idDomain, idArchetype, idTemplate);
     }
     
     public String toString(){

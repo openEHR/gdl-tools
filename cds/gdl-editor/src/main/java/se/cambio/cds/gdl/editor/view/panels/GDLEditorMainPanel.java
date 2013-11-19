@@ -1,28 +1,18 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import se.cambio.cds.formgen.controller.FormGeneratorController;
-import se.cambio.cds.formgen.view.dialog.CDSFormGenDialog;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.sw.CompileGuideSW;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.LoadGuideAction;
 import se.cambio.cds.gdl.editor.view.menubar.SaveGuideAction;
 import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
-import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
-import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.openehr.util.IOUtils;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Calendar;
-import java.util.Date;
 
 public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
     /**

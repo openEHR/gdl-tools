@@ -1,13 +1,13 @@
 package se.cambio.cds.model.util.comparators;
 
-import java.util.Comparator;
-
 import se.cambio.cds.model.guide.dto.GuideDTO;
+
+import java.util.Comparator;
 
 public class GuidesComparator implements Comparator<GuideDTO>{
 
     public int compare(GuideDTO o1, GuideDTO o2) {
-	return o1.getIdGuide().compareTo(o2.getIdGuide());
+        return o1.getIdGuide().compareTo(o2.getIdGuide());
     }
 
 }

@@ -78,6 +78,10 @@ public class Templates {
         return list;
     }
 
+    public static void removeTemplate(String templateId) throws InternalErrorException{
+        getTemplatesMap().remove(templateId);
+    }
+
     public static ImageIcon getIcon(String idTemplate){
         String entryType = getTemplateDTO(idTemplate).getRMName();
         ImageIcon icon = OpenEHRConstUI.getIcon(entryType);

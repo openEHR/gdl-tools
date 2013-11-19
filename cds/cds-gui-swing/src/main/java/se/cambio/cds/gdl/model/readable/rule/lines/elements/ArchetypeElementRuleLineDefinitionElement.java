@@ -41,10 +41,6 @@ public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWi
 	    return getText();
 	}
     }
-
-    public String getAggregationFunction(){
-	return getArchetypeReference().getAggregationFunction();
-    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

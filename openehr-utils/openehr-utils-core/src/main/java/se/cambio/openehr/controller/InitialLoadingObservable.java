@@ -1,77 +1,77 @@
 package se.cambio.openehr.controller;
 
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
 
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-
 public class InitialLoadingObservable extends Observable{
 
     private static InitialLoadingObservable _instance = null;
-    
+
     public static enum LoadingStage{
-	ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES
+        ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES
     }
-    
+
     private LoadingStage _currentLoadingStage = null;
     //From 0 to 1
     private Double _currentProgress = 0.0;
     private int _numLoaded = 0;
     private Collection<InternalErrorException> _loadingExeptions = null;
-    
+
     private InitialLoadingObservable(){
-	_loadingExeptions = new ArrayList<InternalErrorException>();
+        _loadingExeptions = new ArrayList<InternalErrorException>();
     }
-    
+
     public static void setCurrentLoadingStage(LoadingStage loadingStage){
-	getDelegate()._currentLoadingStage = loadingStage;
-	getDelegate()._currentProgress = 0.0;
-	stageUpdated();
+        getDelegate()._currentLoadingStage = loadingStage;
+        getDelegate()._currentProgress = 0.0;
+        stageUpdated();
     }
-    
+
     public static void setCurrentLoadingStageFinished(){
-	//getDelegate()._currentLoadingStage = null;
-	getDelegate()._currentProgress = 0.0;
-	getDelegate()._numLoaded++;
-	stageUpdated();
+        //getDelegate()._currentLoadingStage = null;
+        getDelegate()._currentProgress = 0.0;
+        getDelegate()._numLoaded++;
+        stageUpdated();
     }
-    
+
     public static void setCurrentProgress(Double currentProgress){
-	getDelegate()._currentProgress = currentProgress;
-	stageUpdated();
+        getDelegate()._currentProgress = currentProgress;
+        stageUpdated();
     }
-    
+
     private static void stageUpdated(){
-	getDelegate().setChanged();
-	getDelegate().notifyObservers();
+        getDelegate().setChanged();
+        getDelegate().notifyObservers();
     }
-    
+
     public static LoadingStage getCurrentLoadingStage(){
-	return getDelegate()._currentLoadingStage;
+        return getDelegate()._currentLoadingStage;
     }
-    
+
     public static Integer getNumLoaded(){
-	return getDelegate()._numLoaded;
+        return getDelegate()._numLoaded;
     }
-    
+
     public static Double getCurrentStageProgress(){
-	return getDelegate()._currentProgress;
+        return getDelegate()._currentProgress;
     }
 
     public static void addLoadingException(InternalErrorException e){
-	getDelegate()._loadingExeptions.add(e);
+        getDelegate()._loadingExeptions.add(e);
     }
-    
+
     public static Collection<InternalErrorException> getLoadingExceptions(){
-	return getDelegate()._loadingExeptions;
+        return getDelegate()._loadingExeptions;
     }
-    
+
     public static InitialLoadingObservable getDelegate(){
-	if (_instance==null){
-	    _instance = new InitialLoadingObservable();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new InitialLoadingObservable();
+        }
+        return _instance;
     }
 }
 /*

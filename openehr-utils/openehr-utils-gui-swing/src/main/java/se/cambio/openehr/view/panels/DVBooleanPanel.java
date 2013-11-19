@@ -8,27 +8,27 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class DVBooleanPanel extends DVComboBoxPanel implements DVPanelInterface{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
     public DVBooleanPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
-	super(idElement, idTemplate, allowNull, requestFocus);
-	insertOption("false", OpenEHRLanguageManager.getMessage("False"), OpenEHRLanguageManager.getMessage("False"));
-	insertOption("true", OpenEHRLanguageManager.getMessage("True"), OpenEHRLanguageManager.getMessage("True"));
+        super(idElement, idTemplate, allowNull, requestFocus);
+        insertOption("false", OpenEHRLanguageManager.getMessage("False"), OpenEHRLanguageManager.getMessage("False"));
+        insertOption("true", OpenEHRLanguageManager.getMessage("True"), OpenEHRLanguageManager.getMessage("True"));
     }
 
     public void setDataValue(DataValue dataValue) {
-	String code = "";
-	if (dataValue instanceof DvBoolean){
-	    code =((DvBoolean) dataValue).toString();
-	}
-	getComboBox().setSelectedItem(code);
+        String code = "";
+        if (dataValue instanceof DvBoolean){
+            code =((DvBoolean) dataValue).toString();
+        }
+        getComboBox().setSelectedItem(code);
     }
-    
+
 
     public DataValue getDataValue(){
-	return new DvBoolean(new Boolean(""+getComboBox().getSelectedItem()));
+        return new DvBoolean(new Boolean(""+getComboBox().getSelectedItem()));
     }
 }
 /*

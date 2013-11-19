@@ -112,6 +112,10 @@ public class Guides {
         return getDelegate()._keywordsMap;
     }
 
+    public static void removeGuide(String guideId) throws InternalErrorException{
+        getGuidesMap().remove(guideId);
+    }
+
     public int hashCode(){
         List<GuideDTO> guideDTOs = getAllGuides();
         Collections.sort(guideDTOs, new GuidesComparator());

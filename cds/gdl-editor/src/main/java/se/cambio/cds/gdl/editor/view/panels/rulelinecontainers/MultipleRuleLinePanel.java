@@ -1,24 +1,18 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class MultipleRuleLinePanel extends RuleLineContainerPanel{
 
     /**
-     * 
+     *
      */
     private JPanel ruleLineListPanel = null;
 
@@ -30,63 +24,65 @@ public class MultipleRuleLinePanel extends RuleLineContainerPanel{
     private JPanel mainPanel;
 
     public MultipleRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine){
-	_ruleLinesPanel = ruleLinesPanel;
-	_ruleLine = ruleLine;
-	init();
+        _ruleLinesPanel = ruleLinesPanel;
+        _ruleLine = ruleLine;
+        init();
     }
 
     private void init(){
-	this.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-	this.add(getMainPanel());
+        this.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        this.add(getMainPanel());
     }
 
     protected JPanel getMainPanel(){
-	if (mainPanel==null){
-	    mainPanel = new JPanel(new BorderLayout(0,0));
-	    RuleLine ruleLineCheck = _ruleLinesPanel.getRuleLineCheck();
-	    if (ruleLineCheck!=null){
-		if (RuleLineDirectory.checkRuleLineCompatibility(ruleLineCheck, _ruleLine)){
-		    mainPanel.setBorder(BorderFactory.createEtchedBorder());
-		}
-	    }
-	    JPanel aux = new JPanel(new BorderLayout(0,0));
-	    mainPanel.add(aux, BorderLayout.CENTER);
-	    aux.add(getRuleLineListPanel(), BorderLayout.NORTH);
-	    if (_ruleLine.getChildrenRuleLines().isEmpty()){
-		getRuleLineListPanel().add(Box.createRigidArea(new Dimension(50,20)));
-	    }else{
-		for (RuleLine ruleLine : _ruleLine.getChildrenRuleLines()) {
-		    JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
-		    JPanel auxLine = new JPanel(new BorderLayout(0,0));
-		    auxLine.add(Box.createHorizontalStrut(16), BorderLayout.WEST);
-		    auxLine.add(panel, BorderLayout.CENTER);
-		    getRuleLineListPanel().add(auxLine);
-		}
-	    }
-	}
-	return mainPanel;
+        if (mainPanel==null){
+            mainPanel = new JPanel(new BorderLayout(0,0));
+            RuleLine ruleLineCheck = _ruleLinesPanel.getRuleLineCheck();
+            if (ruleLineCheck!=null){
+                if (RuleLineDirectory.checkRuleLineCompatibility(ruleLineCheck, _ruleLine)){
+                    mainPanel.setBorder(BorderFactory.createEtchedBorder());
+                }
+            }
+            JPanel aux = new JPanel(new BorderLayout(0,0));
+            mainPanel.add(aux, BorderLayout.CENTER);
+            aux.add(getRuleLineListPanel(), BorderLayout.NORTH);
+            if (_ruleLine.getChildrenRuleLines().isEmpty()){
+                getRuleLineListPanel().add(Box.createRigidArea(new Dimension(50,20)));
+            }else{
+                for (RuleLine ruleLine : _ruleLine.getChildrenRuleLines()) {
+                    JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
+                    JPanel auxLine = new JPanel(new BorderLayout(0,0));
+                    auxLine.add(Box.createHorizontalStrut(16), BorderLayout.WEST);
+                    auxLine.add(panel, BorderLayout.CENTER);
+                    getRuleLineListPanel().add(auxLine);
+                }
+            }
+        }
+        return mainPanel;
     }
 
     public void addRuleLine(RuleLine ruleLine){
-	ruleLine = RuleLineCloner.clone(ruleLine);
-	_ruleLine.addChildRuleLine(ruleLine);
-	ruleLineAdded(ruleLine);
+        if (RuleLineDirectory.isDirectoryRuleLine(ruleLine)){
+            ruleLine = RuleLineCloner.clone(ruleLine);
+        }
+        _ruleLine.addChildRuleLine(ruleLine);
+        ruleLineAdded(ruleLine);
     }
 
     private JPanel getRuleLineListPanel(){
-	if (ruleLineListPanel==null){
-	    ruleLineListPanel = new JPanel();
-	    ruleLineListPanel.setLayout(new BoxLayout(ruleLineListPanel, BoxLayout.Y_AXIS));
-	}
-	return ruleLineListPanel;
+        if (ruleLineListPanel==null){
+            ruleLineListPanel = new JPanel();
+            ruleLineListPanel.setLayout(new BoxLayout(ruleLineListPanel, BoxLayout.Y_AXIS));
+        }
+        return ruleLineListPanel;
     }
 
     public RuleLine getRuleLine() {
-	return _ruleLine;
+        return _ruleLine;
     }
 
     public RuleLinesPanel getRuleLinesPanel() {
-	return _ruleLinesPanel;
+        return _ruleLinesPanel;
     }
 }
 /*

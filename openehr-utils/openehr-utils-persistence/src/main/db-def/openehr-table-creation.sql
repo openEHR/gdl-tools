@@ -14,6 +14,8 @@ CREATE TABLE openehr_template
 (
     templateid VARCHAR(255) NOT NULL,
     archetypeid VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
 	rmname VARCHAR(50) NOT NULL,
     archetype TEXT NOT NULL,
     aom bytea NOT NULL,

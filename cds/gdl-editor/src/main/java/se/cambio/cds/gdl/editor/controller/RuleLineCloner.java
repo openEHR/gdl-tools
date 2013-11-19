@@ -14,28 +14,28 @@ public class RuleLineCloner {
     }
 
     private static Cloner getCloner(){
-	if (getDelegate()._cloner==null){
-	    getDelegate()._cloner = new Cloner();
-	}
-	return getDelegate()._cloner;
+        if (getDelegate()._cloner==null){
+            getDelegate()._cloner = new Cloner();
+        }
+        return getDelegate()._cloner;
     }
 
     public static RuleLine clone(RuleLine ruleLine){
-	RuleLine clonedRuleLine = RuleLineCloner.getCloner().deepClone(ruleLine);
-	if (ruleLine instanceof GTCodeDefiner){
-	    GTCodeDefiner tdRuleLine = (GTCodeDefiner)clonedRuleLine;
-	    String gtCode = EditorManager.getActiveGDLEditor().createNextGTCode(); 
-	    tdRuleLine.setGTCode(gtCode);
-	}
-	clonedRuleLine.setTermDefinition(EditorManager.getActiveGDLEditor().getCurrentTermDefinition());
-	return clonedRuleLine;
+        RuleLine clonedRuleLine = RuleLineCloner.getCloner().deepClone(ruleLine);
+        if (ruleLine instanceof GTCodeDefiner){
+            GTCodeDefiner tdRuleLine = (GTCodeDefiner)clonedRuleLine;
+            String gtCode = EditorManager.getActiveGDLEditor().createNextGTCode();
+            tdRuleLine.setGTCode(gtCode);
+        }
+        clonedRuleLine.setTermDefinition(EditorManager.getActiveGDLEditor().getCurrentTermDefinition());
+        return clonedRuleLine;
     }
 
     public static RuleLineCloner getDelegate(){
-	if (_instance==null){
-	    _instance = new RuleLineCloner();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new RuleLineCloner();
+        }
+        return _instance;
     }
 
 }

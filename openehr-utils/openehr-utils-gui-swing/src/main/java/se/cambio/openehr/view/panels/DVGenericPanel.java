@@ -1,66 +1,66 @@
 package se.cambio.openehr.view.panels;
 
-import javax.swing.JPanel;
-
 import org.openehr.rm.datatypes.basic.DataValue;
+
+import javax.swing.*;
 
 public abstract class DVGenericPanel extends JPanel implements DVPanelInterface{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     protected String _idElement = null;
     protected String _idTemplate = null;
     protected boolean _allowsNull;
     protected boolean _requestFocus;
-    
+
     public DVGenericPanel(String idElement, String idTemplate, boolean allowsNull, boolean requestFocus){
-	_idElement = idElement;
-	_idTemplate = idTemplate;
-	_allowsNull = allowsNull;
-	_requestFocus = requestFocus;
+        _idElement = idElement;
+        _idTemplate = idTemplate;
+        _allowsNull = allowsNull;
+        _requestFocus = requestFocus;
     }
 
     public String getIdElement() {
-	return _idElement;
+        return _idElement;
     }
 
     public void setIdElement(String idElement) {
-	this._idElement = idElement;
+        this._idElement = idElement;
     }
 
     public String getIdTemplate(){
-	return _idTemplate;
+        return _idTemplate;
     }
 
     public void setIdTemplate(String idTemplate){
-	_idTemplate = idTemplate;
+        _idTemplate = idTemplate;
     }
 
     public boolean isAllowsNull() {
-	return _allowsNull;
+        return _allowsNull;
     }
 
     public void setAllowNull(boolean allowsNull) {
-	_allowsNull = allowsNull;
+        _allowsNull = allowsNull;
     }
 
     public boolean isRequestFocus() {
-	return _requestFocus;
+        return _requestFocus;
     }
-    
+
     public boolean isValidDV(){
-	try{
-	    DataValue dv = getDataValue();
-	    if (dv!=null || _allowsNull){
-		return true;
-	    }else{
-		return false;
-	    }
-	}catch(Exception e){
-	    return false;
-	}
+        try{
+            DataValue dv = getDataValue();
+            if (dv!=null || _allowsNull){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(Exception e){
+            return false;
+        }
     }
 }
 /*

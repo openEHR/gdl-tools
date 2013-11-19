@@ -19,6 +19,7 @@ import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class GuideImporter {
 
     }
 
-    public static ReadableGuide importGuide(Guide guide, String language){
+    public static ReadableGuide importGuide(Guide guide, String language) throws InternalErrorException {
         Logger.getLogger(GuideImporter.class).debug("Importing guide: "+guide.getId()+", lang="+language);
         Map<String, ArchetypeElementInstantiationRuleLine> gtCodeElementMap =
                 new HashMap<String, ArchetypeElementInstantiationRuleLine>();
@@ -49,8 +50,7 @@ public class GuideImporter {
                             new ArchetypeReference(
                                     archetypeBinding.getDomain(),
                                     archetypeBinding.getArchetypeId(),
-                                    archetypeBinding.getTemplateId(),
-                                    archetypeBinding.getFunction());
+                                    archetypeBinding.getTemplateId());
                     airl.setArchetypeReference(ar);
                     readableGuide.getDefinitionRuleLines().add(airl);
                     if (archetypeBinding.getElements()!=null){
@@ -229,7 +229,7 @@ public class GuideImporter {
     protected static void processAssigmentExpression(
             Collection<RuleLine> ruleLines,
             AssignmentExpression assignmentExpression,
-            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap){
+            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap) throws InternalErrorException {
         String gtCode = assignmentExpression.getVariable().getCode();
         ExpressionItem expressionItemAux = assignmentExpression.getAssignment();
         String attribute = assignmentExpression.getVariable().getAttribute();
@@ -258,7 +258,7 @@ public class GuideImporter {
                 dataValueRuleLineElement.setValue(dv);
                 ruleLines.add(sedvar);
             }else{
-                log.error("Unknown expression '"+expressionItemAux.getClass().getName()+"'");
+                throw new InternalErrorException(new Exception("Unknown expression '"+expressionItemAux.getClass().getName()+"'"));
             }
         }else{
             SetElementAttributeActionRuleLine seaarl = new SetElementAttributeActionRuleLine();
@@ -275,7 +275,7 @@ public class GuideImporter {
             Collection<RuleLine> ruleLines,
             RuleLine parentRuleLine,
             BinaryExpression binaryExpression,
-            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap){
+            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap) throws InternalErrorException {
         if (OperatorKind.OR.equals(binaryExpression.getOperator())){
             OrOperatorRuleLine orOperatorRuleLine = new OrOperatorRuleLine();
             processExpressionItem(ruleLines, orOperatorRuleLine.getLeftRuleLineBranch(), binaryExpression.getLeft(), gtCodeELementMap);
@@ -294,7 +294,7 @@ public class GuideImporter {
                 OperatorKind.LESS_THAN_OR_EQUAL.equals(binaryExpression.getOperator())){
             processComparisonExpression(ruleLines, parentRuleLine, binaryExpression, gtCodeELementMap);
         }else{
-            log.error("Unknown operator '"+binaryExpression.getOperator()+"'");
+            throw new InternalErrorException(new Exception("Unknown operator '"+binaryExpression.getOperator()+"'"));
         }
 
     }
@@ -303,17 +303,20 @@ public class GuideImporter {
             Collection<RuleLine> ruleLines,
             RuleLine parentRuleLine,
             BinaryExpression binaryExpression,
-            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap){
+            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap) throws InternalErrorException {
         GTCodeRuleLineElement gtCodeRuleLineElement = null;
         String attribute = null;
         String gtCode = null;
         if (binaryExpression.getLeft() instanceof Variable){
             Variable var = (Variable)binaryExpression.getLeft();
             gtCode = var.getCode();
-            log.debug("gtCode: " + gtCode);
-            gtCodeRuleLineElement =
-                    gtCodeELementMap.get(gtCode).getGTCodeRuleLineElement();
 
+            ArchetypeElementInstantiationRuleLine aeirl = gtCodeELementMap.get(gtCode);
+            if (aeirl!=null){
+                gtCodeRuleLineElement = aeirl.getGTCodeRuleLineElement();
+            }else{
+                log.warn("gtCode not found! ("+gtCode+")");
+            }
             attribute = var.getAttribute();
         }
         if (gtCodeRuleLineElement!=null){
@@ -359,7 +362,7 @@ public class GuideImporter {
                     eccrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
                     addRuleLine(eccrl, ruleLines, parentRuleLine);
                 }else{
-                    log.error("Unknown expression '"+binaryExpression.getRight().getClass().getName()+"'");
+                    throw new InternalErrorException(new Exception("Unknown expression '"+binaryExpression.getRight().getClass().getName()+"'"));
                 }
             }else{
 
@@ -387,7 +390,7 @@ public class GuideImporter {
                 }
             }
         }else{
-            log.error("Unknown expression '"+binaryExpression.getLeft().getClass().getName()+"'");
+            throw new InternalErrorException(new Exception("Unknown expression '"+binaryExpression.getLeft().getClass().getName()+"'"));
         }
     }
 
@@ -395,7 +398,7 @@ public class GuideImporter {
             Collection<RuleLine> ruleLines,
             RuleLine parentRuleLine,
             ExpressionItem expressionItem,
-            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap){
+            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap) throws InternalErrorException {
         if (expressionItem instanceof AssignmentExpression){
             processAssigmentExpression(ruleLines, (AssignmentExpression)expressionItem, gtCodeELementMap);
         }else if (expressionItem instanceof BinaryExpression){
@@ -403,7 +406,7 @@ public class GuideImporter {
         }else if (expressionItem instanceof UnaryExpression){
             processUnaryExpression(ruleLines, parentRuleLine, (UnaryExpression)expressionItem, gtCodeELementMap);
         }else{
-            log.error("Unknown expression '"+expressionItem.getClass().getName()+"'");
+            throw new InternalErrorException(new Exception("Unknown expression '"+expressionItem.getClass().getName()+"'"));
         }
     }
 
@@ -411,13 +414,13 @@ public class GuideImporter {
             Collection<RuleLine> ruleLines,
             RuleLine parentRuleLine,
             UnaryExpression unaryExpression,
-            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap){
+            Map<String, ArchetypeElementInstantiationRuleLine> gtCodeELementMap) throws InternalErrorException {
         if (OperatorKind.FOR_ALL.equals(unaryExpression.getOperator())){
             ForAllOperatorRuleLine forAllOperatorRuleLine = new ForAllOperatorRuleLine();
             processExpressionItem(ruleLines, forAllOperatorRuleLine, unaryExpression.getOperand(), gtCodeELementMap);
             addRuleLine(forAllOperatorRuleLine, ruleLines, parentRuleLine);
         }else{
-            log.error("Unknown operator '"+unaryExpression.getOperator()+"'");
+            throw new InternalErrorException(new Exception("Unknown operator '"+unaryExpression.getOperator()+"'"));
         }
     }
 

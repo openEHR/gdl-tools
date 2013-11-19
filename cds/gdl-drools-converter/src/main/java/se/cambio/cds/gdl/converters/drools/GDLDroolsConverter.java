@@ -163,9 +163,6 @@ public class GDLDroolsConverter {
                         archetypeBinding.getTemplateId()!=null){
                     archetypeBindingMVELSB.append(", idTemplate==\""+archetypeBinding.getTemplateId()+"\"");
                 }
-                if (archetypeBinding.getFunction()!=null){
-                    archetypeBindingMVELSB.append(", aggregationFunction==\""+archetypeBinding.getFunction()+"\"");
-                }
                 archetypeBindingMVELSB.append(")\n");
 
                 // Predicates
@@ -386,7 +383,7 @@ public class GDLDroolsConverter {
     private String convertExpressionsToMVEL(
             Collection<ExpressionItem> expressionItems,
             Map<String, ArchetypeElementVO> elementMap,
-            Map<RefStat, Set<String>> stats) {
+            Map<RefStat, Set<String>> stats) throws InternalErrorException {
         StringBuffer sb = new StringBuffer();
         if (expressionItems != null) {
             for (ExpressionItem expressionItem : expressionItems) {
@@ -401,7 +398,7 @@ public class GDLDroolsConverter {
     private String convertAssigmentExpressionsToMVEL(
             Collection<AssignmentExpression> expressionItems,
             Map<String, ArchetypeElementVO> elementMap,
-            Map<RefStat, Set<String>> stats) {
+            Map<RefStat, Set<String>> stats) throws InternalErrorException {
         StringBuffer sb = new StringBuffer();
         if (expressionItems != null) {
             for (ExpressionItem expressionItem : expressionItems) {
@@ -420,7 +417,7 @@ public class GDLDroolsConverter {
     protected void processExpressionItem(StringBuffer sb,
                                          ExpressionItem expressionItem,
                                          Map<String, ArchetypeElementVO> elementMap,
-                                         Map<RefStat, Set<String>> stats) {
+                                         Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (expressionItem instanceof AssignmentExpression) {
             processAssigmentExpression(sb,
                     (AssignmentExpression) expressionItem, elementMap, stats);
@@ -431,16 +428,14 @@ public class GDLDroolsConverter {
             processUnaryExpression(sb, (UnaryExpression) expressionItem,
                     elementMap, stats);
         } else {
-            Logger.getLogger(GDLDroolsConverter.class).error(
-                    "Unknown expression '"
-                            + expressionItem.getClass().getName() + "'");
+            throw new InternalErrorException(new Exception("Unknown expression '"+ expressionItem.getClass().getName() + "'"));
         }
     }
 
     protected void processAssigmentExpression(StringBuffer sb,
                                               AssignmentExpression assignmentExpression,
                                               Map<String, ArchetypeElementVO> elementMap,
-                                              Map<RefStat, Set<String>> stats) {
+                                              Map<RefStat, Set<String>> stats) throws InternalErrorException {
         String gtCode = assignmentExpression.getVariable().getCode();
         stats.get(RefStat.REFERENCE).add(gtCode);
         ExpressionItem expressionItemAux = assignmentExpression.getAssignment();
@@ -471,9 +466,9 @@ public class GDLDroolsConverter {
                                 "$"+gtCode+".setNullFlavour(null);"+
                                 "$executionLogger.addLog(drools, $"+gtCode +");");
             } else {
-                Logger.getLogger(GDLDroolsConverter.class).error(
+                throw new InternalErrorException(new Exception(
                         "Unknown expression '"
-                                + expressionItemAux.getClass().getName() + "'");
+                                + expressionItemAux.getClass().getName() + "'"));
             }
         } else {
             if (attribute.equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)){
@@ -518,7 +513,7 @@ public class GDLDroolsConverter {
     protected void processBinaryExpression(StringBuffer sb,
                                            BinaryExpression binaryExpression,
                                            Map<String, ArchetypeElementVO> elementMap,
-                                           Map<RefStat, Set<String>> stats) {
+                                           Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (OperatorKind.OR.equals(binaryExpression.getOperator())) {
             sb.append("(");
             processExpressionItem(sb, binaryExpression.getLeft(), elementMap,
@@ -545,9 +540,8 @@ public class GDLDroolsConverter {
                 || OperatorKind.LESS_THAN_OR_EQUAL.equals(binaryExpression.getOperator())) {
             processComparisonExpression(sb, binaryExpression, elementMap, stats);
         } else {
-            Logger.getLogger(GDLDroolsConverter.class)
-                    .error("Unknown operator '"
-                            + binaryExpression.getOperator() + "'");
+            throw new InternalErrorException(new Exception("Unknown operator '"
+                            + binaryExpression.getOperator() + "'"));
         }
 
     }
@@ -555,7 +549,7 @@ public class GDLDroolsConverter {
     protected void processUnaryExpression(StringBuffer sb,
                                           UnaryExpression unaryExpression,
                                           Map<String, ArchetypeElementVO> elementMap,
-                                          Map<RefStat, Set<String>> stats) {
+                                          Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (OperatorKind.NOT.equals(unaryExpression.getOperator())) {
             sb.append("not(");
             processExpressionItem(sb, unaryExpression.getOperand(), elementMap,
@@ -567,15 +561,15 @@ public class GDLDroolsConverter {
                     stats);
             sb.append(")");
         } else {
-            Logger.getLogger(GDLDroolsConverter.class).error(
-                    "Unknown operator '" + unaryExpression.getOperator() + "'");
+            throw new InternalErrorException(new Exception(
+                    "Unknown operator '" + unaryExpression.getOperator() + "'"));
         }
     }
 
     protected void processComparisonExpression(StringBuffer sb,
                                                BinaryExpression binaryExpression,
                                                Map<String, ArchetypeElementVO> elementMap,
-                                               Map<RefStat, Set<String>> stats) {
+                                               Map<RefStat, Set<String>> stats) throws InternalErrorException {
         Variable var = null;
         if (binaryExpression.getLeft() instanceof Variable) {
             var = (Variable) binaryExpression.getLeft();
@@ -622,10 +616,10 @@ public class GDLDroolsConverter {
                     sb.append(")");
                     stats.get(RefStat.REFERENCE).add(gtCodeAux);
                 } else {
-                    Logger.getLogger(GDLDroolsConverter.class).error(
+                    throw new InternalErrorException(new Exception(
                             "Unknown expression '"
                                     + binaryExpression.getRight().getClass()
-                                    .getName() + "'");
+                                    .getName() + "'"));
                 }
             } else {
                 if (var.getAttribute().equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)){
@@ -662,7 +656,7 @@ public class GDLDroolsConverter {
                 }
             }
         } else {
-            Logger.getLogger(GDLDroolsConverter.class).error("Unknown expression '" + binaryExpression.getLeft() + "'");
+            throw new InternalErrorException(new Exception("Unknown expression '" + binaryExpression.getLeft() + "'"));
         }
     }
 
@@ -874,7 +868,7 @@ public class GDLDroolsConverter {
 
     private String getArithmeticExpressionStr(
             Map<String, ArchetypeElementVO> elementMap,
-            ExpressionItem expressionItem, Map<RefStat, Set<String>> stats) {
+            ExpressionItem expressionItem, Map<RefStat, Set<String>> stats) throws InternalErrorException {
         StringBuffer sb = new StringBuffer();
         if (expressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
@@ -909,9 +903,9 @@ public class GDLDroolsConverter {
         } else if (expressionItem instanceof ConstantExpression) {
             sb.append(formatConstantValue((ConstantExpression) expressionItem));
         } else {
-            Logger.getLogger(GDLDroolsConverter.class).error(
+            throw new InternalErrorException(new Exception(
                     "Unknown expression '"
-                            + expressionItem.getClass().getName() + "'");
+                            + expressionItem.getClass().getName() + "'"));
         }
         return sb.toString();
     }

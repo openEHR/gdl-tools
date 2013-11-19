@@ -15,8 +15,7 @@ import java.util.List;
 public class PreconditionRuleLinesPanel extends RuleLinesPanel {
 
     public PreconditionRuleLinesPanel(GDLEditor controller) {
-        super(
-                controller,
+        super(controller,
                 RuleLineDirectory.getSelectableConditions(),
                 GDLEditorLanguageManager.getMessage("Preconditions"));
     }

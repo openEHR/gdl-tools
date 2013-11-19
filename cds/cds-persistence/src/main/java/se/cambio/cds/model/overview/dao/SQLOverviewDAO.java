@@ -1,35 +1,31 @@
-package se.cambio.cds.view.swing.applicationobjects;
+package se.cambio.cds.model.overview.dao;
 
+import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import javax.swing.ImageIcon;
+import java.sql.Connection;
+import java.util.Collection;
 
-import se.cambio.cds.util.AggregationFunctions;
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
+/**
+ * @author iago.corbal
+ */
+public interface SQLOverviewDAO {
 
-public class AggregationFunctionsUI {
+    public OverviewDTO searchByOverviewId(Connection connection, String overviewId)
+	    throws InternalErrorException, InstanceNotFoundException;
 
-    public static String LAST_NAME = OpenEHRLanguageManager.getMessage("Last");
+    public Collection<OverviewDTO> searchAll(Connection connection)
+	    throws InternalErrorException;
 
-    public static String getAggregationFunctionName(String aggregationFunction){
-	if (AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST.equals(aggregationFunction)){
-	    return LAST_NAME;
-	}
-	return null;
-    }
+    public void insert(Connection connection, OverviewDTO overviewDTO)
+	    throws InternalErrorException;
 
-    public static ImageIcon getIcon(String af){
-	if (af==null){
-	    return OpenEHRImageUtil.AF_ALL_ICON;
-	}else if(AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST.equals(af)){
-	    return OpenEHRImageUtil.AF_LAST_ICON;
-	}else if(AggregationFunctions.ID_AGGREGATION_FUNCTION_DURATION.equals(af)){
-	    return OpenEHRImageUtil.AF_DURATION_ICON;
-	}else{
-	    return null;
-	}
-    }
+    public void update(Connection connection, OverviewDTO overviewDTO)
+    throws InternalErrorException, InstanceNotFoundException;
     
+    public void remove(Connection connection, String overviewId)
+	    throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

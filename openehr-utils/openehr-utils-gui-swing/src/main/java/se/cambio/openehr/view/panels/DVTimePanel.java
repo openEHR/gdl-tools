@@ -1,45 +1,44 @@
 package se.cambio.openehr.view.panels;
 
-import java.util.Calendar;
-
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvTime;
-
 import se.cambio.openehr.view.util.DVConverter;
+
+import java.util.Calendar;
 
 public class DVTimePanel extends DVGenericDateTimePanel implements DVPanelInterface{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
     public DVTimePanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
-	super(idElement, idTemplate, allowNull, requestFocus);
+        super(idElement, idTemplate, allowNull, requestFocus);
     }
 
     public void setDataValue(DataValue dataValue) {
-	Calendar cal = null;
-	if (dataValue instanceof DvTime){
-	    cal = Calendar.getInstance();
-	    DvTime dv = (DvTime)dataValue;
-	    cal.setTime(dv.getDateTime().toDate());
-	}
-	getDateChooser().setCalendar(cal);
+        Calendar cal = null;
+        if (dataValue instanceof DvTime){
+            cal = Calendar.getInstance();
+            DvTime dv = (DvTime)dataValue;
+            cal.setTime(dv.getDateTime().toDate());
+        }
+        getDateChooser().setCalendar(cal);
 
     }
 
     public DataValue getDataValue(){
-	Calendar cal = getDateChooser().getCalendar();
-	return DVConverter.getDvTime(cal);
+        Calendar cal = getDateChooser().getCalendar();
+        return DVConverter.getDvTime(cal);
     }
 
     public String getDateConstraints(){
-	return "HH:mm:ss";
+        return "HH:mm:ss";
     }
 
     public String getCalendarBlanks(){
-	return "##:##:##";
+        return "##:##:##";
     }
 }
 /*

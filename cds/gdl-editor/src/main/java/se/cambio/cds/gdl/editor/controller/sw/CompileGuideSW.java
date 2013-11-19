@@ -2,6 +2,7 @@ package se.cambio.cds.gdl.editor.controller.sw;
 
 import org.apache.log4j.Logger;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
@@ -11,12 +12,12 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CompileGuideSW extends CDSSwingWorker{
     private String _errorMsg = null;
-    private GDLEditor _controller = null;
     private byte[] _compiledGuide = null;
     private Guide _guide = null;
+    private GDLEditor _controller = null;
 
-    public CompileGuideSW(GDLEditor controller){
-        _controller = controller;
+    public CompileGuideSW(){
+        _controller = EditorManager.getActiveGDLEditor();
     }
 
     @Override

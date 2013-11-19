@@ -60,8 +60,7 @@ public class GuideUtil {
                 new GeneratedArchetypeReference(
                         archetypeBinding.getDomain(),
                         archetypeBinding.getArchetypeId(),
-                        archetypeBinding.getTemplateId(),
-                        archetypeBinding.getFunction());
+                        archetypeBinding.getTemplateId());
         if (archetypeBinding.getElements()!=null){
             for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
                 String idElement =

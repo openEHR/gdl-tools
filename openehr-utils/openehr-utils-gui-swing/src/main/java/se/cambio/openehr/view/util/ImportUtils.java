@@ -162,7 +162,7 @@ public class ImportUtils {
 
     public static TemplateDTO importTemplate(Window owner, String idTemplate, String archetypeSrc) throws Exception{
         TemplateDTO templateDTO =
-                new TemplateDTO(idTemplate, null, null, archetypeSrc, null, null);
+                new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
         OETParser parser = new OETParser();
         InputStream bis = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
         TEMPLATE template = parser.parseTemplate(bis).getTemplate();
@@ -175,6 +175,11 @@ public class ImportUtils {
             }
         }
         templateDTO.setIdArchetype(idArchetype);
+        templateDTO.setName(template.getName());
+        //TODO
+        if (template.getDescription()!=null && template.getDescription().getDetails()!=null&&template.getDescription().getDetails().getPurpose()!=null){
+            templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
+        }
         Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
         OpenEHRObjectBundleManager.generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
         OpenEHRObjectBundleManager.addTemplate(templateDTO);
@@ -192,7 +197,7 @@ public class ImportUtils {
             String fileName = file.getName();
             String idTemplate = fileName.substring(0,fileName.length()-4);
             TemplateDTO templateDTO =
-                    new TemplateDTO(idTemplate, null, null, archetypeSrc, null, null);
+                    new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
             Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
             OpenEHRObjectBundleManager.generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
             return templateDTO;

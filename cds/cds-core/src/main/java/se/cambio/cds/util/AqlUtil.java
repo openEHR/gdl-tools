@@ -56,7 +56,7 @@ public class AqlUtil{
 
         List<ArchetypeReference > compactARs = new ArrayList<ArchetypeReference>();
         for (String archetypeId: arsMap.keySet()){
-            ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, archetypeId, null, null);
+            ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, archetypeId, null);
             for (ArchetypeReference arAux: arsMap.get(archetypeId)){
                 for (String elementId: arAux.getElementInstancesMap().keySet()){
                     if (!ar.getElementInstancesMap().containsKey(elementId)){

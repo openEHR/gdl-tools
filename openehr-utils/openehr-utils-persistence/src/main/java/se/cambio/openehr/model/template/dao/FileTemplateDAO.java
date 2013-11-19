@@ -30,9 +30,9 @@ public class FileTemplateDAO implements GenericTemplateDAO{
                 try{
                     if (fileName.endsWith(".oet")){
                         InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
-                        String idTemplate = fileName.substring(0,fileName.length()-4);
+                        String templateId = fileName.substring(0,fileName.length()-4);
                         String archetype = IOUtils.toString(fis);
-                        TemplateDTO templateDTO = new TemplateDTO(idTemplate, null, null, archetype, null, null);
+                        TemplateDTO templateDTO = new TemplateDTO(templateId, templateId, templateId, null, null, archetype, null, null);
                         templateVOs.add(templateDTO);
                     }
                 }catch(Throwable e){
@@ -68,7 +68,7 @@ public class FileTemplateDAO implements GenericTemplateDAO{
                 try {
                     InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
                     String archetype = IOUtils.toString(fis);
-                    templateDTOs.add(new TemplateDTO(templateId, null, null, archetype, null, null));
+                    templateDTOs.add(new TemplateDTO(templateId,templateId,templateId, null, null, archetype, null, null));
                 } catch (Exception e) {
                     ExceptionHandler.handle(e);
                 }

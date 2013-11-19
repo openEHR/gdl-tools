@@ -1,16 +1,12 @@
 package se.cambio.openehr.view.panels;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDuration;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class DVDurationPanel extends DVGenericPanel{
 
@@ -21,8 +17,8 @@ public class DVDurationPanel extends DVGenericPanel{
     private JTextField valueTextField;
     public DVDurationPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
 	super(idElement, idTemplate, allowNull, requestFocus);
-	this.setLayout(new FlowLayout(FlowLayout.LEFT));
-	this.add(getValueTextField());
+	this.setLayout(new BorderLayout());
+	this.add(getValueTextField(), BorderLayout.CENTER);
     }
 
     protected JTextField getValueTextField(){

@@ -137,9 +137,6 @@ public class CDSFormPanel extends JPanel{
                 }
             }
         }
-        if (arOrig.getAggregationFunction()!=null && arNew.getAggregationFunction()==null){
-            arOrig.setAggregationFunction(null);
-        }
     }
 
     public ArchetypeReference getCleanArchetypeReferenceWithElements(ArchetypeReference ar){

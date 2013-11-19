@@ -8,28 +8,24 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class ArchetypeReferenceRuleLineElement extends RuleLineElementWithValue<GTCodeRuleLineElement> {
 
     public ArchetypeReferenceRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("Archetype"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("Archetype"));
     }
 
     public ArchetypeReference getArchetypeReference() {
-	if (getValue().getParentRuleLine() instanceof ArchetypeReferenceRuleLine){
-	    return ((ArchetypeReferenceRuleLine)getValue().getParentRuleLine()).getArchetypeReference();
-	}else{
-	    return null;
-	}
+        if (getValue().getParentRuleLine() instanceof ArchetypeReferenceRuleLine){
+            return ((ArchetypeReferenceRuleLine)getValue().getParentRuleLine()).getArchetypeReference();
+        }else{
+            return null;
+        }
     }
 
     @Override
     public String getDescription() {
-	return OpenEHRLanguageManager.getMessage("Archetype"); 
+        return OpenEHRLanguageManager.getMessage("Archetype");
     }
 
     public String getDomainId(){
-	return getArchetypeReference().getIdDomain();
-    }
-
-    public String getAggregationFunction(){
-	return getArchetypeReference().getAggregationFunction();
+        return getArchetypeReference().getIdDomain();
     }
 }
 /*

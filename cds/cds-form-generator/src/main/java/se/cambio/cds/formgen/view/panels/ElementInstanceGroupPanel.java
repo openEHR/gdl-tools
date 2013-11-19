@@ -128,13 +128,13 @@ public class ElementInstanceGroupPanel extends JPanel {
             if (elementInstance!=null){
                 JLabel label = DVSwingUtil.createLabelForElement(elementInstance, _termDefinition);
                 DVGenericPanel dvGenericPanel = DVSwingUtil.createDVGenericPanel(elementInstance);
-                dvGenericPanel.setDataValue(elementInstance.getDataValue());
+                //dvGenericPanel.setDataValue(elementInstance.getDataValue());
                 dvGenericPanelsMap.put(label, dvGenericPanel);
             }
         }
         JButton addButton = null;
         JButton removeButton = null;
-        if (_viewButtons && ar.getAggregationFunction()==null){
+        if (_viewButtons){
             addButton = createAddButton(ar);
             removeButton = createRemoveButton(ar);
         }

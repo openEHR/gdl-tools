@@ -49,6 +49,7 @@ public class GuideExecutionManager {
     }
 
     public static void setUseCache(boolean useCache){
+        Logger.getLogger(GuideExecutionManager.class).warn("USE-CACHE on cds engine changed to '"+useCache+"'");
         getDelegate()._useCache = useCache;
     }
 

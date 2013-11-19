@@ -1,50 +1,48 @@
 package se.cambio.openehr.view.panels;
 
-import java.awt.FlowLayout;
+import com.toedter.calendar.JDateChooser;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.JComponent;
-
-import se.cambio.openehr.util.OpenEHRImageUtil;
-
-import com.toedter.calendar.JDateChooser;
-
 public abstract class DVGenericDateTimePanel extends DVGenericPanel{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private JDateChooser dateChooser;
     public DVGenericDateTimePanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
-	super(idElement, idTemplate, allowNull, requestFocus);
-	this.setLayout(new FlowLayout(FlowLayout.LEFT));
-	this.add(getDateChooser());
+        super(idElement, idTemplate, allowNull, requestFocus);
+        this.setLayout(new BorderLayout());
+        this.add(getDateChooser(), BorderLayout.CENTER);
     }
 
     public JDateChooser getDateChooser() {
-	if (dateChooser == null) {
-	    dateChooser = new JDateChooser(getDateConstraints(), getCalendarBlanks(), '_');
-	    dateChooser.setIcon(OpenEHRImageUtil.CALENDAR_ICON);
-	    dateChooser.getCalendarButton().addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent arg0) {
-	            dateChooser.getDateEditor().getUiComponent().requestFocus();
-	        }
-	    });
-	}
-	return dateChooser;
+        if (dateChooser == null) {
+            dateChooser = new JDateChooser(getDateConstraints(), getCalendarBlanks(), '_');
+            dateChooser.setIcon(OpenEHRImageUtil.CALENDAR_ICON);
+            dateChooser.getCalendarButton().addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    dateChooser.getDateEditor().getUiComponent().requestFocus();
+                }
+            });
+        }
+        return dateChooser;
     }
 
     public Collection<JComponent> getJComponents() {
-	Collection<JComponent> components = new ArrayList<JComponent>();
-	components.add(getDateChooser());
-	return components;
+        Collection<JComponent> components = new ArrayList<JComponent>();
+        components.add(getDateChooser());
+        return components;
     }
-    
+
     public abstract String getDateConstraints();
     public abstract String getCalendarBlanks();
 }

@@ -1,14 +1,14 @@
 package se.cambio.cds.gdl.editor.controller;
 
-import java.awt.Window;
-import java.io.File;
-
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.view.dialog.DialogGDLEditor;
 import se.cambio.cds.gdl.editor.view.frame.GDLEditorFrame;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.awt.*;
+import java.io.File;
 
 public class EditorManager {
     private static EditorManager _instance = null;
@@ -24,99 +24,106 @@ public class EditorManager {
     }
 
     public static GDLEditor getActiveGDLEditor(){
-	return getDelegate()._controller;
+        return getDelegate()._controller;
     }
 
     public static void setActiveGDLEditor(GDLEditor controller){
-	getDelegate()._controller = controller;
+        getDelegate()._controller = controller;
     }
 
     public static Window getActiveEditorWindow(){
-	return getDelegate()._editorViewer;
+        return getDelegate()._editorViewer;
     }
 
     public static EditorViewer getActiveEditorViewer(){
-	return ((EditorViewer)getDelegate()._editorViewer);
+        return ((EditorViewer)getDelegate()._editorViewer);
     }
 
     public static MainMenuBar getMainMenuBar(){
-	return getActiveEditorViewer().getMainMenuBar();
+        return getActiveEditorViewer().getMainMenuBar();
     }
 
     public static void setExitOnClose(boolean exitOnClose){
-	getDelegate()._exitOnClose = exitOnClose;
+        getDelegate()._exitOnClose = exitOnClose;
     }
 
     public static boolean getExitOnClose(){
-	return getDelegate()._exitOnClose;
+        return getDelegate()._exitOnClose;
     }
 
     public static void closeEditor(){
-	if (getDelegate()._controller==null || 
-		(!checkOnExit() || getDelegate()._controller.isOKToExit())){
-	    getDelegate()._editorViewer.dispose();
-	    if (getDelegate()._exitOnClose){
-		System.exit(0);
-	    }
-	}
+        Runnable exitRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getDelegate()._editorViewer.dispose();
+                if (getDelegate()._exitOnClose){
+                    System.exit(0);
+                }
+            }
+        };
+        if (getDelegate()._controller!=null && checkOnExit()){
+            getDelegate()._controller.runIfOKToExit(exitRunnable);
+        }else{
+            exitRunnable.run();
+        }
     }
 
     public static void initController(GDLEditor controller) throws InternalErrorException{
-	getDelegate()._controller = controller;
-	if (getDelegate()._editorViewer!=null){
-	    getActiveEditorViewer().initController(controller);
-	}else{
-	    throw new InternalErrorException(new Exception("createEditorFrame or createEditorDialog must be called before this method."));
-	}
+        getDelegate()._controller = controller;
+        if (getDelegate()._editorViewer!=null){
+            getActiveEditorViewer().initController(controller);
+        }else{
+            throw new InternalErrorException(new Exception("createEditorFrame or createEditorDialog must be called before this method."));
+        }
     }
 
     public static GDLEditorFrame createEditorFrame(){
-	GDLEditorFrame ef = new GDLEditorFrame();
-	getDelegate()._editorViewer = ef;
-	setExitOnClose(true);
-	return ef;
+        GDLEditorFrame ef = new GDLEditorFrame();
+        getDelegate()._editorViewer = ef;
+        setExitOnClose(true);
+        return ef;
     }
 
 
     public static DialogGDLEditor createEditorDialog(Window owner){
-	DialogGDLEditor ed = new DialogGDLEditor(owner);
-	getDelegate()._editorViewer = ed;
-	setExitOnClose(false);
-	return ed;
+        DialogGDLEditor ed = new DialogGDLEditor(owner);
+        getDelegate()._editorViewer = ed;
+        setExitOnClose(false);
+        return ed;
     }
 
     public static File getLastFolderLoaded() {
-	if (getDelegate()._lastFolderLoaded==null){
-	    getDelegate()._lastFolderLoaded = UserConfigurationManager.getGuidesFolder();
-	}
-	return getDelegate()._lastFolderLoaded;
+        if (getDelegate()._lastFolderLoaded==null){
+            getDelegate()._lastFolderLoaded = UserConfigurationManager.getGuidesFolder();
+        }
+        return getDelegate()._lastFolderLoaded;
     }
 
     public static void setLastFolderLoaded(File _lastFolderLoaded) {
-	getDelegate()._lastFolderLoaded = _lastFolderLoaded;
+        getDelegate()._lastFolderLoaded = _lastFolderLoaded;
     }
 
     public static File getLastFileLoaded() {
-	return getDelegate()._lastFileLoaded;
+        return getDelegate()._lastFileLoaded;
     }
 
     public static void setLastFileLoaded(File _lastFileLoaded) {
-	getDelegate()._lastFileLoaded = _lastFileLoaded;
+        getDelegate()._lastFileLoaded = _lastFileLoaded;
     }
 
     public static boolean checkOnExit(){
-	return getDelegate()._checkOnExit;
+        return getDelegate()._checkOnExit;
     }
 
     public static void setCheckOnExit(boolean checkOnExit){
-	getDelegate()._checkOnExit = checkOnExit;
+        getDelegate()._checkOnExit = checkOnExit;
     }
 
     public static EditorManager getDelegate(){
-	if (_instance==null){
-	    _instance = new EditorManager();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new EditorManager();
+        }
+        return _instance;
     }
 }
 /*

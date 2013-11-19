@@ -1,65 +1,61 @@
 package se.cambio.openehr.view.panels;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvText;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class DVTextPanel extends DVGenericPanel{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private JTextField valueTextField;
     public DVTextPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
-	super(idElement, idTemplate, allowNull, requestFocus);
-	this.setLayout(new FlowLayout(FlowLayout.LEFT));
-	this.add(getValueTextField());
+        super(idElement, idTemplate, allowNull, requestFocus);
+        this.setLayout(new BorderLayout());
+        this.add(getValueTextField(), BorderLayout.CENTER);
     }
 
     protected JTextField getValueTextField(){
-	if (valueTextField==null){
-	    valueTextField = new JTextField();
-	    valueTextField.setPreferredSize(new Dimension(250,18));
-	    if (isRequestFocus()){
-		SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
-			valueTextField.requestFocus();
-		    }
-		});
-	    }
-	}
-	return valueTextField;
+        if (valueTextField==null){
+            valueTextField = new JTextField();
+            valueTextField.setPreferredSize(new Dimension(250,18));
+            if (isRequestFocus()){
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        valueTextField.requestFocus();
+                    }
+                });
+            }
+        }
+        return valueTextField;
     }
 
     public void setDataValue(DataValue dataValue) {
-	String value = "";
-	if (dataValue instanceof DvText){
-	    value = ((DvText)dataValue).getValue();
-	}
-	getValueTextField().setText(value);
+        String value = "";
+        if (dataValue instanceof DvText){
+            value = ((DvText)dataValue).getValue();
+        }
+        getValueTextField().setText(value);
     }
 
     public DataValue getDataValue(){
-	if (getValueTextField().getText().isEmpty()){
-	    return null;
-	}else{
-	    return new DvText(getValueTextField().getText());
-	}
+        if (getValueTextField().getText().isEmpty()){
+            return null;
+        }else{
+            return new DvText(getValueTextField().getText());
+        }
     }
 
     public Collection<JComponent> getJComponents() {
-	Collection<JComponent> components = new ArrayList<JComponent>();
-	components.add(getValueTextField());
-	return components;
+        Collection<JComponent> components = new ArrayList<JComponent>();
+        components.add(getValueTextField());
+        return components;
     }
 }
 /*

@@ -12,47 +12,43 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeReference> {
 
     public ArchetypeReferenceRuleLineDefinitionElement(ArchetypeInstantiationRuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("Archetype"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("Archetype"));
     }
 
     public String getDomainId(){
-	return getValue().getIdDomain();
+        return getValue().getIdDomain();
     }
 
     public String getTemplateId(){
-	if (getValue()!=null){
-	    return getValue().getIdTemplate();
-	}else{
-	    return null;
-	}
+        if (getValue()!=null){
+            return getValue().getIdTemplate();
+        }else{
+            return null;
+        }
     }
 
     @Override
     public String getDescription() {
-	if (getValue()==null){
-	    return OpenEHRLanguageManager.getMessage("Archetype");
-	}else{
-	    return ReadableArchetypeReferencesUtil.getHTMLTooltip((ArchetypeInstantiationRuleLine)getParentRuleLine()); 
-	}
-    }
-    
-    public String toString(){
-	if (getValue()!=null){
-	    String idArchetype = getValue().getIdArchetype();
-	    ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
-	    if (archetypeVO!=null){
-		return archetypeVO.getName();
-	    }else{
-		Logger.getLogger(this.getClass()).error("Archetype not found! ("+idArchetype+")");
-		return null;
-	    }
-	}else{
-	    return getText();
-	}
+        if (getValue()==null){
+            return OpenEHRLanguageManager.getMessage("Archetype");
+        }else{
+            return ReadableArchetypeReferencesUtil.getHTMLTooltip((ArchetypeInstantiationRuleLine)getParentRuleLine());
+        }
     }
 
-    public String getAggregationFunction(){
-	return getValue().getAggregationFunction();
+    public String toString(){
+        if (getValue()!=null){
+            String idArchetype = getValue().getIdArchetype();
+            ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
+            if (archetypeVO!=null){
+                return archetypeVO.getName();
+            }else{
+                Logger.getLogger(this.getClass()).error("Archetype not found! ("+idArchetype+")");
+                return null;
+            }
+        }else{
+            return getText();
+        }
     }
 
 }

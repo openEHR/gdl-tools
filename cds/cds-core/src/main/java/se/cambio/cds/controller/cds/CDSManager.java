@@ -76,7 +76,7 @@ public class CDSManager {
         //TODO Predicates, element selection
         for (ArchetypeReference ar : ars) {
             ArchetypeReference preAR = resultARsMap.get(ar.getIdArchetype());
-            if (preAR==null || preAR.getAggregationFunction()!=null){
+            if (preAR==null){
                 resultARsMap.put(ar.getIdArchetype(), ar);
             }
         }

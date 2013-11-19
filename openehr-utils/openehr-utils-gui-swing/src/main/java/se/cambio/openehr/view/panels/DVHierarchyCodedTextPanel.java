@@ -34,8 +34,8 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
 
     public DVHierarchyCodedTextPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
         super(idElement, idTemplate, allowNull, requestFocus);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        this.add(getCodedTextButton());
+        this.setLayout(new BorderLayout());
+        this.add(getCodedTextButton(), BorderLayout.CENTER);
         selectedCodes = new ArrayList<String>();
     }
 

@@ -1,31 +1,20 @@
 
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.Window;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.util.GDLLoadingUtility;
+import se.cambio.cds.gdl.editor.view.panels.SplashPanel;
+import se.cambio.openehr.controller.InitialLoadingObservable;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Future;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
-import se.cambio.cds.gdl.editor.util.GDLLoadingUtility;
-import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.panels.SplashPanel;
-import se.cambio.openehr.controller.InitialLoadingObservable;
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 /**
  * @author icorram
  *
@@ -33,7 +22,7 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class DialogSplash extends JDialog implements Observer{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -2310821412359230220L;
     private JProgressBar jProgressBar = null;
@@ -48,37 +37,37 @@ public class DialogSplash extends JDialog implements Observer{
     private boolean _loading = false;
     private JButton closeButton;
     private static Integer NUM_OBJ_TO_LOAD = 4;
-    
+
     /**
      * This method initializes 
-     * 
+     *
      */
     public DialogSplash(Window owner, boolean loading) {
-	super(owner, "", ModalityType.APPLICATION_MODAL);
-	_description = "";
-	_loading = loading;
-	initialize();
+        super(owner, "", ModalityType.APPLICATION_MODAL);
+        _description = "";
+        _loading = loading;
+        initialize();
     }
     /**
      * This method initializes this
      */
     private void initialize() {
-	Dimension screenSize =
-		Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension labelSize = this.getSize();
-	this.setSize(633, 416);
-	int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-	int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-	this.setLocation(locx,locy);
-	this.setContentPane(getJPanel1());
-	this.setUndecorated(true);
+        Dimension screenSize =
+                Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension labelSize = this.getSize();
+        this.setSize(633, 416);
+        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
+        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
+        this.setLocation(locx,locy);
+        this.setContentPane(getJPanel1());
+        this.setUndecorated(true);
     }
 
     public void changeLoadingText(String description){
-	_description = description;
-	getSplashLabel().setText(_description);
-	this.repaint();
-	this.validate();
+        _description = description;
+        getSplashLabel().setText(_description);
+        this.repaint();
+        this.validate();
     }
 
     /*
@@ -90,12 +79,12 @@ public class DialogSplash extends JDialog implements Observer{
     }*/
 
     public void stop(){
-	//_isProgresoActivo = false;
-	_progressValue = -100;
-	_currentThread = null;
-	InitialLoadingObservable.getDelegate().deleteObserver(this);
-	getCancelButton().setVisible(false);
-	this.setVisible(false);
+        //_isProgresoActivo = false;
+        _progressValue = -100;
+        _currentThread = null;
+        InitialLoadingObservable.getDelegate().deleteObserver(this);
+        getCancelButton().setVisible(false);
+        this.setVisible(false);
     }
 
     /*
@@ -107,52 +96,52 @@ public class DialogSplash extends JDialog implements Observer{
     }*/
 
     public void setCurrentThread(Future<?> currentThread){
-	_currentThread = currentThread;
-	getCancelButton().setVisible(true);
+        _currentThread = currentThread;
+        getCancelButton().setVisible(true);
     }
 
     public Future<?> getCurrentThread(){
-	return _currentThread;
+        return _currentThread;
     }
 
     private JButton getCancelButton(){
-	if (cancelButton==null){
-	    cancelButton = new JButton(OpenEHRLanguageManager.getMessage("Cancel"));
-	    cancelButton.setIcon(OpenEHRImageUtil.STOP_ICON);
-	    cancelButton.setBackground(null);
-	    cancelButton.setBorder(BorderFactory.createEmptyBorder());
-	    cancelButton.setVisible(false);
-	    cancelButton.setFocusable(false);
-	    cancelButton.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    _currentThread.cancel(true);
-		    stop();
-		}
-	    });
-	}
-	return cancelButton;
+        if (cancelButton==null){
+            cancelButton = new JButton(OpenEHRLanguageManager.getMessage("Cancel"));
+            cancelButton.setIcon(OpenEHRImageUtil.STOP_ICON);
+            cancelButton.setBackground(null);
+            cancelButton.setBorder(BorderFactory.createEmptyBorder());
+            cancelButton.setVisible(false);
+            cancelButton.setFocusable(false);
+            cancelButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    _currentThread.cancel(true);
+                    stop();
+                }
+            });
+        }
+        return cancelButton;
     }
 
 
     private JLabel getSplashLabel(){
-	if (jLabel2 == null){
-	    jLabel2 = new JLabel();
-	}
-	return jLabel2;
+        if (jLabel2 == null){
+            jLabel2 = new JLabel();
+        }
+        return jLabel2;
     }
 
     /**
      * This method initializes jProgressBar	
-     * 	
-     * @return javax.swing.JProgressBar	
-     */    
+     *
+     * @return javax.swing.JProgressBar
+     */
     private JProgressBar getJProgressBar() {
-	if (jProgressBar == null) {
-	    jProgressBar = new JProgressBar();
-	    jProgressBar.setName("jProgressBar");
-	    jProgressBar.setPreferredSize(new java.awt.Dimension(300,20));
-	}
-	return jProgressBar;
+        if (jProgressBar == null) {
+            jProgressBar = new JProgressBar();
+            jProgressBar.setName("jProgressBar");
+            jProgressBar.setPreferredSize(new java.awt.Dimension(300,20));
+        }
+        return jProgressBar;
     }
 
     /* (non-Javadoc)
@@ -160,22 +149,22 @@ public class DialogSplash extends JDialog implements Observer{
      */
 
     public void update() {
-	getSplashLabel().setText(_description);
-	_progressValue =  (int)(100*getTotalLoadingProgress());
-	if (_progressValue>=0){
-	    //getJProgressBar().setVisible(true);
-	    getJProgressBar().setValue(_progressValue);
-	}
+        getSplashLabel().setText(_description);
+        _progressValue =  (int)(100*getTotalLoadingProgress());
+        if (_progressValue>=0){
+            //getJProgressBar().setVisible(true);
+            getJProgressBar().setValue(_progressValue);
+        }
     }
 
     public static Double getTotalLoadingProgress(){
-	return ((double)InitialLoadingObservable.getNumLoaded()/NUM_OBJ_TO_LOAD) + 
-		InitialLoadingObservable.getCurrentStageProgress()/NUM_OBJ_TO_LOAD;
+        return ((double)InitialLoadingObservable.getNumLoaded()/NUM_OBJ_TO_LOAD) +
+                InitialLoadingObservable.getCurrentStageProgress()/NUM_OBJ_TO_LOAD;
     }
     @Override
     public void update(Observable o, Object arg) {
-	_description = GDLLoadingUtility.getCurrentLoadingStageName();
-	update();
+        _description = GDLLoadingUtility.getCurrentLoadingStageName();
+        update();
     }
 
 
@@ -200,47 +189,47 @@ public class DialogSplash extends JDialog implements Observer{
      */
     /**
      * This method initializes jPanel1	
-     * 	
-     * @return javax.swing.JPanel	
-     */    
+     *
+     * @return javax.swing.JPanel
+     */
     private JPanel getJPanel1() {
-	if (jPanel1 == null) {
-	    jPanel1 = new JPanel(new BorderLayout());
-	    jPanel1.setBackground(Color.WHITE);
-	    jPanel1.add(new SplashPanel(), BorderLayout.CENTER);
-	    JPanel panelAux = new JPanel(new BorderLayout(5,5));
-	    panelAux.setBackground(Color.WHITE);
-	    jPanel1.add(panelAux, BorderLayout.SOUTH);
-	    panelAux.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
-	    if (_loading){
-		panelAux.add(getSplashLabel(), BorderLayout.NORTH);
-		panelAux.add(getJProgressBar(), BorderLayout.CENTER);
-	    }else{
-		JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		panelAux2.setBackground(Color.WHITE);
-		panelAux2.add(getCloseButton());
-		panelAux.add(panelAux2, BorderLayout.CENTER);
-	    }
-	}
-	return jPanel1;
+        if (jPanel1 == null) {
+            jPanel1 = new JPanel(new BorderLayout());
+            jPanel1.setBackground(Color.WHITE);
+            jPanel1.add(new SplashPanel(), BorderLayout.CENTER);
+            JPanel panelAux = new JPanel(new BorderLayout(5,5));
+            panelAux.setBackground(Color.WHITE);
+            jPanel1.add(panelAux, BorderLayout.SOUTH);
+            panelAux.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
+            if (_loading){
+                panelAux.add(getSplashLabel(), BorderLayout.NORTH);
+                panelAux.add(getJProgressBar(), BorderLayout.CENTER);
+            }else{
+                JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                panelAux2.setBackground(Color.WHITE);
+                panelAux2.add(getCloseButton());
+                panelAux.add(panelAux2, BorderLayout.CENTER);
+            }
+        }
+        return jPanel1;
     }
-    
+
     public JButton getCloseButton(){
-	if (closeButton==null){
-	    closeButton = new JButton(GDLEditorLanguageManager.getMessage("Close"));
-	    closeButton.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            setVisible(false);
-	            dispose();
-	        }
-	    });
-	}
-	return  closeButton;
+        if (closeButton==null){
+            closeButton = new JButton(GDLEditorLanguageManager.getMessage("Close"));
+            closeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    setVisible(false);
+                    dispose();
+                }
+            });
+        }
+        return  closeButton;
     }
 
     public static void main(String[] args){
-	new DialogSplash(null, false).setVisible(true);
+        new DialogSplash(null, false).setVisible(true);
     }
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

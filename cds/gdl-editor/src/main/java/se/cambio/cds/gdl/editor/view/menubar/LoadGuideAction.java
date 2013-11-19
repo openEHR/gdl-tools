@@ -6,32 +6,30 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 
 
 public class LoadGuideAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3561842193285119707L;
 
     public LoadGuideAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("LoadGuide")+"...");
-	putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideD"));
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("LoadGuide")+"...");
+        putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
     }
 
@@ -39,11 +37,13 @@ public class LoadGuideAction extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	if (EditorManager.getActiveGDLEditor().isOKToExit()){
-	    new LoadGuideFromFileRSW().execute();
-	}
+        EditorManager.getActiveGDLEditor().runIfOKToExit(new Runnable() {
+            @Override
+            public void run() {
+                new LoadGuideFromFileRSW().execute();
+            }
+        });
     }
-
 
 }
 /*

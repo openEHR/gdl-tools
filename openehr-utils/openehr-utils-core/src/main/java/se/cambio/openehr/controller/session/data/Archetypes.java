@@ -25,6 +25,7 @@ public class Archetypes {
     }
 
     public static void loadArchetypes() throws InternalErrorException{
+        init();
         Collection<ArchetypeDTO> archetypeDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllArchetypes();
         loadArchetypes(archetypeDTOs);
@@ -39,6 +40,10 @@ public class Archetypes {
     public static void loadArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException{
         OpenEHRObjectBundleManager.generateArchetypesObjectBundles(Collections.singleton(archetypeDTO));
         registerArchertype(archetypeDTO);
+    }
+
+    public static void removeArchetype(String archetypeId) throws InternalErrorException{
+        getArchetypeDTOMap().remove(archetypeId);
     }
 
     private static void init(){

@@ -7,6 +7,7 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
@@ -48,6 +49,12 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
             if (result != JFileChooser.CANCEL_OPTION){
                 _guideFile = fileChooser.getSelectedFile();
             }
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
+                }
+            });
         }
     }
 
@@ -71,16 +78,22 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
 
 
     protected void done() {
-        if (_editor!=null){
-            if (GDLEditor.checkParsedGuide(_guideStr, _editor.getGuide())){
-                EditorManager.setLastFileLoaded(_guideFile);
-                EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
-                try {
-                    EditorManager.initController(_editor);
-                } catch (InternalErrorException e) {
-                    ExceptionHandler.handle(e);
+        try{
+            if (_editor!=null){
+                if (GDLEditor.checkParsedGuide(_guideStr, _editor.getGuide())){
+                    EditorManager.setLastFileLoaded(_guideFile);
+                    EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
+                    try {
+                        EditorManager.initController(_editor);
+                    } catch (InternalErrorException e) {
+                        ExceptionHandler.handle(e);
+                    }
                 }
             }
+        }catch (Throwable th){
+            ExceptionHandler.handle(th);
+        }finally{
+            WindowManager.setFree();
         }
     }
 }

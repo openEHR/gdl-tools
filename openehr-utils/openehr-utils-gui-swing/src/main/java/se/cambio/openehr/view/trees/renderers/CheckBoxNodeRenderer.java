@@ -6,23 +6,17 @@
  */
 package se.cambio.openehr.view.trees.renderers;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Icon;
-import javax.swing.JCheckBox;
-import javax.swing.JTree;
-import javax.swing.UIManager;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
-
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
 import se.cambio.openehr.view.util.MultipleIcon;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author icorram
@@ -36,122 +30,122 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
 
 
     Color selectionBorderColor, selectionForeground, selectionBackground,
-    textForeground, textBackground;
+            textForeground, textBackground;
 
     public JCheckBox getLeafRenderer() {
-	return leafRenderer;
+        return leafRenderer;
     }
 
     public SelectableNode<?> getNodoSeleccionable() {
-	return _nodoSeleccionable;
+        return _nodoSeleccionable;
     }
 
     public CheckBoxNodeRenderer() {
-	Boolean booleanValue = (Boolean) UIManager.get("Tree.drawsFocusBorderAroundIcon");
-	leafRenderer.setFocusPainted((booleanValue != null)
-		&& (booleanValue.booleanValue()));
-	leafRenderer.addActionListener(new CheckBoxNodeActionListener());
-	selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
-	selectionForeground = UIManager.getColor("Tree.selectionForeground");
-	selectionBackground = UIManager.getColor("Tree.selectionBackground");
-	textForeground = UIManager.getColor("Tree.textForeground");
-	textBackground = UIManager.getColor("Tree.textBackground");
+        Boolean booleanValue = (Boolean) UIManager.get("Tree.drawsFocusBorderAroundIcon");
+        leafRenderer.setFocusPainted((booleanValue != null)
+                && (booleanValue.booleanValue()));
+        leafRenderer.addActionListener(new CheckBoxNodeActionListener());
+        selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
+        selectionForeground = UIManager.getColor("Tree.selectionForeground");
+        selectionBackground = UIManager.getColor("Tree.selectionBackground");
+        textForeground = UIManager.getColor("Tree.textForeground");
+        textBackground = UIManager.getColor("Tree.textBackground");
     }
 
     @SuppressWarnings("unchecked")
     public Component getTreeCellRendererComponent(JTree tree, Object value,
-	    boolean selected, boolean expanded, boolean leaf, int row,
-	    boolean hasFocus) {
+                                                  boolean selected, boolean expanded, boolean leaf, int row,
+                                                  boolean hasFocus) {
 
-	//Boolean visible = getNodoSeleccionable().getVisible();
-	//leafRenderer.setVisible(visible);
-	//if (!visible) return leafRenderer;
-	if (value instanceof SelectableNode<?>){
+        //Boolean visible = getNodoSeleccionable().getVisible();
+        //leafRenderer.setVisible(visible);
+        //if (!visible) return leafRenderer;
+        if (value instanceof SelectableNode<?>){
 	    /*
 			Object strValue = tree.convertValueToText(value, selected,
 					expanded, leaf, row, false);
 	     */
-	    SelectableNode<?> nodo = (SelectableNode<?>)value;
-	    leafRenderer.setText(nodo.getDescripcion());
-	    leafRenderer.setToolTipText(nodo.getToolTip());
-	    tree.setToolTipText(nodo.getToolTip());
-	}
-	leafRenderer.setSelected(false);
-	leafRenderer.setEnabled(tree.isEnabled());
-	if (selected) {
-	    leafRenderer.setForeground(selectionForeground);
-	    leafRenderer.setBackground(selectionBackground);
-	} else {
-	    leafRenderer.setForeground(textForeground);
-	    leafRenderer.setBackground(textBackground);
-	}
+            SelectableNode<?> nodo = (SelectableNode<?>)value;
+            leafRenderer.setText(nodo.getDescripcion());
+            leafRenderer.setToolTipText(nodo.getToolTip());
+            tree.setToolTipText(nodo.getToolTip());
+        }
+        leafRenderer.setSelected(false);
+        leafRenderer.setEnabled(tree.isEnabled());
+        if (selected) {
+            leafRenderer.setForeground(selectionForeground);
+            leafRenderer.setBackground(selectionBackground);
+        } else {
+            leafRenderer.setForeground(textForeground);
+            leafRenderer.setBackground(textBackground);
+        }
 
 
-	if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
-	    if (value instanceof SelectableNode<?>) {
-		SelectableNode<E> node = (SelectableNode<E>) value;
-		_nodoSeleccionable = node;
-		leafRenderer.setText(node.getDescripcion());
-		Font fontValue = UIManager.getFont("Tree.font");
-		if (fontValue != null) {
-		    leafRenderer.setFont(fontValue);
-		}
-		if (node.isCursiva()){
-		    leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.ITALIC));
-		}
-		if (node.isBold()){
-		    leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.BOLD));
-		}
-		if (node.getForeground()!=null){
-		    leafRenderer.setForeground(node.getForeground());
-		}
-		if (!node.getSeleccionUnica()){
-		    Icon selectedIcon = OpenEHRImageUtil.ACCEPT_ICON;
-		    Icon unSelectedIcon = OpenEHRImageUtil.UNACCEPT_ICON;
-		    Icon halfSelectedIcon = OpenEHRImageUtil.HALF_ACCEPT_ICON;
-		    if (value instanceof SelectableNodeWithIcon<?>){
-			selectedIcon = new MultipleIcon( new Icon[]{
-				selectedIcon, 
-				((SelectableNodeWithIcon<?>)value).getIcono()});
-			unSelectedIcon = new MultipleIcon( new Icon[]{
-				unSelectedIcon,
-				((SelectableNodeWithIcon<?>)value).getIcono()});
-			halfSelectedIcon = new MultipleIcon( new Icon[]{
-				halfSelectedIcon,
-				((SelectableNodeWithIcon<?>)value).getIcono()});
-		    }
-		    //leafRenderer.setIcon(new MultipleIcon(unSelectedicons));
-		    leafRenderer.setSelectedIcon(selectedIcon);
-		    leafRenderer.setDisabledSelectedIcon(unSelectedIcon);
-		    if (node.getSeleccionado().booleanValue()){
-			leafRenderer.setIcon(selectedIcon);
-		    } else if (node.getContineneSeleccionado()){
-			leafRenderer.setIcon(halfSelectedIcon);
-		    }else{
-			leafRenderer.setIcon(unSelectedIcon);
-		    } 
-		}else{
-		    Icon icono = OpenEHRImageUtil.EMPTY_ICON;
-		    if (value instanceof SelectableNodeWithIcon<?>){
-			icono = ((SelectableNodeWithIcon<?>)value).getIcono();
-		    }
-		    leafRenderer.setIcon(icono);
-		    leafRenderer.setSelectedIcon(icono);
-		    leafRenderer.setDisabledSelectedIcon(icono);
-		}
-		leafRenderer.setDisabledIcon(leafRenderer.getIcon());
-		leafRenderer.setSelected(node.getSeleccionado().booleanValue());
-	    }
+        if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
+            if (value instanceof SelectableNode<?>) {
+                SelectableNode<E> node = (SelectableNode<E>) value;
+                _nodoSeleccionable = node;
+                leafRenderer.setText(node.getDescripcion());
+                Font fontValue = UIManager.getFont("Tree.font");
+                if (fontValue != null) {
+                    leafRenderer.setFont(fontValue);
+                }
+                if (node.isCursiva()){
+                    leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.ITALIC));
+                }
+                if (node.isBold()){
+                    leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.BOLD));
+                }
+                if (node.getForeground()!=null){
+                    leafRenderer.setForeground(node.getForeground());
+                }
+                if (!node.getSeleccionUnica()){
+                    Icon selectedIcon = OpenEHRImageUtil.ACCEPT_ICON;
+                    Icon unSelectedIcon = OpenEHRImageUtil.UNACCEPT_ICON;
+                    Icon halfSelectedIcon = OpenEHRImageUtil.HALF_ACCEPT_ICON;
+                    if (value instanceof SelectableNodeWithIcon<?>){
+                        selectedIcon = new MultipleIcon( new Icon[]{
+                                selectedIcon,
+                                ((SelectableNodeWithIcon<?>)value).getIcono()});
+                        unSelectedIcon = new MultipleIcon( new Icon[]{
+                                unSelectedIcon,
+                                ((SelectableNodeWithIcon<?>)value).getIcono()});
+                        halfSelectedIcon = new MultipleIcon( new Icon[]{
+                                halfSelectedIcon,
+                                ((SelectableNodeWithIcon<?>)value).getIcono()});
+                    }
+                    //leafRenderer.setIcon(new MultipleIcon(unSelectedicons));
+                    leafRenderer.setSelectedIcon(selectedIcon);
+                    leafRenderer.setDisabledSelectedIcon(unSelectedIcon);
+                    if (node.getSeleccionado().booleanValue()){
+                        leafRenderer.setIcon(selectedIcon);
+                    } else if (node.getContineneSeleccionado()){
+                        leafRenderer.setIcon(halfSelectedIcon);
+                    }else{
+                        leafRenderer.setIcon(unSelectedIcon);
+                    }
+                }else{
+                    Icon icono = OpenEHRImageUtil.EMPTY_ICON;
+                    if (value instanceof SelectableNodeWithIcon<?>){
+                        icono = ((SelectableNodeWithIcon<?>)value).getIcono();
+                    }
+                    leafRenderer.setIcon(icono);
+                    leafRenderer.setSelectedIcon(icono);
+                    leafRenderer.setDisabledSelectedIcon(icono);
+                }
+                leafRenderer.setDisabledIcon(leafRenderer.getIcon());
+                leafRenderer.setSelected(node.getSeleccionado().booleanValue());
+            }
 
-	}
-	return leafRenderer;
+        }
+        return leafRenderer;
     }
 
     class CheckBoxNodeActionListener implements ActionListener{
 
-	public void actionPerformed(ActionEvent e) {
-	    _nodoSeleccionable.cambioEstado(_nodoSeleccionable);
-	}
+        public void actionPerformed(ActionEvent e) {
+            _nodoSeleccionable.cambioEstado(_nodoSeleccionable);
+        }
     }
 }
 /*
