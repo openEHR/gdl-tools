@@ -890,7 +890,11 @@ public class GDLDroolsConverter {
             }
         } else if (expressionItem instanceof Variable) {
             Variable var = (Variable) expressionItem;
-            String rmName = elementMap.get(var.getCode()).getRMType();
+            ArchetypeElementVO aeVO = elementMap.get(var.getCode());
+            if (aeVO==null){
+                throw new InternalErrorException(new Exception("Archetype element not found for gtode '"+var.getCode()+"'"));
+            }
+            String rmName = aeVO.getRMType();
             sb.append(getVariableWithAttributeStr(rmName, var));
             if (isFunction(var.getAttribute())){
                 stats.get(RefStat.ATT_FUNCTIONS).add(var.getCode()+CODE_FUNCTION_SEPARATOR+var.getAttribute());

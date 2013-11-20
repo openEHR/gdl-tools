@@ -22,8 +22,10 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin{
     public String getExportedGuide(Guide guide) throws InternalErrorException {
         try{
             return new GDLDroolsConverter(guide).convertToDrools();
+        }catch (InternalErrorException e) {
+            throw new GuideCompilationException(guide.getId(), e);
         }catch (Throwable th) {
-            throw new GuideCompilationException(guide.getId(), th);
+            throw new GuideCompilationException(guide.getId(), new Exception(th)); //TODO
         }
     }
 

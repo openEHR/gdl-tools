@@ -250,7 +250,9 @@ public class GuideImporter {
                 DataValueRuleLineElement dataValueRuleLineElement = sedvar.getDataValueRuleLineElement();
                 String dvStr = ((ConstantExpression)expressionItemAux).getValue();
                 ArchetypeElementVO archetypeElementVO = gtCodeELementMap.get(gtCode).getArchetypeElement();
-
+                if (archetypeElementVO==null){
+                    throw new InternalErrorException(new Exception("Archetype element not found for gtCode '"+gtCode+"'"));
+                }
                 log.debug("processAssigmentExpression for varialbe: " + gtCode);
 
                 String rmType = archetypeElementVO.getRMType();
@@ -331,6 +333,9 @@ public class GuideImporter {
                         ArchetypeElementVO archetypeElementVO = null;
                         if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)){
                             archetypeElementVO = gtCodeELementMap.get(gtCodeRuleLineElement.getValue()).getArchetypeElement();
+                            if (archetypeElementVO==null){
+                                throw new InternalErrorException(new Exception("Archetype element not found for gtCode '"+gtCodeRuleLineElement.getValue()+"'"));
+                            }
                             rmType = archetypeElementVO.getRMType();
                             if (OpenEHRDataValues.DV_TEXT.equals(rmType) &&
                                     (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))){

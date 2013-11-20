@@ -5,8 +5,8 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 public class GuideCompilationException extends InternalErrorException {
     private static final long serialVersionUID = 1L;
     private String _guideId = null;
-    public GuideCompilationException(String guideId, Throwable th){
-        super(new Exception(th.getMessage()));
+    public GuideCompilationException(String guideId, Exception e){
+        super(e);
         _guideId = guideId;
     }
 

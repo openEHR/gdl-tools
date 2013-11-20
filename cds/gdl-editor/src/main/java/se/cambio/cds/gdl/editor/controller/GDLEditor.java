@@ -852,7 +852,12 @@ public class GDLEditor {
     }
 
     private void runIfOkWithEditorState(Runnable pendingRunnable){
-        Component comp = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
+        Component comp = null;
+        try{
+            comp = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
+        }catch (Exception e){
+            ExceptionHandler.handle(e);   //TODO
+        }
         runIfOkWithEditorState(comp, pendingRunnable);
     }
 

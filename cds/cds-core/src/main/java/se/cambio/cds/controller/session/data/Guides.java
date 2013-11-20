@@ -1,11 +1,14 @@
 package se.cambio.cds.controller.session.data;
 
+import org.apache.log4j.Logger;
+import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.ResourceDescriptionItem;
 import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
 import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegateFactory;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.util.comparators.GuidesComparator;
+import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -91,6 +94,15 @@ public class Guides {
             }
         }
         return inactiveGuideIds;
+    }
+
+    public static Collection<Guide> getAllGuideObjects(){
+        ArrayList<Guide> guides = new ArrayList<Guide>();
+        for (GuideDTO guideDTO: getAllGuides()){
+            Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
+            guides.add(guide);
+        }
+        return guides;
     }
 
     public static boolean isActive(String guideId){
