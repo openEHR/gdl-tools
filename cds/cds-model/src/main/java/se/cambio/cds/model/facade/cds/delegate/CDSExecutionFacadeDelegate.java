@@ -1,8 +1,5 @@
 package se.cambio.cds.model.facade.cds.delegate;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
@@ -11,6 +8,9 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
+
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * @author iago.corbal
@@ -29,8 +29,7 @@ public interface CDSExecutionFacadeDelegate {
             String ehrId,
             Collection<String> guideIds,
             Collection<ArchetypeReference> ehrData,
-            Calendar date,
-            ExecutionMode executionMode)
+            Calendar date)
             throws InternalErrorException, PatientNotFoundException;
 
     public Collection<RuleExecutionResult> execute(
