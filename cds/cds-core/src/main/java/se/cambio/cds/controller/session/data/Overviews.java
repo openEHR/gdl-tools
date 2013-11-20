@@ -6,6 +6,7 @@ import se.cambio.cds.model.util.comparators.GuidesComparator;
 import se.cambio.cds.model.util.comparators.OverviewComparator;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
@@ -23,6 +24,16 @@ public class Overviews {
         Collection<OverviewDTO> overviewDTOs = adminFD.searchAllOverviews();
         loadOverviews(overviewDTOs);
     }
+
+    public static void loadOverviewsById(Collection<String> overviewIds) throws InternalErrorException, InstanceNotFoundException {
+        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
+        for (String overviewId : overviewIds){
+            OverviewDTO overviewDTO = adminFD.searchOverview(overviewId);   //TODO Load all in one call
+            registerOverview(overviewDTO);
+        }
+    }
+
+
 
     public static void loadOverviews(Collection<OverviewDTO> overviewDTOs) throws InternalErrorException{
         init();

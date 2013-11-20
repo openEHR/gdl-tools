@@ -254,7 +254,7 @@ public class CMImportExportManager {
             Archetypes.loadArchetypes(archetypeDTOs);
             Templates.loadTemplates(templateDTOs);
             Terminologies.loadTerminologies(terminologyDTOs);
-            Guides.loadAllGuides(guideDTOs);
+            Guides.loadGuides(guideDTOs);
             Overviews.loadOverviews(overviewDTOs);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);

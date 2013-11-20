@@ -1,14 +1,12 @@
 package se.cambio.cds.controller.session.data;
 
-import org.apache.log4j.Logger;
-import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.ResourceDescriptionItem;
 import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
 import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegateFactory;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.util.comparators.GuidesComparator;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -29,13 +27,19 @@ public class Guides {
         getKeywordsMap().clear();
     }
 
-    public static void loadAllGuides() throws InternalErrorException{
+    public static void loadGuides() throws InternalErrorException{
         CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
         Collection<GuideDTO> guideDTOs = adminFD.searchAllGuides();
-        loadAllGuides(guideDTOs);
+        loadGuides(guideDTOs);
     }
 
-    public static void loadAllGuides(Collection<GuideDTO> guideDTOs) throws InternalErrorException{
+    public static void loadGuidesById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
+        CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
+        Collection<GuideDTO> guideDTOs = adminFD.searchByGuideIds(guideIds);
+        loadGuides(guideDTOs);
+    }
+
+    public static void loadGuides(Collection<GuideDTO> guideDTOs) throws InternalErrorException{
         init();
         for (GuideDTO guideDTO : guideDTOs) {
             registerGuide(guideDTO);
