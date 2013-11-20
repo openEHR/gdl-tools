@@ -94,7 +94,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
                     break;
                 }
             }catch(InvalidCodeException e){
-                Logger.getLogger(CSVTerminologyServicePlugin.class).warn("InvalidCodeException, code '"+code+"' ignored. "+e.getMessage());
+                Logger.getLogger(CSVTerminologyServicePlugin.class).warn("InvalidCodeException: checkSubclassOf('"+code+"','"+cp.getCodeString()+"') ignored. "+e.getMessage());
             }
         }
         return ret;
