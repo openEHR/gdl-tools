@@ -25,6 +25,14 @@ public interface CDSExecutionFacadeDelegate {
 	    ExecutionMode executionMode) 
 		    throws InternalErrorException, PatientNotFoundException;
 
+    public RuleExecutionResult execute(
+            String ehrId,
+            Collection<String> guideIds,
+            Collection<ArchetypeReference> ehrData,
+            Calendar date,
+            ExecutionMode executionMode)
+            throws InternalErrorException, PatientNotFoundException;
+
     public Collection<RuleExecutionResult> execute(
 	    Collection<String> ehrIds,
 	    Collection<String> guideIds,
