@@ -118,6 +118,13 @@ public class TemplateListTable extends JXTable{
         return true;
     }
 
+    public void deleteRow(int row){
+        if (_originalDataValueGroups!=null){
+            _originalDataValueGroups.remove(row);
+        }
+        fireTableChanged();
+    }
+
     public void fireTableChanged(){
         getTemplateListTableModel().fireTableDataChanged();
     }

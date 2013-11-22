@@ -21,6 +21,11 @@ public final class EHRConnectorConfigurationParametersManager {
 
     private static final String JNDI_PREFIX = "java:comp/env/";
 
+    public static final String EHR_USERNAME = "EhrUsername";
+    public static final String EHR_PASSWORD = "EhrPassword";
+    public static final String EHR_HOST = "EhrHost";
+    public static final String EHR_PORT = "EhrPort";
+    public static final String EHR_NAMESPACE = "EhrSubjectNamespace";
     public static final String REMOTE_LOGGER_URL= "RemoteLoggerURL";
     private static final String CONFIGURATION_FILE = "EHRService.properties";
     private static final String CONFIGURATION_FOLDER = "conf";

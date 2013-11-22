@@ -73,7 +73,6 @@ public class OpenEHRInitialContext {
             ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
             EJBClientContext.setSelector(selector);
         }
-
         Properties props = new Properties();
         props.put(InitialContext.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
         return new InitialContext(props);

@@ -165,7 +165,7 @@ public class EJBOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministra
         }
     }
     private static String getLookupName() {
-        String beanName = OpenEHRAdministrationFacadeBean.class.getSimpleName();
+        String beanName = "OpenEHRAdministrationFacadeBean";
         final String interfaceName = OpenEHRAdministrationFacade.class.getName();
         return "ejb:" + EJBConst.APP_NAME + "/" + EJBConst.MODULE_NAME + "//" +
                 beanName + "!" + interfaceName;

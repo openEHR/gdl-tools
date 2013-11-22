@@ -34,6 +34,7 @@ public interface CDSAdministrationFacadeDelegate {
     
     public Collection<OverviewDTO> searchAllOverviews() throws InternalErrorException;
 
+    //TODO input argument should be a collection
     public OverviewDTO searchOverview(String overviewId) throws InternalErrorException, InstanceNotFoundException;
 
     public int getOverviewsHashCode() throws InternalErrorException;

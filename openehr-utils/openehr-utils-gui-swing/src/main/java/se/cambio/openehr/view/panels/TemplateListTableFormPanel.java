@@ -91,7 +91,7 @@ public class TemplateListTableFormPanel extends JPanel implements TemplateTableC
                     if (_dataValuesGroupVOs.size()>row){
                         DataValuesGroupVO dataValuesGroupVO = _dataValuesGroupVOs.get(row);
                         _dataValuesGroupVOs.remove(row);
-                        getTemplateListTable().fireTableChanged();
+                        getTemplateListTable().deleteRow(row);
                         notifyDelete(dataValuesGroupVO);
                     }
                 }
