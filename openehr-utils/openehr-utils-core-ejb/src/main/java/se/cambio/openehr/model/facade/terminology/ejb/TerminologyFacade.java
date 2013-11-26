@@ -1,4 +1,5 @@
-package se.cambio.openehr.model.facade.terminology.delegate;
+
+package se.cambio.openehr.model.facade.terminology.ejb;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
@@ -7,36 +8,37 @@ import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
+import javax.ejb.Remote;
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 
-
 /**
- * @author iago.corbal
+ * @author icorram
  *
  */
-public interface TerminologyFacadeDelegate {
-    public boolean isSubclassOf(CodePhrase a, CodePhrase b) 
-	    throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException;
+@Remote
+public interface TerminologyFacade {
+    public boolean isSubclassOf(CodePhrase a, CodePhrase b)
+            throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException, RemoteException;
 
-    public boolean isSubclassOf(CodePhrase a, Set<CodePhrase> b) 
-	    throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException;
+    public boolean isSubclassOf(CodePhrase a, Set<CodePhrase> b)
+            throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException, RemoteException;
 
-    public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)  
-	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;
+    public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
+            throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException, RemoteException;
 
     public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
-	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException;
+            throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, RemoteException;
 
-    public String retrieveTerm(CodePhrase concept, CodePhrase language)  
-	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;
+    public String retrieveTerm(CodePhrase concept, CodePhrase language)
+            throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException, RemoteException;
 
-    public boolean isValidCodePhrase(CodePhrase cp) throws InternalErrorException;
+    public boolean isValidCodePhrase(CodePhrase cp) throws InternalErrorException, RemoteException;
 
-    public Collection<String> getSupportedTerminologies() throws InternalErrorException;
-
+    public Collection<String> getSupportedTerminologies() throws InternalErrorException, RemoteException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -1,39 +1,39 @@
 package se.cambio.cds.model.facade.execution.vo;
 
+import se.cambio.cds.model.instance.ArchetypeReference;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-import se.cambio.cds.model.instance.ElementInstance;
-
 public class RuleExecutionResult implements Serializable{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 30072012L;
     private String ehrId = null;
-    private Collection<ElementInstance> elementInstances = null;
+    private Collection<ArchetypeReference> ars = null;
     private List<ExecutionLog> log = null;
     private List<RuleReference> firedRules = null;
-    
+
     public RuleExecutionResult(
-	    String ehrId,
-	    Collection<ElementInstance> elementInstances,
-	    List<ExecutionLog> log,
-	    List<RuleReference> firedRules) {
-	super();
-	this.ehrId = ehrId;
-	this.elementInstances = elementInstances;
-	this.log = log;
-	this.firedRules = firedRules;
+            String ehrId,
+            Collection<ArchetypeReference> ars,
+            List<ExecutionLog> log,
+            List<RuleReference> firedRules) {
+        super();
+        this.ehrId = ehrId;
+        this.ars = ars;
+        this.log = log;
+        this.firedRules = firedRules;
     }
-    
+
     public String getEhrId() {
         return ehrId;
     }
-    public Collection<ElementInstance> getElementInstances() {
-        return elementInstances;
+    public Collection<ArchetypeReference> getArchetypeReferences() {
+        return ars;
     }
     public List<ExecutionLog> getLog() {
         return log;
@@ -41,7 +41,7 @@ public class RuleExecutionResult implements Serializable{
     public List<RuleReference> getFiredRules() {
         return firedRules;
     }
- }
+}
 /*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

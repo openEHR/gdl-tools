@@ -1,6 +1,7 @@
 package se.cambio.openehr.view.renderers;
 
 import org.openehr.rm.datatypes.basic.DataValue;
+import se.cambio.openehr.view.util.DataValueCellVO;
 import se.cambio.openehr.view.util.FormatConverter;
 
 import javax.swing.*;
@@ -12,18 +13,17 @@ import java.awt.*;
  * Date: 2013-11-17
  * Time: 12:50
  */
-public class DataValueRenderer  extends DefaultTableCellRenderer {
-
-    private boolean _mandatory = false;
-
-    public DataValueRenderer(boolean mandatory){
-        _mandatory = mandatory;
-    }
+public class DataValueCellVORenderer extends DefaultTableCellRenderer {
 
     @Override
     public void setValue(Object value) {
-        if (value instanceof DataValue){
-            DataValue dv = (DataValue)value;
+        DataValueCellVO dvCellVO = null;
+        DataValue dv = null;
+        if (value instanceof DataValueCellVO){
+            dvCellVO = (DataValueCellVO)value;
+            dv = dvCellVO.getDv();
+        }
+        if (dv!=null){
             String dvStr = FormatConverter.getReadableValue(dv);
             setText(dvStr);
             setToolTipText(dvStr);
@@ -32,9 +32,9 @@ public class DataValueRenderer  extends DefaultTableCellRenderer {
             setText(null);
             setToolTipText(null);
             setIcon(null);
-            if (_mandatory){
-                setBorder(BorderFactory.createLineBorder(Color.RED));
-            }
+        }
+        if (dvCellVO!=null && dvCellVO.isMandatory() && dv==null){
+            setBorder(BorderFactory.createLineBorder(Color.RED));
         }
     }
 }

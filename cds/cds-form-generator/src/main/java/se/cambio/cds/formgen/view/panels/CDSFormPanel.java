@@ -61,22 +61,22 @@ public class CDSFormPanel extends JPanel{
         inputPanel = null;
         _eigps.clear();
         if (elementInstances!=null){
-            addElements(getCompressedArchetypeReferencesForForm(elementInstances), true);
+            addArchetypeReferences(getCompressedArchetypeReferencesForForm(elementInstances), true);
         }
         init();
     }
 
-    public void setResultElements(Collection<ElementInstance> elementInstances){
+    public void setResultElements(Collection<ArchetypeReference> archetypeReferences){
         this.removeAll();
         resultPanel = null;
-        if (elementInstances!=null){
-            addElements(getCDSArchetypeReferences(elementInstances), false);
+        if (archetypeReferences!=null){
+            addArchetypeReferences(archetypeReferences, false);
         }
         getResultPanel().setVisible(true);
         init();
     }
 
-    private void addElements(Collection<ArchetypeReference> archetypeReferences, boolean input){
+    private void addArchetypeReferences(Collection<ArchetypeReference> archetypeReferences, boolean input){
         for (ArchetypeReference ar : archetypeReferences) {
             ElementInstanceGroupPanel eigp = new ElementInstanceGroupPanel(ar, _formGenerator.getTermDefinition(), input);
             eigp.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -278,7 +278,7 @@ public class CDSFormPanel extends JPanel{
 
     public void updateResults(RuleExecutionResult result){
         if (result!=null && result.getFiredRules()!=null){
-            setResultElements(result.getElementInstances());
+            setResultElements(result.getArchetypeReferences());
             int numRulesFired = result.getFiredRules().size();
             getExecutedRulesLabel().setText("("+numRulesFired+")");
             StringBuffer sb = new StringBuffer();

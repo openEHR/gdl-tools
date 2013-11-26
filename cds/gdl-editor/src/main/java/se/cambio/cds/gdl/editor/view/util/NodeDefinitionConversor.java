@@ -22,8 +22,7 @@ import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.*;
-import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
 
@@ -307,10 +306,14 @@ public class NodeDefinitionConversor {
     public static SelectableNode<Object> getNodeTerminologyIds(){
         SelectableNodeWithIcon<Object> root =
                 new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Terminologies"), null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
-        for (String terminologyId : OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies()) {
-            SelectableNodeWithIcon<Object> nodeAux =
-                    new SelectableNodeWithIcon<Object>(terminologyId, terminologyId, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
-            root.add(nodeAux);
+        try{
+            for (String terminologyId : OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies()) {
+                SelectableNodeWithIcon<Object> nodeAux =
+                        new SelectableNodeWithIcon<Object>(terminologyId, terminologyId, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
+                root.add(nodeAux);
+            }
+        }catch (InternalErrorException e){
+            ExceptionHandler.handle(e);
         }
         return root;
     }
@@ -318,28 +321,27 @@ public class NodeDefinitionConversor {
     public static SelectableNode<Object> getNodeAllTerminologyCodes(String terminologyId, Collection<String> selectedCodes){
         SelectableNodeWithIcon<Object> root =
                 new SelectableNodeWithIcon<Object>(terminologyId, null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
-        try {
-            List<TerminologyNodeVO> nodes = OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveAll(terminologyId, OpenEHRDataValuesUI.getLanguageCodePhrase());
-            if (nodes!=null){
-                Collections.sort(nodes, new Comparator<TerminologyNodeVO>() {
-                    @Override
-                    public int compare(TerminologyNodeVO o1, TerminologyNodeVO o2) {
-                        return o1.getValue().getDefiningCode().getCodeString().compareTo(o2.getValue().getDefiningCode().getCodeString());
-                    }
-                });
-                for (TerminologyNodeVO node : nodes) {
-                    root.add(getSelectableNodeTerminologyCodes(node, selectedCodes));
+        List<TerminologyNodeVO> nodes = null;
+        try{
+            nodes = OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveAll(terminologyId, OpenEHRDataValuesUI.getLanguageCodePhrase());
+        }catch (InternalErrorException e){
+            ExceptionHandler.handle(e);
+        }
+        if (nodes!=null){
+            Collections.sort(nodes, new Comparator<TerminologyNodeVO>() {
+                @Override
+                public int compare(TerminologyNodeVO o1, TerminologyNodeVO o2) {
+                    return o1.getValue().getDefiningCode().getCodeString().compareTo(o2.getValue().getDefiningCode().getCodeString());
                 }
+            });
+            for (TerminologyNodeVO node : nodes) {
+                root.add(getSelectableNodeTerminologyCodes(node, selectedCodes));
             }
-        } catch (UnsupportedTerminologyException e) {
-            ExceptionHandler.handle(e);
-        } catch (UnsupportedLanguageException e) {
-            ExceptionHandler.handle(e);
         }
         return root;
     }
 
-    public static SelectableNode<Object> getSelectableNodeTerminologyCodes(TerminologyNodeVO node, Collection<String> selectedCodes){
+    public static SelectableNode<Object> getSelectableNodeTerminologyCodes(TerminologyNodeVO node, Collection <String> selectedCodes){
         String code = node.getValue().getDefiningCode().getCodeString();
         SelectableNodeWithIcon<Object> selectableNode =
                 new SelectableNodeWithIcon<Object>(node.getValue().getValue() +" ("+code+")", node.getValue().getDefiningCode(), false, selectedCodes.contains(code), GDLEditorImageUtil.ONTOLOGY_ICON);

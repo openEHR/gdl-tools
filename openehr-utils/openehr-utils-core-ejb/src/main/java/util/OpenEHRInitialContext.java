@@ -1,4 +1,4 @@
-package se.cambio.openehr.util;
+package util;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb.client.ContextSelector;
@@ -20,25 +20,21 @@ import java.util.Properties;
  */
 public class OpenEHRInitialContext {
 
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_HOST = "OpenEHRServer/host";
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_PORT = "OpenEHRServer/port";
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_USER_LOGIN = "OpenEHRServer/login";
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_USER_PASSWD = "OpenEHRServer/password";
 
     public static String getOpenEHRServerHost() throws MissingConfigurationParameterException {
-        return OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_OPENEHR_SERVER_HOST);
+        return OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
     }
 
     public static String getOpenEHRServerPort() throws MissingConfigurationParameterException {
-        return OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_OPENEHR_SERVER_PORT);
+        return OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_PORT);
     }
 
     public static String getOpenEHRServerLogin() throws MissingConfigurationParameterException {
-        return OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_OPENEHR_SERVER_USER_LOGIN);
+        return OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_USER_LOGIN);
     }
 
     public static String getOpenEHRServerPassword() throws MissingConfigurationParameterException {
-        return OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_OPENEHR_SERVER_USER_PASSWD);
+        return OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_USER_PASSWD);
     }
 
     public static InitialContext getInitialContext() throws NamingException {

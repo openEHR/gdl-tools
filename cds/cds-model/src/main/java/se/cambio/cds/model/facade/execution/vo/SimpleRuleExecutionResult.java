@@ -1,20 +1,39 @@
-package se.cambio.openehr.util.exceptions;
+package se.cambio.cds.model.facade.execution.vo;
 
-/**
- * Root exception of all concrete exceptions thrown by terminology service
- * 
- * @author rong.chen
- *
- */
-public class TerminologyServiceException extends InternalErrorException {
-	/**
-     * 
+import se.cambio.cds.model.facade.cds.vo.DomainData;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class SimpleRuleExecutionResult implements Serializable{
+
+    /**
+     *
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 30072012L;
+    private String ehrId = null;
+    private DomainData cdsDomainData = null;
+    private List<RuleReference> firedRules = null;
 
-	public TerminologyServiceException(String message) {
-		super(new Exception(message));
-	}
+    public SimpleRuleExecutionResult(
+            String ehrId,
+            DomainData cdsDomainData,
+            List<RuleReference> firedRules) {
+        super();
+        this.ehrId = ehrId;
+        this.cdsDomainData = cdsDomainData;
+        this.firedRules = firedRules;
+    }
+
+    public String getEhrId() {
+        return ehrId;
+    }
+    public DomainData getCDSDomainData() {
+        return cdsDomainData;
+    }
+    public List<RuleReference> getFiredRules() {
+        return firedRules;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

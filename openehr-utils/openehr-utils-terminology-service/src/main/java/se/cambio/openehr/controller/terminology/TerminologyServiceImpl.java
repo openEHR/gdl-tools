@@ -87,6 +87,7 @@ public class TerminologyServiceImpl implements TerminologyService {
                 ExceptionHandler.handle(e);
             }
         }
+
         for (TerminologyDTO terminologyDTO : Terminologies.getAllTerminologies()) {
             try{
                 log.debug("Loading terminology : " + terminologyDTO.getTerminologyId());

@@ -26,7 +26,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
     public void init(InputStream is) throws InternalErrorException{
         try {
-            CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(is)));
+            CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(is, "UTF-8")));
             _parentsMap = new HashMap<String, ArrayList<String>>();
             _childrenMap = new HashMap<String, ArrayList<String>>();
             getDescriptionsMap().clear();

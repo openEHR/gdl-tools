@@ -11,10 +11,10 @@ import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegate;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
-import se.cambio.openehr.util.OpenEHRInitialContext;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 import util.EJBConst;
+import util.OpenEHRInitialContext;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

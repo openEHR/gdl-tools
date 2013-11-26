@@ -78,6 +78,8 @@ public class CDSManager {
             ArchetypeReference preAR = resultARsMap.get(ar.getIdArchetype());
             if (preAR==null){
                 resultARsMap.put(ar.getIdArchetype(), ar);
+            }else{
+                //TODO Merge additional missing references from EHR and ANY domain
             }
         }
         return resultARsMap.values();

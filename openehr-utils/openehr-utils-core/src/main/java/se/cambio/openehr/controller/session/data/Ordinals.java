@@ -15,90 +15,90 @@ public class Ordinals {
     private Map<String, Map<String, Map<Integer, OrdinalVO>>> _templateOrdinalsByTemplateIdAndId = null;
 
     private Ordinals(){
-	_ordinalByParentId = new HashMap<String, Map<Integer, OrdinalVO>>();
-	_templateOrdinalsByTemplateIdAndId = new HashMap<String, Map<String,Map<Integer,OrdinalVO>>>();
+        _ordinalByParentId = new HashMap<String, Map<Integer, OrdinalVO>>();
+        _templateOrdinalsByTemplateIdAndId = new HashMap<String, Map<String,Map<Integer,OrdinalVO>>>();
     }
 
     public static void loadOrdinals(Collection<OrdinalVO> ordinalVOs){
-	for (OrdinalVO ordinalVO : ordinalVOs) {
-	    registerOrdinal(ordinalVO);
-	}
+        for (OrdinalVO ordinalVO : ordinalVOs) {
+            registerOrdinal(ordinalVO);
+        }
     }
 
     public static void registerOrdinal(OrdinalVO ordinalVO){
-	if (ordinalVO.getIdTemplate()==null){
-	    getOrdinalMap(ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
-	}else{
-	    getOrdinalTemplateMap(ordinalVO.getIdTemplate(),ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
-	}
+        if (ordinalVO.getIdTemplate()==null){
+            getOrdinalMap(ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
+        }else{
+            getOrdinalTemplateMap(ordinalVO.getIdTemplate(),ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
+        }
     }
 
     public static OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, Integer value){
-	if (idTemplate==null){
-	    return getOrdinalMap(idParentArchetypeNode).get(value);
-	}else{
-	    return getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).get(value);
-	}
+        if (idTemplate==null){
+            return getOrdinalMap(idParentArchetypeNode).get(value);
+        }else{
+            return getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).get(value);
+        }
     }
 
     public static Collection<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode){
-	if (idTemplate==null){
-	    return new ArrayList<OrdinalVO>(getOrdinalMap(idParentArchetypeNode).values());
-	}else{
-	    return new ArrayList<OrdinalVO>(getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).values());
-	}
+        if (idTemplate==null){
+            return new ArrayList<OrdinalVO>(getOrdinalMap(idParentArchetypeNode).values());
+        }else{
+            return new ArrayList<OrdinalVO>(getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).values());
+        }
     }
 
     private static Map<String, Map<Integer, OrdinalVO>> getOrdinalTemplateMap(String idTemplate){
-	Map<String, Map<Integer,OrdinalVO>> map = getDelegate()._templateOrdinalsByTemplateIdAndId.get(idTemplate);
-	if (map==null){
-	    map = new HashMap<String, Map<Integer,OrdinalVO>>();
-	    getDelegate()._templateOrdinalsByTemplateIdAndId.put(idTemplate, map);
-	}
-	return map;
+        Map<String, Map<Integer,OrdinalVO>> map = getDelegate()._templateOrdinalsByTemplateIdAndId.get(idTemplate);
+        if (map==null){
+            map = new HashMap<String, Map<Integer,OrdinalVO>>();
+            getDelegate()._templateOrdinalsByTemplateIdAndId.put(idTemplate, map);
+        }
+        return map;
     }
 
     public static Map<Integer, OrdinalVO> getOrdinalTemplateMap(String idTemplate, String idParentArchetypeNode){
-	Map<Integer,OrdinalVO> map = getOrdinalTemplateMap(idTemplate).get(idParentArchetypeNode);
-	if (map==null){
-	    map = new HashMap<Integer,OrdinalVO>();
-	    getOrdinalTemplateMap(idTemplate).put(idParentArchetypeNode, map);
-	}
-	return map;
+        Map<Integer,OrdinalVO> map = getOrdinalTemplateMap(idTemplate).get(idParentArchetypeNode);
+        if (map==null){
+            map = new HashMap<Integer,OrdinalVO>();
+            getOrdinalTemplateMap(idTemplate).put(idParentArchetypeNode, map);
+        }
+        return map;
     }
 
     private static Map<Integer, OrdinalVO> getOrdinalMap(String idParentArchetypeNode){
-	Map<Integer, OrdinalVO> map = getDelegate()._ordinalByParentId.get(idParentArchetypeNode);
-	if (map==null){
-	    map = new HashMap<Integer, OrdinalVO>();
-	    getDelegate()._ordinalByParentId.put(idParentArchetypeNode, map);
-	}
-	return map;
+        Map<Integer, OrdinalVO> map = getDelegate()._ordinalByParentId.get(idParentArchetypeNode);
+        if (map==null){
+            map = new HashMap<Integer, OrdinalVO>();
+            getDelegate()._ordinalByParentId.put(idParentArchetypeNode, map);
+        }
+        return map;
     }
-    
+
     public static String getName(String idTemplate, String idElement, DvOrdinal dvOrdinal){
-	OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
-	if (ordinalVO!=null){
-	    return ordinalVO.getName();
-	}else{
-	    return dvOrdinal.getSymbolValue();
-	}
+        OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
+        if (ordinalVO!=null){
+            return ordinalVO.getName();
+        }else{
+            return dvOrdinal.getSymbolValue();
+        }
     }
-    
+
     public static String getDescription(String idTemplate, String idElement, DvOrdinal dvOrdinal){
-	OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
-	if (ordinalVO!=null){
-	    return ordinalVO.getDescription();
-	}else{
-	    return dvOrdinal.getSymbolValue();
-	}
+        OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
+        if (ordinalVO!=null){
+            return ordinalVO.getDescription();
+        }else{
+            return dvOrdinal.getSymbolValue();
+        }
     }
 
     public static Ordinals getDelegate(){
-	if (_instance == null){
-	    _instance = new Ordinals();
-	}
-	return _instance;
+        if (_instance == null){
+            _instance = new Ordinals();
+        }
+        return _instance;
     }
 }
 /*

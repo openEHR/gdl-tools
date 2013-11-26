@@ -23,6 +23,7 @@
 					<generateClient>true</generateClient>
 					<clientExcludes>
 						<clientExclude>**/*Bean.class</clientExclude>
+                        <clientExclude>*.properties</clientExclude>
 					</clientExcludes>
 					<!-- <excludes> <exclude>META-INF/maven/cds/cds-ejb/pom.xml</exclude> 
 						</excludes> <archive> <manifest> <addClasspath>true</addClasspath> <classpathPrefix>lib/</classpathPrefix> 

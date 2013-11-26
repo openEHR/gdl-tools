@@ -1,7 +1,6 @@
 package se.cambio.openehr.util.misc;
 
 import org.apache.log4j.Logger;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import javax.naming.InitialContext;
@@ -17,10 +16,10 @@ public final class OpenEHRConfigurationParametersManager {
     private static final String CONFIGURATION_FILE = "OpenEHRConfig.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
 
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_HOST = "OpenEHRServer/host";
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_PORT = "OpenEHRServer/port";
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_USER_LOGIN = "OpenEHRServer/login";
-    private static String DELEGATE_CLASS_OPENEHR_SERVER_USER_PASSWD = "OpenEHRServer/password";
+    public static String OPENEHR_SERVER_HOST = "OpenEHRServer/host";
+    public static String OPENEHR_SERVER_PORT = "OpenEHRServer/port";
+    public static String OPENEHR_SERVER_USER_LOGIN = "OpenEHRServer/login";
+    public static String OPENEHR_SERVER_USER_PASSWD = "OpenEHRServer/password";
 
     private static boolean usesJNDI;
     private static Map <Object,Object> parameters;

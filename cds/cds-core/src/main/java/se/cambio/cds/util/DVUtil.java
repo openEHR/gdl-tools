@@ -12,10 +12,9 @@ import org.openehr.rm.support.measurement.SimpleMeasurementService;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -273,11 +272,8 @@ public class DVUtil {
                 try {
                     boolean result= OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
                     return result;
-                } catch (UnsupportedTerminologyException e) {
-                    Logger.getLogger(DVUtil.class).warn("Unsuported terminolody '"+a.getTerminologyId()+"'");
-                    return false;
-                } catch (InvalidCodeException e) {
-                    Logger.getLogger(DVUtil.class).warn("Invalid code : '"+a.getCodeString()+"'");
+                } catch (InternalErrorException e) {
+                    ExceptionHandler.handle(e);
                     return false;
                 }
             }else{
@@ -321,11 +317,8 @@ public class DVUtil {
             if (a!=null && !codePhrases.isEmpty()){
                 try {
                     return !OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
-                } catch (UnsupportedTerminologyException e) {
-                    //TODO Remove, exceptions should be handled
-                    return false;
-                } catch (InvalidCodeException e) {
-                    //TODO Remove, exceptions should be handled
+                } catch (InternalErrorException e) {
+                    ExceptionHandler.handle(e);
                     return false;
                 }
             }else{

@@ -1,8 +1,8 @@
 package se.cambio.cds.util;
 
-import se.cambio.openehr.util.OpenEHRInitialContext;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class LocalCM {
     public static void loadLocalCM() throws InternalErrorException {
         String hostname = null;
         try{
-            hostname = OpenEHRInitialContext.getOpenEHRServerHost();
+            hostname = OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
         } catch (MissingConfigurationParameterException e) {
         }
         if (hostname==null){
@@ -38,7 +38,7 @@ public class LocalCM {
     public static void saveLocalCM() throws InternalErrorException {
         String hostname = null;
         try{
-            hostname = OpenEHRInitialContext.getOpenEHRServerHost();
+            hostname = OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
         } catch (MissingConfigurationParameterException e) {
         }
         try {

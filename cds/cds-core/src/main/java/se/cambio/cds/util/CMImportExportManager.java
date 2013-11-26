@@ -222,9 +222,9 @@ public class CMImportExportManager {
                         templateDTOs.add(new TemplateDTO(templateId, templateId, templateId, null, null, src, null, null));
                     }
                 }else if (entry.getName().startsWith(TERMINOLOGY_PREFIX) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
-                    String src = IOUtils.toString(in,"UTF-8");
+                    byte[] src = IOUtils.toByteArray(in);
                     String terminologyId = entry.getName().substring(TERMINOLOGY_PREFIX.length(), entry.getName().length()-TERMINOLOGY_POSTFIX.length());
-                    terminologyDTOs.add(new TerminologyDTO(terminologyId, src.getBytes()));
+                    terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
                 }else if (entry.getName().startsWith(OVERVIEWS_PREFIX) && entry.getName().endsWith(OVERVIEWS_POSTFIX)){
                     String src = IOUtils.toString(in,"UTF-8");
                     String overviewId = entry.getName().substring(OVERVIEWS_PREFIX.length(), entry.getName().length()-OVERVIEWS_POSTFIX.length());

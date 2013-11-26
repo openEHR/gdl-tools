@@ -32,10 +32,5 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.13</version>
 		</dependency>
-        <dependency>
-            <groupId>org.jboss</groupId>
-            <artifactId>jboss-ejb-client</artifactId>
-            <version>1.0.5.Final</version>
-        </dependency>
     </dependencies>
 </project>

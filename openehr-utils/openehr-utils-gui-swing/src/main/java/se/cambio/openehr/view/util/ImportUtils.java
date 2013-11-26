@@ -229,11 +229,11 @@ public class ImportUtils {
             fis = new FileInputStream(file);
             UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
             ubis.skipBOM();
-            String termSetSrc = IOUtils.toString(ubis, "UTF-8");
+            byte[] termSetSrc = IOUtils.toByteArray(ubis);
             String fileName = file.getName();
             String terminologyId = fileName.substring(0,fileName.length()-4);
             TerminologyDTO terminologyDTO =
-                    new TerminologyDTO(terminologyId,termSetSrc.getBytes());
+                    new TerminologyDTO(terminologyId,termSetSrc);
             return terminologyDTO;
         } catch (FileNotFoundException e) {
             throw new InternalErrorException(e);

@@ -17,10 +17,10 @@ public final class CDSConfigurationParametersManager {
     private static final String CONFIGURATION_FILE = "CDSSConfig.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
 
-    private static String DELEGATE_CLASS_CDS_SERVER_HOST = "CDSServer/host";
-    private static String DELEGATE_CLASS_CDS_SERVER_PORT = "CDSServer/port";
-    private static String DELEGATE_CLASS_CDS_SERVER_USER_LOGIN = "CDSServer/login";
-    private static String DELEGATE_CLASS_CDS_SERVER_USER_PASSWD = "CDSServer/password";
+    public static String CDS_SERVER_HOST = "CDSServer/host";
+    public static String CDS_SERVER_PORT = "CDSServer/port";
+    public static String CDS_SERVER_USER_LOGIN = "CDSServer/login";
+    public static String CDS_SERVER_USER_PASSWD = "CDSServer/password";
 
     private static boolean usesJNDI;
     private static Map <Object,Object> parameters;
