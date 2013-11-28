@@ -1,13 +1,15 @@
 package se.cambio.cds.gdl.editor.view;
 
 
-import se.cambio.cds.controller.execution.GuideExecutionManager;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.editor.view.frame.GDLEditorFrame;
+import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegateFactory;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.WindowManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.File;
 
@@ -23,7 +25,11 @@ public class InitGDLEditor {
             //Try to open the GDL File
             new LoadGuideFromFileRSW(new File(args[0])).execute();
         }
-        GuideExecutionManager.setUseCache(false);
+        try {
+            RuleExecutionFacadeDelegateFactory.getDelegate().setUseCache(false);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
+        }
     }
 }
 /*

@@ -69,7 +69,8 @@
 		</plugins>
 	</build>
 	<modules>
-		<module>cds-common</module>
+        <module>cds-common</module>
+        <module>cds-engine-drools</module>
 		<module>cds-model</module>
 		<module>gdl-model</module>
 		<module>cds-persistence</module>

@@ -5,7 +5,7 @@ import se.cambio.cds.formgen.view.panels.CDSFormPanel;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
-import se.cambio.cds.gdl.model.readable.GuideImporter;
+import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegate;

@@ -9,10 +9,10 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.util.ExceptionHandler;
 
 import java.util.*;
 

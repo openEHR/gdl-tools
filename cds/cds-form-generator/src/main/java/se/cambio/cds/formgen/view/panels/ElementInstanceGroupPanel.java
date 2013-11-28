@@ -6,7 +6,7 @@ import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.view.swing.DVSwingUtil;
-import se.cambio.cds.view.swing.applicationobjects.ArchetypeReferences;
+import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRImageUtil;

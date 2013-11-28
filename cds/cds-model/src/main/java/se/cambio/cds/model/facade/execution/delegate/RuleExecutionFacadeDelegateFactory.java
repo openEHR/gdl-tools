@@ -1,23 +1,24 @@
-package se.cambio.cds.model.facade.cds.delegate;
+package se.cambio.cds.model.facade.execution.delegate;
 
 import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
 /**
  * @author iago.corbal
  *
  */
-public class CDSExecutionFacadeDelegateFactory {
+public class RuleExecutionFacadeDelegateFactory {
 
-    private static String DELEGATE_CLASS_CDS = "CDSExecutionFacadeDelegate/Class";
+    private static String DELEGATE_CLASS_EXECUTION = "RuleExecutionFacadeDelegate/Class";
 
-    private CDSExecutionFacadeDelegateFactory() {
-    }
+	private RuleExecutionFacadeDelegateFactory() {
+	}
 
     private static Class<?> getDelegateClass() throws InternalErrorException {
         Class<?> theClass = null;
         try {
             String delegateClassName =
-                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_CDS);
+                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_EXECUTION);
             theClass = Class.forName(delegateClassName);
         } catch (Exception e) {
             throw new InternalErrorException(e);
@@ -25,10 +26,10 @@ public class CDSExecutionFacadeDelegateFactory {
         return theClass;
     }
 
-    public static CDSExecutionFacadeDelegate getDelegate()
+    public static RuleExecutionFacadeDelegate getDelegate()
             throws InternalErrorException {
         try {
-            return (CDSExecutionFacadeDelegate)getDelegateClass().newInstance();
+            return (RuleExecutionFacadeDelegate)getDelegateClass().newInstance();
         } catch (InstantiationException e) {
             throw new InternalErrorException(e);
         } catch (IllegalAccessException e) {

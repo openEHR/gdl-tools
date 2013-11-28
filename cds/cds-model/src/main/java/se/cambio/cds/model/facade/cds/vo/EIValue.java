@@ -1,5 +1,7 @@
 package se.cambio.cds.model.facade.cds.vo;
 
+import se.cambio.cds.gdl.model.expression.OperatorKind;
+
 /**
  * User: Iago.Corbal
  * Date: 2013-11-26
@@ -9,11 +11,13 @@ public class EIValue{
     private String dv;
     private String guideId;
     private String gtCode;
+    private OperatorKind operatorKind;
 
-    public EIValue(String dv, String gtCode, String guideId) {
+    public EIValue(String dv, String gtCode, String guideId, OperatorKind operatorKind) {
         this.dv = dv;
         this.gtCode = gtCode;
         this.guideId = guideId;
+        this.operatorKind = operatorKind;
     }
 
     public String getDv() {
@@ -38,5 +42,13 @@ public class EIValue{
 
     public void setGuideId(String guideId) {
         this.guideId = guideId;
+    }
+
+    public OperatorKind getOperatorKind() {
+        return operatorKind;
+    }
+
+    public void setOperatorKind(OperatorKind operatorKind) {
+        this.operatorKind = operatorKind;
     }
 }

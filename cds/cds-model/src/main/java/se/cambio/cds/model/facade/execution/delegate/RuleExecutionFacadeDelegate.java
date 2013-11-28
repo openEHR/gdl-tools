@@ -1,40 +1,32 @@
-package se.cambio.cds.model.facade.cds.delegate;
+package se.cambio.cds.model.facade.execution.delegate;
 
-import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
+import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
+import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.PatientNotFoundException;
+
+import java.util.Calendar;
+import java.util.Collection;
+
+
 /**
  * @author iago.corbal
  *
  */
-public class CDSExecutionFacadeDelegateFactory {
+public interface RuleExecutionFacadeDelegate {
 
-    private static String DELEGATE_CLASS_CDS = "CDSExecutionFacadeDelegate/Class";
+    public RuleExecutionResult execute(
+            String ehrId,
+            Collection<GuideDTO> guides,
+            Collection<ElementInstance> elementInstances,
+            Calendar date) throws InternalErrorException, PatientNotFoundException;
 
-    private CDSExecutionFacadeDelegateFactory() {
-    }
+    public void cancelExecution();
 
-    private static Class<?> getDelegateClass() throws InternalErrorException {
-        Class<?> theClass = null;
-        try {
-            String delegateClassName =
-                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_CDS);
-            theClass = Class.forName(delegateClassName);
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        }
-        return theClass;
-    }
+    public void clearCache();
 
-    public static CDSExecutionFacadeDelegate getDelegate()
-            throws InternalErrorException {
-        try {
-            return (CDSExecutionFacadeDelegate)getDelegateClass().newInstance();
-        } catch (InstantiationException e) {
-            throw new InternalErrorException(e);
-        } catch (IllegalAccessException e) {
-            throw new InternalErrorException(e);
-        }
-    }
+    public void setUseCache(boolean useCache);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

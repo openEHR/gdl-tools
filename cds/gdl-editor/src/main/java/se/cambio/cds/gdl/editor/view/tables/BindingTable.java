@@ -30,7 +30,7 @@ public class BindingTable extends JTable {
 	this.setModel(new BindingTableModel());
 	Vector<String> columnIdentifiers = new Vector<String>();
 	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("LocalTerms"));
-	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Terminology_Codes"));
+	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("TerminologyCodes"));
 	columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Uri"));
 	getBindingTableModel().setColumnIdentifiers(columnIdentifiers);
 	this.getColumnModel().getColumn(0).setPreferredWidth(200);

@@ -13,7 +13,7 @@ import javax.swing.AbstractAction;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.ExportUtils;
+import se.cambio.cds.util.ExportUtils;
 import se.cambio.cds.gdl.model.Guide;
 
 public class ExportToHTMLAction extends AbstractAction {

@@ -14,6 +14,11 @@
 			<artifactId>cds-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>cds-engine-drools</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.openehr.utils</groupId>
 			<artifactId>openehr-utils-server</artifactId>

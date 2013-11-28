@@ -5,6 +5,7 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.model.facade.cds.vo.DomainData;
 import se.cambio.cds.model.facade.cds.vo.EIValue;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 
@@ -30,10 +31,15 @@ public class DomainDataUtil {
                 archetypeReferences.add(archetypeReference);
                 for (String elementId : dvMap.keySet()){
                     EIValue eiValue = dvMap.get(elementId);
-                    if (eiValue.getGtCode()==null){
-                        new ElementInstance(elementId, DataValue.parseValue(eiValue.getDv()), archetypeReference, null, null);
+                    DataValue dv = DataValue.parseValue(eiValue.getDv());
+                    if (eiValue.getGuideId()==null){
+                        new ElementInstance(elementId, dv, archetypeReference, null, null);
                     }else{
-                        new GeneratedElementInstance(elementId, DataValue.parseValue(eiValue.getDv()), archetypeReference, null, null, eiValue.getGuideId(), eiValue.getGtCode());
+                        if (eiValue.getOperatorKind()==null){
+                            new GeneratedElementInstance(elementId, dv, archetypeReference, null, null, eiValue.getGuideId(), eiValue.getGtCode());
+                        }else{
+                            new PredicateGeneratedElementInstance(elementId, dv, archetypeReference, null, null, eiValue.getGuideId(), eiValue.getGtCode(), eiValue.getOperatorKind());
+                        }
                     }
                 }
             }
@@ -62,11 +68,14 @@ public class DomainDataUtil {
             dvMaps.add(dvMap);
             for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
                 if (elementInstance.getDataValue()!=null){
-                    EIValue eiValue = new EIValue(elementInstance.getDataValue().serialise(), null, null);
+                    EIValue eiValue = new EIValue(elementInstance.getDataValue().serialise(), null, null, null);
                     if (elementInstance instanceof GeneratedElementInstance){
                         GeneratedElementInstance gei = (GeneratedElementInstance)elementInstance;
                         eiValue.setGuideId(gei.getGuideId());
                         eiValue.setGtCode(gei.getGtCode());
+                    }
+                    if (elementInstance instanceof PredicateGeneratedElementInstance){
+                        eiValue.setOperatorKind(((PredicateGeneratedElementInstance)elementInstance).getOperatorKind());
                     }
                     dvMap.put(elementInstance.getId(), eiValue);
                 }
