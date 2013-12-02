@@ -41,6 +41,7 @@ public class ArchetypeElements {
         }
     }
 
+    //TODO Should throw an exception when the element is not found
     public static ArchetypeElementVO getArchetypeElement(String idTemplate, String idElement){
         if (idTemplate==null){
             return getDelegate()._archetypeElementsById.get(idElement);

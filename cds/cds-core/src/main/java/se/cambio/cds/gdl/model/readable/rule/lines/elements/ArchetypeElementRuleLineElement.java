@@ -53,7 +53,12 @@ public class ArchetypeElementRuleLineElement extends RuleLineElementWithValue<GT
     }
 
     public String getDomainId(){
-        return getArchetypeReference().getIdDomain();
+        ArchetypeReference ar = getArchetypeReference();
+        if (ar!=null){
+            return ar.getIdDomain();
+        }else {
+            return null;
+        }
     }
 
     public String toString(){

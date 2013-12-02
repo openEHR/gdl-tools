@@ -17,7 +17,7 @@ public class Templates {
     private static Templates _instance = null;
     private Map<String, TemplateDTO> _templatessById = null;
     public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
-
+    private boolean _loaded = false;
     private Templates(){
     }
 
@@ -25,6 +25,7 @@ public class Templates {
         Collection<TemplateDTO> templateDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllTemplates();
         loadTemplates(templateDTOs);
+        getDelegate()._loaded = true;
     }
 
     public static void loadTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException{
@@ -115,6 +116,10 @@ public class Templates {
             defs.add(templateDTO.getArchetype());
         }
         return defs.hashCode();
+    }
+
+    public static boolean hasBeenLoaded(){
+        return getDelegate()._loaded;
     }
 
     public static Templates getDelegate(){

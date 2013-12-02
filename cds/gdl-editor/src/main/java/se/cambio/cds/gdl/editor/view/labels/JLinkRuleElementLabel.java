@@ -169,7 +169,11 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener{
             String domainId = ((ArchetypeReference)_ruleLineElementWithValue.getValue()).getIdDomain();
             setIcon(DomainsUI.getIcon(domainId));
         }else if (_ruleLineElementWithValue.getValue() instanceof ArchetypeElementRuleLineElement){
-            String domainId = ((ArchetypeElementRuleLineElement)_ruleLineElementWithValue.getValue()).getDomainId();
+            ArchetypeElementRuleLineElement aerle = ((ArchetypeElementRuleLineElement)_ruleLineElementWithValue.getValue());
+            String domainId = null;
+            if (aerle!=null){
+                domainId = aerle.getDomainId();
+            }
             setIcon(DomainsUI.getIcon(domainId));
         }else if (_ruleLineElementWithValue.getValue() instanceof GTCodeRuleLineElement){
             RuleLine parentRuleLine = ((GTCodeRuleLineElement)_ruleLineElementWithValue.getValue()).getParentRuleLine();

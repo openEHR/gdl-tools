@@ -20,12 +20,14 @@ public class Archetypes {
     private Map<String, ArchetypeDTO> _archetypesById = null;
     private Map<String, Archetype> _archetypeAOM = null;
     public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
+    public boolean _loaded = false;
 
     private Archetypes(){
     }
 
     public static void loadArchetypes() throws InternalErrorException{
         init();
+        getDelegate()._loaded = true;
         Collection<ArchetypeDTO> archetypeDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllArchetypes();
         loadArchetypes(archetypeDTOs);
@@ -153,6 +155,10 @@ public class Archetypes {
             defs.add(archetypeDTO.getArchetype());
         }
         return defs.hashCode();
+    }
+
+    public static boolean hasBeenLoaded(){
+        return getDelegate()._loaded;
     }
 
     public static Archetypes getDelegate(){

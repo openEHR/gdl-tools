@@ -2,9 +2,13 @@ package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
-import org.openehr.rm.datatypes.basic.DvBoolean;
-import org.openehr.rm.datatypes.quantity.*;
-import org.openehr.rm.datatypes.quantity.datetime.*;
+import org.openehr.rm.datatypes.quantity.DvCount;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import org.openehr.rm.datatypes.quantity.DvProportion;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.openehr.rm.datatypes.quantity.datetime.DvDuration;
+import org.openehr.rm.datatypes.quantity.datetime.DvTemporal;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
@@ -13,12 +17,14 @@ import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.DataValueGenerator;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class DVUtil {
@@ -26,177 +32,9 @@ public class DVUtil {
     public static DataValue createDV(ElementInstance elementInstance, String rmName, String attributeName, Object value) throws InternalErrorException{
         DataValue dv = elementInstance.getDataValue();
         if(dv==null){
-            dv = getDummyDV(rmName);
+            dv = DataValueGenerator.getDummyDV(rmName);
         }
-        return createDV(dv, attributeName, value);
-    }
-
-    public static DataValue createDV(DataValue dataValue, String attributeName, Object value) throws InternalErrorException{
-        if (dataValue instanceof DvQuantity){
-            return create((DvQuantity)dataValue, attributeName, value);
-        }if (dataValue instanceof DvDuration){
-            return create((DvDuration)dataValue, attributeName, value);
-        }if (dataValue instanceof DvDateTime){
-            return create((DvDateTime)dataValue, attributeName, value);
-        }if (dataValue instanceof DvDate){
-            return create((DvDate)dataValue, attributeName, value);
-        }if (dataValue instanceof DvTime){
-            return create((DvTime)dataValue, attributeName, value);
-        }if (dataValue instanceof DvOrdinal){
-            return create((DvOrdinal)dataValue, attributeName, value);
-        }if (dataValue instanceof DvCount){
-            return create((DvCount)dataValue, attributeName, value);
-        }if (dataValue instanceof DvCodedText){
-            return create((DvCodedText)dataValue, attributeName, value);
-        }if (dataValue instanceof DvText){
-            return create((DvText)dataValue, attributeName, value);
-        }if (dataValue instanceof DvBoolean){
-            return create((DvBoolean)dataValue, attributeName, value);
-        }else{
-            throw new IllegalArgumentException("Unknow data value '"+dataValue.getClass().getSimpleName()+"'");
-        }
-    }
-
-    public static DvQuantity create(DvQuantity dvQuantity, String attributeName, Object value) throws InternalErrorException{
-
-        Double magnitude = dvQuantity.getMagnitude();
-        Integer precision = dvQuantity.getPrecision();
-        String units = dvQuantity.getUnits();
-
-        if (attributeName.equals("magnitude")){
-            magnitude = Double.parseDouble(value.toString());
-        }else if (attributeName.equals("units")){
-            if (value!=null){
-                units = value.toString();
-            }
-        }else if (attributeName.equals("precision")){
-            precision = (Integer)value;
-        }
-        return new DvQuantity(units, magnitude, precision);
-    }
-
-    public static DvDuration create(DvDuration dvDuration, String attributeName, Object value) throws InternalErrorException{
-
-        String durationValue = dvDuration.getValue();
-
-        if (attributeName.equals("value")){
-            durationValue = (String)value;
-        }
-
-        return new DvDuration(durationValue);
-    }
-
-    public static DvDateTime create(DvDateTime dvDateTime, String attributeName, Object value) throws InternalErrorException{
-
-        Calendar cal = Calendar.getInstance();
-        setCalendar(cal, Calendar.YEAR, attributeName, (Integer)value, "year", dvDateTime.getYear());
-        setCalendar(cal, Calendar.MONTH, attributeName, (Integer)value, "month", dvDateTime.getMonth());
-        setCalendar(cal, Calendar.DATE, attributeName, (Integer)value, "day", dvDateTime.getDay());
-        setCalendar(cal, Calendar.HOUR, attributeName, (Integer)value, "hour", dvDateTime.getHour());
-        setCalendar(cal, Calendar.MINUTE, attributeName, (Integer)value, "minute", dvDateTime.getMinute());
-        setCalendar(cal, Calendar.SECOND, attributeName, (Integer)value, "second", dvDateTime.getSecond());
-
-        //TODO "fractionalSecond";
-        //TODO "timeZone";
-
-        TimeZone timeZone =  Calendar.getInstance().getTimeZone();
-        return new DvDateTime(
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DATE),
-                cal.get(Calendar.HOUR),
-                cal.get(Calendar.MINUTE),
-                cal.get(Calendar.SECOND), /*fractionalSecond,*/ timeZone);
-    }
-
-    public static DvDate create(DvDate dvDate, String attributeName, Object value) throws InternalErrorException{
-        Calendar cal = Calendar.getInstance();
-        setCalendar(cal, Calendar.YEAR, attributeName, (Integer)value, "year", dvDate.getYear());
-        setCalendar(cal, Calendar.MONTH, attributeName, (Integer)value, "month", dvDate.getMonth());
-        setCalendar(cal, Calendar.DATE, attributeName, (Integer)value, "day", dvDate.getDay());
-        return new DvDate(
-                cal.get(Calendar.HOUR),
-                cal.get(Calendar.MINUTE),
-                cal.get(Calendar.SECOND));
-    }
-
-    public static DvCount create(DvCount dvCount, String attributeName, Object value) throws InternalErrorException{
-        int magnitude = dvCount.getMagnitude();
-        if(attributeName.equals("magnitude")){
-            if (value instanceof Integer){
-                magnitude =((Integer)value);
-            }else if (value instanceof Double){
-                magnitude = ((Double)value).intValue();
-            }else{
-                Logger.getLogger(DVUtil.class).warn("Unkown class for count: "+value.getClass().getName());
-            }
-        }
-        return new DvCount(magnitude);
-    }
-
-    public static DvCodedText create(DvCodedText dvCodedText, String expressi, String attributeName, Object value) throws InternalErrorException{
-        String codedTextvalue = dvCodedText.getValue();
-        String terminologyId = dvCodedText.getDefiningCode().getTerminologyId().getValue();
-        String code = dvCodedText.getDefiningCode().getCodeString();
-        if (attributeName.equals("value")){
-            codedTextvalue = (String)value;
-        }else if (attributeName.equals("terminologyId")){
-            terminologyId = (String)value;
-        }else if (attributeName.equals("code")){
-            code = (String) value;
-        }
-        return new DvCodedText(codedTextvalue, terminologyId, code);
-    }
-
-    public static DvText create(DvText dvText, String attributeName, Object value) throws InternalErrorException{
-        String textValue = dvText.getValue();
-        if (attributeName.equals("value")){
-            textValue = (String)value;;
-        }
-
-        return new DvText(textValue);
-    }
-
-    public static DvOrdinal create(DvOrdinal dvOrdinal, String attributeName, Object value) throws InternalErrorException{
-        Integer ordinalValue = dvOrdinal.getValue();
-        if (attributeName.equals("value")){
-            ordinalValue = (Integer)value;
-        }
-        return new DvOrdinal(ordinalValue, dvOrdinal.getSymbol());
-    }
-
-    public static DvTime create(DvTime dvTime, String attributeName, Object value) throws InternalErrorException{
-        Calendar cal = Calendar.getInstance();
-        setCalendar(cal, Calendar.HOUR, attributeName, (Integer)value, "hour", dvTime.getHour());
-        setCalendar(cal, Calendar.MINUTE, attributeName, (Integer)value, "minute", dvTime.getMinute());
-        setCalendar(cal, Calendar.SECOND, attributeName, (Integer)value, "second", dvTime.getSecond());
-        //String[] assignation = aMap.get("timeZone");
-        TimeZone timeZone =  Calendar.getInstance().getTimeZone();
-        //TODO
-        //if (assignation==null){
-        //    timeZone = dvTime.getTimeZone();
-        //}else{
-        //  timeZone = assignation[2];
-        //}
-        return new DvTime(
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DATE), /*fractionalSecond,*/ timeZone);
-    }
-
-    public static DvBoolean create(DvBoolean dvBoolean, String attributeName, Object value) throws InternalErrorException{
-        Boolean booleanValue = dvBoolean.getValue();
-        if (attributeName.equals("value")){
-            booleanValue = (Boolean) value;
-        }
-        return new DvBoolean(booleanValue);
-    }
-
-    private static void setCalendar(Calendar cal, int field, String attributeName, Integer value, String currentAttributeName, int fieldClonedValue){
-        cal.set(field, fieldClonedValue);
-        if (currentAttributeName.equals(attributeName)){
-            cal.set(field, value);
-        }
+        return DataValueGenerator.createDV(dv, attributeName, value);
     }
 
     //Compares to DataValues ignoring language dependent labels (DvCodedText & DvOrdinal)
@@ -375,16 +213,6 @@ public class DVUtil {
         }
     }
 
-    //SET LOG (TODO CHANGE)
-    public static DataValue getDummyDV(String rmName){
-        DataValue dv = dataValueMap.get(rmName);
-        if(dv == null) {
-            throw new IllegalArgumentException("unsupported RM class[" + rmName + "]");
-        }else{
-            return dv;
-        }
-    }
-
     public static double round(double unroundedDouble, int precision){
         BigDecimal bd = new BigDecimal(unroundedDouble);
         bd = bd.setScale(precision,BigDecimal.ROUND_HALF_UP);
@@ -411,26 +239,6 @@ public class DVUtil {
         }else{
             return new ConstantExpression(dataValueStr);
         }
-    }
-
-    private final static Map<String, DataValue> dataValueMap;
-
-    /*
-     * Initiate the mapping between ReferenceModelName and concrete dataValue 
-     */
-    static {
-        dataValueMap = new HashMap<String, DataValue>();
-        dataValueMap.put(OpenEHRDataValues.DV_COUNT, new DvCount(0));
-        dataValueMap.put(OpenEHRDataValues.DV_QUANTITY, new DvQuantity(10));
-        dataValueMap.put(OpenEHRDataValues.DV_TEXT, new DvText("text"));
-        dataValueMap.put(OpenEHRDataValues.DV_CODED_TEXT, new DvCodedText("text", new CodePhrase("tm", "cd")));
-        dataValueMap.put(OpenEHRDataValues.DV_ORDINAL, new DvOrdinal(0, new DvCodedText("text", new CodePhrase("tm", "cd"))));
-        dataValueMap.put(OpenEHRDataValues.DV_DATE_TIME, new DvDateTime("2001-02-11T00"));
-        dataValueMap.put(OpenEHRDataValues.DV_DATE, new DvDate("2001-02-11"));
-        dataValueMap.put(OpenEHRDataValues.DV_TIME, new DvTime("12:00:00"));
-        dataValueMap.put(OpenEHRDataValues.DV_DURATION, new DvDuration("P10D"));
-        dataValueMap.put(OpenEHRDataValues.DV_BOOLEAN, new DvBoolean(Boolean.FALSE));
-        dataValueMap.put(OpenEHRDataValues.DV_PROPORTION, new DvProportion(1,1,ProportionKind.UNITARY,0));
     }
 }
 /*
