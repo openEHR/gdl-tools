@@ -22,6 +22,8 @@ public final class CDSConfigurationParametersManager {
     public static String CDS_SERVER_USER_LOGIN = "CDSServer/login";
     public static String CDS_SERVER_USER_PASSWD = "CDSServer/password";
 
+    public static String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
+
     private static boolean usesJNDI;
     private static Map <Object,Object> parameters;
 

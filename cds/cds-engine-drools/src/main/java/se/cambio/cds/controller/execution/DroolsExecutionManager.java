@@ -12,6 +12,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
+import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -26,8 +27,7 @@ public class DroolsExecutionManager {
     private static final short MAX_KNOWLEDGE_BASE_CACHE = 10;
     private boolean _useCache = true;
     private ExecutionLogger _logger = null;
-
-    public static long TIMEOUT_IN_MILLIS = 5000;
+    private Long _timeOutInMillis = null;
 
     private DroolsExecutionManager(){
         _knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap <String, KnowledgeBase>());
@@ -184,6 +184,21 @@ public class DroolsExecutionManager {
             _instance = new DroolsExecutionManager();
         }
         return _instance;
+    }
+
+    public static Long getExecutionTimeOut(){
+        if (getDelegate()._timeOutInMillis==null){
+            try {
+                String timeOutStr = CDSConfigurationParametersManager.getParameter(CDSConfigurationParametersManager.CDS_EXECUTION_TIMEOUT);
+                getDelegate()._timeOutInMillis = Long.parseLong(timeOutStr);
+            } catch (Exception e) {
+                Logger.getLogger(DroolsExecutionManager.class).debug("No CDS execution timeout or errors found loading it. Timeout will be disabled.");
+            }
+            if (getDelegate()._timeOutInMillis==null){
+                getDelegate()._timeOutInMillis = Long.MAX_VALUE;
+            }
+        }
+        return getDelegate()._timeOutInMillis;
     }
 }
 /*

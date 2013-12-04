@@ -116,7 +116,7 @@
         <dependency>
             <groupId>org.openehr.utils</groupId>
             <artifactId>openehr-utils-gui-swing</artifactId>
-            <version>${openehr-utils-version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>se.cambio.cds</groupId>

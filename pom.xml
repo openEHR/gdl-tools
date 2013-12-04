@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>se.cambio</groupId>
+	<artifactId>gdl-tools</artifactId>
+	<packaging>pom</packaging>
+	<version>0.93-SNAPSHOT</version>
+	<name>GDL Tools</name>
+	<organization>
+		<name>Cambio</name>
+	</organization>
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <openehr-java-libs-version>1.0.4</openehr-java-libs-version>
+	</properties>
+    <scm>
+        <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
+        <developerConnection>scm:git:git@github.com:openEHR/gdl-tools.git</developerConnection>
+        <url>scm:git:git@github.com:openEHR/gdl-tools.git</url>
+    </scm>
+	<modules>
+		<module>openehr-utils</module>
+        <module>cds</module>
+    </modules>
+</project>

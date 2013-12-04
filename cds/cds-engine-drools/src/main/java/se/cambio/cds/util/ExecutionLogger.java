@@ -31,7 +31,7 @@ public class ExecutionLogger {
 
         //TODO This should not be done in the logger
         long executionTime = (System.currentTimeMillis()-_startTime);
-        if (cancelExecution || executionTime> DroolsExecutionManager.TIMEOUT_IN_MILLIS){
+        if (cancelExecution || executionTime> DroolsExecutionManager.getExecutionTimeOut()){
             Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out!");
             drools.halt();
         }

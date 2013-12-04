@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.openehr.utils</groupId>
 			<artifactId>openehr-utils-persistence</artifactId>
-			<version>${openehr-utils-version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

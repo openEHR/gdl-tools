@@ -18,8 +18,13 @@ public class AqlUtil{
         List<String> elementIds = new ArrayList<String>(archetypeReference.getElementInstancesMap().keySet());
         Collections.sort(elementIds);
         for (String elementId : elementIds){
-            elementPaths.add(elementId.substring(archetypeReference.getIdArchetype().length()));
+            String elementPath = elementId.substring(archetypeReference.getIdArchetype().length());
+            if (elementPath.equals("/event/time")){
+                elementPath = "/data/events/time"; //TODO!!
+            }
+            elementPaths.add(elementPath);
         }
+
         sb.append("SELECT\n");
         sb.append("e/ehr_id/value AS ehrId\n");
             for (String elementPath : elementPaths){

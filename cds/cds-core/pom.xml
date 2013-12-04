@@ -29,12 +29,12 @@
 		<dependency>
 			<groupId>org.openehr.utils</groupId>
 			<artifactId>openehr-utils-core</artifactId>
-			<version>${openehr-utils-version}</version>
+			<version>${project.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.openehr.utils</groupId>
             <artifactId>openehr-utils-terminology-service</artifactId>
-            <version>${openehr-utils-version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>se.cambio.cds</groupId>
