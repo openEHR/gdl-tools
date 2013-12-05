@@ -1,4 +1,4 @@
-package util;
+package se.cambio.openehr.util.util;
 
 
 public class EJBConst {

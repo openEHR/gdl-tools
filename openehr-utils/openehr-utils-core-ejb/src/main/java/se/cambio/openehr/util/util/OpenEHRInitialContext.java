@@ -1,4 +1,4 @@
-package util;
+package se.cambio.openehr.util.util;
 
 import org.apache.log4j.Logger;
 import org.jboss.ejb.client.ContextSelector;

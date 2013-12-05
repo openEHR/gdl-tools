@@ -7,8 +7,8 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
-import util.EJBConst;
-import util.OpenEHRInitialContext;
+import se.cambio.openehr.util.util.EJBConst;
+import se.cambio.openehr.util.util.OpenEHRInitialContext;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
