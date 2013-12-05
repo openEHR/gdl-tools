@@ -3,7 +3,7 @@
     <parent>
         <groupId>se.cambio</groupId>
         <artifactId>gdl-tools</artifactId>
-        <version>0.93</version>
+        <version>0.94-SNAPSHOT</version>
     </parent>
 	<groupId>org.openehr.utils</groupId>
 	<artifactId>openehr-utils</artifactId>

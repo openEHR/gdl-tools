@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.openehr.utils</groupId>
 		<artifactId>openehr-utils</artifactId>
-		<version>0.93</version>
+		<version>0.94-SNAPSHOT</version>
 	</parent>
 	<artifactId>openehr-utils-terminology-service</artifactId>
 	<name>openehr-utils-terminology-service</name>
