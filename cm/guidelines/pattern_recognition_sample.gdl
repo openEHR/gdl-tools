@@ -1,0 +1,81 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"pattern_recognition_sample">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.estimated_glomerular_filtration_rate.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/event/time">
+					>
+				>
+			>
+			
+			[2] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.estimated_glomerular_filtration_rate.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/event/time">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0002"] = (RULE) <
+				when = <"$gt0005<$gt0006", "$gt0006.value<($gt0005.value+15,d)", "$gt0004.magnitude<($gt0003.magnitude-(0.5*$gt0003.magnitude))", "$gt0004.units=='ml/min'", "$gt0003.units=='ml/min'">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0000"] = (TERM) <
+					>
+					["gt0001"] = (TERM) <
+					>
+					["gt0002"] = (TERM) <
+						text = <"Rapid GFR decrease detected">
+					>
+					["gt0003"] = (TERM) <
+						text = <"GFR">
+						description = <"Creatinine level in this specimen">
+					>
+					["gt0004"] = (TERM) <
+						text = <"GFR2">
+						description = <"Creatinine level in this specimen">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Event time">
+						description = <"The exact time of a single timed event during the Observation. Can represent either a specific point-in-time or an interval event.">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Event time2">
+						description = <"The exact time of a single timed event during the Observation. Can represent either a specific point-in-time or an interval event.">
+					>
+				>
+			>
+		>
+	>
+>

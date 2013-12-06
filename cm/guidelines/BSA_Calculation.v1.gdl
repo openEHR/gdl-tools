@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"BSA_Calculation.v1">
+	id = <"BSA_Calculation.v1-Revised function">
 	concept = <"gt0015">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -37,6 +37,7 @@
 						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[2] = (ARCHETYPE_BINDING) <
@@ -47,6 +48,7 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[3] = (ARCHETYPE_BINDING) <
@@ -57,6 +59,7 @@
 						path = <"/protocol[at0005]/items[at0006]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[4] = (ARCHETYPE_BINDING) <

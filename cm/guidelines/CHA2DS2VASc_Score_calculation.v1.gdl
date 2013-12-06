@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"CHA2DS2VASc_Score_calculation.v1">
+	id = <"CHA2DS2VASc_Score_calculation.v1-Revised function">
 	concept = <"gt0036">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -26,7 +26,9 @@
 		>
 		other_contributors = <"Carlos Valladares",...>
 		other_details = <
-			["references"] = <"1. Lip GY, Nieuwlaat R, Pisters R, Lane DA, Crijns HJ. Refining clinical risk stratification for predicting stroke and thromboembolism in atrial fibrillation using a novel risk factor-based approach: the euro heart survey on atrial fibrillation. Chest. 2010 Feb;137(2):263-72. Epub 2009 Sep 17. PubMed PMID: 19762550. 2. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247. 3. Lip GY, Frison L, Halperin JL, Lane DA. Identifying patients at high risk for stroke despite anticoagulation: a comparison of contemporary stroke risk stratification schemes in an anticoagulated atrial fibrillation cohort. Stroke. 2010 Dec;41(12):2731-8. Epub 2010 Oct 21. PubMed PMID: 20966417.">
+			["references"] = <"1. Lip GY, Nieuwlaat R, Pisters R, Lane DA, Crijns HJ. Refining clinical risk stratification for predicting stroke and thromboembolism in atrial fibrillation using a novel risk factor-based approach: the euro heart survey on atrial fibrillation. Chest. 2010 Feb;137(2):263-72. Epub 2009 Sep 17. PubMed PMID: 19762550. 
+2. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247.
+3. Lip GY, Frison L, Halperin JL, Lane DA. Identifying patients at high risk for stroke despite anticoagulation: a comparison of contemporary stroke risk stratification schemes in an anticoagulated atrial fibrillation cohort. Stroke. 2010 Dec;41(12):2731-8. Epub 2010 Oct 21. PubMed PMID: 20966417.">
 		>
 	>
 	definition = (GUIDE_DEFINITION) <
@@ -107,13 +109,14 @@
 				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
 				domain = <"EHR">
 				elements = <
-					["gt0005"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]">
-					>
 					["gt0006"] = (ELEMENT_BINDING) <
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
+					["gt0113"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
+					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[8] = (ARCHETYPE_BINDING) <
@@ -170,17 +173,17 @@
 				priority = <8>
 			>
 			["gt0021"] = (RULE) <
-				when = <"$gt0005<65.0,a",...>
+				when = <"$gt0113.value>($currentDateTime.value-65,a)",...>
 				then = <"$gt0011=0|local::at0036|Under 65|",...>
 				priority = <3>
 			>
 			["gt0022"] = (RULE) <
-				when = <"$gt0005>=65.0,a", "$gt0005<75.0,a">
+				when = <"$gt0113.value<=($currentDateTime.value-65,a)", "$gt0113.value>($currentDateTime.value-75,a)">
 				then = <"$gt0011=1|local::at0037|Between 65-74|",...>
 				priority = <2>
 			>
 			["gt0023"] = (RULE) <
-				when = <"$gt0005>=75.0,a",...>
+				when = <"$gt0113.value<=($currentDateTime.value-75,a)",...>
 				then = <"$gt0011=2|local::at0038|Above or equals to 75|",...>
 				priority = <4>
 			>
@@ -301,7 +304,7 @@
 						text = <"Set previous stroke">
 					>
 					["gt0021"] = (TERM) <
-						text = <"Set aget below 65">
+						text = <"Set age below 65">
 					>
 					["gt0022"] = (TERM) <
 						text = <"Set age between 65-74">
@@ -363,6 +366,10 @@
 					>
 					["gt0112"] = (TERM) <
 						text = <"Vascular disease diagnosis">
+					>
+					["gt0113"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
 					>
 				>
 			>
@@ -487,6 +494,8 @@
 					>
 					["gt0112"] = (TERM) <
 						text = <"*Vascular disease diagnosis (en)">
+					>
+					["gt0113"] = (TERM) <
 					>
 				>
 			>

@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"CKD-EPI_equation.v1">
+	id = <"CKD-EPI_equation.v1-Revised Age">
 	concept = <"gt0000">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -21,7 +21,7 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 					["gt0008"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]">
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
 					>
 				>
 			>
@@ -45,26 +45,25 @@
 				>
 			>
 		>
-		pre_conditions = <"$gt0007==null",...>
 		rules = <
 			["gt0001"] = (RULE) <
 				when = <"$gt0002==local::at0006|Female|", "$gt0003<=62,umol/l">
-				then = <"$gt0007.magnitude=((144*((($gt0003.magnitude*0.011312)/0.7)^(-0.329)))*(0.993^$gt0008.magnitude))", "$gt0007.precision=2", "$gt0007.units='ml/min'">
+				then = <"$gt0007.magnitude=((144*((($gt0003.magnitude*0.011312)/0.7)^(-0.329)))*(0.993^($currentDateTime.year-$gt0008.year)))", "$gt0007.precision=2", "$gt0007.units='ml/min'">
 				priority = <1>
 			>
 			["gt0004"] = (RULE) <
 				when = <"$gt0002==local::at0006|Female|", "$gt0003>62,umol/l">
-				then = <"$gt0007.magnitude=((144*((($gt0003.magnitude*0.011312)/0.7)^(-1.209)))*(0.993^$gt0008.magnitude))", "$gt0007.precision=2", "$gt0007.units='ml/min'">
+				then = <"$gt0007.magnitude=((144*((($gt0003.magnitude*0.011312)/0.7)^(-1.209)))*(0.993^($currentDateTime.year-$gt0008.year)))", "$gt0007.precision=2", "$gt0007.units='ml/min'">
 				priority = <2>
 			>
 			["gt0005"] = (RULE) <
 				when = <"$gt0002==local::at0005|Male|", "$gt0003<=80,umol/l">
-				then = <"$gt0007.magnitude=((141*((($gt0003.magnitude*0.011312)/0.9)^(-0.411)))*(0.993^$gt0008.magnitude))", "$gt0007.units='ml/min'", "$gt0007.precision=2">
+				then = <"$gt0007.magnitude=((141*((($gt0003.magnitude*0.011312)/0.9)^(-0.411)))*(0.993^($currentDateTime.year-$gt0008.year)))", "$gt0007.units='ml/min'", "$gt0007.precision=2">
 				priority = <3>
 			>
 			["gt0006"] = (RULE) <
 				when = <"$gt0002==local::at0005|Male|", "$gt0003>80,umol/l">
-				then = <"$gt0007.magnitude=((141.0*((($gt0003.magnitude*0.011312)/0.9)^(-1.209)))*(0.993^$gt0008.magnitude))", "$gt0007.precision=2", "$gt0007.units='ml/min'">
+				then = <"$gt0007.magnitude=((141.0*((($gt0003.magnitude*0.011312)/0.9)^(-1.209)))*(0.993^($currentDateTime.year-$gt0008.year)))", "$gt0007.precision=2", "$gt0007.units='ml/min'">
 				priority = <4>
 			>
 		>
@@ -102,7 +101,7 @@
 						description = <"*">
 					>
 					["gt0008"] = (TERM) <
-						text = <"Age">
+						text = <"Birthdate">
 						description = <"*">
 					>
 				>

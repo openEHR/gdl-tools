@@ -2,7 +2,7 @@ archetype (adl_version=1.4)
 	openEHR-EHR-OBSERVATION.basic_demographic.v1
 
 concept
-	[at0000]	-- Grundläggande demografi
+	[at0000]	-- Basic demographic
 language
 	original_language = <[ISO_639-1::en]>
 	translations = <
@@ -36,50 +36,50 @@ description
 	lifecycle_state = <"NotSet">
 	other_contributors = <>
 	other_details = <
-		["MD5-CAM-1.0.1"] = <"2495DE242AA383A8DDFB2CF1E7D6FF4C">
+		["MD5-CAM-1.0.1"] = <"65D4529EF3F6E8FB2BEF90992045A71F">
 	>
 
 definition
-	OBSERVATION[at0000] matches {	-- Grundläggande demografi
+	OBSERVATION[at0000] matches {	-- Basic demographic
 		data matches {
-			HISTORY[at0001] matches {	-- Händelser
+			HISTORY[at0001] matches {	-- Event Series
 				events cardinality matches {1..*; unordered} matches {
-					EVENT[at0002] occurrences matches {0..1} matches {	-- Alla händelser
+					EVENT[at0002] occurrences matches {0..1} matches {	-- Any event
 						data matches {
-							ITEM_TREE[at0003] matches {	-- Träd
+							ITEM_TREE[at0003] matches {	-- Tree
 								items cardinality matches {0..*; unordered} matches {
-									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Kön
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Gender
 										value matches {
 											DV_CODED_TEXT matches {
 												defining_code matches {
 													[local::
-													at0005, 	-- Man
-													at0006]	-- Kvinna
+													at0005, 	-- Male
+													at0006]	-- Female
 												}
 											}
 										}
 									}
-									ELEMENT[at0007] occurrences matches {0..1} matches {	-- Ålder
-										value matches {
-											C_DV_QUANTITY <
-												property = <[openehr::128]>
-												list = <
-													["1"] = <
-														units = <"a">
-													>
-													["2"] = <
-														units = <"mo">
-													>
-												>
-											>
-										}
-									}
-									ELEMENT[at0008] occurrences matches {0..1} matches {	-- Födelsedatum
+									ELEMENT[at0008] occurrences matches {0..1} matches {	-- Birthdate
 										value matches {
 											DV_DATE_TIME matches {*}
 										}
 									}
-									ELEMENT[at0009] occurrences matches {0..*} matches {	-- Språk
+									ELEMENT[at0009] occurrences matches {0..*} matches {	-- Languages
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0010] occurrences matches {0..1} matches {	-- Place of residence
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0011] occurrences matches {0..1} matches {	-- County
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0012] occurrences matches {0..1} matches {	-- Municipality
 										value matches {
 											DV_TEXT matches {*}
 										}
@@ -125,16 +125,24 @@ ontology
 					text = <"Female">
 					description = <"Female">
 				>
-				["at0007"] = <
-					text = <"Age">
-					description = <"*">
-				>
 				["at0008"] = <
 					text = <"Birthdate">
 					description = <"*">
 				>
 				["at0009"] = <
 					text = <"Languages">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"Place of residence">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"County">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"Municipality">
 					description = <"*">
 				>
 			>
@@ -169,16 +177,24 @@ ontology
 					text = <"Kvinna">
 					description = <"Kvinna">
 				>
-				["at0007"] = <
-					text = <"Ålder">
-					description = <"**(en)">
-				>
 				["at0008"] = <
 					text = <"Födelsedatum">
 					description = <"**(en)">
 				>
 				["at0009"] = <
 					text = <"Språk">
+					description = <"**(en)">
+				>
+				["at0010"] = <
+					text = <"*Place of residence(en)">
+					description = <"**(en)">
+				>
+				["at0011"] = <
+					text = <"*County(en)">
+					description = <"**(en)">
+				>
+				["at0012"] = <
+					text = <"*Municipality(en)">
 					description = <"**(en)">
 				>
 			>

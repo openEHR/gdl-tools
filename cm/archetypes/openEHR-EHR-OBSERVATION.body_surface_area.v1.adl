@@ -46,6 +46,7 @@ The Boyd formula
 BSA (m2) = 0.0003207 x Height(cm)0.3 x Weight(grams)(0.7285 - ( 0.0188 x LOG(grams) )">
 			keywords = <"BSA", "skin area">
 			misuse = <"">
+			copyright = <"">
 		>
 		["sl"] = <
 			language = <[ISO_639-1::sl]>

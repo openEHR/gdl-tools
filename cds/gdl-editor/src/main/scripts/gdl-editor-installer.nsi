@@ -11,7 +11,7 @@
 Name "GDL editor"
 
 ; The file to write
-OutFile "../../../../dist/gdl-editor/gdl-editor-installer.exe"
+OutFile "./gdl-editor-installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\GDLEditor

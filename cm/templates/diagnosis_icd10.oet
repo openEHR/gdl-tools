@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="openEHR/v1/Template">
   <id>b990314d-ea85-45b1-a20e-19185cd9ae69</id>
-  <name>diagnosis_chadvas_icd10</name>
+  <name>diagnosis_icd10</name>
   <description>
     <lifecycle_state>Initial</lifecycle_state>
     <details>

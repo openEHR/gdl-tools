@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"Estimated_GFR.v1">
+	id = <"Estimated_GFR.v1-Revised funtion and age">
 	concept = <"gt0016">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -36,12 +36,13 @@
 				domain = <"EHR">
 				elements = <
 					["gt0002"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]">
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
 					>
 					["gt0003"] = (ELEMENT_BINDING) <
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[2] = (ARCHETYPE_BINDING) <
@@ -52,6 +53,7 @@
 						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[3] = (ARCHETYPE_BINDING) <
@@ -62,6 +64,7 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[4] = (ARCHETYPE_BINDING) <
@@ -72,6 +75,7 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0078.7]">
 					>
 				>
+				predicates = <"max(/event/time)",...>
 			>
 			
 			[5] = (ARCHETYPE_BINDING) <
@@ -86,17 +90,17 @@
 		>
 		rules = <
 			["gt0012"] = (RULE) <
-				when = <"$gt0002>=20.0,a", "$gt0003==local::at0005|Male|", "$gt0005.units=='kg'", "$gt0009.units=='umol/l'">
-				then = <"$gt0011.magnitude=((1.23*(140-$gt0002.magnitude))*($gt0005.magnitude/$gt0009.magnitude))", "$gt0011.precision=2", "$gt0011.units='ml/min'">
+				when = <"$gt0002.value<=($currentDateTime.value-20,a)", "$gt0003==local::at0005|Male|", "$gt0005.units=='kg'", "$gt0009.units=='umol/l'">
+				then = <"$gt0011.magnitude=((1.23*(140-($currentDateTime.year-$gt0002.year)))*($gt0005.magnitude/$gt0009.magnitude))", "$gt0011.precision=2", "$gt0011.units='ml/min'">
 				priority = <2>
 			>
 			["gt0013"] = (RULE) <
-				when = <"$gt0002>=20.0,a", "$gt0003==local::at0006|Female|", "$gt0005.units=='kg'", "$gt0009.units=='umol/l'">
-				then = <"$gt0011.units='ml/min'", "$gt0011.precision=2", "$gt0011.magnitude=((1.04*(140-$gt0002.magnitude))*($gt0005.magnitude/$gt0009.magnitude))">
+				when = <"$gt0002.value<=($currentDateTime.value-20,a)", "$gt0003==local::at0006|Female|", "$gt0005.units=='kg'", "$gt0009.units=='umol/l'">
+				then = <"$gt0011.units='ml/min'", "$gt0011.precision=2", "$gt0011.magnitude=((1.04*(140-($currentDateTime.year-$gt0002.year)))*($gt0005.magnitude/$gt0009.magnitude))">
 				priority = <1>
 			>
 			["gt0014"] = (RULE) <
-				when = <"$gt0002<20.0,a", "$gt0007.units=='cm'", "$gt0005.units=='kg'", "$gt0009.units=='umol/l'">
+				when = <"$gt0002.value>($currentDateTime.value-20,a)", "$gt0007.units=='cm'", "$gt0005.units=='kg'", "$gt0009.units=='umol/l'">
 				then = <"$gt0011.magnitude=(((42.5*$gt0007.magnitude)/$gt0009.magnitude)/(($gt0005.magnitude/70)^0.7))", "$gt0011.units='ml/min'", "$gt0011.precision=2">
 				priority = <3>
 			>
@@ -107,7 +111,7 @@
 			["en"] = (TERM_DEFINITION) <
 				terms = <
 					["gt0002"] = (TERM) <
-						text = <"Age">
+						text = <"Birthdate">
 						description = <"*">
 					>
 					["gt0003"] = (TERM) <
