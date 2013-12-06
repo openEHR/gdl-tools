@@ -15,9 +15,7 @@ https://github.com/openEHR/java-libs
 
 INSTALLATION:
 
-gdl-tools/openehr-utils/mvn clean install
-
-gdl-tools/cds/mvn clean install
+gdl-tools/mvn clean install
 
 
 GENERATE FULL APPLICATION:

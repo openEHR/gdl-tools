@@ -1,5 +1,12 @@
 GDL Editor - Release Notes
 
+2013-12-06 - v0.93
+
++ Supports specs changes with predicate functions (max/min)
++ Added new sample guidelines and sample descriptions
+* Updated terminologies with new terms (ATC and ICD10)
+
+
 2013-08-16 - v0.92
 
 + Source code editing support
