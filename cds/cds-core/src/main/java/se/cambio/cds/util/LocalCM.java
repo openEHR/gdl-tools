@@ -1,11 +1,11 @@
 package se.cambio.cds.util;
 
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * User: Iago.Corbal
@@ -25,13 +25,36 @@ public class LocalCM {
         if (hostname==null){
             hostname = "local";
         }
-        File file = new File(AUTO_SAVE_FILE_CM_PREFIX+"."+hostname+".zip");
-        if (file.exists()){
-            try {
-                CMImportExportManager.importCM(file);
-            } catch (IOException e) {
-                throw new InternalErrorException(e);
+        String fileName = AUTO_SAVE_FILE_CM_PREFIX+"."+hostname+".zip";
+        InputStream is = null;
+        try{
+            is = LocalCM.class.getClassLoader().getResourceAsStream(fileName);
+            if (is==null){
+                File file = new File(fileName);
+                if (file.exists()){
+                    try {
+                        is = new FileInputStream(file);
+                    } catch (FileNotFoundException e) {
+                        ExceptionHandler.handle(e);
+                    }
+                }
             }
+            if (is!=null){
+                try {
+                    CMImportExportManager.importCM(is);
+                } catch (IOException e) {
+                    throw new InternalErrorException(e);
+                }
+            }
+        }finally {
+            if (is!=null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    ExceptionHandler.handle(e);
+                }
+            }
+
         }
     }
 

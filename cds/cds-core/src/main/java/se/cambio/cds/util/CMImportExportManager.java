@@ -170,92 +170,84 @@ public class CMImportExportManager {
 
 
     /* WARNING! Guides imported using this method will not be compiled! */
-    public static void importCM(File file) throws IOException {
+    public static void importCM(InputStream is) throws IOException {
 
+        Collection<ArchetypeDTO> archetypeSourceDTOs = new ArrayList<ArchetypeDTO>();
         Collection<ArchetypeDTO> archetypeDTOs = new ArrayList<ArchetypeDTO>();
+        Collection<TemplateDTO> templateSourceDTOs = new ArrayList<TemplateDTO>();
         Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
         Collection<TerminologyDTO> terminologyDTOs = new ArrayList<TerminologyDTO>();
         Collection<OverviewDTO> overviewDTOs = new ArrayList<OverviewDTO>();
+        Collection<GuideDTO> guideSourceDTOs = new ArrayList<GuideDTO>();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
 
         boolean useArchetypeDTOs = false;
         boolean useTemplateDTOs = false;
         boolean useGuidelineDTOs = false;
 
+        BufferedInputStream bis = new BufferedInputStream(is, 4048);
+        bis.mark(4048);
         //Look for DTO folders
-        ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+        ZipInputStream zis = new ZipInputStream(bis);
         try{
             ZipEntry entry;
-            while((entry = in.getNextEntry())!=null){
-                if (entry.getName().startsWith(ARCHETYPE_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
+            while((entry = zis.getNextEntry())!=null){
+                if (entry.getName().startsWith(ARCHETYPES_FOLDER_NAME) && entry.getName().endsWith(ARCHETYPE_POSTFIX)){
+                    String src = IOUtils.toString(zis,"UTF-8");
+                    String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length()+1, entry.getName().length()-ARCHETYPE_POSTFIX.length());
+                    archetypeSourceDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, src, null, null));
+                }else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
+                    String src = IOUtils.toString(zis,"UTF-8");
+                    String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length()+1, entry.getName().length()-TEMPLATES_POSTFIX.length());
+                    templateSourceDTOs.add(new TemplateDTO(templateId, templateId, templateId, null, null, src, null, null));
+                }else if (entry.getName().startsWith(TERMINOLOGIES_FOLDER_NAME) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
+                    byte[] src = IOUtils.toByteArray(zis);
+                    String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length()+1, entry.getName().length()-TERMINOLOGY_POSTFIX.length());
+                    terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
+                }else if (entry.getName().startsWith(OVERVIEWS_FOLDER_NAME) && entry.getName().endsWith(OVERVIEWS_POSTFIX)){
+                    String src = IOUtils.toString(zis,"UTF-8");
+                    String overviewId = entry.getName().substring(OVERVIEWS_FOLDER_NAME.length()+1, entry.getName().length()-OVERVIEWS_POSTFIX.length());
+                    overviewDTOs.add(new OverviewDTO(overviewId, overviewId, overviewId, src));
+                }else if (entry.getName().startsWith(GUIDELINES_FOLDER_NAME) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
+                    String src = IOUtils.toString(zis,"UTF-8");
+                    String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length()+1, entry.getName().length()-GUIDELINES_POSTFIX.length());
+                    guideSourceDTOs.add(new GuideDTO(guideId, src, null, null, false));
+                }else if (entry.getName().startsWith(ARCHETYPE_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
+                    ArchetypeDTO archetypeDTO = (ArchetypeDTO)IOUtils.getObject(IOUtils.toByteArray(zis));
+                    archetypeDTOs.add(archetypeDTO);
                     useArchetypeDTOs = true;
                 }else if (entry.getName().startsWith(TEMPLATES_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
+                    TemplateDTO templateDTO = (TemplateDTO)IOUtils.getObject(IOUtils.toByteArray(zis));
+                    templateDTOs.add(templateDTO);
                     useTemplateDTOs = true;
                 }else if (entry.getName().startsWith(GUIDELINES_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
+                    GuideDTO guideDTO = (GuideDTO)IOUtils.getObject(IOUtils.toByteArray(zis));
+                    guideDTOs.add(guideDTO);
                     useGuidelineDTOs = true;
                 }
             }
         }finally{
             // we must always close the zip file.
-            in.close();
-        }
-
-        in = new ZipInputStream(new FileInputStream(file));
-        try{
-            byte[] buffer = new byte[2048];
-            // now iterate through each item in the stream. The get next
-            // entry call will return a ZipEntry for each file in the
-            // stream
-            ZipEntry entry;
-            while((entry = in.getNextEntry())!=null){
-
-                if (entry.getName().startsWith(ARCHETYPES_FOLDER_NAME) && entry.getName().endsWith(ARCHETYPE_POSTFIX)){
-                    if (!useArchetypeDTOs){
-                        String src = IOUtils.toString(in,"UTF-8");
-                        String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length()+1, entry.getName().length()-ARCHETYPE_POSTFIX.length());
-                        archetypeDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, src, null, null));
-                    }
-                }else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
-                    if (!useTemplateDTOs){
-                        String src = IOUtils.toString(in,"UTF-8");
-                        String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length()+1, entry.getName().length()-TEMPLATES_POSTFIX.length());
-                        templateDTOs.add(new TemplateDTO(templateId, templateId, templateId, null, null, src, null, null));
-                    }
-                }else if (entry.getName().startsWith(TERMINOLOGIES_FOLDER_NAME) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
-                    byte[] src = IOUtils.toByteArray(in);
-                    String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length()+1, entry.getName().length()-TERMINOLOGY_POSTFIX.length());
-                    terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
-                }else if (entry.getName().startsWith(OVERVIEWS_FOLDER_NAME) && entry.getName().endsWith(OVERVIEWS_POSTFIX)){
-                    String src = IOUtils.toString(in,"UTF-8");
-                    String overviewId = entry.getName().substring(OVERVIEWS_FOLDER_NAME.length()+1, entry.getName().length()-OVERVIEWS_POSTFIX.length());
-                    overviewDTOs.add(new OverviewDTO(overviewId, overviewId, overviewId, src));
-                }else if (entry.getName().startsWith(GUIDELINES_FOLDER_NAME) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
-                    if (!useGuidelineDTOs){
-                        String src = IOUtils.toString(in,"UTF-8");
-                        String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length()+1, entry.getName().length()-GUIDELINES_POSTFIX.length());
-                        guideDTOs.add(new GuideDTO(guideId, src, null, null, false));
-                    }
-                }else if (entry.getName().startsWith(ARCHETYPE_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
-                    ArchetypeDTO archetypeDTO = (ArchetypeDTO)IOUtils.getObject(IOUtils.toByteArray(in));
-                    archetypeDTOs.add(archetypeDTO);
-                }else if (entry.getName().startsWith(TEMPLATES_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
-                    TemplateDTO templateDTO = (TemplateDTO)IOUtils.getObject(IOUtils.toByteArray(in));
-                    templateDTOs.add(templateDTO);
-                }else if (entry.getName().startsWith(GUIDELINES_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
-                    GuideDTO guideDTO = (GuideDTO)IOUtils.getObject(IOUtils.toByteArray(in));
-                    guideDTOs.add(guideDTO);
-                }
-            }
-        }finally{
-            // we must always close the zip file.
-            in.close();
+            zis.close();
         }
         try {
-            Archetypes.loadArchetypes(archetypeDTOs);
-            Templates.loadTemplates(templateDTOs);
+            if (useArchetypeDTOs){
+                Archetypes.loadArchetypes(archetypeDTOs);
+            }else{
+                Archetypes.loadArchetypes(archetypeSourceDTOs);
+            }
+            if (useTemplateDTOs){
+                Templates.loadTemplates(templateDTOs);
+            }else{
+                Templates.loadTemplates(templateSourceDTOs);
+            }
             Terminologies.loadTerminologies(terminologyDTOs);
-            Guides.loadGuides(guideDTOs);
             Overviews.loadOverviews(overviewDTOs);
+            if (useGuidelineDTOs){
+                Guides.loadGuides(guideDTOs);
+            }else{
+                Guides.loadGuides(guideSourceDTOs);
+            }
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
