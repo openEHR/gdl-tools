@@ -1,36 +1,36 @@
 package se.cambio.cds.gdl.parser;
 
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
+
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-
 public class Expressions {
 
-	public static List<ExpressionItem> parseBooleanExpressions(String value) throws Exception {
-		List<ExpressionItem> items;
-		ExpressionParser parser = new ExpressionParser(convert(value));
-		items = parser.parseBooleanExpressions();
-		return items;
-	}
-	
-	public static List<ExpressionItem> parseArithmeticExpressions(String value) throws Exception {
-		List<ExpressionItem> items;
-		ExpressionParser parser = new ExpressionParser(convert(value));
-		items = parser.parseArithmeticExpressions();
-		return items;
-	}
-	
-	public static ExpressionItem parse(String value) throws Exception {
-		ExpressionParser parser = new ExpressionParser(convert(value));
-		ExpressionItem item = parser.parse();
-		return item;
-	}
+    public static List<ExpressionItem> parseBooleanExpressions(String value) throws Exception {
+        List<ExpressionItem> items;
+        ExpressionParser parser = new ExpressionParser(convert(value));
+        items = parser.parseBooleanExpressions();
+        return items;
+    }
 
-	private static Reader convert(String value) throws Exception {
-		return new StringReader(value);
-	}
+    public static List<ExpressionItem> parseArithmeticExpressions(String value) throws Exception {
+        List<ExpressionItem> items;
+        ExpressionParser parser = new ExpressionParser(convert(value));
+        items = parser.parseArithmeticExpressions();
+        return items;
+    }
+
+    public static ExpressionItem parse(String value) throws Exception {
+        ExpressionParser parser = new ExpressionParser(convert(value));
+        ExpressionItem item = parser.parse();
+        return item;
+    }
+
+    private static Reader convert(String value) throws Exception {
+        return new StringReader(value);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

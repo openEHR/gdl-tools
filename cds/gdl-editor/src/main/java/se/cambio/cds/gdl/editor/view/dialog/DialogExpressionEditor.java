@@ -51,17 +51,19 @@ public class DialogExpressionEditor extends DialogEditor {
     private JTextArea expressionEditorTextComponent;
     public ExpressionItem _expressionItem = null;
     private JButton addElementButton;
+    private boolean _inPredicate;
 
     /**
      * This is the default constructor
      */
-    public DialogExpressionEditor(Window owner, ArchetypeElementVO archetypeElementVO, ExpressionRuleLineElement expressionRuleLineElement) {
+    public DialogExpressionEditor(Window owner, ArchetypeElementVO archetypeElementVO, ExpressionRuleLineElement expressionRuleLineElement, boolean inPredicate) {
         super(owner, GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700,400), true, true);
         _expressionRuleLineElement = expressionRuleLineElement;
         if (_expressionRuleLineElement.getValue()!=null){
             _expressionItem = _expressionRuleLineElement.getValue();
             getExpressionEditorTextComponent().setText(ExpressionUtil.getEditableExpressionString(_expressionItem));
         }
+        _inPredicate = inPredicate;
         initialize();
     }
 
@@ -72,20 +74,22 @@ public class DialogExpressionEditor extends DialogEditor {
     private  void initialize() {
         getJPanel().setLayout(new BorderLayout());
         getJPanel().add(getMainPanel(), BorderLayout.CENTER);
-        getJPanel().add(getBotonesPanel(), BorderLayout.SOUTH);
+        getJPanel().add(getButtonsPanel(), BorderLayout.SOUTH);
     }
 
 
-    public JPanel getBotonesPanel(){
+    public JPanel getButtonsPanel(){
         if (buttonsPanel==null){
             buttonsPanel = new JPanel(new BorderLayout());
             JPanel panelAux = new JPanel(new FlowLayout(FlowLayout.CENTER));
             panelAux.add(getAcceptButton());
             panelAux.add(getCancelButton());
             buttonsPanel.add(panelAux, BorderLayout.CENTER);
-            panelAux = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            panelAux.add(getAddElementButton());
-            buttonsPanel.add(panelAux, BorderLayout.EAST);
+            if (!_inPredicate){
+                panelAux = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                panelAux.add(getAddElementButton());
+                buttonsPanel.add(panelAux, BorderLayout.EAST);
+            }
         }
         return buttonsPanel;
     }
@@ -112,8 +116,12 @@ public class DialogExpressionEditor extends DialogEditor {
     }
 
     private void updateSelectionPanel(){
-        SelectableNode<Object> node =
-                NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor().getDefinitionRuleLines(), false);
+        SelectableNode<Object> node = null;
+        if (_inPredicate){
+            node = NodeDefinitionConversor.getNodeAttributesAndFunctionsPredicate();
+        }else{
+            node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor().getDefinitionRuleLines(), false);
+        }
         selectionPanel.changeRootNode(node);
         selectionPanel.getJTree().expand(node);
         selectionPanel.getJTree().addExtraMouseListener(new MouseAdapter() {

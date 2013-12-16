@@ -1,10 +1,11 @@
 package se.cambio.cds.gdl.model.readable.util;
 
 import org.apache.log4j.Logger;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineDefinitionElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateArchetypeElementAttributeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateAttributeComparisonOperatorRuleLineElement;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVDefSerializer;
 import se.cambio.openehr.controller.session.data.Archetypes;
@@ -55,7 +56,9 @@ public class ReadableArchetypeReferencesUtil {
         for (RuleLine ruleLine : airl.getChildrenRuleLines()) {
             if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
                 WithElementPredicateAttributeDefinitionRuleLine wpadrl = (WithElementPredicateAttributeDefinitionRuleLine)ruleLine;
-                if (!first){
+                if (first){
+                    first = false;
+                }else{
                     sb.append(", ");
                 }
                 ArchetypeElementRuleLineDefinitionElement aerlde = wpadrl.getArchetypeElementRuleLineDefinitionElement();
@@ -65,6 +68,43 @@ public class ReadableArchetypeReferencesUtil {
                         sb.append(archetypeElementVO.getName()+"="+DVDefSerializer.getReadableValue(wpadrl.getDataValueRuleLineElement().getValue(), null));
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                        sb.append("*UNKNOWN PREDICATE*");
+                    }
+                }
+            } else if (ruleLine instanceof WithElementPredicateFunctionDefinitionRuleLine){
+                WithElementPredicateFunctionDefinitionRuleLine wpfdrl = (WithElementPredicateFunctionDefinitionRuleLine)ruleLine;
+                if (first){
+                    first = false;
+                }else{
+                    sb.append(", ");
+                }
+                ArchetypeElementRuleLineDefinitionElement aerlde = wpfdrl.getArchetypeElementRuleLineDefinitionElement();
+                if (aerlde!=null){
+                    ArchetypeElementVO archetypeElementVO = aerlde.getValue();
+                    if (archetypeElementVO!=null){
+                        sb.append(wpfdrl.getFunctionRuleLineElement().getValue()+"("+archetypeElementVO.getName()+")");
+                    }else{
+                        Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                        sb.append("*UNKNOWN PREDICATE*");
+                    }
+                }
+            } else if (ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine){
+                WithElementPredicateExpressionDefinitionRuleLine wepedrl = (WithElementPredicateExpressionDefinitionRuleLine)ruleLine;
+                if (first){
+                    first = false;
+                }else{
+                    sb.append(", ");
+                }
+                PredicateArchetypeElementAttributeRuleLineElement paearle = wepedrl.getArchetypeElementAttributeRuleLineDefinitionElement();
+                PredicateAttributeComparisonOperatorRuleLineElement pacorl = wepedrl.getComparisonOperatorRuleLineElement();
+                ExpressionRuleLineElement ere = wepedrl.getExpressionRuleLineElement();
+                if (paearle!=null){
+                    ArchetypeElementVO archetypeElementVO = paearle.getValue();
+                    String attribute = paearle.getAttribute();
+                    if (archetypeElementVO!=null){
+                        sb.append(archetypeElementVO.getName()+"."+attribute+" "+pacorl.getValue().getSymbol()+" "+ere.toString());
+                    }else{
+                        Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+paearle.toString()+"'");
                         sb.append("*UNKNOWN PREDICATE*");
                     }
                 }

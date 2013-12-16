@@ -15,96 +15,96 @@ public abstract class RuleLine {
     private RuleLine parentRuleLine = null;
     private List<RuleLine> childrenRuleLines = null;
     private TermDefinition termDefinition = null;
-    
+
     public RuleLine(String name, String description) {
-	super();
-	this.name = name;
-	this.description = description;
-	this.ruleLineElements = new ArrayList<RuleLineElement>();
-	this.childrenRuleLines = new ArrayList<RuleLine>();
+        super();
+        this.name = name;
+        this.description = description;
+        this.ruleLineElements = new ArrayList<RuleLineElement>();
+        this.childrenRuleLines = new ArrayList<RuleLine>();
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public String getDescription() {
-	return description;
+        return description;
     }
 
     public ArrayList<RuleLineElement> getRuleLineElements() {
-	return ruleLineElements;
+        return ruleLineElements;
     }
 
     public String toString(){
-	StringBuffer sb = new StringBuffer();
-	int i = 0;
-	for (RuleLineElement ruleLineElement : ruleLineElements) {
-	    sb.append(ruleLineElement.toString());
-	    i++;
-	    if (i<ruleLineElements.size()){
-		sb.append(" ");
-	    }
-	}
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        int i = 0;
+        for (RuleLineElement ruleLineElement : ruleLineElements) {
+            sb.append(ruleLineElement.toString());
+            i++;
+            if (i<ruleLineElements.size()){
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
     }
 
     public String toHTMLString(){
-	return toHTMLString(0);
+        return toHTMLString(0);
     }
-    
+
     public String toHTMLString(int level){
-	StringBuffer sb = new StringBuffer();
-	int i = 0;
-	sb.append(getLevelSpace(level));
-	for (RuleLineElement ruleLineElement : ruleLineElements) {
-	    sb.append(ruleLineElement.toHTMLString());
-	    i++;
-	    if (i<ruleLineElements.size()){
-		sb.append(" ");
-	    }
-	}
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        int i = 0;
+        sb.append(getLevelSpace(level));
+        for (RuleLineElement ruleLineElement : ruleLineElements) {
+            sb.append(ruleLineElement.toHTMLString());
+            i++;
+            if (i<ruleLineElements.size()){
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
     }
-    
+
     protected String getLevelSpace(int level){
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < level; i++) {
-	    sb.append("&nbsp&nbsp&nbsp&nbsp");
-	}
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < level; i++) {
+            sb.append("&nbsp&nbsp&nbsp&nbsp");
+        }
+        return sb.toString();
     }
-    
+
     public boolean isCommented(){
-	return commented;
+        return commented;
     }
 
     public void setCommented(boolean commented){
-	this.commented = commented;
-	for (RuleLine ruleLine : getChildrenRuleLines()) {
-	    ruleLine.setCommented(commented);
-	}
+        this.commented = commented;
+        for (RuleLine ruleLine : getChildrenRuleLines()) {
+            ruleLine.setCommented(commented);
+        }
     }
 
     public RuleLine getParentRuleLine() {
-	return parentRuleLine;
+        return parentRuleLine;
     }
     private void setParentRuleLine(RuleLine parentRuleLine) {
-	this.parentRuleLine = parentRuleLine;
+        this.parentRuleLine = parentRuleLine;
     }
 
     public List<RuleLine> getChildrenRuleLines() {
-	return childrenRuleLines;
+        return childrenRuleLines;
     }
 
     public void addChildRuleLine(RuleLine ruleLine){
-	childrenRuleLines.add(ruleLine);
-	ruleLine.setParentRuleLine(this);
+        childrenRuleLines.add(ruleLine);
+        ruleLine.setParentRuleLine(this);
     }
 
     public void detachFromParent(){
-	this.parentRuleLine.getChildrenRuleLines().remove(this);
-	this.parentRuleLine = null;
+        this.parentRuleLine.getChildrenRuleLines().remove(this);
+        this.parentRuleLine = null;
     }
 
     public TermDefinition getTermDefinition() {

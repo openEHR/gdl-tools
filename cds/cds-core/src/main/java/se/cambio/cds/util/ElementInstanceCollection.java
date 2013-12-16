@@ -18,7 +18,7 @@ public class ElementInstanceCollection {
     private Map<String, Map<String, Map<String, Set<ArchetypeReference>>>> _archetypeReferenceMap = null;
 
     public void add(ElementInstance elementInstance){
-        add(elementInstance.getArchetypeReference(), null);
+        add(elementInstance.getArchetypeReference(), null, null);
     }
 
     public void addAll(Collection<ElementInstance> elementInstances){
@@ -31,15 +31,15 @@ public class ElementInstanceCollection {
 
     public void addAll(Collection<ArchetypeReference> archetypeReferences, GuideManager guideManager){
         for (ArchetypeReference archetypeReferenceToAdd : archetypeReferences) {
-            add(archetypeReferenceToAdd, guideManager);
+            add(archetypeReferenceToAdd, guideManager, null);
         }
     }
 
     public void add(ArchetypeReference archetypeReferenceToAdd){
-        add(archetypeReferenceToAdd, null);
+        add(archetypeReferenceToAdd, null, null);
     }
 
-    public void add(ArchetypeReference archetypeReferenceToAdd, GuideManager guideManager){
+    public void add(ArchetypeReference archetypeReferenceToAdd, GuideManager guideManager, Calendar date){
         if (archetypeReferenceToAdd instanceof GeneratedArchetypeReference){
             //Clone the AR
             ArchetypeReference arAux = archetypeReferenceToAdd.clone();
@@ -55,7 +55,7 @@ public class ElementInstanceCollection {
                     if (guideManager!=null){
                         Guide guide = guideManager.getGuide(predicateOriginalEI.getGuideId());
                         if (guide!=null){
-                            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guide);
+                            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guide, date);
                         }
                     }
                     new PredicateGeneratedElementInstance(
@@ -106,12 +106,12 @@ public class ElementInstanceCollection {
 	return matches((GeneratedArchetypeReference)elementInstance.getArchetypeReference(), guideManager);
     }
      */
-    public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Guide guide){
+    public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Guide guide, Calendar date){
         boolean matches = false;
         Iterator<ArchetypeReference> i = getArchetypeReferences(generatedArchetypeReference).iterator();
         while(i.hasNext() && !matches){
             ArchetypeReference ar =  i.next();
-            matches = ElementInstanceCollectionUtil.matchAndFill(generatedArchetypeReference, ar, guide);
+            matches = ElementInstanceCollectionUtil.matchAndFill(generatedArchetypeReference, ar, guide, date);
         }
         return matches;
     }

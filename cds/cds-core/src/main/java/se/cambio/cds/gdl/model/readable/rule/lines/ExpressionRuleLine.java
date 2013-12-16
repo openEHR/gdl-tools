@@ -10,25 +10,25 @@ import java.util.List;
 public abstract class ExpressionRuleLine extends RuleLine{
 
     public ExpressionRuleLine(String name, String description) {
-	super(name, description);
+        super(name, description);
     }
 
     public abstract ExpressionItem toExpressionItem() throws IllegalStateException;
 
     protected ExpressionItem convertToExpressionItem(List<RuleLine> ruleLines, int index) throws IllegalStateException{
-	if (ruleLines!=null && ruleLines.size()>index){
-	    ExpressionRuleLine expressionRuleLine = (ExpressionRuleLine)ruleLines.get(index);
-	    if (expressionRuleLine!=null){
-		ExpressionItem expressionItem = expressionRuleLine.toExpressionItem();
-		if (index==ruleLines.size()-1){
-		    return expressionItem;
-		}else{
-		    return new BinaryExpression(expressionItem, convertToExpressionItem(ruleLines, ++index), OperatorKind.AND);
-		}
-	    }
-	}
-	Logger.getLogger(ElementAttributeComparisonConditionRuleLine.class).warn("Element instance not found for"+ this.toString());
-	return null;
+        if (ruleLines!=null && ruleLines.size()>index){
+            ExpressionRuleLine expressionRuleLine = (ExpressionRuleLine)ruleLines.get(index);
+            if (expressionRuleLine!=null){
+                ExpressionItem expressionItem = expressionRuleLine.toExpressionItem();
+                if (index==ruleLines.size()-1){
+                    return expressionItem;
+                }else{
+                    return new BinaryExpression(expressionItem, convertToExpressionItem(ruleLines, ++index), OperatorKind.AND);
+                }
+            }
+        }
+        Logger.getLogger(ElementAttributeComparisonConditionRuleLine.class).warn("Element instance not found for"+ this.toString());
+        return null;
 
     }
 }

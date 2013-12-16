@@ -1,19 +1,17 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
-import java.awt.BorderLayout;
-import java.util.Collection;
-
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
+import javax.swing.*;
+import java.awt.*;
+import java.util.Collection;
+
 public class BaseRuleLineContainerPanel extends RuleLineContainerPanel{
 
     /**
-     * 
+     *
      */
     private JPanel ruleLineListPanel = null;
 
@@ -23,34 +21,34 @@ public class BaseRuleLineContainerPanel extends RuleLineContainerPanel{
     private Collection<RuleLine> _ruleLines = null;
 
     public BaseRuleLineContainerPanel(RuleLinesPanel ruleLinesPanel, Collection<RuleLine> ruleLines){
-	_ruleLinesPanel = ruleLinesPanel;
-	_ruleLines = ruleLines;
-	init();
+        _ruleLinesPanel = ruleLinesPanel;
+        _ruleLines = ruleLines;
+        init();
     }
 
     private void init(){
-	this.setLayout(new BorderLayout());
-	this.add(getRuleLineListPanel(), BorderLayout.NORTH);
-	for (RuleLine ruleLine : _ruleLines) {
-	    JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
-	    getRuleLineListPanel().add(panel);
-	}
+        this.setLayout(new BorderLayout());
+        this.add(getRuleLineListPanel(), BorderLayout.NORTH);
+        for (RuleLine ruleLine : _ruleLines) {
+            JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
+            getRuleLineListPanel().add(panel);
+        }
     }
 
     public void addRuleLine(RuleLineContainerPanel ruleLineContainerPanel){
-	getRuleLineListPanel().add(ruleLineContainerPanel);
+        getRuleLineListPanel().add(ruleLineContainerPanel);
     }
 
     private JPanel getRuleLineListPanel(){
-	if (ruleLineListPanel==null){
-	    ruleLineListPanel = new JPanel();
-	    ruleLineListPanel.setLayout(new BoxLayout(ruleLineListPanel, BoxLayout.Y_AXIS));
-	}
-	return ruleLineListPanel;
+        if (ruleLineListPanel==null){
+            ruleLineListPanel = new JPanel();
+            ruleLineListPanel.setLayout(new BoxLayout(ruleLineListPanel, BoxLayout.Y_AXIS));
+        }
+        return ruleLineListPanel;
     }
 
     public RuleLine getRuleLine() {
-	return null;
+        return null;
     }
 }
 /*

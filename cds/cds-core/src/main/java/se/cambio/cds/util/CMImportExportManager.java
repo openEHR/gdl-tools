@@ -209,30 +209,30 @@ public class CMImportExportManager {
             ZipEntry entry;
             while((entry = in.getNextEntry())!=null){
 
-                if (entry.getName().startsWith(ARCHETYPE_PREFIX) && entry.getName().endsWith(ARCHETYPE_POSTFIX)){
+                if (entry.getName().startsWith(ARCHETYPES_FOLDER_NAME) && entry.getName().endsWith(ARCHETYPE_POSTFIX)){
                     if (!useArchetypeDTOs){
                         String src = IOUtils.toString(in,"UTF-8");
-                        String archetypeId = entry.getName().substring(ARCHETYPE_PREFIX.length(), entry.getName().length()-ARCHETYPE_POSTFIX.length());
+                        String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length()+1, entry.getName().length()-ARCHETYPE_POSTFIX.length());
                         archetypeDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, src, null, null));
                     }
-                }else if (entry.getName().startsWith(TEMPLATES_PREFIX) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
+                }else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
                     if (!useTemplateDTOs){
                         String src = IOUtils.toString(in,"UTF-8");
-                        String templateId = entry.getName().substring(TEMPLATES_PREFIX.length(), entry.getName().length()-TEMPLATES_POSTFIX.length());
+                        String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length()+1, entry.getName().length()-TEMPLATES_POSTFIX.length());
                         templateDTOs.add(new TemplateDTO(templateId, templateId, templateId, null, null, src, null, null));
                     }
-                }else if (entry.getName().startsWith(TERMINOLOGY_PREFIX) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
+                }else if (entry.getName().startsWith(TERMINOLOGIES_FOLDER_NAME) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
                     byte[] src = IOUtils.toByteArray(in);
-                    String terminologyId = entry.getName().substring(TERMINOLOGY_PREFIX.length(), entry.getName().length()-TERMINOLOGY_POSTFIX.length());
+                    String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length()+1, entry.getName().length()-TERMINOLOGY_POSTFIX.length());
                     terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
-                }else if (entry.getName().startsWith(OVERVIEWS_PREFIX) && entry.getName().endsWith(OVERVIEWS_POSTFIX)){
+                }else if (entry.getName().startsWith(OVERVIEWS_FOLDER_NAME) && entry.getName().endsWith(OVERVIEWS_POSTFIX)){
                     String src = IOUtils.toString(in,"UTF-8");
-                    String overviewId = entry.getName().substring(OVERVIEWS_PREFIX.length(), entry.getName().length()-OVERVIEWS_POSTFIX.length());
+                    String overviewId = entry.getName().substring(OVERVIEWS_FOLDER_NAME.length()+1, entry.getName().length()-OVERVIEWS_POSTFIX.length());
                     overviewDTOs.add(new OverviewDTO(overviewId, overviewId, overviewId, src));
-                }else if (entry.getName().startsWith(GUIDELINES_PREFIX) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
+                }else if (entry.getName().startsWith(GUIDELINES_FOLDER_NAME) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
                     if (!useGuidelineDTOs){
                         String src = IOUtils.toString(in,"UTF-8");
-                        String guideId = entry.getName().substring(GUIDELINES_PREFIX.length(), entry.getName().length()-GUIDELINES_POSTFIX.length());
+                        String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length()+1, entry.getName().length()-GUIDELINES_POSTFIX.length());
                         guideDTOs.add(new GuideDTO(guideId, src, null, null, false));
                     }
                 }else if (entry.getName().startsWith(ARCHETYPE_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){

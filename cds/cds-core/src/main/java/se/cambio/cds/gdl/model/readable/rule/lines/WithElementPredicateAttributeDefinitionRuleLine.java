@@ -19,68 +19,68 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
     private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
     private PredicateComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
     private DataValueRuleLineElement dataValueRuleLineElement = null;
-    
+
 
     public WithElementPredicateAttributeDefinitionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("ElementPredicateAttribute"),
-		OpenEHRLanguageManager.getMessage("ElementPredicateAttributeDesc"));
-	archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
-	comparisonOperatorRuleLineElement = new PredicateComparisonOperatorRuleLineElement(this);
-	dataValueRuleLineElement = new DataValueRuleLineElement(this);
-	
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
-	getRuleLineElements().add(comparisonOperatorRuleLineElement);
-	getRuleLineElements().add(dataValueRuleLineElement);
+        super(OpenEHRLanguageManager.getMessage("ElementPredicateAttribute"),
+                OpenEHRLanguageManager.getMessage("ElementPredicateAttributeDesc"));
+        archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
+        comparisonOperatorRuleLineElement = new PredicateComparisonOperatorRuleLineElement(this);
+        dataValueRuleLineElement = new DataValueRuleLineElement(this);
+
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
+        getRuleLineElements().add(comparisonOperatorRuleLineElement);
+        getRuleLineElements().add(dataValueRuleLineElement);
     }
 
     public ArchetypeElementRuleLineDefinitionElement getArchetypeElementRuleLineDefinitionElement() {
         return archetypeElementRuleLineDefinitionElement;
     }
-    
+
     @Override
     public ArchetypeReference getArchetypeReference() {
-	return getArchetypeInstantiationRuleLine().
-		getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeInstantiationRuleLine().
+                getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
     @Override
     public ArchetypeElementVO getArchetypeElement() {
-	return archetypeElementRuleLineDefinitionElement.getValue();
+        return archetypeElementRuleLineDefinitionElement.getValue();
     }
 
     public PredicateComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement() {
         return comparisonOperatorRuleLineElement;
     }
-    
+
     public DataValueRuleLineElement getDataValueRuleLineElement() {
         return dataValueRuleLineElement;
     }
-    
+
     public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-	return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
     }
 
     @Override
     public ExpressionItem toExpressionItem() {
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineDefinitionElement().getValue();
-	String path = archetypeElementVO.getPath();
-	DataValue dataValue = 
-		getDataValueRuleLineElement().getValue();
-	OperatorKind operatorKind =
-		getComparisonOperatorRuleLineElement().getValue();
-	ConstantExpression constantExpression = null;
-	if (dataValue!=null){
-	    constantExpression = DVUtil.convertToExpression(dataValue);
-	}else{
-	    throw new IllegalStateException("No data value set");
-	}
-	return new BinaryExpression(
-			new Variable(null,archetypeElementVO.getName(), path),
-			constantExpression,
-			operatorKind);
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineDefinitionElement().getValue();
+        String path = archetypeElementVO.getPath();
+        DataValue dataValue =
+                getDataValueRuleLineElement().getValue();
+        OperatorKind operatorKind =
+                getComparisonOperatorRuleLineElement().getValue();
+        ConstantExpression constantExpression = null;
+        if (dataValue!=null){
+            constantExpression = DVUtil.convertToExpression(dataValue);
+        }else{
+            throw new IllegalStateException("No data value set");
+        }
+        return new BinaryExpression(
+                new Variable(null,archetypeElementVO.getName(), path),
+                constantExpression,
+                operatorKind);
     }
-    
+
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

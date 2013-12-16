@@ -28,6 +28,7 @@ public class Guides {
     }
 
     public static void loadGuides() throws InternalErrorException{
+        init();
         CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
         Collection<GuideDTO> guideDTOs = adminFD.searchAllGuides();
         loadGuides(guideDTOs);
@@ -36,11 +37,12 @@ public class Guides {
     public static void loadGuidesById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
         CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
         Collection<GuideDTO> guideDTOs = adminFD.searchByGuideIds(guideIds);
-        loadGuides(guideDTOs);
+        for (GuideDTO guideDTO : guideDTOs) {
+            registerGuide(guideDTO);
+        }
     }
 
     public static void loadGuides(Collection<GuideDTO> guideDTOs) throws InternalErrorException{
-        init();
         for (GuideDTO guideDTO : guideDTOs) {
             registerGuide(guideDTO);
         }
@@ -103,10 +105,23 @@ public class Guides {
     public static Collection<Guide> getAllGuideObjects(){
         ArrayList<Guide> guides = new ArrayList<Guide>();
         for (GuideDTO guideDTO: getAllGuides()){
-            Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
+            Guide guide = getGuide(guideDTO);
             guides.add(guide);
         }
         return guides;
+    }
+
+    public static Guide getGuide(String guideId){
+        GuideDTO guideDTO = getGuideDTO(guideId);
+        return getGuide(guideDTO);
+    }
+
+    public static Guide getGuide(GuideDTO guideDTO){
+        if (guideDTO!=null){
+            return (Guide)IOUtils.getObject(guideDTO.getGuideObject());
+        }else{
+            return null;
+        }
     }
 
     public static boolean isActive(String guideId){

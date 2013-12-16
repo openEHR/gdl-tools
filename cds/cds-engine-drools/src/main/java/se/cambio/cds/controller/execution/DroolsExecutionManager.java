@@ -13,6 +13,7 @@ import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
 import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
+import se.cambio.openehr.util.DataValueGenerator;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -63,15 +64,8 @@ public class DroolsExecutionManager {
             if (date==null){
                 date = Calendar.getInstance();
             }
-            session.setGlobal("$currentDateTime",
-                    new DvDateTime(
-                            date.get(Calendar.YEAR),
-                            date.get(Calendar.MONTH)+1,
-                            date.get(Calendar.DAY_OF_MONTH),
-                            date.get(Calendar.HOUR_OF_DAY),
-                            date.get(Calendar.MINUTE),
-                            date.get(Calendar.SECOND),
-                            date.getTimeZone()));
+            DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
+            session.setGlobal("$currentDateTime", currentDateTime);
             getDelegate()._logger = executionLogger;
             session.setGlobal("$executionLogger", executionLogger);
             session.setGlobal("$execute", true);

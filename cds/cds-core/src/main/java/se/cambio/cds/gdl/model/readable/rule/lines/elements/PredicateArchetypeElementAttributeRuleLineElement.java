@@ -1,30 +1,45 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-public class GTCodeRuleLineElement extends RuleLineElementWithValue<String> {
+public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineElementWithValue<ArchetypeElementVO> {
+    private String _attribute = null;
 
-    public GTCodeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Name"));
+    public PredicateArchetypeElementAttributeRuleLineElement(RuleLine ruleLine) {
+        super(ruleLine, OpenEHRLanguageManager.getMessage("ElementAttribute"));
     }
 
-    @Override
+    public String getAttribute() {
+        return _attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this._attribute = attribute;
+    }
+
     public String getDescription() {
-        return OpenEHRLanguageManager.getMessage("Name");
-    }
-
-    public String toString(){
         if (getValue()!=null){
-            String name = getName(getValue());
-            if(name!=null){
-                return name;
-            }else{
-                return getText();
-            }
+            return getValue().getDescription();
         }else{
             return getText();
         }
+    }
+
+
+    public String toString(){
+        if (getValue()!=null && getAttribute()!=null){
+            String name = getValue().getName();
+            return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
+        }else{
+            return getText();
+        }
+    }
+
+    @Override
+    public String toHTMLString() {
+        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
     }
 }
 /*

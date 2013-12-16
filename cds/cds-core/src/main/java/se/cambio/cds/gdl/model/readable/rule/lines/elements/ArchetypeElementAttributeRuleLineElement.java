@@ -47,7 +47,7 @@ public class ArchetypeElementAttributeRuleLineElement extends RuleLineElementWit
         return _attribute;
     }
 
-    public void setAttributeFunction(String attribute) {
+    public void setAttribute(String attribute) {
         this._attribute = attribute;
     }
 

@@ -1,30 +1,28 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.elements;
+package se.cambio.cds.gdl.editor.view.dialog;
 
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
-public class GTCodeRuleLineElement extends RuleLineElementWithValue<String> {
+import java.awt.*;
 
-    public GTCodeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Name"));
-    }
+public class DialogPredicateElementAttributeInstanceSelection extends DialogSelection{
 
-    @Override
-    public String getDescription() {
-        return OpenEHRLanguageManager.getMessage("Name");
-    }
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private GDLEditor _controller = null;
 
-    public String toString(){
-        if (getValue()!=null){
-            String name = getName(getValue());
-            if(name!=null){
-                return name;
-            }else{
-                return getText();
-            }
-        }else{
-            return getText();
-        }
+    public DialogPredicateElementAttributeInstanceSelection(Window owner, GDLEditor controller, String archetypeId, String templateId) {
+        super(
+                owner,
+                GDLEditorLanguageManager.getMessage("SelectElementInstance"),
+                NodeDefinitionConversor.getNodeAttributesAndFunctions(archetypeId, templateId),
+                true,
+                new Dimension(500,500));
+        _controller = controller;
     }
 }
 /*

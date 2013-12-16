@@ -4,10 +4,7 @@ import se.cambio.cds.gdl.model.expression.BinaryExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.expression.Variable;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineDefinitionElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateComparisonOperatorRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -17,60 +14,67 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 public class WithElementPredicateExpressionDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeReferenceRuleLine, DefinitionsRuleLine{
 
-    private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
-    private PredicateComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
+    private PredicateArchetypeElementAttributeRuleLineElement archetypeElementAttributeRuleLineDefinitionElement = null;
+    private PredicateAttributeComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
     private ExpressionRuleLineElement expressionRuleLineElement = null;
-    
 
-    public WithElementPredicateExpressionDefinitionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("ElementPredicateExpression"),
-		OpenEHRLanguageManager.getMessage("ElementPredicateExpressionDesc"));
-	archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
-	comparisonOperatorRuleLineElement = new PredicateComparisonOperatorRuleLineElement(this);
-	expressionRuleLineElement = new ExpressionRuleLineElement(this);
-	
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
-	getRuleLineElements().add(comparisonOperatorRuleLineElement);
-	getRuleLineElements().add(expressionRuleLineElement);
+    private ArchetypeElementRuleLineDefinitionElement _archetypeElementRuleLineDefinitionElement = null;
+
+    public WithElementPredicateExpressionDefinitionRuleLine(
+            ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine) {
+        super(OpenEHRLanguageManager.getMessage("ElementPredicateExpression"),
+                OpenEHRLanguageManager.getMessage("ElementPredicateExpressionDesc"));
+        archetypeElementAttributeRuleLineDefinitionElement = new PredicateArchetypeElementAttributeRuleLineElement(this);
+        comparisonOperatorRuleLineElement = new PredicateAttributeComparisonOperatorRuleLineElement(this);
+        expressionRuleLineElement = new ExpressionRuleLineElement(this);
+
+        if (archetypeInstantiationRuleLine!=null){
+            archetypeInstantiationRuleLine.addChildRuleLine(this);
+        }
+
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(archetypeElementAttributeRuleLineDefinitionElement);
+        getRuleLineElements().add(comparisonOperatorRuleLineElement);
+        getRuleLineElements().add(expressionRuleLineElement);
     }
 
-    public ArchetypeElementRuleLineDefinitionElement getArchetypeElementRuleLineDefinitionElement() {
-        return archetypeElementRuleLineDefinitionElement;
+    public PredicateArchetypeElementAttributeRuleLineElement getArchetypeElementAttributeRuleLineDefinitionElement() {
+        return archetypeElementAttributeRuleLineDefinitionElement;
     }
 
-    public PredicateComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement() {
+    public PredicateAttributeComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement() {
         return comparisonOperatorRuleLineElement;
     }
-    
+
     public ExpressionRuleLineElement getExpressionRuleLineElement(){
-	return expressionRuleLineElement;
+        return expressionRuleLineElement;
     }
-    
+
     @Override
     public ArchetypeReference getArchetypeReference() {
-	return getArchetypeInstantiationRuleLine().
-		getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeInstantiationRuleLine().
+                getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
-    
+
     public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-	return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
     }
 
     @Override
     public ExpressionItem toExpressionItem() {
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineDefinitionElement().getValue();
-	String path = archetypeElementVO.getPath();
-	ExpressionRuleLineElement expressionRuleLineElement = 
-		getExpressionRuleLineElement();
-	OperatorKind operatorKind =
-		getComparisonOperatorRuleLineElement().getValue();
-	return new BinaryExpression(
-			new Variable(null,archetypeElementVO.getName(), path),
-			expressionRuleLineElement.getValue(),
-			operatorKind);
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementAttributeRuleLineDefinitionElement().getValue();
+        String attribute = getArchetypeElementAttributeRuleLineDefinitionElement().getAttribute();
+        String path =  archetypeElementVO.getPath()+"/value/"+attribute;
+        ExpressionRuleLineElement expressionRuleLineElement =
+                getExpressionRuleLineElement();
+        OperatorKind operatorKind =
+                getComparisonOperatorRuleLineElement().getValue();
+        return new BinaryExpression(
+                new Variable(null,archetypeElementVO.getName(), path),
+                expressionRuleLineElement.getValue(),
+                operatorKind);
     }
-    
+
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

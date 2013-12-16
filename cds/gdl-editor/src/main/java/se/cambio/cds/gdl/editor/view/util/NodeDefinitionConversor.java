@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.view.util;
 
+import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -10,10 +11,10 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineDefinitionElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineDefinitionElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
@@ -283,6 +284,36 @@ public class NodeDefinitionConversor {
             root.add(currentDateTimeNode);
         }
         root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain));
+        return root;
+    }
+
+    public static SelectableNode<Object> getNodeAttributesAndFunctionsPredicate(){
+        SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+        GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
+        SelectableNode<Object> currentDateTimeNode =
+                getCurrentDateTimeArchetypeElementRuleLineElementNode(currentDateTimeGTCodeRuleLineElement);
+        addFieldsToNode(currentDateTimeNode, OpenEHRDataValues.DV_DATE_TIME, getCurrentDateTimeGTCodeRuleLineElement());
+        root.add(currentDateTimeNode);
+        return root;
+    }
+    public static SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId){
+        SelectableNode<Object> root =
+                new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+        Collection<ArchetypeElementVO> archetypeElementVOs = ArchetypeElements.getArchetypeElementsVO(archetypteId, templateId);
+        for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
+            SelectableNode<Object> elementNode = createElementNode(archetypeElementVO, true);
+            String[] fieldNames =
+                    OpenEHRDataValuesUI.getFieldNames(archetypeElementVO.getRMType());
+            for (String fieldName : fieldNames) {
+                SelectableNodeWithIcon<Object> fieldNode =
+                        new SelectableNodeWithIcon<Object>(
+                                fieldName,
+                                new PredicateAttributeVO(archetypeElementVO, fieldName),
+                                true, false, GDLEditorImageUtil.OBJECT_ICON);
+                elementNode.add(fieldNode);
+            }
+            root.add(elementNode);
+        }
         return root;
     }
 

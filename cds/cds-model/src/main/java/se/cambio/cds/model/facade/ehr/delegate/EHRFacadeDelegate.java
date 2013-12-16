@@ -8,6 +8,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.InvalidAQLForEHRIdsException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,10 @@ public interface EHRFacadeDelegate {
     public List<List<Object>> query(String aql)
             throws InternalErrorException, InvalidAQLForEHRIdsException;
 
-    public Collection<ElementInstance> queryEHRElements(
-	    String ehrId,
-	    Collection<ArchetypeReference> archetypeReferences) 
-		    throws InternalErrorException, PatientNotFoundException;
-   
     public Map<String, Collection<ElementInstance>> queryEHRElements(
 	    Collection<String> ehrIds,
-	    Collection<ArchetypeReference> archetypeReferences) 
+	    Collection<ArchetypeReference> archetypeReferences,
+        Calendar date)
 		    throws InternalErrorException, PatientNotFoundException;    
    
     public boolean storeCDSResults(

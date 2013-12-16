@@ -28,7 +28,7 @@ public class RuleLineDirectory {
             getDelegate()._selectableDefinitions.add(new ArchetypeElementInstantiationRuleLine(null));
             getDelegate()._selectableDefinitions.add(new WithElementPredicateAttributeDefinitionRuleLine());
             getDelegate()._selectableDefinitions.add(new WithElementPredicateFunctionDefinitionRuleLine());
-            //TODO => ruleLines.add(new WithElementPredicateExpressionDefinitionRuleLine());
+            getDelegate()._selectableDefinitions.add(new WithElementPredicateExpressionDefinitionRuleLine(null));
         }
         return getDelegate()._selectableDefinitions;
     }
@@ -86,7 +86,9 @@ public class RuleLineDirectory {
     public static boolean checkRuleLineCompatibility(RuleLine ruleLine, RuleLine ruleLineParent){
         if (ruleLineParent==null){
             if(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
-                    ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
+                    ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine ||
+                    ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine ||
+                    ruleLine instanceof WithElementPredicateFunctionDefinitionRuleLine){
                 return false;
             }else{
                 return true;

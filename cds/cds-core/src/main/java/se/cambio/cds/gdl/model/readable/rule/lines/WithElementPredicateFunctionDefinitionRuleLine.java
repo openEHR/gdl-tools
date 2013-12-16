@@ -21,51 +21,51 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
 
 
     public WithElementPredicateFunctionDefinitionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("ElementPredicateFunction"),
-		OpenEHRLanguageManager.getMessage("ElementPredicateFunctionDesc"));
-	archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
-	functionRuleLineElement = new PredicateComparisonFunctionRuleLineElement(this);
-	
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
-	getRuleLineElements().add(functionRuleLineElement);
+        super(OpenEHRLanguageManager.getMessage("ElementPredicateFunction"),
+                OpenEHRLanguageManager.getMessage("ElementPredicateFunctionDesc"));
+        archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
+        functionRuleLineElement = new PredicateComparisonFunctionRuleLineElement(this);
+
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
+        getRuleLineElements().add(functionRuleLineElement);
     }
 
     public ArchetypeElementRuleLineDefinitionElement getArchetypeElementRuleLineDefinitionElement() {
         return archetypeElementRuleLineDefinitionElement;
     }
-    
+
     @Override
     public ArchetypeReference getArchetypeReference() {
-	return getArchetypeInstantiationRuleLine().
-		getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeInstantiationRuleLine().
+                getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
     @Override
     public ArchetypeElementVO getArchetypeElement() {
-	return archetypeElementRuleLineDefinitionElement.getValue();
+        return archetypeElementRuleLineDefinitionElement.getValue();
     }
 
     public PredicateComparisonFunctionRuleLineElement getFunctionRuleLineElement() {
         return functionRuleLineElement;
     }
-    
+
     public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-	return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
     }
 
     @Override
     public ExpressionItem toExpressionItem() {
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineDefinitionElement().getValue();
-	String path = archetypeElementVO.getPath();
-	OperatorKind operatorKind =
-		getFunctionRuleLineElement().getValue();
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineDefinitionElement().getValue();
+        String path = archetypeElementVO.getPath();
+        OperatorKind operatorKind =
+                getFunctionRuleLineElement().getValue();
 
-	return new UnaryExpression(
-			new Variable(null,archetypeElementVO.getName(), path),
-			operatorKind);
+        return new UnaryExpression(
+                new Variable(null,archetypeElementVO.getName(), path),
+                operatorKind);
     }
-    
+
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

@@ -101,14 +101,16 @@ public class GuideImporter {
                                         binaryExpression.getRight() instanceof ExpressionItem){
                                     Variable variable = (Variable)binaryExpression.getLeft();
                                     ExpressionItem expressionItemAux = binaryExpression.getRight();
-                                    WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine();
-                                    airl.addChildRuleLine(wepdrl);
+                                    WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine(airl);
                                     String path = variable.getPath();
+                                    String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
+                                    path = path.substring(0, path.length()-attribute.length()-7);
                                     ArchetypeElementVO archetypeElementVO =
                                             ArchetypeElements.getArchetypeElement(
                                                     archetypeBinding.getTemplateId(),
                                                     archetypeBinding.getArchetypeId()+path);
-                                    wepdrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setValue(archetypeElementVO);
+                                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setAttribute(attribute);
                                     wepdrl.getExpressionRuleLineElement().setValue(expressionItemAux);
                                     wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
                                 }
@@ -265,7 +267,7 @@ public class GuideImporter {
             }
         }else{
             SetElementAttributeActionRuleLine seaarl = new SetElementAttributeActionRuleLine();
-            seaarl.getArchetypeElementAttributeRuleLineElement().setAttributeFunction(attribute);
+            seaarl.getArchetypeElementAttributeRuleLineElement().setAttribute(attribute);
             ArchetypeElementRuleLineElement aerle = new ArchetypeElementRuleLineElement(seaarl);
             aerle.setValue(gtCodeRuleLineElement);
             seaarl.getArchetypeElementAttributeRuleLineElement().setValue(aerle);
@@ -386,7 +388,7 @@ public class GuideImporter {
                     addRuleLine(ecwnvc, ruleLines, parentRuleLine);
                 }else{//Expression
                     ElementAttributeComparisonConditionRuleLine eaccrl = new ElementAttributeComparisonConditionRuleLine();
-                    eaccrl.getArchetypeElementAttributeRuleLineElement().setAttributeFunction(attribute);
+                    eaccrl.getArchetypeElementAttributeRuleLineElement().setAttribute(attribute);
                     ArchetypeElementRuleLineElement aerle = new ArchetypeElementRuleLineElement(eaccrl);
                     aerle.setValue(gtCodeRuleLineElement);
                     eaccrl.getArchetypeElementAttributeRuleLineElement().setValue(aerle);

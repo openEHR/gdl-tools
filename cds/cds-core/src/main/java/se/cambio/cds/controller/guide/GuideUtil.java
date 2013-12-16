@@ -13,10 +13,11 @@ import se.cambio.cds.gdl.parser.DADLSerializer;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.util.CurrentTimeExpressionDataValue;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
@@ -85,19 +86,37 @@ public class GuideUtil {
                     BinaryExpression be = ((BinaryExpression)expressionItem);
                     ExpressionItem l = be.getLeft();
                     ExpressionItem r = be.getRight();
-                    if (l instanceof Variable && (r instanceof ConstantExpression)){
-                        String idElement =
-                                archetypeBinding.getArchetypeId()+((Variable)l).getPath();
-                        DataValue dv = getDataValue((ConstantExpression)r);
-                        new PredicateGeneratedElementInstance(
-                                idElement,
-                                dv,
-                                ar,
-                                null,
-                                null,
-                                guideId,
-                                null,
-                                be.getOperator());
+                    if (l instanceof Variable){
+                        if (r instanceof ConstantExpression){
+                            String idElement =
+                                    archetypeBinding.getArchetypeId()+((Variable)l).getPath();
+                            DataValue dv = getDataValue((ConstantExpression)r);
+                            new PredicateGeneratedElementInstance(
+                                    idElement,
+                                    dv,
+                                    ar,
+                                    null,
+                                    null,
+                                    guideId,
+                                    null,
+                                    be.getOperator());
+                        }else if (r instanceof ExpressionItem){
+                            String path = ((Variable)l).getPath();
+                            String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
+                            path = path.substring(0, path.length()-attribute.length()-7);
+                            String idElement =
+                                    archetypeBinding.getArchetypeId()+path;
+                            DataValue dv = new CurrentTimeExpressionDataValue(r, attribute);
+                            PredicateGeneratedElementInstance predicateGeneratedElementInstance = new PredicateGeneratedElementInstance(
+                                    idElement,
+                                    dv,
+                                    ar,
+                                    null,
+                                    null,
+                                    guideId,
+                                    null,
+                                    be.getOperator());
+                        }
                     }
                 }else if (expressionItem instanceof UnaryExpression){
                     UnaryExpression ue = ((UnaryExpression)expressionItem);

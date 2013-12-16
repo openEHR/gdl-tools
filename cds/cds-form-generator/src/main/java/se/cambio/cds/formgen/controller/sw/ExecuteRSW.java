@@ -6,20 +6,17 @@ import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegateFactory;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author iago.corbal
@@ -63,11 +60,15 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
             }
 
             Collection<GuideDTO> guideDTOs = Collections.singleton(controller.getGuideDTO());
+            Calendar currentDateTime = controller.getCurrentDate();
+            if (currentDateTime==null){
+                currentDateTime = Calendar.getInstance();
+            }
             GuideManager guideManager = new GuideManager(guideDTOs);
             Collection<ElementInstance> elementInstances =
-                    CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager);
+                    CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager, currentDateTime);
             _refd = RuleExecutionFacadeDelegateFactory.getDelegate();
-            RuleExecutionResult result = _refd.execute(null, guideDTOs, elementInstances, controller.getCurrentDate());
+            RuleExecutionResult result = _refd.execute(null, guideDTOs, elementInstances, currentDateTime);
             //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
             return result;
         }catch(Throwable e){

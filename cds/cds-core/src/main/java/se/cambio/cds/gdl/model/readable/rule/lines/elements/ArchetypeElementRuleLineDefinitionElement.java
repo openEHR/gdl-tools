@@ -10,36 +10,36 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeElementVO> {
 
     public ArchetypeElementRuleLineDefinitionElement(RuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
     }
 
     public ArchetypeReference getArchetypeReference() {
-	if (getParentRuleLine() instanceof ArchetypeReferenceRuleLine){
-	    return ((ArchetypeReferenceRuleLine)getParentRuleLine()).getArchetypeReference();
-	}else{
-	    return null;
-	}
+        if (getParentRuleLine() instanceof ArchetypeReferenceRuleLine){
+            return ((ArchetypeReferenceRuleLine)getParentRuleLine()).getArchetypeReference();
+        }else{
+            return null;
+        }
     }
 
     @Override
     public String getDescription() {
-	if (getValue()==null){
-	    return OpenEHRLanguageManager.getMessage("Element");
-	}else{
-	    return ArchetypeReferences.getHTMLTooltip(getValue(), getArchetypeReference());
-	}
+        if (getValue()==null){
+            return OpenEHRLanguageManager.getMessage("Element");
+        }else{
+            return ArchetypeReferences.getHTMLTooltip(getValue(), getArchetypeReference());
+        }
     }
 
     public String getDomainId(){
-	return getArchetypeReference().getIdDomain();
+        return getArchetypeReference().getIdDomain();
     }
 
     public String toString(){
-	if (getValue()!=null){
-	    return getValue().getName();
-	}else{
-	    return getText();
-	}
+        if (getValue()!=null){
+            return getValue().getName();
+        }else{
+            return getText();
+        }
     }
 }
 /*

@@ -13,6 +13,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
+import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
@@ -43,8 +44,10 @@ public class RuleElementEditor {
             editDataValue((DataValueRuleLineElement)ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof NullValueRuleLineElement){
             editNullValue((NullValueRuleLineElement)ruleLineElementWithValue);
+        }else if (ruleLineElementWithValue instanceof PredicateArchetypeElementAttributeRuleLineElement){
+            editPredicateAttribute((PredicateArchetypeElementAttributeRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof ArchetypeElementAttributeRuleLineElement){
-            editAttribute((ArchetypeElementAttributeRuleLineElement)ruleLineElementWithValue);
+            editAttribute((ArchetypeElementAttributeRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof ExpressionRuleLineElement){
             editExpression((ExpressionRuleLineElement)ruleLineElementWithValue);
         }
@@ -227,6 +230,9 @@ public class RuleElementEditor {
             }else if (ruleLineElement instanceof ArchetypeElementRuleLineDefinitionElement){
                 archetypeElementVO =
                         ((ArchetypeElementRuleLineDefinitionElement)ruleLineElement).getValue();
+            }else if (ruleLineElement instanceof PredicateArchetypeElementAttributeRuleLineElement){
+                archetypeElementVO =
+                        ((PredicateArchetypeElementAttributeRuleLineElement)ruleLineElement).getValue();
             }else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement){
                 ArchetypeElementRuleLineElement aerle = ((ArchetypeElementAttributeRuleLineElement)ruleLineElement).getValue();
                 if (aerle!=null){
@@ -283,13 +289,33 @@ public class RuleElementEditor {
                     new ArchetypeElementRuleLineElement(aearle.getParentRuleLine());
             archetypeElementRuleLineElement.setValue(attributeContainerNode.getGtCodeRuleLineElement());
             aearle.setValue(archetypeElementRuleLineElement);
-            aearle.setAttributeFunction(attributeContainerNode.getAttributeFunction());
+            aearle.setAttribute(attributeContainerNode.getAttributeFunction());
         }else if (selectedObject instanceof GTCodeRuleLineElement){
             GTCodeRuleLineElement gtCodeRuleLineElement = (GTCodeRuleLineElement)selectedObject;
             if (gtCodeRuleLineElement.getParentRuleLine() instanceof ArchetypeInstantiationRuleLine){
                 ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)gtCodeRuleLineElement.getParentRuleLine();
                 controller.addArchetypeElement(airl);
                 editAttribute(aearle);
+            }
+        }
+    }
+
+    private static void editPredicateAttribute(PredicateArchetypeElementAttributeRuleLineElement paearle){
+        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        WithElementPredicateExpressionDefinitionRuleLine wepedrl = (WithElementPredicateExpressionDefinitionRuleLine)paearle.getParentRuleLine();
+        DialogPredicateElementAttributeInstanceSelection dialog =
+                new DialogPredicateElementAttributeInstanceSelection(
+                        EditorManager.getActiveEditorWindow(),
+                        controller,
+                        wepedrl.getArchetypeReference().getIdArchetype(),
+                        wepedrl.getArchetypeReference().getIdTemplate());
+        dialog.setVisible(true);
+        if (dialog.getAnswer()){
+            Object obj = dialog.getSelectedObject();
+            if (obj instanceof PredicateAttributeVO){
+                PredicateAttributeVO predicateAttributeVO = (PredicateAttributeVO)obj;
+                paearle.setAttribute(predicateAttributeVO.getAttribute());
+                paearle.setValue(predicateAttributeVO.getArchetypeElementVO());
             }
         }
     }
@@ -324,8 +350,12 @@ public class RuleElementEditor {
                     arle.setValue(new StringConstant(unit));
                 }
             }else{
+                boolean inPredicate = false;
+                if (arle.getParentRuleLine() instanceof WithElementPredicateExpressionDefinitionRuleLine){
+                    inPredicate = true;
+                }
                 DialogExpressionEditor dialog =
-                        new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), archetypeElementVO, arle);
+                        new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), archetypeElementVO, arle, inPredicate);
                 dialog.setVisible(true);
                 if (dialog.getAnswer()){
                     ExpressionItem expressionItem = dialog.getExpressionItem();

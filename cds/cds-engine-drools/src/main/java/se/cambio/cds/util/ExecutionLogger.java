@@ -7,7 +7,9 @@ import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ExecutionLogger {
@@ -33,6 +35,15 @@ public class ExecutionLogger {
         long executionTime = (System.currentTimeMillis()-_startTime);
         if (cancelExecution || executionTime> DroolsExecutionManager.getExecutionTimeOut()){
             Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out!");
+            Map<String, Integer> countMap = new HashMap<String, Integer>();
+            for (ExecutionLog logLine : getLog()){
+                String firedRule = logLine.getFiredRule();
+                int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
+                countMap.put(firedRule, count + 1);
+            }
+            for (String firedRule:countMap.keySet()){
+                Logger.getLogger(ExecutionLogger.class).info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
+            }
             drools.halt();
         }
     }

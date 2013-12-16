@@ -7,9 +7,11 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 public class PredicateComparisonOperatorRuleLineElement extends AbstractComparisonOperatorRuleLineElement{
 
     public PredicateComparisonOperatorRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine);
-	addOperator(OperatorKind.EQUALITY);
-	addOperator(OperatorKind.IS_A);
+        super(ruleLine);
+        addOperator(OperatorKind.EQUALITY);
+        addOperator(OperatorKind.IS_A);
+        addOperator(OperatorKind.GREATER_THAN_OR_EQUAL);
+        addOperator(OperatorKind.LESS_THAN_OR_EQUAL);
     }
 }
 /*

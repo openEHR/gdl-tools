@@ -1,14 +1,5 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import java.awt.Dimension;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.swing.JButton;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
@@ -21,10 +12,17 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElemen
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class DialogElementAttributeFunctionInstanceSelection extends DialogSelection{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
@@ -34,82 +32,82 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     private JButton addElementButton;
 
     public DialogElementAttributeFunctionInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
-	super(
-		owner, 
-		GDLEditorLanguageManager.getMessage("SelectElementInstance"), 
-		NodeDefinitionConversor.getNodeAttributesAndFunctions(controller.getDefinitionRuleLines(), onlyCDSDomain), 
-		true, 
-		new Dimension(500,500));
-	_controller = controller;
-	_onlyCDSDomain = onlyCDSDomain;
-	initButtons();
+        super(
+                owner,
+                GDLEditorLanguageManager.getMessage("SelectElementInstance"),
+                NodeDefinitionConversor.getNodeAttributesAndFunctions(controller.getDefinitionRuleLines(), onlyCDSDomain),
+                true,
+                new Dimension(500,500));
+        _controller = controller;
+        _onlyCDSDomain = onlyCDSDomain;
+        initButtons();
     }
 
     public void initButtons(){
-	getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());
-	getSelectionPanel().getFilterPanel().add(getAddElementButton());
+        getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());
+        getSelectionPanel().getFilterPanel().add(getAddElementButton());
     }
 
     public JButton getAddArchetypeReferenceButton() {
-	if (addArchetypeReferenceButton == null) {
-	    addArchetypeReferenceButton = new JButton();
-	    addArchetypeReferenceButton.setText(GDLEditorLanguageManager.getMessage("AddArchetype"));
-	    addArchetypeReferenceButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddArchetypeD"));
-	    addArchetypeReferenceButton.setIcon(GDLEditorImageUtil.ADD_ICON);
-	    addArchetypeReferenceButton.setEnabled(true);
-	    addArchetypeReferenceButton.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		    accept();
-		    ArchetypeInstantiationRuleLine airl = 
-			    _controller.addArchetypeReference(_onlyCDSDomain);
-		    if (airl!=null){
-			ArchetypeElementInstantiationRuleLine aeirl =
-				_controller.addArchetypeElement(airl);
-			if (aeirl!=null){
-			    selectAttributeFromGTCodeRLE(aeirl);
-			}
-		    }
-		}
-	    });
-	}
-	return addArchetypeReferenceButton;
+        if (addArchetypeReferenceButton == null) {
+            addArchetypeReferenceButton = new JButton();
+            addArchetypeReferenceButton.setText(GDLEditorLanguageManager.getMessage("AddArchetype"));
+            addArchetypeReferenceButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddArchetypeD"));
+            addArchetypeReferenceButton.setIcon(GDLEditorImageUtil.ADD_ICON);
+            addArchetypeReferenceButton.setEnabled(true);
+            addArchetypeReferenceButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    accept();
+                    ArchetypeInstantiationRuleLine airl =
+                            _controller.addArchetypeReference(_onlyCDSDomain);
+                    if (airl!=null){
+                        ArchetypeElementInstantiationRuleLine aeirl =
+                                _controller.addArchetypeElement(airl);
+                        if (aeirl!=null){
+                            selectAttributeFromGTCodeRLE(aeirl);
+                        }
+                    }
+                }
+            });
+        }
+        return addArchetypeReferenceButton;
     }
 
     protected JButton getAddElementButton() {
-	if (addElementButton == null) {
-	    addElementButton = new JButton();
-	    addElementButton.setText(GDLEditorLanguageManager.getMessage("AddElement"));
-	    addElementButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddElementD"));
-	    addElementButton.setIcon(GDLEditorImageUtil.ADD_ICON);
-	    addElementButton.setEnabled(true);
-	    addElementButton.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    addElement();
-		}
-	    });
-	}
-	return addElementButton;
+        if (addElementButton == null) {
+            addElementButton = new JButton();
+            addElementButton.setText(GDLEditorLanguageManager.getMessage("AddElement"));
+            addElementButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddElementD"));
+            addElementButton.setIcon(GDLEditorImageUtil.ADD_ICON);
+            addElementButton.setEnabled(true);
+            addElementButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    addElement();
+                }
+            });
+        }
+        return addElementButton;
     }
 
     public void addElement(){
-	GDLEditor controller = EditorManager.getActiveGDLEditor();
-	DialogElementInstanceSelection dialog = 
-		new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false);
-	dialog.setVisible(true);
-	if (dialog.getAnswer()){
-	    Object selectedObject = dialog.getSelectedObject();
-	    if (selectedObject instanceof ArchetypeInstantiationRuleLine){
-		ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
-		ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
-		if (aeirl!=null){
-		    selectAttributeFromGTCodeRLE(aeirl);
-		}
-	    }else if (selectedObject instanceof GTCodeRuleLineElement){
-		GTCodeRuleLineElement gtCodeRLE = (GTCodeRuleLineElement)selectedObject;
-		selectAttributeFromGTCodeRLE((ArchetypeElementInstantiationRuleLine)gtCodeRLE.getParentRuleLine());
-	    }
-	}
+        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        DialogElementInstanceSelection dialog =
+                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false);
+        dialog.setVisible(true);
+        if (dialog.getAnswer()){
+            Object selectedObject = dialog.getSelectedObject();
+            if (selectedObject instanceof ArchetypeInstantiationRuleLine){
+                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
+                ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
+                if (aeirl!=null){
+                    selectAttributeFromGTCodeRLE(aeirl);
+                }
+            }else if (selectedObject instanceof GTCodeRuleLineElement){
+                GTCodeRuleLineElement gtCodeRLE = (GTCodeRuleLineElement)selectedObject;
+                selectAttributeFromGTCodeRLE((ArchetypeElementInstantiationRuleLine)gtCodeRLE.getParentRuleLine());
+            }
+        }
     }
 
     /*
@@ -123,25 +121,25 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     }*/
 
     private void selectAttributeFromGTCodeRLE(ArchetypeElementInstantiationRuleLine aeirl){
-	Collection<RuleLine> definitionRuleLines = new ArrayList<RuleLine>();
-	definitionRuleLines.add(aeirl);
-	SelectableNode<Object> rootNode = NodeDefinitionConversor.getSingleNodeAttributesAndFunctions();
-	NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain);
-	DialogSelection dialog = 
-		new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode);
-	dialog.setVisible(true);
-	if (dialog.getAnswer()){
-	    _selectedObject = dialog.getSelectedObject();
-	    accept();
-	}
+        Collection<RuleLine> definitionRuleLines = new ArrayList<RuleLine>();
+        definitionRuleLines.add(aeirl);
+        SelectableNode<Object> rootNode = NodeDefinitionConversor.getSingleNodeAttributesAndFunctions();
+        NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain);
+        DialogSelection dialog =
+                new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode);
+        dialog.setVisible(true);
+        if (dialog.getAnswer()){
+            _selectedObject = dialog.getSelectedObject();
+            accept();
+        }
     }
 
     public Object getSelectedObject(){
-	if (_selectedObject!=null){
-	    return _selectedObject;
-	}else{
-	    return super.getSelectedObject();
-	}
+        if (_selectedObject!=null){
+            return _selectedObject;
+        }else{
+            return super.getSelectedObject();
+        }
     }
 }
 /*

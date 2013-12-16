@@ -1,18 +1,29 @@
 package se.cambio.cds.util;
 
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.MapContext;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermBinding;
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.DataValueGenerator;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
@@ -49,7 +60,7 @@ public class ElementInstanceCollectionUtil {
      * @param guide
      * @return true if ar1 matches ar2
      */
-    public static boolean matchAndFill(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Guide guide){
+    public static boolean matchAndFill(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Guide guide, Calendar date){
         Collection<ElementInstance> emptyElementInstances = new ArrayList<ElementInstance>();
         for (String  idElement : ar1.getElementInstancesMap().keySet()) {
             ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
@@ -57,7 +68,8 @@ public class ElementInstanceCollectionUtil {
             if (ei1 instanceof PredicateGeneratedElementInstance){
                 if (ei2!=null){
                     PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance)ei1);
-                    if (!matches(ei1.getDataValue(), ei2.getDataValue(), pgei.getOperatorKind(), guide)){
+                    DataValue dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(),guide, date);
+                    if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guide)){
                         return false;
                     }
                 }else{
@@ -104,7 +116,6 @@ public class ElementInstanceCollectionUtil {
             DataValue dv2,
             OperatorKind operatorKind,
             Guide guide){
-        //TODO Only == and IS_A operators are supported
         if (OperatorKind.IS_A.equals(operatorKind)){
             if (dv1 instanceof DvCodedText && dv2 instanceof DvCodedText){
                 CodePhrase elementCodePhrase = ((DvCodedText)dv2).getDefiningCode();
@@ -138,17 +149,43 @@ public class ElementInstanceCollectionUtil {
             }
         }else if (OperatorKind.EQUALITY.equals(operatorKind)){
             return DVUtil.equalDVs(dv1, dv2);
+        }else if (OperatorKind.INEQUAL.equals(operatorKind)){
+            return !DVUtil.equalDVs(dv1, dv2);
         }else if (OperatorKind.MAX.equals(operatorKind)|| (OperatorKind.MIN.equals(operatorKind))){
             if(dv2==null){
                 return false;
             }else{
                 return true;
             }
+        }else if (OperatorKind.GREATER_THAN.equals(operatorKind)){
+            if(dv2==null){
+                return false;
+            }else{
+                return DVUtil.compareDVs(dv1, dv2)<0;
+            }
+        }else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(operatorKind)){
+            if(dv2==null){
+                return false;
+            }else{
+                return DVUtil.compareDVs(dv1, dv2)<=0;
+            }
+        }else if (OperatorKind.LESS_THAN.equals(operatorKind)){
+            if(dv2==null){
+                return false;
+            }else{
+                return DVUtil.compareDVs(dv1, dv2)>0;
+            }
+        }else if (OperatorKind.LESS_THAN_OR_EQUAL.equals(operatorKind)){
+            if(dv2==null){
+                return false;
+            }else{
+                return DVUtil.compareDVs(dv1, dv2)>=0;
+            }
         }
         return false;
     }
 
-    public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Guide guide){
+    public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Guide guide, Calendar date){
         if (OperatorKind.IS_A.equals(op)){
             if (dv instanceof DvCodedText){
                 DvCodedText dvCT = (DvCodedText)dv;
@@ -171,6 +208,28 @@ public class ElementInstanceCollectionUtil {
                 Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '"+dv+"'");
                 return null;
             }
+        }else if (dv instanceof CurrentTimeExpressionDataValue){
+            CurrentTimeExpressionDataValue ctedv = ((CurrentTimeExpressionDataValue)dv);
+            ExpressionItem expressionItem = ctedv.getExpressionItem();
+            String attribute = ctedv.getAttrbute();
+            try {
+                String expStr = ExpressionUtil.getArithmeticExpressionStr(null, expressionItem, null);
+                date = (date!=null?date:Calendar.getInstance());
+                DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
+                JexlEngine engine = new JexlEngine();
+                Expression e = engine.createExpression(expStr);
+                JexlContext context = new MapContext();
+                context.set("$"+OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
+                Object obj = e.evaluate(context);
+                if (obj instanceof Double){
+                    obj = ((Double)obj).longValue(); //In dates we never need double value
+                }
+                currentDateTime = (DvDateTime)DataValueGenerator.createDV(currentDateTime, attribute, obj);
+                return currentDateTime;
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
+            return dv;
         }else{
             return dv;
         }

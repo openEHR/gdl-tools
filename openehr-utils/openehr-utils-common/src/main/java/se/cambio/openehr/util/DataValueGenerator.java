@@ -118,20 +118,23 @@ public class DataValueGenerator {
         }else{
             if ("value".equals(attributeName) && value instanceof Long){
                 cal.setTimeInMillis(((Long)value));
+            }else{
+                Logger.getLogger(DataValueGenerator.class).warn("Wrong attribute name or class creating DvDateTime with value = '"+value+"'");
             }
         }
+        return toDvDateTime(cal);
+    }
 
+    public static DvDateTime toDvDateTime(Calendar cal){
         //TODO "fractionalSecond";
         //TODO "timeZone";
-
-        TimeZone timeZone =  Calendar.getInstance().getTimeZone();
         return new DvDateTime(
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH)+1,
                 cal.get(Calendar.DATE),
                 cal.get(Calendar.HOUR),
                 cal.get(Calendar.MINUTE),
-                cal.get(Calendar.SECOND), /*fractionalSecond,*/ timeZone);
+                cal.get(Calendar.SECOND), /*fractionalSecond,*/ TimeZone.getTimeZone("UTC"));
     }
 
     private static DvDate create(DvDate dvDate, String attributeName, Object value) throws InternalErrorException{

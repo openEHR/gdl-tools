@@ -1,30 +1,16 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
+import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-public class GTCodeRuleLineElement extends RuleLineElementWithValue<String> {
 
-    public GTCodeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Name"));
-    }
+public class PredicateAttributeComparisonOperatorRuleLineElement extends AbstractComparisonOperatorRuleLineElement{
 
-    @Override
-    public String getDescription() {
-        return OpenEHRLanguageManager.getMessage("Name");
-    }
-
-    public String toString(){
-        if (getValue()!=null){
-            String name = getName(getValue());
-            if(name!=null){
-                return name;
-            }else{
-                return getText();
-            }
-        }else{
-            return getText();
-        }
+    public PredicateAttributeComparisonOperatorRuleLineElement(RuleLine ruleLine) {
+        super(ruleLine);
+        addOperator(OperatorKind.EQUALITY);
+        addOperator(OperatorKind.GREATER_THAN_OR_EQUAL);
+        addOperator(OperatorKind.LESS_THAN_OR_EQUAL);
     }
 }
 /*
