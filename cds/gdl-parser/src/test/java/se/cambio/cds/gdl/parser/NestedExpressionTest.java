@@ -25,7 +25,7 @@ public class NestedExpressionTest extends ExpressionTestBase {
 	}
 
 	public void testNestedComplexArithmeticExpressions() throws Exception {
-		parseSingleExpression(EXPRESSION_ONE);
+		parseSingleExpression(E1);
 		check("42.5", "/left/left/left/value");
 		check("gt0020", "/left/left/right/code");
 		check("height", "/left/left/right/name");
@@ -42,7 +42,7 @@ public class NestedExpressionTest extends ExpressionTestBase {
 	}
 	
 	public void testComplexExpressionTwo() throws Exception {
-		parseSingleExpression(EXPRESSION_TWO);
+		parseSingleExpression(E2);
 		check("1.23", "/left/left/left/value");
 		check(OperatorKind.MULTIPLICATION, "/left/left/operator");
 		check("140", "/left/left/right/left/value");
@@ -73,21 +73,32 @@ public class NestedExpressionTest extends ExpressionTestBase {
 		check(OperatorKind.EXPONENT, "/right/operator");
 		check("0.7", "right/right/value");
 	}
-	
+
+    public void testNestedComplexArithmeticExpressions4() throws Exception {
+        parseSingleBooleanExpression(E4);
+        check("gt0003", "/left/left/code");
+        check(OperatorKind.EQUALITY, "/left/operator");
+    }
+
+
+
 	public void testExpressionRoundTripStringToString() throws Exception {
-		parseSingleExpression(EXPRESSION_ONE);
+		parseSingleExpression(E1);
 		String actual = item.toString();
-		assertEquals(EXPRESSION_ONE, actual);
+		assertEquals(E1, actual);
 	}
 	
-	private static final String EXPRESSION_ONE = 
+	private static final String E1 =
 			"((42.5*$gt0020|height|)/$gt0009|creatine|)*(($gt0007|weight|/70)^0.7)";
-	
+
+    private static final String E2 =
+            "((1.23*(140-$gt0004|age|))*$gt0007|weight|)/$gt0009|creatine|";
+
 	private static final String E3 =
 			"((42.5 * $gt0007.magnitude) / $gt0009.magnitude) * (($gt0005.magnitude/70) ^ 0.7)";
-	
-	private static final String EXPRESSION_TWO = 
-			"((1.23*(140-$gt0004|age|))*$gt0007|weight|)/$gt0009|creatine|";
+
+    private static final String E4 =
+            "($gt0003=='test1')||($gt0003=='test2')";
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
