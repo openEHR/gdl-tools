@@ -22,7 +22,6 @@ import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.DataValueGenerator;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
@@ -68,7 +67,12 @@ public class ElementInstanceCollectionUtil {
             if (ei1 instanceof PredicateGeneratedElementInstance){
                 if (ei2!=null){
                     PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance)ei1);
-                    DataValue dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(),guide, date);
+                    DataValue dv = null;
+                    if (pgei.getOperatorKind().equals(OperatorKind.IS_A)){
+                        dv = ei1.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
+                    } else {
+                        dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(),guide, date);
+                    }
                     if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guide)){
                         return false;
                     }
