@@ -82,7 +82,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (generateDTOs){
-                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX+archetypeDTO.getIdArchetype()+DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX+"\\"+archetypeDTO.getIdArchetype()+DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(archetypeDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -105,7 +105,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (generateDTOs){
-                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX+templateDTO.getIdTemplate()+DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX+"\\"+templateDTO.getIdTemplate()+DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(templateDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -143,7 +143,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (generateDTOs){
-                out.putNextEntry(new ZipEntry(GUIDELINES_DTO_PREFIX+guideDTO.getIdGuide()+DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(GUIDELINES_DTO_PREFIX+"\\"+guideDTO.getIdGuide()+DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(guideDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
