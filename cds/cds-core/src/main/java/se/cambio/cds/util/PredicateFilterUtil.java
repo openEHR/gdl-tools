@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class PredicateFilterUtil {
 
-    public static void filterMaxMinPredicates(
+    public static void filterByPredicates(
             Collection<ArchetypeReference> definitionArchetypeReferences,
             Collection<ArchetypeReference> ehrArchetypeReferences, Calendar date){
         for (ArchetypeReference archetypeReference: definitionArchetypeReferences){

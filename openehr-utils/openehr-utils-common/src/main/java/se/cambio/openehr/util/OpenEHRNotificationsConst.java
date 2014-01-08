@@ -5,12 +5,19 @@ public class OpenEHRNotificationsConst {
 
     public static String OPENEHR_ALERT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.alert.v1";
     public static String OPENEHR_ALERT_ELEMENT_ID = OPENEHR_ALERT_ARCHETYPE_ID+"/data[at0001]/items[at0015]";
-    public static String OPENEHR_TEMPLATE_ELEMENT_ID = OPENEHR_ALERT_ARCHETYPE_ID+"/archetype_details/template_id";
-    public static String OPENEHR_STATUS_ELEMENT_ID = OPENEHR_ALERT_ARCHETYPE_ID+"/data[at0001]/items[at0009]";
+    public static String OPENEHR_ALERT_STATUS_ELEMENT_ID = OPENEHR_ALERT_ARCHETYPE_ID+"/data[at0001]/items[at0009]";
+    public static String OPENEHR_ALERT_CATEGORY_ELEMENT_ID = OPENEHR_ALERT_ARCHETYPE_ID+"/data[at0001]/items[at0002]";
     
     public static String OPENEHR_RISK_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.risk.v1";
     public static String OPENEHR_RISK_ELEMENT_ID = OPENEHR_RISK_ARCHETYPE_ID+"/data[at0001]/items[at0002]";
     public static String OPENEHR_RISK_SIGNIFICANCE_ID = OPENEHR_RISK_ARCHETYPE_ID+"/data[at0001]/items[at0003]";
+
+    public static String ALERT_CATEGORY_HIGH_CODE = "HIGH";
+    public static String ALERT_CATEGORY_MEDIUM_CODE = "MEDIUM";
+    public static String ALERT_CATEGORY_LOW_CODE = "LOW";
+
+    public static String ALERT_ACTIVE_STATUS_CODE = "at0011";
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

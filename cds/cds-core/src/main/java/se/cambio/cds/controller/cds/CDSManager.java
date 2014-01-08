@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.cds;
 
+import org.apache.log4j.Logger;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.Guide;
@@ -37,7 +38,22 @@ public class CDSManager {
                     CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(Collections.singleton(ehrId), ars, date);
             Collection<ElementInstance> elementInstances = elementInstanceMap.get(ehrId);
             if (elementInstances!=null){
-                eic.addAll(elementInstances);
+                Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
+                int count = 0;   //TODO Remove
+                for (ElementInstance elementInstance: elementInstances){
+                    archetypeReferences.add(elementInstance.getArchetypeReference());
+                    count++;   //TODO Remove
+                }
+                //TODO Remove, used for testing
+                Logger.getLogger(CDSManager.class).info("Found "+count+" elements instances for ehrId "+ehrId+".");
+                PredicateFilterUtil.filterByPredicates(ars, archetypeReferences, date);
+                count = 0;
+                for (ArchetypeReference archetypeReference: archetypeReferences){
+                   count = count+archetypeReference.getElementInstancesMap().keySet().size();
+                }
+                Logger.getLogger(CDSManager.class).info("Using "+count+" elements instances for ehrId "+ehrId+" after filtering.");
+                //TODO Remove ends
+                eic.addAll(archetypeReferences, null);
             }
         }
         return getElementInstances(eic, completeEIC, guideManager, date);
@@ -90,7 +106,7 @@ public class CDSManager {
                             if (!pgei.getOperatorKind().equals(pgei2.getOperatorKind()) ||
                                     DVUtil.compareDVs(pgei.getDataValue(), pgei2.getDataValue())!=0){
                                 //Incompatible predicates found, we remove both
-                                //Found a predicate (if possible) that includes both
+                                //TODO Find a predicate (if possible) that includes both
                                 elementInstancesToRemove.add(elementInstance);
                             }
                         }
@@ -98,6 +114,7 @@ public class CDSManager {
                 }
                 for (ElementInstance elementInstance: elementInstancesToRemove){
                      preAR.getElementInstancesMap().remove(elementInstance.getId());
+                    new ElementInstance(elementInstance.getId(), null, preAR, null, null);   //We add the simple reference
                 }
                 //TODO Merge additional missing references from EHR and ANY domain
             }

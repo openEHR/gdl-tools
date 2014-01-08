@@ -1,6 +1,6 @@
 package se.cambio.openehr.util;
 
-import se.cambio.openehr.view.dialogs.InfoDialog;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,7 +107,8 @@ public class WindowManager {
     private static ProgressManager getProgressManager(String progressKey){
         ProgressManager progressManager = getProgressManagerMap().get(progressKey);
         if (progressManager==null){
-            progressManager = new InfoDialog(getMainWindow());
+            Logger.getLogger(WindowManager.class).warn("Progress Manager not found for '" + progressKey + "' using default.");
+            progressManager = new DefaultProgressManager();
             getProgressManagerMap().put(progressKey, progressManager);
         }
         return progressManager;

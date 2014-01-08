@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
  * Date: 2013-10-31
  * Time: 17:51
  */
-public class ProgressBarPanel extends JPanel implements ProgressManager{
+public class ProgressBarPanel extends JPanel implements ProgressManager {
 
     private JProgressBar jProgressBar = null;
     private Future<?> _currentThread = null;

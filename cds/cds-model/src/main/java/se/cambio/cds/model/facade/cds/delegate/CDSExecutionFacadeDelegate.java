@@ -47,8 +47,11 @@ public interface CDSExecutionFacadeDelegate {
     public Collection<Guide> searchAllGuides() 
 	    throws InternalErrorException;
 
-    public Collection<Guide> searchByGuideIds(Collection<String> guideIds) 
+    public Collection<Guide> searchByGuideIds(Collection<String> guideIds)
 	    throws InternalErrorException, GuideNotFoundException;
+
+    public Collection<ArchetypeReference> searchEHRData(String ehrId, Calendar date, Collection<String> guideIds)
+            throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
 
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
