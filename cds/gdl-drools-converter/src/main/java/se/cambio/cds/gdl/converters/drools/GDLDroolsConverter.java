@@ -190,12 +190,16 @@ public class GDLDroolsConverter {
                                     if (archetypeElement!=null){
                                         String rmType = archetypeElement.getRMType();
                                         archetypeBindingMVELSB.append("      ");
+                                        String dvStr = "null";
+                                        if (!constantExpression.getValue().equals("null")){
+                                            DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
+                                        }
                                         archetypeBindingMVELSB
                                                 .append("eval("+
                                                         getOperatorMVELLine(
                                                                 "$predicate"+ predicateCount,
                                                                 binaryExpression.getOperator(),
-                                                                DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue())),
+                                                                dvStr,
                                                                 true)+
                                                         ")\n");
                                     }else{
@@ -222,7 +226,7 @@ public class GDLDroolsConverter {
                                                     idElement);
                                     if (archetypeElement!=null){
                                         String rmName = archetypeElement.getRMType();
-                                        String aritmeticExpStr = //We cast it to long because all elements from CurrentTime fit in this class for not but we must make it more generic (TODO)
+                                        String aritmeticExpStr = //We cast it to long because all elements from CurrentTime fit into this class, but we must make it more generic (TODO)
                                                 "((long)"+ExpressionUtil.getArithmeticExpressionStr(elementMap, binaryExpression.getRight(), null)+")";
                                         archetypeBindingMVELSB.append("      ");
                                         archetypeBindingMVELSB.append("eval(");
@@ -355,12 +359,16 @@ public class GDLDroolsConverter {
                                     idElement);
                     if (archetypeElement!=null){
                         String rmType = archetypeElement.getRMType();
+                        String dvStr = "null";
+                        if (!"null".equals(constantExpression.getValue())){
+                            dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
+                        }
                         sb.append("      ");
                         sb.append("eval("+
                                 getOperatorMVELLine(
                                         "$predicateAux"+ predicateCount,
                                         binaryExpression.getOperator(),
-                                        DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue())),
+                                        dvStr,
                                         true)+
                                 ") and \n");
                     }

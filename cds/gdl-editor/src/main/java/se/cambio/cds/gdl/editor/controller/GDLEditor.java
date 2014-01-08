@@ -644,6 +644,9 @@ public class GDLEditor {
                                 } else if (ruleLineAux instanceof WithElementPredicateFunctionDefinitionRuleLine) {
                                     WithElementPredicateFunctionDefinitionRuleLine wepfdrl = (WithElementPredicateFunctionDefinitionRuleLine) ruleLineAux;
                                     predicateStatements.add(wepfdrl.toExpressionItem());
+                                } else if (ruleLineAux instanceof WithElementPredicateExistsDefinitionRuleLine) {
+                                    WithElementPredicateExistsDefinitionRuleLine wepedrl = (WithElementPredicateExistsDefinitionRuleLine) ruleLineAux;
+                                    predicateStatements.add(wepedrl.toExpressionItem());
                                 }
                             }
                         }

@@ -15,59 +15,59 @@ public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<S
     private ArrayList<String> _codes = null;
 
     public ExistenceOperatorRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, "??");
-	_codes = new ArrayList<String>();
-	_codes.add(HAS_VALUE);
-	_codes.add(HAS_NO_VALUE);
+        super(ruleLine, "??");
+        _codes = new ArrayList<String>();
+        _codes.add(HAS_VALUE);
+        _codes.add(HAS_NO_VALUE);
     }
 
     public String getResolvedName(String item) {
-	if (HAS_VALUE.equals(item)){
-	    return OpenEHRLanguageManager.getMessage("ExistsRLE");
-	}else if (HAS_NO_VALUE.equals(item)){
-	    return OpenEHRLanguageManager.getMessage("DoesNotExistRLE");
-	}else{
-	    return null;
-	}
+        if (HAS_VALUE.equals(item)){
+            return OpenEHRLanguageManager.getMessage("ExistsRLE");
+        }else if (HAS_NO_VALUE.equals(item)){
+            return OpenEHRLanguageManager.getMessage("DoesNotExistRLE");
+        }else{
+            return null;
+        }
     }
 
     public String getResolvedDescription(String item) {
-	return getResolvedName(item);
+        return getResolvedName(item);
     }
 
     public String toString(){
-	if (getValue()!=null){
-	    return getResolvedName(getValue());
-	}else{
-	    return super.getText();
-	}
+        if (getValue()!=null){
+            return getResolvedName(getValue());
+        }else{
+            return super.getText();
+        }
     }
 
     public Collection<String> getItems() {
-	return _codes;
+        return _codes;
     }
 
     public OperatorKind getOperator() {
-	if (HAS_VALUE.equals(getValue())){
-	    return OperatorKind.INEQUAL;
-	}else if (HAS_NO_VALUE.equals(getValue())){
-	    return OperatorKind.EQUALITY;
-	}else{
-	    return null;
-	}
+        if (HAS_VALUE.equals(getValue())){
+            return OperatorKind.INEQUAL;
+        }else if (HAS_NO_VALUE.equals(getValue())){
+            return OperatorKind.EQUALITY;
+        }else{
+            return null;
+        }
     }
 
     public void setOperator(OperatorKind operatorKind){
-	if (OperatorKind.INEQUAL.equals(operatorKind)){
-	    setValue(HAS_VALUE);
-	}else if (OperatorKind.EQUALITY.equals(operatorKind)){
-	    setValue(HAS_NO_VALUE);
-	}
+        if (OperatorKind.INEQUAL.equals(operatorKind)){
+            setValue(HAS_VALUE);
+        }else if (OperatorKind.EQUALITY.equals(operatorKind)){
+            setValue(HAS_NO_VALUE);
+        }
     }
-    
+
     @Override
     public String toHTMLString() {
-	return toString();
+        return toString();
     }
 }
 /*

@@ -80,30 +80,39 @@ public class GuideImporter {
                                         binaryExpression.getRight() instanceof ConstantExpression){
                                     Variable variable = (Variable)binaryExpression.getLeft();
                                     ConstantExpression constantExpression2 = (ConstantExpression)binaryExpression.getRight();
-                                    WithElementPredicateAttributeDefinitionRuleLine wepdrl = new WithElementPredicateAttributeDefinitionRuleLine();
-                                    airl.addChildRuleLine(wepdrl);
                                     String path = variable.getPath();
                                     String dvStr = constantExpression2.getValue();
                                     ArchetypeElementVO archetypeElementVO =
                                             ArchetypeElements.getArchetypeElement(
                                                     archetypeBinding.getTemplateId(),
                                                     archetypeBinding.getArchetypeId()+path);
-                                    wepdrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
-                                    String rmType = archetypeElementVO.getRMType();
-                                    if (OpenEHRDataValues.DV_TEXT.equals(rmType) &&
-                                            (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))){
-                                        rmType = OpenEHRDataValues.DV_CODED_TEXT;
+                                    if (!dvStr.equals("null")){
+                                        WithElementPredicateAttributeDefinitionRuleLine wepdrl = new WithElementPredicateAttributeDefinitionRuleLine();
+                                        airl.addChildRuleLine(wepdrl);
+                                        wepdrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                                        String rmType = archetypeElementVO.getRMType();
+                                        if (OpenEHRDataValues.DV_TEXT.equals(rmType) &&
+                                                (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))){
+                                            rmType = OpenEHRDataValues.DV_CODED_TEXT;
+                                        }
+                                        DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO);
+                                        wepdrl.getDataValueRuleLineElement().setValue(dv);
+                                        wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
+                                    }else{
+                                       WithElementPredicateExistsDefinitionRuleLine wepedrl = new WithElementPredicateExistsDefinitionRuleLine();
+                                        airl.addChildRuleLine(wepedrl);
+                                        wepedrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                                        wepedrl.getExistenceOperatorRuleLineElement().setValue(binaryExpression.getOperator().getSymbol()+"null");
                                     }
-                                    DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO);
-                                    wepdrl.getDataValueRuleLineElement().setValue(dv);
-                                    wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
+
+
                                 }else if (binaryExpression.getLeft() instanceof Variable &&
                                         binaryExpression.getRight() instanceof ExpressionItem){
                                     Variable variable = (Variable)binaryExpression.getLeft();
                                     ExpressionItem expressionItemAux = binaryExpression.getRight();
                                     WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine(airl);
                                     String path = variable.getPath();
-                                    String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
+                                    String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
                                     path = path.substring(0, path.length()-attribute.length()-7);
                                     ArchetypeElementVO archetypeElementVO =
                                             ArchetypeElements.getArchetypeElement(

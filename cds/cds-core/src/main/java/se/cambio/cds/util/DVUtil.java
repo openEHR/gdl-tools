@@ -73,6 +73,7 @@ public class DVUtil {
         if (!inPredicate && ei instanceof PredicateGeneratedElementInstance){
             return false;
         }else{
+            /*
             if (dv2!=null){
                 if (ei.getDataValue()!=null){
                     return DVUtil.equalDVs(ei.getDataValue(), dv2);
@@ -81,7 +82,8 @@ public class DVUtil {
                 }
             }else{
                 return false;
-            }
+            } */
+            return DVUtil.equalDVs(ei.getDataValue(), dv2);
         }
     }
 

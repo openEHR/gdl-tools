@@ -13,42 +13,42 @@ public class EqualityComparisonOperatorRuleLineElement extends RuleLineElementWi
     private Collection<OperatorKind> _operators = null;
 
     public EqualityComparisonOperatorRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, "??");
-	_operators = new ArrayList<OperatorKind>();
-	_operators.add(OperatorKind.EQUALITY);
-	_operators.add(OperatorKind.INEQUAL);
+        super(ruleLine, "??");
+        _operators = new ArrayList<OperatorKind>();
+        _operators.add(OperatorKind.EQUALITY);
+        _operators.add(OperatorKind.INEQUAL);
     }
 
     public String getResolvedName(OperatorKind item) {
-	if (item!=null){
-	    return item.getSymbol();
-	}else{
-	    return null;
-	}
+        if (item!=null){
+            return item.getSymbol();
+        }else{
+            return null;
+        }
     }
 
     public String getResolvedDescription(OperatorKind item) {
-	if (item!=null){
-	    return item.getName();
-	}else{
-	    return null;
-	}
+        if (item!=null){
+            return item.getName();
+        }else{
+            return null;
+        }
     }
 
     public Collection<OperatorKind> getItems() {
-	return _operators;
+        return _operators;
     }
 
     public String toString(){
-	if (getValue()!=null){
-	    switch(getValue()){
-	    case EQUALITY: return OpenEHRLanguageManager.getMessage("EqualsRLE");
-	    case INEQUAL: return OpenEHRLanguageManager.getMessage("NotEqualsRLE");
-	    default: return "??";
-	    }
-	}else{
-	    return "??";
-	}
+        if (getValue()!=null){
+            switch(getValue()){
+                case EQUALITY: return OpenEHRLanguageManager.getMessage("EqualsRLE");
+                case INEQUAL: return OpenEHRLanguageManager.getMessage("NotEqualsRLE");
+                default: return "??";
+            }
+        }else{
+            return "??";
+        }
     }
 }
 /*

@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model.readable.util;
 
 import org.apache.log4j.Logger;
+import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineDefinitionElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
@@ -83,6 +84,28 @@ public class ReadableArchetypeReferencesUtil {
                     ArchetypeElementVO archetypeElementVO = aerlde.getValue();
                     if (archetypeElementVO!=null){
                         sb.append(wpfdrl.getFunctionRuleLineElement().getValue()+"("+archetypeElementVO.getName()+")");
+                    }else{
+                        Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                        sb.append("*UNKNOWN PREDICATE*");
+                    }
+                }
+            } else if (ruleLine instanceof WithElementPredicateExistsDefinitionRuleLine){
+                WithElementPredicateExistsDefinitionRuleLine wpedrl = (WithElementPredicateExistsDefinitionRuleLine)ruleLine;
+                if (first){
+                    first = false;
+                }else{
+                    sb.append(", ");
+                }
+                ArchetypeElementRuleLineDefinitionElement aerlde = wpedrl.getArchetypeElementRuleLineDefinitionElement();
+                if (aerlde!=null){
+                    ArchetypeElementVO archetypeElementVO = aerlde.getValue();
+                    if (archetypeElementVO!=null){
+                        OperatorKind operator = wpedrl.getExistenceOperatorRuleLineElement().getOperator();
+                        String opStr = "??";
+                        if (operator!=null){
+                            opStr = operator.getSymbol();
+                        }
+                        sb.append(archetypeElementVO.getName()+opStr+"null");
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
                         sb.append("*UNKNOWN PREDICATE*");

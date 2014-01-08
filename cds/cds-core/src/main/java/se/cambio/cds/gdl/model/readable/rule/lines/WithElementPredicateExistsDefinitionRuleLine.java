@@ -1,55 +1,71 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.expression.*;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExistenceOperatorRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ElementInitializedConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine{
+public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine{
 
-    private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
+    private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
     private ExistenceOperatorRuleLineElement existenceOperatorRuleLineElement = null;
     private String NULL_STR = "null";
 
-    public ElementInitializedConditionRuleLine() {
-        super(OpenEHRLanguageManager.getMessage("ElementExists"),
-                OpenEHRLanguageManager.getMessage("ElementExistsDesc"));
-        archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
+
+    public WithElementPredicateExistsDefinitionRuleLine() {
+        super(OpenEHRLanguageManager.getMessage("ElementPredicateExists"),
+                OpenEHRLanguageManager.getMessage("ElementPredicateExistsDesc"));
+        archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         existenceOperatorRuleLineElement = new ExistenceOperatorRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
-        getRuleLineElements().add(archetypeElementRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(existenceOperatorRuleLineElement);
     }
 
-    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
-        return archetypeElementRuleLineElement;
+    public ArchetypeElementRuleLineDefinitionElement getArchetypeElementRuleLineDefinitionElement() {
+        return archetypeElementRuleLineDefinitionElement;
+    }
+
+    @Override
+    public ArchetypeReference getArchetypeReference() {
+        return getArchetypeInstantiationRuleLine().
+                getArchetypeReferenceRuleLineDefinitionElement().getValue();
+    }
+
+    @Override
+    public ArchetypeElementVO getArchetypeElement() {
+        return archetypeElementRuleLineDefinitionElement.getValue();
     }
 
     public ExistenceOperatorRuleLineElement getExistenceOperatorRuleLineElement(){
         return existenceOperatorRuleLineElement;
     }
 
+    public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
+        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+    }
+
     public ExpressionItem toExpressionItem() throws IllegalStateException{
-        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
+        ArchetypeElementVO archetypeElementVO = getArchetypeElement();
         if (archetypeElementVO!=null){
-            String gtCode =
-                    getArchetypeElementRuleLineElement().getValue().getValue();
+            String path =  archetypeElementVO.getPath();
             OperatorKind operatorKind = getExistenceOperatorRuleLineElement().getOperator();
             if (operatorKind==null){
                 throw new IllegalStateException("No operator set");
             }
             return new BinaryExpression(
-                    new Variable(gtCode, null, archetypeElementVO.getName()),
+                    new Variable(null, archetypeElementVO.getName(), path),
                     new ConstantExpression(NULL_STR),
                     operatorKind);
         }else{
             throw new IllegalStateException("Element instance not found for"+ this.toString());
         }
     }
+
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
