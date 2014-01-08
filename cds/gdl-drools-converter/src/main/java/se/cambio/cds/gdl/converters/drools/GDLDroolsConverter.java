@@ -192,7 +192,7 @@ public class GDLDroolsConverter {
                                         archetypeBindingMVELSB.append("      ");
                                         String dvStr = "null";
                                         if (!constantExpression.getValue().equals("null")){
-                                            DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
+                                            dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
                                         }
                                         archetypeBindingMVELSB
                                                 .append("eval("+

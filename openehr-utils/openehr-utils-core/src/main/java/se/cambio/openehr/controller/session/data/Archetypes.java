@@ -41,7 +41,7 @@ public class Archetypes {
 
     public static void loadArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException{
         OpenEHRObjectBundleManager.generateArchetypesObjectBundles(Collections.singleton(archetypeDTO));
-        registerArchertype(archetypeDTO);
+        loadArchetypeDTO(archetypeDTO);
     }
 
     public static void removeArchetype(String archetypeId) throws InternalErrorException{
