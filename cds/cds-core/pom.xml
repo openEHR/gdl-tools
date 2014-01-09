@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.94-SNAPSHOT</version>
+		<version>0.94</version>
 	</parent>
 	<artifactId>cds-core</artifactId>
 	<name>CDS Core</name>

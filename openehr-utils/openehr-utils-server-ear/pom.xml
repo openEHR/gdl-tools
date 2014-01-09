@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.openehr.utils</groupId>
         <artifactId>openehr-utils</artifactId>
-        <version>0.94-SNAPSHOT</version>
+        <version>0.94</version>
     </parent>
     <artifactId>openehr-utils-server-ear</artifactId>
     <name>OpenEHR utils server EAR</name>
