@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openehr.utils</groupId>
+		<artifactId>openehr-utils</artifactId>
+		<version>0.95-SNAPSHOT</version>
+	</parent>
+	<artifactId>openehr-utils-common</artifactId>
+	<name>OpenEHR utils common</name>
+	<organization>
+		<name>OpenEHR</name>
+	</organization>
+
+	<dependencies>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>openehr-rm-core</artifactId>
+			<version>${openehr-java-libs-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>openehr-rm-domain</artifactId>
+			<version>${openehr-java-libs-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>xml-serializer</artifactId>
+			<version>${openehr-java-libs-version}</version>
+		</dependency>
+        <dependency>
+            <groupId>uk.com.robust-it</groupId>
+            <artifactId>cloning</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.13</version>
+        </dependency>
+    </dependencies>
+</project>

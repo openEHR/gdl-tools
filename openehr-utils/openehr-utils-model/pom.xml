@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openehr.utils</groupId>
+		<artifactId>openehr-utils</artifactId>
+		<version>0.95-SNAPSHOT</version>
+	</parent>
+	<artifactId>openehr-utils-model</artifactId>
+	<name>OpenEHR utils model</name>
+	<organization>
+		<name>OpenEHR</name>
+	</organization>
+
+	<dependencies>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>openehr-rm-core</artifactId>
+			<version>${openehr-java-libs-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>openehr-rm-domain</artifactId>
+			<version>${openehr-java-libs-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>xml-serializer</artifactId>
+			<version>${openehr-java-libs-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>

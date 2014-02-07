@@ -1,0 +1,112 @@
+(GUIDE) <
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				function = <"LAST">
+				predicates = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]==12.0,kg",...>
+			>
+		>
+		rules = <
+			["gt0009"] = (RULE) <
+				when = <"$gt0011==local::at0009|Mosteller|", "$gt0008==null">
+				then = <"$gt0008.magnitude=(($gt0005.magnitude*$gt0006.magnitude)/3600)^0.5",...>				
+			>
+			["gt0010"] = (RULE) <
+                when = <"$gt0011==local::at0009|Mosteller|", "$gt0008==null", "$gt0008 is_a local::at002">
+                then = <"$gt0008.magnitude=(($gt0005.magnitude*$gt0006.magnitude)/3600)^0.5",...>
+            >
+		>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"Cambio">
+				keywords = <"test keyword",...>
+				misuse = <"test misuse">
+				purpose = <"test purpose">
+				use = <"test use">
+			>
+		>
+		lifecycle_state = <"Committee draft">
+		original_author = <
+			["date"] = <"13-09-2012">
+			["email"] = <"test@test.com">
+			["name"] = <"Test">
+			["organisation"] = <"Cambio">
+		>
+		other_contributors = <"test contributor1", "test contributor 2">
+		other_details = <
+			["references"] = <"test reference">
+		>
+	>
+	gdl_version = <"0.1">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+        term_definitions = <
+    		["en"] = (TERM_DEFINITION) <
+    			terms = <
+    				["gt0001"] = (TERM) <
+    					description = <"Body weight">
+    					text = <"Body weight">
+    				>
+    				["gt0004"] = (TERM) <
+    					description = <"Height/Length">
+    					text = <"Height/Length">
+    				>
+    				["gt0005"] = (TERM) <
+    					description = <"The weight of the individual.">
+    					text = <"Weight">
+    				>
+    				["gt0006"] = (TERM) <
+    					description = <"The length of the body from crown of head to sole of foot.">
+    					text = <"Height/Length">
+    				>
+    				["gt0007"] = (TERM) <
+    					description = <"Body surface area">
+    					text = <"Body surface area">
+    				>
+    				["gt0008"] = (TERM) <
+    					description = <"The calculated body surface area.">
+    					text = <"Body surface area">
+    				>
+    				["gt0009"] = (TERM) <
+    					text = <"BSA calculation (Mosteller)">
+    				>
+    				["gt0011"] = (TERM) <
+    					description = <"The name of the formula employed to calculate Body Surface Area.">
+    					text = <"Formula name">
+    				>
+    			>
+    		>
+    		
+		>
+		term_bindings = <
+            ["SNOMEDCT"] = (TERM_BINDING) <
+                bindings = <
+                    ["gt0001"] = (BINDING) <
+                        uri = <"http://terminology.org/?query_id=12345">
+                    >
+                    ["gt0002"] = (BINDING) <
+                        codes =<[SNOMEDCT::1111111], [SNOMEDCT::22222222], [SNOMEDCT::33333333]>
+                    >
+                >
+            >
+            ["ICD10"] = (TERM_BINDING) <
+                bindings = <
+                    ["gt0002"] = (BINDING) <
+                        codes =<[ICD10::E10], [ICD10::E11], [ICD10::E12]>
+                    >
+                >
+            >
+        >
+	>
+>

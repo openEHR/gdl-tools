@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openehr.utils</groupId>
+		<artifactId>openehr-utils</artifactId>
+		<version>0.95-SNAPSHOT</version>
+	</parent>
+	<artifactId>openehr-utils-server</artifactId>
+	<name>OpenEHR utils server</name>
+	<organization>
+		<name>OpenEHR</name>
+	</organization>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-persistence</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-terminology-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>

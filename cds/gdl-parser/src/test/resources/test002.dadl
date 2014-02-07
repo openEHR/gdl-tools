@@ -1,0 +1,107 @@
+(GUIDE) <
+	gdl_version=<"0.1">
+
+	id = <"se.cambio::GFR_Calculation.v1">
+
+	concept = <"gt0000">	-- estimated glomerular filtration rate
+		
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+		translations = <
+			["fa"] = (TRANSLATION_DETAILS) <
+				language = <[ISO_639-1::fa]>
+				author = <
+					["name"] = <"Shahla Foozonkhah">
+					["organisation"] = <"Ocean Informatics">
+					["email"] = <"shahla.foozonkhah@oceaninformatics.com">
+				>
+			>
+			["de"] = (TRANSLATION_DETAILS) <
+				language = <[ISO_639-1::de]>
+				author = <
+					["name"] = <"Sebastian Garde, Jasmin Buck">
+					["organisation"] = <"Ocean Informatics, University of Heidelberg">
+				>
+			>
+		>
+	>	
+	
+	description = (RESOURCE_DESCRIPTION) <
+		original_author = <
+			["name"] = <"Sam Heard">
+			["organisation"] = <"Ocean Informatics">
+			["email"] = <"sam.heard@oceaninformatics.com">
+			["date"] = <"22/03/2006">
+		>
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				language = <[ISO_639-1::en]>
+				purpose = <"To record the systemic arterial blood pressure of an individual. ">
+				use = <"Use to record all representations of systemic arterial blood pressure measurement, no matter which method or body location is used to record it. The archetype is intended to capture blood pressure measurements in all clinical scenarios - for example, self-measurement with a home blood pressure machine; an emergency assessment of systolic using palpation and a sphygmomanometer; measurements taken in clinical consultations or during exercise stress testing; and a series of measurements made by a machine in Intensive Care.   
+						There is a rich state model that supports interpretation of measurements through identifying patient position, exercise, confounding factors and angle of a tilt table in research. 
+						Named events have been limited to average over a 24 hour period, however templates can further constrain the default 'any event' to cater for specific requirements for blood pressure measurements such as recording Blood Pressure against specific points in time, or over a range of intervals (+/- mathematical functions).">
+				keywords = <"observations", "measurement", "bp", "vital signs", "mean arterial pressure", "pulse pressure", "systolic", "diastolic", "RR", "NIBP">
+				misuse = <"Not to be used for intravenous pressure.
+							Not to be used for the measurement of arterial blood pressure which is NOT a surrogate for arterial pressure in the systemic circulation eg specific measurement of right Pulmonary artery pressure.  
+							Use OBSERVATION.intravascular_pressure and related specialisations in both of these situations.">
+				copyright = <"� openEHR Foundation">
+			>
+			["de"] = (RESOURCE_DESCRIPTION_ITEM) <
+				language = <[ISO_639-1::de]>
+				purpose = <"Dient">
+				use = <"Alle Blutdruckmessungen werden unter Zuhilfenahme dieses Archetypen dokumentiert, unabh�ngig davon, welche Methode oder K�rperstelle zur Messung benutzt wurden. Der Archetyp dient der Dokumentation des Blutdrucks in alle klinischen Szenarien - z.B. durch eine Blutdruckmaschine zuhause; eine Notfallmessung durch Palpation und ein Sphygmomanometer; Messungen beim Hausarzt oder im Rahmen von Belastungstests; sowie einer Serie von Messungen durch eine Maschine auf der Intensivstation.
+	Der Archetyp beinhaltet ein umfassendes Status-Modell, das die Interpretation der Messung unterst�tzt, indem Position, Anstrengung, Einflussfaktoren, Neigungswinkel angegeben werden k�nnen.
+	Benannte Ereignisse wurden auf den 24-st�ndigen Durchschnitt beschr�nkt, jedoch k�nnen Templates jederzeit das standardm��ig vorhandene Ereignis ('any event') weiter einschr�nken, um spezifischen Anforderungen gerecht zu werden, wie z.B. der Messung zu bestimmten Zeitpunkten, oder �ber eine Anzahl von Intervallen (+/- mathematische Funktionen).">
+				keywords = <"Beobachtungen", "Messungen", "Vitalparameter", "Mittlerer arterieller Druck", "Pulsdruck", "systolisch", "diastolisch", "RR", "Riva-Rocci", "NIBP">
+				misuse = <"Nicht benutzen zur Dokumentation des intraven�sen Drucks.
+	Nicht benutzen zur Dokumentation des arteriellen Blutdrucks, welcher KEIN Surrogat f�r den arteriellen Druck in der systemischen Zirkluation ist, z.B. die spezifische Messung des rechten pulmonaren Arteriendrucks.
+	In diesem Fall sollte der OBSERVATION.intravascular_pressure Archetyp bzw. dessen Spezialisierungen verwendet werden.">
+				copyright = <"� openEHR Foundation">
+			>
+		>
+		lifecycle_state = <"AuthorDraft">
+		other_contributors = <"Koray Atalag, University of Auckland, New Zealand", "Knut Bernstein, MEDIQ, Denmark">
+		other_details = <
+			["MD5-CAM-1.0.1"] = <"D2C5F2928F1B4D9D717A6BA03CE968DF">
+			["references"] = <"OBrien E, Asmar R, Beilin L, et al. European Society of Hypertension recommendations for conventional">
+		>
+	>
+	
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1"> -- Weight Archetype
+				domain = <"ehr">
+				predicates = <
+					"/data[at0001]/events[at0002]/data[at0003]/items[at0007] >= 20",
+					"/data[at0002]/events[at0003]/data[at0001]/items[at0004] == 10"
+				>
+				elements = <
+					["gt0007"] = (ELEMENT) < --weight
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				
+			>	
+		>	
+			
+		pre_conditions = <"$gt0007|weight| != null",...>
+		rules = <	
+			["gt0030"] = (RULE) < -- GFR calculation for adult male
+				when = <"$gt0004|age| >= 20", "$gt0007|weight| != null">			
+				then = <"$gt0011|GFR| = ((1.23*(140 - gt0004|age|)) * $gt0007|weight|) / $gt0009|creatine|", "$gt0011.precision = 2">
+			>
+		>
+	>
+									
+	term_definitions = <
+		["en"] = (TERM_DEFINITION) <
+			terms = <
+				["gt0000"] = (TERM) <
+					text = <"Estimated glomerular filtration rate">
+					description = <"Estimated glomerular filtration rate based on serum creatine test result">
+				>
+			>
+		>
+	>	
+>

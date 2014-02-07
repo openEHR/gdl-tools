@@ -1,0 +1,26 @@
+REQUIREMENTS:
+
+Java 1.6 or higher
+Maven 3.0.4 or higher
+
+INSTALATION INSTRUCTIONS:
+
+
+BEFORE INSTALLING: 
+
+Please download and install the Java openEHR Implementation project:
+
+https://github.com/openEHR/java-libs
+
+
+INSTALLATION:
+
+gdl-tools/mvn clean install
+
+
+GENERATE FULL APPLICATION:
+
+cd cds/gdl-editor
+mvn assembly:single
+
+(a zip file will be created at cds/gdl-editor/target/gdl-editor.zip)

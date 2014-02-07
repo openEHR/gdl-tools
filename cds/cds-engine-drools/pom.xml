@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>se.cambio.cds</groupId>
+		<artifactId>cds</artifactId>
+		<version>0.95-SNAPSHOT</version>
+	</parent>
+	<artifactId>cds-engine-drools</artifactId>
+	<name>cds-engine-drools</name>
+	<description>CDS Drools engine</description>
+	<dependencies>
+        <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>cds-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-core</artifactId>
+            <version>5.5.0.Final</version>
+        </dependency>
+	</dependencies>
+</project>

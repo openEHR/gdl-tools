@@ -1,0 +1,12 @@
+
+INSTALATION INSTRUCTIONS:
+
+mvn clean install
+
+
+GENERATE FULL APPLICATION:
+
+cd gdl-editor
+mvn assembly:single
+
+(a zip file will be created at gdl-editor/target/gdl-editor.zip)

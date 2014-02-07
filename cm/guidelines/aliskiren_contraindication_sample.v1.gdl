@@ -1,0 +1,123 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"aliskiren_contraindication_sample.v1">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0010"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0003|diagnosis_diabetes|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			
+			[2] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0012"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0006|Medication Aliskiren (Tekturna)|",...>
+				template_id = <"medication_atc_indicator">
+			>
+			
+			[3] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0011"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0007"] = (RULE) <
+				when = <"$gt0012!=null", "$gt0010!=null">
+				then = <"$gt0011='Contraindication of aliskerin on diabetes'",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ATC"] = (TERM_BINDING) <
+				bindings = <
+					["gt0006"] = (BINDING) <
+						codes = <[ATC::C09XA],...>
+						uri = <"">
+					>
+				>
+			>
+			["ICD10"] = (TERM_BINDING) <
+				bindings = <
+					["gt0003"] = (BINDING) <
+						codes = <[ICD10::E10], [ICD10::E11], [ICD10::E12], [ICD10::E13], [ICD10::E14], [ICD10::O24]>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0000"] = (TERM) <
+					>
+					["gt0001"] = (TERM) <
+						text = <"Aliskiren contraindication">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Diagnosis">
+						description = <"The index diagnosis">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Diabetes diagnosis code">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Name of medication">
+						description = <"The name of the intervention - which may be coded">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Aliskerin (Tekturna)  code">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Detect contraindication of aliskiren for patient with diabetes">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Medication of aliskerin">
+						description = <"The name of the intervention - which may be coded">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Diabetes diagnosis">
+						description = <"The index diagnosis">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Description">
+						description = <"Narrative description of the alert.">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Aliskerin medication">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+				>
+			>
+		>
+	>
+>

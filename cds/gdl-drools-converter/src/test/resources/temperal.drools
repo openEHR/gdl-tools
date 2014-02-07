@@ -1,0 +1,29 @@
+package se.cambio.cds;
+import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.model.instance.ContainerInstance;
+import se.cambio.cds.util.DVUtil;
+import org.openehr.rm.datatypes.quantity.DvCount;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
+import org.openehr.rm.datatypes.quantity.datetime.DvDate;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.openehr.rm.datatypes.quantity.datetime.DvDuration;
+import org.openehr.rm.datatypes.quantity.datetime.DvTime;
+import org.openehr.rm.datatypes.quantity.DvProportion;
+import org.openehr.rm.datatypes.quantity.ProportionKind;
+import org.openehr.rm.datatypes.basic.DvBoolean;
+import org.openehr.rm.datatypes.text.DvCodedText;
+import org.openehr.rm.datatypes.text.DvText;
+global se.cambio.cds.util.ExecutionLogger $executionLogger;
+global org.openehr.rm.datatypes.quantity.datetime.DvDateTime $currentDateTime;
+
+rule "temperal/gt0001"
+salience 1
+no-loop true
+when
+      $gt0002:ElementInstance(id=="openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]")
+      eval((((DvDateTime)$gt0002.getDataValue()).getDateTime().getMillis()>=(System.currentTimeMillis()-3600000*4.5)))     
+then
+end
+

@@ -1,0 +1,83 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"BMI.Calculation.v.1-Revised function">
+	concept = <"gt0000">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0002"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"max(/event/time)",...>
+			>
+			
+			[2] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.height.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+				predicates = <"max(/event/time)",...>
+			>
+			
+			[3] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_mass_index.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0001"] = (RULE) <
+				when = <"$gt0002.units=='kg'", "$gt0003.units=='cm'">
+				then = <"$gt0004.precision=2", "$gt0004.units='kg/m2'", "$gt0004.magnitude=($gt0002.magnitude/(($gt0003.magnitude/100)^2))">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0000"] = (TERM) <
+						text = <"Body Mass Index calculation">
+					>
+					["gt0001"] = (TERM) <
+						text = <"Calculate body mass index">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Weight">
+						description = <"The weight of the individual.">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Height/Length">
+						description = <"The length of the body from crown of head to sole of foot.">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Body Mass Index">
+						description = <"Index describing ratio of weight to height.">
+					>
+				>
+			>
+		>
+	>
+>

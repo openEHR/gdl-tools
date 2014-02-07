@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>se.cambio</groupId>
+        <artifactId>gdl-tools</artifactId>
+        <version>0.95-SNAPSHOT</version>
+    </parent>
+	<groupId>org.openehr.utils</groupId>
+	<artifactId>openehr-utils</artifactId>
+	<packaging>pom</packaging>
+
+	<name>OpenEHR Utils</name>
+	<organization>
+		<name>OpenEHR</name>
+	</organization>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+    <scm>
+        <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
+        <developerConnection>scm:git:git@github.com:openEHR/gdl-tools.git</developerConnection>
+        <url>scm:git:git@github.com:openEHR/gdl-tools.git</url>
+    </scm>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+					<compilerArgument />
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+					<!-- <docletPath>/path/to/UmlGraph.jar</docletPath> -->
+					<docletArtifact>
+						<groupId>org.umlgraph</groupId>
+						<artifactId>umlgraph</artifactId>
+						<version>5.6</version>
+					</docletArtifact>
+					<additionalparam>
+						-inferrel -inferdep -quiet -hide java.*
+						-collpackages java.util.* -qualify
+						-postfixpackage -nodefontsize 9
+						-nodefontpackagesize 7
+						-edgefontname "Trebuchet MS"
+						-nodefontabstractname "Trebuchet MS"
+						-nodefontclassabstractname
+						"Trebuchet MS"
+						-nodefontclassname "Trebuchet MS"
+						-nodefontname
+						"Trebuchet MS"
+						-nodefontpackagename "Trebuchet MS"
+						-nodefonttagname
+						"Trebuchet MS"
+					</additionalparam>
+					<useStandardDocletOptions>true</useStandardDocletOptions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>openehr-utils-common</module>
+		<module>openehr-utils-model</module>
+		<module>openehr-utils-persistence</module>
+		<module>openehr-utils-core</module>
+        <module>openehr-utils-core-ejb</module>
+		<module>openehr-utils-terminology-service</module>
+		<module>openehr-utils-server</module>
+        <module>openehr-utils-server-ear</module>
+		<module>openehr-utils-gui-swing</module>
+    </modules>
+</project>

@@ -1,0 +1,139 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"BSA_Calculation.v1-Revised function">
+	concept = <"gt0015">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"">
+				misuse = <"">
+				purpose = <"">
+				use = <"">
+			>
+			["es"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Committee draft">
+		original_author = <
+			["date"] = <"">
+			["email"] = <"">
+			["name"] = <"">
+			["organisation"] = <"">
+		>
+		other_details = <
+			["references"] = <"">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			[1] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"max(/event/time)",...>
+			>
+			
+			[2] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.height.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+				predicates = <"max(/event/time)",...>
+			>
+			
+			[3] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_surface_area.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0011"] = (ELEMENT_BINDING) <
+						path = <"/protocol[at0005]/items[at0006]">
+					>
+				>
+				predicates = <"max(/event/time)",...>
+			>
+			
+			[4] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_surface_area.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0013"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0009"] = (RULE) <
+				when = <"$gt0011==local::at0009|Mosteller|", "$gt0005.units=='kg'", "$gt0006.units=='cm'">
+				then = <"$gt0013.magnitude=((($gt0005.magnitude*$gt0006.magnitude)/3600)^0.5)", "$gt0013.precision=2", "$gt0013.units='m2'">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0005"] = (TERM) <
+						text = <"Weight">
+						description = <"The weight of the individual.">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Height">
+						description = <"The length of the body from crown of head to sole of foot.">
+					>
+					["gt0009"] = (TERM) <
+						text = <"BSA calculation (Mosteller)">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Formula name">
+						description = <"The name of the formula employed to calculate Body Surface Area.">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Body surface area">
+						description = <"The calculated body surface area.">
+					>
+					["gt0015"] = (TERM) <
+						text = <"BSA Calculation">
+					>
+				>
+			>
+			["es"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0005"] = (TERM) <
+						text = <"Peso">
+						description = <"*The weight of the individual. (en)">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Altura">
+						description = <"*The length of the body from crown of head to sole of foot. (en)">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Cálculo del área de superficie corporal (Mosteller)">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Fórmula">
+						description = <"*The name of the formula employed to calculate Body Surface Area. (en)">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Área de superficie corporal">
+						description = <"*The calculated body surface area. (en)">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Cálculo del área de superficie corporal">
+					>
+				>
+			>
+		>
+	>
+>

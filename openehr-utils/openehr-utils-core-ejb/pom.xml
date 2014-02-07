@@ -1,0 +1,81 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openehr.utils</groupId>
+		<artifactId>openehr-utils</artifactId>
+		<version>0.95-SNAPSHOT</version>
+	</parent>
+	<artifactId>openehr-utils-core-ejb</artifactId>
+	<name>OpenEHR utils core EJB</name>
+	<organization>
+		<name>OpenEHR</name>
+	</organization>
+	<packaging>ejb</packaging>
+	<build>
+		<finalName>openehr-util-core-ejb</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<ejbVersion>3.1</ejbVersion>
+					<generateClient>true</generateClient>
+					<clientExcludes>
+						<clientExclude>**/*Bean.class</clientExclude>
+                        <clientExclude>*.properties</clientExclude>
+					</clientExcludes>
+					<!-- <excludes> <exclude>META-INF/maven/cds/cds-ejb/pom.xml</exclude> 
+						</excludes> <archive> <manifest> <addClasspath>true</addClasspath> <classpathPrefix>lib/</classpathPrefix> 
+						</manifest> </archive> -->
+				</configuration>
+			</plugin>
+        </plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+        <!--
+		<dependency>
+			<groupId>jboss</groupId>
+			<artifactId>jboss-annotations-ejb3</artifactId>
+			<version>4.2.2.GA</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>3.1.4.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>jbossall-client</artifactId>
+            <version>4.2.2.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-ejb-client</artifactId>
+            <version>1.0.23.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-remote-naming</artifactId>
+            <version>1.0.7.Final</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-ejb-client-bom</artifactId>
+            <version>7.2.0.Final</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</project>
