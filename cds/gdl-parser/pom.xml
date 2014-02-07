@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.95-SNAPSHOT</version>
+		<version>0.95.0</version>
 	</parent>
 	<artifactId>gdl-parser</artifactId>
 	<name>gdl-parser</name>
