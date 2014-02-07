@@ -3,7 +3,7 @@
     <groupId>se.cambio</groupId>
     <artifactId>gdl-tools</artifactId>
     <packaging>pom</packaging>
-    <version>0.95.0</version>
+    <version>0.95-SNAPSHOT</version>
     <name>GDL Tools</name>
     <organization>
         <name>Cambio</name>
@@ -13,9 +13,9 @@
         <openehr-java-libs-version>1.0.5</openehr-java-libs-version>
     </properties>
     <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/tags/0.95.0</connection>
-		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/tags/0.95.0</developerConnection>
-		<url>https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/tags/0.95.0</url>
+        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</connection>
+		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</developerConnection>
+		<url>https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</url>
     </scm>
     <build>
         <plugins>

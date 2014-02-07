@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.95.0</version>
+		<version>0.95-SNAPSHOT</version>
 	</parent>
 	<artifactId>cds-persistence</artifactId>
 	<packaging>jar</packaging>
