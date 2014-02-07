@@ -10,7 +10,7 @@
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openehr-java-libs-version>1.0.4</openehr-java-libs-version>
+        <openehr-java-libs-version>1.0.5</openehr-java-libs-version>
     </properties>
     <scm>
         <connection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</connection>
