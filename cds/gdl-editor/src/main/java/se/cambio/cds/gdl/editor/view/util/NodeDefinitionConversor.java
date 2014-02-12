@@ -388,6 +388,7 @@ public class NodeDefinitionConversor {
         if (node.getObject() instanceof CodePhrase){
             if (object.equals(((CodePhrase)node.getObject()).getCodeString())){
                 node.setSelected(true);
+                node.cambioEstado(node);
                 if (!multiple){
                     return true;
                 }

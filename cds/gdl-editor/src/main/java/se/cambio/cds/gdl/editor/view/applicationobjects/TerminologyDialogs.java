@@ -46,6 +46,7 @@ public class TerminologyDialogs {
                 NodeDefinitionConversor.selectCodesWith(rootNode, selectedCode, false);
             }
         }
+        dialog.setRootNode(rootNode, false);
         return dialog;
     }
 

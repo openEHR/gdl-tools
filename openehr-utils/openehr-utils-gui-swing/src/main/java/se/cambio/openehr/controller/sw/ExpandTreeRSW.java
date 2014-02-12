@@ -36,8 +36,8 @@ public class ExpandTreeRSW extends OpenEHRUtilSwingWorker{
 
 
     protected void done() {
-        WindowManager.setFree();
         _selectionPanel.getJTree().setUI(_treeUI);
+        WindowManager.setFree();
     }
 }
 /*

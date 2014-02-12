@@ -30,15 +30,15 @@ public class LoadTerminologyViewerRSW extends CDSSwingWorker {
         _selectedCodes = selectedCodes;
         _terminologyId = terminologyId;
         _terminologyCodesManager = terminologyCodesManager;
-    }
-
-    protected void executeCDSSW() throws InternalErrorException {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
             }
         });
+    }
+
+    protected void executeCDSSW() throws InternalErrorException {
         try{
             _dialog = TerminologyDialogs.getTerminologyDialog(_terminologyId, _selectedCodes);
         }catch(Exception e){
