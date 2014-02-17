@@ -28,7 +28,12 @@ public class DVBooleanPanel extends DVComboBoxPanel implements DVPanelInterface{
 
 
     public DataValue getDataValue(){
-        return new DvBoolean(new Boolean(""+getComboBox().getSelectedItem()));
+        String selectedItem = (String)getComboBox().getSelectedItem();
+        if (selectedItem.trim().isEmpty()){
+            return null;  //No value selected
+        }else{
+            return new DvBoolean(new Boolean(""+selectedItem));
+        }
     }
 }
 /*

@@ -186,8 +186,8 @@ public class CMImportExportManager {
         boolean useTemplateDTOs = false;
         boolean useGuidelineDTOs = false;
 
-        BufferedInputStream bis = new BufferedInputStream(is, 4048);
-        bis.mark(4048);
+        BufferedInputStream bis = new BufferedInputStream(is);
+        //bis.mark(4048);
         //Look for DTO folders
         ZipInputStream zis = new ZipInputStream(bis);
         try{

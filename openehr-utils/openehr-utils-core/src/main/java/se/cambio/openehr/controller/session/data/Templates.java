@@ -1,4 +1,6 @@
 package se.cambio.openehr.controller.session.data;
+import org.apache.log4j.Logger;
+import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.vo.TemplateObjectBundleCustomVO;
@@ -116,6 +118,17 @@ public class Templates {
             getDelegate()._templatessById = new HashMap<String, TemplateDTO>();
         }
         return getDelegate()._templatessById;
+    }
+
+    public static Archetype getTemplateAOM(String templateId){
+        Archetype aom = null;
+        TemplateDTO templateDTO = getTemplateDTO(templateId);
+        if (templateDTO!=null && templateDTO.getAom()!=null){
+            aom = (Archetype)IOUtils.getObject(templateDTO.getAom());
+        }else {
+            Logger.getLogger(Archetype.class).debug("Template '"+templateId+"' not found.");
+        }
+        return aom;
     }
 
     public int hashCode(){
