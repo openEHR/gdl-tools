@@ -255,8 +255,16 @@ public class DVUtil {
         }
     }
 
-    public static boolean test2(DataValue dv){
-        return true;
+    public static boolean areDomainsCompatible(String domain1, String domain2){
+        if (domain1==null){
+            return true;
+        }else{
+            if (domain2==null){
+                return true;
+            }else{
+                return domain1.equals(domain2);
+            }
+        }
     }
 }
 /*

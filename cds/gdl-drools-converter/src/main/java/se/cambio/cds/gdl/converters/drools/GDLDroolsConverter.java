@@ -294,7 +294,7 @@ public class GDLDroolsConverter {
                                                 + "(dataValue instanceof DvOrdered) &&"
                                                 + "(((DvOrdered)dataValue)"+opStr+"((DvOrdered)$predDV"+ predicateCount+"))"
                                                 */
-                                                + "$"+arID+arCount +".getIdDomain().equals(archetypeReference.getIdDomain()),"
+                                                + "DVUtil.areDomainsCompatible($"+arID+arCount +".getIdDomain(), archetypeReference.getIdDomain()),"
                                                 + "DVUtil.checkMaxMin($predDV"+ predicateCount+", dataValue, \""+op.getSymbol()+"\")"
                                                 +"))\n");
                                 /*
