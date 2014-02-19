@@ -46,9 +46,6 @@ public class OpenEHRDataValues {
     public static final String SECOND_ATT = "second";
     public static final String FRACTIONAL_SECOND_ATT = "fractionalSecond";
     public static final String TIMEZONE_ATT = "timeZone";
-    
-    
-    
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

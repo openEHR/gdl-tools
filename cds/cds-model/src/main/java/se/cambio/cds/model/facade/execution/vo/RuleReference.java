@@ -12,9 +12,9 @@ public class RuleReference implements Serializable{
     private String gtCode = null;
     
     public RuleReference(String ruleId) {
-	int index = ruleId.lastIndexOf("/");
-	this.guideId = ruleId.substring(0, index);
-	this.gtCode = ruleId.substring(index+1);
+	String[] strs = ruleId.split("/");
+	this.guideId = strs[0];
+	this.gtCode = strs[1];
     }
     
     public RuleReference(String guideId, String gtCode) {

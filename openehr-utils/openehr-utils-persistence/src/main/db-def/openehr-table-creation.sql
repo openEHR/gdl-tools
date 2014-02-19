@@ -25,7 +25,7 @@ CREATE TABLE openehr_template
 revoke all on openehr_template from "public";
 
 CREATE TABLE openehr_terminology
-(
+(                                         L
     terminologyid VARCHAR(255) NOT NULL,
     src bytea NOT NULL,
     PRIMARY KEY (terminologyid)

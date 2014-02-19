@@ -2,12 +2,17 @@ package se.cambio.cds.model.util;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import se.cambio.cds.gdl.model.ArchetypeBinding;
+import se.cambio.cds.gdl.model.ElementBinding;
+import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.cds.vo.DomainData;
 import se.cambio.cds.model.facade.cds.vo.EIValue;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.Domains;
 
 import java.util.*;
 
@@ -81,4 +86,57 @@ public class DomainDataUtil {
         return new DomainData(domainId,ardvMap);
     }
 
+    public static DomainData generateDomainDataWithGTCodes(Collection<ArchetypeReference> archetypeReferences, Map<String, Guide> guideMap){
+        DomainData domainData = DomainDataUtil.toDomainData(archetypeReferences);
+        insertGTCodes(domainData, guideMap);
+        return domainData;
+    }
+
+    public static void insertGTCodes(DomainData domainData, Map<String, Guide> guideMap){
+        Map<String, RuleReference> ruleReferenceMap = generateRuleReferencesForEHRElements(guideMap);
+        for (Collection<Map<String, EIValue>> ardvCollection : domainData.getArdvMap().values()){
+            for(Map<String, EIValue> eiMap: ardvCollection){
+                for (String elementId: eiMap.keySet()){
+                    EIValue eiValue = eiMap.get(elementId);
+                    RuleReference ruleReference = ruleReferenceMap.get(elementId);
+                    if (ruleReference!=null){
+                        eiValue.setGtCode(ruleReference.getGTCode());
+                        eiValue.setGuideId(ruleReference.getGuideId());
+                    }else{
+                        Logger.getLogger(DomainDataUtil.class).warn("Rule reference not found for elementId '"+elementId+"'.");
+                    }
+                }
+            }
+        }
+    }
+
+
+    public static Map<String, RuleReference> generateRuleReferencesForEHRElements(Map<String, Guide> guideMap){
+        Map<String, RuleReference> ruleReferenceMap = new HashMap<String, RuleReference>();
+        for(Guide guide: guideMap.values()){
+            for (ArchetypeBinding archetypeBinding: guide.getDefinition().getArchetypeBindings()){
+                if (archetypeBinding.getDomain()==null || Domains.EHR_ID.equals(archetypeBinding.getDomain())){
+                    for(ElementBinding elementBinding: archetypeBinding.getElements().values()){
+                        String elementId = archetypeBinding.getArchetypeId()+elementBinding.getPath();
+                        RuleReference ruleReference = new RuleReference(guide.getId(), elementBinding.getId());
+                        ruleReferenceMap.put(elementId, ruleReference);
+                    }
+                }
+            }
+        }
+        return ruleReferenceMap;
+    }
+
+
+    public static void cleanGTCodes(DomainData domainData){
+        for (Collection<Map<String, EIValue>> ardvCollection : domainData.getArdvMap().values()){
+            for(Map<String, EIValue> eiMap: ardvCollection){
+                for (String elementId: eiMap.keySet()){
+                    EIValue eiValue = eiMap.get(elementId);
+                    eiValue.setGtCode(null);
+                    eiValue.setGuideId(null);
+                }
+            }
+        }
+    }
 }
