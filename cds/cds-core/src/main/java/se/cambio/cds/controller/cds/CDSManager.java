@@ -2,7 +2,6 @@ package se.cambio.cds.controller.cds;
 
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -117,24 +116,11 @@ public class CDSManager {
         //Check for guide elements, if not present, create archetype reference
         for (ArchetypeReference archetypeReference : completeEIC.getAllArchetypeReferences()) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference)archetypeReference;
-            Guide referencedGuide = getReferencedGuideInPredicate(gar, guideManager);
-            boolean matches = elementInstanceCollection.matches(gar, referencedGuide, date);
+            boolean matches = elementInstanceCollection.matches(gar, guideManager.getAllGuidesMap(), date);
             if (!matches){
                 elementInstanceCollection.add(archetypeReference, guideManager, date);
             }
         }
-    }
-
-    private static Guide getReferencedGuideInPredicate(GeneratedArchetypeReference gar, GuideManager gm){
-        Iterator<ElementInstance> i = gar.getElementInstancesMap().values().iterator();
-        while(i.hasNext()){
-            ElementInstance ei = i.next();
-            if (ei instanceof PredicateGeneratedElementInstance){
-                String idGuide = ((PredicateGeneratedElementInstance)ei).getGuideId();
-                return gm.getGuide(idGuide);
-            }
-        }
-        return null;
     }
 
     private static Collection<ArchetypeReference> getCompressedQueryArchetypeReferences(Collection<ArchetypeReference> generatedArchetypeReferences){
@@ -173,10 +159,11 @@ public class CDSManager {
                         }
                     }
                 }
-                if (eiAux instanceof GeneratedElementInstance){
-                    //Clear GT Code, archetype is referenced twice in guide
+                if (eiAux instanceof GeneratedElementInstance && newEI instanceof GeneratedElementInstance){
+                    //Add new rule references
                     GeneratedElementInstance gei = (GeneratedElementInstance) eiAux;
-                    gei.setGtCode(null);
+                    GeneratedElementInstance gei2 = (GeneratedElementInstance) newEI;
+                    gei.getRuleReferences().addAll(gei2.getRuleReferences());
                 }
             }
         }
@@ -193,8 +180,9 @@ public class CDSManager {
     private static ElementInstance cloneElementInstanceWithGTCodes(ElementInstance ei, ArchetypeReference ar, boolean useGTCodes){
         if (useGTCodes && ei instanceof GeneratedElementInstance){
             GeneratedElementInstance gei = (GeneratedElementInstance) ei;
-            new GeneratedElementInstance(
-                    gei.getId(), null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, gei.getGuideId(), gei.getGtCode());
+            GeneratedElementInstance newGei = new GeneratedElementInstance(
+                    gei.getId(), null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+            newGei.setRuleReferences(gei.getRuleReferences());
         }else{
             new ElementInstance(ei.getId(), null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         }

@@ -1,35 +1,45 @@
 package se.cambio.cds.util;
 
-import java.util.Set;
-
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
+
+import java.util.Set;
 
 public class GeneratedElementInstanceCollection extends ElementInstanceCollection{
 
     public void add(ArchetypeReference archetypeReferenceToAdd){
-	Set<ArchetypeReference> archetypeReferences = getArchetypeReferences(archetypeReferenceToAdd);
-	if (archetypeReferences.isEmpty()){
-	    archetypeReferences.add(archetypeReferenceToAdd);
-	}else{
-	    if (ElementInstanceCollectionUtil.isEmpty(archetypeReferenceToAdd)){
-		ArchetypeReference ar = ElementInstanceCollectionUtil.getEmptyArchetypeReference(archetypeReferences);
-		if (ar!=null){
-		    if (!ElementInstanceCollectionUtil.containsAll(ar, archetypeReferenceToAdd)){
-			for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
-			    if (!ar.getElementInstancesMap().containsKey(idElement)){
-				new GeneratedElementInstance(idElement, null, ar, null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO, null, null);
-			    }
-			}
-		    }
-		}else{
-		    archetypeReferences.add(archetypeReferenceToAdd);
-		}
-	    }else{
-		archetypeReferences.add(archetypeReferenceToAdd);
-	    }
-	}
+        Set<ArchetypeReference> archetypeReferences = getArchetypeReferences(archetypeReferenceToAdd);
+        if (archetypeReferences.isEmpty()){
+            archetypeReferences.add(archetypeReferenceToAdd);
+        }else{
+            if (ElementInstanceCollectionUtil.isEmpty(archetypeReferenceToAdd)){
+                ArchetypeReference ar = ElementInstanceCollectionUtil.getEmptyArchetypeReference(archetypeReferences);
+                if (ar!=null){
+                    if (!ElementInstanceCollectionUtil.containsAll(ar, archetypeReferenceToAdd)){
+                        for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
+                            if (!ar.getElementInstancesMap().containsKey(idElement)){
+                                new GeneratedElementInstance(idElement, null, ar, null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
+                            }
+                        }
+                    }else{
+                        //Copy rule references if exist
+                        for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
+                            ElementInstance ei = ar.getElementInstancesMap().get(idElement);
+                            ElementInstance eiToAdd = archetypeReferenceToAdd.getElementInstancesMap().get(idElement);
+                            if (ei instanceof GeneratedElementInstance && eiToAdd instanceof GeneratedElementInstance){
+                                ((GeneratedElementInstance)ei).getRuleReferences().addAll(((GeneratedElementInstance)eiToAdd).getRuleReferences());
+                            }
+                        }
+                    }
+                }else{
+                    archetypeReferences.add(archetypeReferenceToAdd);
+                }
+            }else{
+                archetypeReferences.add(archetypeReferenceToAdd);
+            }
+        }
     }
 }
 /*

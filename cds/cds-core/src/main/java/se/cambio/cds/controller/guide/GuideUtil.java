@@ -18,9 +18,7 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +27,6 @@ public class GuideUtil {
 
     public static final DvCodedText NULL_FLAVOUR_CODE_NO_INFO = new DvCodedText(
             "no information", new CodePhrase(TerminologyService.OPENEHR, "271"));
-
-    public static Guide parseGuide(
-            byte[] guideSrc,
-            GuideManager guideManager,
-            GeneratedElementInstanceCollection elementInstanceCollection)
-            throws InternalErrorException{
-        try {
-            Guide guide = parseGuide(new ByteArrayInputStream(guideSrc));
-            fillElementInstanceCollection(guide, elementInstanceCollection);
-            return guide;
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        }
-    }
 
     public static void fillElementInstanceCollection(
             Guide guide,
@@ -66,19 +50,19 @@ public class GuideUtil {
             for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
                 String idElement =
                         archetypeBinding.getArchetypeId()+elementBinding.getPath();
-                new GeneratedElementInstance(
+                GeneratedElementInstance gei = new GeneratedElementInstance(
                         idElement,
                         null,
                         ar,
                         null,
-                        NULL_FLAVOUR_CODE_NO_INFO,
-                        guideId,
-                        elementBinding.getId());
+                        NULL_FLAVOUR_CODE_NO_INFO);
+                gei.getRuleReferences().add(new RuleReference(guideId, elementBinding.getId()));
             }
         }
         generatePredicateElements(archetypeBinding, ar, guideId);
         return ar;
     }
+
     public static void generatePredicateElements(ArchetypeBinding archetypeBinding, ArchetypeReference ar, String guideId){
         if (archetypeBinding.getPredicateStatements()!=null){
             for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
@@ -90,16 +74,23 @@ public class GuideUtil {
                         if (r instanceof ConstantExpression){
                             String idElement =
                                     archetypeBinding.getArchetypeId()+((Variable)l).getPath();
+                            String gtCode = null;
                             DataValue dv = getDataValue((ConstantExpression)r);
-                            new PredicateGeneratedElementInstance(
+                            if (dv instanceof DvCodedText){
+                                DvCodedText dvCodedText = ((DvCodedText)dv);
+                                //TOOD Will only work if the same code is used in predicate and definition
+                                if ("local".equals(dvCodedText.getTerminologyId())){
+                                    gtCode = dvCodedText.getCode();
+                                }
+                            }
+                            PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
                                     idElement,
                                     dv,
                                     ar,
                                     null,
                                     null,
-                                    guideId,
-                                    null,
                                     be.getOperator());
+                            pgei.getRuleReferences().add(new RuleReference(guideId, gtCode));
                         }else if (r instanceof ExpressionItem){
                             String path = ((Variable)l).getPath();
                             String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
@@ -107,15 +98,14 @@ public class GuideUtil {
                             String idElement =
                                     archetypeBinding.getArchetypeId()+path;
                             DataValue dv = new CurrentTimeExpressionDataValue(r, attribute);
-                            new PredicateGeneratedElementInstance(
+                            PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
                                     idElement,
                                     dv,
                                     ar,
                                     null,
                                     null,
-                                    guideId,
-                                    null,
                                     be.getOperator());
+                            //TODO No rule references added (no gt codes)
                         }
                     }
                 }else if (expressionItem instanceof UnaryExpression){
@@ -132,9 +122,8 @@ public class GuideUtil {
                                 ar,
                                 null,
                                 null,
-                                guideId,
-                                null,
                                 op);
+                        //TODO No rule references added (no gt codes)
                     }
                 }
             }

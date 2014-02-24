@@ -56,43 +56,31 @@ public class ElementInstanceCollectionUtil {
      * Looks if the second reference matches the first one, if empty references are found, they will be copied into the second one (only if the rest is matched).
      * @param ar1
      * @param ar2
-     * @param guide
+     * @param guideMap
+     * @param date
      * @return true if ar1 matches ar2
      */
-    public static boolean matchAndFill(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Guide guide, Calendar date){
+    public static boolean matchAndFill(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap, Calendar date){
         Collection<ElementInstance> emptyElementInstances = new ArrayList<ElementInstance>();
+        boolean matches = matches(ar1, ar2, guideMap, date);
+        if (!matches){
+            return false;
+        }//else continue with the filling
+        //Set AR to empty elementInstances found
         for (String  idElement : ar1.getElementInstancesMap().keySet()) {
             ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
             ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
-            if (ei1 instanceof PredicateGeneratedElementInstance){
-                if (ei2!=null){
-                    PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance)ei1);
-                    DataValue dv = null;
-                    if (pgei.getOperatorKind().equals(OperatorKind.IS_A)){
-                        dv = ei1.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
-                    } else {
-                        dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(),guide, date);
-                    }
-                    if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guide)){
-                        return false;
-                    }
-                }else{
-                    return false;
-                }
-            }else{
-                if (ei2==null){
-                    emptyElementInstances.add(ei1.clone());
-                }
+            if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2==null){
+                emptyElementInstances.add(ei1.clone());
             }
         }
-        //Set AR to empty elementInstances found
         for (ElementInstance elementInstance : emptyElementInstances) {
             elementInstance.setArchetypeReference(ar2);
         }
         return true;
     }
 
-    public static boolean matches(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap){
+    public static boolean matches(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap, Calendar date){
         if (!ar1.getIdArchetype().equals(ar2.getIdArchetype())){
             return false;
         }else{
@@ -102,8 +90,17 @@ public class ElementInstanceCollectionUtil {
                 if (ei1 instanceof PredicateGeneratedElementInstance){
                     if (ei2!=null){
                         PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance)ei1);
-                        Guide guide = guideMap.get(pgei.getGuideId());
-                        if (!matches(ei1.getDataValue(), ei2.getDataValue(), pgei.getOperatorKind(), guide)){
+                        Guide guide = null;
+                        if (!pgei.getRuleReferences().isEmpty()){
+                            guide = guideMap.get(pgei.getRuleReferences().iterator().next().getGuideId()); //TODO Should we look into the rest of guideIds?
+                        }
+                        DataValue dv = null;
+                        if (pgei.getOperatorKind().equals(OperatorKind.IS_A)){
+                            dv = ei1.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
+                        } else {
+                            dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(),guide, date);
+                        }
+                        if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guide)){
                             return false;
                         }
                     }else{

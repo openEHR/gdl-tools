@@ -2,53 +2,48 @@ package se.cambio.cds.model.facade.execution.vo;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
-
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
 import se.cambio.cds.model.instance.ElementInstance;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class GeneratedElementInstance extends ElementInstance{
 
     private static final long serialVersionUID = 1L;
-    private String guideId = null;
-    private String gtCode = null;
-    
+    private Set<RuleReference> ruleReferences = new HashSet<RuleReference>();
+
     public GeneratedElementInstance(
-	    String id, 
-	    DataValue dataValue,
-	    ArchetypeReference archetypeReference,
-	    ContainerInstance containerInstance, 
-	    DvCodedText nullFlavour,
-	    String guideId,
-	    String gtCode) {
-	super(id, dataValue, archetypeReference, containerInstance, nullFlavour);
-	this.guideId = guideId;
-	this.gtCode = gtCode;
+            String id,
+            DataValue dataValue,
+            ArchetypeReference archetypeReference,
+            ContainerInstance containerInstance,
+            DvCodedText nullFlavour) {
+        super(id, dataValue, archetypeReference, containerInstance, nullFlavour);
     }
-    
-    public String getGtCode() {
-        return gtCode;
-    }
-    
-    public void setGtCode(String gtCode) {
-        this.gtCode = gtCode;
-    }
-    
-    public String getGuideId() {
-        return guideId;
-    }
-    
+
     public GeneratedElementInstance clone(){
-	return new GeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour(), guideId, gtCode);
+        GeneratedElementInstance generatedElementInstance = new GeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour());
+        generatedElementInstance.setRuleReferences(generatedElementInstance.getRuleReferences());
+        return generatedElementInstance;
     }
 
     public boolean isPredicate(){
         return false;
     }
 
+    public Set<RuleReference> getRuleReferences() {
+        return ruleReferences;
+    }
+
+    public void setRuleReferences(Set<RuleReference> ruleReferences) {
+        this.ruleReferences = ruleReferences;
+    }
+
     public String toString(){
-	return "(G)"+super.toString();
+        return "(G)"+super.toString();
     }
 }
 /*

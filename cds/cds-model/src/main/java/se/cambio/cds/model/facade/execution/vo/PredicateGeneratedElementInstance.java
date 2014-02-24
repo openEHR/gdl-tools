@@ -19,10 +19,8 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
             ArchetypeReference archetypeReference,
             ContainerInstance containerInstance,
             DvCodedText nullFlavour,
-            String guideId,
-            String gtCode,
             OperatorKind operatorKind) {
-        super(id, dataValue, archetypeReference, containerInstance, nullFlavour, guideId, gtCode);
+        super(id, dataValue, archetypeReference, containerInstance, nullFlavour);
         this.operatorKind = operatorKind;
     }
 

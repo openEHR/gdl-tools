@@ -1,7 +1,7 @@
 package se.cambio.cds.model.facade.cds.vo;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * User: iago.corbal
@@ -11,9 +11,9 @@ import java.util.Map;
 public class DomainData {
 
     private String domainId;
-    private Map<String, Collection<Map<String, EIValue>>> ardvMap = null;
+    private LinkedHashMap<String, List<LinkedHashMap<String, EIValue>>> ardvMap = null;
 
-    public DomainData(String domainId, Map<String, Collection<Map<String, EIValue>>> ardvMap) {
+    public DomainData(String domainId, LinkedHashMap<String, List<LinkedHashMap<String, EIValue>>> ardvMap) {
         this.domainId = domainId;
         this.ardvMap = ardvMap;
     }
@@ -26,11 +26,11 @@ public class DomainData {
         this.domainId = domainId;
     }
 
-    public Map<String, Collection<Map<String, EIValue>>> getArdvMap() {
+    public LinkedHashMap<String, List<LinkedHashMap<String, EIValue>>> getArdvMap() {
         return ardvMap;
     }
 
-    public void setArdvMap(Map<String, Collection<Map<String, EIValue>>> ardvMap) {
+    public void setArdvMap(LinkedHashMap<String, List<LinkedHashMap<String, EIValue>>> ardvMap) {
         this.ardvMap = ardvMap;
     }
 }

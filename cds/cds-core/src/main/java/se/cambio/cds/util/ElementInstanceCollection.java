@@ -51,29 +51,30 @@ public class ElementInstanceCollection {
                             (PredicateGeneratedElementInstance)originalEI;
                     //Its a predicate, so keep it as a generated element instance, but resolve the data value
                     DataValue dv = originalEI.getDataValue();
-                    //Resolve predicate if on guide manager
+                    //Resolve predicate if on guide manager (TODO pick only first reference?)
                     if (guideManager!=null){
-                        Guide guide = guideManager.getGuide(predicateOriginalEI.getGuideId());
-                        if (guide!=null){
-                            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guide, date);
+                        if (!predicateOriginalEI.getRuleReferences().isEmpty()){
+                            String guideId = predicateOriginalEI.getRuleReferences().iterator().next().getGuideId();
+                            Guide guide = guideManager.getGuide(guideId);
+                            if (guide!=null){
+                                dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guide, date);
+                            }
                         }
                     }
-                    new PredicateGeneratedElementInstance(
+                    PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
                             predicateOriginalEI.getId(),
                             dv, arAux,
                             null, null,
-                            predicateOriginalEI.getGuideId(),
-                            predicateOriginalEI.getGtCode(),
                             predicateOriginalEI.getOperatorKind());
+                    pgei.setRuleReferences(predicateOriginalEI.getRuleReferences());
                     //Should not allow value changes for generated elements in the future
                 }else{
                     //Clone a new instance
-                    new GeneratedElementInstance(
+                    GeneratedElementInstance gei = new GeneratedElementInstance(
                             originalEI.getId(),
                             null, arAux,
-                            null, null,
-                            originalEI.getGuideId(),
-                            originalEI.getGtCode());
+                            null, null);
+                    gei.setRuleReferences(originalEI.getRuleReferences());
                 }
             }
             archetypeReferenceToAdd = arAux;
@@ -106,12 +107,12 @@ public class ElementInstanceCollection {
 	return matches((GeneratedArchetypeReference)elementInstance.getArchetypeReference(), guideManager);
     }
      */
-    public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Guide guide, Calendar date){
+    public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Map<String, Guide> guideMap, Calendar date){
         boolean matches = false;
         Iterator<ArchetypeReference> i = getArchetypeReferences(generatedArchetypeReference).iterator();
         while(i.hasNext() && !matches){
             ArchetypeReference ar =  i.next();
-            matches = ElementInstanceCollectionUtil.matchAndFill(generatedArchetypeReference, ar, guide, date);
+            matches = ElementInstanceCollectionUtil.matchAndFill(generatedArchetypeReference, ar, guideMap, date);
         }
         return matches;
     }

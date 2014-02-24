@@ -1,6 +1,10 @@
 package se.cambio.cds.model.facade.cds.vo;
 
 import se.cambio.cds.gdl.model.expression.OperatorKind;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: Iago.Corbal
@@ -9,14 +13,11 @@ import se.cambio.cds.gdl.model.expression.OperatorKind;
  */
 public class EIValue{
     private String dv;
-    private String guideId;
-    private String gtCode;
+    private Set<RuleReference> ruleReferences = new HashSet<RuleReference>();
     private OperatorKind operatorKind;
 
-    public EIValue(String dv, String gtCode, String guideId, OperatorKind operatorKind) {
+    public EIValue(String dv, OperatorKind operatorKind) {
         this.dv = dv;
-        this.gtCode = gtCode;
-        this.guideId = guideId;
         this.operatorKind = operatorKind;
     }
 
@@ -24,24 +25,16 @@ public class EIValue{
         return dv;
     }
 
-    public String getGtCode() {
-        return gtCode;
-    }
-
-    public String getGuideId() {
-        return guideId;
-    }
-
     public void setDv(String dv) {
         this.dv = dv;
     }
 
-    public void setGtCode(String gtCode) {
-        this.gtCode = gtCode;
+    public Set<RuleReference> getRuleReferences() {
+        return ruleReferences;
     }
 
-    public void setGuideId(String guideId) {
-        this.guideId = guideId;
+    public void setRuleReferences(Set<RuleReference> ruleReferences) {
+        this.ruleReferences = ruleReferences;
     }
 
     public OperatorKind getOperatorKind() {

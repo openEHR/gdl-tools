@@ -124,7 +124,11 @@ public class DVSwingUtil {
             GeneratedElementInstance elementInstancesWithGTCode = (GeneratedElementInstance) elementInstance;
             Term term = null;
             if (termDefinition!=null){
-                term = termDefinition.getTerms().get(elementInstancesWithGTCode.getGtCode());
+                String gtCode = null;
+                if (!elementInstancesWithGTCode.getRuleReferences().isEmpty()){
+                    gtCode = elementInstancesWithGTCode.getRuleReferences().iterator().next().getGTCode();
+                }
+                term = termDefinition.getTerms().get(gtCode);
             }
             if (term!=null){
                 name =  term.getText();
