@@ -22,6 +22,9 @@ public final class CDSConfigurationParametersManager {
     public static String CDS_SERVER_USER_LOGIN = "CDSServer/login";
     public static String CDS_SERVER_USER_PASSWD = "CDSServer/password";
 
+    public static String DSV_BASE_URL = "DSVServer/baseURL";
+
+
     public static String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
 
     private static boolean usesJNDI;
@@ -35,8 +38,8 @@ public final class CDSConfigurationParametersManager {
         parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
         try {
 	    /* Read property file (if exists).*/
-            Class<OpenEHRConfigurationParametersManager> configurationParametersManagerClass =
-                    OpenEHRConfigurationParametersManager.class;
+            Class<CDSConfigurationParametersManager> configurationParametersManagerClass =
+                    CDSConfigurationParametersManager.class;
             ClassLoader classLoader =
                     configurationParametersManagerClass.getClassLoader();
             File configFile = getConfigFile();
