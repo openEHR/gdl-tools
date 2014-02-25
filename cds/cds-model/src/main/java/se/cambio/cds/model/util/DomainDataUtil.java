@@ -2,14 +2,19 @@ package se.cambio.cds.model.util;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.model.facade.cds.vo.DomainData;
 import se.cambio.cds.model.facade.cds.vo.EIValue;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.openehr.util.OpenEHRConstUI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: iago.corbal
@@ -26,9 +31,15 @@ public class DomainDataUtil {
                 archetypeReferences.add(archetypeReference);
                 for (String elementId : dvMap.keySet()){
                     EIValue eiValue = dvMap.get(elementId);
-                    DataValue dv = DataValue.parseValue(eiValue.getDv());
+                    DataValue dv = null;
+                    DvCodedText nullFlavourCT = null;
+                    if (eiValue.getDv()!=null){
+                        dv = DataValue.parseValue(eiValue.getDv());
+                    }else{
+                        nullFlavourCT = OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO;
+                    }
                     if (eiValue.getRuleReferences()==null || eiValue.getRuleReferences().isEmpty()){
-                        new ElementInstance(elementId, dv, archetypeReference, null, null);
+                        new ElementInstance(elementId, dv, archetypeReference, null, nullFlavourCT);
                     }else{
                         GeneratedElementInstance gei = null;
                         if (eiValue.getOperatorKind()==null){
@@ -65,17 +76,19 @@ public class DomainDataUtil {
             LinkedHashMap<String, EIValue> dvMap = new LinkedHashMap<String, EIValue>();
             dvMaps.add(dvMap);
             for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
-                if (elementInstance.getDataValue()!=null){
-                    EIValue eiValue = new EIValue(elementInstance.getDataValue().serialise(), null);
-                    if (elementInstance instanceof GeneratedElementInstance){
-                        GeneratedElementInstance gei = (GeneratedElementInstance)elementInstance;
-                        eiValue.setRuleReferences(gei.getRuleReferences());
-                    }
-                    if (elementInstance instanceof PredicateGeneratedElementInstance){
-                        eiValue.setOperatorKind(((PredicateGeneratedElementInstance)elementInstance).getOperatorKind());
-                    }
-                    dvMap.put(elementInstance.getId(), eiValue);
+                String dvStr = null;
+                if (elementInstance.getDataValue()!=null){ //TODO DVStr as null?!?!
+                    dvStr = elementInstance.getDataValue().serialise();
                 }
+                EIValue eiValue = new EIValue(dvStr, null);
+                if (elementInstance instanceof GeneratedElementInstance){
+                    GeneratedElementInstance gei = (GeneratedElementInstance)elementInstance;
+                    eiValue.setRuleReferences(gei.getRuleReferences());
+                }
+                if (elementInstance instanceof PredicateGeneratedElementInstance){
+                    eiValue.setOperatorKind(((PredicateGeneratedElementInstance)elementInstance).getOperatorKind());
+                }
+                dvMap.put(elementInstance.getId(), eiValue);
             }
         }
         return new DomainData(domainId,ardvMap);
