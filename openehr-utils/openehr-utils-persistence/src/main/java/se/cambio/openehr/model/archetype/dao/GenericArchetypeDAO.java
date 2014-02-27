@@ -17,7 +17,7 @@ public interface GenericArchetypeDAO {
 	    throws InternalErrorException;
     
     public Collection<ArchetypeDTO> searchByArchetypeIds(Collection<String> archetypeId)
-	    throws InternalErrorException, InstanceNotFoundException;
+	    throws InternalErrorException;
 
     public Collection<ArchetypeDTO> searchAllDefinitions()
             throws InternalErrorException;

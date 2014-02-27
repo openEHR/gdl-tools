@@ -110,7 +110,7 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 String archetype = resultSet.getString(i++);
                 byte[] aom = resultSet.getBytes(i++);
                 byte[] tobcvo = resultSet.getBytes(i++);
-                templateDTOs.add(new TemplateDTO(idTemplate, name, description, idArchetype, rmName, archetype, aom, tobcvo));
+                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, name, description, rmName, archetype, aom, tobcvo));
             } while (resultSet.next());
 
 	    /* Return the value object. */
@@ -132,7 +132,7 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
         try {
 	    /* Create "preparedStatement". */
             String queryString =
-                    "SELECT templateid, archetypeid, rmname, archetype FROM openehr_template";
+                    "SELECT templateid, archetypeid, name, description, rmname, archetype FROM openehr_template";
             preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */

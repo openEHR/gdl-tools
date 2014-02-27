@@ -20,7 +20,7 @@ public interface GenericTemplateDAO {
             throws InternalErrorException;
     
     public Collection<TemplateDTO> searchByTemplateIds(Collection<String> templateIds)
-	    throws InternalErrorException, InstanceNotFoundException;
+	    throws InternalErrorException;
     
     public void insert(TemplateDTO templateDTO)
 	    throws InternalErrorException, ModelException;

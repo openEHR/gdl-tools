@@ -17,39 +17,39 @@ public class InJarTemplateDAO implements GenericTemplateDAO{
     }
 
     public Collection<TemplateDTO> searchAll()
-	    throws InternalErrorException{
-	try{
-	    InputStream is = InJarTemplateDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
-	    Collection<String> templateFileNames = new ArrayList<String>();
-	    Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
-	    if (is!=null) {
-		String resourceList = IOUtils.toString(is, "UTF-8");
-		for (String string : resourceList.split("\n")) {
-		    string = string.trim();
-		    if (string.endsWith(".oet")){
-			//Remove the leading '\'
-			string = string.replaceAll("\\\\", "/");
-			templateFileNames.add(string.substring(1, string.length()));
-		    }
-		}
-		for (String templateFileName : templateFileNames) {
-		    try{
-			InputStream fis =InJarTemplateDAO.class.getClassLoader().getResourceAsStream(templateFileName);
-			String templateId = templateFileName.substring(templateFileName.lastIndexOf("/")+1,templateFileName.length()-4);
-			String archetype = IOUtils.toString(fis);
-			templateDTOs.add(new TemplateDTO(templateId,templateId, templateId, null, null, archetype, null, null));
-		    }catch(Exception e){
-			throw new InternalErrorException(e);
-		    }
-		}
-	    }else{
-		throw new Exception("Resource list not found!");
-	    }
+            throws InternalErrorException{
+        try{
+            InputStream is = InJarTemplateDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
+            Collection<String> templateFileNames = new ArrayList<String>();
+            Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
+            if (is!=null) {
+                String resourceList = IOUtils.toString(is, "UTF-8");
+                for (String string : resourceList.split("\n")) {
+                    string = string.trim();
+                    if (string.endsWith(".oet")){
+                        //Remove the leading '\'
+                        string = string.replaceAll("\\\\", "/");
+                        templateFileNames.add(string.substring(1, string.length()));
+                    }
+                }
+                for (String templateFileName : templateFileNames) {
+                    try{
+                        InputStream fis =InJarTemplateDAO.class.getClassLoader().getResourceAsStream(templateFileName);
+                        String templateId = templateFileName.substring(templateFileName.lastIndexOf("/")+1,templateFileName.length()-4);
+                        String archetype = IOUtils.toString(fis);
+                        templateDTOs.add(new TemplateDTO(templateId,templateId, templateId, null, null, archetype, null, null));
+                    }catch(Exception e){
+                        throw new InternalErrorException(e);
+                    }
+                }
+            }else{
+                throw new Exception("Resource list not found!");
+            }
 
-	    return templateDTOs;
-	}catch(Exception e){
-	    throw new InternalErrorException(e);
-	}
+            return templateDTOs;
+        }catch(Exception e){
+            throw new InternalErrorException(e);
+        }
     }
 
     @Override
@@ -58,23 +58,23 @@ public class InJarTemplateDAO implements GenericTemplateDAO{
     }
 
     public Collection<TemplateDTO> searchByTemplateIds(Collection<String> templateIds)
-	    throws InternalErrorException, InstanceNotFoundException {
-	try{
-	    Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
-	    for (String templateId : templateIds) {
-		InputStream fis =InJarTemplateDAO.class.getClassLoader().getResourceAsStream(templateId+".oet");
-		String archetype = IOUtils.toString(fis);
-		templateDTOs.add(new TemplateDTO(templateId,templateId,templateId, null, null, archetype, null, null));
-	    }
-	    return templateDTOs;
-	}catch(Exception e){
-	    throw new InternalErrorException(e);
-	}
+            throws InternalErrorException {
+        try{
+            Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
+            for (String templateId : templateIds) {
+                InputStream fis =InJarTemplateDAO.class.getClassLoader().getResourceAsStream(templateId+".oet");
+                String archetype = IOUtils.toString(fis);
+                templateDTOs.add(new TemplateDTO(templateId,templateId,templateId, null, null, archetype, null, null));
+            }
+            return templateDTOs;
+        }catch(Exception e){
+            throw new InternalErrorException(e);
+        }
     }
 
     public void insert(TemplateDTO templateVO)
-	    throws InternalErrorException, ModelException{
-	throw new InternalErrorException(new Exception("It's Not possible to add templates into resources!"));
+            throws InternalErrorException, ModelException{
+        throw new InternalErrorException(new Exception("It's Not possible to add templates into resources!"));
     }
 
     @Override

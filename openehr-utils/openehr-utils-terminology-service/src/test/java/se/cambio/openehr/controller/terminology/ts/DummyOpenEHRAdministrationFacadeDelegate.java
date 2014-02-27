@@ -35,6 +35,16 @@ public class DummyOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
     }
 
     @Override
+    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds) throws InternalErrorException {
+        return null; //Generated
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds) throws InternalErrorException {
+        return null; //Generated
+    }
+
+    @Override
     public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
         return null; //Generated
     }

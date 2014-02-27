@@ -42,6 +42,20 @@ public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
     }
 
     @Override
+    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds)
+            throws InternalErrorException {
+        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
+        return dao.searchByArchetypeIds(archetypeIds);
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds)
+            throws InternalErrorException {
+        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
+        return dao.searchByTemplateIds(templateIds);
+    }
+
+    @Override
     public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
         GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
         return dao.searchAllDefinitions();

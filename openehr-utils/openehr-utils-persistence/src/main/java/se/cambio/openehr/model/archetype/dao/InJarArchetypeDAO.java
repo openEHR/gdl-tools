@@ -56,7 +56,7 @@ public class InJarArchetypeDAO implements GenericArchetypeDAO{
     }
 
     public Collection<ArchetypeDTO> searchByArchetypeIds(Collection<String> archetypeIds)
-            throws InternalErrorException, InstanceNotFoundException {
+            throws InternalErrorException {
         try{
             Collection<ArchetypeDTO> archetypeDTOs = new ArrayList<ArchetypeDTO>();
             for (String archetypeId : archetypeIds) {

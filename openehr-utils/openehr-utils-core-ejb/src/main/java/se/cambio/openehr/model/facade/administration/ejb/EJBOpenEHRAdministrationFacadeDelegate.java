@@ -67,6 +67,24 @@ public class EJBOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministra
     }
 
     @Override
+    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds) throws InternalErrorException {
+        try {
+            return _adminFacade.searchArchetypes(archetypeIds);
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
+    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds) throws InternalErrorException {
+        try {
+            return _adminFacade.searchTemplates(templateIds);
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
+    @Override
     public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
         try {
             return _adminFacade.searchAllArchetypesDefinitions();

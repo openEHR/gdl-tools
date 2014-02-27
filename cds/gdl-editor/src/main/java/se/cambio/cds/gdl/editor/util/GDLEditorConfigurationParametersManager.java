@@ -1,20 +1,13 @@
 package se.cambio.cds.gdl.editor.util;
 
+import org.apache.log4j.Logger;
+import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+
+import javax.naming.InitialContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.naming.InitialContext;
-
-import org.apache.log4j.Logger;
-
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+import java.util.*;
 
 public final class GDLEditorConfigurationParametersManager {
 
@@ -42,10 +35,10 @@ public final class GDLEditorConfigurationParametersManager {
             InputStream inputStream = null;
             if (configFile!=null){
                 inputStream = new FileInputStream(configFile);
-                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(GDLEditorConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
             }else{
                 inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(GDLEditorConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
             }
             Properties properties = new Properties();
             properties.load(inputStream);
@@ -57,7 +50,7 @@ public final class GDLEditorConfigurationParametersManager {
         } catch (Exception e) {
 	    /* We have not been able to read the file. */
             usesJNDI = true;
-            Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
+            Logger.getLogger(GDLEditorConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
         }
     }
 

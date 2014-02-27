@@ -2,7 +2,6 @@ package se.cambio.openehr.util;
 
 import org.apache.log4j.Logger;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
 import javax.swing.*;
 import java.io.*;
@@ -61,13 +60,13 @@ public class UserConfigurationManager {
                     String path = System.getProperty("user.home")+File.separator+USER_CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE;
                     _configFile = new File(path);
                     is = new FileInputStream(_configFile);
-                    Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using user home folder for '"+CONFIGURATION_FILE+"'");
+                    Logger.getLogger(UserConfigurationManager.class).info("*** Using user home folder for '"+CONFIGURATION_FILE+"'");
                 }else{
-                    Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+                    Logger.getLogger(UserConfigurationManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
                 }
             }else{
                 is = new FileInputStream(_configFile);
-                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(UserConfigurationManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
             }
             if (is!=null){
                 //We use an extended properties to be able to load paths defined with backslash (\)

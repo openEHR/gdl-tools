@@ -26,6 +26,11 @@ public interface OpenEHRAdministrationFacade{
     public Collection<TerminologyDTO> searchAllTerminologies()
             throws InternalErrorException, RemoteException;
 
+    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds)
+            throws InternalErrorException, RemoteException;
+    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds)
+            throws InternalErrorException, RemoteException;
+
     public Collection<ArchetypeDTO> searchAllArchetypesDefinitions()
             throws InternalErrorException, RemoteException;
     public Collection<TemplateDTO> searchAllTemplatesDefinitions()

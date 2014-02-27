@@ -42,6 +42,16 @@ public class OpenEHRAdministrationFacadeBean implements OpenEHRAdministrationFac
         return _delegate.searchAllTerminologies();
     }
 
+    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds)
+            throws InternalErrorException, RemoteException {
+        return _delegate.searchArchetypes(archetypeIds);
+    }
+
+    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds)
+            throws InternalErrorException, RemoteException {
+        return _delegate.searchTemplates(templateIds);
+    }
+
     @Override
     public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException, RemoteException {
         return _delegate.searchAllArchetypesDefinitions();
