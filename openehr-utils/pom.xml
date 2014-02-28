@@ -71,10 +71,8 @@
 		<module>openehr-utils-model</module>
 		<module>openehr-utils-persistence</module>
 		<module>openehr-utils-core</module>
-        <module>openehr-utils-core-ejb</module>
 		<module>openehr-utils-terminology-service</module>
 		<module>openehr-utils-server</module>
-        <module>openehr-utils-server-ear</module>
 		<module>openehr-utils-gui-swing</module>
     </modules>
 </project>
