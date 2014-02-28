@@ -2,14 +2,15 @@ package se.cambio.cds.model.util;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.openehr.rm.support.terminology.TerminologyService;
 import se.cambio.cds.model.facade.cds.vo.DomainData;
 import se.cambio.cds.model.facade.cds.vo.EIValue;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.openehr.util.OpenEHRConstUI;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,6 +23,9 @@ import java.util.Map;
  * Time: 11:42
  */
 public class DomainDataUtil {
+
+    public static DvCodedText NULL_FLAVOUR_CODE_NO_INFO = new DvCodedText("no information", new CodePhrase(TerminologyService.OPENEHR, "271"));
+
     public static List<ArchetypeReference> fromDomainData(DomainData ehrData){
         List<ArchetypeReference> archetypeReferences = new ArrayList<ArchetypeReference>();
         for (String archetypeId: ehrData.getArdvMap().keySet()){
@@ -36,7 +40,7 @@ public class DomainDataUtil {
                     if (eiValue.getDv()!=null){
                         dv = DataValue.parseValue(eiValue.getDv());
                     }else{
-                        nullFlavourCT = OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO;
+                        nullFlavourCT = NULL_FLAVOUR_CODE_NO_INFO;
                     }
                     if (eiValue.getRuleReferences()==null || eiValue.getRuleReferences().isEmpty()){
                         new ElementInstance(elementId, dv, archetypeReference, null, nullFlavourCT);

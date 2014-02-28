@@ -3,6 +3,7 @@ package se.cambio.openehr.model.facade.administration.delegate;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.template.generator.model.Template;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
@@ -47,6 +48,10 @@ public interface OpenEHRAdministrationFacadeDelegate {
             throws InternalErrorException, ModelException;
     public void removeTerminology(String terminologyId)
             throws InternalErrorException, ModelException;
+
+    public Template getSimpleTemplate(String templateId, String lang)
+            throws InternalErrorException, ModelException;
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

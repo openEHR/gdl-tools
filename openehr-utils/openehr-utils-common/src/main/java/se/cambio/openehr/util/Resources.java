@@ -1,7 +1,7 @@
 package se.cambio.openehr.util;
 
 public class Resources {
-    public static String RESOURCES_LIST = "resourceslist.txt";
+    public static String RESOURCES_LIST = "resources.list";
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

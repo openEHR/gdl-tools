@@ -4,6 +4,7 @@ import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.facade.administration.plain.PlainOpenEHRAdministrationFacadeDelegate;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.template.generator.model.Template;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
@@ -106,6 +107,11 @@ public class OpenEHRAdministrationFacadeBean implements OpenEHRAdministrationFac
     @Override
     public void removeTerminology(String terminologyId) throws InternalErrorException, ModelException, RemoteException {
         _delegate.removeTerminology(terminologyId);
+    }
+
+    public Template getSimpleTemplate(String templateId, String lang)
+            throws InternalErrorException, ModelException, RemoteException{
+        return _delegate.getSimpleTemplate(templateId, lang);
     }
 }
 /*

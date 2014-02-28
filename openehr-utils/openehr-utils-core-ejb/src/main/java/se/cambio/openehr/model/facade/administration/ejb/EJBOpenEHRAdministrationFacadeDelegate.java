@@ -11,6 +11,7 @@ import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegate;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.template.generator.model.Template;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 import se.cambio.openehr.util.util.EJBConst;
@@ -182,6 +183,16 @@ public class EJBOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministra
             throw new InternalErrorException(e);
         }
     }
+
+    @Override
+    public Template getSimpleTemplate(String templateId, String lang) throws InternalErrorException, ModelException {
+        try {
+            return _adminFacade.getSimpleTemplate(templateId, lang);
+        } catch (RemoteException e) {
+            throw new InternalErrorException(e);
+        }
+    }
+
     private static String getLookupName() {
         String beanName = "OpenEHRAdministrationFacadeBean";
         final String interfaceName = OpenEHRAdministrationFacade.class.getName();

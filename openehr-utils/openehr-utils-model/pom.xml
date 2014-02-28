@@ -32,5 +32,10 @@
 			<artifactId>openehr-utils-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>cosmic-template-gen</artifactId>
+            <version>${template-gen-version}</version>
+        </dependency>
 	</dependencies>
 </project>

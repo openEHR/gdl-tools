@@ -11,6 +11,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <openehr-java-libs-version>1.0.5</openehr-java-libs-version>
+        <cm-version>1.1.0-SNAPSHOT</cm-version>
+        <template-gen-version>0.95.0-SNAPSHOT</template-gen-version>
         <distribution.path>//css-cds/dist/${artifactId}/${project.version}</distribution.path>
     </properties>
     <scm>

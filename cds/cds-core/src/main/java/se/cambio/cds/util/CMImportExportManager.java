@@ -33,7 +33,7 @@ public class CMImportExportManager {
     private static String TEMPLATES_FOLDER_NAME = "templates";
     private static String TERMINOLOGIES_FOLDER_NAME = "terminologies";
     private static String GUIDELINES_FOLDER_NAME = "guidelines";
-    private static String OVERVIEWS_FOLDER_NAME = "overviews";
+    private static String OVERVIEWS_FOLDER_NAME = "views";
 
     private static String ARCHETYPE_POSTFIX = ".adl";
     private static String TEMPLATES_POSTFIX = ".oet";

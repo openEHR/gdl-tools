@@ -1,5 +1,6 @@
 package se.cambio.openehr.model.facade.administration.plain;
 
+import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.model.archetype.dao.GenericArchetypeDAO;
 import se.cambio.openehr.model.archetype.dao.GenericArchetypeFactory;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -13,6 +14,9 @@ import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
 import se.cambio.openehr.model.util.comparators.TemplateComparator;
 import se.cambio.openehr.model.util.comparators.TerminologyComparator;
+import se.cambio.openehr.template.generator.controller.TemplateGen;
+import se.cambio.openehr.template.generator.model.Template;
+import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
@@ -152,6 +156,24 @@ public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
     public void removeTerminology(String terminologyId) throws InternalErrorException, ModelException {
         GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
         dao.remove(terminologyId);
+    }
+
+    @Override
+    public Template getSimpleTemplate(String templateId, String lang) throws InternalErrorException, ModelException {
+        Collection<TemplateDTO> templateDTOs = searchTemplates(Collections.singleton(templateId));
+        Template simpleTemplate = null;
+        if (!templateDTOs.isEmpty()){
+            Collection<ArchetypeDTO> archetypeDTOs = searchAllArchetypes();
+            Map<String, Archetype> archetypeMap = new HashMap<String, Archetype>();
+            for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+                archetypeMap.put(archetypeDTO.getIdArchetype(), (Archetype) IOUtils.getObject(archetypeDTO.getAom()));
+            }
+            TemplateDTO templateDTO = templateDTOs.iterator().next();
+            Archetype templateAOM = (Archetype) IOUtils.getObject(templateDTO.getAom());
+            TemplateGen templateGen = new TemplateGen();
+            simpleTemplate = templateGen.toTemplate(templateDTO.getName(), templateAOM, archetypeMap, lang);
+        }
+        return simpleTemplate;
     }
 }
 /*

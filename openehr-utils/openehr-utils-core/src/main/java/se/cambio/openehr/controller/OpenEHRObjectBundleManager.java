@@ -134,7 +134,7 @@ public class OpenEHRObjectBundleManager {
         }
         if (ar==null){
             OETParser parser = new OETParser();
-            InputStream is = IOUtils.toInputStream(templateDTO.getArchetype());
+            InputStream is = IOUtils.toInputStream(templateDTO.getArchetype(), "UTF-8");
             TEMPLATE template = parser.parseTemplate(is).getTemplate();
             templateDTO.setName(template.getName());
             //TODO

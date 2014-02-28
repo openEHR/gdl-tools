@@ -1,11 +1,12 @@
 package se.cambio.openehr.model.facade.terminology.vo;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.openehr.rm.datatypes.text.DvCodedText;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.openehr.rm.datatypes.text.DvCodedText;
 
 /**
  * A generic tree representation with codedText as value. Immutable object.
@@ -13,7 +14,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
  * @author rong.chen
  * 
  */
-public class TerminologyNodeVO {
+public class TerminologyNodeVO implements Serializable{
 
 	public TerminologyNodeVO(DvCodedText value, List<TerminologyNodeVO> children) {
 		if (value == null) {
