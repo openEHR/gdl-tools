@@ -30,8 +30,7 @@ public class ExportUtils {
 
     public static void exportToHTML(Window owner, Guide guide, String lang){
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "HTML",new String[]{"html"});
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("HTML",new String[]{"html"});
         fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));
         fileChooser.setFileFilter(filter);
         File selectedFile = new File(guide.getId()+".html");
@@ -124,7 +123,6 @@ public class ExportUtils {
             }
             sb.append("</table><br>");
         }
-
 
         if (!readableGuide.getReadableRules().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("RuleList")));
