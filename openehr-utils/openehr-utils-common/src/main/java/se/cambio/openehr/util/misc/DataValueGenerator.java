@@ -1,4 +1,4 @@
-package se.cambio.openehr.util;
+package se.cambio.openehr.util.misc;
 
 import com.rits.cloning.Cloner;
 import org.apache.log4j.Logger;
@@ -12,6 +12,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
+import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Calendar;
