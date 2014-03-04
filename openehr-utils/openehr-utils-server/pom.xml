@@ -29,6 +29,11 @@
 			<version>${project.version}</version>
 		</dependency>
         <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>template-gen-core</artifactId>
+            <version>${template-gen-version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.2-1002-jdbc4</version>
