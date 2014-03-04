@@ -12,21 +12,13 @@
 	</organization>
 
 	<dependencies>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>openehr-rm-core</artifactId>
-			<version>${openehr-java-libs-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>openehr-rm-domain</artifactId>
-			<version>${openehr-java-libs-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>openehr</groupId>
-			<artifactId>xml-serializer</artifactId>
-			<version>${openehr-java-libs-version}</version>
-		</dependency>
+        <dependency>
+            <groupId>openehr</groupId>
+            <artifactId>openehr-rm-core</artifactId>
+            <version>${openehr-java-libs-version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>uk.com.robust-it</groupId>
             <artifactId>cloning</artifactId>

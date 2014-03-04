@@ -19,7 +19,7 @@ import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.util.DataValueGenerator;
+import se.cambio.openehr.util.misc.DataValueGenerator;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.exceptions.InternalErrorException;

@@ -13,7 +13,7 @@ import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
 import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
-import se.cambio.openehr.util.DataValueGenerator;
+import se.cambio.openehr.util.misc.DataValueGenerator;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
