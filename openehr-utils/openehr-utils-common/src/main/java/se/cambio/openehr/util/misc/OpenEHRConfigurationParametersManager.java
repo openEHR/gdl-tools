@@ -48,7 +48,6 @@ public final class OpenEHRConfigurationParametersManager {
             Properties properties = new Properties();
             properties.load(inputStream);
             inputStream.close();
-
 	    /* We have been able to read the file. */
             usesJNDI = false;
             parameters.putAll(properties);
@@ -85,7 +84,6 @@ public final class OpenEHRConfigurationParametersManager {
             if (file.exists()){
                 return file;
             }
-
         }catch(Throwable t2){
             //Problem finding config folder
             //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
@@ -95,9 +93,7 @@ public final class OpenEHRConfigurationParametersManager {
 
     public static String getParameter(String name)
             throws MissingConfigurationParameterException {
-
         String value = (String) parameters.get(name);
-
         if (value == null) {
             //System.out.println("Missing "+name);
             if (usesJNDI) {
@@ -111,7 +107,6 @@ public final class OpenEHRConfigurationParametersManager {
                 }
             } else {
                 throw new MissingConfigurationParameterException(name);
-
             }
         }
         return value;
@@ -123,9 +118,7 @@ public final class OpenEHRConfigurationParametersManager {
 
     public static Object getObjectParameter(String name)
             throws MissingConfigurationParameterException {
-
         Object value = (Object) parameters.get(name);
-
         if (value == null) {
             //System.out.println("Missing "+name);
             if (usesJNDI) {
@@ -143,11 +136,8 @@ public final class OpenEHRConfigurationParametersManager {
 
             }
         }
-
         return value;
-
     }
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
