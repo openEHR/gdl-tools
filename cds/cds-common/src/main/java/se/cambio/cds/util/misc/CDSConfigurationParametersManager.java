@@ -1,9 +1,7 @@
 package se.cambio.cds.util.misc;
 
 import org.apache.log4j.Logger;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
 import javax.naming.InitialContext;
 import java.io.File;
@@ -23,6 +21,7 @@ public final class CDSConfigurationParametersManager {
     public static String CDS_SERVER_USER_LOGIN = "CDSServer/login";
     public static String CDS_SERVER_USER_PASSWD = "CDSServer/password";
 
+    public static String USE_LOCAL_CM_CACHE = "CM/UseLocalCache";
     private static String DSV_BASE_URL = "DSVServer/baseURL";
 
 
@@ -157,7 +156,18 @@ public final class CDSConfigurationParametersManager {
     }
 
     public static String getDvBaseUrl() throws MissingConfigurationParameterException{
-        return CDSConfigurationParametersManager.getParameter(CDSConfigurationParametersManager.DSV_BASE_URL);
+        return CDSConfigurationParametersManager.getParameter(DSV_BASE_URL);
+    }
+
+    public static boolean useLocalCMCache(){
+        boolean useLocalKM = false;
+        try {
+            String useLocalCachStr = CDSConfigurationParametersManager.getParameter(USE_LOCAL_CM_CACHE);
+            useLocalKM = new Boolean(useLocalCachStr);
+        } catch (MissingConfigurationParameterException e) {
+            e.printStackTrace();
+        }
+        return useLocalKM;
     }
 }
 /*
