@@ -1,6 +1,7 @@
 package se.cambio.cds.util.misc;
 
 import org.apache.log4j.Logger;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import javax.naming.InitialContext;
@@ -160,14 +161,14 @@ public final class CDSConfigurationParametersManager {
     }
 
     public static boolean useLocalCMCache(){
-        boolean useLocalKM = false;
+        boolean useLocalCM = false;
         try {
             String useLocalCachStr = CDSConfigurationParametersManager.getParameter(USE_LOCAL_CM_CACHE);
-            useLocalKM = new Boolean(useLocalCachStr);
+            useLocalCM = new Boolean(useLocalCachStr);
         } catch (MissingConfigurationParameterException e) {
-            e.printStackTrace();
+            Logger.getLogger(CDSConfigurationParametersManager.class).info("'"+USE_LOCAL_CM_CACHE+"' property not found. Using default ("+useLocalCM+").");
         }
-        return useLocalKM;
+        return useLocalCM;
     }
 }
 /*

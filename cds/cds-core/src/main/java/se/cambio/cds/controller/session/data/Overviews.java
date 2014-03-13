@@ -1,11 +1,9 @@
 package se.cambio.cds.controller.session.data;
+import org.apache.log4j.Logger;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
 import se.cambio.cds.model.overview.dto.OverviewDTO;
-import se.cambio.cds.model.util.comparators.GuidesComparator;
 import se.cambio.cds.model.util.comparators.OverviewComparator;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -33,8 +31,6 @@ public class Overviews {
         }
     }
 
-
-
     public static void loadOverviews(Collection<OverviewDTO> overviewDTOs) throws InternalErrorException{
         init();
         for (OverviewDTO overviewDTO : overviewDTOs) {
@@ -44,6 +40,7 @@ public class Overviews {
 
     public static void registerOverview(OverviewDTO overviewDTO){
         getOverviewsMap().put(overviewDTO.getIdOverview(), overviewDTO);
+        Logger.getLogger(Overviews.class).info("Registering dsv: '"+overviewDTO.getIdOverview()+"'.");
     }
 
     public static OverviewDTO getOverviewDTO(String idOverview){
