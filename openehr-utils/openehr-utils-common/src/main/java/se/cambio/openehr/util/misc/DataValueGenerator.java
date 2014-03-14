@@ -113,7 +113,7 @@ public class DataValueGenerator {
             setCalendar(cal, Calendar.YEAR, attributeName, (Integer)value, "year", dvDateTime.getYear());
             setCalendar(cal, Calendar.MONTH, attributeName, (Integer)value, "month", dvDateTime.getMonth());
             setCalendar(cal, Calendar.DATE, attributeName, (Integer)value, "day", dvDateTime.getDay());
-            setCalendar(cal, Calendar.HOUR, attributeName, (Integer)value, "hour", dvDateTime.getHour());
+            setCalendar(cal, Calendar.HOUR_OF_DAY, attributeName, (Integer)value, "hour", dvDateTime.getHour());
             setCalendar(cal, Calendar.MINUTE, attributeName, (Integer)value, "minute", dvDateTime.getMinute());
             setCalendar(cal, Calendar.SECOND, attributeName, (Integer)value, "second", dvDateTime.getSecond());
         }else{
@@ -133,7 +133,7 @@ public class DataValueGenerator {
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH)+1,
                 cal.get(Calendar.DATE),
-                cal.get(Calendar.HOUR),
+                cal.get(Calendar.HOUR_OF_DAY),
                 cal.get(Calendar.MINUTE),
                 cal.get(Calendar.SECOND), /*fractionalSecond,*/ TimeZone.getTimeZone("UTC"));
     }
@@ -196,7 +196,7 @@ public class DataValueGenerator {
 
     private static DvTime create(DvTime dvTime, String attributeName, Object value) throws InternalErrorException{
         Calendar cal = Calendar.getInstance();
-        setCalendar(cal, Calendar.HOUR, attributeName, (Integer)value, "hour", dvTime.getHour());
+        setCalendar(cal, Calendar.HOUR_OF_DAY, attributeName, (Integer)value, "hour", dvTime.getHour());
         setCalendar(cal, Calendar.MINUTE, attributeName, (Integer)value, "minute", dvTime.getMinute());
         setCalendar(cal, Calendar.SECOND, attributeName, (Integer)value, "second", dvTime.getSecond());
         //String[] assignation = aMap.get("timeZone");
@@ -208,7 +208,7 @@ public class DataValueGenerator {
         //  timeZone = assignation[2];
         //}
         return new DvTime(
-                cal.get(Calendar.HOUR),
+                cal.get(Calendar.HOUR_OF_DAY),
                 cal.get(Calendar.MINUTE),
                 cal.get(Calendar.SECOND), /*fractionalSecond,*/ timeZone);
     }
