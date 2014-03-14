@@ -33,12 +33,12 @@ public class UserConfigurationManager {
 
     private static Map<String, String> _defaultValues = new HashMap<String, String>();
     static{
-        _defaultValues.put(ARCHETYPES_FOLDER_KW, "Archetypes");
-        _defaultValues.put(TEMPLATES_FOLDER_KW, "Templates");
-        _defaultValues.put(GUIDES_FOLDER_KW, "Guidelines");
-        _defaultValues.put(TERMINOLOGIES_FOLDER_KW, "Terminologies");
-        _defaultValues.put(ONTOLOGIES_FOLDER_KW, "Ontologies");
-        _defaultValues.put(OVERVIEWS_FOLDER_KW, "Overviews");
+        _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");
+        _defaultValues.put(TEMPLATES_FOLDER_KW, "templates");
+        _defaultValues.put(GUIDES_FOLDER_KW, "guidelines");
+        _defaultValues.put(TERMINOLOGIES_FOLDER_KW, "terminologies");
+        _defaultValues.put(ONTOLOGIES_FOLDER_KW, "ontologies");
+        _defaultValues.put(OVERVIEWS_FOLDER_KW, "views");
         _defaultValues.put(DOCUMENTS_FOLDER_KW, "docs");
         _defaultValues.put(CURRENT_DATE_TIME_KW, null);
         _defaultValues.put(LANGUAGE, DEFAULT_LANGUAGE);
