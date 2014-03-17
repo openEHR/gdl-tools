@@ -2,6 +2,7 @@ package se.cambio.openehr.util.misc;
 
 import com.rits.cloning.Cloner;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
 import org.openehr.rm.datatypes.quantity.*;
@@ -127,15 +128,7 @@ public class DataValueGenerator {
     }
 
     public static DvDateTime toDvDateTime(Calendar cal){
-        //TODO "fractionalSecond";
-        //TODO "timeZone";
-        return new DvDateTime(
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH)+1,
-                cal.get(Calendar.DATE),
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
-                cal.get(Calendar.SECOND), /*fractionalSecond,*/ TimeZone.getTimeZone("UTC"));
+        return new DvDateTime(new DateTime(cal.getTimeInMillis()).toString());
     }
 
     private static DvDate create(DvDate dvDate, String attributeName, Object value) throws InternalErrorException{
