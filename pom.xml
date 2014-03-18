@@ -10,8 +10,8 @@
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openehr-java-libs-version>1.0.6-SNAPSHOT</openehr-java-libs-version>
-        <template-gen-version>0.95.3-SNAPSHOT</template-gen-version>
+        <openehr-java-libs-version>1.0.7</openehr-java-libs-version>
+        <template-gen-version>0.95.3</template-gen-version>
         <distribution.path>//css-cds/dist/${artifactId}/${project.version}</distribution.path>
     </properties>
     <scm>
