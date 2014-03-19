@@ -1,7 +1,10 @@
 import junit.framework.TestCase;
 import se.cambio.openehr.controller.session.data.*;
+import se.cambio.openehr.controller.terminology.session.data.Terminologies;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.net.URISyntaxException;
 
 /**
  * User: Iago.Corbal
@@ -13,10 +16,11 @@ public class ArchetypeElementsTest extends TestCase {
 
     public void testArchetypeElementsLanguages(){
         try {
-            UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("archetypes").getPath());
+            UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
+            Terminologies.loadTerminologies();
+            UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
             Archetypes.loadArchetypes();
-
-            UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("templates").getPath());
+            UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
             Templates.loadTemplates();
 
             String text = ArchetypeElements.getText(null,"openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0026]","sv");
@@ -31,6 +35,8 @@ public class ArchetypeElementsTest extends TestCase {
             text = Clusters.getText("medication_atc_indicator", "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0033]", "sv");
             assertTrue(text.equals("Dose")); //No translation to swedish
         } catch (InternalErrorException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
