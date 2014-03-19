@@ -1,0 +1,204 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.stroke_risk.v1
+
+concept
+	[at0000]	-- Stroke risk
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"*(en)">
+			use = <"*(en)">
+			misuse = <"*(en)">
+			copyright = <"*(en)">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"2FD00018DEE75B350F3097F8A146DCEA">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Stroke risk
+		data matches {
+			HISTORY[at0001] matches {	-- Event Series
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- Any event
+						data matches {
+							ITEM_TREE[at0003] matches {	-- Tree
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..2} matches {	-- Risk for stroke
+										value matches {
+											0|[local::at0005], 	-- 0.0%
+											1|[local::at0006], 	-- 1.3%
+											2|[local::at0007], 	-- 2.2%
+											3|[local::at0008], 	-- 3.2%
+											4|[local::at0009], 	-- 4.0%
+											5|[local::at0010], 	-- 6.7%
+											6|[local::at0011], 	-- 9.8%
+											7|[local::at0012], 	-- 9.6%
+											8|[local::at0013], 	-- 6.7%
+											9|[local::at0014]  	-- 15.2%
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Stroke risk">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Any event">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Risk for stroke">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"0.0%">
+					description = <"0%">
+				>
+				["at0006"] = <
+					text = <"1.3%">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"2.2%">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"3.2%">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"4.0%">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"6.7%">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"9.8%">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"9.6%">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"6.7%">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"15.2%">
+					description = <"*">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Strokerisk">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Vilken händelse som helst">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Träd">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Risk för stroke">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"0.0%">
+					description = <"**(sv)">
+				>
+				["at0006"] = <
+					text = <"1.3%">
+					description = <"**(sv)">
+				>
+				["at0007"] = <
+					text = <"2.2%">
+					description = <"**(sv)">
+				>
+				["at0008"] = <
+					text = <"3.2%">
+					description = <"**(sv)">
+				>
+				["at0009"] = <
+					text = <"4.0%">
+					description = <"**(sv)">
+				>
+				["at0010"] = <
+					text = <"6.7%">
+					description = <"**(sv)">
+				>
+				["at0011"] = <
+					text = <"9.8%">
+					description = <"**(sv)">
+				>
+				["at0012"] = <
+					text = <"9.6%">
+					description = <"**(sv)">
+				>
+				["at0013"] = <
+					text = <"6.7%">
+					description = <"**(sv)">
+				>
+				["at0014"] = <
+					text = <"15.2%">
+					description = <"**(sv)">
+				>
+			>
+		>
+	>

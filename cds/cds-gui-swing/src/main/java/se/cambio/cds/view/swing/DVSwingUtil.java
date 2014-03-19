@@ -19,6 +19,7 @@ import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.DisabledComboUI;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 import se.cambio.openehr.view.util.DVPanelFactory;
 import se.cambio.openehr.view.util.MultipleIcon;
@@ -101,7 +102,7 @@ public class DVSwingUtil {
 
     public static JLabel createLabelForElement(ArchetypeElementVO archetypeElementVO){
         JLabel label = null;
-        String name = archetypeElementVO.getName();
+        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         String tooltip = name;
 
         label = new JLabel(name);
@@ -119,7 +120,8 @@ public class DVSwingUtil {
                         elementInstance.getArchetypeReference().getIdTemplate(),
                         elementInstance.getId());
         JLabel label = null;
-        String name = archetypeElement.getName();
+        String name = ArchetypeElements.getText(archetypeElement, UserConfigurationManager.getLanguage());
+
         if (elementInstance instanceof GeneratedElementInstance){
             GeneratedElementInstance elementInstancesWithGTCode = (GeneratedElementInstance) elementInstance;
             Term term = null;

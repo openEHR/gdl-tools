@@ -17,7 +17,7 @@ public class ExpressionRuleLineElement extends RuleLineElementWithValue<Expressi
         return OpenEHRLanguageManager.getMessage("Expression");
     }
 
-    public String toHTMLString(){
+    public String toHTMLString(String lang){
         if (getValue()!=null){
             return "<font color='#00803a'>"+ExpressionUtil.convertToHTMLText(this, getValue())+"</font>";
         }else{

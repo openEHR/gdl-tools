@@ -1,4 +1,5 @@
 package se.cambio.cds.gdl.editor;
+
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import se.cambio.cds.controller.guide.GuideUtil;
@@ -45,19 +46,24 @@ public class GDLEditorMainTest extends TestCase {
 
 
     public void testCMGuides()  throws Exception{
-        File mainGuideDir = new File(MAIN_GUIDE_REPOSITORY_PATH);
-        if(mainGuideDir.exists() && mainGuideDir.isDirectory()){
-            for (File file : mainGuideDir.listFiles()) {
-                if (file.getName().endsWith(".gdl")){
-                    Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '"+file.getName()+"'");
-                    FileInputStream fis = new FileInputStream(file);
-                    InputStreamReader in = new InputStreamReader(fis, "UTF-8");
-                    String guideStr = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
-                    Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
-                    GDLEditor editor = new GDLEditor(guide);
-                    String guideStr2 = editor.serializeCurrentGuide();
-                    assertEquals(guideStr, guideStr2);
-                }
+        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("archetypes").getPath());
+        Archetypes.loadArchetypes();
+        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("templates").getPath());
+        Templates.loadTemplates();
+
+        UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE,"en");
+
+        File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
+        for (File file : mainGuideDir.listFiles()) {
+            if (file.getName().endsWith(".gdl")){
+                Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '"+file.getName()+"'");
+                FileInputStream fis = new FileInputStream(file);
+                InputStreamReader in = new InputStreamReader(fis, "UTF-8");
+                String guideStr = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
+                Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
+                GDLEditor editor = new GDLEditor(guide);
+                String guideStr2 = editor.serializeCurrentGuide();
+                assertEquals(guideStr, guideStr2);
             }
         }
     }

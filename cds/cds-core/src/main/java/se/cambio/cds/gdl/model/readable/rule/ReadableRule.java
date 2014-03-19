@@ -5,6 +5,7 @@ import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,58 +19,62 @@ public class ReadableRule {
     private boolean commented = false;
 
     public ReadableRule(TermDefinition termDefinition, String gtCode){
-	this.gtCode = gtCode;
-	_conditionRuleLines = new ArrayList<RuleLine>();
-	_actionRuleLines = new ArrayList<RuleLine>();
-	_termDefinition = termDefinition;
+        this.gtCode = gtCode;
+        _conditionRuleLines = new ArrayList<RuleLine>();
+        _actionRuleLines = new ArrayList<RuleLine>();
+        _termDefinition = termDefinition;
     }
-    
+
     public String getGTCode() {
-	return gtCode;
+        return gtCode;
     }
-    
+
     public List<RuleLine> getConditionRuleLines() {
-	return _conditionRuleLines;
+        return _conditionRuleLines;
     }
 
     public List<RuleLine> getActionRuleLines() {
-	return _actionRuleLines;
+        return _actionRuleLines;
     }
 
     public boolean isCommented(){
-	return commented;
+        return commented;
     }
 
     public void setCommented(boolean commented){
-	this.commented = commented;
+        this.commented = commented;
     }
 
     public TermDefinition getTermDefinition() {
         return _termDefinition;
     }
-    
+
     private String getName(String gtCode){
-	Term term = getTermDefinition().getTerms().get(gtCode);
-	if (term!=null){
-	    return term.getText();
-	}else{
-	    ExceptionHandler.handle(new Exception("Unknow term for gtCode='"+gtCode+"'"));
-	    return "*UNKNOWN*";
-	}
+        Term term = getTermDefinition().getTerms().get(gtCode);
+        if (term!=null){
+            return term.getText();
+        }else{
+            ExceptionHandler.handle(new Exception("Unknow term for gtCode='"+gtCode+"'"));
+            return "*UNKNOWN*";
+        }
     }
-    
+
     public String toString(){
-	StringBuffer sb = new StringBuffer();
-	sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Rule")+"</font><font> "+getName(gtCode)+"</font></b><br>");
-	sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("When")+"</font></b><br>");
-	for (RuleLine ruleLine : getConditionRuleLines()) {
-	    sb.append(ruleLine.toHTMLString(1)+"</div><br>");
-	}
-	sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Then")+"</font></b><br>");
-	for (RuleLine ruleLine : getActionRuleLines()) {
-	    sb.append(ruleLine.toHTMLString(1)+"</div><br>");
-	}
-	return sb.toString();
+        return toHTMLString(UserConfigurationManager.getLanguage());
+    }
+
+    public String toHTMLString(String lang){
+        StringBuffer sb = new StringBuffer();
+        sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Rule")+"</font><font> "+getName(gtCode)+"</font></b><br>");
+        sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("When")+"</font></b><br>");
+        for (RuleLine ruleLine : getConditionRuleLines()) {
+            sb.append(ruleLine.toHTMLString(1, lang)+"</div><br>");
+        }
+        sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Then")+"</font></b><br>");
+        for (RuleLine ruleLine : getActionRuleLines()) {
+            sb.append(ruleLine.toHTMLString(1, lang)+"</div><br>");
+        }
+        return sb.toString();
     }
 }
 /*

@@ -1,0 +1,250 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1
+
+concept
+	[at0000]	-- Cha2ds2vasc compliance
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"*(sv)">
+			use = <"*(sv)">
+			misuse = <"*(sv)">
+			copyright = <"*(sv)">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"**(sv)(en)">
+			use = <"**(sv)(en)">
+			misuse = <"**(sv)(en)">
+			copyright = <"**(sv)(en)">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"06CFE75200A7758BAC44891232E857F2">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Cha2ds2vasc compliance
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Träd
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- CHA2DS2-VASc Compliance
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0003, 	-- Förenlig
+									at0004]	-- Ej förenlig
+								}
+							}
+						}
+					}
+					ELEMENT[at0006] occurrences matches {0..1} matches {	-- CHA2DS2-VASc Score poäng
+						value matches {
+							0|[local::at0007], 	-- 0
+							1|[local::at0008], 	-- 1
+							2|[local::at0009], 	-- 2
+							3|[local::at0010], 	-- 3
+							4|[local::at0011], 	-- 4
+							5|[local::at0012], 	-- 5
+							6|[local::at0013], 	-- 6
+							7|[local::at0014], 	-- 7
+							8|[local::at0015], 	-- 8
+							9|[local::at0016]  	-- 9
+						}
+					}
+					ELEMENT[at0017] occurrences matches {0..1} matches {	-- Antikoagulantia
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0018, 	-- Finns
+									at0019]	-- Finns ej
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Cha2ds2vasc compliance">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"CHA2DS2-VASc Compliance">
+					description = <"CHA2DS2-VASc Compliance">
+				>
+				["at0003"] = <
+					text = <"Compliant">
+					description = <"Compliant">
+				>
+				["at0004"] = <
+					text = <"Non compliant">
+					description = <"Non compliant">
+				>
+				["at0006"] = <
+					text = <"CHA2DS2-VASc Score">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"0">
+					description = <"0">
+				>
+				["at0008"] = <
+					text = <"1">
+					description = <"1">
+				>
+				["at0009"] = <
+					text = <"2">
+					description = <"2">
+				>
+				["at0010"] = <
+					text = <"3">
+					description = <"3">
+				>
+				["at0011"] = <
+					text = <"4">
+					description = <"4">
+				>
+				["at0012"] = <
+					text = <"5">
+					description = <"5">
+				>
+				["at0013"] = <
+					text = <"6">
+					description = <"6">
+				>
+				["at0014"] = <
+					text = <"7">
+					description = <"7">
+				>
+				["at0015"] = <
+					text = <"8">
+					description = <"8">
+				>
+				["at0016"] = <
+					text = <"9">
+					description = <"9">
+				>
+				["at0017"] = <
+					text = <"Anti-coagulant medication">
+					description = <"*">
+				>
+				["at0018"] = <
+					text = <"Present">
+					description = <"Present">
+				>
+				["at0019"] = <
+					text = <"Absent">
+					description = <"Absent">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Cha2ds2vasc compliance">
+					description = <"**unknown(sv)(en)">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"**@ internal @(sv)(en)">
+				>
+				["at0002"] = <
+					text = <"CHA2DS2-VASc Compliance">
+					description = <"*CHA2DS2-VASc Compliance(en)">
+				>
+				["at0003"] = <
+					text = <"Förenlig">
+					description = <"*Compliant(en)">
+				>
+				["at0004"] = <
+					text = <"Ej förenlig">
+					description = <"*Non compliant(en)">
+				>
+				["at0006"] = <
+					text = <"CHA2DS2-VASc Score poäng">
+					description = <"**(en)">
+				>
+				["at0007"] = <
+					text = <"0">
+					description = <"*0(en)">
+				>
+				["at0008"] = <
+					text = <"1">
+					description = <"*1(en)">
+				>
+				["at0009"] = <
+					text = <"2">
+					description = <"*2(en)">
+				>
+				["at0010"] = <
+					text = <"3">
+					description = <"*3(en)">
+				>
+				["at0011"] = <
+					text = <"4">
+					description = <"*4(en)">
+				>
+				["at0012"] = <
+					text = <"5">
+					description = <"*5(en)">
+				>
+				["at0013"] = <
+					text = <"6">
+					description = <"*6(en)">
+				>
+				["at0014"] = <
+					text = <"7">
+					description = <"*7(en)">
+				>
+				["at0015"] = <
+					text = <"8">
+					description = <"*8(en)">
+				>
+				["at0016"] = <
+					text = <"9">
+					description = <"*9(en)">
+				>
+				["at0017"] = <
+					text = <"Antikoagulantia">
+					description = <"**(en)">
+				>
+				["at0018"] = <
+					text = <"Finns">
+					description = <"*Present(en)">
+				>
+				["at0019"] = <
+					text = <"Finns ej">
+					description = <"*Absent(en)">
+				>
+			>
+		>
+	>

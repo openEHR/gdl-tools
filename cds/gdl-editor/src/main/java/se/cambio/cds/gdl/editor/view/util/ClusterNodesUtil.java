@@ -6,6 +6,7 @@ import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
 
@@ -87,10 +88,13 @@ public class ClusterNodesUtil {
     public static SelectableNode<Object> createClusterNode(ClusterVO clusterVO, Object object, boolean singleSelection){
         String upperNumOcurrences =
                 (clusterVO.getUpperCardinality()==null?" [*]":clusterVO.getUpperCardinality()>1?" ["+clusterVO.getUpperCardinality()+"]":"");
+        String name = Clusters.getText(clusterVO, UserConfigurationManager.getLanguage());
+        String desc = Clusters.getDescription(clusterVO, UserConfigurationManager.getLanguage());
+
         return new SelectableNodeWithIcon<Object>(
-                clusterVO.getName()+upperNumOcurrences, object ,singleSelection, false,
+                name+upperNumOcurrences, object ,singleSelection, false,
                 OpenEHRConstUI.getIcon(clusterVO.getRMType()),
-                clusterVO.getDescription());
+                desc);
     }
 }
 /*

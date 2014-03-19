@@ -1,11 +1,15 @@
 package se.cambio.openehr.controller.session.data;
 
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ArchetypeElements {
     private static ArchetypeElements _instance = null;
@@ -48,6 +52,55 @@ public class ArchetypeElements {
         }else{
             return getArchetypeElementsInTemplate(idTemplate).get(idElement);
         }
+    }
+
+    public static String getText(ArchetypeElementVO archetypeElementVO, String lang){
+        return getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), lang);
+    }
+
+    public static String getText(String idTemplate, String idElement, String lang){
+        ArchetypeElementVO archetypeElementVO = getArchetypeElement(idTemplate, idElement);
+        if (archetypeElementVO!=null){
+            ArchetypeTerm archetypeTem = getArchetypeTerm(idTemplate, idElement, lang);
+            if (archetypeTem!=null){
+                return archetypeTem.getText();
+            }else{
+                return archetypeElementVO.getName();
+            }
+        }else{
+            return "*UNKNOWN*";
+        }
+    }
+
+    public static String getDescription(ArchetypeElementVO archetypeElementVO, String lang){
+        return getDescription(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), lang);
+    }
+
+    public static String getDescription(String idTemplate, String idElement, String lang){
+        ArchetypeElementVO archetypeElementVO = getArchetypeElement(idTemplate, idElement);
+        if (archetypeElementVO!=null){
+
+            ArchetypeTerm archetypeTem = getArchetypeTerm(idTemplate, idElement, lang);
+            if (archetypeTem!=null){
+                return archetypeTem.getDescription();
+            }else{
+                return archetypeElementVO.getDescription();
+            }
+        }else{
+            return "*UNKNOWN*";
+        }
+    }
+
+    private static ArchetypeTerm getArchetypeTerm(String idTemplate, String idElement, String lang){
+        String atCode = idElement.substring(idElement.lastIndexOf("[")+1, idElement.length()-1);
+        ArchetypeTerm archetypeTem = null;
+        if (idTemplate==null){
+            String archetypeId = idElement.substring(0, idElement.indexOf("/"));
+            archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
+        }else{
+            archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+        }
+        return archetypeTem;
     }
 
     private static Map<String, ArchetypeElementVO> getArchetypeElementsInTemplate(String idTemplate){

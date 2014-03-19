@@ -14,54 +14,55 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class DataValueRuleLineElement extends RuleLineElementWithValue<DataValue> {
 
     public DataValueRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("DataValue"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("DataValue"));
     }
 
     @Override
     public String getDescription() {
-	if (getValue()!=null){
-	    if (getValue() instanceof DvCodedText){
-		CodePhrase cp = ((DvCodedText)getValue()).getDefiningCode();
-		Term term = getTerm(cp);
-		if (term!=null){
-		    return term.getDescription();   
-		}else{
-		    return ((DvCodedText)getValue()).getValue();
-		}
-	    }else if (getValue() instanceof DvOrdinal){
-		CodePhrase cp = ((DvOrdinal)getValue()).getSymbol().getDefiningCode();
-		Term term = getTerm(cp);
-		if (term!=null){
-		    return term.getDescription();   
-		}else{
-		    return ((DvOrdinal)getValue()).getSymbol().getValue();
-		}
-	    }
-	}
-	return OpenEHRLanguageManager.getMessage("DataValue"); //Default
+        if (getValue()!=null){
+            if (getValue() instanceof DvCodedText){
+                CodePhrase cp = ((DvCodedText)getValue()).getDefiningCode();
+                Term term = getTerm(cp);
+                if (term!=null){
+                    return term.getDescription();
+                }else{
+                    return ((DvCodedText)getValue()).getValue();
+                }
+            }else if (getValue() instanceof DvOrdinal){
+                CodePhrase cp = ((DvOrdinal)getValue()).getSymbol().getDefiningCode();
+                Term term = getTerm(cp);
+                if (term!=null){
+                    return term.getDescription();
+                }else{
+                    return ((DvOrdinal)getValue()).getSymbol().getValue();
+                }
+            }
+        }
+        return OpenEHRLanguageManager.getMessage("DataValue"); //Default
     }
 
     public String toString(){
-	if (getValue()!=null){
-	    return DVDefSerializer.getReadableValue(getValue(), getParentRuleLine().getTermDefinition());
-	}else{
-	    return getText();
-	}
+        if (getValue()!=null){
+            return DVDefSerializer.getReadableValue(getValue(), getParentRuleLine().getTermDefinition());
+        }else{
+            return getText();
+        }
     }
 
+
     private Term getTerm(CodePhrase cp){
-	if (cp.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)){
-	    TermDefinition termDefinition =  getParentRuleLine().getTermDefinition();
-	    if (termDefinition!=null){
-		return termDefinition.getTerms().get(cp.getCodeString());
-	    }
-	}
-	return null;
+        if (cp.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)){
+            TermDefinition termDefinition =  getParentRuleLine().getTermDefinition();
+            if (termDefinition!=null){
+                return termDefinition.getTerms().get(cp.getCodeString());
+            }
+        }
+        return null;
     }
 
     @Override
-    public String toHTMLString() {
-	return "<font color='#00803a'><b>"+toString()+"</b></font>";
+    public String toHTMLString(String lang) {
+        return "<font color='#00803a'><b>"+toString()+"</b></font>";
     }
 }
 /*

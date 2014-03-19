@@ -8,34 +8,34 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class CurrentDateTimeRuleLineElement extends RuleLineElementWithValue<GTCodeRuleLineElement> {
 
     public CurrentDateTimeRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
     }
 
     public ArchetypeReference getArchetypeReference() {
-	return null;
+        return null;
     }
 
     public ArchetypeElementVO getArchetypeElementVO(){
-	return null;
+        return null;
     }
 
     @Override
     public String toString() {
-	return OpenEHRLanguageManager.getMessage("CurrentDateTime");
+        return OpenEHRLanguageManager.getMessage("CurrentDateTime");
     }
-    
+
     @Override
     public String getName(String gtCode){
-	return OpenEHRLanguageManager.getMessage("CurrentDateTime");
+        return OpenEHRLanguageManager.getMessage("CurrentDateTime");
     }
-    
+
     @Override
     public String getDescription() {
-	return OpenEHRLanguageManager.getMessage("CurrentDateTime");
+        return OpenEHRLanguageManager.getMessage("CurrentDateTime");
     }
     @Override
-    public String toHTMLString() {
-	return "<font color='#800000'><b>\""+toString()+"\"</b></font>";
+    public String toHTMLString(String lang) {
+        return "<font color='#800000'><b>\""+toString()+"\"</b></font>";
     }
 }
 /*

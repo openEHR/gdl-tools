@@ -39,7 +39,7 @@ public class ArchetypeElementAttributeRuleLineElement extends RuleLineElementWit
     }
 
     @Override
-    public String toHTMLString() {
+    public String toHTMLString(String lang) {
         return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
     }
 

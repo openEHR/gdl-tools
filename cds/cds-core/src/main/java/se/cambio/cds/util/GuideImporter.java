@@ -9,8 +9,8 @@ import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.DataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.util.RulePriorityComparator;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -20,6 +20,7 @@ import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
@@ -95,7 +96,7 @@ public class GuideImporter {
                                                 (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))){
                                             rmType = OpenEHRDataValues.DV_CODED_TEXT;
                                         }
-                                        DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO);
+                                        DataValue dv = parseGTDataValue(rmType, dvStr, termDefinition);
                                         wepdrl.getDataValueRuleLineElement().setValue(dv);
                                         wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
                                     }else{
@@ -221,7 +222,7 @@ public class GuideImporter {
         if (dv instanceof DvCodedText){
             if (archetypeElementVO!=null){
                 DvCodedText dvCT = (DvCodedText)dv;
-                String name = CodedTexts.getName(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvCT);
+                String name = CodedTexts.getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvCT.getCode(), UserConfigurationManager.getLanguage());
                 if (name!=null){
                     dvCT.setValue(name);
                 }
@@ -229,7 +230,29 @@ public class GuideImporter {
         }else if (dv instanceof DvOrdinal){
             if (archetypeElementVO!=null){
                 DvOrdinal dvOrdinal= (DvOrdinal)dv;
-                String name = Ordinals.getName(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvOrdinal);
+                String name = Ordinals.getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvOrdinal.getValue(), UserConfigurationManager.getLanguage());
+                if (name!=null){
+                    dvOrdinal.getSymbol().setValue(name);
+                }
+            }
+        }
+        return dv;
+    }
+
+    protected static DataValue parseGTDataValue(String rmType, String dvStr,  TermDefinition termDefinition){
+        DataValue dv = DataValue.parseValue(rmType+","+dvStr);
+        if (dv instanceof DvCodedText){
+            if (termDefinition!=null){
+                DvCodedText dvCT = (DvCodedText)dv;
+                String name = termDefinition.getTerms().get(dvCT.getCode()).getText();
+                if (name!=null){
+                    dvCT.setValue(name);
+                }
+            }
+        }else if (dv instanceof DvOrdinal){
+            if (termDefinition!=null){
+                DvOrdinal dvOrdinal= (DvOrdinal)dv;
+                String name = termDefinition.getTerms().get(dvOrdinal.getCode()).getText();
                 if (name!=null){
                     dvOrdinal.getSymbol().setValue(name);
                 }
@@ -259,7 +282,7 @@ public class GuideImporter {
             }else if (expressionItemAux instanceof ConstantExpression){
                 SetElementWithDataValueActionRuleLine sedvar = new SetElementWithDataValueActionRuleLine();
                 sedvar.getArchetypeElementRuleLineElement().setValue(gtCodeRuleLineElement);
-                DataValueRuleLineElement dataValueRuleLineElement = sedvar.getDataValueRuleLineElement();
+                ArchetypeDataValueRuleLineElement archetypeDataValueRuleLineElement = sedvar.getArchetypeDataValueRuleLineElement();
                 String dvStr = ((ConstantExpression)expressionItemAux).getValue();
                 ArchetypeElementVO archetypeElementVO = gtCodeELementMap.get(gtCode).getArchetypeElement();
                 if (archetypeElementVO==null){
@@ -269,7 +292,8 @@ public class GuideImporter {
 
                 String rmType = archetypeElementVO.getRMType();
                 DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO);
-                dataValueRuleLineElement.setValue(dv);
+                archetypeDataValueRuleLineElement.setArchetypeElementVO(archetypeElementVO);
+                archetypeDataValueRuleLineElement.setValue(dv);
                 ruleLines.add(sedvar);
             }else{
                 throw new InternalErrorException(new Exception("Unknown expression '"+expressionItemAux.getClass().getName()+"'"));
@@ -339,10 +363,10 @@ public class GuideImporter {
                     ConstantExpression constantExpression = (ConstantExpression)binaryExpression.getRight();
                     String dvStr = constantExpression.getValue();
                     DataValue dv = null;
+                    ArchetypeElementVO archetypeElementVO = null;
                     if (!dvStr.equals("null")){
                         log.debug("codeRuleLineElement: " + gtCodeRuleLineElement.getValue());
                         String rmType = null;
-                        ArchetypeElementVO archetypeElementVO = null;
                         if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)){
                             archetypeElementVO = gtCodeELementMap.get(gtCodeRuleLineElement.getValue()).getArchetypeElement();
                             if (archetypeElementVO==null){
@@ -361,7 +385,8 @@ public class GuideImporter {
                     if (dv!=null){
                         ElementComparisonWithDVConditionRuleLine eccrl = new ElementComparisonWithDVConditionRuleLine();
                         eccrl.getArchetypeElementRuleLineElement().setValue(gtCodeRuleLineElement);
-                        eccrl.getDataValueRuleLineElement().setValue(dv);
+                        eccrl.getArchetypeDataValueRuleLineElement().setValue(dv);
+                        eccrl.getArchetypeDataValueRuleLineElement().setArchetypeElementVO(archetypeElementVO);
                         eccrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
                         addRuleLine(eccrl, ruleLines, parentRuleLine);
                     }else{

@@ -334,7 +334,7 @@ public class DVDefSerializer {
     }
 
     public static String getOrdinalNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation){
-        return Ordinals.getOrdinalVO(idTemplate, idParentArchetypeNode, Integer.parseInt(getValueFromDVInstantiation(dvInstantiation))).getName();
+        return Ordinals.getText(idTemplate, idParentArchetypeNode, Integer.parseInt(getValueFromDVInstantiation(dvInstantiation)), UserConfigurationManager.getLanguage());
     }
 
     public static String getValueFromDVInstantiation(String dvInstantiation){
@@ -350,7 +350,8 @@ public class DVDefSerializer {
     public static String getCodedTextNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation){
         CodedTextVO codedTexTVO = CodedTexts.getCodedTextVO(idTemplate, idParentArchetypeNode, getCodeFromDVInstantiation(dvInstantiation));
         if (codedTexTVO!=null){
-            return codedTexTVO.getName();
+            String name = CodedTexts.getText(codedTexTVO, UserConfigurationManager.getLanguage());
+            return name;
         }else{
             return getCodeFromDVInstantiation(dvInstantiation);
         }

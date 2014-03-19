@@ -96,7 +96,7 @@ public class ExportUtils {
         }
 
         List<String> contributors = (List<String>)c.getValue("/otherContributors");
-        if (!contributors.isEmpty()){
+        if (contributors!=null && !contributors.isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Contributors")));
             boolean first = true;
             sb.append("<font face='Calibri'><i>");
@@ -113,23 +113,23 @@ public class ExportUtils {
 
         ReadableGuide readableGuide = GuideImporter.importGuide(guide, lang);
 
-        if (!readableGuide.getPreconditionRuleLines().isEmpty()){
+        if (readableGuide.getPreconditionRuleLines()!=null && !readableGuide.getPreconditionRuleLines().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Preconditions")));
             sb.append("<table width=100%>");
             for (RuleLine ruleLine : readableGuide.getPreconditionRuleLines()) {
                 sb.append(TR_TD_FONT_OPEN_WITH_BG);
-                sb.append(ruleLine.toHTMLString());
+                sb.append(ruleLine.toHTMLString(lang));
                 sb.append(FONT_TD_TR_CLOSE);
             }
             sb.append("</table><br>");
         }
 
-        if (!readableGuide.getReadableRules().isEmpty()){
+        if (readableGuide.getReadableRules()!=null && !readableGuide.getReadableRules().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("RuleList")));
             sb.append("<table width=100%>");
             for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
                 sb.append(TR_TD_FONT_OPEN_WITH_BG);
-                sb.append(readableRule);
+                sb.append(readableRule.toHTMLString(lang));
                 sb.append("</font></tr><tr><td></td></tr>");
             }
             sb.append("</table>");

@@ -17,10 +17,12 @@ import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Units;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.dialogs.DVDialogEditor;
 import se.cambio.openehr.view.dialogs.DialogEditorNullValue;
 import se.cambio.openehr.view.trees.SelectableNode;
@@ -122,8 +124,10 @@ public class RuleElementEditor {
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
                         Term term = EditorManager.getActiveGDLEditor().getTerm(gtCode);
                         if (term.getText()==null || term.getText().isEmpty()){
-                            term.setText(aerlde.getValue().getName());
-                            term.setDescription(aerlde.getValue().getDescription());
+                            String name = ArchetypeElements.getText(aerlde.getValue(), UserConfigurationManager.getLanguage());
+                            String desc = ArchetypeElements.getDescription(aerlde.getValue(), UserConfigurationManager.getLanguage());
+                            term.setText(name);
+                            term.setDescription(desc);
                         }
                     }
                 }

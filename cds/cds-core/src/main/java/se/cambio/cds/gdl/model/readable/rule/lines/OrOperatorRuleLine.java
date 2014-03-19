@@ -12,14 +12,14 @@ public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionR
 
     private BranchRuleLine leftRuleLineBranch = null;
     private BranchRuleLine rightRuleLineBranch = null;
-    
+
     public OrOperatorRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("OrOperator"), 
-		OpenEHRLanguageManager.getMessage("OrOperatorDesc"));
-	leftRuleLineBranch = new BranchRuleLine();
-	rightRuleLineBranch = new BranchRuleLine();
-	this.addChildRuleLine(leftRuleLineBranch);
-	this.addChildRuleLine(rightRuleLineBranch);
+        super(OpenEHRLanguageManager.getMessage("OrOperator"),
+                OpenEHRLanguageManager.getMessage("OrOperatorDesc"));
+        leftRuleLineBranch = new BranchRuleLine();
+        rightRuleLineBranch = new BranchRuleLine();
+        this.addChildRuleLine(leftRuleLineBranch);
+        this.addChildRuleLine(rightRuleLineBranch);
     }
 
     public BranchRuleLine getLeftRuleLineBranch() {
@@ -30,44 +30,44 @@ public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionR
         return rightRuleLineBranch;
     }
     public void setCommented(boolean commented){
-	super.setCommented(commented);
-	getLeftRuleLineBranch().setCommented(commented);
-	getRightRuleLineBranch().setCommented(commented);
+        super.setCommented(commented);
+        getLeftRuleLineBranch().setCommented(commented);
+        getRightRuleLineBranch().setCommented(commented);
     }
-    
+
     public ExpressionItem toExpressionItem(){
-	return new BinaryExpression(
-		    convertToExpressionItem(getLeftRuleLineBranch().getChildrenRuleLines(),0), 
-		    convertToExpressionItem(getRightRuleLineBranch().getChildrenRuleLines(),0),
-		    OperatorKind.OR);
+        return new BinaryExpression(
+                convertToExpressionItem(getLeftRuleLineBranch().getChildrenRuleLines(),0),
+                convertToExpressionItem(getRightRuleLineBranch().getChildrenRuleLines(),0),
+                OperatorKind.OR);
     }
-    
+
     public String toString(){
-	StringBuffer sb = new StringBuffer();
-	sb.append("((");
-	for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines()) {
-	    sb.append(ruleLine.toString());
-	}
-	sb.append(") "+OpenEHRLanguageManager.getMessage("OrRLE")+" (");
-	for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines()) {
-	    sb.append(ruleLine.toString());
-	}
-	sb.append("))");
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("((");
+        for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines()) {
+            sb.append(ruleLine.toString());
+        }
+        sb.append(") "+OpenEHRLanguageManager.getMessage("OrRLE")+" (");
+        for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines()) {
+            sb.append(ruleLine.toString());
+        }
+        sb.append("))");
+        return sb.toString();
     }
-    
-    public String toHTMLString(int level){
-	StringBuffer sb = new StringBuffer();
-	sb.append(getLevelSpace(level)+"((<br>");
-	for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines()) {
-	    sb.append(ruleLine.toHTMLString(level+1)+"<br>");
-	}
-	sb.append(getLevelSpace(level)+")"+getLevelSpace(level)+"<b>"+OpenEHRLanguageManager.getMessage("OrRLE")+"</b> (<br>");
-	for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines()) {
-	    sb.append(ruleLine.toHTMLString(level+1)+"<br>");
-	}
-	sb.append(getLevelSpace(level)+"))");
-	return sb.toString();
+
+    public String toHTMLString(int level, String lang){
+        StringBuffer sb = new StringBuffer();
+        sb.append(getLevelSpace(level)+"((<br>");
+        for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines()) {
+            sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
+        }
+        sb.append(getLevelSpace(level)+")"+getLevelSpace(level)+"<b>"+OpenEHRLanguageManager.getMessage("OrRLE")+"</b> (<br>");
+        for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines()) {
+            sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
+        }
+        sb.append(getLevelSpace(level)+"))");
+        return sb.toString();
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

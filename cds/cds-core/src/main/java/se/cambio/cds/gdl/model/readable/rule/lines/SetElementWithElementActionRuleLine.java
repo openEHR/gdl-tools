@@ -5,55 +5,58 @@ import se.cambio.cds.gdl.model.expression.Variable;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class SetElementWithElementActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine{
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement2 = null;
-    
+
 
     public SetElementWithElementActionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("SetElementWithElement"), 
-		OpenEHRLanguageManager.getMessage("SetElementWithElementDesc"));
-	archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
-	archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
-	
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineElement2);
+        super(OpenEHRLanguageManager.getMessage("SetElementWithElement"),
+                OpenEHRLanguageManager.getMessage("SetElementWithElementDesc"));
+        archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
+        archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
+
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineElement2);
     }
-    
+
     public AssignmentExpression toAssignmentExpression() throws IllegalStateException{
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-	if (archetypeElementVO==null){
-	    throw new IllegalStateException("No variable set");
-	}
-	Variable var = new Variable(
-		archetypeElementRuleLineElement.getValue().getValue(),
-		null, archetypeElementVO.getName());
-	ArchetypeElementVO archetypeElementVO2 = getSecondArchetypeElementRuleLineElement().getArchetypeElementVO();
-	if (archetypeElementVO2==null){
-	    throw new IllegalStateException("No variable to assign set");
-	}
-	Variable varAux = new Variable(
-		archetypeElementRuleLineElement2.getValue().getValue(),
-		null, archetypeElementVO2.getName());
-	return new AssignmentExpression(
-		    var, 
-		    varAux);//TODO
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
+        if (archetypeElementVO==null){
+            throw new IllegalStateException("No variable set");
+        }
+        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        Variable var = new Variable(
+                archetypeElementRuleLineElement.getValue().getValue(),
+                null, name);
+        ArchetypeElementVO archetypeElementVO2 = getSecondArchetypeElementRuleLineElement().getArchetypeElementVO();
+        if (archetypeElementVO2==null){
+            throw new IllegalStateException("No variable to assign set");
+        }
+        Variable varAux = new Variable(
+                archetypeElementRuleLineElement2.getValue().getValue(),
+                null, name);
+        return new AssignmentExpression(
+                var,
+                varAux);//TODO
     }
     public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
-	return archetypeElementRuleLineElement;
+        return archetypeElementRuleLineElement;
     }
 
     public ArchetypeElementRuleLineElement getSecondArchetypeElementRuleLineElement() {
         return archetypeElementRuleLineElement2;
     }
-    
+
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

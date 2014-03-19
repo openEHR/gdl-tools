@@ -8,8 +8,10 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRule
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ElementComparisonOperatorRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class ElementComparisonWithElementConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine{
@@ -20,52 +22,53 @@ public class ElementComparisonWithElementConditionRuleLine extends ExpressionRul
 
 
     public ElementComparisonWithElementConditionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("CompareElementWithElement"), 
-		OpenEHRLanguageManager.getMessage("CompareElementWithElementDesc"));
-	archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
-	comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
-	archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
+        super(OpenEHRLanguageManager.getMessage("CompareElementWithElement"),
+                OpenEHRLanguageManager.getMessage("CompareElementWithElementDesc"));
+        archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
+        comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
+        archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(comparisonOperatorRuleLineElement);
-	getRuleLineElements().add(archetypeElementRuleLineElement2);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineElement);
+        getRuleLineElements().add(comparisonOperatorRuleLineElement);
+        getRuleLineElements().add(archetypeElementRuleLineElement2);
     }
 
     public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
-	return archetypeElementRuleLineElement;
+        return archetypeElementRuleLineElement;
     }
 
     public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement(){
-	return comparisonOperatorRuleLineElement;
+        return comparisonOperatorRuleLineElement;
     }
 
     public ArchetypeElementRuleLineElement getSecondArchetypeElementRuleLineElement(){
-	return archetypeElementRuleLineElement2;
+        return archetypeElementRuleLineElement2;
     }
 
     public ExpressionItem toExpressionItem() throws IllegalStateException{
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-	if (archetypeElementVO!=null){
-	    String gtCode = 
-		    getArchetypeElementRuleLineElement().getValue().getValue();
-	    if (getSecondArchetypeElementRuleLineElement().getValue()==null){
-		throw new IllegalStateException("No expression set");
-	    }
-	    String secondGtCode = 
-		    getSecondArchetypeElementRuleLineElement().getValue().getValue();
-	    OperatorKind operatorKind =
-		    getComparisonOperatorRuleLineElement().getValue();
-	    if (operatorKind==null){
-		throw new IllegalStateException("No operator kind set");
-	    }
-	    return new BinaryExpression(
-		    new Variable(gtCode, null, archetypeElementVO.getName()),
-		    new Variable(secondGtCode),
-		    operatorKind);
-	}else{
-	    throw new IllegalStateException("Invalid rule line: "+getArchetypeElementRuleLineElement());
-	}
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
+        if (archetypeElementVO!=null){
+            String gtCode =
+                    getArchetypeElementRuleLineElement().getValue().getValue();
+            if (getSecondArchetypeElementRuleLineElement().getValue()==null){
+                throw new IllegalStateException("No expression set");
+            }
+            String secondGtCode =
+                    getSecondArchetypeElementRuleLineElement().getValue().getValue();
+            OperatorKind operatorKind =
+                    getComparisonOperatorRuleLineElement().getValue();
+            if (operatorKind==null){
+                throw new IllegalStateException("No operator kind set");
+            }
+            String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+            return new BinaryExpression(
+                    new Variable(gtCode, null, name),
+                    new Variable(secondGtCode),
+                    operatorKind);
+        }else{
+            throw new IllegalStateException("Invalid rule line: "+getArchetypeElementRuleLineElement());
+        }
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

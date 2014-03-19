@@ -1,6 +1,9 @@
 package se.cambio.openehr.controller.session.data;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
+import org.openehr.am.archetype.ontology.ArchetypeOntology;
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.vo.TemplateObjectBundleCustomVO;
@@ -20,6 +23,8 @@ public class Templates {
     private Map<String, TemplateDTO> _templatessById = null;
     public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
     private boolean _loaded = false;
+    private HashMap<String, Map<String, Map<String, ArchetypeTerm>>> _archetypeTermsMap;
+
     private Templates(){
     }
 
@@ -46,18 +51,62 @@ public class Templates {
         }
     }
 
-    public static void loadTemplate(TemplateDTO templateVO) throws InternalErrorException{
-        OpenEHRObjectBundleManager.generateTemplateObjectBundles(Collections.singleton(templateVO));
-        registerTemplate(templateVO);
+    public static void loadTemplate(TemplateDTO templateDTO) throws InternalErrorException{
+        OpenEHRObjectBundleManager.generateTemplateObjectBundles(Collections.singleton(templateDTO));
+        registerTemplate(templateDTO);
     }
 
     private static void init(){
         getTemplatesMap().clear();
     }
 
-    private static void registerTemplate(TemplateDTO templateVO){
-        getTemplatesMap().put(templateVO.getIdTemplate(), templateVO);
+    private static void registerTemplate(TemplateDTO templateDTO){
+        getTemplatesMap().put(templateDTO.getIdTemplate(), templateDTO);
+        generateArchetypeDefinitionsMap(templateDTO.getIdTemplate());
     }
+
+    private static void generateArchetypeDefinitionsMap(String templateId){
+        Archetype archetype = getTemplateAOM(templateId);
+        ArchetypeOntology ao = archetype.getOntology();
+        List<OntologyDefinitions> ods = ao.getTermDefinitionsList();
+        for (OntologyDefinitions od : ods){
+            String lang = od.getLanguage();
+            List<ArchetypeTerm> archetypeTerms = od.getDefinitions();
+            for(ArchetypeTerm archetypeTerm: archetypeTerms){
+                getArchetypeTermsMap(templateId, lang).put(archetypeTerm.getCode(), archetypeTerm);
+            }
+        }
+    }
+
+    public static ArchetypeTerm getArchetypeTerm(String templateId, String lang, String atCode){
+        return getArchetypeTermsMap(templateId, lang).get(atCode);
+    }
+
+    private static Map<String, ArchetypeTerm> getArchetypeTermsMap(String templateId, String lang){
+        Map<String, ArchetypeTerm> archetypeTermMap = getArchetypeTermsMap(templateId).get(lang);
+        if(archetypeTermMap==null){
+            archetypeTermMap = new HashMap<String, ArchetypeTerm>();
+            getArchetypeTermsMap(templateId).put(lang, archetypeTermMap);
+        }
+        return archetypeTermMap;
+    }
+
+    private static Map<String, Map<String, ArchetypeTerm>> getArchetypeTermsMap(String archetypeId){
+        Map<String, Map<String, ArchetypeTerm>> archetypeTermMap = getArchetypeTermsMap().get(archetypeId);
+        if(archetypeTermMap==null){
+            archetypeTermMap = new HashMap<String, Map<String, ArchetypeTerm>>();
+            getArchetypeTermsMap().put(archetypeId, archetypeTermMap);
+        }
+        return archetypeTermMap;
+    }
+
+    private static Map<String, Map<String, Map<String, ArchetypeTerm>>> getArchetypeTermsMap(){
+        if(getDelegate()._archetypeTermsMap==null){
+            getDelegate()._archetypeTermsMap = new HashMap<String, Map<String, Map<String, ArchetypeTerm>>>();
+        }
+        return getDelegate()._archetypeTermsMap;
+    }
+
 
     public static TemplateDTO getTemplateDTO(String idTemplate){
         return getTemplatesMap().get(idTemplate);
@@ -83,9 +132,9 @@ public class Templates {
 
     public static ArrayList<TemplateDTO> getTemplates(String entryType){
         ArrayList<TemplateDTO> list = new ArrayList<TemplateDTO>();
-        for (TemplateDTO templateVO : getTemplatesMap().values()) {
-            if (entryType.equals(templateVO.getRMName())){
-                list.add(templateVO);
+        for (TemplateDTO templateDTO : getTemplatesMap().values()) {
+            if (entryType.equals(templateDTO.getRMName())){
+                list.add(templateDTO);
             }
         }
         return list;

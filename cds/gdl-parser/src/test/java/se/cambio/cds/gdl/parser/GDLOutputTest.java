@@ -26,7 +26,7 @@ public class GDLOutputTest extends TestCase {
 	public void testParseSimpleGDL() throws Exception {
 		parse("test001.dadl");
 		List<String> list = serializer.toDADL(guide);
-		write(list, "output.dadl");
+		//write(list, "output.dadl");
 	}
 	
 	public void testOutputEmptyMap() throws Exception {
@@ -34,7 +34,7 @@ public class GDLOutputTest extends TestCase {
 		
 		guide.getLanguage().setTranslations(new HashMap<String,TranslationDetails>());
 		List<String> list = serializer.toDADL(guide);		
-		write(list, "output2.dadl");
+		//write(list, "output2.dadl");
 		
 		Guide actual = parse(list);
 		guide.getLanguage().setTranslations(null);
@@ -45,7 +45,7 @@ public class GDLOutputTest extends TestCase {
 		parse("test001.dadl");
 		List<String> list = serializer.toDADL(guide);
 		
-		write(list, "after_parse.dadl");
+		//write(list, "after_parse.dadl");
 		
 		StringBuffer buf = new StringBuffer();
 		for(String s : list) {
@@ -55,7 +55,7 @@ public class GDLOutputTest extends TestCase {
 		Guide after = parser.parse(reader);
 		
 		list = serializer.toDADL(after);
-		write(list, "after_round_trip.dadl");
+		//write(list, "after_round_trip.dadl");
 		
 		assertEquals(guide, after);
 	}

@@ -16,39 +16,39 @@ public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleL
 
 
     public SetElementAttributeActionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("SetElementAttribute"), 
-		OpenEHRLanguageManager.getMessage("SetElementAttributeDesc"));
-	archetypeElementAttributeRuleLineElement = new ArchetypeElementAttributeRuleLineElement(this);
-	expressionRuleLineElement = new ExpressionRuleLineElement(this);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
-	getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
-	getRuleLineElements().add(expressionRuleLineElement);
+        super(OpenEHRLanguageManager.getMessage("SetElementAttribute"),
+                OpenEHRLanguageManager.getMessage("SetElementAttributeDesc"));
+        archetypeElementAttributeRuleLineElement = new ArchetypeElementAttributeRuleLineElement(this);
+        expressionRuleLineElement = new ExpressionRuleLineElement(this);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
+        getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
+        getRuleLineElements().add(expressionRuleLineElement);
     }
 
 
     public ArchetypeElementAttributeRuleLineElement getArchetypeElementAttributeRuleLineElement() {
-	return archetypeElementAttributeRuleLineElement;
+        return archetypeElementAttributeRuleLineElement;
     }
 
 
     public ExpressionRuleLineElement getExpressionRuleLineElement() {
-	return expressionRuleLineElement;
+        return expressionRuleLineElement;
     }
 
 
     public AssignmentExpression toAssignmentExpression() throws IllegalStateException{
-	if (archetypeElementAttributeRuleLineElement.getValue()==null || archetypeElementAttributeRuleLineElement.getValue().getValue()==null){
-	    throw new IllegalStateException("No variable set");
-	}
-	Variable var = new Variable(
-		archetypeElementAttributeRuleLineElement.getValue().getValue().getValue(),
-		null,
-		null,
-		archetypeElementAttributeRuleLineElement.getAttribute());
-	return new AssignmentExpression(
-		var, 
-		expressionRuleLineElement.getValue());
+        if (archetypeElementAttributeRuleLineElement.getValue()==null || archetypeElementAttributeRuleLineElement.getValue().getValue()==null){
+            throw new IllegalStateException("No variable set");
+        }
+        Variable var = new Variable(
+                archetypeElementAttributeRuleLineElement.getValue().getValue().getValue(),
+                null,
+                null,
+                archetypeElementAttributeRuleLineElement.getAttribute());
+        return new AssignmentExpression(
+                var,
+                expressionRuleLineElement.getValue());
     }
 
 }/*

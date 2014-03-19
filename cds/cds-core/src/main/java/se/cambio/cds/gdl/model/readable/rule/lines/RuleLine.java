@@ -49,16 +49,16 @@ public abstract class RuleLine {
         return sb.toString();
     }
 
-    public String toHTMLString(){
-        return toHTMLString(0);
+    public String toHTMLString(String lang){
+        return toHTMLString(0, lang);
     }
 
-    public String toHTMLString(int level){
+    public String toHTMLString(int level, String lang){
         StringBuffer sb = new StringBuffer();
         int i = 0;
         sb.append(getLevelSpace(level));
         for (RuleLineElement ruleLineElement : ruleLineElements) {
-            sb.append(ruleLineElement.toHTMLString());
+            sb.append(ruleLineElement.toHTMLString(lang));
             i++;
             if (i<ruleLineElements.size()){
                 sb.append(" ");

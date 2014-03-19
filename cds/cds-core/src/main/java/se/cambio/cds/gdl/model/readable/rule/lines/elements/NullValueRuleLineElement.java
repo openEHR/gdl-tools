@@ -7,25 +7,25 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class NullValueRuleLineElement extends RuleLineElementWithValue<DvCodedText> {
 
     public NullValueRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, OpenEHRLanguageManager.getMessage("NullValue"));
+        super(ruleLine, OpenEHRLanguageManager.getMessage("NullValue"));
     }
 
     @Override
     public String getDescription() {
-	return OpenEHRLanguageManager.getMessage("NullValue");
+        return OpenEHRLanguageManager.getMessage("NullValue");
     }
 
     public String toString(){
-	if (getValue()!=null){
-		return getValue().getValue();
-	}else{
-	    return getText();
-	}
+        if (getValue()!=null){
+            return getValue().getValue();
+        }else{
+            return getText();
+        }
     }
-    
+
     @Override
-    public String toHTMLString() {
-	return "<font color='#00803a'>"+toString()+"</font>";
+    public String toHTMLString(String lang) {
+        return "<font color='#00803a'>"+toString()+"</font>";
     }
 }
 /*

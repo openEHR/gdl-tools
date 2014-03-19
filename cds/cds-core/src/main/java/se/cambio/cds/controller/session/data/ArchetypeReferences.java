@@ -1,10 +1,10 @@
 package se.cambio.cds.controller.session.data;
 
 import org.apache.log4j.Logger;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.DVDefSerializer;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Clusters;
@@ -54,9 +54,9 @@ public class ArchetypeReferences {
                 if (!first){
                     sb.append(", ");
                 }
-                ArchetypeElementVO archetypeElementVO = ArchetypeElements.getArchetypeElement(ar.getIdTemplate(), elementInstance.getId());
-                if (archetypeElementVO!=null){
-                    sb.append(archetypeElementVO.getName()+"="+DVDefSerializer.getReadableValue(elementInstance.getDataValue(), null));
+                String name = ArchetypeElements.getText(ar.getIdTemplate(), elementInstance.getId(), UserConfigurationManager.getLanguage());
+                if (name!=null){
+                    sb.append(name+"="+DVDefSerializer.getReadableValue(elementInstance.getDataValue(), null));
                     first = false;
                 }else{
                     Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+ar.toString()+"'");
@@ -108,7 +108,8 @@ public class ArchetypeReferences {
         String archetypeImageName = OpenEHRConstUI.getIconName(archetypeVO.getRMName());
         String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
 
-        String elementName = archetypeElementVO.getName();
+        String elementName = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String elementDesc = ArchetypeElements.getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
 
         String archetypeName = ArchetypeReferences.getName(ar)+(idDomain!=null?" ("+idDomain+")":"");
         String cardinalityStr = archetypeElementVO.getLowerCardinality()+"..."+(archetypeElementVO.getUpperCardinality()==null?"*":archetypeElementVO.getUpperCardinality());
@@ -134,7 +135,8 @@ public class ArchetypeReferences {
                 clusterPathSB.append("/"+pathNode);
                 ClusterVO clusterVO = Clusters.getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
                 if (clusterVO!=null){
-                    pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getRMType()))+"&nbsp;"+clusterVO.getName()+" / ");
+                    String name = Clusters.getText(clusterVO, UserConfigurationManager.getLanguage());
+                    pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getRMType()))+"&nbsp;"+name+" / ");
                 }
             }
         }
@@ -147,7 +149,7 @@ public class ArchetypeReferences {
                 "<tr><td><b>"+OpenEHRLanguageManager.getMessage("DataValue")+": </b>"+OpenEHRImageUtil.getImgHTMLTag(dataValueImageName)+"&nbsp;"+OpenEHRDataValuesUI.getName(archetypeElementVO.getRMType())+"</td><td><b>"+OpenEHRLanguageManager.getMessage("Occurrences")+": </b>"+cardinalityStr+"</td></tr>"+
                 (units!=null?"<tr><td colspan=2><b>"+OpenEHRLanguageManager.getMessage("Units")+": </b>"+units+"</td></tr>":"")+
                 "<tr><td colspan=2><b>"+OpenEHRLanguageManager.getMessage("Path")+": </b>"+path+"</td></tr>"+
-                "<tr><td colspan=2><b>"+OpenEHRLanguageManager.getMessage("Description")+": </b>"+archetypeElementVO.getDescription()+"</td></tr>"+
+                "<tr><td colspan=2><b>"+OpenEHRLanguageManager.getMessage("Description")+": </b>"+elementDesc+"</td></tr>"+
                 (extraLines!=null?extraLines:"")+
                 "</table></html>";
     }

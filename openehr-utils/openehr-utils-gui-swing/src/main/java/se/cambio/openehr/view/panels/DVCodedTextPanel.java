@@ -5,6 +5,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +35,7 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                 for (CodedTextVO codedTextVO : codedTextsVO) {
                     getDVComboBoxPanel().insertOption(
                             codedTextVO.getCode(),
-                            codedTextVO.getName(),
+                            CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage()),
                             codedTextVO.getDescription());
                 }
             }else{
@@ -63,7 +64,8 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                     String code = (String)getComboBox().getSelectedItem();
                     if (!code.trim().isEmpty()){
                         CodedTextVO codedTextVO = CodedTexts.getCodedTextVO(getIdTemplate(), getIdElement(), code);
-                        return new DvCodedText(codedTextVO.getName(),codedTextVO.getTerminology(), codedTextVO.getCode());
+                        String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+                        return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
                     }else{
                         return null;
                     }

@@ -70,7 +70,7 @@ public class ArchetypeElementRuleLineElement extends RuleLineElementWithValue<GT
     }
 
     @Override
-    public String toHTMLString() {
+    public String toHTMLString(String lang) {
         return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
     }
 }

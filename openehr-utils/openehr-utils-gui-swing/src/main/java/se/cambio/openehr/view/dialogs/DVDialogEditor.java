@@ -4,10 +4,12 @@
 package se.cambio.openehr.view.dialogs;
 
 import org.openehr.rm.datatypes.basic.DataValue;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 import se.cambio.openehr.view.util.DVPanelFactory;
 import se.cambio.openehr.view.util.ScreenUtil;
@@ -40,7 +42,7 @@ public class DVDialogEditor  extends JDialog {
     private JTextPane jTextPane;
 
     public DVDialogEditor(Window owner, ArchetypeElementVO archetypeElementVO, boolean allowNull, boolean enableUnits){
-        super(owner, archetypeElementVO.getName(), ModalityType.APPLICATION_MODAL);
+        super(owner, ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage()), ModalityType.APPLICATION_MODAL);
         _archetypeElementVO = archetypeElementVO;
         _allowNull = allowNull;
         _enableUnits = enableUnits;
@@ -64,7 +66,8 @@ public class DVDialogEditor  extends JDialog {
         if (mainPanel==null){
             mainPanel = new JPanel(new BorderLayout());
             JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel label = new JLabel(_archetypeElementVO.getName()+":");
+            String name = ArchetypeElements.getText(_archetypeElementVO, UserConfigurationManager.getLanguage());
+            JLabel label = new JLabel(name+":");
             label.setIcon(OpenEHRDataValuesUI.getIcon(_archetypeElementVO.getRMType()));
             panelAux1.add(label);
             panelAux1.add(getDVGenericPanel());

@@ -15,59 +15,59 @@ public class IsAOperatorRuleLineElement extends RuleLineElementWithValue<String>
     private ArrayList<String> _codes = null;
 
     public IsAOperatorRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine, "??");
-	_codes = new ArrayList<String>();
-	_codes.add(IS_A_VALUE);
-	_codes.add(IS_NOT_A_VALUE);
+        super(ruleLine, "??");
+        _codes = new ArrayList<String>();
+        _codes.add(IS_A_VALUE);
+        _codes.add(IS_NOT_A_VALUE);
     }
 
     public String getResolvedName(String item) {
-	if (IS_A_VALUE.equals(item)){
-	    return OpenEHRLanguageManager.getMessage("IsARLE");
-	}else if (IS_NOT_A_VALUE.equals(item)){
-	    return OpenEHRLanguageManager.getMessage("IsNotARLE");
-	}else{
-	    return null;
-	}
+        if (IS_A_VALUE.equals(item)){
+            return OpenEHRLanguageManager.getMessage("IsARLE");
+        }else if (IS_NOT_A_VALUE.equals(item)){
+            return OpenEHRLanguageManager.getMessage("IsNotARLE");
+        }else{
+            return null;
+        }
     }
 
     public String getResolvedDescription(String item) {
-	return getResolvedName(item);
+        return getResolvedName(item);
     }
 
     public String toString(){
-	if (getValue()!=null){
-	    return getResolvedName(getValue());
-	}else{
-	    return super.getText();
-	}
+        if (getValue()!=null){
+            return getResolvedName(getValue());
+        }else{
+            return super.getText();
+        }
     }
 
     public Collection<String> getItems() {
-	return _codes;
+        return _codes;
     }
 
     public OperatorKind getOperator() {
-	if (IS_A_VALUE.equals(getValue())){
-	    return OperatorKind.IS_A;
-	}else if (IS_NOT_A_VALUE.equals(getValue())){
-	    return OperatorKind.IS_NOT_A;
-	}else{
-	    return null;
-	}
+        if (IS_A_VALUE.equals(getValue())){
+            return OperatorKind.IS_A;
+        }else if (IS_NOT_A_VALUE.equals(getValue())){
+            return OperatorKind.IS_NOT_A;
+        }else{
+            return null;
+        }
     }
 
     public void setOperator(OperatorKind operatorKind){
-	if (OperatorKind.IS_A.equals(operatorKind)){
-	    setValue(IS_A_VALUE);
-	}else if (OperatorKind.IS_NOT_A.equals(operatorKind)){
-	    setValue(IS_NOT_A_VALUE);
-	}
+        if (OperatorKind.IS_A.equals(operatorKind)){
+            setValue(IS_A_VALUE);
+        }else if (OperatorKind.IS_NOT_A.equals(operatorKind)){
+            setValue(IS_NOT_A_VALUE);
+        }
     }
-    
+
     @Override
-    public String toHTMLString() {
-	return "<font color='#c29700'>"+toString()+"</font>";
+    public String toHTMLString(String lang) {
+        return "<font color='#c29700'>"+toString()+"</font>";
     }
 }
 /*

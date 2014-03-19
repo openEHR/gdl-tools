@@ -211,9 +211,11 @@ public class NodeDefinitionConversor {
     }
 
     private static SelectableNodeWithIcon<Object> createElementNode(ArchetypeElementVO archetypeElementVO, boolean singleSelection){
+        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String desc = ArchetypeElements.getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
         return new SelectableNodeWithIcon<Object>(
-                archetypeElementVO.getName(),archetypeElementVO,singleSelection, false,
-                OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()), archetypeElementVO.getDescription());
+                name, archetypeElementVO,singleSelection, false,
+                OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()), desc);
     }
 
     public static void addElementInstanceAttributesAndFunctionsToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain){

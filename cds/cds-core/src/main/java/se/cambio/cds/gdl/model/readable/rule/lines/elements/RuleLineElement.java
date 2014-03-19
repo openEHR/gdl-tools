@@ -25,7 +25,7 @@ public abstract class RuleLineElement {
         this.description = description;
     }
     
-    public abstract String toHTMLString();
+    public abstract String toHTMLString(String lang);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -5,8 +5,10 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine{
@@ -57,8 +59,9 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
             if (operatorKind==null){
                 throw new IllegalStateException("No operator set");
             }
+            String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
             return new BinaryExpression(
-                    new Variable(null, archetypeElementVO.getName(), path),
+                    new Variable(null, name, path),
                     new ConstantExpression(NULL_STR),
                     operatorKind);
         }else{

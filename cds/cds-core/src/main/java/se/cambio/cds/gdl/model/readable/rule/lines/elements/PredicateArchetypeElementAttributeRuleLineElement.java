@@ -1,8 +1,10 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineElementWithValue<ArchetypeElementVO> {
     private String _attribute = null;
@@ -21,7 +23,8 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
 
     public String getDescription() {
         if (getValue()!=null){
-            return getValue().getDescription();
+            String elementDesc = ArchetypeElements.getDescription(getValue(), UserConfigurationManager.getLanguage());
+            return elementDesc;
         }else{
             return getText();
         }
@@ -29,8 +32,12 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
 
 
     public String toString(){
+        return toString(UserConfigurationManager.getLanguage());
+    }
+
+    private String toString(String lang){
         if (getValue()!=null && getAttribute()!=null){
-            String name = getValue().getName();
+            String name = ArchetypeElements.getText(getValue(), lang);
             return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
         }else{
             return getText();
@@ -38,8 +45,8 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
     }
 
     @Override
-    public String toHTMLString() {
-        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
+    public String toHTMLString(String lang) {
+        return "<font color='#4f81bd'><b>"+toString(lang)+"</b></font>";
     }
 }
 /*

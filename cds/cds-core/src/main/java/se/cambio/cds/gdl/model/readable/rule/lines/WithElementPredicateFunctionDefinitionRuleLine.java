@@ -10,8 +10,10 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineEl
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine{
@@ -60,9 +62,9 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         String path = archetypeElementVO.getPath();
         OperatorKind operatorKind =
                 getFunctionRuleLineElement().getValue();
-
+        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         return new UnaryExpression(
-                new Variable(null,archetypeElementVO.getName(), path),
+                new Variable(null,name, path),
                 operatorKind);
     }
 

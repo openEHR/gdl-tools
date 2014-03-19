@@ -1,6 +1,9 @@
 package se.cambio.openehr.controller.session.data;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
+import org.openehr.am.archetype.ontology.ArchetypeOntology;
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -19,6 +22,7 @@ public class Archetypes {
     private static Archetypes _instance = null;
     private Map<String, ArchetypeDTO> _archetypesById = null;
     private Map<String, Archetype> _archetypeAOM = null;
+    private Map<String, Map<String, Map<String, ArchetypeTerm>>> _archetypeTermsMap = null;
     public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
     public boolean _loaded = false;
 
@@ -31,7 +35,6 @@ public class Archetypes {
     }
 
     public static void loadArchetypes(boolean force) throws InternalErrorException{
-        init();
         Collection<ArchetypeDTO> archetypeDTOs =
                 OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllArchetypes();
         loadArchetypes(archetypeDTOs, force);
@@ -65,6 +68,49 @@ public class Archetypes {
 
     private static void registerArchertype(ArchetypeDTO archetypeDTO){
         getArchetypeDTOMap().put(archetypeDTO.getIdArchetype(), archetypeDTO);
+        generateArchetypeDefinitionsMap(archetypeDTO.getIdArchetype());
+    }
+
+    private static void generateArchetypeDefinitionsMap(String archetypeId){
+        Archetype archetype = getArchetypeAOM(archetypeId);
+        ArchetypeOntology ao = archetype.getOntology();
+        List<OntologyDefinitions> ods = ao.getTermDefinitionsList();
+        for (OntologyDefinitions od : ods){
+            String lang = od.getLanguage();
+            List<ArchetypeTerm> archetypeTerms = od.getDefinitions();
+            for(ArchetypeTerm archetypeTerm: archetypeTerms){
+                getArchetypeTermsMap(archetypeId, lang).put(archetypeTerm.getCode(), archetypeTerm);
+            }
+        }
+    }
+
+    public static ArchetypeTerm getArchetypeTerm(String archetypeId, String lang, String atCode){
+        return getArchetypeTermsMap(archetypeId, lang).get(atCode);
+    }
+
+    private static Map<String, ArchetypeTerm> getArchetypeTermsMap(String archetypeId, String lang){
+        Map<String, ArchetypeTerm> archetypeTermMap = getArchetypeTermsMap(archetypeId).get(lang);
+        if(archetypeTermMap==null){
+            archetypeTermMap = new HashMap<String, ArchetypeTerm>();
+            getArchetypeTermsMap(archetypeId).put(lang, archetypeTermMap);
+        }
+        return archetypeTermMap;
+    }
+
+    private static Map<String, Map<String, ArchetypeTerm>> getArchetypeTermsMap(String archetypeId){
+        Map<String, Map<String, ArchetypeTerm>> archetypeTermMap = getArchetypeTermsMap().get(archetypeId);
+        if(archetypeTermMap==null){
+            archetypeTermMap = new HashMap<String, Map<String, ArchetypeTerm>>();
+            getArchetypeTermsMap().put(archetypeId, archetypeTermMap);
+        }
+        return archetypeTermMap;
+    }
+
+    private static Map<String, Map<String, Map<String, ArchetypeTerm>>> getArchetypeTermsMap(){
+        if(getDelegate()._archetypeTermsMap==null){
+            getDelegate()._archetypeTermsMap = new HashMap<String, Map<String, Map<String, ArchetypeTerm>>>();
+        }
+        return getDelegate()._archetypeTermsMap;
     }
 
     public static ArchetypeDTO getArchetypeDTO(String idArchetype){

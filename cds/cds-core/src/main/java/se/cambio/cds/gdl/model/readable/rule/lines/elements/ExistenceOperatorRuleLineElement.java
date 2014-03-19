@@ -66,7 +66,7 @@ public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<S
     }
 
     @Override
-    public String toHTMLString() {
+    public String toHTMLString(String lang) {
         return toString();
     }
 }

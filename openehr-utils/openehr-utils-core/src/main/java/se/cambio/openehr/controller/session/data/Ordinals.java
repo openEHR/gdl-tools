@@ -1,13 +1,12 @@
 package se.cambio.openehr.controller.session.data;
 
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import se.cambio.openehr.model.archetype.vo.OrdinalVO;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.openehr.rm.datatypes.quantity.DvOrdinal;
-
-import se.cambio.openehr.model.archetype.vo.OrdinalVO;
 
 public class Ordinals {
     private static Ordinals _instance = null;
@@ -76,6 +75,7 @@ public class Ordinals {
         return map;
     }
 
+    /*
     public static String getName(String idTemplate, String idElement, DvOrdinal dvOrdinal){
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
         if (ordinalVO!=null){
@@ -92,7 +92,56 @@ public class Ordinals {
         }else{
             return dvOrdinal.getSymbolValue();
         }
+    }*/
+
+    public static String getText(OrdinalVO ordinalVO, String lang){
+        return getText(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getValue(), lang);
     }
+
+    public static String getText(String idTemplate, String idElement, Integer value, String lang){
+        OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
+        if (ordinalVO!=null){
+            String archetypeId = idElement.substring(0, idElement.indexOf("/"));
+            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, ordinalVO.getCode(), lang);
+            if (archetypeTem!=null){
+                return archetypeTem.getText();
+            }else{
+                return ordinalVO.getName();
+            }
+        }else{
+            return "*UNKNOWN*";
+        }
+    }
+
+    public static String getDescription(OrdinalVO ordinalVO, String lang){
+        return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getValue(), lang);
+    }
+
+    public static String getDescription(String idTemplate, String idElement, Integer value, String lang){
+        OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
+        if (ordinalVO!=null){
+            String archetypeId = idElement.substring(0, idElement.indexOf("/"));
+            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, ordinalVO.getCode(), lang);
+            if (archetypeTem!=null){
+                return archetypeTem.getDescription();
+            }else{
+                return ordinalVO.getDescription();
+            }
+        }else{
+            return "*UNKNOWN*";
+        }
+    }
+
+    private static ArchetypeTerm getArchetypeTerm(String archetypeId, String idTemplate, String atCode, String lang){
+        ArchetypeTerm archetypeTem = null;
+        if (idTemplate==null){
+            archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
+        }else{
+            archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+        }
+        return archetypeTem;
+    }
+
 
     public static Ordinals getDelegate(){
         if (_instance == null){

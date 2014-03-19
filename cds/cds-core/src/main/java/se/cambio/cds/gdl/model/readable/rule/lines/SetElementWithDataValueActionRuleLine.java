@@ -4,6 +4,7 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ConstantExpression;
 import se.cambio.cds.gdl.model.expression.Variable;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.DataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
@@ -11,64 +12,67 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionRuleLine implements ArchetypeElementRuleLine, ActionRuleLine{
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
-    private DataValueRuleLineElement dataValueRuleLineElement = null;
+    private ArchetypeDataValueRuleLineElement archetypeDataValueRuleLineElement = null;
 
 
     public SetElementWithDataValueActionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("SetElementWithDataValue"), 
-		OpenEHRLanguageManager.getMessage("SetElementWithDataValueDesc"));
-	archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
-	dataValueRuleLineElement = new DataValueRuleLineElement(this);
+        super(OpenEHRLanguageManager.getMessage("SetElementWithDataValue"),
+                OpenEHRLanguageManager.getMessage("SetElementWithDataValueDesc"));
+        archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
+        archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
-	getRuleLineElements().add(dataValueRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
+        getRuleLineElements().add(archetypeDataValueRuleLineElement);
     }
 
     public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
-	return archetypeElementRuleLineElement;
+        return archetypeElementRuleLineElement;
     }
-    
+
     @Override
     public ArchetypeReference getArchetypeReference() {
-	return archetypeElementRuleLineElement.getArchetypeReference();
+        return archetypeElementRuleLineElement.getArchetypeReference();
     }
 
     @Override
     public ArchetypeElementVO getArchetypeElement() {
-	return archetypeElementRuleLineElement.getArchetypeElementVO();
+        return archetypeElementRuleLineElement.getArchetypeElementVO();
     }
 
-    public DataValueRuleLineElement getDataValueRuleLineElement(){
-	return dataValueRuleLineElement;
+    public ArchetypeDataValueRuleLineElement getArchetypeDataValueRuleLineElement(){
+        return archetypeDataValueRuleLineElement;
     }
 
     public AssignmentExpression toAssignmentExpression() throws IllegalStateException{
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-	if (archetypeElementVO==null){
-	    throw new IllegalStateException("No variable set");
-	}
-	Variable var = new Variable(
-		archetypeElementRuleLineElement.getValue().getValue(),
-		null, archetypeElementVO.getName());
-	DataValue dataValue = dataValueRuleLineElement.getValue();
-	ConstantExpression constantExpression = null;
-	if (dataValue!=null){
-	    constantExpression = DVUtil.convertToExpression(dataValue);
-	}else{
-	    throw new IllegalStateException("No data value set");
-	}
-	return new AssignmentExpression(
-		var, 
-		constantExpression);
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
+        if (archetypeElementVO==null){
+            throw new IllegalStateException("No variable set");
+        }
+        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        Variable var = new Variable(
+                archetypeElementRuleLineElement.getValue().getValue(),
+                null, name);
+        DataValue dataValue = archetypeDataValueRuleLineElement.getValue();
+        ConstantExpression constantExpression = null;
+        if (dataValue!=null){
+            constantExpression = DVUtil.convertToExpression(dataValue);
+        }else{
+            throw new IllegalStateException("No data value set");
+        }
+        return new AssignmentExpression(
+                var,
+                constantExpression);
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

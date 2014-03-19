@@ -4,12 +4,12 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 public class StaticTextRuleLineElement extends RuleLineElement {
 
     public StaticTextRuleLineElement(String text) {
-	super(text);
+        super(text);
     }
 
     @Override
-    public String toHTMLString() {
-	return "<font>"+toString()+"</font>";
+    public String toHTMLString(String lang) {
+        return "<font>"+toString()+"</font>";
     }
 }
 /*

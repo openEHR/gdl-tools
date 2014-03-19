@@ -171,6 +171,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>cds-persistence</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.sciss</groupId>
             <artifactId>jsyntaxpane</artifactId>
             <version>1.0.0</version>

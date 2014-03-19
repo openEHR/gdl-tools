@@ -2,85 +2,85 @@ package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.gdl.model.expression.*;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.DataValueRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ElementComparisonOperatorRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, ConditionRuleLine{
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ElementComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
-    private DataValueRuleLineElement dataValueRuleLineElement = null;
+    private ArchetypeDataValueRuleLineElement archetypeDataValueRuleLineElement = null;
 
 
     public ElementComparisonWithDVConditionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("CompareElementWithDataValue"), 
-		OpenEHRLanguageManager.getMessage("CompareElementWithDataValueDesc"));
-	archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
-	comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
-	dataValueRuleLineElement = new DataValueRuleLineElement(this);
+        super(OpenEHRLanguageManager.getMessage("CompareElementWithDataValue"),
+                OpenEHRLanguageManager.getMessage("CompareElementWithDataValueDesc"));
+        archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
+        comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
+        archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
-	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(comparisonOperatorRuleLineElement);
-	getRuleLineElements().add(dataValueRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
+        getRuleLineElements().add(archetypeElementRuleLineElement);
+        getRuleLineElements().add(comparisonOperatorRuleLineElement);
+        getRuleLineElements().add(archetypeDataValueRuleLineElement);
     }
 
     public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
-	return archetypeElementRuleLineElement;
+        return archetypeElementRuleLineElement;
     }
 
     @Override
     public ArchetypeReference getArchetypeReference() {
-	return archetypeElementRuleLineElement.getArchetypeReference();
+        return archetypeElementRuleLineElement.getArchetypeReference();
     }
 
     @Override
     public ArchetypeElementVO getArchetypeElement() {
-	return archetypeElementRuleLineElement.getArchetypeElementVO();
-    }
-    
-    public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement(){
-	return comparisonOperatorRuleLineElement;
+        return archetypeElementRuleLineElement.getArchetypeElementVO();
     }
 
-    public DataValueRuleLineElement getDataValueRuleLineElement(){
-	return dataValueRuleLineElement;
+    public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement(){
+        return comparisonOperatorRuleLineElement;
+    }
+
+    public ArchetypeDataValueRuleLineElement getArchetypeDataValueRuleLineElement(){
+        return archetypeDataValueRuleLineElement;
     }
 
     public ExpressionItem toExpressionItem() throws IllegalStateException{
-	ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-	if (archetypeElementVO!=null){
-	    String gtCode = 
-		    getArchetypeElementRuleLineElement().getValue().getValue();
-	    DataValue dataValue = 
-		    getDataValueRuleLineElement().getValue();
-	    ConstantExpression constantExpression = null;
-	    if (dataValue!=null){
-		constantExpression = DVUtil.convertToExpression(dataValue);
-	    }else{
-		throw new IllegalStateException("No data value set");
-	    }
-	    OperatorKind operatorKind =
-		    getComparisonOperatorRuleLineElement().getValue();
-	    if (operatorKind==null){
-		throw new IllegalStateException("No operator set");
-	    }
-	    return new BinaryExpression(
-		    new Variable(gtCode,null, archetypeElementVO.getName()),
-		    constantExpression,
-		    operatorKind);
-	}else{
-	    throw new IllegalStateException("Element instance not found for"+ this.toString());
-	}
+        ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
+        if (archetypeElementVO!=null){
+            String gtCode =
+                    getArchetypeElementRuleLineElement().getValue().getValue();
+            DataValue dataValue =
+                    getArchetypeDataValueRuleLineElement().getValue();
+            ConstantExpression constantExpression = null;
+            if (dataValue!=null){
+                constantExpression = DVUtil.convertToExpression(dataValue);
+            }else{
+                throw new IllegalStateException("No data value set");
+            }
+            OperatorKind operatorKind =
+                    getComparisonOperatorRuleLineElement().getValue();
+            if (operatorKind==null){
+                throw new IllegalStateException("No operator set");
+            }
+            String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+            return new BinaryExpression(
+                    new Variable(gtCode,null, name),
+                    constantExpression,
+                    operatorKind);
+        }else{
+            throw new IllegalStateException("Element instance not found for"+ this.toString());
+        }
     }
 
 }/*

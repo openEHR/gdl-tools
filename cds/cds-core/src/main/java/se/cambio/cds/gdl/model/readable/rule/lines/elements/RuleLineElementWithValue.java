@@ -71,7 +71,7 @@ public abstract class RuleLineElementWithValue<E> extends RuleLineElement{
     }
 
     @Override
-    public String toHTMLString() {
+    public String toHTMLString(String lang) {
         return toString();
     }
 }/*

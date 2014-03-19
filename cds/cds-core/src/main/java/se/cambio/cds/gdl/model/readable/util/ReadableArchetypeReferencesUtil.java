@@ -9,12 +9,14 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateArchetypeEl
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateAttributeComparisonOperatorRuleLineElement;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVDefSerializer;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ReadableArchetypeReferencesUtil {
 
@@ -66,7 +68,8 @@ public class ReadableArchetypeReferencesUtil {
                 if (aerlde!=null){
                     ArchetypeElementVO archetypeElementVO = aerlde.getValue();
                     if (archetypeElementVO!=null){
-                        sb.append(archetypeElementVO.getName()+"="+DVDefSerializer.getReadableValue(wpadrl.getDataValueRuleLineElement().getValue(), null));
+                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        sb.append(name+"="+DVDefSerializer.getReadableValue(wpadrl.getDataValueRuleLineElement().getValue(), null));
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
                         sb.append("*UNKNOWN PREDICATE*");
@@ -83,7 +86,8 @@ public class ReadableArchetypeReferencesUtil {
                 if (aerlde!=null){
                     ArchetypeElementVO archetypeElementVO = aerlde.getValue();
                     if (archetypeElementVO!=null){
-                        sb.append(wpfdrl.getFunctionRuleLineElement().getValue()+"("+archetypeElementVO.getName()+")");
+                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        sb.append(wpfdrl.getFunctionRuleLineElement().getValue()+"("+name+")");
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
                         sb.append("*UNKNOWN PREDICATE*");
@@ -105,7 +109,8 @@ public class ReadableArchetypeReferencesUtil {
                         if (operator!=null){
                             opStr = operator.getSymbol();
                         }
-                        sb.append(archetypeElementVO.getName()+opStr+"null");
+                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        sb.append(name+opStr+"null");
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
                         sb.append("*UNKNOWN PREDICATE*");
@@ -125,7 +130,8 @@ public class ReadableArchetypeReferencesUtil {
                     ArchetypeElementVO archetypeElementVO = paearle.getValue();
                     String attribute = paearle.getAttribute();
                     if (archetypeElementVO!=null && pacorl.getValue()!=null){
-                        sb.append(archetypeElementVO.getName()+"."+attribute+" "+pacorl.getValue().getSymbol()+" "+ere.toString());
+                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        sb.append(name+"."+attribute+" "+pacorl.getValue().getSymbol()+" "+ere.toString());
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+paearle.toString()+"'");
                         sb.append("*UNKNOWN PREDICATE*");
