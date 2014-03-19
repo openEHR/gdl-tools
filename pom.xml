@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <openehr-java-libs-version>1.0.7</openehr-java-libs-version>
         <template-gen-version>0.95.3</template-gen-version>
-        <distribution.path>//css-cds/dist/${artifactId}/${project.version}</distribution.path>
+        <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
     <scm>
         <connection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</connection>
