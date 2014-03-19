@@ -28,11 +28,11 @@ public class GDLEditorMainTest extends TestCase {
         if (!setUpIsDone){
             //Load archetypes and templates
             try{
-                UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("terminologies").getPath());
+                UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
                 Terminologies.loadTerminologies();
-                UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("archetypes").getPath());
+                UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
                 Archetypes.loadArchetypes();
-                UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("templates").getPath());
+                UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("templates").toURI().getPath());
                 Templates.loadTemplates();
             }catch(Exception e){
                 ExceptionHandler.handle(e);
