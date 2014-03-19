@@ -5,6 +5,7 @@ import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.PathUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,7 +99,12 @@ public class ArchetypeElements {
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
             archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
         }else{
-            archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+            String archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, Archetypes.getAOMMap().keySet());
+            if (archetypeId==null){
+                archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+            }else{
+                archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
+            }
         }
         return archetypeTem;
     }

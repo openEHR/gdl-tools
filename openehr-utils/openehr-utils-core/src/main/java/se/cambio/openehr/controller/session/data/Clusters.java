@@ -3,6 +3,7 @@ package se.cambio.openehr.controller.session.data;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.PathUtils;
 
 import java.util.*;
 
@@ -119,7 +120,12 @@ public class Clusters {
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
             archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
         }else{
-            archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+            String archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, Archetypes.getAOMMap().keySet());
+            if (archetypeId==null){
+                archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+            }else{
+                archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
+            }
         }
         return archetypeTem;
     }

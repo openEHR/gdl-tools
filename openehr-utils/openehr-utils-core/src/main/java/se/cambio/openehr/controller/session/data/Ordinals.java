@@ -2,6 +2,7 @@ package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.openehr.model.archetype.vo.OrdinalVO;
+import se.cambio.openehr.util.PathUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -102,7 +103,7 @@ public class Ordinals {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
         if (ordinalVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, ordinalVO.getCode(), lang);
+            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -121,7 +122,7 @@ public class Ordinals {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
         if (ordinalVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, ordinalVO.getCode(), lang);
+            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -132,12 +133,17 @@ public class Ordinals {
         }
     }
 
-    private static ArchetypeTerm getArchetypeTerm(String archetypeId, String idTemplate, String atCode, String lang){
+    private static ArchetypeTerm getArchetypeTerm(String archetypeId, String idTemplate, String idElement, String atCode, String lang){
         ArchetypeTerm archetypeTem = null;
         if (idTemplate==null){
             archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
         }else{
-            archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+            archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, Archetypes.getAOMMap().keySet());
+            if (archetypeId==null){
+                archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
+            }else{
+                archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
+            }
         }
         return archetypeTem;
     }
