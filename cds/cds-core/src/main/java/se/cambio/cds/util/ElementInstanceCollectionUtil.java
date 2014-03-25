@@ -203,7 +203,7 @@ public class ElementInstanceCollectionUtil {
                     }
                 }
                 //If reaches here, no terminology was found (problem)
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not terminology binding for '"+dv+"' was found.");
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No terminology binding for '"+dv+"' was found. (guide='"+(guide==null?"null":guide.getId())+"')");
                 return null;
             }else{
                 Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '"+dv+"'");
