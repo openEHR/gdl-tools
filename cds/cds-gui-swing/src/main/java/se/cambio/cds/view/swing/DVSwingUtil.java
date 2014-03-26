@@ -124,18 +124,21 @@ public class DVSwingUtil {
 
         if (elementInstance instanceof GeneratedElementInstance){
             GeneratedElementInstance elementInstancesWithGTCode = (GeneratedElementInstance) elementInstance;
-            Term term = null;
-            if (termDefinition!=null){
-                String gtCode = null;
-                if (!elementInstancesWithGTCode.getRuleReferences().isEmpty()){
-                    gtCode = elementInstancesWithGTCode.getRuleReferences().iterator().next().getGTCode();
+            //Labels are only going to be shown if there is only one term definition
+            if (elementInstancesWithGTCode.getRuleReferences().size()<2){
+                Term term = null;
+                if (termDefinition!=null){
+                    String gtCode = null;
+                    if (!elementInstancesWithGTCode.getRuleReferences().isEmpty()){
+                        gtCode = elementInstancesWithGTCode.getRuleReferences().iterator().next().getGTCode();
+                    }
+                    term = termDefinition.getTerms().get(gtCode);
                 }
-                term = termDefinition.getTerms().get(gtCode);
-            }
-            if (term!=null){
-                name =  term.getText();
-            }else{
-                Logger.getLogger(DVSwingUtil.class).warn("Term translation not found for '"+elementInstance.getId()+"'");
+                if (term!=null){
+                    name =  term.getText();
+                }else{
+                    Logger.getLogger(DVSwingUtil.class).warn("Term translation not found for '"+elementInstance.getId()+"'");
+                }
             }
         }
 

@@ -2,11 +2,13 @@ package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 
@@ -51,13 +53,15 @@ public class ElementInstanceCollection {
                             (PredicateGeneratedElementInstance)originalEI;
                     //Its a predicate, so keep it as a generated element instance, but resolve the data value
                     DataValue dv = originalEI.getDataValue();
-                    //Resolve predicate if on guide manager (TODO pick only first reference?)
                     if (guideManager!=null){
                         if (!predicateOriginalEI.getRuleReferences().isEmpty()){
-                            String guideId = predicateOriginalEI.getRuleReferences().iterator().next().getGuideId();
+                            //Resolve predicate if on guide manager (TODO pick only first reference?)
+                            String guideId = getReferenceGuideId(dv, predicateOriginalEI.getRuleReferences());
                             Guide guide = guideManager.getGuide(guideId);
                             if (guide!=null){
                                 dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guide, date);
+                            }else{
+                                Logger.getLogger(ElementInstanceCollection.class).warn("Guide id '"+guideId+"' not found, resolving data value '"+dv.serialise()+"'.");
                             }
                         }
                     }
@@ -92,6 +96,23 @@ public class ElementInstanceCollection {
         archetypeReferencesInCollection.add(archetypeReferenceToAdd);
     }
 
+    public String getReferenceGuideId(DataValue dv, Collection<RuleReference> ruleReferences){
+        if (dv instanceof DvCodedText){
+            DvCodedText dvCT = (DvCodedText)dv;
+            Iterator<RuleReference> i = ruleReferences.iterator();
+            while (i.hasNext()) {
+                RuleReference next =  i.next();
+                if (next.getGTCode().equals(dvCT.getCode())){
+                    return next.getGuideId();
+                }
+            }
+        } else {
+           if (!ruleReferences.isEmpty()){
+               return ruleReferences.iterator().next().getGuideId();
+           }
+        }
+        return null;
+    }
     public void remove(ArchetypeReference archetypeReference){
         getArchetypeReferences(archetypeReference).remove(archetypeReference);
     }
