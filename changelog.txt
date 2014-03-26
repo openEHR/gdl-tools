@@ -1,0 +1,39 @@
+(CDS) fix multiple rule reference problem resolving coded texts
+(CDS) minor fix on the log
+(CDS) Fixed names in templates
+(CDS) Test fix
+(CDS) Several fixes to allow display of archetypes/templates in different languages
+
+0.95.2
+
+(CDS) Updated dependency before release.
+(CDS) CDS-247 Updated modules to use java 1.5 as compiler target, and updated all dependencies to the new snapshots.
+
+0.95.1
+
+(CDS) CDS-239
+(CDS) Fixing time zone
+(CDS)- hour fix
+(CDS) change on the template gen
+(CDS) minor configuration issue
+(CDS) new config - use local cm
+(CDS) CDS-242
+(CDS) CDS-239
+(CDS) CDS-236
+(CDS) CDS-162
+(CDS)  * Allow multiple rule references in each generated element instance
+(CDS)  Fixing confusion between EHR and CDS domain
+(CDS)  Fixing confusion between EHR and CDS domain
+(CDS) Minor fixes for the editor
+(CDS) Fixed the boolean existence
+(CDS) CDS-194
+(CDS) CDS-177 Updated existing paths to use css-cds/dist instead of css-cds/d. Added bundle copy to cds-importer, cds-validation, cds-workbench, knowlege-manager, and openehr-cm-admin-swing.
+(CDS) CDS-177
+
+0.95.0
+
+(CDS) CDS-177 Added files to ignorelist.
+(CDS) CDS-177 Updated java-libs version before release.
+(CDS) CDS-177 Fixed scm from git to svn.
+(CDS) CDS-130 Added release plugin.
+(CDS) CDS-130 Added all files from github without modifications.
