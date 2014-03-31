@@ -275,11 +275,11 @@ public class OpenEHRObjectBundleManager {
                 archetypeElementVOs.add(archetypeElementVO);
                 if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)){
                     if (codedTextVOs!=null){
-                        loadCodedTexts(localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, codedTextVOs);
+                        loadCodedTexts(archId, localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, codedTextVOs);
                     }
                 }else if (OpenEHRDataValues.DV_ORDINAL.equals(type)) {
                     if (ordinalVOs!=null){
-                        loadOrdinals(localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, ordinalVOs);
+                        loadOrdinals(archId, localAOM, idTemplate, path, childCObject, archetypeElementVO.getId(), language, ordinalVOs);
                     }
                 }else if (OpenEHRDataValues.DV_QUANTITY.equals(type)) {
                     if (unitVOs!=null){
@@ -374,6 +374,7 @@ public class OpenEHRObjectBundleManager {
     }
 
     private static void loadCodedTexts(
+            String archetypdId,
             Archetype ar,
             String idTemplate,
             String path,
@@ -404,7 +405,7 @@ public class OpenEHRObjectBundleManager {
                                             desc,
                                             cCodePhrase.getRmTypeName(),
                                             idElement,
-                                            ar.getArchetypeId().getValue(),
+                                            archetypdId,
                                             idTemplate,
                                             path,
                                             cCodePhrase.getTerminologyId().getValue(),
@@ -469,6 +470,7 @@ public class OpenEHRObjectBundleManager {
     }
 
     private static void loadOrdinals(
+            String archetypdId,
             Archetype ar,
             String idTemplate,
             String path,
@@ -496,7 +498,7 @@ public class OpenEHRObjectBundleManager {
                                     desc,
                                     cDvOrdinal.getRmTypeName(),
                                     idElement,
-                                    ar.getArchetypeId().getValue(),
+                                    archetypdId,
                                     idTemplate,
                                     path,
                                     ordinal.getValue(),
