@@ -3,17 +3,17 @@ package se.cambio.openehr.util;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-import org.openehr.rm.datatypes.quantity.DvQuantity;
-
 public class OpenEHRNumberFormat  {
 
-    
+
+    public static char DV_QUANTITY_DECIMAL_SEPARATOR = '.';
+
     public static DecimalFormat getDecimalFormat(){
 	return getDecimalFormat(null);
     }
     public static DecimalFormat getDecimalFormat(Integer precision){
 	DecimalFormatSymbols custom = new DecimalFormatSymbols();
-	custom.setDecimalSeparator(DvQuantity.DECIMAL_SEPARATOR);
+	custom.setDecimalSeparator(DV_QUANTITY_DECIMAL_SEPARATOR);
 	DecimalFormat format = new DecimalFormat();
 	format.setDecimalFormatSymbols(custom);
 	format.setGroupingUsed(false);

@@ -22,5 +22,10 @@
             <artifactId>template-gen-model</artifactId>
             <version>${template-gen-version}</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>openehr</groupId>
+            <artifactId>openehr-rm-core</artifactId>
+            <version>${openehr-java-libs-version}</version>
+        </dependency>
+    </dependencies>
 </project>
