@@ -100,7 +100,7 @@ public class GuideImporter {
                                         wepdrl.getDataValueRuleLineElement().setValue(dv);
                                         wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
                                     }else{
-                                       WithElementPredicateExistsDefinitionRuleLine wepedrl = new WithElementPredicateExistsDefinitionRuleLine();
+                                        WithElementPredicateExistsDefinitionRuleLine wepedrl = new WithElementPredicateExistsDefinitionRuleLine();
                                         airl.addChildRuleLine(wepedrl);
                                         wepedrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
                                         wepedrl.getExistenceOperatorRuleLineElement().setValue(binaryExpression.getOperator().getSymbol()+"null");
@@ -244,9 +244,9 @@ public class GuideImporter {
         if (dv instanceof DvCodedText){
             if (termDefinition!=null){
                 DvCodedText dvCT = (DvCodedText)dv;
-                String name = termDefinition.getTerms().get(dvCT.getCode()).getText();
-                if (name!=null){
-                    dvCT.setValue(name);
+                Term term = termDefinition.getTerms().get(dvCT.getCode());
+                if (term!=null && term.getText()!=null){
+                    dvCT.setValue(term.getText());
                 }
             }
         }else if (dv instanceof DvOrdinal){

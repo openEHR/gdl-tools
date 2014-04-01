@@ -402,7 +402,6 @@ public class ElementInstanceCollection {
         sb.append("-----\n");
         return sb.toString();
     }
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

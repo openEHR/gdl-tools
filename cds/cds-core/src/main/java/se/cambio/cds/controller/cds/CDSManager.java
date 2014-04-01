@@ -114,7 +114,9 @@ public class CDSManager {
             GuideManager guideManager,
             Calendar date){
         //Check for guide elements, if not present, create archetype reference
-        for (ArchetypeReference archetypeReference : completeEIC.getAllArchetypeReferences()) {
+        List<ArchetypeReference> guideArchetypeReferences = new ArrayList<ArchetypeReference>(completeEIC.getAllArchetypeReferences());
+        Collections.sort(guideArchetypeReferences, new ARNonEmptyPredicateComparator());
+        for (ArchetypeReference archetypeReference : guideArchetypeReferences) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference)archetypeReference;
             boolean matches = elementInstanceCollection.matches(gar, guideManager.getAllGuidesMap(), date);
             if (!matches){
@@ -187,6 +189,25 @@ public class CDSManager {
             new ElementInstance(ei.getId(), null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         }
         return ei;
+    }
+
+    private static class ARNonEmptyPredicateComparator implements Comparator<ArchetypeReference>{
+
+        public int compare(ArchetypeReference o1, ArchetypeReference o2) {
+            int count1 = getNumPredicates(o1);
+            int count2 = getNumPredicates(o2);
+            return count1-count2;
+        }
+
+        private int getNumPredicates(ArchetypeReference archetypeReference){
+            int count = 0;
+            for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
+                if (elementInstance instanceof PredicateGeneratedElementInstance && elementInstance.getDataValue()!=null){
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 }
 /*
