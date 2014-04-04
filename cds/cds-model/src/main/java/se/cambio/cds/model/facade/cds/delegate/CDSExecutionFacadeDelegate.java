@@ -1,11 +1,13 @@
 package se.cambio.cds.model.facade.cds.delegate;
 
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.model.dsvdata.DSVData;
 import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.StoringMode;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
@@ -37,6 +39,13 @@ public interface CDSExecutionFacadeDelegate {
 	    Collection<String> guideIds,
 	    Calendar date)
 		    throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
+
+    public DSVData executeDSV(
+            String dsvId,
+            String ehrId,
+            Collection<ArchetypeReference> ehrData,
+            Calendar date)
+            throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
 
     public Collection<RuleExecutionResult> executeAndStore(
 	    Collection<String> ehrIds,

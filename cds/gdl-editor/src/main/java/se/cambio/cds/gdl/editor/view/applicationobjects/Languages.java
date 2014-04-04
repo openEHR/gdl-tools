@@ -17,6 +17,7 @@ public class Languages {
 	_supportedLanguages = new HashSet<String>();
 	_supportedLanguages.add("en"); 
 	_supportedLanguages.add("es");
+    _supportedLanguages.add("sv");
 	//TODO Add more support! :P
 	
 	_languages = new HashMap<String, String>();

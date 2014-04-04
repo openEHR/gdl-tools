@@ -64,6 +64,7 @@
 	<modules>
         <module>cds-common</module>
         <module>cds-engine-drools</module>
+		<module>cds-integration-model</module>
 		<module>cds-model</module>
 		<module>gdl-model</module>
 		<module>cds-persistence</module>
