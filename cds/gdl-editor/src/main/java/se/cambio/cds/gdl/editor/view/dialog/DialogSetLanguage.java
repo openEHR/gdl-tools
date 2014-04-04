@@ -1,21 +1,15 @@
 
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.Languages;
 import se.cambio.cds.gdl.editor.view.renderers.LanguageRenderer;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.dialogs.DialogEditor;
+
+import javax.swing.*;
+import java.awt.*;
 /**
  * @author icorram
  *
@@ -25,7 +19,7 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 public class DialogSetLanguage extends DialogEditor {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2562412853124970610L;
     private JComboBox _languageSelection = null;
@@ -34,50 +28,51 @@ public class DialogSetLanguage extends DialogEditor {
      * This is the default constructor
      */
     public DialogSetLanguage() {
-	super(EditorManager.getActiveEditorWindow(),
-		GDLEditorLanguageManager.getMessage("SetEditorLanguage"),
-		new Dimension(250, 110),true);
-	initialize();
+        super(EditorManager.getActiveEditorWindow(),
+                GDLEditorLanguageManager.getMessage("SetEditorLanguage"),
+                new Dimension(250, 110),true);
+        initialize();
     }
 
     /**
      * This method initializes this
      */
     private  void initialize() {
-	getJPanel().setLayout(new BorderLayout());
-	JPanel panelAux = new JPanel(new BorderLayout());
-	getJPanel().add(panelAux, BorderLayout.NORTH);
-	
-	JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	panelAux1.add(new JLabel(GDLEditorLanguageManager.getMessage("SetEditorLanguage")+":"));
-	panelAux1.add(getLanguageSelectorComboBox());
-	panelAux.add(panelAux1, BorderLayout.NORTH);
-	JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	panelAux2.add(getAcceptButton());
-	panelAux2.add(getCancelButton());
-	getJPanel().add(panelAux2, BorderLayout.SOUTH); 
+        getJPanel().setLayout(new BorderLayout());
+        JPanel panelAux = new JPanel(new BorderLayout());
+        getJPanel().add(panelAux, BorderLayout.NORTH);
+
+        JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelAux1.add(new JLabel(GDLEditorLanguageManager.getMessage("SetEditorLanguage")+":"));
+        panelAux1.add(getLanguageSelectorComboBox());
+        panelAux.add(panelAux1, BorderLayout.NORTH);
+        JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelAux2.add(getAcceptButton());
+        panelAux2.add(getCancelButton());
+        getJPanel().add(panelAux2, BorderLayout.SOUTH);
 
     }
 
     private JComboBox getLanguageSelectorComboBox(){
-	if (_languageSelection==null){
-	    _languageSelection = new JComboBox(Languages.getSupportedLanguages().toArray());
-	    _languageSelection.setRenderer(new LanguageRenderer());
-	    String lang = UserConfigurationManager.getLanguage();
-	    if (Languages.getSupportedLanguages().contains(lang)){
-		_languageSelection.setSelectedItem(lang);
-	    }
-	}
-	return _languageSelection;
+        if (_languageSelection==null){
+            _languageSelection = new JComboBox(Languages.getSupportedLanguages().toArray());
+            _languageSelection.setRenderer(new LanguageRenderer());
+            String lang = UserConfigurationManager.getLanguage();
+            if (Languages.getSupportedLanguages().contains(lang)){
+                _languageSelection.setSelectedItem(lang);
+            }
+        }
+        return _languageSelection;
     }
 
 
     protected boolean acceptDialog(){
-	String language = (String)getLanguageSelectorComboBox().getSelectedItem();
-	UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.LANGUAGE, language);
-	UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.COUNTRY, language.toUpperCase());
-	JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
-	return UserConfigurationManager.saveConfig();
+        String languageAndCountry = (String)getLanguageSelectorComboBox().getSelectedItem();
+        String [] str = languageAndCountry.split("_");
+        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.LANGUAGE, str[0]);
+        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.COUNTRY, str[1]);
+        JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
+        return UserConfigurationManager.saveConfig();
     }
 } 
 

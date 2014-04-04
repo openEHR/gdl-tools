@@ -74,7 +74,7 @@ public class ExportUtils {
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLyfecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
         sb.append("</font></table>");
 

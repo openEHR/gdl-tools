@@ -122,7 +122,7 @@ public class DescriptionPanel extends JPanel{
     public JPanel getAuthorshipLifeCycle(){
         if (authorshipLifecyclePanel==null){
             authorshipLifecyclePanel = new JPanel(new SpringLayout());
-            authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorshipLyfecycle")+":"));
+            authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorshipLifecycle")+":"));
             JComboBox lyfeCB = new JComboBox();
             //TODO Translations?
             lyfeCB.addItem("Not set");

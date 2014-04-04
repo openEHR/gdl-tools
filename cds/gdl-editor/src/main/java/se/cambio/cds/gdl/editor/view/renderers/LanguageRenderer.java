@@ -1,44 +1,39 @@
 package se.cambio.cds.gdl.editor.view.renderers;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-
 import se.cambio.cds.gdl.editor.view.applicationobjects.Languages;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class LanguageRenderer extends JLabel implements ListCellRenderer {
     private static final long serialVersionUID = 1L;
-    
+
     public LanguageRenderer(){
-	setOpaque(true);
-	setHorizontalAlignment(LEFT);
-	setVerticalAlignment(CENTER);
+        setOpaque(true);
+        setHorizontalAlignment(LEFT);
+        setVerticalAlignment(CENTER);
     }
 
     public Component getListCellRendererComponent(JList list, Object value,
-	    int index, boolean isSelected, boolean cellHasFocus) {
-	if (isSelected) {
-	    setBackground(list.getSelectionBackground());
-	    setForeground(list.getSelectionForeground());
-	} else {
-	    setBackground(list.getBackground());
-	    setForeground(list.getForeground());
-	}
-	if (value!=null){
-	    String name = Languages.getLanguageName((String)value);
-	    setText(value +" - "+name);
-	    setToolTipText(value +" - "+name);
-	    setBorder(null);
-	}else{
-	    setText(" ");
-	    setToolTipText("");
-	    setBorder(BorderFactory.createLineBorder(Color.RED));
-	}
-	return this;
+                                                  int index, boolean isSelected, boolean cellHasFocus) {
+        if (isSelected) {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+        } else {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+        }
+        if (value!=null){
+            String name = Languages.getLanguageName(((String)value).split("_")[0]);
+            setText(value +" - "+name);
+            setToolTipText(value +" - "+name);
+            setBorder(null);
+        }else{
+            setText(" ");
+            setToolTipText("");
+            setBorder(BorderFactory.createLineBorder(Color.RED));
+        }
+        return this;
     }
 }
 /*
