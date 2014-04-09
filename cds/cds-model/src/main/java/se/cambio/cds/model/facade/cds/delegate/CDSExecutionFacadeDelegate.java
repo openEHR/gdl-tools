@@ -45,7 +45,7 @@ public interface CDSExecutionFacadeDelegate {
             String ehrId,
             Collection<ArchetypeReference> ehrData,
             Calendar date)
-            throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
+            throws InternalErrorException, PatientNotFoundException, GuideNotFoundException, InstanceNotFoundException;
 
     public Collection<RuleExecutionResult> executeAndStore(
 	    Collection<String> ehrIds,
