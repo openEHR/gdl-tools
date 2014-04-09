@@ -164,8 +164,14 @@ public class Archetypes {
     }
 
     public static ImageIcon getIcon(String idArchetype){
-        String entryType = getArchetypeDTO(idArchetype).getRMName();
-        ImageIcon icon = OpenEHRConstUI.getIcon(entryType);
+        ArchetypeDTO archetypeDTO = getArchetypeDTO(idArchetype);
+        ImageIcon icon = null;
+        if (archetypeDTO!=null){
+            String entryType = archetypeDTO.getRMName();
+            icon = OpenEHRConstUI.getIcon(entryType);
+        }else{
+            Logger.getLogger(Archetypes.class).warn("Archetype '"+idArchetype+"' was not found loading icon.");
+        }
         if (icon!=null){
             return icon;
         }else{
