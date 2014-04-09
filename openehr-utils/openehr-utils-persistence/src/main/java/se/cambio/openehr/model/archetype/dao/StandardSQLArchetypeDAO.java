@@ -68,7 +68,7 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
         String idsArquetiposStr = "";
         if (archetypeIds!=null && !archetypeIds.isEmpty()){
             for (String archetypeId : archetypeIds) {
-                idsArquetiposStr += archetypeId+",";
+                idsArquetiposStr += "'"+archetypeId+"',";
             }
             if (idsArquetiposStr.length()>1){
                 idsArquetiposStr = idsArquetiposStr.substring(0, idsArquetiposStr.length()-1);
