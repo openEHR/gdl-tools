@@ -39,14 +39,14 @@ public interface CDSExecutionFacadeDelegate {
 	    Collection<String> guideIds,
 	    Calendar date)
 		    throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
-/*
+
     public DSVData executeDSV(
             String dsvId,
             String ehrId,
             Collection<ArchetypeReference> ehrData,
             Calendar date)
             throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
-*/
+
     public Collection<RuleExecutionResult> executeAndStore(
 	    Collection<String> ehrIds,
 	    Collection<String> guideIds,
