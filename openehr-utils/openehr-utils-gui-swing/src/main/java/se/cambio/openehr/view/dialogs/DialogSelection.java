@@ -83,6 +83,7 @@ public class DialogSelection extends DialogEditor {
         getJPanel().add(getButonsPanel(), gbc);
         KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
         getJPanel().registerKeyboardAction(null, enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        this.setResizable(true);
     }
 
     public JPanel getButonsPanel(){
