@@ -37,11 +37,13 @@ public class DVUtil {
     //Compares to DataValues ignoring language dependent labels (DvCodedText & DvOrdinal)
     public static boolean equalDVs(DataValue dv1, DataValue dv2){
         if (dv1 instanceof DvCodedText && dv2 instanceof DvCodedText){
-            return ((DvCodedText)dv1).getDefiningCode().equals(((DvCodedText)dv2).getDefiningCode());
+            DvCodedText dvCodedText1 = (DvCodedText) dv1;
+            DvCodedText dvCodedText2 = (DvCodedText) dv2;
+            return dvCodedText1.getDefiningCode().equals(dvCodedText2.getDefiningCode()) && dvCodedText2.getTerminologyId().equals(dvCodedText2.getTerminologyId());
         }else if (dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal){
             DvOrdinal dvOrdinal1 = (DvOrdinal) dv1;
             DvOrdinal dvOrdinal2 = (DvOrdinal) dv2;
-            return dvOrdinal1.getValue()==dvOrdinal2.getValue() && dvOrdinal1.getSymbol().getDefiningCode().equals(dvOrdinal2.getSymbol().getDefiningCode());
+            return dvOrdinal1.getValue()==dvOrdinal2.getValue() && equalDVs(dvOrdinal1.getSymbol(), dvOrdinal2.getSymbol());
         }else if (dv1 instanceof DvQuantity && dv2 instanceof DvQuantity){
             DvQuantity dvQuantity1 = (DvQuantity) dv1;
             DvQuantity dvQuantity2 = (DvQuantity) dv2;
@@ -70,16 +72,6 @@ public class DVUtil {
         if (!inPredicate && ei instanceof PredicateGeneratedElementInstance){
             return false;
         }else{
-            /*
-            if (dv2!=null){
-                if (ei.getDataValue()!=null){
-                    return DVUtil.equalDVs(ei.getDataValue(), dv2);
-                }else{
-                    return false;
-                }
-            }else{
-                return false;
-            } */
             return DVUtil.equalDVs(ei.getDataValue(), dv2);
         }
     }
