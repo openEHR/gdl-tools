@@ -37,8 +37,6 @@ public class OpenEHRObjectBundleManager {
 
     public static void generateArchetypesObjectBundles(Collection<ArchetypeDTO> archetypeDTOs)
             throws InternalErrorException {
-        int total = archetypeDTOs.size();
-        int count = 1;
         for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
             if (archetypeDTO.getAobcVO()!=null){
                 ArchetypeObjectBundleCustomVO aobcVO = (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
