@@ -31,9 +31,8 @@ public class GDLDroolsConverter {
     private static String WHEN = "when";
     private static String THEN = "then";
     private static String END = "end";
-    private static String DEFAULT_CONFIG = "no-loop true";
-
-
+    private static String DEFAULT_CONFIG = "no-loop true\nauto-focus true";
+    private static String AGENDA_GROUP = "agenda-group";
 
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
@@ -97,6 +96,7 @@ public class GDLDroolsConverter {
                 functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
                 String functionExtraCode = getFunctionsExtraCode(functionsRefs);
                 sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
+                sb.append(AGENDA_GROUP + " '"+guide.getId()+"'\n"); //Isolate rule execution to guide context
                 sb.append("salience " + rule.getPriority() + "\n");
                 sb.append(DEFAULT_CONFIG + "\n");
                 sb.append(WHEN + "\n");
