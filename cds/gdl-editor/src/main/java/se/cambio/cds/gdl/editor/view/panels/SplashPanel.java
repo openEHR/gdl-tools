@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.util.Version;
+import se.cambio.cds.util.misc.Version;
 
 public class SplashPanel extends JPanel {
     private static final long serialVersionUID = 1L;

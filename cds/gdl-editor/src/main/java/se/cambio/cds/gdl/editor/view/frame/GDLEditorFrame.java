@@ -16,7 +16,7 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.util.Version;
+import se.cambio.cds.util.misc.Version;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.openehr.util.ExceptionHandler;
 

@@ -4,15 +4,15 @@
 
 
  */
-package se.cambio.cds.gdl.editor.util;
+package se.cambio.cds.util.misc;
+
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 /**
  * @author icorram
