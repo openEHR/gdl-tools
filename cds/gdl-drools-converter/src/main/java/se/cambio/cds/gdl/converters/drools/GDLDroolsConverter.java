@@ -531,7 +531,11 @@ public class GDLDroolsConverter {
                         "$"+gtCode+".setNullFlavour("+ DVDefSerializer.getDVInstantiation(dv)+");"+
                         "$executionLogger.addLog(drools, $"+gtCode +");");
             }else{
-                String rmName = elementMap.get(gtCode).getRMType();
+                ArchetypeElementVO archetypeElementVO = elementMap.get(gtCode);
+                if (archetypeElementVO==null){
+                    throw new InternalErrorException(new Exception("GTCode '"+gtCode+"' not found. (guideId='"+guide.getId()+"')"));
+                }
+                String rmName = archetypeElementVO.getRMType();
                 Map<RefStat, Set<String>> statsAux = initStats();
                 String arithmeticExpStr =
                         ExpressionUtil.getArithmeticExpressionStr(elementMap, expressionItemAux, statsAux);
