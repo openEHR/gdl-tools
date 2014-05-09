@@ -25,6 +25,8 @@ public class DroolsGuideUtil {
             if (guideDTO.getGuideObject()==null || force){
                 guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
                 guideDTO.setGuideObject(IOUtils.getBytes(guide));
+            }else{
+                guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
             }
             if (guideDTO.getCompiledGuide()==null || force){
                 String droolsGuide = new GDLDroolsConverter(guide).convertToDrools();
