@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-core</artifactId>
-            <version>5.5.0.Final</version>
+            <version>${drools.version}</version>
         </dependency>
 	</dependencies>
 </project>

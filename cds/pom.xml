@@ -15,6 +15,7 @@
 	</organization>
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <drools.version>5.5.0.Final</drools.version>
 	</properties>
     <scm>
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
