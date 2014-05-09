@@ -3,6 +3,7 @@ package se.cambio.cds.controller.guide;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -26,7 +27,12 @@ public class GuideManager extends SimpleGuideManager{
         Collection<Guide> guides = new ArrayList<Guide>();
         for (GuideDTO guideDTO : guidesDTO) {
             try {
-                Guide guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
+                Guide guide = null;
+                if (guideDTO.getGuideObject()!=null){
+                    guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
+                }else{
+                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
+                }
                 guides.add(guide);
             } catch (Exception e) {
                 ExceptionHandler.handle(e);
