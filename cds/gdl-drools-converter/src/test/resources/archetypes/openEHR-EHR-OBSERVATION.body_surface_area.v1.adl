@@ -1,0 +1,332 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.body_surface_area.v1
+
+concept
+	[at0000]	-- Površina kože
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sl"] = <
+			language = <[ISO_639-1::sl]>
+			author = <
+				["organisation"] = <"Slovenia">
+				["name"] = <"Uroš Rajkovi?, Biljana Prin?i?">
+				["email"] = <"uros.rajkovic@fov.uni-mb.si, biljana.princic@marand.si">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"Dr Ian McNicoll">
+		["organisation"] = <"Ocean Informatics, United Kingdom">
+		["email"] = <"ian.mcnicoll@oceaninformatics.com">
+		["date"] = <"19/10/2010">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record the calculated body surface area of the subject.
+ ">
+			use = <"The Mosteller formula
+BSA (m²) = ( [Height(cm) x Weight(kg) ]/ 3600 )½        e.g. BSA = SQRT( (cm*kg)/3600 )
+or in inches and pounds:     BSA (m²) = ( [Height(in) x Weight(lbs) ]/ 3131 )½
+ 
+The DuBois and DuBois formula
+BSA (m²) = 0.20247 x Height(m)0.725 x Weight(kg)0.425
+A variation of DuBois and DuBois15 thats gives virtually identical results is:
+BSA (m²) = 0.007184 x Height(cm)0.725 x Weight(kg)0.425
+ 
+The Haycock formula
+BSA (m²) = 0.024265 x Height(cm)0.3964 x Weight(kg)0.5378
+ 
+The Gehan and George formula
+BSA (m²) = 0.0235 x Height(cm)0.42246 x Weight(kg)0.51456
+ 
+The Boyd formula
+BSA (m2) = 0.0003207 x Height(cm)0.3 x Weight(grams)(0.7285 - ( 0.0188 x LOG(grams) )">
+			keywords = <"BSA", "skin area">
+			misuse = <"">
+			copyright = <"">
+		>
+		["sl"] = <
+			language = <[ISO_639-1::sl]>
+			purpose = <"Za beleženje izra?unane površine kože subjekta">
+			use = <"The Mosteller formula
+BSA (m²) = ( [Height(cm) x Weight(kg) ]/ 3600 )½        e.g. BSA = SQRT( (cm*kg)/3600 )
+or in inches and pounds:     BSA (m²) = ( [Height(in) x Weight(lbs) ]/ 3131 )½
+ 
+The DuBois and DuBois formula
+BSA (m²) = 0.20247 x Height(m)0.725 x Weight(kg)0.425
+A variation of DuBois and DuBois15 thats gives virtually identical results is:
+BSA (m²) = 0.007184 x Height(cm)0.725 x Weight(kg)0.425
+ 
+The Haycock formula
+BSA (m²) = 0.024265 x Height(cm)0.3964 x Weight(kg)0.5378
+ 
+The Gehan and George formula
+BSA (m²) = 0.0235 x Height(cm)0.42246 x Weight(kg)0.51456
+ 
+The Boyd formula
+BSA (m2) = 0.0003207 x Height(cm)0.3 x Weight(grams)(0.7285 - ( 0.0188 x LOG(grams) )">
+			keywords = <"površina kože", ...>
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+	other_contributors = <"Biljana Prin?i?, Marand d.o.o., Slovenia", "Uroš Rajkovi?, Faculty of Organizational Sciences, University of Maribor, Slovenia">
+	other_details = <
+		["references"] = <"Wikipedia contributors. Body surface area. Wikipedia, The Free Encyclopedia. July 18, 2010, 10:20 UTC. Available at: http://en.wikipedia.org/w/index.php?title=Body_surface_area&oldid=374115233. Accessed October 19, 2010.
+Mosteller RD: Simplified Calculation of Body Surface Area. N Engl J Med 1987 Oct 22;317(17):1098 (letter)
+DuBois D; DuBois EF: A formula to estimate the approximate surface area if height and weight be known. Arch Int Med 1916 17:863-71.
+Haycock G.B., Schwartz G.J.,Wisotsky D.H.  Geometric method for measuring body surface area: A height weight formula validated in infants, children and adults.   The Journal of Pediatrics 1978  93:1:62-66
+Gehan EA, George SL, Estimation of human body surface area from height and weight.   Cancer Chemother Rep 1970 54:225-35.
+Boyd E, The growth of the surface area of the human body. Minneapolis: university of Minnesota Press, 1935.  (I never found the original source. (Formula from: http://www.ispub.com/journals/IJA/Vol2N2/bsa.htm )
+Lam TK, Leung DT: More on simplified calculation of body-surface area. N Engl J Med 1988 Apr 28;318(17):1130, (letter)
+Wang Y, Moss J, Thisted R. Predictors of body surface area. J Clin Anesth. 1992; 4(1):4-10.">
+		["MD5-CAM-1.0.1"] = <"4CDBC0394B0EE46221E4E3FAA65BC856">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Površina kože
+		data matches {
+			HISTORY[at0001] matches {	-- *Event Series(en)
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- *Any event(en)
+						data matches {
+							ITEM_TREE[at0003] matches {	-- *Tree(en)
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Površina kože
+										value matches {
+											C_DV_QUANTITY <
+												property = <[openehr::335]>
+												list = <
+													["1"] = <
+														units = <"m2">
+														magnitude = <|>=0.0|>
+														precision = <|2|>
+													>
+													["2"] = <
+														units = <"cm2">
+														magnitude = <|>=0.0|>
+														precision = <|1|>
+													>
+												>
+											>
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		protocol matches {
+			ITEM_TREE[at0005] matches {	-- *Tree(en)
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0015] occurrences matches {0..1} matches {	-- Metoda
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0016, 	-- Avtomatski vnos
+									at0017]	-- Uporabniški vnos
+								}
+							}
+						}
+					}
+					ELEMENT[at0006] occurrences matches {0..1} matches {	-- Naziv formule
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0008, 	-- Dubois and Dubois
+									at0009, 	-- Mosteller
+									at0010, 	-- Haycock
+									at0011, 	-- Gehan and George
+									at0012, 	-- Boyd
+									at0013, 	-- Fujimoto
+									at0014]	-- Takihara
+								}
+							}
+						}
+					}
+					ELEMENT[at0007] occurrences matches {0..1} matches {	-- Matemati?na formula
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0018] occurrences matches {0..1} matches {	-- Opombe
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Body surface area">
+					description = <"The calculated body surface area of the subject.">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Any event">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Body surface area">
+					description = <"The calculated body surface area.">
+				>
+				["at0005"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0006"] = <
+					text = <"Formula name">
+					description = <"The name of the formula employed to calculate Body Surface Area.">
+				>
+				["at0007"] = <
+					text = <"Formula">
+					description = <"The exact formula used to calculate the body surface area.">
+				>
+				["at0008"] = <
+					text = <"Dubois and Dubois">
+					description = <"The Dubois and Dubois formula was used.">
+				>
+				["at0009"] = <
+					text = <"Mosteller">
+					description = <"The Mosteller formula was used.">
+				>
+				["at0010"] = <
+					text = <"Haycock">
+					description = <"The Haycock formula was used.">
+				>
+				["at0011"] = <
+					text = <"Gehan and George">
+					description = <"The Gehan and George formula was used.">
+				>
+				["at0012"] = <
+					text = <"Boyd">
+					description = <"The Boyd formula was used.">
+				>
+				["at0013"] = <
+					text = <"Fujimoto">
+					description = <"The Fujimoto formula was used.">
+				>
+				["at0014"] = <
+					text = <"Takihara">
+					description = <"The Takihara formula was used.">
+				>
+				["at0015"] = <
+					text = <"Method">
+					description = <"The method of entering the Body Surface Area.">
+				>
+				["at0016"] = <
+					text = <"Automatic entry">
+					description = <"Body Aurface area calculated and entered automatically without user intervention.">
+				>
+				["at0017"] = <
+					text = <"Direct entry">
+					description = <"Body Surface Area calculated and entered directly by user.">
+				>
+				["at0018"] = <
+					text = <"Comment">
+					description = <"Comment about the Body Surface Area measurement eg noting that the measurements used were adjusted weight/height.">
+				>
+			>
+		>
+		["sl"] = <
+			items = <
+				["at0000"] = <
+					text = <"Površina kože">
+					description = <"Izra?unana površina kože telesa">
+				>
+				["at0001"] = <
+					text = <"*Event Series(en)">
+					description = <"*@ internal @(en)">
+				>
+				["at0002"] = <
+					text = <"*Any event(en)">
+					description = <"**(en)">
+				>
+				["at0003"] = <
+					text = <"*Tree(en)">
+					description = <"*@ internal @(en)">
+				>
+				["at0004"] = <
+					text = <"Površina kože">
+					description = <"Izra?unana površina kože telesa">
+				>
+				["at0005"] = <
+					text = <"*Tree(en)">
+					description = <"*@ internal @(en)">
+				>
+				["at0006"] = <
+					text = <"Naziv formule">
+					description = <"Ime uporabljene formule za izra?un">
+				>
+				["at0007"] = <
+					text = <"Matemati?na formula">
+					description = <"Natan?en vnos formule za izra?un">
+				>
+				["at0008"] = <
+					text = <"Dubois and Dubois">
+					description = <"Za izra?un je bila uporabljena formula avtorjev Dubois in Dubois">
+				>
+				["at0009"] = <
+					text = <"Mosteller">
+					description = <"Za izra?un je bila uporabljena formula avtorja Mosteller">
+				>
+				["at0010"] = <
+					text = <"Haycock">
+					description = <"Za izra?un je bila uporabljena formula avtorja Haycock">
+				>
+				["at0011"] = <
+					text = <"Gehan and George">
+					description = <"Za izra?un je bila uporabljena formula avtorjev Gehan in George">
+				>
+				["at0012"] = <
+					text = <"Boyd">
+					description = <"Za izra?un je bila uporabljena formula avtorja Boyd">
+				>
+				["at0013"] = <
+					text = <"Fujimoto">
+					description = <"Za izra?un je bila uporabljena formula avtorja Fujimoto">
+				>
+				["at0014"] = <
+					text = <"Takihara">
+					description = <"Za izra?un je bila uporabljena formula avtorja Tahikara">
+				>
+				["at0015"] = <
+					text = <"Metoda">
+					description = <"Metoda vnosa podatkov">
+				>
+				["at0016"] = <
+					text = <"Avtomatski vnos">
+					description = <"Površina je bila izra?unana in zabeležena avtomatsko, brez posredovanja uporabnika (?loveka)">
+				>
+				["at0017"] = <
+					text = <"Uporabniški vnos">
+					description = <"Izra?un in vnos podatkov je sprožil uporabnik.">
+				>
+				["at0018"] = <
+					text = <"Opombe">
+					description = <"Opombe vezane na izra?un površine kože">
+				>
+			>
+		>
+	>

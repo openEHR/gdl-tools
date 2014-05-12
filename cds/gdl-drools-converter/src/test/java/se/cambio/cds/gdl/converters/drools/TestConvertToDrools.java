@@ -1,18 +1,21 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.util.UserConfigurationManager;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 public class TestConvertToDrools extends TestCase {
 
 	public void setUp() throws Exception {
+        String archetypesFolderPath = TestConvertToDrools.class.getClassLoader().getResource("archetypes").getPath();
+        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
 		Archetypes.loadArchetypes();
 		parser = new GDLParser();
 		guide = null;
