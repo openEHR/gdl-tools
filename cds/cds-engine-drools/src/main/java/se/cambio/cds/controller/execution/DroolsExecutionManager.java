@@ -50,7 +50,7 @@ public class DroolsExecutionManager {
     }
 
 
-    public static void executeGuides(
+    private static void executeGuides(
             KnowledgeBase knowledgeBase,
             Calendar date,
             Collection<Object> workingMemoryObjects,
@@ -186,7 +186,7 @@ public class DroolsExecutionManager {
                 String timeOutStr = CDSConfigurationParametersManager.getParameter(CDSConfigurationParametersManager.CDS_EXECUTION_TIMEOUT);
                 getDelegate()._timeOutInMillis = Long.parseLong(timeOutStr);
             } catch (Exception e) {
-                Logger.getLogger(DroolsExecutionManager.class).debug("No CDS execution timeout or errors found loading it. Timeout will be disabled.");
+                Logger.getLogger(DroolsExecutionManager.class).info("No CDS execution timeout or errors found loading it. Timeout will be disabled.");
             }
             if (getDelegate()._timeOutInMillis==null){
                 getDelegate()._timeOutInMillis = Long.MAX_VALUE;

@@ -62,7 +62,10 @@ public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDel
 	}*/
         final List<RuleReference> ruleReferences =
                 GuideUtil.getRuleReferences(executionLogger.getFiredRules());
-        return new RuleExecutionResult(ehrId, modifiedArhetypeReferences, executionLogger.getLog(), ruleReferences);
+
+        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, modifiedArhetypeReferences, executionLogger.getLog(), ruleReferences);
+        ruleExecutionResult.setTimedOut(executionLogger.executionTimedOut());
+        return ruleExecutionResult;
     }
 
     @Override

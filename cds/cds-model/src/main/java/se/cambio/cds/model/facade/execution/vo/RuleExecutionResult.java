@@ -16,6 +16,7 @@ public class RuleExecutionResult implements Serializable{
     private Collection<ArchetypeReference> ars = null;
     private List<ExecutionLog> log = null;
     private List<RuleReference> firedRules = null;
+    private boolean timedOut = false;
 
     public RuleExecutionResult(
             String ehrId,
@@ -40,6 +41,14 @@ public class RuleExecutionResult implements Serializable{
     }
     public List<RuleReference> getFiredRules() {
         return firedRules;
+    }
+
+    public boolean isTimedOut() {
+        return timedOut;
+    }
+
+    public void setTimedOut(boolean timedOut) {
+        this.timedOut = timedOut;
     }
 }
 /*

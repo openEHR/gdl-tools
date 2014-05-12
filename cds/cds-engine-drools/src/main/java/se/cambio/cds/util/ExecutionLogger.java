@@ -15,7 +15,10 @@ import java.util.Map;
 public class ExecutionLogger {
     private List<ExecutionLog> _log = null;
     private List<String> _firedRules = null;
-    private boolean cancelExecution = false;
+    private boolean _executionCanceled = false;
+    private boolean _executionTimedOut = false;
+    private boolean _halt = false;
+
     private long _startTime = 0;
     public ExecutionLogger(){
         _startTime = System.currentTimeMillis();
@@ -30,21 +33,26 @@ public class ExecutionLogger {
                         elementInstance.getId(),
                         elementInstance.getDataValue()!=null?elementInstance.getDataValue().serialise():null);
         getLog().add(executionLog);
-
         //TODO This should not be done in the logger
-        long executionTime = (System.currentTimeMillis()-_startTime);
-        if (cancelExecution || executionTime> DroolsExecutionManager.getExecutionTimeOut()){
-            Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out!");
-            Map<String, Integer> countMap = new HashMap<String, Integer>();
-            for (ExecutionLog logLine : getLog()){
-                String firedRule = logLine.getFiredRule();
-                int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
-                countMap.put(firedRule, count + 1);
+        if (!_halt){
+            long executionTime = (System.currentTimeMillis()-_startTime);
+            if (!_executionTimedOut){
+                _executionTimedOut = executionTime> DroolsExecutionManager.getExecutionTimeOut();
             }
-            for (String firedRule:countMap.keySet()){
-                Logger.getLogger(ExecutionLogger.class).info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
+            if (_executionCanceled || _executionTimedOut){
+                Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out! (executionTime= "+executionTime+" ms)");
+                Map<String, Integer> countMap = new HashMap<String, Integer>();
+                for (ExecutionLog logLine : getLog()){
+                    String firedRule = logLine.getFiredRule();
+                    int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
+                    countMap.put(firedRule, count + 1);
+                }
+                for (String firedRule:countMap.keySet()){
+                    Logger.getLogger(ExecutionLogger.class).info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
+                }
+                drools.halt();
+                _halt = true;
             }
-            drools.halt();
         }
     }
 
@@ -64,7 +72,15 @@ public class ExecutionLogger {
     }
 
     public void cancelExecution(){
-        cancelExecution = true;
+        _executionCanceled = true;
+    }
+
+    public boolean executionCanceled(){
+        return _executionCanceled;
+    }
+
+    public boolean executionTimedOut(){
+        return _executionTimedOut;
     }
 }
 /*
