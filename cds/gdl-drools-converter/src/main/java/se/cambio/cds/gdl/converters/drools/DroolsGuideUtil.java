@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.converters.drools;
 
+import org.apache.log4j.Logger;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.guide.dto.GuideDTO;
@@ -21,6 +22,8 @@ public class DroolsGuideUtil {
 
     public static void compile(GuideDTO guideDTO, boolean force) throws InternalErrorException {
         try {
+            long startTime = System.currentTimeMillis();
+            boolean compile = false;
             Guide guide = null;
             if (guideDTO.getGuideObject()==null || force){
                 guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
@@ -31,6 +34,11 @@ public class DroolsGuideUtil {
             if (guideDTO.getCompiledGuide()==null || force){
                 String droolsGuide = new GDLDroolsConverter(guide).convertToDrools();
                 guideDTO.setCompiledGuide(CompilationManager.compile(droolsGuide));
+                compile = true;
+            }
+            if (compile){
+                long totalExecutionTime = System.currentTimeMillis()-startTime;
+                Logger.getLogger(DroolsGuideUtil.class).info("Guide '"+guideDTO.getIdGuide()+"' compiled in "+totalExecutionTime+" ms.");
             }
         } catch (Exception e) {
             throw new InternalErrorException(e);
