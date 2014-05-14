@@ -1,10 +1,12 @@
 package se.cambio.cds.controller.cds;
 
+import org.openehr.rm.datatypes.quantity.DvQuantity;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegate;
 import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegateFactory;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -75,6 +77,7 @@ public class CDSManager {
         }
         return cdsEIMap;
     }
+
 
 
     public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection eic){
@@ -180,13 +183,10 @@ public class CDSManager {
     }
 
     private static ElementInstance cloneElementInstanceWithGTCodes(ElementInstance ei, ArchetypeReference ar, boolean useGTCodes){
-        if (useGTCodes && ei instanceof GeneratedElementInstance){
-            GeneratedElementInstance gei = (GeneratedElementInstance) ei;
-            GeneratedElementInstance newGei = new GeneratedElementInstance(
-                    gei.getId(), null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-            newGei.setRuleReferences(gei.getRuleReferences());
-        }else{
-            new ElementInstance(ei.getId(), null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        ei = ei.clone();
+        ei.setArchetypeReference(ar);
+        if (!useGTCodes && ei instanceof GeneratedElementInstance){
+            ((GeneratedElementInstance)ei).setRuleReferences(null);
         }
         return ei;
     }

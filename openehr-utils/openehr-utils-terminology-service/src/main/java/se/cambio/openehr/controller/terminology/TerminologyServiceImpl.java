@@ -80,12 +80,10 @@ public class TerminologyServiceImpl implements TerminologyService {
 	    ExceptionHandler.handle(e);
 	}
 	 */
-        if (!Terminologies.isLoaded()){
-            try {
-                Terminologies.loadTerminologies();
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
+        try {
+            Terminologies.loadTerminologies();
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
         }
 
         for (TerminologyDTO terminologyDTO : Terminologies.getAllTerminologies()) {

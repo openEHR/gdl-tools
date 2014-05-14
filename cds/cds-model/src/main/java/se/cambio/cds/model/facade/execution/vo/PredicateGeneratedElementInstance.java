@@ -40,6 +40,13 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
         Logger.getLogger(PredicateGeneratedElementInstance.class).warn("Attempt to change data value of generated element (from '"+getDataValue()+"' to '"+dataValue+"')");
     }
 
+    public PredicateGeneratedElementInstance clone(){
+        PredicateGeneratedElementInstance predicateGeneratedElementInstance =
+                new PredicateGeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour(), getOperatorKind());
+        predicateGeneratedElementInstance.setRuleReferences(getRuleReferences());
+        return predicateGeneratedElementInstance;
+    }
+
     public boolean hasValue(){
         return false;
     }

@@ -11,14 +11,23 @@ import java.util.*;
 public class Terminologies {
     private static Terminologies _instance = null;
     private Map<String, TerminologyDTO> _terminologiesById = null;
+    private boolean _loaded = false;
 
     private Terminologies(){
     }
 
+
     public static void loadTerminologies() throws InternalErrorException{
-        Collection<TerminologyDTO> terminologyDTOs =
-                OpenEHRAdministrationFacadeDelegateFactory.getDelegate().searchAllTerminologies();
-        loadTerminologies(terminologyDTOs);
+        loadTerminologies(false);
+    }
+
+    public static void loadTerminologies(boolean force) throws InternalErrorException{
+        if (force || !getDelegate()._loaded){
+            Collection<TerminologyDTO> terminologyDTOs =
+                    OpenEHRAdministrationFacadeDelegateFactory.getDelegate().searchAllTerminologies();
+            loadTerminologies(terminologyDTOs);
+            getDelegate()._loaded = true;
+        }
     }
 
     public static void loadTerminologies(Collection<TerminologyDTO> terminologyDTOs) throws InternalErrorException{
@@ -27,10 +36,6 @@ public class Terminologies {
             Logger.getLogger(Terminologies.class).info("Registering terminology: '"+terminologyDTO.getTerminologyId()+"'.");
             registerTerminology(terminologyDTO);
         }
-    }
-
-    public static boolean isLoaded(){
-        return !getTerminologiesMap().isEmpty();
     }
 
     private static void init(){

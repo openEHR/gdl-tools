@@ -26,7 +26,7 @@ public class GeneratedElementInstance extends ElementInstance{
 
     public GeneratedElementInstance clone(){
         GeneratedElementInstance generatedElementInstance = new GeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour());
-        generatedElementInstance.setRuleReferences(generatedElementInstance.getRuleReferences());
+        generatedElementInstance.setRuleReferences(new HashSet<RuleReference>(generatedElementInstance.getRuleReferences()));
         return generatedElementInstance;
     }
 
