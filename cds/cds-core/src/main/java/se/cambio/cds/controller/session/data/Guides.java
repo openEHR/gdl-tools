@@ -96,6 +96,30 @@ public class Guides {
         return new ArrayList<GuideDTO>(getGuidesMap().values());
     }
 
+    public static Collection<GuideDTO> getGuideDTOsById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
+        Set<String> missingGuideIds = new HashSet<String>();
+        for(String guideId: guideIds){
+            if (!isGuideLoaded(guideId)){
+                missingGuideIds.add(guideId);
+            }
+        }
+        loadGuidesById(missingGuideIds);
+        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+        for(String guideId: guideIds){
+            GuideDTO guideDTO = getGuideDTO(guideId);
+            if (guideDTO!=null){
+                guideDTOs.add(guideDTO);
+            }else{
+                throw new GuideNotFoundException(guideId);
+            }
+        }
+        return guideDTOs;
+    }
+
+    public static boolean isGuideLoaded(String guideId){
+        return getGuidesMap().containsKey(guideId);
+    }
+
     public static List<String> getAllGuideIdsSorted(){
         ArrayList<String> guideIds = new ArrayList<String>(getGuidesMap().keySet());
         Collections.sort(guideIds);
