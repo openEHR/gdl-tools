@@ -15,6 +15,10 @@ public class Ordinals {
     private Map<String, Map<String, Map<Integer, OrdinalVO>>> _templateOrdinalsByTemplateIdAndId = null;
 
     private Ordinals(){
+        init();
+    }
+
+    public void init(){
         _ordinalByParentId = new HashMap<String, Map<Integer, OrdinalVO>>();
         _templateOrdinalsByTemplateIdAndId = new HashMap<String, Map<String,Map<Integer,OrdinalVO>>>();
     }
@@ -96,7 +100,7 @@ public class Ordinals {
     }*/
 
     public static String getText(OrdinalVO ordinalVO, String lang){
-        return getText(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getValue(), lang);
+        return getText(ordinalVO.getIdTemplate(), ordinalVO.getIdParent(), ordinalVO.getValue(), lang);
     }
 
     public static String getText(String idTemplate, String idElement, Integer value, String lang){
@@ -115,7 +119,7 @@ public class Ordinals {
     }
 
     public static String getDescription(OrdinalVO ordinalVO, String lang){
-        return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getValue(), lang);
+        return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getIdParent(), ordinalVO.getValue(), lang);
     }
 
     public static String getDescription(String idTemplate, String idElement, Integer value, String lang){

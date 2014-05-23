@@ -64,6 +64,14 @@ public class Archetypes {
     private static void init(){
         getArchetypeDTOMap().clear();
         getAOMMap().clear();
+        getArchetypeTermsMap().clear();
+        ArchetypeElements.getDelegate().init();
+        Clusters.getDelegate().init();
+        CodedTexts.getDelegate().init();
+        Ordinals.getDelegate().init();
+        ArchetypeSlots.getDelegate().init();
+        Units.getDelegate().init();
+        ProportionTypesUI.getDelegate().init();
     }
 
     private static void registerArchertype(ArchetypeDTO archetypeDTO){

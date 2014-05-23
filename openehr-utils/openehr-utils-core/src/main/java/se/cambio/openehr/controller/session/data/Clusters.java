@@ -12,7 +12,12 @@ public class Clusters {
     private  Map<String, ClusterVO> _clustersById = null;
     private Map<String, Map<String, ClusterVO>> _templateClustersByTemplateIdAndId = null;
 
+
     private Clusters(){
+        init();
+    }
+
+    public void init(){
         _clustersById = new HashMap<String, ClusterVO>();
         _templateClustersByTemplateIdAndId = new HashMap<String, Map<String,ClusterVO>>();
     }

@@ -13,60 +13,64 @@ public class Units {
     private Map<String, Map<String, Collection<String>>> _templateUnitsByTemplateIdAndId = null;
 
     private Units(){
-	_unitsByIdElement = new HashMap<String, Collection<String>>();
-	_templateUnitsByTemplateIdAndId = new HashMap<String, Map<String,Collection<String>>>();
+        init();
+    }
+
+    public void init(){
+        _unitsByIdElement = new HashMap<String, Collection<String>>();
+        _templateUnitsByTemplateIdAndId = new HashMap<String, Map<String,Collection<String>>>();
     }
 
     public static void loadUnits(Collection<UnitVO> unitVOs){
-	for (UnitVO unitVO : unitVOs) {
-	    registerUnit(unitVO);
-	}
+        for (UnitVO unitVO : unitVOs) {
+            registerUnit(unitVO);
+        }
     }
 
     public static void registerUnit(UnitVO unitVO){
-	if (unitVO.getIdTemplate()==null){
-	    getUnits(unitVO.getIdElement()).add(unitVO.getUnit());
-	}else{
-	    getUnits(unitVO.getIdTemplate(), unitVO.getIdElement()).add(unitVO.getUnit());
-	}
+        if (unitVO.getIdTemplate()==null){
+            getUnits(unitVO.getIdElement()).add(unitVO.getUnit());
+        }else{
+            getUnits(unitVO.getIdTemplate(), unitVO.getIdElement()).add(unitVO.getUnit());
+        }
     }
 
     private static Map<String, Collection<String>> getUnitsInTemplate(String idTemplate){
-	Map<String, Collection<String>> map = getDelegate()._templateUnitsByTemplateIdAndId.get(idTemplate);
-	if (map==null){
-	    map = new HashMap<String, Collection<String>>();
-	    getDelegate()._templateUnitsByTemplateIdAndId.put(idTemplate, map);
-	}
-	return map;
+        Map<String, Collection<String>> map = getDelegate()._templateUnitsByTemplateIdAndId.get(idTemplate);
+        if (map==null){
+            map = new HashMap<String, Collection<String>>();
+            getDelegate()._templateUnitsByTemplateIdAndId.put(idTemplate, map);
+        }
+        return map;
     }
 
     public static Collection<String> getUnits(String idTemplate, String idElement){
-	if (idTemplate==null){
-	    return getUnits(idElement);
-	}else{
-	    Collection<String> units = getUnitsInTemplate(idTemplate).get(idElement);
-	    if (units==null){
-		units = new ArrayList<String>();
-		getUnitsInTemplate(idTemplate).put(idElement, units);
-	    }
-	    return units;
-	}
+        if (idTemplate==null){
+            return getUnits(idElement);
+        }else{
+            Collection<String> units = getUnitsInTemplate(idTemplate).get(idElement);
+            if (units==null){
+                units = new ArrayList<String>();
+                getUnitsInTemplate(idTemplate).put(idElement, units);
+            }
+            return units;
+        }
     }
 
     private static Collection<String> getUnits(String idElement){
-	Collection<String> units = getDelegate()._unitsByIdElement.get(idElement);
-	if (units==null){
-	    units = new ArrayList<String>();
-	    getDelegate()._unitsByIdElement.put(idElement, units);
-	}
-	return units;
+        Collection<String> units = getDelegate()._unitsByIdElement.get(idElement);
+        if (units==null){
+            units = new ArrayList<String>();
+            getDelegate()._unitsByIdElement.put(idElement, units);
+        }
+        return units;
     }
 
     public static Units getDelegate(){
-	if (_instance == null){
-	    _instance = new Units();
-	}
-	return _instance;
+        if (_instance == null){
+            _instance = new Units();
+        }
+        return _instance;
     }
 }
 /*

@@ -18,100 +18,104 @@ public class ProportionTypesUI {
     private Map<ProportionKind, String> _proportionTypeNames = null;
     private Map<ProportionKind, String> _proportionTypeDescriptions = null;
     private Map<ProportionKind, String> _proportionTypeIDs = null;
-    
+
     private static String RATIO_ID = "RATIO";
     private static String UNITARY_ID = "UNITARY";
     private static String PERCENT_ID = "PERCENT";
     private static String FRACTION_ID = "FRACTION";
     private static String INTEGER_FRACTION_ID = "INTEGER_FRACTION";
-    
-    private ProportionTypesUI(){
-	_proportionTypesByIdElement = new HashMap<String, Collection<ProportionKind>>();
-	_templateProportionTypesByTemplateIdAndId = new HashMap<String, Map<String,Collection<ProportionKind>>>();
-	_proportionTypeIDs = new HashMap<ProportionKind, String>();
-	
-	_proportionTypeNames = new HashMap<ProportionKind, String>();
-	_proportionTypeDescriptions = new HashMap<ProportionKind, String>();
-	_proportionTypeNames.put(ProportionKind.RATIO, OpenEHRLanguageManager.getMessage("Ratio"));
-	_proportionTypeNames.put(ProportionKind.UNITARY, OpenEHRLanguageManager.getMessage("Unitary"));
-	_proportionTypeNames.put(ProportionKind.PERCENT, OpenEHRLanguageManager.getMessage("Percent"));
-	_proportionTypeNames.put(ProportionKind.FRACTION, OpenEHRLanguageManager.getMessage("Fraction"));
-	_proportionTypeNames.put(ProportionKind.INTEGER_FRACTION, OpenEHRLanguageManager.getMessage("IntegerFraction"));
 
-	_proportionTypeDescriptions.put(ProportionKind.RATIO, OpenEHRLanguageManager.getMessage("RatioDesc"));
-	_proportionTypeDescriptions.put(ProportionKind.UNITARY, OpenEHRLanguageManager.getMessage("UnitaryDesc"));
-	_proportionTypeDescriptions.put(ProportionKind.PERCENT, OpenEHRLanguageManager.getMessage("PercentDesc"));
-	_proportionTypeDescriptions.put(ProportionKind.FRACTION, OpenEHRLanguageManager.getMessage("FractionDesc"));
-	_proportionTypeDescriptions.put(ProportionKind.INTEGER_FRACTION, OpenEHRLanguageManager.getMessage("IntegerFractionDesc"));
-	
-	_proportionTypeIDs.put(ProportionKind.RATIO, ProportionKind.class.getSimpleName()+"."+RATIO_ID);
-	_proportionTypeIDs.put(ProportionKind.UNITARY, ProportionKind.class.getSimpleName()+"."+UNITARY_ID);
-	_proportionTypeIDs.put(ProportionKind.PERCENT, ProportionKind.class.getSimpleName()+"."+PERCENT_ID);
-	_proportionTypeIDs.put(ProportionKind.FRACTION, ProportionKind.class.getSimpleName()+"."+FRACTION_ID);
-	_proportionTypeIDs.put(ProportionKind.INTEGER_FRACTION, ProportionKind.class.getSimpleName()+"."+INTEGER_FRACTION_ID);
+    private ProportionTypesUI(){
+        init();
+    }
+
+    public void init(){
+        _proportionTypesByIdElement = new HashMap<String, Collection<ProportionKind>>();
+        _templateProportionTypesByTemplateIdAndId = new HashMap<String, Map<String,Collection<ProportionKind>>>();
+        _proportionTypeIDs = new HashMap<ProportionKind, String>();
+
+        _proportionTypeNames = new HashMap<ProportionKind, String>();
+        _proportionTypeDescriptions = new HashMap<ProportionKind, String>();
+        _proportionTypeNames.put(ProportionKind.RATIO, OpenEHRLanguageManager.getMessage("Ratio"));
+        _proportionTypeNames.put(ProportionKind.UNITARY, OpenEHRLanguageManager.getMessage("Unitary"));
+        _proportionTypeNames.put(ProportionKind.PERCENT, OpenEHRLanguageManager.getMessage("Percent"));
+        _proportionTypeNames.put(ProportionKind.FRACTION, OpenEHRLanguageManager.getMessage("Fraction"));
+        _proportionTypeNames.put(ProportionKind.INTEGER_FRACTION, OpenEHRLanguageManager.getMessage("IntegerFraction"));
+
+        _proportionTypeDescriptions.put(ProportionKind.RATIO, OpenEHRLanguageManager.getMessage("RatioDesc"));
+        _proportionTypeDescriptions.put(ProportionKind.UNITARY, OpenEHRLanguageManager.getMessage("UnitaryDesc"));
+        _proportionTypeDescriptions.put(ProportionKind.PERCENT, OpenEHRLanguageManager.getMessage("PercentDesc"));
+        _proportionTypeDescriptions.put(ProportionKind.FRACTION, OpenEHRLanguageManager.getMessage("FractionDesc"));
+        _proportionTypeDescriptions.put(ProportionKind.INTEGER_FRACTION, OpenEHRLanguageManager.getMessage("IntegerFractionDesc"));
+
+        _proportionTypeIDs.put(ProportionKind.RATIO, ProportionKind.class.getSimpleName()+"."+RATIO_ID);
+        _proportionTypeIDs.put(ProportionKind.UNITARY, ProportionKind.class.getSimpleName()+"."+UNITARY_ID);
+        _proportionTypeIDs.put(ProportionKind.PERCENT, ProportionKind.class.getSimpleName()+"."+PERCENT_ID);
+        _proportionTypeIDs.put(ProportionKind.FRACTION, ProportionKind.class.getSimpleName()+"."+FRACTION_ID);
+        _proportionTypeIDs.put(ProportionKind.INTEGER_FRACTION, ProportionKind.class.getSimpleName()+"."+INTEGER_FRACTION_ID);
     }
 
     public static void loadProportionTypes(Collection<ProportionTypeVO> proportionTypeVOs){
-	for (ProportionTypeVO proportionTypeVO : proportionTypeVOs) {
-	    registerProportionType(proportionTypeVO);
-	}
+        for (ProportionTypeVO proportionTypeVO : proportionTypeVOs) {
+            registerProportionType(proportionTypeVO);
+        }
     }
 
     public static void registerProportionType(ProportionTypeVO proportionTypeVO){
-	if (proportionTypeVO.getIdTemplate()==null){
-	    getProportionTypes(proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
-	}else{
-	    getProportionTypes(proportionTypeVO.getIdTemplate(), proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
-	}
+        if (proportionTypeVO.getIdTemplate()==null){
+            getProportionTypes(proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
+        }else{
+            getProportionTypes(proportionTypeVO.getIdTemplate(), proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
+        }
     }
 
     private static Map<String, Collection<ProportionKind>> getProportionTypesInTemplate(String idTemplate){
-	Map<String, Collection<ProportionKind>> map = getDelegate()._templateProportionTypesByTemplateIdAndId.get(idTemplate);
-	if (map==null){
-	    map = new HashMap<String, Collection<ProportionKind>>();
-	    getDelegate()._templateProportionTypesByTemplateIdAndId.put(idTemplate, map);
-	}
-	return map;
+        Map<String, Collection<ProportionKind>> map = getDelegate()._templateProportionTypesByTemplateIdAndId.get(idTemplate);
+        if (map==null){
+            map = new HashMap<String, Collection<ProportionKind>>();
+            getDelegate()._templateProportionTypesByTemplateIdAndId.put(idTemplate, map);
+        }
+        return map;
     }
 
     public static Collection<ProportionKind> getProportionTypes(String idTemplate, String idElement){
-	if (idTemplate==null){
-	    return getProportionTypes(idElement);
-	}else{
-	    Collection<ProportionKind> proportionTypes = getProportionTypesInTemplate(idTemplate).get(idElement);
-	    if (proportionTypes==null){
-		proportionTypes = new ArrayList<ProportionKind>();
-		getProportionTypesInTemplate(idTemplate).put(idElement, proportionTypes);
-	    }
-	    return proportionTypes;
-	}
+        if (idTemplate==null){
+            return getProportionTypes(idElement);
+        }else{
+            Collection<ProportionKind> proportionTypes = getProportionTypesInTemplate(idTemplate).get(idElement);
+            if (proportionTypes==null){
+                proportionTypes = new ArrayList<ProportionKind>();
+                getProportionTypesInTemplate(idTemplate).put(idElement, proportionTypes);
+            }
+            return proportionTypes;
+        }
     }
 
     private static Collection<ProportionKind> getProportionTypes(String idElement){
-	Collection<ProportionKind> proportionTypes = getDelegate()._proportionTypesByIdElement.get(idElement);
-	if (proportionTypes==null){
-	    proportionTypes = new ArrayList<ProportionKind>();
-	    getDelegate()._proportionTypesByIdElement.put(idElement, proportionTypes);
-	}
-	return proportionTypes;
+        Collection<ProportionKind> proportionTypes = getDelegate()._proportionTypesByIdElement.get(idElement);
+        if (proportionTypes==null){
+            proportionTypes = new ArrayList<ProportionKind>();
+            getDelegate()._proportionTypesByIdElement.put(idElement, proportionTypes);
+        }
+        return proportionTypes;
     }
 
     public static String getName(ProportionKind proportionType){
-	return getDelegate()._proportionTypeNames.get(proportionType);
+        return getDelegate()._proportionTypeNames.get(proportionType);
     }
 
     public static String getDescription(ProportionKind proportionType){
-	return getDelegate()._proportionTypeDescriptions.get(proportionType);
+        return getDelegate()._proportionTypeDescriptions.get(proportionType);
     }
 
     public static String getInstanceID(ProportionKind proportionKind){
-	return getDelegate()._proportionTypeIDs.get(proportionKind);
+        return getDelegate()._proportionTypeIDs.get(proportionKind);
     }
     public static ProportionTypesUI getDelegate(){
-	if (_instance == null){
-	    _instance = new ProportionTypesUI();
-	}
-	return _instance;
+        if (_instance == null){
+            _instance = new ProportionTypesUI();
+        }
+        return _instance;
     }
 }
 /*

@@ -12,65 +12,70 @@ public class ArchetypeSlots {
     private static ArchetypeSlots _instance = null;
     private Map<String, ArchetypeSlotVO> _archetypeSlotsById = null;
 
+
     private ArchetypeSlots(){
-	_archetypeSlotsById = new HashMap<String, ArchetypeSlotVO>();
+        init();
+    }
+
+    public void init(){
+        _archetypeSlotsById = new HashMap<String, ArchetypeSlotVO>();
     }
 
     public static void loadArchetypeNodes(Collection<ArchetypeSlotVO> archetypeSlotVOs){
-	for (ArchetypeSlotVO archetypeSlotVO : archetypeSlotVOs) {
-	    registerArchetypeSlot(archetypeSlotVO);
-	}
+        for (ArchetypeSlotVO archetypeSlotVO : archetypeSlotVOs) {
+            registerArchetypeSlot(archetypeSlotVO);
+        }
     }
 
     public static void registerArchetypeSlot(ArchetypeSlotVO archetypeSlotVO){
-	getDelegate()._archetypeSlotsById.put(archetypeSlotVO.getId(), archetypeSlotVO);
+        getDelegate()._archetypeSlotsById.put(archetypeSlotVO.getId(), archetypeSlotVO);
     }
 
     public static ArchetypeSlotVO getArchetypeSlot(String idArchetypeNode){
-	return getDelegate()._archetypeSlotsById.get(idArchetypeNode);
+        return getDelegate()._archetypeSlotsById.get(idArchetypeNode);
     }
 
     public static Collection<ArchetypeSlotVO> getArchetypeSlots(String idArchetype){
-	Collection<ArchetypeSlotVO> list = new ArrayList<ArchetypeSlotVO>();
-	for (ArchetypeSlotVO archetypeSlotVO : getDelegate()._archetypeSlotsById.values()) {
-	    if(idArchetype.equals(archetypeSlotVO.getIdArchetype())){
-		list.add(archetypeSlotVO);
-	    }
-	}
-	return list;
+        Collection<ArchetypeSlotVO> list = new ArrayList<ArchetypeSlotVO>();
+        for (ArchetypeSlotVO archetypeSlotVO : getDelegate()._archetypeSlotsById.values()) {
+            if(idArchetype.equals(archetypeSlotVO.getIdArchetype())){
+                list.add(archetypeSlotVO);
+            }
+        }
+        return list;
     }
 
     public static boolean passesFilter(String idArchetype, ArchetypeSlotVO archetypeSlotVO){
-	boolean included = isIncluded(idArchetype, archetypeSlotVO.getIncludes());
-	boolean excluded = isExcluded(idArchetype, archetypeSlotVO.getExludes());
-	return (included && !excluded);
+        boolean included = isIncluded(idArchetype, archetypeSlotVO.getIncludes());
+        boolean excluded = isExcluded(idArchetype, archetypeSlotVO.getExludes());
+        return (included && !excluded);
     }
 
     private static boolean isIncluded(String idArchetype, Collection<String> includes){
-	for (String includesExp : includes) {
-	    if (Pattern.matches(includesExp, idArchetype)){
-		return true; 
-	    }
-	}
-	return false;
+        for (String includesExp : includes) {
+            if (Pattern.matches(includesExp, idArchetype)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isExcluded(String idArchetype, Collection<String> excludes){
-	for (String excludesExp : excludes) {
-	    if (!excludesExp.equals(".*")){
-		if (Pattern.matches(excludesExp, idArchetype)){
-		    return true;
-		}
-	    }
-	}
-	return false;
+        for (String excludesExp : excludes) {
+            if (!excludesExp.equals(".*")){
+                if (Pattern.matches(excludesExp, idArchetype)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static ArchetypeSlots getDelegate(){
-	if (_instance == null){
-	    _instance = new ArchetypeSlots();
-	}
-	return _instance;
+        if (_instance == null){
+            _instance = new ArchetypeSlots();
+        }
+        return _instance;
     }
 }
 /*

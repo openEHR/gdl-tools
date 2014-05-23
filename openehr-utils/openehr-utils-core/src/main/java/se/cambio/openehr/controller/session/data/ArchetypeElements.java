@@ -26,10 +26,15 @@ public class ArchetypeElements {
                     OpenEHRLanguageManager.getMessage("CurrentDateTime"),
                     OpenEHRDataValues.DV_DATE_TIME, null, null, null, null);
 
+
     private ArchetypeElements(){
+        init();
+    }
+
+
+    public void init(){
         _archetypeElementsById = new LinkedHashMap<String, ArchetypeElementVO>();
         _templateElementsByTemplateIdAndId = new LinkedHashMap<String, Map<String, ArchetypeElementVO>>();
-
     }
 
     public static void loadArchetypeElements(Collection<ArchetypeElementVO> archetypeElementVOs){

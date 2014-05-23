@@ -14,11 +14,15 @@ public class CodedTexts {
     private Map<String, Map<String, CodedTextVO>> _codedTextsByParentId = null;
     private Map<String, Map<String, Map<String, CodedTextVO>>> _templateCodedTextsByTemplateIdAndId = null;
 
+
     private CodedTexts(){
+        init();
+    }
+
+    public void init(){
         _codedTextsByParentId = new HashMap<String, Map<String, CodedTextVO>>();
         _templateCodedTextsByTemplateIdAndId = new HashMap<String, Map<String,Map<String,CodedTextVO>>>();
     }
-
     public static void loadCodedTexts(Collection<CodedTextVO> codedTextVOs){
         for (CodedTextVO codedTextVO : codedTextVOs) {
             registerCodedText(codedTextVO);
@@ -99,7 +103,7 @@ public class CodedTexts {
     }
     */
     public static String getText(CodedTextVO codedTextVO, String lang){
-        return getText(codedTextVO.getIdTemplate(), codedTextVO.getId(), codedTextVO.getCode(), lang);
+        return getText(codedTextVO.getIdTemplate(), codedTextVO.getIdParent(), codedTextVO.getCode(), lang);
     }
 
     public static String getText(String idTemplate, String idElement, String code, String lang){
@@ -118,7 +122,7 @@ public class CodedTexts {
     }
 
     public static String getDescription(CodedTextVO codedTextVO, String lang){
-        return getDescription(codedTextVO.getIdTemplate(), codedTextVO.getId(), codedTextVO.getCode(), lang);
+        return getDescription(codedTextVO.getIdTemplate(), codedTextVO.getIdParent(), codedTextVO.getCode(), lang);
     }
 
     public static String getDescription(String idTemplate, String idElement, String code, String lang){
