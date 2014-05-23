@@ -15,7 +15,7 @@ public class PathUtils {
         List<String> archetypeIds = new ArrayList<String>();
         String[] elemetnsInPath = path.split("/");
         for(String elementInPath: elemetnsInPath){
-            if (elementInPath.contains("[")){
+            if (elementInPath.contains("[") && elementInPath.contains("]")){
                 String candidateArchetypeId = elementInPath.substring(elementInPath.indexOf("[")+1, elementInPath.indexOf("]"));
                 if (validArcehtypeIds.contains(candidateArchetypeId)){
                     archetypeIds.add(candidateArchetypeId);
