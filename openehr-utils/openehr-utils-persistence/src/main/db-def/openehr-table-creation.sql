@@ -7,8 +7,7 @@ CREATE TABLE openehr_archetype
    aom bytea NOT NULL,
    aobcvo bytea NOT NULL,
    PRIMARY KEY (archetypeid)
-)  extent size 512 next size 1024 lock mode row;
-revoke all on openehr_archetype from "public";
+);
 
 CREATE TABLE openehr_template
 (
@@ -21,16 +20,14 @@ CREATE TABLE openehr_template
     aom bytea NOT NULL,
     tobcvo  bytea NOT NULL,
     PRIMARY KEY (templateid)
-)  extent size 512 next size 1024 lock mode row;
-revoke all on openehr_template from "public";
+);
 
 CREATE TABLE openehr_terminology
-(                                         L
+(
     terminologyid VARCHAR(255) NOT NULL,
     src bytea NOT NULL,
     PRIMARY KEY (terminologyid)
-)  extent size 1024 next size 2048 lock mode row;
-revoke all on openehr_terminology from "public";
+);
 
-ALTER TABLE openehr_template ADD CONSTRAINT FOREIGN KEY (archetypeid)
-REFERENCES openehr_archetype (archetypeid) CONSTRAINT fk_temlate_archetypeid;
+ALTER TABLE openehr_template ADD CONSTRAINT fk_temlate_archetypeid FOREIGN KEY (archetypeid)
+REFERENCES openehr_archetype (archetypeid);

@@ -7,8 +7,7 @@ CREATE TABLE cds_guide
     active SMALLINT NOT NULL,
     lastUpdate TIMESTAMP WITHOUT TIME ZONE,
     PRIMARY KEY (guideid)
-)  extent size 2048 next size 2048 lock mode row;
-revoke all on cds_guide from "public";
+);
 
 CREATE TABLE cds_overview
 (
@@ -17,5 +16,4 @@ CREATE TABLE cds_overview
     description TEXT NOT NULL,
     src TEXT NOT NULL,
     PRIMARY KEY (overviewid)
-)  extent size 2048 next size 2048 lock mode row;
-revoke all on cds_guide from "public";
+);
