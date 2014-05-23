@@ -7,6 +7,7 @@
 package se.cambio.openehr.view.util;
 
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.DvProportion;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
@@ -299,6 +300,8 @@ public class FormatConverter {
             DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
             Date date = ((DvTime)dv).getDateTime().toDate();
             return df.format(date);
+        }else if (dv instanceof DvCount){
+            return ""+((DvCount)dv).getMagnitude();
         }else if (dv instanceof DvText){
             return dv.toString();
         }else if (dv!=null){
