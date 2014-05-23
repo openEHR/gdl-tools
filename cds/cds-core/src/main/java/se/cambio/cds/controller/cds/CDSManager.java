@@ -16,6 +16,8 @@ import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
@@ -159,8 +161,10 @@ public class CDSManager {
                                 DVUtil.compareDVs(pgeiNew.getDataValue(), pgeiPrev.getDataValue())!=0){
                             //TODO Find a predicate (if possible) that includes both
                             //Incompatible predicates found, we remove data value and operation
-                            pgeiPrev.setDataValue(null);
-                            pgeiPrev.setOperatorKind(null);
+                            new PredicateGeneratedElementInstance(
+                                    pgeiPrev.getId(),
+                                    null, pgeiPrev.getArchetypeReference(), null,
+                                    OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, null);
                         }
                     }
                 }
