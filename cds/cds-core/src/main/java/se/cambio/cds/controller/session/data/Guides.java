@@ -42,7 +42,7 @@ public class Guides {
         }
     }
 
-    public static void loadGuidesById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
+    public static void loadGuidesIntoCacheById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
         CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
         Collection<GuideDTO> guideDTOs = adminFD.searchByGuideIds(guideIds);
         for (GuideDTO guideDTO : guideDTOs) {
@@ -88,8 +88,12 @@ public class Guides {
         return allKeywords;
     }
 
-    public static GuideDTO getGuideDTO(String guideId){
-        return getGuidesMap().get(guideId);
+    public static GuideDTO getCachedGuideDTO(String guideId) throws GuideNotFoundException{
+        GuideDTO guideDTO = getGuidesMap().get(guideId);
+        if(guideDTO==null){
+            throw new GuideNotFoundException(guideId);
+        }
+        return guideDTO;
     }
 
     public static List<GuideDTO> getAllGuides(){
@@ -97,16 +101,16 @@ public class Guides {
     }
 
     public static Collection<GuideDTO> getGuideDTOsById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
-        Set<String> missingGuideIds = new HashSet<String>();
+        Set<String> uncachedGuideIds = new HashSet<String>();
         for(String guideId: guideIds){
             if (!isGuideLoaded(guideId)){
-                missingGuideIds.add(guideId);
+                uncachedGuideIds.add(guideId);
             }
         }
-        loadGuidesById(missingGuideIds);
+        loadGuidesIntoCacheById(uncachedGuideIds);
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         for(String guideId: guideIds){
-            GuideDTO guideDTO = getGuideDTO(guideId);
+            GuideDTO guideDTO = getCachedGuideDTO(guideId);
             if (guideDTO!=null){
                 guideDTOs.add(guideDTO);
             }else{
@@ -145,8 +149,8 @@ public class Guides {
         return guides;
     }
 
-    public static Guide getGuide(String guideId){
-        GuideDTO guideDTO = getGuideDTO(guideId);
+    public static Guide getGuide(String guideId) throws GuideNotFoundException {
+        GuideDTO guideDTO = getCachedGuideDTO(guideId);
         return getGuide(guideDTO);
     }
 
@@ -158,8 +162,8 @@ public class Guides {
         }
     }
 
-    public static boolean isActive(String guideId){
-        GuideDTO guideDTO = getGuideDTO(guideId);
+    public static boolean isActive(String guideId) throws GuideNotFoundException {
+        GuideDTO guideDTO = getCachedGuideDTO(guideId);
         return guideDTO!=null && guideDTO.isActive();
     }
 
