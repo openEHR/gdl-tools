@@ -1,5 +1,6 @@
 package se.cambio.openehr.util;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
@@ -9,52 +10,53 @@ public class OpenEHRNumberFormat  {
     public static char DV_QUANTITY_DECIMAL_SEPARATOR = '.';
 
     public static DecimalFormat getDecimalFormat(){
-	return getDecimalFormat(null);
-    }
-    public static DecimalFormat getDecimalFormat(Integer precision){
-	DecimalFormatSymbols custom = new DecimalFormatSymbols();
-	custom.setDecimalSeparator(DV_QUANTITY_DECIMAL_SEPARATOR);
-	DecimalFormat format = new DecimalFormat();
-	format.setDecimalFormatSymbols(custom);
-	format.setGroupingUsed(false);
-	if (precision!=null){
-	    format.setMinimumFractionDigits(precision);
-	    format.setMaximumFractionDigits(precision);
-	}
-	return format;
+        return getDecimalFormat(null);
     }
 
-    
+    public static DecimalFormat getDecimalFormat(Integer precision){
+        DecimalFormatSymbols custom = new DecimalFormatSymbols();
+        custom.setDecimalSeparator(DV_QUANTITY_DECIMAL_SEPARATOR);
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalFormatSymbols(custom);
+        format.setGroupingUsed(false);
+        if (precision!=null){
+            format.setMinimumFractionDigits(precision);
+            format.setMaximumFractionDigits(precision);
+        }
+        return format;
+    }
+
+
     public static String roundToStr(double unrounded, int precision){
-	StringBuffer roundSB= new StringBuffer();
-	roundSB.append(unrounded);
-	String origStr = roundSB.toString();
-	if (origStr.contains(".")){
-	    int numDecimals = origStr.length()-origStr.indexOf(".")-1;
-	    if (numDecimals!=precision){
-		if (numDecimals>precision){
-		    if (precision>0){
-			roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")+precision+1));
-		    }else{
-			roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")));
-		    }
-		}else {
-		    appendZeros(roundSB, precision-numDecimals);
-		}
-	    }
-	}else{
-	    if (precision>0){
-		roundSB.append(".");
-		appendZeros(roundSB, precision);
-	    }
-	}
-	return roundSB.toString();
+        String origStr = new BigDecimal(unrounded).toString();
+        StringBuffer roundSB = new StringBuffer();
+        roundSB.append(origStr);
+        if (origStr.contains(".") ){
+            int numDecimals = origStr.length()-origStr.indexOf(".")-1;
+            if (numDecimals!=precision){
+                if (numDecimals>precision){
+                    if (precision>0){
+                        roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")+precision+1));
+                    }else{
+                        roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")));
+                    }
+                }else {
+                    appendZeros(roundSB, precision-numDecimals);
+                }
+            }
+        }else{
+            if (precision>0){
+                roundSB.append(".");
+                appendZeros(roundSB, precision);
+            }
+        }
+        return roundSB.toString();
     }
 
     private static void appendZeros(StringBuffer roundSB, int precision){
-	for (int i =0; i<precision;i++) {
-	    roundSB.append("0");
-	}
+        for (int i =0; i<precision;i++) {
+            roundSB.append("0");
+        }
     }
 }
 /*
