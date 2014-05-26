@@ -31,7 +31,7 @@ public class OpenEHRNumberFormat  {
         String origStr = new BigDecimal(unrounded).toString();
         StringBuffer roundSB = new StringBuffer();
         roundSB.append(origStr);
-        if (origStr.contains(".") ){
+        if (origStr.contains(".")){
             int numDecimals = origStr.length()-origStr.indexOf(".")-1;
             if (numDecimals!=precision){
                 if (numDecimals>precision){
