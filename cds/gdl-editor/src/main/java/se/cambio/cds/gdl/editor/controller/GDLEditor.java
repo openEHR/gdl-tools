@@ -809,11 +809,18 @@ public class GDLEditor {
             TermDefinition termDefinition = getTermDefinition(language);
             for (String gtCode : originalTermDefinition.getTerms().keySet()) {
                 Term term = termDefinition.getTerms().get(gtCode);
-                if (term==null){
+                if (term==null || term.getText()==null){
                     term = getTermToDifferenLanguage(
                             gtCode,
                             originalTermDefinition.getTerms().get(gtCode),
                             getOriginalLanguageCode());
+                    termDefinition.getTerms().put(gtCode, term);
+                }
+                if (term==null || term.getText()==null){
+                    term = getTermToDifferenLanguage(
+                            gtCode,
+                            getTermDefinition(_currentGuideLanguageCode).getTerms().get(gtCode),
+                            _currentGuideLanguageCode);
                     termDefinition.getTerms().put(gtCode, term);
                 }
             }
