@@ -11,11 +11,11 @@ import java.text.DecimalFormat;
 public class OpenEHRNumberFormatTests extends TestCase {
 
     public void testRoundToStr(){
-        assertEquals("20.1234", OpenEHRNumberFormat.roundToStr(new Double(20.1234), 4));
-        assertEquals("2012340000000.0000", OpenEHRNumberFormat.roundToStr(2.01234E12, 4));
-        assertEquals("2012340000000", OpenEHRNumberFormat.roundToStr(2.01234E12, 0));
-        assertEquals("0.0002", OpenEHRNumberFormat.roundToStr(2.01234E-4, 4));
-        assertEquals("1.0000", OpenEHRNumberFormat.roundToStr(1, 4));
+        assertEquals("20.1234", OpenEHRNumberFormat.toStringUsingPrecision(new Double(20.1234), 4));
+        assertEquals("2012340000000.0000", OpenEHRNumberFormat.toStringUsingPrecision(2.01234E12, 4));
+        assertEquals("2012340000000", OpenEHRNumberFormat.toStringUsingPrecision(2.01234E12, 0));
+        assertEquals("0.0002", OpenEHRNumberFormat.toStringUsingPrecision(2.01234E-4, 4));
+        assertEquals("1.0000", OpenEHRNumberFormat.toStringUsingPrecision(1, 4));
     }
 
     public void testGetDecimalFormat(){

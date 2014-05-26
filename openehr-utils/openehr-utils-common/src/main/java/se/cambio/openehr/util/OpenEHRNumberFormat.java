@@ -27,7 +27,7 @@ public class OpenEHRNumberFormat  {
     }
 
 
-    public static String roundToStr(double unrounded, int precision){
+    public static String toStringUsingPrecision(double unrounded, int precision){
         String origStr = new BigDecimal(unrounded).toString();
         StringBuffer roundSB = new StringBuffer();
         roundSB.append(origStr);

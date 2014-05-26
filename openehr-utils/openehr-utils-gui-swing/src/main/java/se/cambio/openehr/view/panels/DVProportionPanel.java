@@ -179,8 +179,8 @@ public class DVProportionPanel extends DVGenericPanel{
         ProportionKind proportionKind = ProportionKind.FRACTION;
         if (dataValue instanceof DvProportion){
             DvProportion dvProportion = (DvProportion)dataValue;
-            numerator = OpenEHRNumberFormat.roundToStr(dvProportion.getNumerator(), dvProportion.getPrecision());
-            denominator = OpenEHRNumberFormat.roundToStr(dvProportion.getDenominator(), dvProportion.getPrecision());
+            numerator = OpenEHRNumberFormat.toStringUsingPrecision(dvProportion.getNumerator(), dvProportion.getPrecision());
+            denominator = OpenEHRNumberFormat.toStringUsingPrecision(dvProportion.getDenominator(), dvProportion.getPrecision());
             proportionKind = dvProportion.getType();
         }
         getProportionTypeComboBox().setSelectedItem(proportionKind);

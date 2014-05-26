@@ -120,7 +120,7 @@ public class DVQuantityPanel extends DVGenericPanel{
         String units = "";
         if (dataValue instanceof DvQuantity){
             DvQuantity dvQuantity = (DvQuantity)dataValue;
-            magnitude = OpenEHRNumberFormat.roundToStr(dvQuantity.getMagnitude(), dvQuantity.getPrecision());
+            magnitude = OpenEHRNumberFormat.toStringUsingPrecision(dvQuantity.getMagnitude(), dvQuantity.getPrecision());
             units = dvQuantity.getUnits();
         }
         getMagnitudeTextField().setText(magnitude);
