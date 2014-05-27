@@ -884,6 +884,14 @@ public class GDLEditor {
             GDLPanel gdlPanel = (GDLPanel)_lastRefreshedPanel;
             String guideStr = gdlPanel.getGuideStr();
             new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+        }else if (currentPanel instanceof GDLPanel){
+            try {
+                String guideStr = GuideUtil.serializeGuide(getGuide());
+                new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+            } catch (Exception e) {
+                //Errors found serializing/parsing/compiling guide, so we do not load the source view
+                loadLastTab();
+            }
         }else{
             pendingRunnable.run();
         }
@@ -913,10 +921,14 @@ public class GDLEditor {
                     pendingRunnable.run();
                 }
             }else{
-                GDLPanel gdlPanel = (GDLPanel)_lastRefreshedPanel;
-                _gdlEditorMainPanel.getGuidePanel().getGuideEditorTabPane().setSelectedComponent(gdlPanel);
+                loadLastTab();
             }
         }
+    }
+
+    private void loadLastTab(){
+        Component component = (Component)_lastRefreshedPanel;
+        _gdlEditorMainPanel.getGuidePanel().getGuideEditorTabPane().setSelectedComponent(component);
     }
 
     private void initGuideVars(){
