@@ -10,7 +10,7 @@
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openehr-java-libs-version>1.0.8</openehr-java-libs-version>
+        <openehr-java-libs-version>1.0.9-SNAPSHOT</openehr-java-libs-version>
         <template-gen-version>0.95.3</template-gen-version>
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
@@ -25,8 +25,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <encoding>UTF-8</encoding>
                     <compilerArgument />
                 </configuration>

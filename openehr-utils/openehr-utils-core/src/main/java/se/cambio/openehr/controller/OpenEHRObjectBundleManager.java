@@ -18,7 +18,6 @@ import org.openehr.am.template.OETParser;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.acode.openehr.parser.ADLParser;
-import se.acode.openehr.parser.ParseException;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -83,7 +82,7 @@ public class OpenEHRObjectBundleManager {
     }
 
     public static void generateArchetypeObjectBundleCustomVO (ArchetypeDTO archetypeDTO)
-            throws ParseException, Exception{
+            throws Exception{
         ADLParser adlParser = new ADLParser(archetypeDTO.getArchetype());
         Archetype ar = adlParser.parse();
         String language =
@@ -131,9 +130,7 @@ public class OpenEHRObjectBundleManager {
             ar = (Archetype) IOUtils.getObject(aomByteArray);
         }
         if (ar==null){
-            OETParser parser = new OETParser();
-            InputStream is = IOUtils.toInputStream(templateDTO.getArchetype(), "UTF-8");
-            TEMPLATE template = parser.parseTemplate(is).getTemplate();
+            TEMPLATE template = getParsedTemplate(templateDTO.getArchetype());
             templateDTO.setName(template.getName());
             //TODO
             if (template.getDescription()!=null && template.getDescription().getDetails()!=null&&template.getDescription().getDetails().getPurpose()!=null){
@@ -180,6 +177,12 @@ public class OpenEHRObjectBundleManager {
         templateDTO.setRMName(ar.getArchetypeId().rmEntity());
         templateDTO.setAom(IOUtils.getBytes(ar));
         templateDTO.setTobcVO(IOUtils.getBytes(templateObjectBundleCustomVO));
+    }
+
+    public static TEMPLATE getParsedTemplate(String templateSrc) throws Exception {
+        OETParser parser = new OETParser();
+        InputStream is = IOUtils.toInputStream(templateSrc, "UTF-8");
+        return parser.parseTemplate(is).getTemplate();
     }
 
     public static void loadArchetypeObjects(

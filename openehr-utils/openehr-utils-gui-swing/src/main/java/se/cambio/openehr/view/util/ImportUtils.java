@@ -2,7 +2,9 @@ package se.cambio.openehr.view.util;
 
 import openEHR.v1.template.TEMPLATE;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.template.OETParser;
+import org.openehr.am.template.Flattener;
+import org.openehr.am.template.FlatteningException;
+import org.openehr.am.template.UnknownArchetypeException;
 import se.acode.openehr.parser.ParseException;
 import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
@@ -23,6 +25,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public class ImportUtils {
@@ -70,24 +73,35 @@ public class ImportUtils {
     }
 
     //TODO Should be on a SW
-    private static void addArchetype(Window owner, File file){
+    private static void addArchetype(final Window owner, File file){
         String fileName = file.getName().toLowerCase();
         if (fileName.endsWith(".adl")){
             try{
                 ArchetypeDTO archetypeDTO = getArchetypeDTOFromFile(file);
-                OpenEHRObjectBundleManager.addArchetype(archetypeDTO);
                 Archetypes.loadArchetypeDTO(archetypeDTO);
-            }catch(Exception e){
+                OpenEHRObjectBundleManager.addArchetype(archetypeDTO);
+            }catch(final Exception e){
                 ExceptionHandler.handle(e);
-                DialogLongMessageNotice dialog =
-                        new DialogLongMessageNotice(
-                                owner,
-                                OpenEHRLanguageManager.getMessage("ErrorParsingArchetypeT"),
-                                OpenEHRLanguageManager.getMessage("ErrorParsingArchetype"),
-                                e.getMessage(),
-                                MessageType.ERROR
-                        );
-                dialog.setVisible(true);
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogLongMessageNotice dialog =
+                                    new DialogLongMessageNotice(
+                                            owner,
+                                            OpenEHRLanguageManager.getMessage("ErrorParsingArchetypeT"),
+                                            OpenEHRLanguageManager.getMessage("ErrorParsingArchetype"),
+                                            e.getMessage(),
+                                            MessageType.ERROR
+                                    );
+                            dialog.setVisible(true);
+                        }
+                    });
+                } catch (InterruptedException e1) {
+                    ExceptionHandler.handle(e);
+                } catch (InvocationTargetException e1) {
+                    ExceptionHandler.handle(e);
+                }
             }
         }
     }
@@ -115,6 +129,8 @@ public class ImportUtils {
             throw new InternalErrorException(e);
         } catch (Exception e) {
             throw new InternalErrorException(e);
+        } catch (Error e) {
+            throw new InternalErrorException(new Exception(e.getMessage()));
         } finally{
             if (fis!=null){
                 try {
@@ -126,7 +142,7 @@ public class ImportUtils {
         }
     }
 
-    private static void addTemplate(Window owner, File file){
+    private static void addTemplate(final Window owner, File file){
         String fileName = file.getName().toLowerCase();
         InputStream fis = null;
         if (fileName.endsWith(".oet")){
@@ -137,17 +153,28 @@ public class ImportUtils {
                 String idTemplate = fileName.substring(0,fileName.length()-4);
                 String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
                 importTemplate(owner, idTemplate, archetypeSrc);
-            }catch(Exception e){
+            }catch(final Exception e){
                 ExceptionHandler.handle(e);
-                DialogLongMessageNotice dialog =
-                        new DialogLongMessageNotice(
-                                owner,
-                                OpenEHRLanguageManager.getMessage("ErrorParsingTemplateT"),
-                                OpenEHRLanguageManager.getMessage("ErrorParsingTemplate"),
-                                e.getMessage(),
-                                MessageType.ERROR
-                        );
-                dialog.setVisible(true);
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogLongMessageNotice dialog =
+                                    new DialogLongMessageNotice(
+                                            owner,
+                                            OpenEHRLanguageManager.getMessage("ErrorParsingTemplateT"),
+                                            OpenEHRLanguageManager.getMessage("ErrorParsingTemplate"),
+                                            e.getMessage(),
+                                            MessageType.ERROR
+                                    );
+                            dialog.setVisible(true);
+                        }
+                    });
+                } catch (InterruptedException e1) {
+                    ExceptionHandler.handle(e);
+                } catch (InvocationTargetException e1) {
+                    ExceptionHandler.handle(e1);
+                }
             }finally{
                 if (fis!=null){
                     try {
@@ -163,24 +190,37 @@ public class ImportUtils {
     public static TemplateDTO importTemplate(Window owner, String idTemplate, String archetypeSrc) throws Exception{
         TemplateDTO templateDTO =
                 new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
-        OETParser parser = new OETParser();
-        InputStream bis = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
-        TEMPLATE template = parser.parseTemplate(bis).getTemplate();
-        String idArchetype = template.getDefinition().getArchetypeId();
-        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
-        if (archetypeVO==null){
-            int result = showImportArchetypeDialogAndAddToRepo(owner, new File(idArchetype + ".adl"));
-            if (result==JFileChooser.CANCEL_OPTION){
-                return null;
+        TEMPLATE template = OpenEHRObjectBundleManager.getParsedTemplate(templateDTO.getArchetype());
+        Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
+        boolean lookupForArchetypes = true;
+        while(lookupForArchetypes){
+            lookupForArchetypes = false;
+            archetypeMap = Archetypes.getArchetypeMap();
+            String missingArchetypeId = null;
+            try{
+                new Flattener().toFlattenedArchetype(template, archetypeMap);
+            }catch(FlatteningException e){
+                if (e instanceof UnknownArchetypeException){
+                    missingArchetypeId = ((UnknownArchetypeException)e).getArchetypeId();
+                }else{
+                    throw e;
+                }
+            }
+            if (missingArchetypeId!=null){
+                lookupForArchetypes=true;
+                int result = showImportArchetypeDialogAndAddToRepo(owner, new File(missingArchetypeId + ".adl"));
+                if (result==JFileChooser.CANCEL_OPTION){
+                    return null;
+                }
             }
         }
+        String idArchetype = template.getDefinition().getArchetypeId();
         templateDTO.setIdArchetype(idArchetype);
         templateDTO.setName(template.getName());
         //TODO
         if (template.getDescription()!=null && template.getDescription().getDetails()!=null&&template.getDescription().getDetails().getPurpose()!=null){
             templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
         }
-        Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
         OpenEHRObjectBundleManager.generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
         OpenEHRObjectBundleManager.addTemplate(templateDTO);
         Templates.loadTemplateObjectBundle(templateDTO);
