@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
  * Date: 2014-05-26
  * Time: 16:53
  */
-public class OpenEHRNumberFormatTests extends TestCase {
+public class OpenEHRNumberFormatTest extends TestCase {
 
     public void testRoundToStr(){
         assertEquals("20.1234", OpenEHRNumberFormat.toStringUsingPrecision(new Double(20.1234), 4));
