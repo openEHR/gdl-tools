@@ -70,6 +70,9 @@ public class AqlUtil{
         for (String archetypeId: arsMap.keySet()){
             ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, archetypeId, null);
             for (ArchetypeReference arAux: arsMap.get(archetypeId)){
+                if (arAux.getIdTemplate()!=null){
+                    ar.setIdTemplate(arAux.getIdTemplate()); //Copy the template if found, useful when editing the intances (may contain additional information)
+                }
                 for (String elementId: arAux.getElementInstancesMap().keySet()){
                     if (!ar.getElementInstancesMap().containsKey(elementId)){
                         ElementInstance ei = arAux.getElementInstancesMap().get(elementId).clone();
