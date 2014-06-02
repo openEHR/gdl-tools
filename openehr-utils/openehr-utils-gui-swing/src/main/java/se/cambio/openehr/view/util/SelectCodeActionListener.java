@@ -8,7 +8,6 @@ import se.cambio.openehr.view.util.NodeConversor.SearchType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class SelectCodeActionListener implements ActionListener {
@@ -26,13 +25,7 @@ public class SelectCodeActionListener implements ActionListener {
                     new DialogSelection(null, OpenEHRLanguageManager.getMessage("SelectTerm"), _panel.getRootNode());
             dialog.setVisible(true);
             if (dialog.getAnswer()){
-                Collection<Object> objs = NodeConversor.getSelectedObjects(_panel.getRootNode(), SearchType.SEARCH_ONLY_PARENT);
-                Collection<CodedTextVO> codedTextVOs = new ArrayList<CodedTextVO>();
-                for (Object object : objs) {
-                    if (object instanceof CodedTextVO){
-                        codedTextVOs.add((CodedTextVO)object);
-                    }
-                }
+                Collection<CodedTextVO> codedTextVOs = NodeConversor.getSelectedObjects(_panel.getRootNode(), SearchType.SEARCH_ONLY_PARENT);
                 _panel.addCodedTextCollection(codedTextVOs);
             }
         }

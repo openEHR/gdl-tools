@@ -135,7 +135,7 @@ public class DialogSelection extends DialogEditor {
         return NodeConversor.getSelectedObject(_rootNode);
     }
 
-    public Collection<Object> getSelectedObjects(){
+    public Collection<?> getSelectedObjects(){
         return NodeConversor.getSelectedObjects(_rootNode);
     }
 

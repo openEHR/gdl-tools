@@ -75,10 +75,10 @@ public class NodeConversor {
         return selectedNode!=null?selectedNode.getObject():null;
     }
 
-    public static SelectableNode<?> getSelectedNode(SelectableNode<?> nodoRaiz, boolean allowParent){
+    public static <K>SelectableNode<K> getSelectedNode(SelectableNode<K> nodoRaiz, boolean allowParent){
         Enumeration<?> e = nodoRaiz.getAllchildren();
         while (e.hasMoreElements()){
-            SelectableNode<?> nodo = (SelectableNode<?>)e.nextElement();
+            SelectableNode<K> nodo = (SelectableNode<K>)e.nextElement();
             if (nodo.getSeleccionado() && (allowParent || nodo.isLeaf() || !nodo.getSeleccionUnica())){
                 return nodo;
             }else {
@@ -90,24 +90,24 @@ public class NodeConversor {
         return null;
     }
 
-    public static Collection<Object> getSelectedObjects(SelectableNode<?> nodoRaiz){
+    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> nodoRaiz){
         return getSelectedObjects(nodoRaiz, SearchType.SEARCH_ALL);
     }
 
-    public static Collection<Object> getSelectedObjects(SelectableNode<?> nodoRaiz, SearchType searchType){
-        Collection<SelectableNode<?>> selectedNodes = new ArrayList<SelectableNode<?>>();
+    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> nodoRaiz, SearchType searchType){
+        Collection<SelectableNode<K>> selectedNodes = new ArrayList<SelectableNode<K>>();
         addSelectedNodes(nodoRaiz, selectedNodes, searchType);
-        Collection<Object> objs = new ArrayList<Object>();
-        for (SelectableNode<?> nodoSeleccionable : selectedNodes) {
+        Collection<K> objs = new ArrayList<K>();
+        for (SelectableNode<K> nodoSeleccionable : selectedNodes) {
             objs.add(nodoSeleccionable.getObject());
         }
         return objs;
     }
 
-    public static void addSelectedNodes(SelectableNode<?> nodoRaiz, Collection<SelectableNode<?>> selectedNodes, SearchType searchType){
+    public static <K>void addSelectedNodes(SelectableNode<K> nodoRaiz, Collection<SelectableNode<K>> selectedNodes, SearchType searchType){
         Enumeration<?> e = nodoRaiz.getAllchildren();
         while (e.hasMoreElements()){
-            SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
+            SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
             if (node.getSeleccionado()){
                 if (searchType!=SearchType.SEARCH_ONLY_LEAVES || node.isLeaf()){
                     selectedNodes.add(node);
