@@ -190,7 +190,7 @@ public class CDSManager {
         ei = ei.clone();
         ei.setArchetypeReference(ar);
         if (!useGTCodes && ei instanceof GeneratedElementInstance){
-            ((GeneratedElementInstance)ei).setRuleReferences(null);
+            ((GeneratedElementInstance)ei).getRuleReferences().clear();
         }
         return ei;
     }
