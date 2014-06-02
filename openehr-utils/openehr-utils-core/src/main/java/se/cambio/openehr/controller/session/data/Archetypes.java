@@ -9,6 +9,7 @@ import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
@@ -46,15 +47,17 @@ public class Archetypes {
     public static void loadArchetypes(Collection<ArchetypeDTO> archetypeDTOs, boolean force) throws InternalErrorException{
         if (!getDelegate()._loaded || force){
             init();
-            OpenEHRObjectBundleManager.generateArchetypesObjectBundles(archetypeDTOs);
-            loadArchetypesObjectBundle(archetypeDTOs);
+            Collection<ArchetypeDTO> correctlyParsedArchetypeDTOs = OpenEHRObjectBundleManager.generateArchetypesObjectBundles(archetypeDTOs);
+            loadArchetypesObjectBundle(correctlyParsedArchetypeDTOs);
             getDelegate()._loaded = true;
         }
     }
 
     public static void loadArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException{
-        OpenEHRObjectBundleManager.generateArchetypesObjectBundles(Collections.singleton(archetypeDTO));
-        loadArchetypeDTO(archetypeDTO);
+        Collection<ArchetypeDTO> correctlyParsedArchetypeDTOs = OpenEHRObjectBundleManager.generateArchetypesObjectBundles(Collections.singleton(archetypeDTO));
+        if (!correctlyParsedArchetypeDTOs.isEmpty()){
+            loadArchetypeDTO(correctlyParsedArchetypeDTOs.iterator().next());
+        }
     }
 
     public static void removeArchetype(String archetypeId) throws InternalErrorException{
@@ -150,15 +153,19 @@ public class Archetypes {
     }
 
     public static void loadArchetypeDTO(ArchetypeDTO archetypeDTO){
-        registerArchertype(archetypeDTO);
-        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
-        ArchetypeElements.loadArchetypeElements(archetypeObjectBundleCustomVO.getElementVOs());
-        Clusters.loadClusters(archetypeObjectBundleCustomVO.getClusterVOs());
-        CodedTexts.loadCodedTexts(archetypeObjectBundleCustomVO.getCodedTextVOs());
-        Ordinals.loadOrdinals(archetypeObjectBundleCustomVO.getOrdinalVOs());
-        ArchetypeSlots.loadArchetypeNodes(archetypeObjectBundleCustomVO.getSlotVOs());
-        Units.loadUnits(archetypeObjectBundleCustomVO.getUnitVOs());
-        ProportionTypesUI.loadProportionTypes(archetypeObjectBundleCustomVO.getProportionTypes());
+        try{
+            registerArchertype(archetypeDTO);
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
+            ArchetypeElements.loadArchetypeElements(archetypeObjectBundleCustomVO.getElementVOs());
+            Clusters.loadClusters(archetypeObjectBundleCustomVO.getClusterVOs());
+            CodedTexts.loadCodedTexts(archetypeObjectBundleCustomVO.getCodedTextVOs());
+            Ordinals.loadOrdinals(archetypeObjectBundleCustomVO.getOrdinalVOs());
+            ArchetypeSlots.loadArchetypeNodes(archetypeObjectBundleCustomVO.getSlotVOs());
+            Units.loadUnits(archetypeObjectBundleCustomVO.getUnitVOs());
+            ProportionTypesUI.loadProportionTypes(archetypeObjectBundleCustomVO.getProportionTypes());
+        }catch(Throwable e){
+            ExceptionHandler.handle(e);   //TODO
+        }
     }
 
     public static ArrayList<ArchetypeDTO> getArchetypes(String entryType){

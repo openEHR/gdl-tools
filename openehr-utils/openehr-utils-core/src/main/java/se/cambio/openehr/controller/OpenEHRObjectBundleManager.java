@@ -34,8 +34,9 @@ import java.util.*;
 public class OpenEHRObjectBundleManager {
     private static String SECTION_NAME = "name/value='";
 
-    public static void generateArchetypesObjectBundles(Collection<ArchetypeDTO> archetypeDTOs)
+    public static Collection<ArchetypeDTO> generateArchetypesObjectBundles(Collection<ArchetypeDTO> archetypeDTOs)
             throws InternalErrorException {
+        Collection<ArchetypeDTO> correctlyParsedArchetypeDTOs = new ArrayList<ArchetypeDTO>();
         for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
             if (archetypeDTO.getAobcVO()!=null){
                 ArchetypeObjectBundleCustomVO aobcVO = (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
@@ -48,12 +49,19 @@ public class OpenEHRObjectBundleManager {
                 Logger.getLogger(OpenEHRObjectBundleManager.class).debug("Parsing archetype '"+archetypeDTO.getIdArchetype()+"'...");
                 try{
                     generateArchetypeObjectBundleCustomVO(archetypeDTO);
-                }catch(Throwable e){
+                    correctlyParsedArchetypeDTOs.add(archetypeDTO);
+                }catch(Error e){
                     InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getIdArchetype()+"'", e));
                     ExceptionHandler.handle(iee);
+                }catch(Exception e){
+                    InternalErrorException iee = new InternalErrorException(e);
+                    ExceptionHandler.handle(iee);
                 }
+            }else{
+                correctlyParsedArchetypeDTOs.add(archetypeDTO);
             }
         }
+        return correctlyParsedArchetypeDTOs;
     }
 
     public static void generateTemplateObjectBundles(Collection<TemplateDTO> templateDTOs)
@@ -203,8 +211,8 @@ public class OpenEHRObjectBundleManager {
         //Shortest path first (to populate clusters before children)
         //Collections.sort(paths);
         //for (String path : paths) {
-            //CObject cObject = pathObjectMap.get(path);
-            proccessCObject(ar.getDefinition(), ar, archId, idTemplate, archetypeElementVOs, clusterVOs, codedTextVOs, ordinalVOs, archetypeSlotVOs, unitVOs, proportionTypeVOs, language);
+        //CObject cObject = pathObjectMap.get(path);
+        proccessCObject(ar.getDefinition(), ar, archId, idTemplate, archetypeElementVOs, clusterVOs, codedTextVOs, ordinalVOs, archetypeSlotVOs, unitVOs, proportionTypeVOs, language);
         //}
         loadRMElements(archId, idTemplate, rmEntry, archetypeElementVOs);
     }

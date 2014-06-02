@@ -21,16 +21,17 @@ public class DataValuesGroupVO {
     public Map<String, DataValue> getDataValueMap() {
         return dataValueMap;
     }
-
+    /*
     public void setDataValueMap(Map<String, DataValue> dataValueMap) {
         this.dataValueMap = dataValueMap;
     }
-
+    */
     public String getPath() {
         return path;
     }
-
+    /*
     public void setPath(String path) {
         this.path = path;
     }
+    */
 }
