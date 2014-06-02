@@ -31,6 +31,7 @@ import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
+import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
@@ -1194,7 +1195,8 @@ public class GDLEditor {
             String archetypeId = archetypeBinding.getArchetypeId();
             String templateId = archetypeBinding.getTemplateId();
             if (templateId == null) {
-                if (Archetypes.getArchetypeDTO(archetypeId) == null) {
+                ArchetypeDTO archetypeDTO = Archetypes.getArchetypeDTO(archetypeId);
+                if (archetypeDTO == null) {
                     int result = ImportUtils.showImportArchetypeDialogAndAddToRepo(
                             EditorManager.getActiveEditorWindow(), new File(
                             archetypeId + ".adl"));
