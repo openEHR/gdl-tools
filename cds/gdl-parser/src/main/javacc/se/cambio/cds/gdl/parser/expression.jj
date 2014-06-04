@@ -442,7 +442,6 @@ ExpressionItem expression_node() :
   ExpressionItem item = null;
   ExpressionItem item2 = null;
   OperatorKind op = null;
-  List<AssignmentExpression> assignmentExpressions = null;
   boolean precedenceOverridden = false; // TODO
   Token t = null;
   String attrId = null;
@@ -539,10 +538,6 @@ ExpressionItem expression_node() :
         {
           return new AssignmentExpression((Variable) item, item2);
         }
-      | assignmentExpressions = assignmentExpressions()
-        {
-          return new CreateInstanceExpression((Variable) item, assignmentExpressions);
-        }
       )
       item2 = expression_leaf()
       {
@@ -579,50 +574,6 @@ ExpressionItem expression_leaf() :
     return item;
   }
 }
-
-AssignmentExpression assignmentExpression() :
-{
-    ExpressionItem item = null;
-    ExpressionItem item2 = null;
-}
-{
-    (
-     item = expression_leaf()
-     < SYM_ASSIGNMENT >
-     item2 = expression_leaf()
-    )
-    {
-        return new AssignmentExpression((Variable) item, item2);
-    }
-}
-
-List < AssignmentExpression > assignmentExpressions() :
-{
-    List < AssignmentExpression > items = new ArrayList < AssignmentExpression > ();
-    AssignmentExpression item = null;
-}
-{
-    (
-     < SYM_L_PARENTHESIS >
-     item = assignmentExpression()
-     {
-     items.add(item);
-     }
-     (
-      LOOKAHEAD(2)
-      < SYM_SEMICOLON > item = assignmentExpression()
-      {
-      items.add(item);
-      }
-     )*
-     < SYM_R_PARENTHESIS >
-    )
-
-    {
-        return items;
-    }
-}
-
 
 ConstantExpression constant_expression() :
 {
