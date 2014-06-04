@@ -1,12 +1,20 @@
 package se.cambio.cds.gdl.parser;
 
-import java.io.*;
-import java.util.*;
-
 import org.openehr.am.parser.ContentObject;
 import org.openehr.am.parser.DADLParser;
-import se.cambio.cds.gdl.model.*;
-import se.cambio.cds.gdl.model.expression.*;
+import se.cambio.cds.gdl.model.ArchetypeBinding;
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.gdl.model.GuideDefinition;
+import se.cambio.cds.gdl.model.Rule;
+import se.cambio.cds.gdl.model.expression.AssignmentExpression;
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class GDLParser {
 
@@ -44,9 +52,9 @@ public class GDLParser {
 
 		GuideDefinition definition = guide.getDefinition();
 		if (definition.getArchetypeBindings() != null) {
-			Collection<ArchetypeBinding> bindings = definition
+            Map<String, ArchetypeBinding> bindings = definition
 					.getArchetypeBindings();
-			for (ArchetypeBinding binding : bindings) {
+			for (ArchetypeBinding binding : bindings.values()) {
 				binding.setPredicateStatements(parseExpressions(binding
 						.getPredicates()));
 			}

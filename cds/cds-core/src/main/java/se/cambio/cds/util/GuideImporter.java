@@ -43,9 +43,9 @@ public class GuideImporter {
         TermDefinition termDefinition = getTermDefinition(guide, language);
         ReadableGuide readableGuide = new ReadableGuide(termDefinition);
         if (guideDefinition!=null){
-            List<ArchetypeBinding> ab = guideDefinition.getArchetypeBindings();
+            Map<String, ArchetypeBinding> ab = guideDefinition.getArchetypeBindings();
             if (ab!=null){
-                for (ArchetypeBinding archetypeBinding: ab) {
+                for (ArchetypeBinding archetypeBinding: ab.values()) {
                     ArchetypeInstantiationRuleLine airl =
                             new ArchetypeInstantiationRuleLine();
                     ArchetypeReference ar =

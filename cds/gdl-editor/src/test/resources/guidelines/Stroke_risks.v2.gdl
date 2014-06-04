@@ -28,7 +28,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0020"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.stroke_risk.v1">
 				domain = <"CDS">
 				elements = <
@@ -37,8 +37,7 @@
 					>
 				>
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0021"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
 				domain = <"CDS">
 				elements = <

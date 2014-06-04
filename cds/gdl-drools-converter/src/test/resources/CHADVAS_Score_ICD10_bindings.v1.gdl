@@ -16,7 +16,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0037"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -26,7 +26,7 @@
 				>
 				template_id = <"diagnosis_chadvas_icd10">
 			>
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0038"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
 				domain = <"EHR">
 				elements = <
@@ -39,7 +39,7 @@
 				>
 				function = <"LAST">
 			>
-			[3] = (ARCHETYPE_BINDING) <
+			["gt0039"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
 				domain = <"CDS">
 				elements = <

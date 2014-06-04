@@ -4,7 +4,7 @@
 	id = <"se.cambio::GFR_Calculation.v1">
 
 	concept = <"gt0000">	-- estimated glomerular filtration rate
-		
+
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
 		translations = <
@@ -24,8 +24,8 @@
 				>
 			>
 		>
-	>	
-	
+	>
+
 	description = (RESOURCE_DESCRIPTION) <
 		original_author = <
 			["name"] = <"Sam Heard">
@@ -37,12 +37,12 @@
 			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
 				language = <[ISO_639-1::en]>
 				purpose = <"To record the systemic arterial blood pressure of an individual. ">
-				use = <"Use to record all representations of systemic arterial blood pressure measurement, no matter which method or body location is used to record it. The archetype is intended to capture blood pressure measurements in all clinical scenarios - for example, self-measurement with a home blood pressure machine; an emergency assessment of systolic using palpation and a sphygmomanometer; measurements taken in clinical consultations or during exercise stress testing; and a series of measurements made by a machine in Intensive Care.   
-						There is a rich state model that supports interpretation of measurements through identifying patient position, exercise, confounding factors and angle of a tilt table in research. 
+				use = <"Use to record all representations of systemic arterial blood pressure measurement, no matter which method or body location is used to record it. The archetype is intended to capture blood pressure measurements in all clinical scenarios - for example, self-measurement with a home blood pressure machine; an emergency assessment of systolic using palpation and a sphygmomanometer; measurements taken in clinical consultations or during exercise stress testing; and a series of measurements made by a machine in Intensive Care.
+						There is a rich state model that supports interpretation of measurements through identifying patient position, exercise, confounding factors and angle of a tilt table in research.
 						Named events have been limited to average over a 24 hour period, however templates can further constrain the default 'any event' to cater for specific requirements for blood pressure measurements such as recording Blood Pressure against specific points in time, or over a range of intervals (+/- mathematical functions).">
 				keywords = <"observations", "measurement", "bp", "vital signs", "mean arterial pressure", "pulse pressure", "systolic", "diastolic", "RR", "NIBP">
 				misuse = <"Not to be used for intravenous pressure.
-							Not to be used for the measurement of arterial blood pressure which is NOT a surrogate for arterial pressure in the systemic circulation eg specific measurement of right Pulmonary artery pressure.  
+							Not to be used for the measurement of arterial blood pressure which is NOT a surrogate for arterial pressure in the systemic circulation eg specific measurement of right Pulmonary artery pressure.
 							Use OBSERVATION.intravascular_pressure and related specialisations in both of these situations.">
 				copyright = <"� openEHR Foundation">
 			>
@@ -66,10 +66,10 @@
 			["references"] = <"OBrien E, Asmar R, Beilin L, et al. European Society of Hypertension recommendations for conventional">
 		>
 	>
-	
+
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0001"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1"> -- Weight Archetype
 				domain = <"ehr">
 				predicates = <
@@ -81,19 +81,19 @@
 						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
 					>
 				>
-				
-			>	
-		>	
-			
+
+			>
+		>
+
 		pre_conditions = <"$gt0007|weight| != null",...>
-		rules = <	
+		rules = <
 			["gt0030"] = (RULE) < -- GFR calculation for adult male
-				when = <"$gt0004|age| >= 20", "$gt0007|weight| != null">			
+				when = <"$gt0004|age| >= 20", "$gt0007|weight| != null">
 				then = <"$gt0011|GFR| = ((1.23*(140 - gt0004|age|)) * $gt0007|weight|) / $gt0009|creatine|", "$gt0011.precision = 2">
 			>
 		>
 	>
-									
+
 	term_definitions = <
 		["en"] = (TERM_DEFINITION) <
 			terms = <
@@ -103,5 +103,5 @@
 				>
 			>
 		>
-	>	
+	>
 >

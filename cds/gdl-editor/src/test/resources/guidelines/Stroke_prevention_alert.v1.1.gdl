@@ -19,7 +19,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0047"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
 				domain = <"CDS">
 				elements = <
@@ -28,8 +28,7 @@
 					>
 				>
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0048"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -40,8 +39,7 @@
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0041|Exclusion diagnosis|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			
-			[3] = (ARCHETYPE_BINDING) <
+			["gt0049"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
@@ -58,8 +56,7 @@
 				predicates = <"/data[at0001]/items[at0015] is_a local::gt0038|No documented Gender Alert|",...>
 				template_id = <"coded_alert">
 			>
-			
-			[4] = (ARCHETYPE_BINDING) <
+			["gt0050"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
@@ -76,8 +73,7 @@
 				predicates = <"/data[at0001]/items[at0015] is_a local::gt0034|No documented Age alert|",...>
 				template_id = <"coded_alert">
 			>
-			
-			[5] = (ARCHETYPE_BINDING) <
+			["gt0051"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
@@ -94,8 +90,7 @@
 				predicates = <"/data[at0001]/items[at0015] is_a local::gt0025|Documented deviation older than 6 months alert|",...>
 				template_id = <"coded_alert">
 			>
-			
-			[6] = (ARCHETYPE_BINDING) <
+			["gt0052"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
@@ -112,8 +107,7 @@
 				predicates = <"/data[at0001]/items[at0015] is_a local::gt0023|Documented deviation with different CHADSVASc score alert|",...>
 				template_id = <"coded_alert">
 			>
-			
-			[7] = (ARCHETYPE_BINDING) <
+			["gt0053"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
@@ -130,8 +124,7 @@
 				predicates = <"/data[at0001]/items[at0015] is_a local::gt0021|No documented deviation in review record alert|",...>
 				template_id = <"coded_alert">
 			>
-			
-			[8] = (ARCHETYPE_BINDING) <
+			["gt0054"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
@@ -148,8 +141,7 @@
 				predicates = <"/data[at0001]/items[at0015] is_a local::gt0019|No previous review record alert|",...>
 				template_id = <"coded_alert">
 			>
-			
-			[9] = (ARCHETYPE_BINDING) <
+			["gt0055"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.stroke_prevention_review.v1">
 				domain = <"EHR">
 				elements = <
@@ -177,8 +169,7 @@
 				>
 				predicates = <"max(/data[at0001]/items[at0007])",...>
 			>
-			
-			[10] = (ARCHETYPE_BINDING) <
+			["gt0056"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
 				domain = <"CDS">
 				elements = <
@@ -187,8 +178,7 @@
 					>
 				>
 			>
-			
-			[11] = (ARCHETYPE_BINDING) <
+			["gt0057"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1">
 				domain = <"CDS">
 				elements = <
@@ -197,8 +187,7 @@
 					>
 				>
 			>
-			
-			[12] = (ARCHETYPE_BINDING) <
+			["gt0058"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
 				domain = <"EHR">
 				elements = <

@@ -15,7 +15,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0011"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.estimated_glomerular_filtration_rate.v1">
 				domain = <"CDS">
 				elements = <
@@ -24,8 +24,8 @@
 					>
 				>
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+
+			["gt0012"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"EHR">
 				elements = <
@@ -37,8 +37,8 @@
 				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0010|Aciclovir or similar|",...>
 				template_id = <"generic_medication_instruction_atc">
 			>
-			
-			[3] = (ARCHETYPE_BINDING) <
+
+			["gt0013"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <
