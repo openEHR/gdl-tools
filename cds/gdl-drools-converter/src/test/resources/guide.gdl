@@ -1,7 +1,7 @@
 (GUIDE) <
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			["gt0012"] = (ARCHETYPE_BINDING) <
+			[1] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
 				domain = <"EHR">
 				elements = <

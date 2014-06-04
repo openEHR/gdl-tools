@@ -1,11 +1,13 @@
 package se.cambio.cds.gdl.parser;
 
-import junit.framework.TestCase;
-import org.apache.commons.jxpath.JXPathContext;
-import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-
 import java.io.InputStream;
+
+import org.apache.commons.jxpath.JXPathContext;
+
+import junit.framework.TestCase;
+
+import se.cambio.cds.gdl.model.*;
+import se.cambio.cds.gdl.model.expression.OperatorKind;
 
 public class GDLParsingTest extends TestCase {
 	
@@ -18,12 +20,12 @@ public class GDLParsingTest extends TestCase {
 	public void testParseSimpleGDL() throws Exception {
 		parse("test001.dadl");
 		check("/data[at0002]/events[at0003]/data[at0001]/items[at0004]", 
-				"definition/archetypeBindings/gt0004/elements/gt0007/path");
+				"definition/archetypeBindings[1]/elements/gt0007/path");
 	}
 	
 	public void testSetId() throws Exception {
 		parse("test001.dadl");
-		check("gt0007", "definition/archetypeBindings/gt0004/elements/gt0007/id");
+		check("gt0007", "definition/archetypeBindings[1]/elements/gt0007/id");
 		check("gt0030", "definition/rules/gt0030/id");
 	}
 	
@@ -32,17 +34,17 @@ public class GDLParsingTest extends TestCase {
 		
 		// first predicate
 		check("/data[at0001]/events[at0002]/data[at0003]/items[at0007]", 
-				"definition/archetypeBindings/gt0004/predicateStatements[1]/left/path");
+				"definition/archetypeBindings[1]/predicateStatements[1]/left/path");
 		check(OperatorKind.GREATER_THAN_OR_EQUAL, 
-				"definition/archetypeBindings/gt0004/predicateStatements[1]/operator");
+				"definition/archetypeBindings[1]/predicateStatements[1]/operator");
 		check("20", 
-				"definition/archetypeBindings/gt0004/predicateStatements[1]/right/value");
+				"definition/archetypeBindings[1]/predicateStatements[1]/right/value");
 		
 		// second predicate
 		check("/data[at0002]/events[at0003]/data[at0001]/items[at0004]", 
-				"definition/archetypeBindings/gt0004/predicateStatements[2]/left/path");
+				"definition/archetypeBindings[1]/predicateStatements[2]/left/path");
 		check("10", 
-				"definition/archetypeBindings/gt0004/predicateStatements[2]/right/value");
+				"definition/archetypeBindings[1]/predicateStatements[2]/right/value");
 		
 	}
 	

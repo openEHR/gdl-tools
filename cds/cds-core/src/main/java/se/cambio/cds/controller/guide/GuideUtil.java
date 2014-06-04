@@ -22,7 +22,6 @@ import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GuideUtil {
 
@@ -32,9 +31,9 @@ public class GuideUtil {
     public static void fillElementInstanceCollection(
             Guide guide,
             GeneratedElementInstanceCollection elementInstanceCollection){
-        Map<String, ArchetypeBinding> abs = guide.getDefinition().getArchetypeBindings();
+        List<ArchetypeBinding> abs = guide.getDefinition().getArchetypeBindings();
         if (abs!=null){
-            for (ArchetypeBinding archetypeBinding: abs.values()) {
+            for (ArchetypeBinding archetypeBinding: abs) {
                 ArchetypeReference ar = getGeneratedArchetypeReference(archetypeBinding,  guide.getId());
                 elementInstanceCollection.add(ar);
             }

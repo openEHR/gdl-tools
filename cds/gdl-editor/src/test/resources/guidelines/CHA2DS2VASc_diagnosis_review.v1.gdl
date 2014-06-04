@@ -29,7 +29,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			["gt0156"] = (ARCHETYPE_BINDING) <
+			[1] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
 				domain = <"EHR">
 				elements = <
@@ -57,7 +57,8 @@
 				>
 				predicates = <"max(/data[at0001]/items[at0041])",...>
 			>
-			["gt0157"] = (ARCHETYPE_BINDING) <
+			
+			[2] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
 				domain = <"CDS">
 				elements = <
@@ -84,7 +85,8 @@
 					>
 				>
 			>
-			["gt0158"] = (ARCHETYPE_BINDING) <
+			
+			[3] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -98,7 +100,8 @@
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0149|Atrial fibrillation diagnosis|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			["gt0159"] = (ARCHETYPE_BINDING) <
+			
+			[4] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -112,7 +115,8 @@
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0101|Hypertension|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			["gt0160"] = (ARCHETYPE_BINDING) <
+			
+			[5] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -126,7 +130,8 @@
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0102|Diabetes|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			["gt0161"] = (ARCHETYPE_BINDING) <
+			
+			[6] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -140,7 +145,8 @@
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0100|Congestive heart failure|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			["gt0162"] = (ARCHETYPE_BINDING) <
+			
+			[7] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -154,7 +160,8 @@
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0103|Previous stroke or TIA|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			["gt0163"] = (ARCHETYPE_BINDING) <
+			
+			[8] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <

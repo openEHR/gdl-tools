@@ -612,7 +612,7 @@ public class GDLEditor {
 
     private Guide constructCurrentGuide() throws IllegalStateException {
         GuideDefinition guideDefinition = new GuideDefinition(
-                new HashMap<String, ArchetypeBinding>(), new ArrayList<String>(),
+                new ArrayList<ArchetypeBinding>(), new ArrayList<String>(),
                 new HashMap<String, Rule>());
         // Insert definition
         for (RuleLine ruleLine : getDefinitionRuleLines()) {
@@ -659,7 +659,7 @@ public class GDLEditor {
                         archetypeBinding.setTemplateId(ar.getIdTemplate());
                         archetypeBinding.setElements(elementMap);
                         archetypeBinding.setPredicateStatements(predicateStatements);
-                        guideDefinition.getArchetypeBindings().put(archetypeBinding.getId(), archetypeBinding);
+                        guideDefinition.getArchetypeBindings().add(archetypeBinding);
                     }
                 }
             }
@@ -1190,7 +1190,8 @@ public class GDLEditor {
                 || guide.getDefinition().getArchetypeBindings() == null) {
             return;
         }
-        for (ArchetypeBinding archetypeBinding : guide.getDefinition().getArchetypeBindings().values()) {
+        for (ArchetypeBinding archetypeBinding : guide.getDefinition()
+                .getArchetypeBindings()) {
             String archetypeId = archetypeBinding.getArchetypeId();
             String templateId = archetypeBinding.getTemplateId();
             if (templateId == null) {

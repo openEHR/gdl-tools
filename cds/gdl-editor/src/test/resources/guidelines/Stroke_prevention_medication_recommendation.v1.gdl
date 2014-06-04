@@ -16,7 +16,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			["gt0013"] = (ARCHETYPE_BINDING) <
+			[1] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"CDS">
 				elements = <
@@ -30,7 +30,8 @@
 				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0007|Apixaban|",...>
 				template_id = <"medication_atc_indicator">
 			>
-			["gt0014"] = (ARCHETYPE_BINDING) <
+			
+			[2] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"CDS">
 				elements = <
@@ -44,7 +45,8 @@
 				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0008|Rivaroxaban|",...>
 				template_id = <"medication_atc_indicator">
 			>
-			["gt0015"] = (ARCHETYPE_BINDING) <
+			
+			[3] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"CDS">
 				elements = <
@@ -58,7 +60,8 @@
 				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0006|Dabigatran etexilate|",...>
 				template_id = <"medication_atc_indicator">
 			>
-			["gt0016"] = (ARCHETYPE_BINDING) <
+			
+			[4] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"CDS">
 				elements = <
@@ -72,7 +75,8 @@
 				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0004|Warfarin|",...>
 				template_id = <"medication_atc_indicator">
 			>
-			["gt0017"] = (ARCHETYPE_BINDING) <
+			
+			[5] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <

@@ -1,11 +1,11 @@
 package se.cambio.cds.gdl.model;
 
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
 
 /**
  * Guide definition object
@@ -23,7 +23,7 @@ public class GuideDefinition implements Serializable{
     public GuideDefinition() {
     }
 
-    public GuideDefinition(Map<String, ArchetypeBinding> archetypeBindings,
+    public GuideDefinition(List<ArchetypeBinding> archetypeBindings,
 	    List<String> preConditions, Map<String,Rule> rules) {
 	super();
 	this.archetypeBindings = archetypeBindings;
@@ -34,7 +34,7 @@ public class GuideDefinition implements Serializable{
     /**
      * @return the archetypeBindings
      */
-    public Map<String, ArchetypeBinding> getArchetypeBindings() {
+    public List<ArchetypeBinding> getArchetypeBindings() {
 	return archetypeBindings;
     }
 
@@ -62,7 +62,7 @@ public class GuideDefinition implements Serializable{
     /**
      * @param archetypeBindings the archetypeBindings to set
      */
-    public void setArchetypeBindings(Map<String, ArchetypeBinding> archetypeBindings) {
+    public void setArchetypeBindings(List<ArchetypeBinding> archetypeBindings) {
 	this.archetypeBindings = archetypeBindings;
     }
 
@@ -127,7 +127,7 @@ public class GuideDefinition implements Serializable{
 	return true;
     }	
 
-    private Map<String, ArchetypeBinding> archetypeBindings;
+    private List<ArchetypeBinding> archetypeBindings;
     private List<String> preConditions;
     private Map<String,Rule> rules;	
     private List<ExpressionItem> preConditionExpressions;

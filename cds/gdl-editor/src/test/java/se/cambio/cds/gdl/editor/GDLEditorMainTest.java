@@ -2,7 +2,7 @@ package se.cambio.cds.gdl.editor;
 
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
-import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.Archetypes;
@@ -53,7 +53,8 @@ public class GDLEditorMainTest extends TestCase {
                 InputStreamReader in = new InputStreamReader(fis, "UTF-8");
                 String guideStr = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
                 Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
-                String guideStr2 = GuideUtil.serializeGuide(guide);
+                GDLEditor editor = new GDLEditor(guide);
+                String guideStr2 = editor.serializeCurrentGuide();
                 assertEquals(guideStr, guideStr2);
             }
         }
