@@ -992,6 +992,23 @@ public class GDLEditor {
         }
         _guideOntology.setTermDefinitions(_termDefinitions);
         _guideOntology.setTermBindings(_termBindings);
+
+        //Generate gt codes for archetype bindings (if missing)
+        if (guide.getDefinition()!=null && guide.getDefinition().getArchetypeBindings()!=null){
+            List<String> abCodes = new ArrayList<String>();
+            abCodes.addAll(guide.getDefinition().getArchetypeBindings().keySet());
+            Collections.sort(abCodes);
+            for(String abCode: abCodes){
+                if (abCode.startsWith(GuideDefinition.ARCHETYPE_BINDING_PREFIX)){
+                    ArchetypeBinding archetypeBinding = guide.getDefinition().getArchetypeBindings().get(abCode);
+                    String gtCode = createNextGTCode();
+                    guide.getDefinition().getArchetypeBindings().remove(abCode);
+                    archetypeBinding.setId(gtCode);
+                    guide.getDefinition().getArchetypeBindings().put(gtCode, archetypeBinding);
+                }
+            }
+        }
+
         _readableGuide =
                 GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
         initResourceDescription();
@@ -1156,6 +1173,30 @@ public class GDLEditor {
         } else {
             return null;
         }
+    }
+
+    /*
+    private String createNextArchetypeBindingCode(){
+        String abCode = null;
+        int i = 1;
+        Collection<String> archeytpeBindingCodesUsed = getArchetyoeBindingCodesUsed();
+        boolean abCodeFound = false;
+        while(!abCodeFound){
+            abCode = GuideDefinition.ARCHETYPE_BINDING_PREFIX+ StringUtils.leftPad("" + (i++), 4, "0");
+            abCodeFound = !archeytpeBindingCodesUsed.contains(abCode);
+        }
+        return abCode;
+    }
+    */
+    private Collection<String> getArchetyoeBindingCodesUsed(){
+        ArrayList<String> archeytpeBindingCodesUsed = new ArrayList<String>();
+        for (RuleLine ruleLine : getDefinitionRuleLines()){
+            if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+                ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine = (ArchetypeInstantiationRuleLine) ruleLine;
+                archeytpeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());
+            }
+        }
+        return archeytpeBindingCodesUsed;
     }
 
     public ArchetypeElementInstantiationRuleLine addArchetypeElement(

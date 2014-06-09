@@ -24,7 +24,7 @@ public class DialogEntrySelection extends DialogSelection{
     public DialogEntrySelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
         super(owner,
                 GDLEditorLanguageManager.getMessage("SelectEntry"),
-                NodeDefinitionConversor.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain),
+                NodeDefinitionConversor.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
                 true,
                 new Dimension(500,500));
         _controller = controller;

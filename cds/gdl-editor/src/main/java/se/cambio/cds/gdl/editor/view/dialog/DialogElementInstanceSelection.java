@@ -6,6 +6,7 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import javax.swing.*;
@@ -23,10 +24,10 @@ public class DialogElementInstanceSelection extends DialogSelection{
     private GDLEditor _controller = null;
     private Object _selectedObject = null;
     private boolean _onlyCDSDomain;
-    public DialogElementInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
+    public DialogElementInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain, ArchetypeReference ar) {
         super(owner,
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain),
+                NodeDefinitionConversor.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
                 true,
                 new Dimension(500,500));
         _controller = controller;
