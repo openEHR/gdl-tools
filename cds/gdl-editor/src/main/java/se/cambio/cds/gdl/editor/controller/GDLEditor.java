@@ -653,12 +653,13 @@ public class GDLEditor {
                             }
                         }
                         ArchetypeBinding archetypeBinding = new ArchetypeBinding();
-                        // archetypeBinding.setId(archetypeGTCode);
                         archetypeBinding.setArchetypeId(ar.getIdArchetype());
                         archetypeBinding.setDomain(ar.getIdDomain());
                         archetypeBinding.setTemplateId(ar.getIdTemplate());
                         archetypeBinding.setElements(elementMap);
                         archetypeBinding.setPredicateStatements(predicateStatements);
+                        String gtCode = airl.getGTCodeRuleLineElement().getValue();
+                        archetypeBinding.setId(gtCode);
                         guideDefinition.getArchetypeBindings().put(archetypeBinding.getId(), archetypeBinding);
                     }
                 }
@@ -744,6 +745,7 @@ public class GDLEditor {
         try {
             return GuideUtil.serializeGuide(guide);
         } catch (Exception e) {
+            e.printStackTrace();
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     EditorManager.getActiveEditorWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuideT"),
@@ -788,8 +790,9 @@ public class GDLEditor {
         List<AssignmentExpression> list = new ArrayList<AssignmentExpression>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {
-                list.add(((AssignmentExpressionRuleLine) ruleLine)
-                        .toAssignmentExpression());
+                AssignmentExpression assignmentExpression =
+                        ((AssignmentExpressionRuleLine) ruleLine).toAssignmentExpression();
+                list.add(assignmentExpression);
             }
         }
         return list;
@@ -887,8 +890,16 @@ public class GDLEditor {
             new CheckGuideSW(this, guideStr, pendingRunnable).execute();
         }else if (currentPanel instanceof GDLPanel){
             try {
-                String guideStr = GuideUtil.serializeGuide(getGuide());
-                new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+                String guideStr = null;
+                Guide guide = getGuide();
+                if (guide!=null){
+                    guideStr = serializeGuide(guide);
+                }
+                if (guideStr!=null){
+                    new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+                }else{
+                    loadLastTab();
+                }
             } catch (Exception e) {
                 //Errors found serializing/parsing/compiling guide, so we do not load the source view
                 loadLastTab();
@@ -900,7 +911,7 @@ public class GDLEditor {
 
     public void gdlEditingChecked(Guide guide, boolean checkOk, Runnable pendingRunnable){
 //        setFree();
-        if (checkOk){
+        if (checkOk && guide!=null){
             String auxOriginalGuide = _originalGuide;
             try {
                 setGuide(guide);
@@ -1134,7 +1145,7 @@ public class GDLEditor {
     public ArchetypeInstantiationRuleLine addArchetypeReference(
             boolean showOnlyCDS) {
         ArchetypeInstantiationRuleLine airl = new ArchetypeInstantiationRuleLine();
-        // airl.getGTCodeRuleLineElement().setValue(EditorManager.getActiveGDLEditor().createNextGTCode());
+        airl.setGTCode(createNextGTCode());
         airl.setTermDefinition(getCurrentTermDefinition());
         RuleElementEditor.editArchetype(
                 airl.getArchetypeReferenceRuleLineDefinitionElement(),
@@ -1149,10 +1160,8 @@ public class GDLEditor {
 
     public ArchetypeElementInstantiationRuleLine addArchetypeElement(
             ArchetypeInstantiationRuleLine airl) {
-        ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(
-                airl);
-        aeirl.getGTCodeRuleLineElement().setValue(
-                EditorManager.getActiveGDLEditor().createNextGTCode());
+        ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(airl);
+        aeirl.getGTCodeRuleLineElement().setValue(createNextGTCode());
         aeirl.setTermDefinition(getCurrentTermDefinition());
         editRuleElement(aeirl.getArchetypeElementRuleLineDefinitionElement());
         if (aeirl.getArchetypeElementRuleLineDefinitionElement().getValue() != null) {

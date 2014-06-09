@@ -1,8 +1,11 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
 
 
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+
 public interface GTCodeDefiner {
 
+    public GTCodeRuleLineElement getGTCodeRuleLineElement();
     public String getGTCode();
     public void setGTCode(String gtCode);
 }

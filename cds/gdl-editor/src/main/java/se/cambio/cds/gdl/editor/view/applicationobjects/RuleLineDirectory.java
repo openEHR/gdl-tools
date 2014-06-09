@@ -51,6 +51,7 @@ public class RuleLineDirectory {
     public static Collection<RuleLine> getSelectableActions(){
         if (getDelegate()._selectableActions==null){
             getDelegate()._selectableActions = new ArrayList<RuleLine>();
+            getDelegate()._selectableActions.add(new CreateInstanceActionRuleLine());
             getDelegate()._selectableActions.add(new SetElementWithDataValueActionRuleLine());
             getDelegate()._selectableActions.add(new SetElementWithNullValueActionRuleLine());
             getDelegate()._selectableActions.add(new SetElementWithElementActionRuleLine());
@@ -114,6 +115,12 @@ public class RuleLineDirectory {
                 return true;
             }else{
                 return false;
+            }
+        }else if (ruleLineParent instanceof CreateInstanceActionRuleLine){
+            if (ruleLine instanceof CreateInstanceActionRuleLine){
+                return false;
+            }else{
+                return true;
             }
         }else{
             return true;

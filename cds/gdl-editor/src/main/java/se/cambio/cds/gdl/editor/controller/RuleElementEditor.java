@@ -40,12 +40,14 @@ public class RuleElementEditor {
             rename((GTCodeRuleLineElement)ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineDefinitionElement){
             editArchetypeElement((ArchetypeElementRuleLineDefinitionElement)ruleLineElementWithValue);
+        }else if (ruleLineElementWithValue instanceof CDSEntryRuleLineElement){
+            selectCDSEntry((CDSEntryRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineElement){
-            selectArchetypeElement((ArchetypeElementRuleLineElement)ruleLineElementWithValue);
+            selectArchetypeElement((ArchetypeElementRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof DataValueRuleLineElement){
-            editDataValue((DataValueRuleLineElement)ruleLineElementWithValue);
+            editDataValue((DataValueRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof NullValueRuleLineElement){
-            editNullValue((NullValueRuleLineElement)ruleLineElementWithValue);
+            editNullValue((NullValueRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof PredicateArchetypeElementAttributeRuleLineElement){
             editPredicateAttribute((PredicateArchetypeElementAttributeRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof ArchetypeElementAttributeRuleLineElement){
@@ -168,6 +170,26 @@ public class RuleElementEditor {
             ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
             if (aeirl!=null){
                 arrle.setValue(aeirl.getGTCodeRuleLineElement());
+            }
+        }
+    }
+
+    public static void selectCDSEntry(CDSEntryRuleLineElement cdserle){
+        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        boolean onlyCDSDomain = true;
+        Object selectedObject = null;
+        //if (!emptyDefinitions(controller.getDefinitionRuleLines(), onlyCDSDomain)){
+        DialogEntrySelection dialog =
+                new DialogEntrySelection(EditorManager.getActiveEditorWindow(), controller, onlyCDSDomain);
+        dialog.setVisible(true);
+        if (dialog.getAnswer()){
+            selectedObject = dialog.getSelectedObject();
+        }
+
+        if (selectedObject instanceof ArchetypeInstantiationRuleLine){
+            ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
+            if (airl!=null){
+                cdserle.setValue(airl.getGTCodeRuleLineElement());
             }
         }
     }

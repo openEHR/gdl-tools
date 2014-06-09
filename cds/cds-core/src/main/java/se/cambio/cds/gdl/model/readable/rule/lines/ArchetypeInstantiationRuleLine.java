@@ -1,39 +1,58 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineDefinitionElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ArchetypeInstantiationRuleLine extends RuleLine implements ArchetypeReferenceRuleLine,DefinitionsRuleLine{
+public class ArchetypeInstantiationRuleLine extends RuleLine implements ArchetypeReferenceRuleLine,DefinitionsRuleLine, GTCodeDefiner {
 
     private ArchetypeReferenceRuleLineDefinitionElement archetypeReferenceRuleLineDefinitionElement = null;
-    //private GTCodeRuleLineElement gtCodeRuleLineElement = null;
+    private GTCodeRuleLineElement gtCodeRuleLineElement = null;
 
 
     public ArchetypeInstantiationRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("ArchetypeInstantiation"), 
-		OpenEHRLanguageManager.getMessage("ArchetypeInstantiationDesc"));
-	archetypeReferenceRuleLineDefinitionElement = new ArchetypeReferenceRuleLineDefinitionElement(this);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("InstantiateArchetypeRLE")));
-	getRuleLineElements().add(archetypeReferenceRuleLineDefinitionElement);
+        super(OpenEHRLanguageManager.getMessage("ArchetypeInstantiation"),
+                OpenEHRLanguageManager.getMessage("ArchetypeInstantiationDesc"));
+        archetypeReferenceRuleLineDefinitionElement = new ArchetypeReferenceRuleLineDefinitionElement(this);
+        gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
+        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("InstantiateArchetypeRLE")));
+        getRuleLineElements().add(archetypeReferenceRuleLineDefinitionElement);
     }
 
 
     public ArchetypeReferenceRuleLineDefinitionElement getArchetypeReferenceRuleLineDefinitionElement() {
-	return archetypeReferenceRuleLineDefinitionElement;
+        return archetypeReferenceRuleLineDefinitionElement;
     }
 
     @Override
     public ArchetypeReference getArchetypeReference() {
-	return getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
     public void setArchetypeReference(ArchetypeReference ar) {
-	getArchetypeReferenceRuleLineDefinitionElement().setValue(ar);
+        getArchetypeReferenceRuleLineDefinitionElement().setValue(ar);
+    }
+
+    public String getGTCode() {
+        return getGTCodeRuleLineElement().getValue();
+    }
+
+    public void setGTCode(String term) {
+        getGTCodeRuleLineElement().setValue(term);
+    }
+
+    public GTCodeRuleLineElement getGTCodeRuleLineElement() {
+        return gtCodeRuleLineElement;
+    }
+
+    public void setGtCodeRuleLineElement(GTCodeRuleLineElement gtCodeRuleLineElement) {
+        this.gtCodeRuleLineElement = gtCodeRuleLineElement;
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

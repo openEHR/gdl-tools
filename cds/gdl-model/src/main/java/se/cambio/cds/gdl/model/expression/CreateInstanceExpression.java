@@ -2,94 +2,25 @@ package se.cambio.cds.gdl.model.expression;
 
 import java.util.List;
 
-public class CreateInstanceExpression extends ExpressionItem {
+public class CreateInstanceExpression extends AssignmentExpression {
 
-    /**
-     *
-     */
+    public static String FUNCTION_CREATE_NAME = "create";
+
     private static final long serialVersionUID = 1L;
     public CreateInstanceExpression(Variable variable, List<AssignmentExpression> assignmentExpressions) {
-        super();
-        this.variable = variable;
-        this.assignmentExpressions = assignmentExpressions;
-    }
-
-    /**
-     * @return the variable
-     */
-    public Variable getVariable() {
-        return variable;
-    }
-
-    /**
-     * @return the assignment expressions
-     */
-    public List<AssignmentExpression> getAssignmentExpressions() {
-        return assignmentExpressions;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((assignmentExpressions == null) ? 0 : assignmentExpressions.hashCode());
-        result = prime * result
-                + ((variable == null) ? 0 : variable.hashCode());
-        return result;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        CreateInstanceExpression other = (CreateInstanceExpression) obj;
-        if (assignmentExpressions == null) {
-            if (other.assignmentExpressions != null) {
-                return false;
-            }
-        } else{
-            if (!assignmentExpressions.equals(other.assignmentExpressions)){
-                return false;
-            }
-        }
-        if (variable == null) {
-            if (other.variable != null)
-                return false;
-        } else if (!variable.equals(other.variable))
-            return false;
-        return true;
+        super(variable, new AssignmentExpressionList(assignmentExpressions));
     }
 
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        buf.append(variable);
-        buf.append("(");
-        if (assignmentExpressions!=null){
-            String prefix = "";
-            for(AssignmentExpression assignmentExpression: assignmentExpressions){
-                buf.append(prefix);
-                buf.append(assignmentExpression);
-                prefix = ";";
-            }
-        }
-        buf.append(")");
+        buf.append(getVariable());
+        buf.append(getAssigment());
         return buf.toString();
     }
 
-    private Variable variable;
-    private List<AssignmentExpression> assignmentExpressions;
-
+    public AssignmentExpressionList getAssigment(){
+        return (AssignmentExpressionList)this.getAssignment();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
