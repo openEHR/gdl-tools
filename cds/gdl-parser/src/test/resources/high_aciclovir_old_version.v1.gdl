@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"high_aciclovir.v1">
+	id = <"high_aciclovir_old_version.v1">
 	concept = <"gt0000">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -15,7 +15,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			["gt0011"] = (ARCHETYPE_BINDING) <
+			[1] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.estimated_glomerular_filtration_rate.v1">
 				domain = <"CDS">
 				elements = <
@@ -25,7 +25,7 @@
 				>
 			>
 
-			["gt0012"] = (ARCHETYPE_BINDING) <
+			[2] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"EHR">
 				elements = <
@@ -38,7 +38,7 @@
 				template_id = <"generic_medication_instruction_atc">
 			>
 
-			["gt0013"] = (ARCHETYPE_BINDING) <
+			[3] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <

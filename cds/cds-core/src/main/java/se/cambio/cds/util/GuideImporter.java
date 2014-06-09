@@ -318,7 +318,7 @@ public class GuideImporter {
                     processAssigmentExpression(ruleLinesAssignmentInstance, assignmentExpressionAux, gtCodeELementMap);
                 }
                 for(RuleLine ruleLine: ruleLinesAssignmentInstance){
-                    cirl.getChildrenRuleLines().add(ruleLine);
+                    cirl.addChildRuleLine(ruleLine);
                 }
                 cirl.getCdsEntryRuleLineElement().setValue(gtCodeRuleLineElement);
                 ruleLines.add(cirl);

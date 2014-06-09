@@ -1,12 +1,10 @@
 package se.cambio.cds.gdl.parser;
 
-import java.io.InputStream;
-
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.JXPathNotFoundException;
 import org.openehr.rm.datatypes.text.CodePhrase;
-
 import se.cambio.cds.gdl.model.Guide;
+
+import java.io.InputStream;
 
 public class ParseOldVersionTest extends ExpressionTestBase {
 
@@ -15,19 +13,11 @@ public class ParseOldVersionTest extends ExpressionTestBase {
 	}
 	
 	public void testParseSimpleGDL() throws Exception {
-		parse("high_aciclovir.v1.gdl");
+		parse("high_aciclovir_old_version.v1.gdl");
 		JXPathContext context = JXPathContext.newContext(guide);
-		
-		
+
 		assertEquals(new CodePhrase("ATC", "J05AB01"), 
 				context.getValue("/ontology/termBindings/ATC/bindings/gt0010/codes[1]"));
-		
-		try {
-			context.getValue("/ontology/termBindings/ATC/bindings/gt0010/codes[2]");
-			fail("Exception should be thrown at path pointing at the 2nd, duplicated element");
-		} catch(Exception e) {
-			assertTrue(e instanceof JXPathNotFoundException);
-		}
 	}
 	
 	private void parse(String input) throws Exception {
