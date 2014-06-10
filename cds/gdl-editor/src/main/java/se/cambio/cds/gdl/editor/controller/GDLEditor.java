@@ -501,18 +501,26 @@ public class GDLEditor {
     }
 
     public String createNextGTCode() {
-        String gtCode = generateNextGTCode();
-        getTerm(gtCode).setText(null);
-        getTerm(gtCode).setDescription(null);
+        return createNextGTCode(true);
+    }
+
+    public String createNextGTCode(boolean generateTerm) {
+        String gtCode = generateNextGTCode(generateTerm);
+        if (generateTerm){
+            getTerm(gtCode).setText(null);
+            getTerm(gtCode).setDescription(null);
+        }
         return gtCode;
     }
 
-    private String generateNextGTCode() {
+    private String generateNextGTCode(boolean generateTerm) {
         String nextGTCode = GT_HEADER
                 + StringUtils.leftPad("" + (getNextTermNumber()), 4, "0");
-        // Generate codes for all terminologies
-        for (String langCode : getTermDefinitions().keySet()) {
-            getTerm(langCode, nextGTCode);
+        if (generateTerm){
+            // Generate codes for all terminologies
+            for (String langCode : getTermDefinitions().keySet()) {
+                getTerm(langCode, nextGTCode);
+            }
         }
         return nextGTCode;
     }
@@ -522,7 +530,14 @@ public class GDLEditor {
                 .getOriginalLanguage().getCodeString());
         int termCount = 0;
         if (termDefinition.getTerms() != null) {
-            for (String gtCode : termDefinition.getTerms().keySet()) {
+            Set<String> gtCodes = new HashSet<String>();
+            gtCodes.addAll(termDefinition.getTerms().keySet());
+            for (RuleLine ruleLine: getDefinitionRuleLines()){
+                if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+                    gtCodes.add(((ArchetypeInstantiationRuleLine)ruleLine).getGTCode());
+                }
+            }
+            for (String gtCode : gtCodes) {
                 try {
                     int codeNum = Integer.parseInt(gtCode.substring(2));
                     if (codeNum > termCount) {
@@ -1162,7 +1177,7 @@ public class GDLEditor {
     public ArchetypeInstantiationRuleLine addArchetypeReference(
             boolean showOnlyCDS) {
         ArchetypeInstantiationRuleLine airl = new ArchetypeInstantiationRuleLine();
-        airl.setGTCode(createNextGTCode());
+        airl.setGTCode(createNextGTCode(false));
         airl.setTermDefinition(getCurrentTermDefinition());
         RuleElementEditor.editArchetype(
                 airl.getArchetypeReferenceRuleLineDefinitionElement(),
