@@ -31,7 +31,6 @@ public class QueryPopulationUtil {
             if (ehrIdPage.size()>=EHR_QUERY_PAGINATION_NUMBER || !i.hasNext()){
                 Map<String, Collection<ElementInstance>> ehrDataPage =
                         CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(ehrIdPage, queryARs, null);
-                filterEHRDataPageForSepsis(ehrDataPage);
                 ehrData.putAll(ehrDataPage);
                 ehrIdPage.clear();
                 WindowManager.setCurrentProgress(
@@ -40,47 +39,5 @@ public class QueryPopulationUtil {
             }
         }
         return ehrData;
-    }
-
-    //TODO REMOVE VVVVVVV
-
-    private static void filterEHRDataPageForSepsis(Map<String, Collection<ElementInstance>> ehrDataPage){
-        Map<String, Collection<ElementInstance>> ehrDataPageAux = new HashMap<String, Collection<ElementInstance>>();
-        long totalNumEI = 0;
-        long filteredNumEI = 0;
-        for (String ehrId:ehrDataPage.keySet()){
-            Collection<ElementInstance> eis = ehrDataPage.get(ehrId);
-            int numEIS = eis.size();
-            totalNumEI+=numEIS;
-            eis = filterDataForSepsisTest(eis);
-            filteredNumEI+=(numEIS-eis.size());
-            ehrDataPage.put(ehrId, eis);
-        }
-        //System.out.println("Avg num EIs = "+(totalNumEI/ehrDataPage.keySet().size()+", Avg num EIs filtered = "+(filteredNumEI/ehrDataPage.keySet().size())));
-    }
-
-
-    private static Collection<ElementInstance> filterDataForSepsisTest(Collection<ElementInstance> elementInstances){
-        Collection<ElementInstance> elementInstancesAux = new ArrayList<ElementInstance>();
-        HashSet<ArchetypeReference> filteredARs = new HashSet<ArchetypeReference>();
-        for (ElementInstance elementInstance : elementInstances){
-            if (elementInstance.getId().equals("openEHR-EHR-OBSERVATION.body_temperature.v1/data[at0002]/events[at0003]/data[at0001]/items[at0004]")){
-                DvQuantity dvQuantity = (DvQuantity)elementInstance.getDataValue();
-                if (dvQuantity.getMagnitude()>=36.0 && dvQuantity.getMagnitude()<=38.0){
-                    filteredARs.add(elementInstance.getArchetypeReference());
-                }
-            } else if (elementInstance.getId().equals("openEHR-EHR-OBSERVATION.lab_test-full_blood_count.v1/data[at0001]/events[at0002]/data[at0003]/items[at0078.13]")){
-                DvQuantity dvQuantity = (DvQuantity)elementInstance.getDataValue();
-                if (dvQuantity.getMagnitude()>=4 && dvQuantity.getMagnitude()<=12){
-                    filteredARs.add(elementInstance.getArchetypeReference());
-                }
-            }
-        }
-        for (ElementInstance elementInstance : elementInstances){
-            if (!filteredARs.contains(elementInstance.getArchetypeReference())){
-                elementInstancesAux.add(elementInstance);
-            }
-        }
-        return elementInstancesAux;
     }
 }
