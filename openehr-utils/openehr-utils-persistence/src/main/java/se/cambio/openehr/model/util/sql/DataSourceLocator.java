@@ -39,7 +39,7 @@ public class DataSourceLocator {
      * when using an application server providing only servlets and JSP).
      */
     public static void addDataSource(String name, DataSource dataSource) {
-	dataSources.put(name, dataSource);    
+        dataSources.put(name, dataSource);
     }
 
     /**
@@ -53,32 +53,32 @@ public class DataSourceLocator {
      * under JNDI to one providing them.
      */
 
-    public static DataSource getDataSource(String name) 
-	    throws InternalErrorException{
-	DataSource dataSource = (DataSource) dataSources.get(name);
-	if (dataSource == null) {
-	    if (isStandalone()){
-		dataSource = createStandaloneDataSource(name);
-	    }else{
-		dataSource = createICDataSource(name);
-	    }
-	    dataSources.put(name, dataSource);
-	}
-	return dataSource;
+    public static DataSource getDataSource(String name)
+            throws InternalErrorException{
+        DataSource dataSource = (DataSource) dataSources.get(name);
+        if (dataSource == null) {
+            if (isStandalone()){
+                dataSource = createStandaloneDataSource(name);
+            }else{
+                dataSource = createICDataSource(name);
+            }
+            dataSources.put(name, dataSource);
+        }
+        return dataSource;
     }
 
 
-    public static DataSource createICDataSource(String name) 
-	    throws InternalErrorException{
-	DataSource dataSource = null;
-	try {
-	    InitialContext initialContext = new InitialContext();
-	    dataSource = (DataSource) initialContext.lookup(name);
-	    dataSources.put(name, dataSource);
-	} catch (Exception e) {
-	    throw new InternalErrorException(e);
-	}
-	return dataSource;
+    public static DataSource createICDataSource(String name)
+            throws InternalErrorException{
+        DataSource dataSource = null;
+        try {
+            InitialContext initialContext = new InitialContext();
+            dataSource = (DataSource) initialContext.lookup(name);
+            dataSources.put(name, dataSource);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+        return dataSource;
     }
 
     public static DataSource createStandaloneDataSource(String name) throws InternalErrorException {
@@ -109,12 +109,12 @@ public class DataSourceLocator {
     }
 
     public static boolean isStandalone(){
-	try {
-	    OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
-	} catch (MissingConfigurationParameterException e) {
-	    return false;
-	}
-	return true;
+        try {
+            OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
+        } catch (MissingConfigurationParameterException e) {
+            return false;
+        }
+        return true;
     }
 }
 /*
