@@ -88,7 +88,7 @@ public class AqlUtil{
         return compactARs;
     }
 
-    private static String getWhereAQLFromPredicateAQL(ArchetypeReference archetypeReference){
+    public static String getWhereAQLFromPredicateAQL(ArchetypeReference archetypeReference){
         StringBuffer whereAQLSB = new StringBuffer();
         for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
             if (elementInstance instanceof PredicateGeneratedElementInstance){
