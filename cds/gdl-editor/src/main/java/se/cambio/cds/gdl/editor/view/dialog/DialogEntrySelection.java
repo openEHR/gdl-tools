@@ -4,9 +4,6 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
-import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import javax.swing.*;
@@ -14,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DialogElementInstanceSelection extends DialogSelection{
+public class DialogEntrySelection extends DialogSelection{
 
     /**
      *
@@ -24,10 +21,10 @@ public class DialogElementInstanceSelection extends DialogSelection{
     private GDLEditor _controller = null;
     private Object _selectedObject = null;
     private boolean _onlyCDSDomain;
-    public DialogElementInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain, ArchetypeReference ar) {
+    public DialogEntrySelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
         super(owner,
-                GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
+                GDLEditorLanguageManager.getMessage("SelectEntry"),
+                NodeDefinitionConversor.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
                 true,
                 new Dimension(500,500));
         _controller = controller;
@@ -54,15 +51,8 @@ public class DialogElementInstanceSelection extends DialogSelection{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     accept();
-                    ArchetypeInstantiationRuleLine airl =
+                    _selectedObject =
                             _controller.addArchetypeReference(_onlyCDSDomain);
-                    if (airl!=null){
-                        ArchetypeElementInstantiationRuleLine aeirl =
-                                _controller.addArchetypeElement(airl);
-                        if (aeirl!=null){
-                            _selectedObject = aeirl.getGTCodeRuleLineElement();
-                        }
-                    }
                 }
             });
         }

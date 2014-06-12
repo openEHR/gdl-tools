@@ -17,6 +17,7 @@ public class ArchetypeBinding  implements Serializable{
 	public ArchetypeBinding() {
 	}
 
+    private String id;
 	private String archetypeId;
 	private String templateId;
 	private String domain;
@@ -26,7 +27,15 @@ public class ArchetypeBinding  implements Serializable{
 	private List<String> predicates;
 	private List<ExpressionItem> predicateStatements;
 
-	/**
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
 	 * @return the archetypeId
 	 */
 	public String getArchetypeId() {
@@ -172,6 +181,8 @@ public class ArchetypeBinding  implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+        result = prime * result
+                + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
 				+ ((archetypeId == null) ? 0 : archetypeId.hashCode());
 		result = prime * result + ((domain == null) ? 0 : domain.hashCode());
@@ -207,6 +218,13 @@ public class ArchetypeBinding  implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		ArchetypeBinding other = (ArchetypeBinding) obj;
+        if (id == null) {
+            if (other.id != null){
+                return false;
+            }
+        } else if (!id.equals(other.id)){
+            return false;
+        }
 		if (archetypeId == null) {
 			if (other.archetypeId != null)
 				return false;

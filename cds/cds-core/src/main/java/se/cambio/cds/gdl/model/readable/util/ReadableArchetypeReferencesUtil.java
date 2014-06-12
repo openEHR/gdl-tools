@@ -161,8 +161,6 @@ public class ReadableArchetypeReferencesUtil {
         return (predicateDesc.isEmpty()?"":"<tr><td colspan=2><b>"+OpenEHRLanguageManager.getMessage("Predicate")+": </b>"+predicateDesc+"</td></tr>");
     }
 
-
-
     public static String getHTMLTooltip(ArchetypeInstantiationRuleLine airl){
         ArchetypeReference ar = airl.getArchetypeReference();
         if (ar!=null){

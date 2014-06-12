@@ -9,6 +9,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiation
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
 
@@ -30,16 +31,18 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     private Object _selectedObject = null;
     private boolean _onlyCDSDomain;
     private JButton addElementButton;
+    private ArchetypeReference _ar;
 
-    public DialogElementAttributeFunctionInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
+    public DialogElementAttributeFunctionInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain, ArchetypeReference ar) {
         super(
                 owner,
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getNodeAttributesAndFunctions(controller.getDefinitionRuleLines(), onlyCDSDomain),
+                NodeDefinitionConversor.getNodeAttributesAndFunctions(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
                 true,
                 new Dimension(500,500));
         _controller = controller;
         _onlyCDSDomain = onlyCDSDomain;
+        _ar = ar;
         initButtons();
     }
 
@@ -93,7 +96,7 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     public void addElement(){
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         DialogElementInstanceSelection dialog =
-                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false);
+                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false, _ar);
         dialog.setVisible(true);
         if (dialog.getAnswer()){
             Object selectedObject = dialog.getSelectedObject();
@@ -124,7 +127,7 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
         Collection<RuleLine> definitionRuleLines = new ArrayList<RuleLine>();
         definitionRuleLines.add(aeirl);
         SelectableNode<Object> rootNode = NodeDefinitionConversor.getSingleNodeAttributesAndFunctions();
-        NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain);
+        NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain, _ar);
         DialogSelection dialog =
                 new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode);
         dialog.setVisible(true);

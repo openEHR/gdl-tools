@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.controller;
 
+import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 
@@ -24,7 +25,8 @@ public class RuleLineCloner {
         RuleLine clonedRuleLine = RuleLineCloner.getCloner().deepClone(ruleLine);
         if (ruleLine instanceof GTCodeDefiner){
             GTCodeDefiner tdRuleLine = (GTCodeDefiner)clonedRuleLine;
-            String gtCode = EditorManager.getActiveGDLEditor().createNextGTCode();
+            boolean generateTerm = !(ruleLine instanceof ArchetypeInstantiationRuleLine);
+            String gtCode = EditorManager.getActiveGDLEditor().createNextGTCode(generateTerm);
             tdRuleLine.setGTCode(gtCode);
         }
         clonedRuleLine.setTermDefinition(EditorManager.getActiveGDLEditor().getCurrentTermDefinition());

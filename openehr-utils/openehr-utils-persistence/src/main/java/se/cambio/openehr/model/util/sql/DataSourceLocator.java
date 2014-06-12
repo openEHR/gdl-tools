@@ -1,17 +1,15 @@
 package se.cambio.openehr.model.util.sql;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
-import org.h2.jdbcx.JdbcDataSource;
-
+import org.apache.commons.dbcp.BasicDataSource;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Caches references to <code>DataSources</code>. It allows to register
@@ -27,6 +25,8 @@ public class DataSourceLocator {
     public static final String JNDI_PREFIX = "java:comp/env/";
     public static final String STANDALONE_DS = "standalone_ds";
     public static final String STANDALONE_DS_URL = "StandaloneDS/URL";
+    public static final String STANDALONE_DS_USERNAME = "StandaloneDS/User";
+    public static final String STANDALONE_DS_PASSWORD = "StandaloneDS/Password";
 
     private static Map<String, DataSource> dataSources = Collections.synchronizedMap(new HashMap<String, DataSource>());
 
@@ -81,22 +81,31 @@ public class DataSourceLocator {
 	return dataSource;
     }
 
-    public static DataSource createStandaloneDataSource(String name) throws InternalErrorException{
-	DataSource dataSource = dataSources.get(STANDALONE_DS);
-	if (dataSource==null){
-	    JdbcDataSource dataSourceAux = new JdbcDataSource();
-	    String standAloneURL;
-	    try {
-		standAloneURL = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
-	    } catch (MissingConfigurationParameterException e) {
-		throw new InternalErrorException(e);
-	    }
-	    dataSourceAux.setURL(standAloneURL);
-	    dataSourceAux.setUser("sa");
-	    dataSource = dataSourceAux;
-	    dataSources.put(STANDALONE_DS, dataSource);
-	}
-	return dataSource;
+    public static DataSource createStandaloneDataSource(String name) throws InternalErrorException {
+        DataSource dataSource = dataSources.get(name);
+        if (dataSource==null){
+            /* H2 */
+            //JdbcDataSource dataSourceAux = new JdbcDataSource();
+            /* PostgreSQL */
+            BasicDataSource ds = new BasicDataSource();
+            ds.setDriverClassName("org.postgresql.Driver");
+            String standAloneURL;
+            String username;
+            String password;
+            try {
+                standAloneURL = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
+                username = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_USERNAME);
+                password = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_PASSWORD);
+            } catch (   MissingConfigurationParameterException e) {
+                throw new InternalErrorException(e);
+            }
+            ds.setUrl(standAloneURL);
+            ds.setUsername(username);
+            ds.setPassword(password);
+            dataSource = ds;
+            dataSources.put(name, dataSource);
+        }
+        return dataSource;
     }
 
     public static boolean isStandalone(){

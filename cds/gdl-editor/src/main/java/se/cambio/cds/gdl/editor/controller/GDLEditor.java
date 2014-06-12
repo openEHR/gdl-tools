@@ -501,18 +501,26 @@ public class GDLEditor {
     }
 
     public String createNextGTCode() {
-        String gtCode = generateNextGTCode();
-        getTerm(gtCode).setText(null);
-        getTerm(gtCode).setDescription(null);
+        return createNextGTCode(true);
+    }
+
+    public String createNextGTCode(boolean generateTerm) {
+        String gtCode = generateNextGTCode(generateTerm);
+        if (generateTerm){
+            getTerm(gtCode).setText(null);
+            getTerm(gtCode).setDescription(null);
+        }
         return gtCode;
     }
 
-    private String generateNextGTCode() {
+    private String generateNextGTCode(boolean generateTerm) {
         String nextGTCode = GT_HEADER
                 + StringUtils.leftPad("" + (getNextTermNumber()), 4, "0");
-        // Generate codes for all terminologies
-        for (String langCode : getTermDefinitions().keySet()) {
-            getTerm(langCode, nextGTCode);
+        if (generateTerm){
+            // Generate codes for all terminologies
+            for (String langCode : getTermDefinitions().keySet()) {
+                getTerm(langCode, nextGTCode);
+            }
         }
         return nextGTCode;
     }
@@ -522,7 +530,14 @@ public class GDLEditor {
                 .getOriginalLanguage().getCodeString());
         int termCount = 0;
         if (termDefinition.getTerms() != null) {
-            for (String gtCode : termDefinition.getTerms().keySet()) {
+            Set<String> gtCodes = new HashSet<String>();
+            gtCodes.addAll(termDefinition.getTerms().keySet());
+            for (RuleLine ruleLine: getDefinitionRuleLines()){
+                if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+                    gtCodes.add(((ArchetypeInstantiationRuleLine)ruleLine).getGTCode());
+                }
+            }
+            for (String gtCode : gtCodes) {
                 try {
                     int codeNum = Integer.parseInt(gtCode.substring(2));
                     if (codeNum > termCount) {
@@ -612,7 +627,7 @@ public class GDLEditor {
 
     private Guide constructCurrentGuide() throws IllegalStateException {
         GuideDefinition guideDefinition = new GuideDefinition(
-                new ArrayList<ArchetypeBinding>(), new ArrayList<String>(),
+                new HashMap<String, ArchetypeBinding>(), new ArrayList<String>(),
                 new HashMap<String, Rule>());
         // Insert definition
         for (RuleLine ruleLine : getDefinitionRuleLines()) {
@@ -653,13 +668,14 @@ public class GDLEditor {
                             }
                         }
                         ArchetypeBinding archetypeBinding = new ArchetypeBinding();
-                        // archetypeBinding.setId(archetypeGTCode);
                         archetypeBinding.setArchetypeId(ar.getIdArchetype());
                         archetypeBinding.setDomain(ar.getIdDomain());
                         archetypeBinding.setTemplateId(ar.getIdTemplate());
                         archetypeBinding.setElements(elementMap);
                         archetypeBinding.setPredicateStatements(predicateStatements);
-                        guideDefinition.getArchetypeBindings().add(archetypeBinding);
+                        String gtCode = airl.getGTCodeRuleLineElement().getValue();
+                        archetypeBinding.setId(gtCode);
+                        guideDefinition.getArchetypeBindings().put(archetypeBinding.getId(), archetypeBinding);
                     }
                 }
             }
@@ -744,6 +760,7 @@ public class GDLEditor {
         try {
             return GuideUtil.serializeGuide(guide);
         } catch (Exception e) {
+            e.printStackTrace();
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     EditorManager.getActiveEditorWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuideT"),
@@ -788,8 +805,9 @@ public class GDLEditor {
         List<AssignmentExpression> list = new ArrayList<AssignmentExpression>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {
-                list.add(((AssignmentExpressionRuleLine) ruleLine)
-                        .toAssignmentExpression());
+                AssignmentExpression assignmentExpression =
+                        ((AssignmentExpressionRuleLine) ruleLine).toAssignmentExpression();
+                list.add(assignmentExpression);
             }
         }
         return list;
@@ -887,8 +905,16 @@ public class GDLEditor {
             new CheckGuideSW(this, guideStr, pendingRunnable).execute();
         }else if (currentPanel instanceof GDLPanel){
             try {
-                String guideStr = GuideUtil.serializeGuide(getGuide());
-                new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+                String guideStr = null;
+                Guide guide = getGuide();
+                if (guide!=null){
+                    guideStr = serializeGuide(guide);
+                }
+                if (guideStr!=null){
+                    new CheckGuideSW(this, guideStr, pendingRunnable).execute();
+                }else{
+                    loadLastTab();
+                }
             } catch (Exception e) {
                 //Errors found serializing/parsing/compiling guide, so we do not load the source view
                 loadLastTab();
@@ -900,7 +926,7 @@ public class GDLEditor {
 
     public void gdlEditingChecked(Guide guide, boolean checkOk, Runnable pendingRunnable){
 //        setFree();
-        if (checkOk){
+        if (checkOk && guide!=null){
             String auxOriginalGuide = _originalGuide;
             try {
                 setGuide(guide);
@@ -981,6 +1007,23 @@ public class GDLEditor {
         }
         _guideOntology.setTermDefinitions(_termDefinitions);
         _guideOntology.setTermBindings(_termBindings);
+
+        //Generate gt codes for archetype bindings (if missing)
+        if (guide.getDefinition()!=null && guide.getDefinition().getArchetypeBindings()!=null){
+            List<String> abCodes = new ArrayList<String>();
+            abCodes.addAll(guide.getDefinition().getArchetypeBindings().keySet());
+            Collections.sort(abCodes);
+            for(String abCode: abCodes){
+                if (abCode.startsWith(GuideDefinition.ARCHETYPE_BINDING_PREFIX)){
+                    ArchetypeBinding archetypeBinding = guide.getDefinition().getArchetypeBindings().get(abCode);
+                    String gtCode = createNextGTCode();
+                    guide.getDefinition().getArchetypeBindings().remove(abCode);
+                    archetypeBinding.setId(gtCode);
+                    guide.getDefinition().getArchetypeBindings().put(gtCode, archetypeBinding);
+                }
+            }
+        }
+
         _readableGuide =
                 GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
         initResourceDescription();
@@ -1134,7 +1177,7 @@ public class GDLEditor {
     public ArchetypeInstantiationRuleLine addArchetypeReference(
             boolean showOnlyCDS) {
         ArchetypeInstantiationRuleLine airl = new ArchetypeInstantiationRuleLine();
-        // airl.getGTCodeRuleLineElement().setValue(EditorManager.getActiveGDLEditor().createNextGTCode());
+        airl.setGTCode(createNextGTCode(false));
         airl.setTermDefinition(getCurrentTermDefinition());
         RuleElementEditor.editArchetype(
                 airl.getArchetypeReferenceRuleLineDefinitionElement(),
@@ -1147,12 +1190,34 @@ public class GDLEditor {
         }
     }
 
+    /*
+    private String createNextArchetypeBindingCode(){
+        String abCode = null;
+        int i = 1;
+        Collection<String> archeytpeBindingCodesUsed = getArchetyoeBindingCodesUsed();
+        boolean abCodeFound = false;
+        while(!abCodeFound){
+            abCode = GuideDefinition.ARCHETYPE_BINDING_PREFIX+ StringUtils.leftPad("" + (i++), 4, "0");
+            abCodeFound = !archeytpeBindingCodesUsed.contains(abCode);
+        }
+        return abCode;
+    }
+    */
+    private Collection<String> getArchetyoeBindingCodesUsed(){
+        ArrayList<String> archeytpeBindingCodesUsed = new ArrayList<String>();
+        for (RuleLine ruleLine : getDefinitionRuleLines()){
+            if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+                ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine = (ArchetypeInstantiationRuleLine) ruleLine;
+                archeytpeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());
+            }
+        }
+        return archeytpeBindingCodesUsed;
+    }
+
     public ArchetypeElementInstantiationRuleLine addArchetypeElement(
             ArchetypeInstantiationRuleLine airl) {
-        ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(
-                airl);
-        aeirl.getGTCodeRuleLineElement().setValue(
-                EditorManager.getActiveGDLEditor().createNextGTCode());
+        ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(airl);
+        aeirl.getGTCodeRuleLineElement().setValue(createNextGTCode());
         aeirl.setTermDefinition(getCurrentTermDefinition());
         editRuleElement(aeirl.getArchetypeElementRuleLineDefinitionElement());
         if (aeirl.getArchetypeElementRuleLineDefinitionElement().getValue() != null) {
@@ -1190,8 +1255,7 @@ public class GDLEditor {
                 || guide.getDefinition().getArchetypeBindings() == null) {
             return;
         }
-        for (ArchetypeBinding archetypeBinding : guide.getDefinition()
-                .getArchetypeBindings()) {
+        for (ArchetypeBinding archetypeBinding : guide.getDefinition().getArchetypeBindings().values()) {
             String archetypeId = archetypeBinding.getArchetypeId();
             String templateId = archetypeBinding.getTemplateId();
             if (templateId == null) {

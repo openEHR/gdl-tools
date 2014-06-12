@@ -1,13 +1,26 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
+package se.cambio.cds.gdl.parser;
+
+public class InstanceCreationExpressionTest extends ExpressionTestBase {
+
+    public void testInstanceCreationWithMultipleSets() throws Exception {
+        parseSingleExpression("$gt0003.create($gt0009=20,kg;$gt0010=1|local::at0028|Present|)");
+        check("gt0003", "/variable/code");
+        check("create", "/variable/attribute");
+        check("gt0009", "/assignment/assignmentExpressions[1]/variable/code");
+        check("gt0010", "/assignment/assignmentExpressions[2]/variable/code");
+        check("20,kg", "/assignment/assignmentExpressions[1]/assignment/value");
+        check("1|local::at0028|Present|", "/assignment/assignmentExpressions[2]/assignment/value");
+    }
 
 
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+    public void testInstanceCreationWithMultipleSetsRoundTrip() throws Exception {
+		parseSingleExpression(COMPLEX);
+		String actual = item.toString();
+		assertEquals(actual, COMPLEX);
+	}
 
-public interface GTCodeDefiner {
-
-    public GTCodeRuleLineElement getGTCodeRuleLineElement();
-    public String getGTCode();
-    public void setGTCode(String gtCode);
+	private static final String COMPLEX =
+		"$gt0003.create($gt0009=20,kg;$gt0010=1|local::at0028|Present|)";
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

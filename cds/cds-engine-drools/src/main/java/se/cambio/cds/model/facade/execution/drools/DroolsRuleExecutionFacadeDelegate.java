@@ -3,14 +3,13 @@ package se.cambio.cds.model.facade.execution.drools;
 import org.apache.log4j.Logger;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideUtil;
-import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.Domains;
+import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
@@ -39,27 +38,9 @@ public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDel
         }
         final Set<ArchetypeReference> modifiedArhetypeReferences = new HashSet<ArchetypeReference>();
         //Search for modified elements
-        for (Object object : workingMemoryObjects) {
-            if (object instanceof ElementInstance){
-                ElementInstance elementInstance = (ElementInstance)object;
-                ArchetypeReference ar = elementInstance.getArchetypeReference();
-                if (Domains.CDS_ID.equals(ar.getIdDomain())){
-                    modifiedArhetypeReferences.add(elementInstance.getArchetypeReference());
-                }
-            }
+        for (ElementInstance elementInstance : executionLogger.getElementInstancesSet()) {
+            modifiedArhetypeReferences.add(elementInstance.getArchetypeReference());
         }
-	/*
-	//Search for elements in modified references
-	for (Object object : workingMemoryObjects) {
-	    if (object instanceof ElementInstance){
-		ElementInstance elementInstance = (ElementInstance)object;
-		ArchetypeReference ar = elementInstance.getArchetypeReference();
-		if (ar! instanceof CDSArchetypeReference ||
-			&& modifiedArhetypeReferences.contains(elementInstance.getArchetypeReference())){
-		    elementInstances.add(elementInstance);
-		}
-	    }
-	}*/
         final List<RuleReference> ruleReferences =
                 GuideUtil.getRuleReferences(executionLogger.getFiredRules());
 

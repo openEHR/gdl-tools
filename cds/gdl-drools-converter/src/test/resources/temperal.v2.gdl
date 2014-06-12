@@ -14,7 +14,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0005"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -25,7 +25,7 @@
 				function = <"LAST">
 			>
 			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0006"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <

@@ -6,10 +6,7 @@ import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class ExecutionLogger {
@@ -18,7 +15,7 @@ public class ExecutionLogger {
     private boolean _executionCanceled = false;
     private boolean _executionTimedOut = false;
     private boolean _halt = false;
-
+    private Set<ElementInstance> _elementInstancesSet = null;
     private long _startTime = 0;
     public ExecutionLogger(){
         _startTime = System.currentTimeMillis();
@@ -26,6 +23,7 @@ public class ExecutionLogger {
 
 
     public void addLog(KnowledgeHelper drools, ElementInstance elementInstance){
+        getElementInstancesSet().add(elementInstance);
         ExecutionLog executionLog =
                 new ExecutionLog(
                         drools.getRule().getName(),
@@ -81,6 +79,13 @@ public class ExecutionLogger {
 
     public boolean executionTimedOut(){
         return _executionTimedOut;
+    }
+
+    public Set<ElementInstance> getElementInstancesSet(){
+        if (_elementInstancesSet==null){
+            _elementInstancesSet = new HashSet<ElementInstance>();
+        }
+        return _elementInstancesSet;
     }
 }
 /*

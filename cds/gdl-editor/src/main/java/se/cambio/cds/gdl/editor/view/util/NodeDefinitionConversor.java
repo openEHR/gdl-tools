@@ -34,40 +34,40 @@ import java.util.*;
 public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getElementInstancesSelectionNodes(
-            Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain){
+            Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
         SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(
                 GDLEditorLanguageManager.getMessage("Definitions"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
         SelectableNode<Object> elementsNode = new SelectableNodeWithIcon<Object>(
                 GDLEditorLanguageManager.getMessage("ElementInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
         root.add(elementsNode);
-        addElementInstanceToNode(definitionRuleLines, elementsNode, onlyCDSDomain);
+        addElementInstanceToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
 	/*
 	if (!onlyCDSDomain){
 	    elementsNode.add(getCurrentDateTimeArchetypeElementRuleLineElementNode(getCurrentDateTimeGTCodeRuleLineElement()));
 	}*/
-        root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain));
+        root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
         return root;
     }
 
-    public static void addElementInstanceToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain){
+    public static void addElementInstanceToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar){
         for (RuleLine ruleLine : ruleLines) {
             if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
                 SelectableNode<Object> nodeAux =
-                        getArchetypeElementRuleLineElementNode((ArchetypeElementInstantiationRuleLine)ruleLine, onlyCDSDomain);
+                        getArchetypeElementRuleLineElementNode((ArchetypeElementInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
                 if(nodeAux!=null){
                     node.add(nodeAux);
                 }
             }
-            addElementInstanceToNode(ruleLine.getChildrenRuleLines(), node, onlyCDSDomain);
+            addElementInstanceToNode(ruleLine.getChildrenRuleLines(), node, onlyCDSDomain, ar);
         }
     }
 
-    public static SelectableNode<Object> getArchetypeInstancesSelectionNodes(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain){
+    public static SelectableNode<Object> getArchetypeInstancesSelectionNodes(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
         SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(
                 GDLEditorLanguageManager.getMessage("ArchetypeInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
         for (RuleLine ruleLine : definitionRuleLines) {
             if (ruleLine instanceof ArchetypeInstantiationRuleLine){
-                SelectableNode<Object> node = getArchetypeElementRuleLineElementNode((ArchetypeInstantiationRuleLine)ruleLine, onlyCDSDomain);
+                SelectableNode<Object> node = getArchetypeElementRuleLineElementNode((ArchetypeInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
                 if (node!=null){
                     root.add(node);
                 }
@@ -76,12 +76,12 @@ public class NodeDefinitionConversor {
         return root;
     }
 
-    public static SelectableNode<Object> getArchetypeElementRuleLineElementNode(ArchetypeInstantiationRuleLine airl, boolean onlyCDSDomain){
-        ArchetypeReference ar = airl.getArchetypeReference();
-        if (ar!=null){
-            String idArchetype = ar.getIdArchetype();
+    public static SelectableNode<Object> getArchetypeElementRuleLineElementNode(ArchetypeInstantiationRuleLine airl, boolean onlyCDSDomain, ArchetypeReference ar){
+        ArchetypeReference arAux = airl.getArchetypeReference();
+        if (arAux!=null){
+            String idArchetype = arAux.getIdArchetype();
             //String idTemplate = airl.getArchetypeReference().getIdArchetype();
-            if (!onlyCDSDomain || Domains.CDS_ID.equals(airl.getArchetypeReference().getIdDomain())){
+            if ((!onlyCDSDomain || Domains.CDS_ID.equals(airl.getArchetypeReference().getIdDomain()) && (ar==null||ar.equals(airl.getArchetypeReference())))){
                 return new SelectableNodeWithIcon<Object>(
                         ReadableArchetypeReferencesUtil.getName(airl),
                         airl,
@@ -94,24 +94,26 @@ public class NodeDefinitionConversor {
         return null;
     }
 
-    public static SelectableNode<Object> getArchetypeElementRuleLineElementNode(ArchetypeElementInstantiationRuleLine aeirl, boolean onlyCDSDomain){
+    public static SelectableNode<Object> getArchetypeElementRuleLineElementNode(ArchetypeElementInstantiationRuleLine aeirl, boolean onlyCDSDomain, ArchetypeReference ar){
         ArchetypeElementVO archetypeElementVO = aeirl.getArchetypeElementRuleLineDefinitionElement().getValue();
         if(archetypeElementVO!=null){
-            ArchetypeReference ar = aeirl.getArchetypeReference();
-            String domainId = ar.getIdDomain();
-            if (!onlyCDSDomain || Domains.CDS_ID.equals(domainId)){
-                String name = EditorManager.getActiveGDLEditor().getGTName(aeirl.getGTCodeRuleLineElement().getValue());
-                if (name==null){
-                    name = "*EMPTY*";
+            ArchetypeReference arAux = aeirl.getArchetypeReference();
+            if (ar==null || ar.equals(arAux)){
+                String domainId = arAux.getIdDomain();
+                if (!onlyCDSDomain || Domains.CDS_ID.equals(domainId)){
+                    String name = EditorManager.getActiveGDLEditor().getGTName(aeirl.getGTCodeRuleLineElement().getValue());
+                    if (name==null){
+                        name = "*EMPTY*";
+                    }
+                    name = name.length()>30?name.substring(0, 30)+"...":name;
+                    return new SelectableNodeWithIcon<Object>(
+                            name,
+                            aeirl.getGTCodeRuleLineElement(),
+                            true,
+                            false,
+                            getIcons(aeirl.getGTCodeRuleLineElement()),
+                            ArchetypeReferences.getHTMLTooltip(archetypeElementVO, arAux));
                 }
-                name = name.length()>30?name.substring(0, 30)+"...":name;
-                return new SelectableNodeWithIcon<Object>(
-                        name,
-                        aeirl.getGTCodeRuleLineElement(),
-                        true,
-                        false,
-                        getIcons(aeirl.getGTCodeRuleLineElement()),
-                        ArchetypeReferences.getHTMLTooltip(archetypeElementVO, ar));
             }
         }
         return null;
@@ -218,13 +220,13 @@ public class NodeDefinitionConversor {
                 OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()), desc);
     }
 
-    public static void addElementInstanceAttributesAndFunctionsToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain){
+    public static void addElementInstanceAttributesAndFunctionsToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar){
         for (RuleLine ruleLine : ruleLines) {
             if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
                 ArchetypeElementInstantiationRuleLine aeirl = (ArchetypeElementInstantiationRuleLine)ruleLine;
                 if (aeirl.getArchetypeElement()!=null){
                     SelectableNode<Object> nodeAux =
-                            getArchetypeElementRuleLineElementNode(aeirl, onlyCDSDomain);
+                            getArchetypeElementRuleLineElementNode(aeirl, onlyCDSDomain, ar);
                     if(nodeAux!=null){
                         GTCodeRuleLineElement gtCodeRuleLineElement =
                                 (GTCodeRuleLineElement)nodeAux.getObject();
@@ -234,7 +236,7 @@ public class NodeDefinitionConversor {
                     }
                 }
             }
-            addElementInstanceAttributesAndFunctionsToNode(ruleLine.getChildrenRuleLines(), node, onlyCDSDomain);
+            addElementInstanceAttributesAndFunctionsToNode(ruleLine.getChildrenRuleLines(), node, onlyCDSDomain, ar);
         }
     }
 
@@ -276,9 +278,9 @@ public class NodeDefinitionConversor {
         return new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes")+"/"+GDLEditorLanguageManager.getMessage("Functions"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
     }
 
-    public static SelectableNode<Object> getNodeAttributesAndFunctions(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain){
+    public static SelectableNode<Object> getNodeAttributesAndFunctions(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
         SelectableNode<Object> root = getSingleNodeAttributesAndFunctions();
-        addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, root, onlyCDSDomain);
+        addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, root, onlyCDSDomain, ar);
         if (!onlyCDSDomain){
             GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
             SelectableNode<Object> currentDateTimeNode =
@@ -286,7 +288,7 @@ public class NodeDefinitionConversor {
             addFieldsToNode(currentDateTimeNode, OpenEHRDataValues.DV_DATE_TIME, getCurrentDateTimeGTCodeRuleLineElement());
             root.add(currentDateTimeNode);
         }
-        root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain));
+        root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
         return root;
     }
 

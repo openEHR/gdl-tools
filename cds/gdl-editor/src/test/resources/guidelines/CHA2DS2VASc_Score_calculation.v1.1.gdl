@@ -33,7 +33,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0122"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
 				domain = <"CDS">
 				elements = <
@@ -57,8 +57,7 @@
 					>
 				>
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0123"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
 				domain = <"EHR">
 				elements = <
@@ -70,8 +69,7 @@
 					>
 				>
 			>
-			
-			[3] = (ARCHETYPE_BINDING) <
+			["gt0124"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
 				domain = <"CDS">
 				elements = <

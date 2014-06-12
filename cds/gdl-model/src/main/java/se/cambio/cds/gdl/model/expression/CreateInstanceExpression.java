@@ -1,13 +1,26 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
+package se.cambio.cds.gdl.model.expression;
 
+import java.util.List;
 
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+public class CreateInstanceExpression extends AssignmentExpression {
 
-public interface GTCodeDefiner {
+    public static String FUNCTION_CREATE_NAME = "create";
 
-    public GTCodeRuleLineElement getGTCodeRuleLineElement();
-    public String getGTCode();
-    public void setGTCode(String gtCode);
+    private static final long serialVersionUID = 1L;
+    public CreateInstanceExpression(Variable variable, List<AssignmentExpression> assignmentExpressions) {
+        super(variable, new AssignmentExpressionList(assignmentExpressions));
+    }
+
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append(getVariable());
+        buf.append(getAssigment());
+        return buf.toString();
+    }
+
+    public AssignmentExpressionList getAssigment(){
+        return (AssignmentExpressionList)this.getAssignment();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

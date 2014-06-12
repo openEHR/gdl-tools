@@ -1,12 +1,9 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
-import org.apache.log4j.Logger;
-import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
@@ -23,27 +20,14 @@ public class CheckGuideSW extends CDSSwingWorker{
         _controller = controller;
         _guideStr = guideStr;
         _pendingRunnable = pendingRunnable;
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                _controller.setBusy(GDLEditorLanguageManager.getMessage("Compiling"));
-//            }
-//        });
     }
 
     @Override
     protected void executeCDSSW() throws InternalErrorException{
-        try{
-            ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes());
-            _guide = GuideUtil.parseGuide(bais);
-            if (_guide!=null){
-                GuideExportPluginDirectory.compile(_guide);
-            }
-        }catch(Throwable e){
-            _errorMsg = e.getMessage();
-            Logger.getLogger(CheckGuideSW.class).warn("ERROR parsing/compiling guide '"+_controller.getGuide().getId()+"': "+e.getMessage());
-            ExceptionHandler.handle(e);
-            _checkOk = false;
+        ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes());
+        _guide = _controller.parseGuide(bais);
+        if (_guide!=null){
+            GuideExportPluginDirectory.compile(_guide);
         }
     }
 

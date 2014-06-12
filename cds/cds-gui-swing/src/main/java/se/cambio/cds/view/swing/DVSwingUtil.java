@@ -16,10 +16,7 @@ import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
-import se.cambio.openehr.util.DisabledComboUI;
-import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.*;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 import se.cambio.openehr.view.util.DVPanelFactory;
 import se.cambio.openehr.view.util.MultipleIcon;
@@ -184,6 +181,14 @@ public class DVSwingUtil {
     }
 
     public static DVGenericPanel createDVGenericPanel(ElementInstance elementInstance){
+        if (elementInstance instanceof PredicateGeneratedElementInstance){
+            elementInstance = new ElementInstance(
+                    elementInstance.getId(),
+                    null,
+                    elementInstance.getArchetypeReference(),
+                    null,
+                    OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        }
         DVGenericPanel dvGenericPanel = getDVGenericForElement(elementInstance);
         for (JComponent jComponent : dvGenericPanel.getJComponents()) {
             if (jComponent instanceof JDateChooser){
@@ -193,7 +198,7 @@ public class DVSwingUtil {
             }
             if (Domains.CDS_ID.equals(elementInstance.getArchetypeReference().getIdDomain()) ||
                     elementInstance instanceof PredicateGeneratedElementInstance){
-                DVSwingUtil.disable(jComponent);
+                //DVSwingUtil.disable(jComponent);
             }
         }
         return dvGenericPanel;

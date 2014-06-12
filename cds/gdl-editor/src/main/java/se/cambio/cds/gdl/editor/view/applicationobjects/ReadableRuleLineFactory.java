@@ -1,19 +1,5 @@
 package se.cambio.cds.gdl.editor.view.applicationobjects;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
@@ -22,26 +8,25 @@ import se.cambio.cds.gdl.editor.view.labels.JLinkRuleElementLabel;
 import se.cambio.cds.gdl.editor.view.listeners.PluginTypeLinkListener;
 import se.cambio.cds.gdl.editor.view.listeners.RuleLineElementItemListener;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
-import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.MultipleRuleLineContainerWithHeader;
-import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.OperatorRuleLineContainer;
-import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.OrOperatorRuleLinePanel;
-import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.RuleLineContainerPanel;
-import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.SingleRuleLinePanel;
+import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.*;
 import se.cambio.cds.gdl.editor.view.renderers.SingleSelectionRuleElementRenderer;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.CreateInstanceActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.OrOperatorRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class ReadableRuleLineFactory {
 
     public static RuleLineContainerPanel createRuleLineContainer(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine){
-	if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+	if (ruleLine instanceof ArchetypeInstantiationRuleLine ||
+            ruleLine instanceof CreateInstanceActionRuleLine){
 	    MultipleRuleLineContainerWithHeader archetypeInstantiationRL = new MultipleRuleLineContainerWithHeader(ruleLinesPanel, ruleLine);
 	    archetypeInstantiationRL.setBorder(BorderFactory.createEmptyBorder(0,0,8,0));
 	    return archetypeInstantiationRL;

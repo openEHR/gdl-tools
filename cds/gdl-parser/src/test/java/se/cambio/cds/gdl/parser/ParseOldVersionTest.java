@@ -1,13 +1,36 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
+package se.cambio.cds.gdl.parser;
 
+import org.apache.commons.jxpath.JXPathContext;
+import org.openehr.rm.datatypes.text.CodePhrase;
+import se.cambio.cds.gdl.model.Guide;
 
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import java.io.InputStream;
 
-public interface GTCodeDefiner {
+public class ParseOldVersionTest extends ExpressionTestBase {
 
-    public GTCodeRuleLineElement getGTCodeRuleLineElement();
-    public String getGTCode();
-    public void setGTCode(String gtCode);
+	public void setUp() {
+		parser = new GDLParser();
+	}
+	
+	public void testParseSimpleGDL() throws Exception {
+		parse("high_aciclovir_old_version.v1.gdl");
+		JXPathContext context = JXPathContext.newContext(guide);
+
+		assertEquals(new CodePhrase("ATC", "J05AB01"), 
+				context.getValue("/ontology/termBindings/ATC/bindings/gt0010/codes[1]"));
+	}
+	
+	private void parse(String input) throws Exception {
+		guide = parser.parse(load(input));
+	}
+	
+	private InputStream load(String name) throws Exception {
+		return this.getClass().getClassLoader()
+				.getResourceAsStream(name);
+	}
+	
+	GDLParser parser;
+	Guide guide;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
