@@ -181,7 +181,9 @@ public class DVSwingUtil {
     }
 
     public static DVGenericPanel createDVGenericPanel(ElementInstance elementInstance){
-        if (elementInstance instanceof PredicateGeneratedElementInstance){
+        if (!Domains.CDS_ID.equals(elementInstance.getArchetypeReference().getIdDomain()) &&
+                elementInstance instanceof PredicateGeneratedElementInstance){
+            //Remove predicates for ehr data
             elementInstance = new ElementInstance(
                     elementInstance.getId(),
                     null,
@@ -198,7 +200,7 @@ public class DVSwingUtil {
             }
             if (Domains.CDS_ID.equals(elementInstance.getArchetypeReference().getIdDomain()) ||
                     elementInstance instanceof PredicateGeneratedElementInstance){
-                //DVSwingUtil.disable(jComponent);
+                DVSwingUtil.disable(jComponent);
             }
         }
         return dvGenericPanel;

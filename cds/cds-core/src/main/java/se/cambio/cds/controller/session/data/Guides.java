@@ -8,6 +8,7 @@ import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacad
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.util.comparators.GuidesComparator;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -60,17 +61,21 @@ public class Guides {
         try{
             getGuidesMap().put(guideDTO.getIdGuide(), guideDTO);
             if(guideDTO.getGuideObject()!=null){
-                Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
-                ResourceDescriptionItem rdi = guide.getDescription().getDetails().get(UserConfigurationManager.getLanguage());
-                if (rdi==null){
-                    rdi = guide.getDescription().getDetails().get(guide.getLanguage().getOriginalLanguage().getCodeString());
-                }
-                if (rdi!=null && rdi.getKeywords()!=null){
-                    getKeywordsMap().put(guide.getId(), rdi.getKeywords());
+                try{
+                    Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
+                    ResourceDescriptionItem rdi = guide.getDescription().getDetails().get(UserConfigurationManager.getLanguage());
+                    if (rdi==null){
+                        rdi = guide.getDescription().getDetails().get(guide.getLanguage().getOriginalLanguage().getCodeString());
+                    }
+                    if (rdi!=null && rdi.getKeywords()!=null){
+                        getKeywordsMap().put(guide.getId(), rdi.getKeywords());
+                    }
+                }catch(Exception e){
+                    Logger.getLogger(Guides.class).error("ERROR Registering guideline: '" + guideDTO.getIdGuide() + "'.");
+                    ExceptionHandler.handle(e);
                 }
             }
             Logger.getLogger(Guides.class).info("Registering guideline: '"+guideDTO.getIdGuide()+"'.");
-
         }catch(Exception e){
             throw new InternalErrorException(e);
         }

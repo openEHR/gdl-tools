@@ -8,7 +8,6 @@ import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogRuleExecutionList;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -29,10 +28,7 @@ public class CDSFormPanel extends JPanel{
     private JPanel inputPanel;
     private JPanel resultPanel;
     private JLinkLabel executedRulesLabel;
-    //private Map<String, JPanel> elementGroupPanelMap = null;
     private JPanel executionButtonPanel;
-    private GridBagConstraints inputGBC;
-    private GridBagConstraints resultGBC;
     private Collection<ElementInstanceGroupPanel> _eigps = null;
 
     public CDSFormPanel(FormGeneratorController formGenerator){
@@ -87,25 +83,6 @@ public class CDSFormPanel extends JPanel{
         }
     }
 
-    public Collection<ArchetypeReference> getAllArchetypeReferences(Collection<ElementInstance> elementInstances){
-        Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-        for (ElementInstance elementInstance : elementInstances) {
-            archetypeReferences.add(elementInstance.getArchetypeReference());
-        }
-        return archetypeReferences;
-    }
-
-    public Collection<ArchetypeReference> getCDSArchetypeReferences(Collection<ElementInstance> elementInstances){
-        Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-        for (ElementInstance elementInstance : elementInstances) {
-            ArchetypeReference ar = elementInstance.getArchetypeReference();
-            if (Domains.CDS_ID.equals(ar.getIdDomain())){
-                archetypeReferences.add(ar);
-            }
-        }
-        return archetypeReferences;
-    }
-
     public Collection<ElementInstance> getElementInstances(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
         for (ElementInstanceGroupPanel eigp : _eigps) {
@@ -121,28 +98,6 @@ public class CDSFormPanel extends JPanel{
             inputPanel.setBorder(BorderFactory.createTitledBorder(OpenEHRLanguageManager.getMessage("Input")));
         }
         return  inputPanel;
-    }
-
-    public GridBagConstraints getInputGBC(){
-        if (inputGBC==null){
-            inputGBC = new GridBagConstraints();
-            inputGBC.gridx = 0;
-            inputGBC.gridy = 0;
-            inputGBC.anchor = GridBagConstraints.WEST;
-            inputGBC.fill= GridBagConstraints.BOTH;
-        }
-        return inputGBC;
-    }
-
-    public GridBagConstraints getResulGBC(){
-        if (resultGBC==null){
-            resultGBC = new GridBagConstraints();
-            resultGBC.gridx = 0;
-            resultGBC.gridy = 0;
-            resultGBC.anchor = GridBagConstraints.WEST;
-            resultGBC.fill= GridBagConstraints.BOTH;
-        }
-        return resultGBC;
     }
 
     public JPanel getResultPanel(){

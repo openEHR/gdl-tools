@@ -544,8 +544,7 @@ public class GDLEditor {
                         termCount = codeNum;
                     }
                 } catch (Exception e) {
-                    Logger.getLogger(this.getClass()).warn(
-                            "Unable to parse code '" + gtCode + "'");
+                    Logger.getLogger(this.getClass()).warn("Unable to parse code '" + gtCode + "'");
                 }
             }
         }
@@ -1013,10 +1012,11 @@ public class GDLEditor {
             List<String> abCodes = new ArrayList<String>();
             abCodes.addAll(guide.getDefinition().getArchetypeBindings().keySet());
             Collections.sort(abCodes);
+            int gtNum = getNextTermNumber();
             for(String abCode: abCodes){
                 if (abCode.startsWith(GuideDefinition.ARCHETYPE_BINDING_PREFIX)){
                     ArchetypeBinding archetypeBinding = guide.getDefinition().getArchetypeBindings().get(abCode);
-                    String gtCode = createNextGTCode();
+                    String gtCode = GT_HEADER+StringUtils.leftPad("" + (gtNum++), 4, "0");
                     guide.getDefinition().getArchetypeBindings().remove(abCode);
                     archetypeBinding.setId(gtCode);
                     guide.getDefinition().getArchetypeBindings().put(gtCode, archetypeBinding);
