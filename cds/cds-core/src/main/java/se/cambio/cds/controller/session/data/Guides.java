@@ -63,12 +63,14 @@ public class Guides {
             if(guideDTO.getGuideObject()!=null){
                 try{
                     Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
-                    ResourceDescriptionItem rdi = guide.getDescription().getDetails().get(UserConfigurationManager.getLanguage());
-                    if (rdi==null){
-                        rdi = guide.getDescription().getDetails().get(guide.getLanguage().getOriginalLanguage().getCodeString());
-                    }
-                    if (rdi!=null && rdi.getKeywords()!=null){
-                        getKeywordsMap().put(guide.getId(), rdi.getKeywords());
+                    if (guide!=null){
+                        ResourceDescriptionItem rdi = guide.getDescription().getDetails().get(UserConfigurationManager.getLanguage());
+                        if (rdi==null){
+                            rdi = guide.getDescription().getDetails().get(guide.getLanguage().getOriginalLanguage().getCodeString());
+                        }
+                        if (rdi!=null && rdi.getKeywords()!=null){
+                            getKeywordsMap().put(guide.getId(), rdi.getKeywords());
+                        }
                     }
                 }catch(Exception e){
                     Logger.getLogger(Guides.class).error("ERROR Registering guideline: '" + guideDTO.getIdGuide() + "'.");
