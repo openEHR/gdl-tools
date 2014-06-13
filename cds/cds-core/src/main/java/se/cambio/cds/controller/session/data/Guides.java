@@ -71,6 +71,8 @@ public class Guides {
                         if (rdi!=null && rdi.getKeywords()!=null){
                             getKeywordsMap().put(guide.getId(), rdi.getKeywords());
                         }
+                    }else{
+                        guideDTO.setGuideObject(null);
                     }
                 }catch(Exception e){
                     Logger.getLogger(Guides.class).error("ERROR Registering guideline: '" + guideDTO.getIdGuide() + "'.");
