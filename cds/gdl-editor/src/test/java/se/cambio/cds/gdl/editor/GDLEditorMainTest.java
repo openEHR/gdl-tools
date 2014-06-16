@@ -12,10 +12,7 @@ import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 
 public class GDLEditorMainTest extends TestCase {
@@ -42,20 +39,27 @@ public class GDLEditorMainTest extends TestCase {
         }
     }
 
-
-    public void testCMGuides()  throws Exception{
+    public void testCompareSerializedGuides() throws Exception {
         UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE,"en");
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {
             if (file.getName().endsWith(".gdl")){
                 Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '"+file.getName()+"'");
-                FileInputStream fis = new FileInputStream(file);
-                InputStreamReader in = new InputStreamReader(fis, "UTF-8");
-                String guideStr = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
-                Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
-                String guideStr2 = GuideUtil.serializeGuide(guide);
-                assertEquals(guideStr, guideStr2);
+                String originalGuideStr = readGuideFile(file);
+                String output = parseAndReserializeGuide(originalGuideStr);
+                assertEquals(originalGuideStr, output);
             }
         }
+    }
+
+    private static String readGuideFile(File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader in = new InputStreamReader(fis, "UTF-8");
+        return IOUtils.toString(in).replaceAll("\\r\\n", "\n");
+    }
+
+    private static String parseAndReserializeGuide(String guideStr) throws Exception {
+        Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
+        return GuideUtil.serializeGuide(guide);
     }
 }
