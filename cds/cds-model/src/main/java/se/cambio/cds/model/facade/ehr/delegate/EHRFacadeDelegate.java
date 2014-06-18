@@ -1,5 +1,6 @@
 package se.cambio.cds.model.facade.ehr.delegate;
 
+import se.cambio.cds.model.facade.ehr.util.EHRDataStream;
 import se.cambio.cds.model.facade.ehr.vo.EHREventVO;
 import se.cambio.cds.model.facade.ehr.vo.EHRTriggerVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -27,6 +28,9 @@ public interface EHRFacadeDelegate {
 	    throws InternalErrorException, InvalidAQLForEHRIdsException;
 
     public List<List<Object>> query(String aql)
+            throws InternalErrorException, InvalidAQLForEHRIdsException;
+
+    public EHRDataStream queryStream(String aql)
             throws InternalErrorException, InvalidAQLForEHRIdsException;
 
     public Map<String, Collection<ElementInstance>> queryEHRElements(

@@ -6,6 +6,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,7 +50,11 @@ public class EHRDataFilterUtil {
                 }
             }
             //Fill missing data
-            PredicateFilterUtil.filterByPredicates(queryARs, ehrIdARs, ehrDate.toGregorianCalendar());
+            Calendar date = Calendar.getInstance();
+            if (ehrDate!=null){
+                date = ehrDate.toGregorianCalendar();
+            }
+            PredicateFilterUtil.filterByPredicates(queryARs, ehrIdARs, date);
         }
         return ehrIdARs;
     }

@@ -19,7 +19,7 @@ public class SimpleGuideManager {
     private Map<String, Guide> _allGuidesMap = null;
     private Map<String, ElementInstanceCollection> _elementInstanceCollectionByIdGuideMap = null;
     private GeneratedElementInstanceCollection _completeElementInstanceCollection = null;
-
+    private Map<String, Set<String>> _guideIdsByElementIdsMap = null;
 
     public SimpleGuideManager(Collection<Guide> guides){
         init();
@@ -34,6 +34,7 @@ public class SimpleGuideManager {
         _allGuidesMap = new HashMap<String, Guide>();
         _elementInstanceCollectionByIdGuideMap = new HashMap<String, ElementInstanceCollection>();
         _completeElementInstanceCollection = new GeneratedElementInstanceCollection();
+        _guideIdsByElementIdsMap = new HashMap<String, Set<String>>();
     }
 
     public void loadGuides(Collection<Guide> guides) throws InternalErrorException{
@@ -51,7 +52,8 @@ public class SimpleGuideManager {
         return elementInstanceCollection;
     }
 
-    public Collection<String> getGuideIds(ExecutionMode executionMode, ElementInstanceCollection elementInstancesCollection){
+    public Collection<String> getGuideIds(ExecutionMode executionMode, ElementInstanceCollection elementInstancesCollection)
+            throws InternalErrorException {
         Collection<String> guideIds = null;
         if (executionMode.equals(ExecutionMode.STRICT_BY_CONTEXT)){
             guideIds = getGuideIdsStrict(elementInstancesCollection);
@@ -110,27 +112,103 @@ public class SimpleGuideManager {
         }
     }
 
-    public Collection<String> getGuideIdsNormal(ElementInstanceCollection elementInstancesCollection){
-        Set<String> guideIds = new HashSet<String>();
+    public Collection<String> getGuideIdsNormal(ElementInstanceCollection elementInstancesCollection) throws InternalErrorException {
         //Get all idElements
-        Set<String> idElementsEHR = elementInstancesCollection.getElementIdsByIdDomain(Domains.EHR_ID);
+        Set<String> elementIds = elementInstancesCollection.getElementIdsByIdDomain(Domains.EHR_ID);
+        return getGuideIdsNormal(elementIds);
+    }
 
-        for (String idGuide : _elementInstanceCollectionByIdGuideMap.keySet()) {
-            ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
-            Set<String> idElementsEHRAux = new HashSet<String>();
-            idElementsEHRAux.addAll(eic.getElementIdsByIdDomain(Domains.EHR_ID));
-            idElementsEHRAux.addAll(eic.getElementIdsByIdDomain(ElementInstanceCollection.EMPTY_CODE));
-            Iterator<String> i = idElementsEHRAux.iterator();
+
+    public Set<String> getGuideIdsNormal(Collection<String> elementIds)
+            throws InternalErrorException {
+        String elementIdsKey = getELementIdsKey(elementIds);
+        Set<String> guideIds = _guideIdsByElementIdsMap.get(elementIdsKey);
+        if (guideIds==null){
+            guideIds = generateGuideIdsNormal(elementIds);
+        }
+        return guideIds;
+    }
+
+    private Set<String> generateGuideIdsNormal(Collection<String> elementIds) throws InternalErrorException {
+        return getGuideIdsNormal(null, elementIds, Domains.EHR_ID);
+    }
+
+    private String getELementIdsKey(Collection<String> elementIds){
+        StringBuffer sb = new StringBuffer();
+        ArrayList<String> elementIdsList = new ArrayList<String>(elementIds);
+        Collections.sort(elementIdsList);
+        for(String elementId: elementIdsList){
+            sb.append(elementId);
+        }
+        return sb.toString();
+    }
+
+    private Set<String> getGuideIdsNormal(Set<String> skipElementIds, Collection<String> elementIds, String domainId) throws InternalErrorException {
+        Set<String> guideIds = new HashSet<String>();
+        for (String guideId : getAllGuideIds()) {
+            Set<String> idElementsRead = getElementIdsByReads(Collections.singleton(guideId), domainId);
+            Iterator<String> i = idElementsRead.iterator();
             boolean contains = false;
             while (i.hasNext() && !contains){
-                if (idElementsEHR.contains(i.next())){
-                    guideIds.add(idGuide);
+                if (elementIds.contains(i.next())){
+                    guideIds.add(guideId);
                     contains = true;
                 }
             }
         }
-        //TODO Look for linked guides
+        //Look for linked guides
+        Set<String> elementIdsByCDSWrites = getElementIdsByCDSWrites(guideIds);
+        if (skipElementIds==null){
+            skipElementIds = new HashSet<String>();
+        }
+        //First call are EHR element ids, we dont want to include those
+        if (Domains.CDS_ID.equals(domainId)){
+            skipElementIds.addAll(elementIds);
+        }
+        elementIdsByCDSWrites.removeAll(skipElementIds);
+        if (!elementIdsByCDSWrites.isEmpty()){
+            guideIds.addAll(getGuideIdsNormal(skipElementIds, elementIdsByCDSWrites, Domains.CDS_ID));
+        }
         return guideIds;
+    }
+
+    private Set<String> getElementIdsByReads(Collection<String> guideIds, String domainId) throws InternalErrorException {
+        Set<String> elementIds = new HashSet<String>();
+        for (String guideId: guideIds){
+            Guide guide = getGuide(guideId);
+            if (guide==null){
+                throw new InternalErrorException(new Exception("Guide '"+guideId+"' not found on GuideManager."));
+            }
+            Set<String> gtCodes = GuideUtil.getGTCodesInReads(guide);
+            Map<String, String> elementIdsByGtCodesMap = GuideUtil.getGtCodeElementIdMap(guide, domainId);
+            for (String gtCode: gtCodes){
+                String elementId = elementIdsByGtCodesMap.get(gtCode);
+                if (elementId!=null){
+                    elementIds.add(elementId);
+                }
+            }
+        }
+        return elementIds;
+    }
+
+    private Set<String> getElementIdsByCDSWrites(Collection<String> guideIds) throws InternalErrorException {
+        Set<String> elementIds = new HashSet<String>();
+        for (String guideId: guideIds){
+            Guide guide = getGuide(guideId);
+            if (guide==null){
+                throw new InternalErrorException(new Exception("Guide '"+guideId+"' not found on GuideManager."));
+            }
+            Set<String> gtCodes = GuideUtil.getGTCodesInWrites(guide);
+            Map<String, String> elementIdsByGtCodesMap = GuideUtil.getGtCodeElementIdMap(guide);
+            for (String gtCode: gtCodes){
+                String elementId = elementIdsByGtCodesMap.get(gtCode);
+                if (elementId==null){
+                    throw new InternalErrorException(new Exception("GT code '"+gtCode+"' not found for guide '"+guideId+"' on GuideManager."));
+                }
+                elementIds.add(elementId);
+            }
+        }
+        return elementIds;
     }
 
     public ArrayList<String> getAllGuideIds(){

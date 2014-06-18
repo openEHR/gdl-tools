@@ -1,6 +1,7 @@
 package se.cambio.cds.controller.guide;
 
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
@@ -8,6 +9,7 @@ import org.openehr.rm.support.terminology.TerminologyService;
 import se.cambio.cds.gdl.model.ArchetypeBinding;
 import se.cambio.cds.gdl.model.ElementBinding;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.gdl.model.Rule;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.parser.DADLSerializer;
 import se.cambio.cds.gdl.parser.GDLParser;
@@ -18,11 +20,10 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GuideUtil {
 
@@ -141,8 +142,10 @@ public class GuideUtil {
             return new DvText(((StringConstant)e).getString());
         } else if (e instanceof OrdinalConstant){
             return ((OrdinalConstant)e).getOrdinal();
+        } else if (e instanceof DateTimeConstant){
+            return new DvDateTime(e.getValue());
         } else {
-            return null; //TODO Proportion, dates, count, etc
+            return null; //TODO Proportion, date, time, count, etc
         }
     }
 
@@ -170,7 +173,113 @@ public class GuideUtil {
         return parser.parse(input);
     }
 
+    //Get all element paths in the guideline that contains a read statement
+    public static Set<String> getGTCodesInReads(Guide guide) throws InternalErrorException {
+        Set<String> gtCodes = new HashSet<String>();
+        if (guide.getDefinition()==null || guide.getDefinition().getRules()==null){
+            return gtCodes;
+        }
+        //Rules
+        for(Rule rule: guide.getDefinition().getRules().values()){
+            if (rule.getWhenStatements()!=null){
+                for(ExpressionItem expressionItem: rule.getWhenStatements()){
+                    addGTCodesInReads(expressionItem, gtCodes);
+                }
+            }
+            if (rule.getThenStatements()!=null){
+                for(ExpressionItem expressionItem: rule.getThenStatements()){
+                    addGTCodesInReads(expressionItem, gtCodes);
+                }
+            }
+        }
+        //Preconditions
+        if (guide.getDefinition().getPreConditionExpressions()!=null){
+            for(ExpressionItem expressionItem: guide.getDefinition().getPreConditionExpressions()){
+                addGTCodesInReads(expressionItem, gtCodes);
+            }
+        }
+        return gtCodes;
+    }
 
+    private static void addGTCodesInReads(ExpressionItem expressionItem, Set<String> gtCodes) throws InternalErrorException {
+        if (expressionItem instanceof BinaryExpression){
+            BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
+            addGTCodesInReads(binaryExpression.getLeft(), gtCodes);
+            addGTCodesInReads(binaryExpression.getRight(), gtCodes);
+        }else if (expressionItem instanceof UnaryExpression){
+            UnaryExpression unaryExpression = (UnaryExpression)expressionItem;
+            addGTCodesInReads(unaryExpression.getOperand(), gtCodes);
+        }else if (expressionItem instanceof FunctionalExpression){
+            FunctionalExpression functionalExpression = (FunctionalExpression)expressionItem;
+            for(ExpressionItem expressionItemAux: functionalExpression.getItems()){
+                addGTCodesInReads(expressionItemAux, gtCodes);
+            }
+        }else if (expressionItem instanceof AssignmentExpression){
+            AssignmentExpression assignmentExpression = (AssignmentExpression)expressionItem;
+            addGTCodesInReads(assignmentExpression.getAssignment(), gtCodes);
+        }else if (expressionItem instanceof CreateInstanceExpression){
+            AssignmentExpressionList assignmentExpressionList = ((CreateInstanceExpression)expressionItem).getAssigment();
+            for(AssignmentExpression assignmentExpression: assignmentExpressionList.getAssignmentExpressions()){
+                addGTCodesInReads(assignmentExpression, gtCodes);
+            }
+        }else if (expressionItem instanceof Variable){
+            Variable variable = (Variable)expressionItem;
+            gtCodes.add(variable.getCode());
+        }else if (expressionItem instanceof ConstantExpression){
+            //Do nothing
+        }else{
+            throw new InternalErrorException(new Exception("Unkown expression '"+expressionItem.getClass().getName()+"'"));
+        }
+    }
+
+    //Get all element paths in the guideline that contains a set/create statement
+    public static Set<String> getGTCodesInWrites(Guide guide) throws InternalErrorException {
+        Set<String> gtCodes = new HashSet<String>();
+        if (guide.getDefinition()==null || guide.getDefinition().getRules()==null){
+            return gtCodes;
+        }
+        //Rules
+        for(Rule rule: guide.getDefinition().getRules().values()){
+            if (rule.getThenStatements()!=null){
+                for(ExpressionItem expressionItem: rule.getThenStatements()){
+                    addGTCodesInWrites(expressionItem, gtCodes);
+                }
+            }
+        }
+        return gtCodes;
+    }
+
+    private static void addGTCodesInWrites(ExpressionItem expressionItem, Set<String> gtCodes) throws InternalErrorException {
+        if (expressionItem instanceof CreateInstanceExpression){
+            AssignmentExpressionList assignmentExpressionList = ((CreateInstanceExpression)expressionItem).getAssigment();
+            for(AssignmentExpression assignmentExpression: assignmentExpressionList.getAssignmentExpressions()){
+                addGTCodesInReads(assignmentExpression, gtCodes);
+            }
+        }else if (expressionItem instanceof AssignmentExpression){
+            gtCodes.add(((AssignmentExpression) expressionItem).getVariable().getCode());
+        }else{
+            throw new InternalErrorException(new Exception("Unkown expression '"+expressionItem.getClass().getName()+"'"));
+        }
+    }
+
+    public static Map<String, String> getGtCodeElementIdMap(Guide guide){
+        return getGtCodeElementIdMap(guide, null);
+    }
+
+    public static Map<String, String> getGtCodeElementIdMap(Guide guide, String domainId){
+        Map<String, String> gtCodeElementIdMap = new HashMap<String, String>();
+        if (guide.getDefinition()==null || guide.getDefinition().getArchetypeBindings()==null){
+            return gtCodeElementIdMap;
+        }
+        for(ArchetypeBinding archetypeBinding: guide.getDefinition().getArchetypeBindings().values()){
+            if (domainId==null || archetypeBinding.getDomain()==null|| domainId.equals(archetypeBinding.getDomain())){
+                for(ElementBinding elementBinding: archetypeBinding.getElements().values()){
+                    gtCodeElementIdMap.put(elementBinding.getId(), archetypeBinding.getArchetypeId()+elementBinding.getPath());
+                }
+            }
+        }
+        return gtCodeElementIdMap;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -3,6 +3,7 @@ package se.cambio.cds.controller.cds;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
+import se.cambio.cds.gdl.model.ArchetypeBinding;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -15,6 +16,7 @@ import se.cambio.cds.util.DVUtil;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
+import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
@@ -58,7 +60,6 @@ public class CDSManager {
     public static Map<String,Collection<ElementInstance>> getElementInstancesForPopulation(
             Collection <String> ehrIds,
             Collection<String> guideIds,
-            Collection<ArchetypeReference> ehrData,
             GuideManager guideManager,
             Calendar date) throws PatientNotFoundException, InternalErrorException{
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
@@ -79,8 +80,6 @@ public class CDSManager {
         }
         return cdsEIMap;
     }
-
-
 
     public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection eic){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
