@@ -141,11 +141,7 @@ public class RuleElementEditor {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         boolean onlyCDSDomain = onlyCDSDomain(arrle);
         Object selectedObject = null;
-        ArchetypeReference ar = null;
-        //If the set is inside a create instance action, we limit the selection to the created archetype reference
-        if (onlyCDSDomain && arrle.getParentRuleLine().getParentRuleLine() instanceof CreateInstanceActionRuleLine){
-            ar = ((CreateInstanceActionRuleLine)arrle.getParentRuleLine().getParentRuleLine()).getArchetypeReference();
-        }
+        ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arrle, onlyCDSDomain);
         DialogElementInstanceSelection dialog =
                 new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, onlyCDSDomain, ar);
         dialog.setVisible(true);
@@ -166,6 +162,17 @@ public class RuleElementEditor {
         }
     }
 
+    private static ArchetypeReference getArchetypeReferenceFromCreateInstanceRuleLine(RuleLineElementWithValue<?> ruleLineElement, boolean onlyCDSDomain){
+        //If the set is inside a create instance action, we limit the selection to the created archetype reference
+        if (onlyCDSDomain && ruleLineElement.getParentRuleLine().getParentRuleLine() instanceof CreateInstanceActionRuleLine){
+            return ((CreateInstanceActionRuleLine)ruleLineElement.getParentRuleLine().getParentRuleLine()).getArchetypeReference();
+        }else{
+            return null;
+        }
+    }
+
+    //This method creates a dialog, if the user selects a valid object (ArchetypeInstantiationRuleLine)
+    // it sets the referring element's value (CDSEntryRuleLineElement) to the GTCode of the archetype instance.
     public static void selectCDSEntry(CDSEntryRuleLineElement cdserle){
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         boolean onlyCDSDomain = true;
@@ -277,11 +284,7 @@ public class RuleElementEditor {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         boolean onlyCDSDomain = (aearle.getParentRuleLine() instanceof ActionRuleLine);
         Object selectedObject = null;
-        ArchetypeReference ar = null;
-        //If the set is inside a create instance action, we limit the selection to the created archetype reference
-        if (onlyCDSDomain && aearle.getParentRuleLine().getParentRuleLine() instanceof CreateInstanceActionRuleLine){
-            ar = ((CreateInstanceActionRuleLine)aearle.getParentRuleLine().getParentRuleLine()).getArchetypeReference();
-        }
+        ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(aearle, onlyCDSDomain);
         DialogElementAttributeFunctionInstanceSelection dialog =
                 new DialogElementAttributeFunctionInstanceSelection(EditorManager.getActiveEditorWindow(), controller, onlyCDSDomain, ar);
         dialog.setVisible(true);
@@ -359,11 +362,7 @@ public class RuleElementEditor {
                 if (arle.getParentRuleLine() instanceof WithElementPredicateExpressionDefinitionRuleLine){
                     inPredicate = true;
                 }
-                ArchetypeReference ar = null;
-                //If the set is inside a create instance action, we limit the selection to the created archetype reference
-                if (arle.getParentRuleLine().getParentRuleLine() instanceof CreateInstanceActionRuleLine){
-                    ar = ((CreateInstanceActionRuleLine)arle.getParentRuleLine().getParentRuleLine()).getArchetypeReference();
-                }
+                ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
                 DialogExpressionEditor dialog =
                         new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), archetypeElementVO, arle, inPredicate, ar);
                 dialog.setVisible(true);

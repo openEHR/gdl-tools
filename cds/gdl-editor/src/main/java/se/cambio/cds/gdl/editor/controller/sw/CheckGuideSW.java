@@ -8,6 +8,11 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 
+// CheckGuideSW will perform parsing and compiling of the guideline to make sure that is valid.
+// If so, it will notify to the controller that it can continue. We pass a pending action to it (pendingRunnable),
+// if the check is ok, the pending action will be processed. This is useful specially when changing from tabs
+// in the editor that deal with source code that can contain errors (GDL view) or trying to generate the CDS form
+// from the current guideline.
 public class CheckGuideSW extends CDSSwingWorker{
     private String _errorMsg = null;
     private GDLEditor _controller = null;

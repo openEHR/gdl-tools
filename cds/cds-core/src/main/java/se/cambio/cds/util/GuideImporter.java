@@ -310,17 +310,17 @@ public class GuideImporter {
             if (CreateInstanceExpression.FUNCTION_CREATE_NAME.equals(attribute)){
                 CreateInstanceActionRuleLine cirl = new CreateInstanceActionRuleLine();
                 Collection<RuleLine> ruleLinesAssignmentInstance = new ArrayList<RuleLine>();
-                if (!(expressionItemAux instanceof AssignmentExpressionList)){
+                if (!(expressionItemAux instanceof MultipleAssignmentExpression)){
                     throw new InternalErrorException(new Exception("Unknown expression in creation statement '"+expressionItemAux.toString()+"'"));
                 }
-                Collection<AssignmentExpression> assignmentExpressions = ((AssignmentExpressionList)expressionItemAux).getAssignmentExpressions();
+                Collection<AssignmentExpression> assignmentExpressions = ((MultipleAssignmentExpression)expressionItemAux).getAssignmentExpressions();
                 for(AssignmentExpression assignmentExpressionAux: assignmentExpressions){
                     processAssigmentExpression(ruleLinesAssignmentInstance, assignmentExpressionAux, gtCodeELementMap);
                 }
                 for(RuleLine ruleLine: ruleLinesAssignmentInstance){
                     cirl.addChildRuleLine(ruleLine);
                 }
-                cirl.getCdsEntryRuleLineElement().setValue(gtCodeRuleLineElement);
+                cirl.setCDSEntryGTCodeRuleLineElementValue(gtCodeRuleLineElement);
                 ruleLines.add(cirl);
             }else if (OpenEHRConst.NULL_FLAVOR_ATTRIBUTE.equals(attribute)){
                 SetElementWithNullValueActionRuleLine sewnvrl = new SetElementWithNullValueActionRuleLine();

@@ -218,8 +218,8 @@ public class GuideUtil {
             AssignmentExpression assignmentExpression = (AssignmentExpression)expressionItem;
             addGTCodesInReads(assignmentExpression.getAssignment(), gtCodes);
         }else if (expressionItem instanceof CreateInstanceExpression){
-            AssignmentExpressionList assignmentExpressionList = ((CreateInstanceExpression)expressionItem).getAssigment();
-            for(AssignmentExpression assignmentExpression: assignmentExpressionList.getAssignmentExpressions()){
+            MultipleAssignmentExpression multipleAssignmentExpression = ((CreateInstanceExpression)expressionItem).getAssigment();
+            for(AssignmentExpression assignmentExpression: multipleAssignmentExpression.getAssignmentExpressions()){
                 addGTCodesInReads(assignmentExpression, gtCodes);
             }
         }else if (expressionItem instanceof Variable){
@@ -251,8 +251,8 @@ public class GuideUtil {
 
     private static void addGTCodesInWrites(ExpressionItem expressionItem, Set<String> gtCodes) throws InternalErrorException {
         if (expressionItem instanceof CreateInstanceExpression){
-            AssignmentExpressionList assignmentExpressionList = ((CreateInstanceExpression)expressionItem).getAssigment();
-            for(AssignmentExpression assignmentExpression: assignmentExpressionList.getAssignmentExpressions()){
+            MultipleAssignmentExpression multipleAssignmentExpression = ((CreateInstanceExpression)expressionItem).getAssigment();
+            for(AssignmentExpression assignmentExpression: multipleAssignmentExpression.getAssignmentExpressions()){
                 addGTCodesInReads(assignmentExpression, gtCodes);
             }
         }else if (expressionItem instanceof AssignmentExpression){

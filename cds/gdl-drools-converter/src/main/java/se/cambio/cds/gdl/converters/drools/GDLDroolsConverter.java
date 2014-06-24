@@ -568,13 +568,13 @@ public class GDLDroolsConverter {
             Map<String, ArchetypeElementVO> elementMap,
             ExpressionItem expressionItem,
             Map<RefStat, Set<String>> stats) throws InternalErrorException {
-        if (!(expressionItem instanceof AssignmentExpressionList)){
+        if (!(expressionItem instanceof MultipleAssignmentExpression)){
             throw new InternalErrorException(new Exception("Guide="+guide.getId()+", Incorrect expression inside creation expression '"+expressionItem+"'"));
         }
-        AssignmentExpressionList assignmentExpressionList = (AssignmentExpressionList)expressionItem;
+        MultipleAssignmentExpression multipleAssignmentExpression = (MultipleAssignmentExpression)expressionItem;
         int i = 0;
         Map<String, String> elementIdsMap = new HashMap<String, String>();
-        for(AssignmentExpression assignmentExpressionAux: assignmentExpressionList.getAssignmentExpressions()){
+        for(AssignmentExpression assignmentExpressionAux: multipleAssignmentExpression.getAssignmentExpressions()){
             String gtCode = assignmentExpressionAux.getVariable().getCode();
             ArchetypeElementVO archetypeElementVO = elementMap.get(gtCode);
             if (archetypeElementVO==null){

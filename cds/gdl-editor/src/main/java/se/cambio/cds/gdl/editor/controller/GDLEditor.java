@@ -580,15 +580,15 @@ public class GDLEditor {
         if (term == null) {
             Term originalTerm = getTermDefinition(getOriginalLanguageCode())
                     .getTerms().get(gtCode);
-            term = getTermToDifferenLanguage(gtCode, originalTerm,
+            term = getTermToDifferentLanguage(gtCode, originalTerm,
                     getOriginalLanguageCode());
             getTermsMap(langCode).put(gtCode, term);
         }
         return getTermsMap(langCode).get(gtCode);
     }
 
-    private static Term getTermToDifferenLanguage(String gtCode,
-                                                  Term originalTerm, String originalLanguage) {
+    private static Term getTermToDifferentLanguage(String gtCode,
+                                                   Term originalTerm, String originalLanguage) {
         Term newTerm = new Term();
         newTerm.setId(gtCode);
         String text = null;
@@ -672,8 +672,7 @@ public class GDLEditor {
                         archetypeBinding.setTemplateId(ar.getIdTemplate());
                         archetypeBinding.setElements(elementMap);
                         archetypeBinding.setPredicateStatements(predicateStatements);
-                        String gtCode = airl.getGTCodeRuleLineElement().getValue();
-                        archetypeBinding.setId(gtCode);
+                        archetypeBinding.setId(airl.getGTCode());
                         guideDefinition.getArchetypeBindings().put(archetypeBinding.getId(), archetypeBinding);
                     }
                 }
@@ -774,6 +773,7 @@ public class GDLEditor {
         try {
             return GuideUtil.parseGuide(input);
         } catch (Exception e) {
+            e.printStackTrace();
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     EditorManager.getActiveEditorWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuideT"),
@@ -828,14 +828,14 @@ public class GDLEditor {
             for (String gtCode : originalTermDefinition.getTerms().keySet()) {
                 Term term = termDefinition.getTerms().get(gtCode);
                 if (term==null || term.getText()==null){
-                    term = getTermToDifferenLanguage(
+                    term = getTermToDifferentLanguage(
                             gtCode,
                             originalTermDefinition.getTerms().get(gtCode),
                             getOriginalLanguageCode());
                     termDefinition.getTerms().put(gtCode, term);
                 }
                 if (term==null || term.getText()==null){
-                    term = getTermToDifferenLanguage(
+                    term = getTermToDifferentLanguage(
                             gtCode,
                             getTermDefinition(_currentGuideLanguageCode).getTerms().get(gtCode),
                             _currentGuideLanguageCode);
@@ -924,7 +924,6 @@ public class GDLEditor {
     }
 
     public void gdlEditingChecked(Guide guide, boolean checkOk, Runnable pendingRunnable){
-//        setFree();
         if (checkOk && guide!=null){
             String auxOriginalGuide = _originalGuide;
             try {
@@ -1006,7 +1005,15 @@ public class GDLEditor {
         }
         _guideOntology.setTermDefinitions(_termDefinitions);
         _guideOntology.setTermBindings(_termBindings);
+        generateGTCodesForArchetypeBindings(guide);
+        _readableGuide =
+                GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
+        initResourceDescription();
+        updateOriginal();
+        return true;
+    }
 
+    private void generateGTCodesForArchetypeBindings(Guide guide){
         //Generate gt codes for archetype bindings (if missing)
         if (guide.getDefinition()!=null && guide.getDefinition().getArchetypeBindings()!=null){
             List<String> abCodes = new ArrayList<String>();
@@ -1023,12 +1030,6 @@ public class GDLEditor {
                 }
             }
         }
-
-        _readableGuide =
-                GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
-        initResourceDescription();
-        updateOriginal();
-        return true;
     }
 
     // Check if all elements inside map have the same amount of gtcodes as the
@@ -1046,7 +1047,7 @@ public class GDLEditor {
                                 "Language '" + langCode
                                         + "' does not contain gt code '"
                                         + gtCode + "'. Will be added...");
-                        Term term = getTermToDifferenLanguage(gtCode,
+                        Term term = getTermToDifferentLanguage(gtCode,
                                 originalTermDefinition.getTerms().get(gtCode),
                                 originalLang);
                         td.getTerms().put(gtCode, term);
@@ -1194,7 +1195,7 @@ public class GDLEditor {
     private String createNextArchetypeBindingCode(){
         String abCode = null;
         int i = 1;
-        Collection<String> archeytpeBindingCodesUsed = getArchetyoeBindingCodesUsed();
+        Collection<String> archeytpeBindingCodesUsed = getArchetypeBindingCodesUsed();
         boolean abCodeFound = false;
         while(!abCodeFound){
             abCode = GuideDefinition.ARCHETYPE_BINDING_PREFIX+ StringUtils.leftPad("" + (i++), 4, "0");
@@ -1203,15 +1204,15 @@ public class GDLEditor {
         return abCode;
     }
     */
-    private Collection<String> getArchetyoeBindingCodesUsed(){
-        ArrayList<String> archeytpeBindingCodesUsed = new ArrayList<String>();
+    private Collection<String> getArchetypeBindingCodesUsed(){
+        ArrayList<String> archetypeBindingCodesUsed = new ArrayList<String>();
         for (RuleLine ruleLine : getDefinitionRuleLines()){
             if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                 ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine = (ArchetypeInstantiationRuleLine) ruleLine;
-                archeytpeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());
+                archetypeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());
             }
         }
-        return archeytpeBindingCodesUsed;
+        return archetypeBindingCodesUsed;
     }
 
     public ArchetypeElementInstantiationRuleLine addArchetypeElement(

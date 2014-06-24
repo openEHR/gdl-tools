@@ -4,8 +4,10 @@ import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.CreateInstanceExpression;
 import se.cambio.cds.gdl.model.expression.Variable;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.CDSEntryRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.InstantiationRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.misc.CDSLanguageManager;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine{
+public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine, InstantiationRuleLine {
 
     private CDSEntryRuleLineElement cdsEntryRuleLineElement = null;
 
@@ -25,21 +27,19 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         getRuleLineElements().add(cdsEntryRuleLineElement);
     }
 
-    public CDSEntryRuleLineElement getCdsEntryRuleLineElement(){
-        return cdsEntryRuleLineElement;
+    public void setCDSEntryGTCodeRuleLineElementValue(GTCodeRuleLineElement value){
+        if (cdsEntryRuleLineElement!=null){
+            cdsEntryRuleLineElement.setValue(value);
+        }
     }
 
     public ArchetypeReference getArchetypeReference() {
         return cdsEntryRuleLineElement.getArchetypeReference();
     }
 
-    public void setCdsEntryRuleLineElement(CDSEntryRuleLineElement cdsEntryRuleLineElement) {
-        this.cdsEntryRuleLineElement = cdsEntryRuleLineElement;
-    }
-
     @Override
     public AssignmentExpression toAssignmentExpression() throws IllegalStateException {
-        String name = getArchetypeReference().getIdArchetype(); //TODO Use proper name
+        String name = getArchetypeReference().getIdArchetype();
         Variable var = new Variable(
                 cdsEntryRuleLineElement.getValue().getValue(),
                 null, name, CreateInstanceExpression.FUNCTION_CREATE_NAME);

@@ -2,13 +2,13 @@ package se.cambio.cds.gdl.model.expression;
 
 import java.util.List;
 
-public class AssignmentExpressionList extends ExpressionItem {
+public class MultipleAssignmentExpression extends ExpressionItem {
 
 	/**
      *
      */
     private static final long serialVersionUID = 1L;
-	public AssignmentExpressionList(List<AssignmentExpression> assignmentExpressions) {
+	public MultipleAssignmentExpression(List<AssignmentExpression> assignmentExpressions) {
 		super();
         this.assignmentExpressions = assignmentExpressions;
 	}
@@ -33,7 +33,7 @@ public class AssignmentExpressionList extends ExpressionItem {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AssignmentExpressionList other = (AssignmentExpressionList) obj;
+		MultipleAssignmentExpression other = (MultipleAssignmentExpression) obj;
 		if (assignmentExpressions == null) {
 			if (other.assignmentExpressions != null)
 				return false;

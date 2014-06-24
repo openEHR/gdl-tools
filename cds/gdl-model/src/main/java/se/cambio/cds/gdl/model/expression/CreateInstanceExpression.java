@@ -8,7 +8,7 @@ public class CreateInstanceExpression extends AssignmentExpression {
 
     private static final long serialVersionUID = 1L;
     public CreateInstanceExpression(Variable variable, List<AssignmentExpression> assignmentExpressions) {
-        super(variable, new AssignmentExpressionList(assignmentExpressions));
+        super(variable, new MultipleAssignmentExpression(assignmentExpressions));
     }
 
     public String toString() {
@@ -18,8 +18,8 @@ public class CreateInstanceExpression extends AssignmentExpression {
         return buf.toString();
     }
 
-    public AssignmentExpressionList getAssigment(){
-        return (AssignmentExpressionList)this.getAssignment();
+    public MultipleAssignmentExpression getAssigment(){
+        return (MultipleAssignmentExpression)this.getAssignment();
     }
 }
 /*

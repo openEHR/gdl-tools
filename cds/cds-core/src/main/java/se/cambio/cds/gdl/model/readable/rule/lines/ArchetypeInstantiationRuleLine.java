@@ -6,11 +6,12 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineEl
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.InstantiationRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ArchetypeInstantiationRuleLine extends RuleLine implements ArchetypeReferenceRuleLine,DefinitionsRuleLine, GTCodeDefiner {
+public class ArchetypeInstantiationRuleLine extends RuleLine implements ArchetypeReferenceRuleLine,DefinitionsRuleLine, GTCodeDefiner, InstantiationRuleLine {
 
     private ArchetypeReferenceRuleLineDefinitionElement archetypeReferenceRuleLineDefinitionElement = null;
     private GTCodeRuleLineElement gtCodeRuleLineElement = null;
@@ -25,6 +26,9 @@ public class ArchetypeInstantiationRuleLine extends RuleLine implements Archetyp
         getRuleLineElements().add(archetypeReferenceRuleLineDefinitionElement);
     }
 
+    public String getIdArchetype(){
+        return getArchetypeReference().getIdArchetype();
+    }
 
     public ArchetypeReferenceRuleLineDefinitionElement getArchetypeReferenceRuleLineDefinitionElement() {
         return archetypeReferenceRuleLineDefinitionElement;

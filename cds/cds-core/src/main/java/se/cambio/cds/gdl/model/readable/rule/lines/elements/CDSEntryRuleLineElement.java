@@ -40,7 +40,7 @@ public class CDSEntryRuleLineElement extends RuleLineElementWithValue<GTCodeRule
 
     public String toString(){
         if (getArchetypeInstantiationRuleLine()!=null){
-            return getArchetypeInstantiationRuleLine().getArchetypeReference().getIdArchetype();
+            return getArchetypeInstantiationRuleLine().getIdArchetype();
         }else{
             return getText();
         }
