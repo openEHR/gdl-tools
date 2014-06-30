@@ -10,6 +10,7 @@ import org.drools.definition.KnowledgePackage;
 import org.drools.runtime.StatelessKnowledgeSession;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
 import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
@@ -68,6 +69,7 @@ public class DroolsExecutionManager {
             session.setGlobal("$currentDateTime", currentDateTime);
             getDelegate()._logger = executionLogger;
             session.setGlobal("$executionLogger", executionLogger);
+            session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
             session.setGlobal("$execute", true);
             session.execute(workingMemoryObjects);
             executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
