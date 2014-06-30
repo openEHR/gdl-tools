@@ -1,1 +1,1 @@
-java -jar gdl-editor.jar
+java -Dfile.encoding=utf8 -jar gdl-editor.jar

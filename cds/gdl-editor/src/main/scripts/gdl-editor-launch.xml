@@ -9,13 +9,17 @@
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
-  <customProcName>false</customProcName>
+  <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
+  <icon>..\resources\img\editor.ico</icon>
   <jre>
     <path>jre</path>
     <minVersion>1.6.0</minVersion>
-    <maxVersion></maxVersion>
+    <maxVersion>1.7.6</maxVersion>
     <jdkPreference>preferJre</jdkPreference>
+    <initialHeapSize>128</initialHeapSize>
+    <maxHeapSize>1024</maxHeapSize>
+    <opt>-Dfile.encoding=utf8</opt>
   </jre>
 </launch4jConfig>
