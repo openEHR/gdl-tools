@@ -40,7 +40,7 @@ public class TerminologyDialogs {
             getDelegate().terminologySelectableNodes.put(terminologyId, dialog);
         }
         rootNode = dialog.getNode();
-        rootNode.setAllSelected(false);
+        rootNode.setAllSelected(false, true); //Force cleaning all selection
         if (selectedCodes!=null){
             for (String selectedCode: selectedCodes){
                 NodeDefinitionConversor.selectCodesWith(rootNode, selectedCode, false);

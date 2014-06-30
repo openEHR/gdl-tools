@@ -16,12 +16,12 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
      *
      */
     private static final long serialVersionUID = -7670845142505301936L;
-    private Boolean _seleccionado = Boolean.FALSE;
-    private Boolean _contineneSeleccionado = Boolean.FALSE;
+    private Boolean _selected = Boolean.FALSE;
+    private Boolean _containsSelected = Boolean.FALSE;
     private Boolean _visible = Boolean.TRUE;
     private String _descripcion = null;
     private String _tooltip = null;
-    private boolean _seleccionUnica = false;
+    private boolean _uniqueSelection = false;
     private boolean _hierarchySelection = true;
     private boolean _bold = false;
     private Color _foreground = null;
@@ -53,7 +53,7 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     public SelectableNode(String descripcion,
                           E objeto, Boolean seleccionado) {
         super(descripcion);
-        _seleccionado = seleccionado;
+        _selected = seleccionado;
         _descripcion = descripcion;
         _objeto = objeto;
     }
@@ -62,8 +62,8 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     public SelectableNode(String descripcion,
                           E objeto, Boolean seleccionUnica, Boolean seleccionado) {
         super(descripcion);
-        _seleccionado = seleccionado;
-        _seleccionUnica = seleccionUnica;
+        _selected = seleccionado;
+        _uniqueSelection = seleccionUnica;
         _descripcion = descripcion;
         _objeto = objeto;
     }
@@ -71,49 +71,53 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     public SelectableNode(String descripcion,
                           E objeto, Boolean seleccionUnica, Boolean seleccionado, String tooltip) {
         super(descripcion);
-        _seleccionado = seleccionado;
-        _seleccionUnica = seleccionUnica;
+        _selected = seleccionado;
+        _uniqueSelection = seleccionUnica;
         _descripcion = descripcion;
         _objeto = objeto;
         _tooltip = tooltip;
     }
 
     public Boolean getSeleccionado() {
-        return _seleccionado;
+        return _selected;
     }
 
     public Boolean getSeleccionUnica() {
-        return _seleccionUnica;
+        return _uniqueSelection;
     }
 
     public void setSingleSelection(Boolean seleccionUnica) {
-        _seleccionUnica = seleccionUnica;
+        _uniqueSelection = seleccionUnica;
     }
 
     public void setSelected(Boolean seleccionado) {
-        _seleccionado = seleccionado;
+        _selected = seleccionado;
     }
 
     public Boolean getContineneSeleccionado() {
-        return _contineneSeleccionado;
+        return _containsSelected;
     }
 
     public void setContainsSelected(Boolean seleccionado) {
-        _contineneSeleccionado = seleccionado;
+        _containsSelected = seleccionado;
     }
 
     public void setHierarchySelection(boolean hierarchySelection){
         _hierarchySelection = hierarchySelection;
     }
 
-    public void setAllSelected(Boolean seleccionado) {
-        _seleccionado = seleccionado;
-        _contineneSeleccionado = seleccionado;
-        if (_hierarchySelection){
-            if (!_seleccionUnica || !seleccionado){
+    public void setAllSelected(Boolean selected) {
+        setAllSelected(selected, false);
+    }
+
+    public void setAllSelected(Boolean selected, boolean force) {
+        _selected = selected;
+        _containsSelected = selected;
+        if (_hierarchySelection || force){
+            if (!_uniqueSelection || !selected){
                 Enumeration<?> e = children();
                 while (e.hasMoreElements()){
-                    ((SelectableNode<?>)e.nextElement()).setAllSelected(seleccionado);
+                    ((SelectableNode<?>)e.nextElement()).setAllSelected(selected, force);
                 }
             }
         }
@@ -185,13 +189,13 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void cambioEstado(SelectableNode<?> nodoSeleccionable){
-        if (_seleccionUnica && this.equals(nodoSeleccionable)){
+        if (_uniqueSelection && this.equals(nodoSeleccionable)){
             SelectableNode<E> nodoRaiz = this;
             while (nodoRaiz.getParent()!=null){
                 nodoRaiz = (SelectableNode)nodoRaiz.getParent();
             }
 
-            //Borramos todas las selecciones existentes
+            //Delete all previous selections
             nodoRaiz.setAllSelected(false);
             if (!this.equals(nodoRaiz)){
                 if (_hierarchySelection){
@@ -201,7 +205,7 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
             }
         }
         if (this.children !=null && this.children.contains(nodoSeleccionable)){
-            boolean seleccionado = !_seleccionUnica && getChildCount()>0;
+            boolean seleccionado = !_uniqueSelection && getChildCount()>0;
             boolean contieneSeleccionado = false;
             Enumeration<?> e = getAllchildren();
             while (e.hasMoreElements()){
@@ -215,9 +219,9 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
             }
             nodoSeleccionable = this;
             if (_hierarchySelection){
-                _seleccionado = seleccionado;
+                _selected = seleccionado;
             }
-            _contineneSeleccionado = contieneSeleccionado;
+            _containsSelected = contieneSeleccionado;
         }
         if (getParent() instanceof SelectableNode<?>){
             ((SelectableNode<E>)getParent()).cambioEstado(nodoSeleccionable);
@@ -227,16 +231,16 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     public void add(SelectableNode<?> newChild) {
         super.add(newChild);
         if (newChild.getSeleccionado()){
-            if (_hierarchySelection && getChildCount()==1 && _seleccionUnica){
-                _seleccionado = true;
+            if (_hierarchySelection && getChildCount()==1 && _uniqueSelection){
+                _selected = true;
             }
-            _contineneSeleccionado = true;
+            _containsSelected = true;
         }else{
             if (_hierarchySelection){
-                _seleccionado = false;
+                _selected = false;
             }
             if (newChild.getContineneSeleccionado()){
-                _contineneSeleccionado = true;
+                _containsSelected = true;
             }
         }
         newChild.setParentNode(this);
@@ -320,7 +324,7 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     }
 
     public SelectableNode<E> clone(){
-        return new SelectableNode<E>(_descripcion, _objeto, _seleccionUnica, _seleccionado);
+        return new SelectableNode<E>(_descripcion, _objeto, _uniqueSelection, _selected);
     }
 
 }
