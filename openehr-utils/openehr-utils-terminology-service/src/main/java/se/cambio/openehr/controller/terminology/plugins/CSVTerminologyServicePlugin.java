@@ -80,7 +80,6 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
     public boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes)
             throws UnsupportedTerminologyException, InvalidCodeException {
-
         checkTerminologySupported(code);
         boolean ret = false;
         for (CodePhrase cp : codes) {

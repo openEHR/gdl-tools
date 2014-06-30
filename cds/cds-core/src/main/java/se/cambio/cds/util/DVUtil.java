@@ -20,7 +20,9 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -88,6 +90,36 @@ public class DVUtil {
         }
     }
 
+    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
+        return isSubClassOfCached(inPredicate, ei, bindingsMap, false, dataValues);
+    }
+
+    public static boolean isSubClassOfCached(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, boolean negation, DataValue... dataValues) {
+        Map<String, Boolean> bindingMapByElementInstance = bindingsMap.get(ei);
+        if (bindingMapByElementInstance==null){
+            bindingMapByElementInstance = new HashMap<String, Boolean>();
+            bindingsMap.put(ei, bindingMapByElementInstance);
+        }
+        String dataValueKey = getDataValuesKey(dataValues);
+        Boolean isSubClass = bindingMapByElementInstance.get(dataValueKey);
+        if (isSubClass==null){
+            if (!negation){
+                isSubClass = isSubClassOf(inPredicate, ei, dataValues);
+            }else{
+                isSubClass = isNotSubClassOf(inPredicate, ei, dataValues);
+            }
+            bindingMapByElementInstance.put(dataValueKey, isSubClass);
+        }
+        return isSubClass;
+    }
+
+    private static String getDataValuesKey(DataValue[] dataValues){
+        StringBuffer sb = new StringBuffer();
+        for(DataValue dataValue: dataValues){
+            sb.append(dataValue.serialise());
+        }
+        return sb.toString();
+    }
 
     public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues) {
         if (!inPredicate && ei instanceof PredicateGeneratedElementInstance){
@@ -132,6 +164,11 @@ public class DVUtil {
         }else{
             return null;
         }
+    }
+
+
+    public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
+         return isSubClassOfCached(inPredicate, ei, bindingsMap, true, dataValues);
     }
 
     public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues){

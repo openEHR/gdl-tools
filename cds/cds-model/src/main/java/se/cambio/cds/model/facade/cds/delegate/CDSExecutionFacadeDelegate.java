@@ -62,7 +62,8 @@ public interface CDSExecutionFacadeDelegate {
     public Collection<ArchetypeReference> searchEHRData(String ehrId, Calendar date, Collection<String> guideIds)
             throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
 
-}/*
+    public void clearCachedKM() throws InternalErrorException;
+    }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

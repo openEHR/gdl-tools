@@ -1,0 +1,191 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1
+
+concept
+	[at0000]	-- CHA2DS2-VASc Diagnosis review
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Recording diagnosis review">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"*Recording diagnosis review(en)">
+			use = <"*(en)">
+			misuse = <"*(en)">
+			copyright = <"*(en)">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"47E510239290CA3A2F6E270C9294FDE5">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- CHA2DS2-VASc Diagnosis review
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0035] occurrences matches {0..1} matches {	-- Atrial fibrillation
+						value matches {
+							0|[local::at0050], 	-- Absent
+							1|[local::at0051]  	-- Present
+						}
+					}
+					ELEMENT[at0036] occurrences matches {0..1} matches {	-- Diabetes
+						value matches {
+							0|[local::at0050], 	-- Absent
+							1|[local::at0051]  	-- Present
+						}
+					}
+					ELEMENT[at0037] occurrences matches {0..1} matches {	-- Stroke
+						value matches {
+							0|[local::at0050], 	-- Absent
+							1|[local::at0051]  	-- Present
+						}
+					}
+					ELEMENT[at0038] occurrences matches {0..1} matches {	-- Congestive heart failure
+						value matches {
+							0|[local::at0050], 	-- Absent
+							1|[local::at0051]  	-- Present
+						}
+					}
+					ELEMENT[at0039] occurrences matches {0..1} matches {	-- Vascular disease
+						value matches {
+							0|[local::at0050], 	-- Absent
+							1|[local::at0051]  	-- Present
+						}
+					}
+					ELEMENT[at0040] occurrences matches {0..1} matches {	-- Hypertension
+						value matches {
+							0|[local::at0050], 	-- Absent
+							1|[local::at0051]  	-- Present
+						}
+					}
+					ELEMENT[at0041] occurrences matches {0..1} matches {	-- Date (time) of diagnosis review
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"CHA2DS2-VASc Diagnosis review">
+					description = <"">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"">
+				>
+				["at0035"] = <
+					text = <"Atrial fibrillation">
+					description = <"">
+				>
+				["at0036"] = <
+					text = <"Diabetes">
+					description = <"">
+				>
+				["at0037"] = <
+					text = <"Stroke">
+					description = <"">
+				>
+				["at0038"] = <
+					text = <"Congestive heart failure">
+					description = <"">
+				>
+				["at0039"] = <
+					text = <"Vascular disease">
+					description = <"">
+				>
+				["at0040"] = <
+					text = <"Hypertension">
+					description = <"">
+				>
+				["at0041"] = <
+					text = <"Date (time) of diagnosis review">
+					description = <"">
+				>
+				["at0050"] = <
+					text = <"Absent">
+					description = <"">
+				>
+				["at0051"] = <
+					text = <"Present">
+					description = <"">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"CHA2DS2-VASc Översikt av diagnos">
+					description = <"*unknown(en)">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"*@ internal @(en)">
+				>
+				["at0035"] = <
+					text = <"Förmaksflimmer">
+					description = <"**(en)">
+				>
+				["at0036"] = <
+					text = <"Diabetes">
+					description = <"**(en)">
+				>
+				["at0037"] = <
+					text = <"Tidigare Stroke/TIA">
+					description = <"**(en)">
+				>
+				["at0038"] = <
+					text = <"Hjärtsvikt/VK-dysfunktion">
+					description = <"**(en)">
+				>
+				["at0039"] = <
+					text = <"Vaskulär sjukdom">
+					description = <"**(en)">
+				>
+				["at0040"] = <
+					text = <"Hypertoni">
+					description = <"**(en)">
+				>
+				["at0041"] = <
+					text = <"	Tidpunkt för översyn av diagnos">
+					description = <"**(en)">
+				>
+				["at0050"] = <
+					text = <"Nej">
+					description = <"**(en)">
+				>
+				["at0051"] = <
+					text = <"Ja">
+					description = <"**(en)">
+				>
+			>
+		>
+	>

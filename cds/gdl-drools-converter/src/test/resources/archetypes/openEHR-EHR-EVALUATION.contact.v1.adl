@@ -1,0 +1,119 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.contact.v1
+
+concept
+	[at0000]	-- Contact
+language
+	original_language = <[ISO_639-1::en]>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record basic information about care contact">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"99A8DE80C08C402C84B01BB331BAA89C">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Contact
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- Contact ID
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0003] occurrences matches {0..1} matches {	-- Start time
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0004] occurrences matches {0..1} matches {	-- End time
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0005] occurrences matches {0..1} matches {	-- Responsible unit
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0006] occurrences matches {0..1} matches {	-- Contac type
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0007, 	-- Inpatient
+									at0008]	-- Outpatient
+								}
+							}
+						}
+					}
+					ELEMENT[at0009] occurrences matches {0..1} matches {	-- Reason for contact
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Contact">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Contact ID">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Start time">
+					description = <"*">
+				>
+				["at0004"] = <
+					text = <"End time">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"Responsible unit">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"Contac type">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"Inpatient">
+					description = <"Inpatient care contact">
+				>
+				["at0008"] = <
+					text = <"Outpatient">
+					description = <"Outpatient care contact">
+				>
+				["at0009"] = <
+					text = <"Reason for contact">
+					description = <"*">
+				>
+			>
+		>
+	>

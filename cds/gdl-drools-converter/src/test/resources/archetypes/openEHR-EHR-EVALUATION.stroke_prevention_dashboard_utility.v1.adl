@@ -1,0 +1,452 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.stroke_prevention_dashboard_utility.v1
+
+concept
+	[at0000]	-- Stroke prevention dashboard utility
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"*(en)">
+			use = <"*(en)">
+			misuse = <"*(en)">
+			copyright = <"*(en)">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"CD58414A642F07ED62ED924442D06930">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Stroke prevention dashboard utility
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- Responsible unit
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0012, 	-- Text 1
+									at0013, 	-- Text 2
+									at0014, 	-- Text 3
+									at0015, 	-- Other Unit
+									at0016]	-- Unknown
+								}
+							}
+						}
+					}
+					ELEMENT[at0007] occurrences matches {0..1} matches {	-- Decision postponed
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0017, 	-- 7 days
+									at0018, 	-- 14 days
+									at0019]	-- 28 days
+								}
+							}
+						}
+					}
+					ELEMENT[at0034] occurrences matches {0..1} matches {	-- CHA2DS2-VASc score
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0035, 	-- 0
+									at0036, 	-- 1
+									at0037, 	-- 2
+									at0038, 	-- 3
+									at0039, 	-- 4
+									at0040, 	-- 5
+									at0041, 	-- 6
+									at0042, 	-- 7
+									at0043, 	-- 8
+									at0044]	-- 9
+								}
+							}
+						}
+					}
+					CLUSTER[at0024] occurrences matches {0..1} matches {	-- Override
+						items cardinality matches {1..*; unordered} matches {
+							ELEMENT[at0033] occurrences matches {0..1} matches {	-- General override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+							ELEMENT[at0025] occurrences matches {0..1} matches {	-- Atrial fibrillation override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+							ELEMENT[at0026] occurrences matches {0..1} matches {	-- Diabetes override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+							ELEMENT[at0027] occurrences matches {0..1} matches {	-- Hypertension override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+							ELEMENT[at0028] occurrences matches {0..1} matches {	-- Congestive heart failure override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+							ELEMENT[at0029] occurrences matches {0..1} matches {	-- Previous stroke/TIA override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+							ELEMENT[at0030] occurrences matches {0..1} matches {	-- Vascular disease override
+								value matches {
+									DV_CODED_TEXT matches {
+										defining_code matches {
+											[local::
+											at0031, 	-- Absent
+											at0032]	-- Present
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Stroke prevention dashboard utility">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Responsible unit">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"Decision postponed">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"Text 1">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"Text 2">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"Text 3">
+					description = <"*">
+				>
+				["at0015"] = <
+					text = <"Other Unit">
+					description = <"*">
+				>
+				["at0016"] = <
+					text = <"Unknown">
+					description = <"*">
+				>
+				["at0017"] = <
+					text = <"7 days">
+					description = <"*">
+				>
+				["at0018"] = <
+					text = <"14 days">
+					description = <"*">
+				>
+				["at0019"] = <
+					text = <"28 days">
+					description = <"*">
+				>
+				["at0024"] = <
+					text = <"Override">
+					description = <"*">
+				>
+				["at0025"] = <
+					text = <"Atrial fibrillation override">
+					description = <"*">
+				>
+				["at0026"] = <
+					text = <"Diabetes override">
+					description = <"*">
+				>
+				["at0027"] = <
+					text = <"Hypertension override">
+					description = <"*">
+				>
+				["at0028"] = <
+					text = <"Congestive heart failure override">
+					description = <"*">
+				>
+				["at0029"] = <
+					text = <"Previous stroke/TIA override">
+					description = <"*">
+				>
+				["at0030"] = <
+					text = <"Vascular disease override">
+					description = <"*">
+				>
+				["at0031"] = <
+					text = <"Absent">
+					description = <"*">
+				>
+				["at0032"] = <
+					text = <"Present">
+					description = <"*">
+				>
+				["at0033"] = <
+					text = <"General override">
+					description = <"*">
+				>
+				["at0034"] = <
+					text = <"CHA2DS2-VASc score">
+					description = <"*">
+				>
+				["at0035"] = <
+					text = <"0">
+					description = <"*">
+				>
+				["at0036"] = <
+					text = <"1">
+					description = <"*">
+				>
+				["at0037"] = <
+					text = <"2">
+					description = <"*">
+				>
+				["at0038"] = <
+					text = <"3">
+					description = <"*">
+				>
+				["at0039"] = <
+					text = <"4">
+					description = <"*">
+				>
+				["at0040"] = <
+					text = <"5">
+					description = <"*">
+				>
+				["at0041"] = <
+					text = <"6">
+					description = <"*">
+				>
+				["at0042"] = <
+					text = <"7">
+					description = <"*">
+				>
+				["at0043"] = <
+					text = <"8">
+					description = <"*">
+				>
+				["at0044"] = <
+					text = <"9">
+					description = <"*">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Stroke prevention dashboard utility">
+					description = <"*unknown(en)">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"*@ internal @(en)">
+				>
+				["at0002"] = <
+					text = <"Ansvarig enhet">
+					description = <"**(en)">
+				>
+				["at0007"] = <
+					text = <"Beslut uppskjutet">
+					description = <"**(en)">
+				>
+				["at0012"] = <
+					text = <"Text 1">
+					description = <"**(en)">
+				>
+				["at0013"] = <
+					text = <"Text 2">
+					description = <"**(en)">
+				>
+				["at0014"] = <
+					text = <"Text 3">
+					description = <"**(en)">
+				>
+				["at0015"] = <
+					text = <"Annan enhet">
+					description = <"**(en)">
+				>
+				["at0016"] = <
+					text = <"Okänd">
+					description = <"**(en)">
+				>
+				["at0017"] = <
+					text = <"7 dagar">
+					description = <"**(en)">
+				>
+				["at0018"] = <
+					text = <"14 dagar">
+					description = <"**(en)">
+				>
+				["at0019"] = <
+					text = <"28 dagar">
+					description = <"**(en)">
+				>
+				["at0024"] = <
+					text = <"Omvärdering">
+					description = <"**(en)">
+				>
+				["at0025"] = <
+					text = <"Förmaksflimmer omvärdering">
+					description = <"**(en)">
+				>
+				["at0026"] = <
+					text = <"Diabetes omvärdering">
+					description = <"**(en)">
+				>
+				["at0027"] = <
+					text = <"Hypertoni omvärdering">
+					description = <"**(en)">
+				>
+				["at0028"] = <
+					text = <"Hjärtsvikt/VK-dysfunktion omvärdering">
+					description = <"**(en)">
+				>
+				["at0029"] = <
+					text = <"Tidigare Stroke/TIA omvärdering">
+					description = <"**(en)">
+				>
+				["at0030"] = <
+					text = <"Vaskulär sjukdom omvärdering">
+					description = <"**(en)">
+				>
+				["at0031"] = <
+					text = <"Saknas">
+					description = <"**(en)">
+				>
+				["at0032"] = <
+					text = <"Finns">
+					description = <"**(en)">
+				>
+				["at0033"] = <
+					text = <"Allmän omvärdering">
+					description = <"**(en)">
+				>
+				["at0034"] = <
+					text = <"CHA2DS2-VASc poäng">
+					description = <"**(en)">
+				>
+				["at0035"] = <
+					text = <"0">
+					description = <"**(en)">
+				>
+				["at0036"] = <
+					text = <"1">
+					description = <"**(en)">
+				>
+				["at0037"] = <
+					text = <"2">
+					description = <"**(en)">
+				>
+				["at0038"] = <
+					text = <"3">
+					description = <"**(en)">
+				>
+				["at0039"] = <
+					text = <"4">
+					description = <"**(en)">
+				>
+				["at0040"] = <
+					text = <"5">
+					description = <"**(en)">
+				>
+				["at0041"] = <
+					text = <"6">
+					description = <"**(en)">
+				>
+				["at0042"] = <
+					text = <"7">
+					description = <"**(en)">
+				>
+				["at0043"] = <
+					text = <"8">
+					description = <"**(en)">
+				>
+				["at0044"] = <
+					text = <"9">
+					description = <"**(en)">
+				>
+			>
+		>
+	>
