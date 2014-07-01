@@ -56,6 +56,25 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
                 var,
                 assignmentExpressions);
     }
+
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(super.toString());
+        for (RuleLine ruleLine : getChildrenRuleLines()) {
+            sb.append(ruleLine.toString());
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public String toHTMLString(int level, String lang){
+        StringBuffer sb = new StringBuffer();
+        sb.append(super.toHTMLString(level, lang));
+        for (RuleLine ruleLine : getChildrenRuleLines()) {
+            sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
+        }
+        return sb.toString();
+    }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

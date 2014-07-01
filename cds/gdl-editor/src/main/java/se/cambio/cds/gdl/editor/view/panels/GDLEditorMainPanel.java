@@ -54,8 +54,8 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         buttonPanel.add(getSaveButton());
         buttonPanel.add(getAddRuleButton());
         buttonPanel.add(getCreateBindingButton());
-        buttonPanel.add(getBackToGuideButton());
         buttonPanel.add(getGenerateFormButton());
+        buttonPanel.add(getBackToGuideButton());
         add(buttonPanel, BorderLayout.NORTH);
         add(getMainPanel(), BorderLayout.CENTER);
 
