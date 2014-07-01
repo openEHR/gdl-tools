@@ -6,12 +6,10 @@
  */
 package se.cambio.cds.gdl.editor.util;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-
-import javax.swing.ImageIcon;
 
 /**
  * @author icorram
@@ -59,7 +57,8 @@ public class GDLEditorImageUtil {
 	public static final ImageIcon MAGNIFIER_ICON = GDLEditorImageUtil.getIcon("magnifier.png");
 	public static final ImageIcon REFRESH_ICON = GDLEditorImageUtil.getIcon("arrow_refresh.png");
 	public static final ImageIcon COMPILE_ICON = GDLEditorImageUtil.getIcon("cog_go.png");
-	
+    public static final ImageIcon RUN_ICON = GDLEditorImageUtil.getIcon("run.png");
+
 	public static final ImageIcon ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("ontology.png");
 	public static final ImageIcon ADD_ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("add_ontology.png");
 	

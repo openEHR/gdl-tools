@@ -52,12 +52,10 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
 
         buttonPanel.add(getLoadButton());
         buttonPanel.add(getSaveButton());
-        buttonPanel.add(getGenerateFormButton());
         buttonPanel.add(getAddRuleButton());
         buttonPanel.add(getCreateBindingButton());
         buttonPanel.add(getBackToGuideButton());
-        //buttonPanel.add(getTitleLabel());
-
+        buttonPanel.add(getGenerateFormButton());
         add(buttonPanel, BorderLayout.NORTH);
         add(getMainPanel(), BorderLayout.CENTER);
 
@@ -247,8 +245,8 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         if (generateFormButton == null) {
             generateFormButton = new JButton();
             generateFormButton.setAction(new GenerateFormAction());
-            generateFormButton.setText(GDLEditorLanguageManager.getMessage("GenerateForm"));
-            generateFormButton.setIcon(GDLEditorImageUtil.TEST_ICON);
+            generateFormButton.setText(GDLEditorLanguageManager.getMessage("Run"));
+            generateFormButton.setIcon(GDLEditorImageUtil.RUN_ICON);
             generateFormButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         }
         return generateFormButton;
