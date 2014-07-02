@@ -4,7 +4,7 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.listeners.SelectableRuleLineDragMouseListener;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineContainerPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;

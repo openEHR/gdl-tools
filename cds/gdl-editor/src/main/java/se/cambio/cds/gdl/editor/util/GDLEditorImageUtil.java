@@ -59,6 +59,7 @@ public class GDLEditorImageUtil {
 	public static final ImageIcon COMPILE_ICON = GDLEditorImageUtil.getIcon("cog_go.png");
     public static final ImageIcon RUN_ICON = GDLEditorImageUtil.getIcon("run.png");
 
+
 	public static final ImageIcon ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("ontology.png");
 	public static final ImageIcon ADD_ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("add_ontology.png");
 	

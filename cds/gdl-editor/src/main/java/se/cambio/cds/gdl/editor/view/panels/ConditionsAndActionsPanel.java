@@ -1,7 +1,7 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
 import javax.swing.*;
 import java.awt.*;

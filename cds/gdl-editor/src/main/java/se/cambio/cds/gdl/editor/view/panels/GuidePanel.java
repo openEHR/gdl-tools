@@ -3,8 +3,11 @@ package se.cambio.cds.gdl.editor.view.panels;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
+import se.cambio.cds.gdl.editor.controller.panelplugins.GDLEditorPluginPanelManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.view.swing.panel.AbstractPluginPanel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -77,6 +80,16 @@ public class GuidePanel extends JPanel {
                     GDLEditorImageUtil.HTML_ICON,
                     getHTMLPanel());
             guideEditorTabPane.setFocusable(true);
+            Guide guide = _controller.getGuide();
+            for (AbstractPluginPanel abstractPluginPanel : GDLEditorPluginPanelManager.getPluginPanels()) {
+                abstractPluginPanel.setGuide(guide);
+                abstractPluginPanel.setLanguage(_controller.getCurrentGuideLanguageCode());
+                guideEditorTabPane.addTab(
+                        abstractPluginPanel.getPluginName(),
+                        abstractPluginPanel.getPluginIcon(),
+                        abstractPluginPanel
+                );
+            }
             for (GuideExportPlugin guideExportPlugin : GuideExportPluginDirectory.getGuideExportPlugins()) {
                 guideEditorTabPane.addTab(
                         guideExportPlugin.getPluginName(),
