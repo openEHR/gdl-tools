@@ -83,7 +83,7 @@ public class StressTest {
 
     private static Collection<ElementInstance> getGeneratedElementInstances(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
-        for (int i = 0; i<3; i++){
+        for (int i = 0; i<1; i++){
             for(String icd10Code: ICD10_CODES){
                 ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, DIAGNOSIS_ARCHETYPE_ID, DIAGNOSIS_TEMPLATE_ID);
                 DataValue dataValue = new DvCodedText(icd10Code, "ICD10", icd10Code);

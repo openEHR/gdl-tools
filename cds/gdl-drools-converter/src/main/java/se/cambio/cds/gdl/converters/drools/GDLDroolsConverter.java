@@ -38,9 +38,7 @@ public class GDLDroolsConverter {
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToElementId = new HashMap<String, String>();
-
     private int creationIndex = 0;
-
     public String convertToDrools() throws InternalErrorException{
         StringBuffer sb = new StringBuffer();
         sb.append(getGuideHeader());
@@ -50,18 +48,15 @@ public class GDLDroolsConverter {
         // Add currentTime
         elementMap.put(OpenEHRConst.CURRENT_DATE_TIME_ID,
                 ArchetypeElements.CURRENT_DATE_TIME);
-
         Map<Integer, String> archetypeBindingIndexToDefinition = new HashMap<Integer, String>();
         Map<String, Integer> gtElementToArchetypeBindingIndex = new HashMap<String, Integer>();
         Map<String, ArchetypeBinding> archetypeBindings = guide.getDefinition().getArchetypeBindings();
-
         fillDefinitions(
                 archetypeBindings!=null?archetypeBindings.values():null,
                 archetypeBindingIndexToDefinition,
                 gtElementToArchetypeBindingIndex,
                 archetypeReferenceMap,
                 elementMap);
-
         Map<RefStat, Set<String>> preconditionStats = initStats();
         String preconditionStr = null;
         if (guide.getDefinition().getPreConditionExpressions() != null) {
@@ -72,11 +67,6 @@ public class GDLDroolsConverter {
                             elementMap,
                             preconditionStats);
         }
-        /*
-        StringBuffer preconditionInitSB = new StringBuffer();
-
-        String preconditionInitStr = preconditionInitSB.toString();
-        */
         if (guide.getDefinition().getRules()!=null){
             for (Rule rule : guide.getDefinition().getRules().values()) {
                 Map<RefStat, Set<String>> ruleStats = initStats();
@@ -117,11 +107,6 @@ public class GDLDroolsConverter {
                 if (hasValueChecks != null){
                     sb.append(hasValueChecks);
                 }
-                /*
-                if (preconditionInitStr != null){
-                    sb.append(preconditionInitStr);
-                }
-                */
                 if (preconditionStr != null){
                     sb.append(preconditionStr);
                 }
@@ -538,7 +523,7 @@ public class GDLDroolsConverter {
             }else if (attribute.equals(CreateInstanceExpression.FUNCTION_CREATE_NAME)) {
                 ArchetypeReference ar = archetypeReferenceMap.get(gtCode);
                 String arId = "newAR"+creationIndex;
-                sb.append("ArchetypeReference " + arId + " = new ArchetypeReference(\"CDS\", \"" + ar.getIdArchetype() + "\",null);\n");
+                sb.append("ArchetypeReference " + arId + " = new ArchetypeReference(\"CDS\", \"" + ar.getIdArchetype() + "\","+(ar.getIdTemplate()!=null?"\""+ar.getIdTemplate()+"\"":"null")+");\n");
                 sb.append("   insert("+arId+");\n");
                 insertAssignments(sb, arId, archetypeReferenceMap, elementMap, expressionItemAux, stats);
                 creationIndex++;
@@ -821,9 +806,9 @@ public class GDLDroolsConverter {
         } else if (OperatorKind.INEQUAL.equals(ok)) {
             return "!" + getEqualsString(handle, value, inPredicate);
         } else if (OperatorKind.IS_A.equals(ok)) {
-            return "DVUtil.isSubClassOf("+ inPredicate+", "+ handle + ", "+ getTermBindings(value) + ")";
+            return "DVUtil.isSubClassOf("+ inPredicate+", "+ handle + ", $bindingMap, "+ getTermBindings(value) + ")";
         } else if (OperatorKind.IS_NOT_A.equals(ok)) {
-            return "DVUtil.isNotSubClassOf(" + inPredicate + ", "+ handle+", "+ getTermBindings(value) + ")";
+            return "DVUtil.isNotSubClassOf(" + inPredicate + ", "+ handle+", $bindingMap, "+ getTermBindings(value) + ")";
         } else if (OperatorKind.GREATER_THAN.equals(ok)) {
             return getComparisonString(handle, value) + ">0";
         } else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(ok)) {
@@ -921,7 +906,6 @@ public class GDLDroolsConverter {
             return "null";
         }
         Map<String, TermBinding> termBindings = guide.getOntology().getTermBindings();
-
         // TODO log.warn if gt code is unbound to terminologies
         if(termBindings == null) {
             //Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
@@ -930,20 +914,13 @@ public class GDLDroolsConverter {
         String code = parseCode(value);
         StringBuffer buf = new StringBuffer("new DvCodedText[] {");
         boolean first = true;
-
         for(String terminology : termBindings.keySet()) {
-
             log.debug("terminology: " + terminology);
-
             TermBinding termBinding = termBindings.get(terminology);
             Map<String, Binding> bindings = termBinding.getBindings();
-
             log.debug("bindings: " + bindings);
-
             if(bindings.containsKey(code)) {
-
                 log.debug("hasCode: " + code);
-
                 Binding binding = bindings.get(code);
                 if(binding.getCodes() != null) {
                     for(CodePhrase cp : binding.getCodes()) {
@@ -994,7 +971,9 @@ public class GDLDroolsConverter {
                 + "import org.openehr.rm.datatypes.text.DvText;\n"
                 + "global se.cambio.cds.util.ExecutionLogger $executionLogger;\n"
                 + "global org.openehr.rm.datatypes.basic.DataValue $auxDV;\n"
-                + "global org.openehr.rm.datatypes.quantity.datetime.DvDateTime $"+OpenEHRConst.CURRENT_DATE_TIME_ID + ";\n\n";
+                + "global org.openehr.rm.datatypes.quantity.datetime.DvDateTime $"+OpenEHRConst.CURRENT_DATE_TIME_ID + ";\n"
+                + "global java.util.Map<se.cambio.cds.model.instance.ElementInstance, java.util.Map<String, Boolean>> $bindingMap;\n"
+                + "\n";
     }
 }
 /*

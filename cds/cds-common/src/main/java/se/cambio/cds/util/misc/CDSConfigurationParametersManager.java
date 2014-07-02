@@ -165,6 +165,7 @@ public final class CDSConfigurationParametersManager {
         try {
             String useLocalCachStr = CDSConfigurationParametersManager.getParameter(USE_LOCAL_CM_CACHE);
             useLocalCM = new Boolean(useLocalCachStr);
+            Logger.getLogger(CDSConfigurationParametersManager.class).info("'"+USE_LOCAL_CM_CACHE+"'="+useLocalCM+".");
         } catch (MissingConfigurationParameterException e) {
             Logger.getLogger(CDSConfigurationParametersManager.class).info("'"+USE_LOCAL_CM_CACHE+"' property not found. Using default ("+useLocalCM+").");
         }

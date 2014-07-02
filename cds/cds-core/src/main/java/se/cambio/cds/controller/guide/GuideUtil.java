@@ -181,18 +181,30 @@ public class GuideUtil {
         }
         //Rules
         for(Rule rule: guide.getDefinition().getRules().values()){
-            if (rule.getWhenStatements()!=null){
-                for(ExpressionItem expressionItem: rule.getWhenStatements()){
-                    addGTCodesInReads(expressionItem, gtCodes);
-                }
-            }
-            if (rule.getThenStatements()!=null){
-                for(ExpressionItem expressionItem: rule.getThenStatements()){
-                    addGTCodesInReads(expressionItem, gtCodes);
-                }
-            }
+           gtCodes.addAll(getGTCodesInReads(rule));
         }
         //Preconditions
+        gtCodes.addAll(getPreconditionGTCodesInReads(guide));
+        return gtCodes;
+    }
+
+    public static Set<String> getGTCodesInReads(Rule rule) throws InternalErrorException {
+        Set<String> gtCodes = new HashSet<String>();
+        if (rule.getWhenStatements()!=null){
+            for(ExpressionItem expressionItem: rule.getWhenStatements()){
+                addGTCodesInReads(expressionItem, gtCodes);
+            }
+        }
+        if (rule.getThenStatements()!=null){
+            for(ExpressionItem expressionItem: rule.getThenStatements()){
+                addGTCodesInReads(expressionItem, gtCodes);
+            }
+        }
+        return gtCodes;
+    }
+
+    public static Set<String> getPreconditionGTCodesInReads(Guide guide) throws InternalErrorException {
+        Set<String> gtCodes = new HashSet<String>();
         if (guide.getDefinition().getPreConditionExpressions()!=null){
             for(ExpressionItem expressionItem: guide.getDefinition().getPreConditionExpressions()){
                 addGTCodesInReads(expressionItem, gtCodes);
@@ -217,8 +229,8 @@ public class GuideUtil {
         }else if (expressionItem instanceof AssignmentExpression){
             AssignmentExpression assignmentExpression = (AssignmentExpression)expressionItem;
             addGTCodesInReads(assignmentExpression.getAssignment(), gtCodes);
-        }else if (expressionItem instanceof CreateInstanceExpression){
-            MultipleAssignmentExpression multipleAssignmentExpression = ((CreateInstanceExpression)expressionItem).getAssigment();
+        }else if (expressionItem instanceof MultipleAssignmentExpression){
+            MultipleAssignmentExpression multipleAssignmentExpression = (MultipleAssignmentExpression)expressionItem;
             for(AssignmentExpression assignmentExpression: multipleAssignmentExpression.getAssignmentExpressions()){
                 addGTCodesInReads(assignmentExpression, gtCodes);
             }
@@ -240,10 +252,16 @@ public class GuideUtil {
         }
         //Rules
         for(Rule rule: guide.getDefinition().getRules().values()){
-            if (rule.getThenStatements()!=null){
-                for(ExpressionItem expressionItem: rule.getThenStatements()){
-                    addGTCodesInWrites(expressionItem, gtCodes);
-                }
+            gtCodes.addAll(getGTCodesInWrites(rule));
+        }
+        return gtCodes;
+    }
+
+    public static Set<String> getGTCodesInWrites(Rule rule) throws InternalErrorException {
+        Set<String> gtCodes = new HashSet<String>();
+        if (rule.getThenStatements()!=null){
+            for(ExpressionItem expressionItem: rule.getThenStatements()){
+                addGTCodesInWrites(expressionItem, gtCodes);
             }
         }
         return gtCodes;
