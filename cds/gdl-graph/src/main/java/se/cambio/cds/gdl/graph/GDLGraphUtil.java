@@ -78,7 +78,10 @@ public class GDLGraphUtil {
     }
 
     public static DefaultEdge createDirectionalEdge(DefaultGraphCell n1, DefaultGraphCell n2){
-        DefaultEdge edge = new DefaultEdge();
+        return createDirectionalEdge(null, n1, n2);
+    }
+    public static DefaultEdge createDirectionalEdge(String label, DefaultGraphCell n1, DefaultGraphCell n2){
+        DefaultEdge edge = new DefaultEdge(label);
         // Fetch the ports from the new vertices, and connect them with the edge
         edge.setSource(n1.getChildAt(0));
         edge.setTarget(n2.getChildAt(0));

@@ -9,10 +9,15 @@ import org.jgraph.graph.GraphModel;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.Rule;
 import se.cambio.cds.gdl.model.TermDefinition;
+import se.cambio.cds.gdl.model.expression.BinaryExpression;
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
+import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * User: Iago.Corbal
@@ -64,8 +69,41 @@ public class GDLDecisionGraph {
     }
 
     public static Collection<DefaultGraphCell> createRuleNodes(Rule rule, TermDefinition termDefinition){
-        Collection<DefaultGraphCell> defaultGraphCells = new ArrayList<DefaultGraphCell>();
-        return defaultGraphCells;
+        List<DefaultGraphCell> graphCells = new ArrayList<DefaultGraphCell>();
+        DefaultGraphCell startNode = createNode();
+        graphCells.add(startNode);
+        DefaultGraphCell endNode = createNode();
+        for(ExpressionItem expressionItem: rule.getWhenStatements()){
+            addGraphCells(expressionItem, startNode, endNode, graphCells);
+            graphCells.add(endNode);
+            startNode = endNode;
+            endNode = createNode();
+        }
+        return graphCells;
+    }
+
+    public static void addGraphCells(ExpressionItem currentExpressionItem, DefaultGraphCell startNode, DefaultGraphCell endNode, List<DefaultGraphCell> graphCells){
+        if (currentExpressionItem instanceof BinaryExpression){
+            BinaryExpression binaryExpression = (BinaryExpression) currentExpressionItem;
+            if (OperatorKind.OR.equals(binaryExpression.getOperator())){
+                addGraphCells(binaryExpression.getLeft(), startNode, endNode, graphCells);
+                addGraphCells(binaryExpression.getRight(), startNode, endNode, graphCells);
+                return;
+            }else if (OperatorKind.AND.equals(binaryExpression.getOperator())){
+                DefaultGraphCell endNodeAux = createNode();
+                addGraphCells(binaryExpression.getLeft(), startNode, endNodeAux, graphCells);
+                startNode = endNodeAux;
+                addGraphCells(binaryExpression.getRight(), startNode, endNode, graphCells);
+                return;
+            }
+        }
+        DefaultGraphCell edge = GDLGraphUtil.createDirectionalEdge(currentExpressionItem.toString(), startNode, endNode);
+        graphCells.add(edge);
+    }
+
+    private static DefaultGraphCell createNode(){
+        DefaultGraphCell node = GDLGraphUtil.createNode("  ", Color.YELLOW.brighter().brighter());
+        return node;
     }
 
 }
