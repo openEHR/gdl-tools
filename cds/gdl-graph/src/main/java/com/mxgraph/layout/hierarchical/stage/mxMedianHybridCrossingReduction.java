@@ -11,6 +11,7 @@
 
 package com.mxgraph.layout.hierarchical.stage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,7 +30,6 @@ import com.mxgraph.layout.hierarchical.model.mxGraphHierarchyRank;
 public class mxMedianHybridCrossingReduction implements
 		mxHierarchicalLayoutStage/*, JGraphLayout.Stoppable*/
 {
-
 	/**
 	 * Reference to the enclosing layout algorithm
 	 */
@@ -492,17 +492,19 @@ public class mxMedianHybridCrossingReduction implements
 	private void medianRank(int rankValue, boolean downwardSweep)
 	{
 		int numCellsForRank = nestedBestRanks[rankValue].length;
-		MedianCellSorter[] medianValues = new MedianCellSorter[numCellsForRank];
+		ArrayList<MedianCellSorter> medianValues = new ArrayList<MedianCellSorter>(numCellsForRank);
+		boolean[] reservedPositions = new boolean[numCellsForRank];
 
 		for (int i = 0; i < numCellsForRank; i++)
 		{
 			mxGraphAbstractHierarchyCell cell = nestedBestRanks[rankValue][i];
-			medianValues[i] = new MedianCellSorter();
-			medianValues[i].cell = cell;
+			MedianCellSorter sorterEntry = new MedianCellSorter();
+			sorterEntry.cell = cell;
 
 			// Flip whether or not equal medians are flipped on up and down
 			// sweeps
-			medianValues[i].nudge = !downwardSweep;
+			// todo reimplement some kind of nudging depending on sweep
+			//nudge = !downwardSweep;
 			Collection<mxGraphAbstractHierarchyCell> nextLevelConnectedCells;
 
 			if (downwardSweep)
@@ -530,26 +532,32 @@ public class mxMedianHybridCrossingReduction implements
 			if (nextLevelConnectedCells != null
 					&& nextLevelConnectedCells.size() != 0)
 			{
-				medianValues[i].medianValue = medianValue(
+				sorterEntry.medianValue = medianValue(
 						nextLevelConnectedCells, nextRankValue);
+				medianValues.add(sorterEntry);
 			}
 			else
 			{
-				// Nodes with no adjacent vertices are given a median value of
-				// -1 to indicate to the median function that they should be
-				// left of their current position if possible.
-				medianValues[i].medianValue = -1.0; // TODO needs to account for
-				// both layers
+				// Nodes with no adjacent vertices are flagged in the reserved array 
+				// to indicate they should be left in their current position.
+				reservedPositions[cell.getGeneralPurposeVariable(rankValue)] = true;
 			}
 		}
 
-		Arrays.sort(medianValues);
+		MedianCellSorter[] medianArray = medianValues.toArray(new MedianCellSorter[medianValues.size()]);
+		Arrays.sort(medianArray);
 
 		// Set the new position of each node within the rank using
 		// its temp variable
+		int index = 0;
+		
 		for (int i = 0; i < numCellsForRank; i++)
 		{
-			medianValues[i].cell.setGeneralPurposeVariable(rankValue, i);
+			if (!reservedPositions[i])
+			{
+				MedianCellSorter wrapper = medianArray[index++];
+				wrapper.cell.setGeneralPurposeVariable(rankValue, i);
+			}
 		}
 	}
 
@@ -615,11 +623,6 @@ public class mxMedianHybridCrossingReduction implements
 		public double medianValue = 0.0;
 
 		/**
-		 * Whether or not to flip equal median values.
-		 */
-		public boolean nudge = false;
-
-		/**
 		 * The cell whose median value is being calculated
 		 */
 		mxGraphAbstractHierarchyCell cell = null;
@@ -632,27 +635,21 @@ public class mxMedianHybridCrossingReduction implements
 		 * @return the standard return you would expect when comparing two
 		 *         double
 		 */
-        public int compareTo(Object arg0)
-        {
-            if (arg0 instanceof MedianCellSorter)
-            {
-                if (medianValue < ((MedianCellSorter) arg0).medianValue)
-                {
-                    return -1;
-                }
-                else if (medianValue > ((MedianCellSorter) arg0).medianValue)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                return 0;
-            }
-        }
+		public int compareTo(Object arg0)
+		{
+			if (arg0 instanceof MedianCellSorter)
+			{
+				if (medianValue < ((MedianCellSorter) arg0).medianValue)
+				{
+					return -1;
+				}
+				else if (medianValue > ((MedianCellSorter) arg0).medianValue)
+				{
+					return 1;
+				}
+			}
+			
+			return 0;
+		}
 	}
 }

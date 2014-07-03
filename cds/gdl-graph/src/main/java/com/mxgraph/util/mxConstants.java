@@ -1,20 +1,8 @@
 /**
- * $Id: mxConstants.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2007-2010, Gaudenz Alder, David Benson
+ * $Id: mxConstants.java,v 1.9 2014/02/08 14:05:57 gaudenz Exp $
+ * Copyright (c) 2007-2012, JGraph Ltd
  */
 package com.mxgraph.util;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Stroke;
-import java.awt.image.BufferedImage;
-
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 /**
  * Contains all global constants.
@@ -71,13 +59,8 @@ public class mxConstants
 	public static String NS_XLINK = "http://www.w3.org/1999/xlink";
 
 	/**
-	 * Contains an empty image of size 1, 1.
-	 */
-	public static Image EMPTY_IMAGE = new BufferedImage(1, 1,
-			BufferedImage.TYPE_INT_RGB);
-
-	/**
 	 * Comma separated list of default fonts for CSS properties.
+	 * And the default font family value for new image export.
 	 * Default is Arial, Helvetica.
 	 */
 	public static String DEFAULT_FONTFAMILIES = "Arial,Helvetica";
@@ -99,9 +82,27 @@ public class mxConstants
 	public static int DEFAULT_STARTSIZE = 40;
 
 	/**
+	 * Default line height for text output. Default is 1.2. This is ignored for HTML in
+	 * the current version of Java. See
+	 * http://docs.oracle.com/javase/6/docs/api/index.html?javax/swing/text/html/CSS.html
+	 */
+	public static float LINE_HEIGHT = 1.2f;
+
+	/**
+	 * Specifies if absolute line heights should be used (px) in CSS. Default
+	 * is false. Set this to true for backwards compatibility.
+	 */
+	public static boolean ABSOLUTE_LINE_HEIGHT = false;
+
+	/**
 	 * Specifies the line spacing. Default is 0.
 	 */
 	public static int LINESPACING = 0;
+
+	/**
+	 * Whether or not to split whole words when applying word wrapping in mxUtils.wordWrap.
+	 */
+	public static boolean SPLIT_WORDS = true;
 
 	/**
 	 * Defines the inset in absolute pixels between the label bounding box and
@@ -126,9 +127,14 @@ public class mxConstants
 	public static int DEFAULT_IMAGESIZE = 24;
 
 	/**
-	 * Defines the color to be used for shadows. Default is gray.
+	 * Defines the default opacity for stencils shadows. Default is 1.
 	 */
-	public static Color SHADOW_COLOR = Color.gray;
+	public static int STENCIL_SHADOW_OPACITY = 1;
+
+	/**
+	 * Defines the default shadow color for stencils. Default is "gray".
+	 */
+	public static String STENCIL_SHADOWCOLOR = "gray";
 
 	/**
 	 * Defines the x-offset to be used for shadows. Default is 2.
@@ -152,16 +158,6 @@ public class mxConstants
 	public static String SVG_SHADOWTRANSFORM = "translate(2 3)";
 
 	/**
-	 * Specifies the default valid color. Default is green.
-	 */
-	public static Color DEFAULT_VALID_COLOR = Color.GREEN;
-
-	/**
-	 * Specifies the default invalid color. Default is red.
-	 */
-	public static Color DEFAULT_INVALID_COLOR = Color.RED;
-
-	/**
 	 * Specifies the default dash pattern, 3 pixels solid, 3 pixels clear.
 	 */
 	public static float[] DEFAULT_DASHED_PATTERN = new float[] {3.0f , 3.0f};
@@ -171,16 +167,6 @@ public class mxConstants
 	 * created from its base curve
 	 */
 	public static double DEFAULT_LABEL_BUFFER = 12.0;
-
-	/**
-	 * Defines the rubberband border color. 
-	 */
-	public static Color RUBBERBAND_BORDERCOLOR = new Color(51, 153, 255);
-
-	/**
-	 * Defines the rubberband fill color with an alpha of 80.
-	 */
-	public static Color RUBBERBAND_FILLCOLOR = new Color(51, 153, 255, 80);
 
 	/**
 	 * Defines the handle size. Default is 7.
@@ -193,31 +179,6 @@ public class mxConstants
 	public static int LABEL_HANDLE_SIZE = 4;
 
 	/**
-	 * Defines the handle border color. Default is black.
-	 */
-	public static Color HANDLE_BORDERCOLOR = Color.black;
-
-	/**
-	 * Defines the handle fill color. Default is green.
-	 */
-	public static Color HANDLE_FILLCOLOR = Color.green;
-
-	/**
-	 * Defines the label handle fill color. Default is yellow.
-	 */
-	public static Color LABEL_HANDLE_FILLCOLOR = Color.yellow;
-
-	/**
-	 * Defines the connect handle fill color. Default is blue.
-	 */
-	public static Color CONNECT_HANDLE_FILLCOLOR = Color.blue;
-
-	/**
-	 * Defines the handle fill color for locked handles. Default is red.
-	 */
-	public static Color LOCKED_HANDLE_FILLCOLOR = Color.red;
-
-	/**
 	 * Defines the default value for the connect handle. Default is false.
 	 */
 	public static boolean CONNECT_HANDLE_ENABLED = false;
@@ -226,60 +187,6 @@ public class mxConstants
 	 * Defines the connect handle size. Default is 8.
 	 */
 	public static int CONNECT_HANDLE_SIZE = 8;
-
-	/**
-	 * Defines the selection color for edges. Default is green.
-	 */
-	public static Color EDGE_SELECTION_COLOR = Color.green;
-
-	/**
-	 * Defines the selection color for vertices. Default is green.
-	 */
-	public static Color VERTEX_SELECTION_COLOR = Color.green;
-
-	/**
-	 * Defines the stroke used for painting selected edges. Default is a dashed
-	 * line.
-	 */
-	public static Stroke EDGE_SELECTION_STROKE = new BasicStroke(1,
-			BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {
-					3, 3 }, 0.0f);
-
-	/**
-	 * Defines the stroke used for painting the border of selected vertices.
-	 * Default is a dashed line.
-	 */
-	public static Stroke VERTEX_SELECTION_STROKE = new BasicStroke(1,
-			BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {
-					3, 3 }, 0.0f);
-
-	/**
-	 * Defines the stroke used for painting the preview for new and existing edges
-	 * that are being changed. Default is a dashed line.
-	 */
-	public static Stroke PREVIEW_STROKE = new BasicStroke(1,
-			BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {
-					3, 3 }, 0.0f);
-
-	/**
-	 * Defines the border used for painting the preview when vertices are being
-	 * resized, or cells and labels are being moved.
-	 */
-	public static Border PREVIEW_BORDER = new LineBorder(
-			mxConstants.HANDLE_BORDERCOLOR)
-	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1348016511717964310L;
-
-		public void paintBorder(Component c, Graphics g, int x, int y,
-				int width, int height)
-		{
-			((Graphics2D) g).setStroke(VERTEX_SELECTION_STROKE);
-			super.paintBorder(c, g, x, y, width, height);
-		}
-	};
 
 	/**
 	 * Defines the length of the horizontal segment of an Entity Relation.
@@ -343,6 +250,14 @@ public class mxConstants
 	 * connecting to a cell while keeping the actual terminal of the edge.
 	 */
 	public static String STYLE_TARGET_PORT = "targetPort";
+
+	/**
+	 * Defines the direction(s) that edges are allowed to connect to cells in.
+	 * Possible values are <code>DIRECTION_NORTH, DIRECTION_SOUTH, 
+	 * DIRECTION_EAST</code> and <code>DIRECTION_WEST</code>.
+	 * 
+	 */
+	public static String STYLE_PORT_CONSTRAINT = "portConstraint";
 
 	/**
 	 * Defines the key for the opacity style. The type of the value is 
@@ -572,11 +487,13 @@ public class mxConstants
 
 	/**
 	 * Defines the key for the image style. Possible values are any image URL,
-	 * the type of the value is <code>String</code>. This is the path to the
+	 * registered key in mxImageResources or short data URI as defined in
+	 * mxImageBundle.
+	 * The type of the value is <code>String</code>. This is the path to the
 	 * image to image that is to be displayed within the label of a vertex. See
 	 * mxGraphics2DCanvas.getImageForStyle, loadImage and setImageBasePath on
 	 * how the image URL is resolved. Finally, mxUtils.loadImage is used for
-	 * loading the image for a given URL.
+	 * loading the image for a given value.
 	 */
 	public static String STYLE_IMAGE = "image";
 
@@ -605,6 +522,45 @@ public class mxConstants
 	 * image shapes. Possible values are all HTML color names or HEX codes.
 	 */
 	public static String STYLE_IMAGE_BORDER = "imageBorder";
+
+	/**
+	 * Defines the key for the horizontal image flip. This style is only used
+	 * in mxImageShape. Possible values are 0 and 1. Default is 0.
+	 */
+	public static String STYLE_IMAGE_FLIPH = "imageFlipH";
+
+	/**
+	 * Defines the key for the vertical image flip. This style is only used
+	 * in mxImageShape. Possible values are 0 and 1. Default is 0.
+	 */
+	public static String STYLE_IMAGE_FLIPV = "imageFlipV";
+
+	/**
+	 * Defines the key for the horizontal stencil flip. This style is only used
+	 * for <mxStencilShape>. Possible values are 0 and 1. Default is 0.
+	 */
+	public static String STYLE_STENCIL_FLIPH = "stencilFlipH";
+
+	/**
+	 * Defines the key for the vertical stencil flip. This style is only used
+	 * for <mxStencilShape>. Possible values are 0 and 1. Default is 0.
+	 */
+	public static String STYLE_STENCIL_FLIPV = "stencilFlipV";
+
+
+	/**
+	 * Defines the key for the horizontal image flip. This style is only used
+	 * in <mxImageShape>. Possible values are 0 and 1. Default is 0.
+	 */
+	public static String STYLE_FLIPH = "flipH";
+
+	/**
+	 * Variable: STYLE_FLIPV
+	 * 
+	 * Defines the key for the vertical flip. Possible values are 0 and 1.
+	 * Default is 0.
+	 */
+	public static String STYLE_FLIPV = "flipV";
 
 	/**
 	 * Defines the key for the noLabel style. If this is
@@ -731,6 +687,18 @@ public class mxConstants
 	public static String STYLE_STARTSIZE = "startSize";
 
 	/**
+	 * Defines the key for the endFill style. Use 0 for no fill or 1
+	 * (default) for fill. (This style is only exported via <mxImageExport>.)
+	 */
+	public static String STYLE_ENDFILL = "endFill";
+
+	/**
+	 * Defines the key for the startFill style. Use 0 for no fill or 1
+	 * (default) for fill. (This style is only exported via <mxImageExport>.)
+	 */
+	public static String STYLE_STARTFILL = "startFill";
+
+	/**
 	 * Defines the key for the dashed style. The type of this value is
 	 * <code>boolean</code> and the value determines whether or not an edge or
 	 * border is drawn with a dashed pattern along the line.
@@ -740,7 +708,12 @@ public class mxConstants
 	/**
 	 * Defines the key for the dashed pattern style. The type of this value
 	 * is <code>float[]</code> and the value specifies the dashed pattern 
-	 * to apply to edges drawn with this style.
+	 * to apply to edges drawn with this style. This style allows the user
+	 * to specify a custom-defined dash pattern. This is done using a series
+	 * of numbers. Dash styles are defined in terms of the length of the dash
+	 * (the drawn part of the stroke) and the length of the space between the
+	 * dashes. The lengths are relative to the line width: a length of "1" is
+	 * equal to the line width.
 	 */
 	public static String STYLE_DASH_PATTERN = "dashPattern";
 
@@ -873,6 +846,63 @@ public class mxConstants
 	public static String STYLE_FONTSTYLE = "fontStyle";
 
 	/**
+	 * Defines the key for the autosize style. This specifies if a cell should be
+	 * resized automatically if the value has changed. Possible values are 0 or 1.
+	 * Default is 0. See mxGraph.isAutoSizeCell. This is normally combined with
+	 * STYLE_RESIZABLE to disable manual sizing.
+	 */
+	public static String STYLE_AUTOSIZE = "autosize";
+
+	/**
+	 * Defines the key for the foldable style. This specifies if a cell is foldable
+	 * using a folding icon. Possible values are 0 or 1. Default is 1. See
+	 * mxGraph.isCellFoldable.
+	 */
+	public static String STYLE_FOLDABLE = "foldable";
+
+	/**
+	 * Defines the key for the editable style. This specifies if the value of
+	 * a cell can be edited using the in-place editor. Possible values are 0 or
+	 * 1. Default is 1. See mxGraph.isCellEditable.
+	 */
+	public static String STYLE_EDITABLE = "editable";
+
+	/**
+	 * Defines the key for the bendable style. This specifies if the control
+	 * points of an edge can be moved. Possible values are 0 or 1. Default is
+	 * 1. See mxGraph.isCellBendable.
+	 */
+	public static String STYLE_BENDABLE = "bendable";
+
+	/**
+	 * Defines the key for the movable style. This specifies if a cell can
+	 * be moved. Possible values are 0 or 1. Default is 1. See
+	 * mxGraph.isCellMovable.
+	 */
+	public static String STYLE_MOVABLE = "movable";
+
+	/**
+	 * Defines the key for the resizable style. This specifies if a cell can
+	 * be resized. Possible values are 0 or 1. Default is 1. See
+	 * mxGraph.isCellResizable.
+	 */
+	public static String STYLE_RESIZABLE = "resizable";
+
+	/**
+	 * Defines the key for the cloneable style. This specifies if a cell can
+	 * be cloned. Possible values are 0 or 1. Default is 1. See
+	 * mxGraph.isCellCloneable.
+	 */
+	public static String STYLE_CLONEABLE = "cloneable";
+
+	/**
+	 * Defines the key for the deletable style. This specifies if a cell can be
+	 * deleted. Possible values are 0 or 1. Default is 1. See
+	 * mxGraph.isCellDeletable.
+	 */
+	public static String STYLE_DELETABLE = "deletable";
+
+	/**
 	 * Defines the key for the shape style.
 	 * Possible values are any of the SHAPE_*
 	 * constants.
@@ -934,6 +964,11 @@ public class mxConstants
 	 * SHAPE_ELLIPSE
 	 */
 	public static final String SHAPE_ELLIPSE = "ellipse";
+
+	/**
+	 * SHAPE_DOUBLE_RECTANGLE
+	 */
+	public static final String SHAPE_DOUBLE_RECTANGLE = "doubleRectangle";
 
 	/**
 	 * SHAPE_DOUBLE_ELLIPSE
@@ -1081,6 +1116,36 @@ public class mxConstants
 	public static final String DIRECTION_WEST = "west";
 
 	/**
+	 * DIRECTION_MASK_NONE
+	 */
+	public static final int DIRECTION_MASK_NONE = 0x00;
+
+	/**
+	 * DIRECTION_MASK_WEST
+	 */
+	public static final int DIRECTION_MASK_WEST = 0x01;
+	
+	/**
+	 * DIRECTION_MASK_NORTH
+	 */
+	public static final int DIRECTION_MASK_NORTH = 0x02;
+
+	/**
+	 * DIRECTION_MASK_SOUTH
+	 */
+	public static final int DIRECTION_MASK_SOUTH = 0x04;
+
+	/**
+	 * DIRECTION_MASK_EAST
+	 */
+	public static final int DIRECTION_MASK_EAST = 0x08;
+	
+	/**
+	 * DIRECTION_MASK_EAST
+	 */
+	public static final int DIRECTION_MASK_ALL = 0x0F;
+
+	/**
 	 * ELBOW_VERTICAL
 	 */
 	public static final String ELBOW_VERTICAL = "vertical";
@@ -1119,7 +1184,19 @@ public class mxConstants
 	 * for the STYLE_EDGE style.
 	 */
 	public static final String EDGESTYLE_TOPTOBOTTOM = "topToBottomEdgeStyle";
+	
+	/**
+	 * Name of the orthogonal edge style. Can be used as a string value for
+	 * the STYLE_EDGE style.
+	 */
+	public static final String EDGESTYLE_ORTHOGONAL = "orthogonalEdgeStyle";
 
+	/**
+	 * Name of the generic segment edge style. Can be used as a string value
+	 * for the STYLE_EDGE style.
+	 */
+	public static final String EDGESTYLE_SEGMENT = "segmentEdgeStyle";
+ 
 	/**
 	 * Name of the ellipse perimeter. Can be used as a string value
 	 * for the STYLE_PERIMETER style.

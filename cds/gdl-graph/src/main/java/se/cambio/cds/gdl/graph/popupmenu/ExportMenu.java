@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.graph.popupmenu;
 
-import org.jgraph.JGraph;
+import com.mxgraph.swing.mxGraphComponent;
 import se.cambio.cds.gdl.graph.GDLGraphUtil;
 import se.cambio.openehr.util.ExceptionHandler;
 
@@ -23,24 +23,24 @@ public class ExportMenu extends JPopupMenu {
 
     private static final long serialVersionUID = -5734461135480001487L;
 
-    public ExportMenu(MouseEvent me, JGraph jGraph){
+    public ExportMenu(MouseEvent me, mxGraphComponent mxGraphComponent){
         JPopupMenu menu = new JPopupMenu();
         JMenuItem enableInstance =
                 new JMenuItem(
                         "Export (SVG)", //TODO i18n
                         null);
-        enableInstance.addActionListener(new ExportToSVG(jGraph));
+        enableInstance.addActionListener(new ExportToSVG(mxGraphComponent));
         menu.add(enableInstance);
 
-        Point pt = SwingUtilities.convertPoint(me.getComponent(), me.getPoint(), jGraph);
-        menu.show(jGraph, pt.x, pt.y);
+        Point pt = SwingUtilities.convertPoint(me.getComponent(), me.getPoint(), mxGraphComponent);
+        menu.show(mxGraphComponent, pt.x, pt.y);
 
     }
 
     private class ExportToSVG implements ActionListener{
-        private JGraph _jGraph = null;
-        public ExportToSVG(JGraph jGraph){
-            _jGraph = jGraph;
+        private mxGraphComponent _mxGraphComponent = null;
+        public ExportToSVG(mxGraphComponent mxGraphComponent){
+            _mxGraphComponent = mxGraphComponent;
         }
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -53,12 +53,12 @@ public class ExportMenu extends JPopupMenu {
             File file = new File(fileChooser.getFileSystemView()
                     .getDefaultDirectory() + "/guide-graph.svg");  //TODO Proper name
             fileChooser.setSelectedFile(file);
-            int result = fileChooser.showSaveDialog(_jGraph);
+            int result = fileChooser.showSaveDialog(_mxGraphComponent);
             File svgFile = fileChooser.getSelectedFile();
             if (result != JFileChooser.CANCEL_OPTION) {
                 try{
                     FileWriter fileWriter = new FileWriter(svgFile);
-                    GDLGraphUtil.exportGraph(fileWriter, _jGraph);
+                    GDLGraphUtil.exportGraph(fileWriter, _mxGraphComponent.getGraph());
                 }catch (IOException e1){
                     ExceptionHandler.handle(e1);
                 }

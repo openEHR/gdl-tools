@@ -1,6 +1,6 @@
 /**
- * $Id: mxStylesheetCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2006-2010, JGraph Ltd
+ * $Id: mxStylesheetCodec.java,v 1.2 2013/10/28 08:45:08 gaudenz Exp $
+ * Copyright (c) 2006-2013, JGraph Ltd
  */
 package com.mxgraph.io;
 
@@ -76,10 +76,9 @@ public class mxStylesheetCodec extends mxObjectCodec
 				{
 					Map.Entry<String, Object> entry2 = it2.next();
 					Element entryNode = enc.document.createElement("add");
-					entryNode.setAttribute("as", String
-							.valueOf(entry2.getKey()));
-					entryNode.setAttribute("value", String.valueOf(entry2
-							.getValue()));
+					entryNode.setAttribute("as",
+							String.valueOf(entry2.getKey()));
+					entryNode.setAttribute("value", getStringValue(entry2));
 					styleNode.appendChild(entryNode);
 				}
 
@@ -91,6 +90,19 @@ public class mxStylesheetCodec extends mxObjectCodec
 		}
 
 		return node;
+	}
+
+	/**
+	 * Returns the string for encoding the given value.
+	 */
+	protected String getStringValue(Map.Entry<String, Object> entry)
+	{
+		if (entry.getValue() instanceof Boolean)
+		{
+			return ((Boolean) entry.getValue()) ? "1" : "0";
+		}
+
+		return entry.getValue().toString();
 	}
 
 	/**
@@ -134,8 +146,7 @@ public class mxStylesheetCodec extends mxObjectCodec
 					{
 						String extend = ((Element) node).getAttribute("extend");
 						Map<String, Object> style = (extend != null) ? ((mxStylesheet) obj)
-								.getStyles().get(extend)
-								: null;
+								.getStyles().get(extend) : null;
 
 						if (style == null)
 						{

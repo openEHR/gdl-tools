@@ -1,13 +1,19 @@
 package com.mxgraph.layout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.mxgraph.model.mxGeometry;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxIGraphModel;
+import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
+import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 
 public class mxCompactTreeLayout extends mxGraphLayout
 {
@@ -23,16 +29,27 @@ public class mxCompactTreeLayout extends mxGraphLayout
 	protected boolean invert;
 
 	/**
-	 * If the parent should be resized to match the width/height of the
-	 * tree. Default is true.
+	 * If the parents should be resized to match the width/height of the
+	 * children. Default is true.
 	 */
 	protected boolean resizeParent = true;
 
 	/**
-	 * Specifies if the tree should be moved to the top, left corner
-	 * if it is inside a top-level layer. Default is true.
+	 * Padding added to resized parents
 	 */
-	protected boolean moveTree = true;
+	protected int groupPadding = 10;
+
+	/**
+	 * A set of the parents that need updating based on children
+	 * process as part of the layout
+	 */
+	protected Set<Object> parentsChanged = null;
+
+	/**
+	 * Specifies if the tree should be moved to the top, left corner
+	 * if it is inside a top-level layer. Default is false.
+	 */
+	protected boolean moveTree = false;
 
 	/**
 	 * Specifies if all edge points of traversed edges should be removed.
@@ -49,6 +66,32 @@ public class mxCompactTreeLayout extends mxGraphLayout
 	 * Holds the nodeDistance. Default is 20.
 	 */
 	protected int nodeDistance = 20;
+
+	/**
+	 * The preferred horizontal distance between edges exiting a vertex
+	 */
+	protected int prefHozEdgeSep = 5;
+
+	/**
+	 * The preferred vertical offset between edges exiting a vertex
+	 */
+	protected int prefVertEdgeOff = 2;
+
+	/**
+	 * The minimum distance for an edge jetty from a vertex
+	 */
+	protected int minEdgeJetty = 12;
+
+	/**
+	 * The size of the vertical buffer in the center of inter-rank channels
+	 * where edge control points should not be placed
+	 */
+	protected int channelBuffer = 4;
+
+	/**
+	 * Whether or not to apply the internal tree edge routing
+	 */
+	protected boolean edgeRouting = true;
 
 	/**
 	 * 
@@ -175,6 +218,16 @@ public class mxCompactTreeLayout extends mxGraphLayout
 		this.resetEdges = resetEdges;
 	}
 
+	public boolean isEdgeRouting()
+	{
+		return edgeRouting;
+	}
+
+	public void setEdgeRouting(boolean edgeRouting)
+	{
+		this.edgeRouting = edgeRouting;
+	}
+
 	/**
 	 * @return the levelDistance
 	 */
@@ -207,12 +260,23 @@ public class mxCompactTreeLayout extends mxGraphLayout
 		this.nodeDistance = nodeDistance;
 	}
 
+	public double getGroupPadding()
+	{
+		return groupPadding;
+	}
+
+	public void setGroupPadding(int groupPadding)
+	{
+		this.groupPadding = groupPadding;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * @see mxIGraphLayout#execute(java.lang.Object)
+	 * @see com.mxgraph.layout.mxIGraphLayout#execute(java.lang.Object)
 	 */
 	public void execute(Object parent)
 	{
+		super.execute(parent);
 		execute(parent, null);
 	}
 
@@ -240,9 +304,9 @@ public class mxCompactTreeLayout extends mxGraphLayout
 			// children
 			else
 			{
-				List<Object> roots = graph.findTreeRoots(parent, true, invert);
+				List<Object> roots = findTreeRoots(parent, invert);
 
-				if (roots != null && roots.size() > 0)
+				if (roots.size() > 0)
 				{
 					for (int i = 0; i < roots.size(); i++)
 					{
@@ -260,7 +324,15 @@ public class mxCompactTreeLayout extends mxGraphLayout
 
 		if (root != null)
 		{
-			parent = model.getParent(root);
+			if (resizeParent)
+			{
+				parentsChanged = new HashSet<Object>();
+			}
+			else
+			{
+				parentsChanged = null;
+			}
+
 			model.beginUpdate();
 
 			try
@@ -274,9 +346,9 @@ public class mxCompactTreeLayout extends mxGraphLayout
 					double x0 = graph.getGridSize();
 					double y0 = x0;
 
-					if (!moveTree || model.getParent(parent) == model.getRoot())
+					if (!moveTree)
 					{
-						mxGeometry g = model.getGeometry(root);
+						mxRectangle g = getVertexBounds(root);
 
 						if (g != null)
 						{
@@ -311,55 +383,21 @@ public class mxCompactTreeLayout extends mxGraphLayout
 							dy = Math.abs(y0 - bounds.getY());
 						}
 
-						if (parent != null)
+						if (dx != 0 || dy != 0)
 						{
-							mxRectangle size = graph.getStartSize(parent);
-							dx += size.getWidth();
-							dy += size.getHeight();
-
-							// Resize parent swimlane
-							if (resizeParent && !graph.isCellCollapsed(parent))
-							{
-								mxGeometry g = model.getGeometry(parent);
-
-								if (g != null)
-								{
-									double width = bounds.getWidth()
-											+ size.getWidth() - bounds.getX()
-											+ 2 * x0;
-									double height = bounds.getHeight()
-											+ size.getHeight() - bounds.getY()
-											+ 2 * y0;
-
-									g = (mxGeometry) g.clone();
-
-									if (g.getWidth() > width)
-									{
-										dx += (g.getWidth() - width) / 2;
-									}
-									else
-									{
-										g.setWidth(width);
-									}
-
-									if (g.getHeight() > height)
-									{
-										if (horizontal)
-										{
-											dy += (g.getHeight() - height) / 2;
-										}
-									}
-									else
-									{
-										g.setHeight(height);
-									}
-
-									model.setGeometry(parent, g);
-								}
-							}
+							moveNode(node, dx, dy);
 						}
 
-						moveNode(node, dx, dy);
+						if (resizeParent)
+						{
+							adjustParents();
+						}
+
+						if (edgeRouting)
+						{
+							// Iterate through all edges setting their positions
+							localEdgeProcessing(node);
+						}
 					}
 				}
 			}
@@ -368,6 +406,79 @@ public class mxCompactTreeLayout extends mxGraphLayout
 				model.endUpdate();
 			}
 		}
+	}
+
+	/**
+	 * Returns all visible children in the given parent which do not have
+	 * incoming edges. If the result is empty then the children with the
+	 * maximum difference between incoming and outgoing edges are returned.
+	 * This takes into account edges that are being promoted to the given
+	 * root due to invisible children or collapsed cells.
+	 * 
+	 * @param parent Cell whose children should be checked.
+	 * @param invert Specifies if outgoing or incoming edges should be counted
+	 * for a tree root. If false then outgoing edges will be counted.
+	 * @return List of tree roots in parent.
+	 */
+	public List<Object> findTreeRoots(Object parent, boolean invert)
+	{
+		List<Object> roots = new ArrayList<Object>();
+
+		if (parent != null)
+		{
+			mxIGraphModel model = graph.getModel();
+			int childCount = model.getChildCount(parent);
+			Object best = null;
+			int maxDiff = 0;
+
+			for (int i = 0; i < childCount; i++)
+			{
+				Object cell = model.getChildAt(parent, i);
+
+				if (model.isVertex(cell) && graph.isCellVisible(cell))
+				{
+					Object[] conns = graph.getConnections(cell, parent, true);
+					int fanOut = 0;
+					int fanIn = 0;
+
+					for (int j = 0; j < conns.length; j++)
+					{
+						Object src = graph.getView().getVisibleTerminal(
+								conns[j], true);
+
+						if (src == cell)
+						{
+							fanOut++;
+						}
+						else
+						{
+							fanIn++;
+						}
+					}
+
+					if ((invert && fanOut == 0 && fanIn > 0)
+							|| (!invert && fanIn == 0 && fanOut > 0))
+					{
+						roots.add(cell);
+					}
+
+					int diff = (invert) ? fanIn - fanOut : fanOut - fanIn;
+
+					if (diff > maxDiff)
+					{
+						maxDiff = diff;
+						best = cell;
+					}
+				}
+			}
+
+			if (roots.isEmpty() && best != null)
+			{
+				roots.add(best);
+			}
+		}
+
+		return roots;
 	}
 
 	/**
@@ -390,7 +501,7 @@ public class mxCompactTreeLayout extends mxGraphLayout
 
 	/**
 	 * Does a depth first search starting at the specified cell.
-	 * Makes sure the specified swimlane is never left by the
+	 * Makes sure the specified parent is never left by the
 	 * algorithm.
 	 */
 	protected TreeNode dfs(Object cell, Object parent, Set<Object> visited)
@@ -409,7 +520,9 @@ public class mxCompactTreeLayout extends mxGraphLayout
 
 			mxIGraphModel model = graph.getModel();
 			TreeNode prev = null;
-			Object[] out = graph.getEdges(cell, parent, invert, !invert, false);
+			Object[] out = graph.getEdges(cell, parent, invert, !invert, false,
+					true);
+			mxGraphView view = graph.getView();
 
 			for (int i = 0; i < out.length; i++)
 			{
@@ -423,9 +536,17 @@ public class mxCompactTreeLayout extends mxGraphLayout
 						setEdgePoints(edge, null);
 					}
 
+					if (edgeRouting)
+					{
+						setEdgeStyleEnabled(edge, false);
+						setEdgePoints(edge, null);
+					}
+
 					// Checks if terminal in same swimlane
-					Object target = graph.getView().getVisibleTerminal(edge,
-							invert);
+					mxCellState state = view.getState(edge);
+					Object target = (state != null) ? state
+							.getVisibleTerminal(invert) : view
+							.getVisibleTerminal(edge, invert);
 					TreeNode tmp = dfs(target, parent, visited);
 
 					if (tmp != null && model.getGeometry(target) != null)
@@ -545,10 +666,10 @@ public class mxCompactTreeLayout extends mxGraphLayout
 		node.child.offsetX = x + node.height;
 		node.child.offsetY = y1;
 
-		node.contour.upperHead = createLine(node.height, 0, createLine(x, y1,
-				node.contour.upperHead));
-		node.contour.lowerHead = createLine(node.height, 0, createLine(x, y2,
-				node.contour.lowerHead));
+		node.contour.upperHead = createLine(node.height, 0,
+				createLine(x, y1, node.contour.upperHead));
+		node.contour.lowerHead = createLine(node.height, 0,
+				createLine(x, y2, node.contour.lowerHead));
 	}
 
 	/**
@@ -753,31 +874,41 @@ public class mxCompactTreeLayout extends mxGraphLayout
 
 	/**
 	 * 
+	 * @param node
+	 * @param bounds
+	 * @return
 	 */
 	protected mxRectangle apply(TreeNode node, mxRectangle bounds)
 	{
-		mxRectangle g = graph.getModel().getGeometry(node.cell);
+		mxIGraphModel model = graph.getModel();
+		Object cell = node.cell;
+		mxRectangle g = model.getGeometry(cell);
 
-		if (node.cell != null && g != null)
+		if (cell != null && g != null)
 		{
-			if (isVertexMovable(node.cell))
+			if (isVertexMovable(cell))
 			{
-				g = setVertexLocation(node.cell, node.x, node.y);
+				g = setVertexLocation(cell, node.x, node.y);
+
+				if (resizeParent)
+				{
+					parentsChanged.add(model.getParent(cell));
+				}
 			}
 
 			if (bounds == null)
 			{
-				bounds = new mxRectangle(g.getX(), g.getY(), g.getWidth(), g
-						.getHeight());
+				bounds = new mxRectangle(g.getX(), g.getY(), g.getWidth(),
+						g.getHeight());
 			}
 			else
 			{
 				bounds = new mxRectangle(Math.min(bounds.getX(), g.getX()),
-						Math.min(bounds.getY(), g.getY()), Math.max(bounds
-								.getX()
-								+ bounds.getWidth(), g.getX() + g.getWidth()),
-						Math.max(bounds.getY() + bounds.getHeight(), g.getY()
-								+ g.getHeight()));
+						Math.min(bounds.getY(), g.getY()), Math.max(
+								bounds.getX() + bounds.getWidth(),
+								g.getX() + g.getWidth()), Math.max(
+								bounds.getY() + bounds.getHeight(), g.getY()
+										+ g.getHeight()));
 			}
 		}
 
@@ -790,6 +921,218 @@ public class mxCompactTreeLayout extends mxGraphLayout
 	protected Polyline createLine(double dx, double dy, Polyline next)
 	{
 		return new Polyline(dx, dy, next);
+	}
+
+	/**
+	 * Adjust parent cells whose child geometries have changed. The default 
+	 * implementation adjusts the group to just fit around the children with 
+	 * a padding.
+	 */
+	protected void adjustParents()
+	{
+		arrangeGroups(mxUtils.sortCells(this.parentsChanged, true).toArray(), groupPadding);
+	}
+
+	/**
+	 * Moves the specified node and all of its children by the given amount.
+	 */
+	protected void localEdgeProcessing(TreeNode node)
+	{
+		processNodeOutgoing(node);
+		TreeNode child = node.child;
+
+		while (child != null)
+		{
+			localEdgeProcessing(child);
+			child = child.next;
+		}
+	}
+
+	/**
+	 * Separates the x position of edges as they connect to vertices
+	 * 
+	 * @param node
+	 *            the root node of the tree
+	 */
+	protected void processNodeOutgoing(TreeNode node)
+	{
+		mxIGraphModel model = graph.getModel();
+
+		TreeNode child = node.child;
+		Object parentCell = node.cell;
+
+		int childCount = 0;
+		List<WeightedCellSorter> sortedCells = new ArrayList<WeightedCellSorter>();
+
+		while (child != null)
+		{
+			childCount++;
+
+			double sortingCriterion = child.x;
+
+			if (this.horizontal)
+			{
+				sortingCriterion = child.y;
+			}
+
+			sortedCells.add(new WeightedCellSorter(child,
+					(int) sortingCriterion));
+			child = child.next;
+		}
+
+		WeightedCellSorter[] sortedCellsArray = sortedCells
+				.toArray(new WeightedCellSorter[sortedCells.size()]);
+		Arrays.sort(sortedCellsArray);
+
+		double availableWidth = node.width;
+
+		double requiredWidth = (childCount + 1) * prefHozEdgeSep;
+
+		// Add a buffer on the edges of the vertex if the edge count allows
+		if (availableWidth > requiredWidth + (2 * prefHozEdgeSep))
+		{
+			availableWidth -= 2 * prefHozEdgeSep;
+		}
+
+		double edgeSpacing = availableWidth / childCount;
+
+		double currentXOffset = edgeSpacing / 2.0;
+
+		if (availableWidth > requiredWidth + (2 * prefHozEdgeSep))
+		{
+			currentXOffset += prefHozEdgeSep;
+		}
+
+		double currentYOffset = minEdgeJetty - prefVertEdgeOff;
+		double maxYOffset = 0;
+
+		mxRectangle parentBounds = getVertexBounds(parentCell);
+		child = node.child;
+
+		for (int j = 0; j < sortedCellsArray.length; j++)
+		{
+			Object childCell = sortedCellsArray[j].cell.cell;
+			mxRectangle childBounds = getVertexBounds(childCell);
+
+			Object[] edges = mxGraphModel.getEdgesBetween(model, parentCell,
+					childCell);
+
+			List<mxPoint> newPoints = new ArrayList<mxPoint>(3);
+			double x = 0;
+			double y = 0;
+
+			for (int i = 0; i < edges.length; i++)
+			{
+				if (this.horizontal)
+				{
+					// Use opposite co-ords, calculation was done for 
+					// 
+					x = parentBounds.getX() + parentBounds.getWidth();
+					y = parentBounds.getY() + currentXOffset;
+					newPoints.add(new mxPoint(x, y));
+					x = parentBounds.getX() + parentBounds.getWidth()
+							+ currentYOffset;
+					newPoints.add(new mxPoint(x, y));
+					y = childBounds.getY() + childBounds.getHeight() / 2.0;
+					newPoints.add(new mxPoint(x, y));
+					setEdgePoints(edges[i], newPoints);
+				}
+				else
+				{
+					x = parentBounds.getX() + currentXOffset;
+					y = parentBounds.getY() + parentBounds.getHeight();
+					newPoints.add(new mxPoint(x, y));
+					y = parentBounds.getY() + parentBounds.getHeight()
+							+ currentYOffset;
+					newPoints.add(new mxPoint(x, y));
+					x = childBounds.getX() + childBounds.getWidth() / 2.0;
+					newPoints.add(new mxPoint(x, y));
+					setEdgePoints(edges[i], newPoints);
+				}
+			}
+
+			if (j < (float) childCount / 2.0f)
+			{
+				currentYOffset += prefVertEdgeOff;
+			}
+			else if (j > (float) childCount / 2.0f)
+			{
+				currentYOffset -= prefVertEdgeOff;
+			}
+			// Ignore the case if equals, this means the second of 2
+			// jettys with the same y (even number of edges)
+
+			//								pos[k * 2] = currentX;
+			currentXOffset += edgeSpacing;
+			//								pos[k * 2 + 1] = currentYOffset;
+
+			maxYOffset = Math.max(maxYOffset, currentYOffset);
+		}
+	}
+
+	/**
+	 * A utility class used to track cells whilst sorting occurs on the weighted
+	 * sum of their connected edges. Does not violate (x.compareTo(y)==0) ==
+	 * (x.equals(y))
+	 */
+	protected class WeightedCellSorter implements Comparable<Object>
+	{
+
+		/**
+		 * The weighted value of the cell stored
+		 */
+		public int weightedValue = 0;
+
+		/**
+		 * Whether or not to flip equal weight values.
+		 */
+		public boolean nudge = false;
+
+		/**
+		 * Whether or not this cell has been visited in the current assignment
+		 */
+		public boolean visited = false;
+
+		/**
+		 * The cell whose median value is being calculated
+		 */
+		public TreeNode cell = null;
+
+		public WeightedCellSorter()
+		{
+			this(null, 0);
+		}
+
+		public WeightedCellSorter(TreeNode cell, int weightedValue)
+		{
+			this.cell = cell;
+			this.weightedValue = weightedValue;
+		}
+
+		/**
+		 * comparator on the medianValue
+		 * 
+		 * @param arg0
+		 *            the object to be compared to
+		 * @return the standard return you would expect when comparing two
+		 *         double
+		 */
+		public int compareTo(Object arg0)
+		{
+			if (arg0 instanceof WeightedCellSorter)
+			{
+				if (weightedValue > ((WeightedCellSorter) arg0).weightedValue)
+				{
+					return 1;
+				}
+				else if (weightedValue < ((WeightedCellSorter) arg0).weightedValue)
+				{
+					return -1;
+				}
+			}
+
+			return 0;
+		}
 	}
 
 	/**

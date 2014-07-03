@@ -1,5 +1,5 @@
 /*
- * $Id: mxGraphSelectionModel.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxGraphSelectionModel.java,v 1.1 2012/11/15 13:26:46 gaudenz Exp $
  * Copyright (c) 2001-2005, Gaudenz Alder
  * 
  * All rights reserved.
@@ -20,7 +20,6 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.util.mxUndoableEdit;
-import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
 
 /**
  * Implements the selection model for a graph.
@@ -44,9 +43,9 @@ import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
  *   {
  *     public void invoke(Object sender, mxEventObject evt)
  *     {
- *       mxSelectionModel model = (mxSelectionModel) sender;
- *       Collection added = (Collection) evt.getArg("added");
- *       Collection removed = (Collection) evt.getArg("removed");
+ *       mxGraphSelectionModel model = (mxSelectionModel) sender;
+ *       Collection added = (Collection) evt.getProperty("added");
+ *       Collection removed = (Collection) evt.getProperty("removed");
  *       selectionChanged(model, added, removed);
  *     }
  *   });
@@ -330,7 +329,7 @@ public class mxGraphSelectionModel extends mxEventSource
 	/**
 	 *
 	 */
-	public static class mxSelectionChange implements mxUndoableChange
+	public static class mxSelectionChange implements mxUndoableEdit.mxUndoableChange
 	{
 
 		/**

@@ -1,23 +1,24 @@
 package se.cambio.cds.gdl.graph;
 
-import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.svggen.SVGGraphics2D;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.swing.handler.mxRubberband;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxRectangle;
+import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxGraph;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
-import org.jgraph.JGraph;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.GraphConstants;
-import org.jgraph.plaf.basic.BasicGraphUI;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
+import se.cambio.cds.gdl.model.ElementBinding;
+import se.cambio.cds.gdl.model.Rule;
+import se.cambio.cds.gdl.model.TermDefinition;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 
 /**
  * User: Iago.Corbal
@@ -33,8 +34,9 @@ public class GDLGraphUtil {
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new GDLGraphContextMenu());
     }
 
-    public static void exportGraph(OutputStreamWriter writer, JGraph graph) throws SVGGraphics2DIOException {
-        Object[] cells = graph.getRoots();
+    public static void exportGraph(OutputStreamWriter writer, mxGraph graph) throws SVGGraphics2DIOException {
+        /*
+        Object[] cells = graph.getChildCells(null);
         Rectangle2D bounds = graph.toScreen(graph.getCellBounds(cells));
         DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
         Document document = domImpl.createDocument(null, "svg", null);
@@ -45,60 +47,82 @@ public class GDLGraphUtil {
         BasicGraphUI gui = (BasicGraphUI) graph.getUI();
         gui.drawGraph(svgGraphics, bounds);
         svgGraphics.stream(writer, false);
+        */
     }
 
-    public static DefaultGraphCell createNode(String label, Color color){
+    public static mxGraph createGraph(){
+        mxGraphModel model = new mxGraphModel();
+        mxGraph graph = new mxGraph(model);
+        graph.setCellsDeletable(true);
+        graph.getSelectionModel().setSingleSelection(false);
+        graph.setPortsEnabled(true);
+        graph.setHtmlLabels(true);
+        graph.setAllowDanglingEdges(false);
+        return graph;
+    }
+
+    public static mxGraphComponent createGraphComponent(mxGraph graph){
+        mxGraphComponent graphComponent = new mxGraphComponent(graph);
+        new mxRubberband(graphComponent);
+        layout(graphComponent);
+        return graphComponent;
+    }
+
+    public static Object insertNode(mxGraph mxGraph, String label, String color){
+        mxRectangle rectangle = mxUtils.getSizeForHtml(label, new HashMap<String, Object>(), 1, 0);
         int textWidth = (int)(DEFAULT_FONT.getStringBounds(label, FONT_RENDER_CONTEXT).getWidth());
-        DefaultGraphCell node = createNode(label, 0, 0, textWidth + 20, 35, null, false);
-        setBasicAttributes(node.getAttributes(), color);
+        return insertNode(mxGraph, label, 0, 0, rectangle.getWidth()+25, rectangle.getHeight()+15, color);
+    }
+
+    public static Object insertNode(mxGraph mxGraph, String label, double x, double y, double w, double h, String color) {
+        // Create node with the given label
+        Object node = mxGraph.insertVertex(mxGraph.getDefaultParent(), null, label, x, y, w, h);
+        StringBuffer styleSB = new StringBuffer();
+        styleSB.append(mxConstants.STYLE_SHAPE+"="+mxConstants.SHAPE_RECTANGLE+";");
+        styleSB.append(mxConstants.STYLE_ALIGN+"="+mxConstants.ALIGN_CENTER+";");
+        if (color!=null){
+            styleSB.append(mxConstants.STYLE_FILLCOLOR + "=" + color + ";");
+        }
+        mxGraph.getModel().setStyle(node, styleSB.toString());
         return node;
     }
 
-    public static DefaultGraphCell createNode(String name, double x, double y, double w, double h, Color bg, boolean raised) {
-        // Create vertex with the given name
-        DefaultGraphCell cell = new DefaultGraphCell(name);
-        // Set bounds
-        GraphConstants.setBounds(cell.getAttributes(), new Rectangle2D.Double(x, y, w, h));
-        // Set fill color
-        if (bg != null) {
-            GraphConstants.setGradientColor(cell.getAttributes(), bg);
-            GraphConstants.setOpaque(cell.getAttributes(), true);
-        }
-        // Set raised border
-        if (raised){
-            GraphConstants.setBorder(cell.getAttributes(), BorderFactory
-                    .createRaisedBevelBorder());
-        }else{
-            // Set black border
-            GraphConstants.setBorderColor(cell.getAttributes(), Color.black);
-        }
-        // Add a Floating Port
-        cell.addPort();
-        return cell;
+    public static void insertDirectionalEdge(mxGraph mxGraph, Object n1, Object n2){
+        insertDirectionalEdge(mxGraph, null, n1, n2);
+    }
+    public static void insertDirectionalEdge(mxGraph mxGraph, String label, Object n1, Object n2){
+        Object edge = mxGraph.insertEdge(mxGraph.getDefaultParent(), null, label, n1, n2);
+        StringBuffer styleSB = new StringBuffer();
+        //styleSB.append(mxConstants.STYLE_ALIGN+"="+mxConstants.ALIGN_CENTER+";");
+        mxGraph.getModel().setStyle(edge, styleSB.toString());
     }
 
-    public static DefaultEdge createDirectionalEdge(DefaultGraphCell n1, DefaultGraphCell n2){
-        return createDirectionalEdge(null, n1, n2);
-    }
-    public static DefaultEdge createDirectionalEdge(String label, DefaultGraphCell n1, DefaultGraphCell n2){
-        DefaultEdge edge = new DefaultEdge(label);
-        // Fetch the ports from the new vertices, and connect them with the edge
-        edge.setSource(n1.getChildAt(0));
-        edge.setTarget(n2.getChildAt(0));
-        // Set Arrow Style for edge
-        int arrow = GraphConstants.ARROW_CLASSIC;
-        GraphConstants.setLineEnd(edge.getAttributes(), arrow);
-        GraphConstants.setEndFill(edge.getAttributes(), true);
-        return edge;
+    public static Object createElementNode(mxGraph graph, ElementBinding elementBinding, TermDefinition termDefinition){
+        String label = termDefinition.getTerms().get(elementBinding.getId()).getText();
+        return GDLGraphUtil.insertNode(graph, label, "#31b2e6");
     }
 
-    private static void setBasicAttributes(AttributeMap attMap, Color color){
-        GraphConstants.setFont(attMap, DEFAULT_FONT);
-        GraphConstants.setBorder(attMap, BorderFactory.createRaisedBevelBorder());
-        GraphConstants.setBackground(attMap, color.darker().darker());
-        GraphConstants
-                .setGradientColor(attMap, color.brighter().brighter());
-        GraphConstants.setForeground(attMap, Color.white);
-        GraphConstants.setOpaque(attMap, true);
+    public static Object createSpecialNode(mxGraph graph, String label, TermDefinition termDefinition){
+        return GDLGraphUtil.insertNode(graph, label, "#cccccc");
+    }
+
+    public static Object createRuleNode(mxGraph graph, Rule rule, TermDefinition termDefinition){
+        String label = termDefinition.getTerms().get(rule.getId()).getText();
+        return GDLGraphUtil.insertNode(graph, label, "#a3e308");
+    }
+
+    public static Object createEndNode(mxGraph graph){
+        return GDLGraphUtil.insertNode(graph, "",0,0,40,4, "#000000");
+    }
+
+    public static void layout(mxGraphComponent graphComponent){
+        final mxGraph graph = graphComponent.getGraph();
+        final mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+        graph.getModel().beginUpdate();
+        try{
+            layout.execute(graph.getDefaultParent());
+        }finally{
+            graph.getModel().endUpdate();
+        }
     }
 }

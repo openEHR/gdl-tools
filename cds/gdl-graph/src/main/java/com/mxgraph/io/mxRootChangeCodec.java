@@ -1,6 +1,6 @@
 /**
- * $Id: mxRootChangeCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2006, Gaudenz Alder
+ * $Id: mxRootChangeCodec.java,v 1.2 2013/10/28 08:45:08 gaudenz Exp $
+ * Copyright (c) 2006-2013, Gaudenz Alder, David Benson
  */
 package com.mxgraph.io;
 
@@ -13,7 +13,7 @@ import com.mxgraph.model.mxICell;
 
 /**
  * Codec for mxChildChanges. This class is created and registered
- * dynamically at load time and used implicitely via mxCodec
+ * dynamically at load time and used implicitly via mxCodec
  * and the mxCodecRegistry.
  */
 public class mxRootChangeCodec extends mxObjectCodec
@@ -38,7 +38,7 @@ public class mxRootChangeCodec extends mxObjectCodec
 	}
 
 	/* (non-Javadoc)
-	 * @see mxObjectCodec#afterEncode(mxCodec, java.lang.Object, org.w3c.dom.Node)
+	 * @see com.mxgraph.io.mxObjectCodec#afterEncode(com.mxgraph.io.mxCodec, java.lang.Object, org.w3c.dom.Node)
 	 */
 	@Override
 	public Node afterEncode(mxCodec enc, Object obj, Node node)
@@ -93,7 +93,7 @@ public class mxRootChangeCodec extends mxObjectCodec
 	}
 
 	/* (non-Javadoc)
-	 * @see mxObjectCodec#afterDecode(mxCodec, org.w3c.dom.Node, java.lang.Object)
+	 * @see com.mxgraph.io.mxObjectCodec#afterDecode(com.mxgraph.io.mxCodec, org.w3c.dom.Node, java.lang.Object)
 	 */
 	@Override
 	public Object afterDecode(mxCodec dec, Node node, Object obj)

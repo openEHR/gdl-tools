@@ -1,5 +1,5 @@
 /**
- * $Id: mxVmlCanvas.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxVmlCanvas.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.canvas;
@@ -9,13 +9,13 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxRectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxPoint;
-import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
 
@@ -84,7 +84,7 @@ public class mxVmlCanvas extends mxBasicCanvas
 	}
 
 	/* (non-Javadoc)
-	 * @see mxICanvas#drawCell()
+	 * @see com.mxgraph.canvas.mxICanvas#drawCell()
 	 */
 	public Object drawCell(mxCellState state)
 	{
@@ -219,7 +219,7 @@ public class mxVmlCanvas extends mxBasicCanvas
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxICanvas#drawLabel()
+	 * @see com.mxgraph.canvas.mxICanvas#drawLabel()
 	 */
 	public Object drawLabel(String label, mxCellState state, boolean html)
 	{
@@ -304,11 +304,10 @@ public class mxVmlCanvas extends mxBasicCanvas
 			elem.setAttribute("coordsize", w + " " + h);
 			int inset = (int) ((3 + strokeWidth) * scale);
 
-			String points = "ar 0 0 " + w + " " + h + " 0 " + (h / 2)
-					+ " " + (w / 2) + " " + (h / 2) + " e ar "
-					+ inset + " " + inset + " " + (w - inset) + " "
-					+ (h - inset) + " 0 " + (h / 2) + " " + (w / 2)
-					+ " " + (h / 2);
+			String points = "ar 0 0 " + w + " " + h + " 0 " + (h / 2) + " "
+					+ (w / 2) + " " + (h / 2) + " e ar " + inset + " " + inset
+					+ " " + (w - inset) + " " + (h - inset) + " 0 " + (h / 2)
+					+ " " + (w / 2) + " " + (h / 2);
 
 			elem.setAttribute("path", points + " x e");
 		}
@@ -317,9 +316,8 @@ public class mxVmlCanvas extends mxBasicCanvas
 			elem = document.createElement("v:shape");
 			elem.setAttribute("coordsize", w + " " + h);
 
-			String points = "m " + (w / 2) + " 0 l " + w + " "
-					+ (h / 2) + " l " + (w / 2) + " " + h + " l 0 "
-					+ (h / 2);
+			String points = "m " + (w / 2) + " 0 l " + w + " " + (h / 2)
+					+ " l " + (w / 2) + " " + h + " l 0 " + (h / 2);
 
 			elem.setAttribute("path", points + " x e");
 		}
@@ -334,18 +332,17 @@ public class mxVmlCanvas extends mxBasicCanvas
 
 			if (direction.equals(mxConstants.DIRECTION_NORTH))
 			{
-				points = "m 0 " + h + " l " + (w / 2) + " 0 " + " l " + w
-						+ " " + h;
+				points = "m 0 " + h + " l " + (w / 2) + " 0 " + " l " + w + " "
+						+ h;
 			}
 			else if (direction.equals(mxConstants.DIRECTION_SOUTH))
 			{
-				points = "m 0 0 l " + (w / 2) + " " + h + " l " + w
-						+ " 0";
+				points = "m 0 0 l " + (w / 2) + " " + h + " l " + w + " 0";
 			}
 			else if (direction.equals(mxConstants.DIRECTION_WEST))
 			{
-				points = "m " + w + " 0 l " + w + " " + (h / 2) + " l "
-						+ w + " " + h;
+				points = "m " + w + " 0 l " + w + " " + (h / 2) + " l " + w
+						+ " " + h;
 			}
 			else
 			// east
@@ -393,17 +390,16 @@ public class mxVmlCanvas extends mxBasicCanvas
 					+ (int) (0.55 * h) + " c 0 " + (int) (0.66 * h) + " "
 					+ (int) (0.18 * w) + " " + (int) (0.9 * h) + " "
 					+ (int) (0.31 * w) + " " + (int) (0.8 * h) + " c "
-					+ (int) (0.4 * w) + " " + (h) + " " + (int) (0.7 * w)
-					+ " " + (h) + " " + (int) (0.8 * w) + " "
-					+ (int) (0.8 * h) + " c " + (w) + " "
-					+ (int) (0.8 * h) + " " + (w) + " " + (int) (0.6 * h)
-					+ " " + (int) (0.875 * w) + " " + (int) (0.5 * h) + " c "
-					+ (w) + " " + (int) (0.3 * h) + " " + (int) (0.8 * w)
-					+ " " + (int) (0.1 * h) + " " + (int) (0.625 * w) + " "
-					+ (int) (0.2 * h) + " c " + (int) (0.5 * w) + " "
-					+ (int) (0.05 * h) + " " + (int) (0.3 * w) + " "
-					+ (int) (0.05 * h) + " " + (int) (0.25 * w) + " "
-					+ (int) (0.25 * h);
+					+ (int) (0.4 * w) + " " + (h) + " " + (int) (0.7 * w) + " "
+					+ (h) + " " + (int) (0.8 * w) + " " + (int) (0.8 * h)
+					+ " c " + (w) + " " + (int) (0.8 * h) + " " + (w) + " "
+					+ (int) (0.6 * h) + " " + (int) (0.875 * w) + " "
+					+ (int) (0.5 * h) + " c " + (w) + " " + (int) (0.3 * h)
+					+ " " + (int) (0.8 * w) + " " + (int) (0.1 * h) + " "
+					+ (int) (0.625 * w) + " " + (int) (0.2 * h) + " c "
+					+ (int) (0.5 * w) + " " + (int) (0.05 * h) + " "
+					+ (int) (0.3 * w) + " " + (int) (0.05 * h) + " "
+					+ (int) (0.25 * w) + " " + (int) (0.25 * h);
 
 			elem.setAttribute("path", points + " x e");
 		}
@@ -413,16 +409,14 @@ public class mxVmlCanvas extends mxBasicCanvas
 			elem.setAttribute("coordsize", w + " " + h);
 
 			double width3 = w / 3;
-			String points = "m 0 " + (h) + " C 0 " + (3 * h / 5)
-					+ " 0 " + (2 * h / 5) + " " + (w / 2) + " "
-					+ (2 * h / 5) + " c " + (int) (w / 2 - width3) + " "
-					+ (2 * h / 5) + " " + (int) (w / 2 - width3) + " 0 "
-					+ (w / 2) + " 0 c " + (int) (w / 2 + width3) + " 0 "
-					+ (int) (w / 2 + width3) + " " + (2 * h / 5) + " "
-					+ (w / 2) + " " + (2 * h / 5) + " c "
-					+ (w) + " " + (2 * h / 5) + " " + (w)
-					+ " " + (3 * h / 5) + " " + (w) + " "
-					+ (h);
+			String points = "m 0 " + (h) + " C 0 " + (3 * h / 5) + " 0 "
+					+ (2 * h / 5) + " " + (w / 2) + " " + (2 * h / 5) + " c "
+					+ (int) (w / 2 - width3) + " " + (2 * h / 5) + " "
+					+ (int) (w / 2 - width3) + " 0 " + (w / 2) + " 0 c "
+					+ (int) (w / 2 + width3) + " 0 " + (int) (w / 2 + width3)
+					+ " " + (2 * h / 5) + " " + (w / 2) + " " + (2 * h / 5)
+					+ " c " + (w) + " " + (2 * h / 5) + " " + (w) + " "
+					+ (3 * h / 5) + " " + (w) + " " + (h);
 
 			elem.setAttribute("path", points + " x e");
 		}
@@ -433,13 +427,12 @@ public class mxVmlCanvas extends mxBasicCanvas
 
 			double dy = Math.min(40, Math.floor(h / 5));
 			String points = "m 0 " + (int) (dy) + " C 0 " + (int) (dy / 3)
-					+ " " + (w) + " " + (int) (dy / 3) + " " + (w)
-					+ " " + (int) (dy) + " L " + (w) + " "
-					+ (int) (h - dy) + " C " + (w) + " "
-					+ (int) (h + dy / 3) + " 0 " + (int) (h + dy / 3) + " 0 "
-					+ (int) (h - dy) + " x e" + " m 0 " + (int) (dy) + " C 0 "
-					+ (int) (2 * dy) + " " + (w) + " " + (int) (2 * dy)
-					+ " " + (w) + " " + (int) (dy);
+					+ " " + (w) + " " + (int) (dy / 3) + " " + (w) + " "
+					+ (int) (dy) + " L " + (w) + " " + (int) (h - dy) + " C "
+					+ (w) + " " + (int) (h + dy / 3) + " 0 "
+					+ (int) (h + dy / 3) + " 0 " + (int) (h - dy) + " x e"
+					+ " m 0 " + (int) (dy) + " C 0 " + (int) (2 * dy) + " "
+					+ (w) + " " + (int) (2 * dy) + " " + (w) + " " + (int) (dy);
 
 			elem.setAttribute("path", points + " e");
 		}
@@ -519,7 +512,7 @@ public class mxVmlCanvas extends mxBasicCanvas
 			elem.setAttribute("stroked", "false");
 		}
 
-		elem.setAttribute("strokeweight", String.valueOf(strokeWidth) + "pt");
+		elem.setAttribute("strokeweight", String.valueOf(strokeWidth) + "px");
 		appendVmlElement(elem);
 
 		return elem;
@@ -546,23 +539,24 @@ public class mxVmlCanvas extends mxBasicCanvas
 			mxPoint pt = pts.get(0);
 			Rectangle r = new Rectangle(pt.getPoint());
 
-			String d = "m " + Math.round(pt.getX()) + " "
-					+ Math.round(pt.getY());
+			StringBuilder buf = new StringBuilder("m " + Math.round(pt.getX())
+					+ " " + Math.round(pt.getY()));
 
 			for (int i = 1; i < pts.size(); i++)
 			{
 				pt = pts.get(i);
-				d += " l " + Math.round(pt.getX()) + " "
-						+ Math.round(pt.getY());
+				buf.append(" l " + Math.round(pt.getX()) + " "
+						+ Math.round(pt.getY()));
 
 				r = r.union(new Rectangle(pt.getPoint()));
 			}
 
+			String d = buf.toString();
 			elem.setAttribute("path", d);
 			elem.setAttribute("filled", "false");
 			elem.setAttribute("strokecolor", strokeColor);
 			elem.setAttribute("strokeweight", String.valueOf(strokeWidth)
-					+ "pt");
+					+ "px");
 
 			String s = "position:absolute;" + "left:" + String.valueOf(r.x)
 					+ "px;" + "top:" + String.valueOf(r.y) + "px;" + "width:"
@@ -570,8 +564,8 @@ public class mxVmlCanvas extends mxBasicCanvas
 					+ String.valueOf(r.height) + "px;";
 			elem.setAttribute("style", s);
 
-			elem.setAttribute("coordorigin", String.valueOf(r.x) + " "
-					+ String.valueOf(r.y));
+			elem.setAttribute("coordorigin",
+					String.valueOf(r.x) + " " + String.valueOf(r.y));
 			elem.setAttribute("coordsize", String.valueOf(r.width) + " "
 					+ String.valueOf(r.height));
 		}

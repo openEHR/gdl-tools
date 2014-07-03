@@ -1,5 +1,5 @@
 /**
- * $Id: mxChildChangeCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxChildChangeCodec.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2006, Gaudenz Alder
  */
 package com.mxgraph.io;
@@ -39,7 +39,7 @@ public class mxChildChangeCodec extends mxObjectCodec
 	}
 
 	/* (non-Javadoc)
-	 * @see mxObjectCodec#isReference(java.lang.Object, java.lang.String, java.lang.Object, boolean)
+	 * @see com.mxgraph.io.mxObjectCodec#isReference(java.lang.Object, java.lang.String, java.lang.Object, boolean)
 	 */
 	@Override
 	public boolean isReference(Object obj, String attr, Object value,
@@ -55,7 +55,7 @@ public class mxChildChangeCodec extends mxObjectCodec
 	}
 
 	/* (non-Javadoc)
-	 * @see mxObjectCodec#afterEncode(mxCodec, java.lang.Object, org.w3c.dom.Node)
+	 * @see com.mxgraph.io.mxObjectCodec#afterEncode(com.mxgraph.io.mxCodec, java.lang.Object, org.w3c.dom.Node)
 	 */
 	@Override
 	public Node afterEncode(mxCodec enc, Object obj, Node node)
@@ -142,7 +142,7 @@ public class mxChildChangeCodec extends mxObjectCodec
 	}
 
 	/* (non-Javadoc)
-	 * @see mxObjectCodec#afterDecode(mxCodec, org.w3c.dom.Node, java.lang.Object)
+	 * @see com.mxgraph.io.mxObjectCodec#afterDecode(com.mxgraph.io.mxCodec, org.w3c.dom.Node, java.lang.Object)
 	 */
 	@Override
 	public Object afterDecode(mxCodec dec, Node node, Object obj)

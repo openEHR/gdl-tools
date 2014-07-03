@@ -1,5 +1,5 @@
 /**
- * $Id: mxRectangle.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxRectangle.java,v 1.1 2012/11/15 13:26:39 gaudenz Exp $
  * Copyright (c) 2007-2010, Gaudenz Alder, David Benson
  */
 package com.mxgraph.util;
@@ -105,6 +105,22 @@ public class mxRectangle extends mxPoint
 	public void setHeight(double value)
 	{
 		height = value;
+	}
+
+	/**
+	 * Sets this rectangle to the specified values
+	 * 
+	 * @param x the new x-axis position
+	 * @param y the new y-axis position
+	 * @param w the new width of the rectangle
+	 * @param h the new height of the rectangle
+	 */
+	public void setRect(double x, double y, double w, double h)
+	{
+	    this.x = x;
+	    this.y = y;
+	    this.width = w;
+	    this.height = h;
 	}
 
 	/**

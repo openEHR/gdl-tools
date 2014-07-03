@@ -1,5 +1,5 @@
 /**
- * $Id: mxHtmlCanvas.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxHtmlCanvas.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.canvas;
@@ -83,7 +83,7 @@ public class mxHtmlCanvas extends mxBasicCanvas
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxICanvas#drawCell()
+	 * @see com.mxgraph.canvas.mxICanvas#drawCell()
 	 */
 	public Object drawCell(mxCellState state)
 	{
@@ -140,7 +140,7 @@ public class mxHtmlCanvas extends mxBasicCanvas
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxICanvas#drawLabel()
+	 * @see com.mxgraph.canvas.mxICanvas#drawLabel()
 	 */
 	public Object drawLabel(String label, mxCellState state, boolean html)
 	{

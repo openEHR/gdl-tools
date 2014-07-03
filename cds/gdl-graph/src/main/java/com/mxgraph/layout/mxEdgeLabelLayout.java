@@ -4,11 +4,11 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mxgraph.view.mxGraph;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
 public class mxEdgeLabelLayout extends mxGraphLayout
@@ -25,7 +25,7 @@ public class mxEdgeLabelLayout extends mxGraphLayout
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxIGraphLayout#execute(java.lang.Object)
+	 * @see com.mxgraph.layout.mxIGraphLayout#execute(java.lang.Object)
 	 */
 	public void execute(Object parent)
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: mxStyleRegistry.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxStyleRegistry.java,v 1.2 2013/02/20 11:41:05 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.view;
@@ -31,12 +31,15 @@ public class mxStyleRegistry
 		putValue(mxConstants.EDGESTYLE_LOOP, mxEdgeStyle.Loop);
 		putValue(mxConstants.EDGESTYLE_SIDETOSIDE, mxEdgeStyle.SideToSide);
 		putValue(mxConstants.EDGESTYLE_TOPTOBOTTOM, mxEdgeStyle.TopToBottom);
+		putValue(mxConstants.EDGESTYLE_ORTHOGONAL, mxEdgeStyle.OrthConnector);
+		putValue(mxConstants.EDGESTYLE_SEGMENT, mxEdgeStyle.SegmentConnector);
 
 		putValue(mxConstants.PERIMETER_ELLIPSE, mxPerimeter.EllipsePerimeter);
 		putValue(mxConstants.PERIMETER_RECTANGLE,
 				mxPerimeter.RectanglePerimeter);
 		putValue(mxConstants.PERIMETER_RHOMBUS, mxPerimeter.RhombusPerimeter);
 		putValue(mxConstants.PERIMETER_TRIANGLE, mxPerimeter.TrianglePerimeter);
+		putValue(mxConstants.PERIMETER_HEXAGON, mxPerimeter.HexagonPerimeter);
 	}
 
 	/**

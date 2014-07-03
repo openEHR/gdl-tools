@@ -1,50 +1,23 @@
 /**
- * $Id: mxGraph.java,v 1.2 2010-12-01 17:59:41 david Exp $
+ * $Id: mxGraph.java,v 1.6 2014/02/19 09:40:59 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.view;
 
-import java.awt.Point;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.canvas.mxICanvas;
+import com.mxgraph.canvas.mxImageCanvas;
+import com.mxgraph.model.*;
+import com.mxgraph.model.mxGraphModel.*;
+import com.mxgraph.util.*;
+import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
 import org.w3c.dom.Element;
 
-import com.mxgraph.canvas.mxICanvas;
-import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGeometry;
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxGraphModel.Filter;
-import com.mxgraph.model.mxGraphModel.mxChildChange;
-import com.mxgraph.model.mxGraphModel.mxCollapseChange;
-import com.mxgraph.model.mxGraphModel.mxGeometryChange;
-import com.mxgraph.model.mxGraphModel.mxRootChange;
-import com.mxgraph.model.mxGraphModel.mxStyleChange;
-import com.mxgraph.model.mxGraphModel.mxTerminalChange;
-import com.mxgraph.model.mxGraphModel.mxValueChange;
-import com.mxgraph.model.mxGraphModel.mxVisibleChange;
-import com.mxgraph.model.mxICell;
-import com.mxgraph.model.mxIGraphModel;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource;
-import com.mxgraph.util.mxPoint;
-import com.mxgraph.util.mxRectangle;
-import com.mxgraph.util.mxResources;
-import com.mxgraph.util.mxUndoableEdit;
-import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
-import com.mxgraph.util.mxUtils;
+import java.awt.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.*;
+import java.util.List;
 
 /**
  * Implements a graph object that allows to create diagrams from a graph model
@@ -187,9 +160,9 @@ public class mxGraph extends mxEventSource
 
 	/**
 	 * Holds the version number of this release. Current version
-	 * is @MXGRAPH-VERSION@.
+	 * is 2.8.2.0.
 	 */
-	public static final String VERSION = "@MXGRAPH-VERSION@";
+	public static final String VERSION = "2.8.2.0";
 
 	/**
 	 * 
@@ -241,6 +214,12 @@ public class mxGraph extends mxEventSource
 	 * Specifies if the grid is enabled. Default is true.
 	 */
 	protected boolean gridEnabled = true;
+
+	/**
+	 * Specifies if ports are enabled. This is used in <cellConnected> to update
+	 * the respective style. Default is true.
+	 */
+	protected boolean portsEnabled = true;
 
 	/**
 	 * Value returned by getOverlap if isAllowOverlapParent returns
@@ -509,6 +488,11 @@ public class mxGraph extends mxEventSource
 	protected mxPoint origin = new mxPoint();
 
 	/**
+	 * Holds the list of bundles.
+	 */
+	protected static List<mxImageBundle> imageBundles = new LinkedList<mxImageBundle>();
+
+	/**
 	 * Fires repaint events for full repaints.
 	 */
 	protected mxIEventListener fullRepaintHandler = new mxIEventListener()
@@ -520,11 +504,24 @@ public class mxGraph extends mxEventSource
 	};
 
 	/**
+	 * Fires repaint events for full repaints.
+	 */
+	protected mxIEventListener updateOriginHandler = new mxIEventListener()
+	{
+		public void invoke(Object sender, mxEventObject evt)
+		{
+			if (isAutoOrigin())
+			{
+				updateOrigin();
+			}
+		}
+	};
+
+	/**
 	 * Fires repaint events for model changes.
 	 */
 	protected mxIEventListener graphModelChangeHandler = new mxIEventListener()
 	{
-		@SuppressWarnings("unchecked")
 		public void invoke(Object sender, mxEventObject evt)
 		{
 			mxRectangle dirty = graphModelChanged((mxIGraphModel) sender,
@@ -662,6 +659,7 @@ public class mxGraph extends mxEventSource
 		if (view != null)
 		{
 			view.removeListener(fullRepaintHandler);
+			view.removeListener(updateOriginHandler);
 		}
 
 		Object oldView = view;
@@ -674,8 +672,10 @@ public class mxGraph extends mxEventSource
 
 		// Listens to changes in the view
 		view.addListener(mxEvent.SCALE, fullRepaintHandler);
+		view.addListener(mxEvent.SCALE, updateOriginHandler);
 		view.addListener(mxEvent.TRANSLATE, fullRepaintHandler);
 		view.addListener(mxEvent.SCALE_AND_TRANSLATE, fullRepaintHandler);
+		view.addListener(mxEvent.SCALE_AND_TRANSLATE, updateOriginHandler);
 		view.addListener(mxEvent.UP, fullRepaintHandler);
 		view.addListener(mxEvent.DOWN, fullRepaintHandler);
 
@@ -1118,6 +1118,7 @@ public class mxGraph extends mxEventSource
 			removeStateForCell(model.getChildAt(cell, i));
 		}
 
+		view.invalidate(cell);
 		view.removeState(cell);
 	}
 
@@ -1143,12 +1144,51 @@ public class mxGraph extends mxEventSource
 
 		if (name != null)
 		{
-			style = stylesheet.getCellStyle(name, style);
+			style = postProcessCellStyle(stylesheet.getCellStyle(name, style));
 		}
 
 		if (style == null)
 		{
 			style = mxStylesheet.EMPTY_STYLE;
+		}
+
+		return style;
+	}
+
+	/**
+	 * Tries to resolve the value for the image style in the image bundles and
+	 * turns short data URIs as defined in mxImageBundle to data URIs as
+	 * defined in RFC 2397 of the IETF.
+	 */
+	protected Map<String, Object> postProcessCellStyle(Map<String, Object> style)
+	{
+		if (style != null)
+		{
+			String key = mxUtils.getString(style, mxConstants.STYLE_IMAGE);
+			String image = getImageFromBundles(key);
+
+			if (image != null)
+			{
+				style.put(mxConstants.STYLE_IMAGE, image);
+			}
+			else
+			{
+				image = key;
+			}
+
+			// Converts short data uris to normal data uris
+			if (image != null && image.startsWith("data:image/"))
+			{
+				int comma = image.indexOf(',');
+
+				if (comma > 0)
+				{
+					image = image.substring(0, comma) + ";base64,"
+							+ image.substring(comma + 1);
+				}
+
+				style.put(mxConstants.STYLE_IMAGE, image);
+			}
 		}
 
 		return style;
@@ -1288,7 +1328,7 @@ public class mxGraph extends mxEventSource
 			cells = getSelectionCells();
 		}
 
-		mxUtils.setCellStyles(model, cells, key, value);
+		mxStyleUtils.setCellStyles(model, cells, key, value);
 
 		return cells;
 	}
@@ -1367,10 +1407,66 @@ public class mxGraph extends mxEventSource
 				}
 			}
 
-			mxUtils.setCellStyleFlags(model, cells, key, flag, value);
+			mxStyleUtils.setCellStyleFlags(model, cells, key, flag, value);
 		}
 
 		return cells;
+	}
+
+	/**
+	 * Adds the specified bundle.
+	 */
+	public void addImageBundle(mxImageBundle bundle)
+	{
+		imageBundles.add(bundle);
+	}
+
+	/**
+	 * Removes the specified bundle.
+	 */
+	public void removeImageBundle(mxImageBundle bundle)
+	{
+		imageBundles.remove(bundle);
+	}
+
+	/**
+	 * Searches all bundles for the specified key and returns the value for the
+	 * first match or null if the key is not found.
+	 */
+	public String getImageFromBundles(String key)
+	{
+		if (key != null)
+		{
+			Iterator<mxImageBundle> it = imageBundles.iterator();
+
+			while (it.hasNext())
+			{
+				String value = it.next().getImage(key);
+
+				if (value != null)
+				{
+					return value;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the image bundles
+	 */
+	public List<mxImageBundle> getImageBundles()
+	{
+		return imageBundles;
+	}
+
+	/**
+	 * Returns the image bundles
+	 */
+	public void getImageBundles(List<mxImageBundle> value)
+	{
+		imageBundles = value;
 	}
 
 	//
@@ -1741,7 +1837,13 @@ public class mxGraph extends mxEventSource
 
 		if (cells.length > 0 && bounds != null)
 		{
-			Object parent = model.getParent(cells[0]);
+			// Uses parent of group or previous parent of first child
+			Object parent = model.getParent(group);
+
+			if (parent == null)
+			{
+				parent = model.getParent(cells[0]);
+			}
 
 			model.beginUpdate();
 			try
@@ -1761,7 +1863,7 @@ public class mxGraph extends mxEventSource
 				// Adds the group into the parent and resizes
 				index = model.getChildCount(parent);
 				cellsAdded(new Object[] { group }, parent, index, null, null,
-						false);
+						false, false);
 				cellsResized(new Object[] { group },
 						new mxRectangle[] { bounds });
 
@@ -1785,7 +1887,7 @@ public class mxGraph extends mxEventSource
 	{
 		List<Object> result = new ArrayList<Object>(cells.length);
 
-		if (cells != null && cells.length > 0)
+		if (cells.length > 0)
 		{
 			Object parent = model.getParent(cells[0]);
 			result.add(cells[0]);
@@ -2080,9 +2182,18 @@ public class mxGraph extends mxEventSource
 	 * <code>
 	 * graph2.addCells(graph.cloneCells(new Object[] { parent }));
 	 * </code>
+	 * 
+	 * To clone all children in a graph layer if graph g1 and put them into the
+	 * default parent (typically default layer) of another graph g2, the
+	 * following code is used:
+	 * 
+	 * <code>
+	 * g2.addCells(g1.cloneCells(g1.cloneCells(g1.getChildCells(g1.getDefaultParent()));
+	 * </code>
 	 */
 	public Object[] cloneCells(Object[] cells)
 	{
+
 		return cloneCells(cells, true);
 	}
 
@@ -2244,8 +2355,33 @@ public class mxGraph extends mxEventSource
 	public Object insertVertex(Object parent, String id, Object value,
 			double x, double y, double width, double height, String style)
 	{
+		return insertVertex(parent, id, value, x, y, width, height, style,
+				false);
+	}
+
+	/**
+	 * Adds a new vertex into the given parent using value as the user object
+	 * and the given coordinates as the geometry of the new vertex. The id and
+	 * style are used for the respective properties of the new cell, which is
+	 * returned.
+	 * 
+	 * @param parent Cell that specifies the parent of the new vertex.
+	 * @param id Optional string that defines the Id of the new vertex.
+	 * @param value Object to be used as the user object.
+	 * @param x Integer that defines the x coordinate of the vertex.
+	 * @param y Integer that defines the y coordinate of the vertex.
+	 * @param width Integer that defines the width of the vertex.
+	 * @param height Integer that defines the height of the vertex.
+	 * @param style Optional string that defines the cell style.
+	 * @param relative Specifies if the geometry should be relative.
+	 * @return Returns the new vertex that has been inserted.
+	 */
+	public Object insertVertex(Object parent, String id, Object value,
+			double x, double y, double width, double height, String style,
+			boolean relative)
+	{
 		Object vertex = createVertex(parent, id, value, x, y, width, height,
-				style);
+				style, relative);
 
 		return addCell(vertex, parent);
 	}
@@ -2266,9 +2402,32 @@ public class mxGraph extends mxEventSource
 	public Object createVertex(Object parent, String id, Object value,
 			double x, double y, double width, double height, String style)
 	{
-		mxGeometry geometry = new mxGeometry(x, y, width, height);
-		mxCell vertex = new mxCell(value, geometry, style);
+		return createVertex(parent, id, value, x, y, width, height, style,
+				false);
+	}
 
+	/**
+	 * Hook method that creates the new vertex for insertVertex.
+	 * 
+	 * @param parent Cell that specifies the parent of the new vertex.
+	 * @param id Optional string that defines the Id of the new vertex.
+	 * @param value Object to be used as the user object.
+	 * @param x Integer that defines the x coordinate of the vertex.
+	 * @param y Integer that defines the y coordinate of the vertex.
+	 * @param width Integer that defines the width of the vertex.
+	 * @param height Integer that defines the height of the vertex.
+	 * @param style Optional string that defines the cell style.
+	 * @param relative Specifies if the geometry should be relative.
+	 * @return Returns the new vertex to be inserted.
+	 */
+	public Object createVertex(Object parent, String id, Object value,
+			double x, double y, double width, double height, String style,
+			boolean relative)
+	{
+		mxGeometry geometry = new mxGeometry(x, y, width, height);
+		geometry.setRelative(relative);
+
+		mxCell vertex = new mxCell(value, geometry, style);
 		vertex.setId(id);
 		vertex.setVertex(true);
 		vertex.setConnectable(true);
@@ -2460,7 +2619,7 @@ public class mxGraph extends mxEventSource
 		model.beginUpdate();
 		try
 		{
-			cellsAdded(cells, parent, index, source, target, false);
+			cellsAdded(cells, parent, index, source, target, false, true);
 			fireEvent(new mxEventObject(mxEvent.ADD_CELLS, "cells", cells,
 					"parent", parent, "index", index, "source", source,
 					"target", target));
@@ -2472,13 +2631,22 @@ public class mxGraph extends mxEventSource
 
 		return cells;
 	}
-
 	/**
 	 * Adds the specified cells to the given parent. This method fires
 	 * mxEvent.CELLS_ADDED while the transaction is in progress.
 	 */
 	public void cellsAdded(Object[] cells, Object parent, Integer index,
 			Object source, Object target, boolean absolute)
+	{
+		cellsAdded(cells, parent, index, source, target, absolute, true);
+	}
+	
+	/**
+	 * Adds the specified cells to the given parent. This method fires
+	 * mxEvent.CELLS_ADDED while the transaction is in progress.
+	 */
+	public void cellsAdded(Object[] cells, Object parent, Integer index,
+			Object source, Object target, boolean absolute, boolean constrain)
 	{
 		if (cells != null && parent != null && index != null)
 		{
@@ -2493,63 +2661,75 @@ public class mxGraph extends mxEventSource
 
 				for (int i = 0; i < cells.length; i++)
 				{
-					Object previous = model.getParent(cells[i]);
-
-					// Keeps the cell at its absolute location
-					if (o1 != null && cells[i] != parent && parent != previous)
-					{
-						mxCellState oldState = view.getState(previous);
-						mxPoint o2 = (oldState != null) ? oldState.getOrigin()
-								: zero;
-						mxGeometry geo = model.getGeometry(cells[i]);
-
-						if (geo != null)
-						{
-							double dx = o2.getX() - o1.getX();
-							double dy = o2.getY() - o1.getY();
-
-							geo = (mxGeometry) geo.clone();
-							geo.translate(dx, dy);
-
-							if (!geo.isRelative() && model.isVertex(cells[i])
-									&& !isAllowNegativeCoordinates())
-							{
-								geo.setX(Math.max(0, geo.getX()));
-								geo.setY(Math.max(0, geo.getY()));
-							}
-
-							model.setGeometry(cells[i], geo);
-						}
-					}
-
-					// Decrements all following indices
-					// if cell is already in parent
-					if (parent == previous)
+					if (cells[i] == null)
 					{
 						index--;
 					}
-
-					model.add(parent, cells[i], index + i);
-
-					// Extends the parent
-					if (isExtendParentsOnAdd() && isExtendParent(cells[i]))
+					else
 					{
-						extendParent(cells[i]);
-					}
+						Object previous = model.getParent(cells[i]);
 
-					// Constrains the child
-					constrainChild(cells[i]);
+						// Keeps the cell at its absolute location
+						if (o1 != null && cells[i] != parent
+								&& parent != previous)
+						{
+							mxCellState oldState = view.getState(previous);
+							mxPoint o2 = (oldState != null) ? oldState
+									.getOrigin() : zero;
+							mxGeometry geo = model.getGeometry(cells[i]);
 
-					// Sets the source terminal
-					if (source != null)
-					{
-						cellConnected(cells[i], source, true, null);
-					}
+							if (geo != null)
+							{
+								double dx = o2.getX() - o1.getX();
+								double dy = o2.getY() - o1.getY();
 
-					// Sets the target terminal
-					if (target != null)
-					{
-						cellConnected(cells[i], target, false, null);
+								geo = (mxGeometry) geo.clone();
+								geo.translate(dx, dy);
+
+								if (!geo.isRelative()
+										&& model.isVertex(cells[i])
+										&& !isAllowNegativeCoordinates())
+								{
+									geo.setX(Math.max(0, geo.getX()));
+									geo.setY(Math.max(0, geo.getY()));
+								}
+
+								model.setGeometry(cells[i], geo);
+							}
+						}
+
+						// Decrements all following indices
+						// if cell is already in parent
+						if (parent == previous)
+						{
+							index--;
+						}
+
+						model.add(parent, cells[i], index + i);
+
+						// Extends the parent
+						if (isExtendParentsOnAdd() && isExtendParent(cells[i]))
+						{
+							extendParent(cells[i]);
+						}
+
+						// Constrains the child
+						if (constrain)
+						{
+							constrainChild(cells[i]);
+						}
+
+						// Sets the source terminal
+						if (source != null)
+						{
+							cellConnected(cells[i], source, true, null);
+						}
+
+						// Sets the target terminal
+						if (target != null)
+						{
+							cellConnected(cells[i], target, false, null);
+						}
 					}
 				}
 
@@ -2660,8 +2840,8 @@ public class mxGraph extends mxEventSource
 								if (state != null)
 								{
 									geo = (mxGeometry) geo.clone();
-									boolean source = view.getVisibleTerminal(
-											edges[j], true) == cells[i];
+									boolean source = state
+											.getVisibleTerminal(true) == cells[i];
 									int n = (source) ? 0 : state
 											.getAbsolutePointCount() - 1;
 									mxPoint pt = state.getAbsolutePoint(n);
@@ -2874,6 +3054,14 @@ public class mxGraph extends mxEventSource
 	}
 
 	/**
+	 * Invokes foldCells with checkFoldable set to false.
+	 */
+	public Object[] foldCells(boolean collapse, boolean recurse, Object[] cells)
+	{
+		return foldCells(collapse, recurse, cells, false);
+	}
+
+	/**
 	 * Sets the collapsed state of the specified cells and all descendants
 	 * if recurse is true. The change is carried out using cellsFolded.
 	 * This method fires mxEvent.FOLD_CELLS while the transaction is in
@@ -2884,8 +3072,11 @@ public class mxGraph extends mxEventSource
 	 * descendants should be set.
 	 * @param cells Array of cells whose collapsed state should be set. If
 	 * null is specified then the foldable selection cells are used.
+	 * @param checkFoldable Boolean indicating of isCellFoldable should be
+	 * checked. Default is false.
 	 */
-	public Object[] foldCells(boolean collapse, boolean recurse, Object[] cells)
+	public Object[] foldCells(boolean collapse, boolean recurse,
+			Object[] cells, boolean checkFoldable)
 	{
 		if (cells == null)
 		{
@@ -2895,7 +3086,7 @@ public class mxGraph extends mxEventSource
 		model.beginUpdate();
 		try
 		{
-			cellsFolded(cells, collapse, recurse);
+			cellsFolded(cells, collapse, recurse, checkFoldable);
 			fireEvent(new mxEventObject(mxEvent.FOLD_CELLS, "cells", cells,
 					"collapse", collapse, "recurse", recurse));
 		}
@@ -2908,6 +3099,14 @@ public class mxGraph extends mxEventSource
 	}
 
 	/**
+	 * Invokes cellsFoldable with checkFoldable set to false.
+	 */
+	public void cellsFolded(Object[] cells, boolean collapse, boolean recurse)
+	{
+		cellsFolded(cells, collapse, recurse, false);
+	}
+
+	/**
 	 * Sets the collapsed state of the specified cells. This method fires
 	 * mxEvent.CELLS_FOLDED while the transaction is in progress. Returns the
 	 * cells whose collapsed state was changed.
@@ -2916,8 +3115,11 @@ public class mxGraph extends mxEventSource
 	 * @param collapse Boolean indicating the collapsed state to be assigned.
 	 * @param recurse Boolean indicating if the collapsed state of all
 	 * descendants should be set.
+	 * @param checkFoldable Boolean indicating of isCellFoldable should be
+	 * checked. Default is false.
 	 */
-	public void cellsFolded(Object[] cells, boolean collapse, boolean recurse)
+	public void cellsFolded(Object[] cells, boolean collapse, boolean recurse,
+			boolean checkFoldable)
 	{
 		if (cells != null && cells.length > 0)
 		{
@@ -2926,7 +3128,8 @@ public class mxGraph extends mxEventSource
 			{
 				for (int i = 0; i < cells.length; i++)
 				{
-					if (collapse != isCellCollapsed(cells[i]))
+					if ((!checkFoldable || isCellFoldable(cells[i], collapse))
+							&& collapse != isCellCollapsed(cells[i]))
 					{
 						model.setCollapsed(cells[i], collapse);
 						swapBounds(cells[i], collapse);
@@ -3148,7 +3351,7 @@ public class mxGraph extends mxEventSource
 						if (mxUtils.isTrue(style, mxConstants.STYLE_HORIZONTAL,
 								true))
 						{
-							cellStyle = mxUtils.setStyle(cellStyle,
+							cellStyle = mxStyleUtils.setStyle(cellStyle,
 									mxConstants.STYLE_STARTSIZE,
 									String.valueOf(size.getHeight() + 8));
 
@@ -3161,7 +3364,7 @@ public class mxGraph extends mxEventSource
 						}
 						else
 						{
-							cellStyle = mxUtils.setStyle(cellStyle,
+							cellStyle = mxStyleUtils.setStyle(cellStyle,
 									mxConstants.STYLE_STARTSIZE,
 									String.valueOf(size.getWidth() + 8));
 
@@ -3278,9 +3481,8 @@ public class mxGraph extends mxEventSource
 
 				if (value != null && value.length() > 0)
 				{
-					// FIXME: Check word-wrap style and balance width/height
 					mxRectangle size = mxUtils.getLabelSize(value, style,
-							isHtmlLabel(cell), 0);
+							isHtmlLabel(cell), 1);
 					double width = size.getWidth() + dx;
 					double height = size.getHeight() + dy;
 
@@ -3383,10 +3585,8 @@ public class mxGraph extends mxEventSource
 
 							if (offset != null)
 							{
-								offset.setX(offset.getX() + tmp.getX()
-										- geo.getX());
-								offset.setY(offset.getY() + tmp.getY()
-										- geo.getY());
+								offset.setX(offset.getX() + tmp.getX());
+								offset.setY(offset.getY() + tmp.getY());
 							}
 						}
 						else
@@ -3520,8 +3720,19 @@ public class mxGraph extends mxEventSource
 					}
 				}
 
+				// Need to disable allowNegativeCoordinates if target not null to
+				// allow for temporary negative numbers until cellsAdded is called.
+				boolean previous = isAllowNegativeCoordinates();
+				
+				if (target != null)
+				{
+					setAllowNegativeCoordinates(true);
+				}
+				
 				cellsMoved(cells, dx, dy, !clone && isDisconnectOnMove()
 						&& isAllowDanglingEdges(), target == null);
+				
+				setAllowNegativeCoordinates(previous);
 
 				if (target != null)
 				{
@@ -3762,10 +3973,13 @@ public class mxGraph extends mxEventSource
 					{
 						for (int j = 0; j < edges.length; j++)
 						{
-							Object source = view.getVisibleTerminal(edges[j],
-									true);
-							Object target = view.getVisibleTerminal(edges[j],
-									false);
+							mxCellState state = view.getState(edges[j]);
+							Object source = (state != null) ? state
+									.getVisibleTerminal(true) : view
+									.getVisibleTerminal(edges[j], true);
+							Object target = (state != null) ? state
+									.getVisibleTerminal(false) : view
+									.getVisibleTerminal(edges[j], false);
 
 							// Checks if one of the terminals is not in the given array
 							if (!set.contains(source) || !set.contains(target))
@@ -4020,20 +4234,26 @@ public class mxGraph extends mxEventSource
 
 				// Updates the constraint
 				setConnectionConstraint(edge, terminal, source, constraint);
-
-				// Checks if the new terminal is a port
-				String id = null;
-
-				if (isPort(terminal) && terminal instanceof mxICell)
+				
+				// Checks if the new terminal is a port, uses the ID of the port in the
+				// style and the parent of the port as the actual terminal of the edge.
+				if (isPortsEnabled())
 				{
-					id = ((mxICell) terminal).getId();
-					terminal = getTerminalForPort(terminal, source);
+					// Checks if the new terminal is a port
+					String id = null;
+	
+					if (isPort(terminal) && terminal instanceof mxICell)
+					{
+						id = ((mxICell) terminal).getId();
+						terminal = getTerminalForPort(terminal, source);
+					}
+	
+					// Sets or resets all previous information for connecting to a child port
+					String key = (source) ? mxConstants.STYLE_SOURCE_PORT
+							: mxConstants.STYLE_TARGET_PORT;
+					setCellStyles(key, id, new Object[] { edge });
 				}
-
-				// Sets or resets all previous information for connecting to a child port
-				String key = (source) ? mxConstants.STYLE_SOURCE_PORT
-						: mxConstants.STYLE_TARGET_PORT;
-				setCellStyles(key, id, new Object[] { edge });
+				
 				model.setTerminal(edge, terminal, source);
 
 				if (isResetEdgesOnConnect())
@@ -4484,7 +4704,6 @@ public class mxGraph extends mxEventSource
 	public mxRectangle getCellBounds(Object cell, boolean includeEdges,
 			boolean includeDescendants, boolean boundingBox)
 	{
-		mxRectangle result = null;
 		Object[] cells;
 
 		// Recursively includes connected edges
@@ -4519,32 +4738,28 @@ public class mxGraph extends mxEventSource
 			cells = new Object[] { cell };
 		}
 
-		if (boundingBox)
-		{
-			result = view.getBoundingBox(cells);
-		}
-		else
-		{
-			result = view.getBounds(cells);
-		}
+		mxRectangle result = view.getBounds(cells, boundingBox);
 
 		// Recursively includes the bounds of the children
 		if (includeDescendants)
 		{
-			int childCount = model.getChildCount(cell);
-
-			for (int i = 0; i < childCount; i++)
+			for (int i = 0; i < cells.length; i++)
 			{
-				mxRectangle tmp = getCellBounds(model.getChildAt(cell, i),
-						includeEdges, true, boundingBox);
-
-				if (result != null)
+				int childCount = model.getChildCount(cells[i]);
+	
+				for (int j = 0; j < childCount; j++)
 				{
-					result.add(tmp);
-				}
-				else
-				{
-					result = tmp;
+					mxRectangle tmp = getCellBounds(model.getChildAt(cells[i], j),
+							includeEdges, true, boundingBox);
+	
+					if (result != null)
+					{
+						result.add(tmp);
+					}
+					else
+					{
+						result = tmp;
+					}
 				}
 			}
 		}
@@ -4671,10 +4886,12 @@ public class mxGraph extends mxEventSource
 		mxEdgeStyle.mxEdgeStyleFunction tmp = view.getEdgeStyle(edge, null,
 				null, null);
 
-		return tmp == mxEdgeStyle.ElbowConnector
+		return tmp == mxEdgeStyle.SegmentConnector
+				|| tmp == mxEdgeStyle.ElbowConnector
 				|| tmp == mxEdgeStyle.SideToSide
 				|| tmp == mxEdgeStyle.TopToBottom
-				|| tmp == mxEdgeStyle.EntityRelation;
+				|| tmp == mxEdgeStyle.EntityRelation
+				|| tmp == mxEdgeStyle.OrthConnector;
 	}
 
 	/**
@@ -4685,8 +4902,8 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isLoop(mxCellState state)
 	{
-		Object src = view.getVisibleTerminal(state.getCell(), true);
-		Object trg = view.getVisibleTerminal(state.getCell(), false);
+		Object src = state.getVisibleTerminalState(true);
+		Object trg = state.getVisibleTerminalState(false);
 
 		return (src != null && src == trg);
 	}
@@ -4745,6 +4962,12 @@ public class mxGraph extends mxEventSource
 	public String getEdgeValidationError(Object edge, Object source,
 			Object target)
 	{
+		if (edge != null && !isAllowDanglingEdges()
+				&& (source == null || target == null))
+		{
+			return "";
+		}
+
 		if (edge != null && model.getTerminal(edge, true) == null
 				&& model.getTerminal(edge, false) == null)
 		{
@@ -4846,24 +5069,29 @@ public class mxGraph extends mxEventSource
 		StringBuffer error = new StringBuffer();
 		Object value = model.getValue(cell);
 
-		for (int i = 0; i < multiplicities.length; i++)
+		if (multiplicities != null)
 		{
-			mxMultiplicity rule = multiplicities[i];
-			int max = rule.getMaxValue();
+			for (int i = 0; i < multiplicities.length; i++)
+			{
+				mxMultiplicity rule = multiplicities[i];
+				int max = rule.getMaxValue();
 
-			if (rule.source
-					&& mxUtils.isNode(value, rule.type, rule.attr, rule.value)
-					&& ((max == 0 && outCount > 0)
-							|| (rule.min == 1 && outCount == 0) || (max == 1 && outCount > 1)))
-			{
-				error.append(rule.countError + '\n');
-			}
-			else if (!rule.source
-					&& mxUtils.isNode(value, rule.type, rule.attr, rule.value)
-					&& ((max == 0 && inCount > 0)
-							|| (rule.min == 1 && inCount == 0) || (max == 1 && inCount > 1)))
-			{
-				error.append(rule.countError + '\n');
+				if (rule.source
+						&& mxUtils.isNode(value, rule.type, rule.attr,
+								rule.value)
+						&& ((max == 0 && outCount > 0)
+								|| (rule.min == 1 && outCount == 0) || (max == 1 && outCount > 1)))
+				{
+					error.append(rule.countError + '\n');
+				}
+				else if (!rule.source
+						&& mxUtils.isNode(value, rule.type, rule.attr,
+								rule.value)
+						&& ((max == 0 && inCount > 0)
+								|| (rule.min == 1 && inCount == 0) || (max == 1 && inCount > 1)))
+				{
+					error.append(rule.countError + '\n');
+				}
 			}
 		}
 
@@ -5182,7 +5410,12 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isCellEditable(Object cell)
 	{
-		return isCellsEditable() && !isCellLocked(cell);
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isCellsEditable() && !isCellLocked(cell)
+				&& mxUtils.isTrue(style, mxConstants.STYLE_EDITABLE, true);
 	}
 
 	/**
@@ -5216,7 +5449,12 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isCellResizable(Object cell)
 	{
-		return isCellsResizable() && !isCellLocked(cell);
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isCellsResizable() && !isCellLocked(cell)
+				&& mxUtils.isTrue(style, mxConstants.STYLE_RESIZABLE, true);
 	}
 
 	/**
@@ -5262,7 +5500,12 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isCellMovable(Object cell)
 	{
-		return isCellsMovable() && !isCellLocked(cell);
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isCellsMovable() && !isCellLocked(cell)
+				&& mxUtils.isTrue(style, mxConstants.STYLE_MOVABLE, true);
 	}
 
 	/**
@@ -5286,6 +5529,23 @@ public class mxGraph extends mxEventSource
 	}
 
 	/**
+	 * Function: isTerminalPointMovable
+	 *
+	 * Returns true if the given terminal point is movable. This is independent
+	 * from isCellConnectable and isCellDisconnectable and controls if terminal
+	 * points can be moved in the graph if the edge is not connected. Note that
+	 * it is required for this to return true to connect unconnected edges.
+	 * This implementation returns true.
+	 * 
+	 * @param cell Cell whose terminal point should be moved.
+	 * @param source Boolean indicating if the source or target terminal should be moved.
+	 */
+	public boolean isTerminalPointMovable(Object cell, boolean source)
+	{
+		return true;
+	}
+
+	/**
 	 * Returns true if the given cell is bendable. This implementation returns
 	 * bendable. This is used in mxElbowEdgeHandler to determine if the middle
 	 * handle should be shown.
@@ -5295,7 +5555,12 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isCellBendable(Object cell)
 	{
-		return isCellsBendable() && !isCellLocked(cell);
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isCellsBendable() && !isCellLocked(cell)
+				&& mxUtils.isTrue(style, mxConstants.STYLE_BENDABLE, true);
 	}
 
 	/**
@@ -5373,7 +5638,12 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isCellDeletable(Object cell)
 	{
-		return isCellsDeletable();
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isCellsDeletable()
+				&& mxUtils.isTrue(style, mxConstants.STYLE_DELETABLE, true);
 	}
 
 	/**
@@ -5417,7 +5687,12 @@ public class mxGraph extends mxEventSource
 	 */
 	public boolean isCellCloneable(Object cell)
 	{
-		return isCellsCloneable();
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isCellsCloneable()
+				&& mxUtils.isTrue(style, mxConstants.STYLE_CLONEABLE, true);
 	}
 
 	/**
@@ -5872,14 +6147,20 @@ public class mxGraph extends mxEventSource
 	/**
 	 * Returns true if the size of the given cell should automatically be
 	 * updated after a change of the label. This implementation returns
-	 * autoSize for all given cells.
+	 * autoSize for all given cells or checks if the cell style does specify
+	 * mxConstants.STYLE_AUTOSIZE to be 1.
 	 * 
 	 * @param cell Cell that should be resized.
 	 * @return Returns true if the size of the given cell should be updated.
 	 */
 	public boolean isAutoSizeCell(Object cell)
 	{
-		return isAutoSizeCells();
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return isAutoSizeCells()
+				|| mxUtils.isTrue(style, mxConstants.STYLE_AUTOSIZE, false);
 	}
 
 	/**
@@ -5963,12 +6244,13 @@ public class mxGraph extends mxEventSource
 	/**
 	 * Returns true if the given cell should be kept inside the bounds of its
 	 * parent according to the rules defined by getOverlap and
-	 * isAllowOverlapParent. This implementation returns
-	 * isConstrainChildren() for all given cells.
+	 * isAllowOverlapParent. This implementation returns false for all children
+	 * of edges and isConstrainChildren() otherwise.
 	 */
 	public boolean isConstrainChild(Object cell)
 	{
-		return isConstrainChildren();
+		return isConstrainChildren()
+				&& !getModel().isEdge(getModel().getParent(cell));
 	}
 
 	/**
@@ -6265,14 +6547,20 @@ public class mxGraph extends mxEventSource
 
 	/**
 	 * Returns true if the given cell is expandable. This implementation
-	 * returns true if the cell has at least one child.
+	 * returns true if the cell has at least one child and its style
+	 * does not specify mxConstants.STYLE_FOLDABLE to be 0.
 	 *
 	 * @param cell <mxCell> whose expandable state should be returned.
 	 * @return Returns true if the given cell is expandable.
 	 */
 	public boolean isCellFoldable(Object cell, boolean collapse)
 	{
-		return model.getChildCount(cell) > 0;
+		mxCellState state = view.getState(cell);
+		Map<String, Object> style = (state != null) ? state.getStyle()
+				: getCellStyle(cell);
+
+		return model.getChildCount(cell) > 0
+				&& mxUtils.isTrue(style, mxConstants.STYLE_FOLDABLE, true);
 	}
 
 	/**
@@ -6295,7 +6583,30 @@ public class mxGraph extends mxEventSource
 		boolean oldValue = gridEnabled;
 		gridEnabled = value;
 
-		changeSupport.firePropertyChange("gridEnabled", oldValue, gridSize);
+		changeSupport.firePropertyChange("gridEnabled", oldValue, gridEnabled);
+	}
+
+	/**
+	 * Returns true if ports are enabled.
+	 * 
+	 * @return Returns the enabled state of the ports.
+	 */
+	public boolean isPortsEnabled()
+	{
+		return portsEnabled;
+	}
+
+	/**
+	 * Sets if ports are enabled.
+	 * 
+	 * @param value Specifies if the ports should be enabled.
+	 */
+	public void setPortsEnabled(boolean value)
+	{
+		boolean oldValue = portsEnabled;
+		portsEnabled = value;
+
+		changeSupport.firePropertyChange("portsEnabled", oldValue, portsEnabled);
 	}
 
 	/**
@@ -6416,7 +6727,7 @@ public class mxGraph extends mxEventSource
 		{
 			cell = swimlane;
 		}
-		else if (swimlane != null)
+		/*else if (swimlane != null)
 		{
 			// Checks if the cell is an ancestor of the swimlane
 			// under the mouse and uses the swimlane in that case
@@ -6431,7 +6742,7 @@ public class mxGraph extends mxEventSource
 			{
 				cell = swimlane;
 			}
-		}
+		}*/
 
 		while (cell != null && !isValidDropTarget(cell, cells)
 				&& model.getParent(cell) != model.getRoot())
@@ -6561,7 +6872,22 @@ public class mxGraph extends mxEventSource
 	 */
 	public Object[] getConnections(Object cell, Object parent)
 	{
-		return getEdges(cell, parent, true, true, false);
+		return getConnections(cell, parent, false);
+	}
+
+	/**
+	 * Returns all visible edges connected to the given cell without loops.
+	 * If the optional parent argument is specified, then only child
+	 * edges of the given parent are returned.
+	 * 
+	 * @param cell Cell whose connections should be returned.
+	 * @param parent Optional parent of the opposite end for a connection
+	 * to be returned.
+	 * @return Returns the connected edges for the given cell.
+	 */
+	public Object[] getConnections(Object cell, Object parent, boolean recurse)
+	{
+		return getEdges(cell, parent, true, true, false, recurse);
 	}
 
 	/**
@@ -6648,8 +6974,8 @@ public class mxGraph extends mxEventSource
 	 * where the opposite is in the given parent cell.
 	 * 
 	 * @param cell Cell whose edges should be returned.
-	 * @param parent Optional parent of the opposite end for an edge to be
-	 * returned.
+	 * @param parent Optional parent. If specified the opposite end of any edge
+	 * must be a direct child of that parent in order for the edge to be returned.
 	 * @param incoming Specifies if incoming edges should be included in the
 	 * result.
 	 * @param outgoing Specifies if outgoing edges should be included in the
@@ -6659,6 +6985,31 @@ public class mxGraph extends mxEventSource
 	 */
 	public Object[] getEdges(Object cell, Object parent, boolean incoming,
 			boolean outgoing, boolean includeLoops)
+	{
+		return getEdges(cell, parent, incoming, outgoing, includeLoops, false);
+	}
+
+	/**
+	 * Returns the incoming and/or outgoing edges for the given cell.
+	 * If the optional parent argument is specified, then only edges are returned
+	 * where the opposite is in the given parent cell.
+	 * 
+	 * @param cell Cell whose edges should be returned.
+	 * @param parent Optional parent. If specified the opposite end of any edge
+	 * must be a child of that parent in order for the edge to be returned. The
+	 * recurse parameter specifies whether or not it must be the direct child
+	 * or the parent just be an ancestral parent.
+	 * @param incoming Specifies if incoming edges should be included in the
+	 * result.
+	 * @param outgoing Specifies if outgoing edges should be included in the
+	 * result.
+	 * @param includeLoops Specifies if loops should be included in the result.
+	 * @param recurse Specifies if the parent specified only need be an ancestral
+	 * parent, <code>true</code>, or the direct parent, <code>false</code>
+	 * @return Returns the edges connected to the given cell.
+	 */
+	public Object[] getEdges(Object cell, Object parent, boolean incoming,
+			boolean outgoing, boolean includeLoops, boolean recurse)
 	{
 		boolean isCollapsed = isCellCollapsed(cell);
 		List<Object> edges = new ArrayList<Object>();
@@ -6683,20 +7034,40 @@ public class mxGraph extends mxEventSource
 		while (it.hasNext())
 		{
 			Object edge = it.next();
-			Object source = view.getVisibleTerminal(edge, true);
-			Object target = view.getVisibleTerminal(edge, false);
+			mxCellState state = view.getState(edge);
+			Object source = (state != null) ? state.getVisibleTerminal(true)
+					: view.getVisibleTerminal(edge, true);
+			Object target = (state != null) ? state.getVisibleTerminal(false)
+					: view.getVisibleTerminal(edge, false);
 
-			if (includeLoops
-					|| ((source != target) && ((incoming && target == cell && (parent == null || model
-							.getParent(source) == parent)) || (outgoing
-							&& source == cell && (parent == null || model
-							.getParent(target) == parent)))))
+			if ((includeLoops && source == target)
+					|| ((source != target) && ((incoming && target == cell && (parent == null || isValidAncestor(
+							source, parent, recurse))) || (outgoing
+							&& source == cell && (parent == null || isValidAncestor(
+							target, parent, recurse))))))
 			{
 				result.add(edge);
 			}
 		}
 
 		return result.toArray();
+	}
+
+	/**
+	 * Returns whether or not the specified parent is a valid
+	 * ancestor of the specified cell, either direct or indirectly
+	 * based on whether ancestor recursion is enabled.
+	 * @param cell the possible child cell
+	 * @param parent the possible parent cell
+	 * @param recurse whether or not to recurse the child ancestors
+	 * @return whether or not the specified parent is a valid
+	 * ancestor of the specified cell, either direct or indirectly
+	 * based on whether ancestor recursion is enabled.
+	 */
+	public boolean isValidAncestor(Object cell, Object parent, boolean recurse)
+	{
+		return (recurse ? model.isAncestor(parent, cell) : model
+				.getParent(cell) == parent);
 	}
 
 	/**
@@ -6721,9 +7092,9 @@ public class mxGraph extends mxEventSource
 	 * returned.
 	 * @param sources Specifies if source terminals should be included in the
 	 * result.
-	 * @param targets Specifies if targer terminals should be included in the
+	 * @param targets Specifies if target terminals should be included in the
 	 * result.
-	 * @return Returns the cells at the oppsite ends of the given edges.
+	 * @return Returns the cells at the opposite ends of the given edges.
 	 */
 	public Object[] getOpposites(Object[] edges, Object terminal,
 			boolean sources, boolean targets)
@@ -6734,8 +7105,13 @@ public class mxGraph extends mxEventSource
 		{
 			for (int i = 0; i < edges.length; i++)
 			{
-				Object source = view.getVisibleTerminal(edges[i], true);
-				Object target = view.getVisibleTerminal(edges[i], false);
+				mxCellState state = view.getState(edges[i]);
+				Object source = (state != null) ? state
+						.getVisibleTerminal(true) : view.getVisibleTerminal(
+						edges[i], true);
+				Object target = (state != null) ? state
+						.getVisibleTerminal(false) : view.getVisibleTerminal(
+						edges[i], false);
 
 				// Checks if the terminal is the source of
 				// the edge and if the target should be
@@ -6794,8 +7170,11 @@ public class mxGraph extends mxEventSource
 		// cell and adds any match to the result
 		for (int i = 0; i < edges.length; i++)
 		{
-			Object src = view.getVisibleTerminal(edges[i], true);
-			Object trg = view.getVisibleTerminal(edges[i], false);
+			mxCellState state = view.getState(edges[i]);
+			Object src = (state != null) ? state.getVisibleTerminal(true)
+					: view.getVisibleTerminal(edges[i], true);
+			Object trg = (state != null) ? state.getVisibleTerminal(false)
+					: view.getVisibleTerminal(edges[i], false);
 
 			if ((src == source && trg == target)
 					|| (!directed && src == target && trg == source))
@@ -6903,7 +7282,8 @@ public class mxGraph extends mxEventSource
 	 * for a tree root. If false then outgoing edges will be counted.
 	 * @return List of tree roots in parent.
 	 */
-	public List<Object> findTreeRoots(Object parent, boolean isolate, boolean invert)
+	public List<Object> findTreeRoots(Object parent, boolean isolate,
+			boolean invert)
 	{
 		List<Object> roots = new ArrayList<Object>();
 
@@ -7399,7 +7779,7 @@ public class mxGraph extends mxEventSource
 	 */
 	public void drawCell(mxICanvas canvas, Object cell)
 	{
-		drawState(canvas, getView().getState(cell), getLabel(cell));
+		drawState(canvas, getView().getState(cell), true);
 
 		// Draws the children on top of their parent
 		int childCount = model.getChildCount(cell);
@@ -7419,11 +7799,78 @@ public class mxGraph extends mxEventSource
 	 * 
 	 * @param canvas Canvas onto which the cell should be drawn.
 	 * @param state State of the cell to be drawn.
-	 * @param label Label of the cell to be dranw.
+	 * @param drawLabel Indicates if the label should be drawn.
 	 */
-	public void drawState(mxICanvas canvas, mxCellState state, String label)
+	public void drawState(mxICanvas canvas, mxCellState state, boolean drawLabel)
 	{
+		Object cell = (state != null) ? state.getCell() : null;
 
+		if (cell != null && cell != view.getCurrentRoot()
+				&& cell != model.getRoot()
+				&& (model.isVertex(cell) || model.isEdge(cell)))
+		{
+			Object obj = canvas.drawCell(state);
+			Object lab = null;
+
+			// Holds the current clipping region in case the label will
+			// be clipped
+			Shape clip = null;
+			Rectangle newClip = state.getRectangle();
+
+			// Indirection for image canvas that contains a graphics canvas
+			mxICanvas clippedCanvas = (isLabelClipped(state.getCell())) ? canvas
+					: null;
+
+			if (clippedCanvas instanceof mxImageCanvas)
+			{
+				clippedCanvas = ((mxImageCanvas) clippedCanvas)
+						.getGraphicsCanvas();
+				// TODO: Shift newClip to match the image offset
+				//Point pt = ((mxImageCanvas) canvas).getTranslate();
+				//newClip.translate(-pt.x, -pt.y);
+			}
+
+			if (clippedCanvas instanceof mxGraphics2DCanvas)
+			{
+				Graphics g = ((mxGraphics2DCanvas) clippedCanvas).getGraphics();
+				clip = g.getClip();
+				
+				// Ensure that our new clip resides within our old clip
+				if (clip instanceof Rectangle)
+				{
+					g.setClip(newClip.intersection((Rectangle) clip));
+				}
+				// Otherwise, default to original implementation
+				else
+				{
+					g.setClip(newClip);
+				}
+			}
+
+			if (drawLabel)
+			{
+				String label = state.getLabel();
+
+				if (label != null && state.getLabelBounds() != null)
+				{
+					lab = canvas.drawLabel(label, state, isHtmlLabel(cell));
+				}
+			}
+
+			// Restores the previous clipping region
+			if (clippedCanvas instanceof mxGraphics2DCanvas)
+			{
+				((mxGraphics2DCanvas) clippedCanvas).getGraphics()
+						.setClip(clip);
+			}
+
+			// Invokes the cellDrawn callback with the object which was created
+			// by the canvas to represent the cell graphically
+			if (obj != null)
+			{
+				cellDrawn(canvas, state, obj, lab);
+			}
+		}
 	}
 
 	/**

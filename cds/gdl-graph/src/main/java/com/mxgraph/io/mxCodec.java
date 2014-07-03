@@ -1,6 +1,6 @@
 /**
- * $Id: mxCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2006, Gaudenz Alder
+ * $Id: mxCodec.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
+ * Copyright (c) 2012, JGraph Ltd
  */
 package com.mxgraph.io;
 
@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxCellPath;
 import com.mxgraph.model.mxICell;
+import com.mxgraph.util.mxDomUtils;
 import com.mxgraph.util.mxUtils;
 
 /**
@@ -44,7 +45,7 @@ public class mxCodec
 	 */
 	public mxCodec()
 	{
-		this(mxUtils.createDocument());
+		this(mxDomUtils.createDocument());
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class mxCodec
 	{
 		if (document == null)
 		{
-			document = mxUtils.createDocument();
+			document = mxDomUtils.createDocument();
 		}
 
 		this.document = document;

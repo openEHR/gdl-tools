@@ -1,5 +1,5 @@
 /**
- * $Id: mxConnectionConstraint.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxConnectionConstraint.java,v 1.1 2012/11/15 13:26:46 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.view;

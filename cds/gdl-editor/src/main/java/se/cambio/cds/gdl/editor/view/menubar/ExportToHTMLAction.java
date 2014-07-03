@@ -6,42 +6,41 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.util.ExportUtils;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.util.ExportUtils;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class ExportToHTMLAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3561842193285119707L;
 
     public ExportToHTMLAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("ExportToHTML")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
-	//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("ExportToHTML")+"...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
+        //putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	GDLEditor controller = EditorManager.getActiveGDLEditor();
-	Guide guide = controller.getGuide();
-	ExportUtils.exportToHTML(
-		EditorManager.getActiveEditorWindow(),
-		guide,
-		controller.getCurrentGuideLanguageCode());
+        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        Guide guide = controller.getGuide();
+        ExportUtils.exportToHTML(
+                EditorManager.getActiveEditorWindow(),
+                guide,
+                controller.getCurrentGuideLanguageCode());
     }
 }
 /*

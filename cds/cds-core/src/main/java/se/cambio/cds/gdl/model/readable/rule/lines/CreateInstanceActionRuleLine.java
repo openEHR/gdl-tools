@@ -69,11 +69,15 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
 
     public String toHTMLString(int level, String lang){
         StringBuffer sb = new StringBuffer();
-        sb.append(super.toHTMLString(level, lang));
+        sb.append(toHTMLStringSingle(level, lang));
         for (RuleLine ruleLine : getChildrenRuleLines()) {
             sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
         }
         return sb.toString();
+    }
+
+    public String toHTMLStringSingle(int level, String lang){
+        return super.toHTMLString(level, lang);
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

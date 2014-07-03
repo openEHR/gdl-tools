@@ -1,6 +1,6 @@
 /**
- * $Id: mxOrganicLayout.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2007-2009, JGraph Ltd
+ * $Id: mxOrganicLayout.java,v 1.2 2012/12/22 22:39:40 david Exp $
+ * Copyright (c) 2007-2013, JGraph Ltd
  */
 
 package com.mxgraph.layout;
@@ -9,13 +9,17 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.mxgraph.model.mxIGraphModel;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.model.mxIGraphModel;
+import com.mxgraph.view.mxGraphView;
 
 /**
  * An implementation of a simulated annealing layout, based on "Drawing Graphs
@@ -153,7 +157,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	 * is not set this value mutiplied by the number of nodes to find
 	 * the total graph area. The graph is assumed square.
 	 */
-	protected double averageNodeArea = 10000;
+	protected double averageNodeArea = 160000;
 
 	/**
 	 * The radius below which fine tuning of the layout should start
@@ -167,7 +171,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	 * Limit to the number of iterations that may take place. This is only
 	 * reached if one of the termination conditions does not occur first.
 	 */
-	protected int maxIterations = 100;
+	protected int maxIterations = 1000;
 
 	/**
 	 * Cost factor applied to energy calculations involving the distance
@@ -176,7 +180,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	 * <code>isOptimizeEdgeDistance</code> must be true for edge to nodes
 	 * distances to be taken into account.
 	 */
-	protected double edgeDistanceCostFactor = 4000;
+	protected double edgeDistanceCostFactor = 3000;
 
 	/**
 	 * Cost factor applied to energy calculations involving edges that cross
@@ -185,7 +189,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	 * <code>isOptimizeEdgeCrossing</code> must be true for edge crossings
 	 * to be taken into account.
 	 */
-	protected double edgeCrossingCostFactor = 2000;
+	protected double edgeCrossingCostFactor = 6000;
 
 	/**
 	 * Cost factor applied to energy calculations involving the general node
@@ -195,7 +199,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	 * <code>isOptimizeNodeDistribution</code> must be true for this general
 	 * distribution to be applied.
 	 */
-	protected double nodeDistributionCostFactor = 300000;
+	protected double nodeDistributionCostFactor = 30000;
 
 	/**
 	 * Cost factor applied to energy calculations for node promixity to the
@@ -333,6 +337,18 @@ public class mxOrganicLayout extends mxGraphLayout
 	protected boolean isFineTuning = true;
 
 	/**
+	 *  Specifies if the STYLE_NOEDGESTYLE flag should be set on edges that are
+	 * modified by the result. Default is true.
+	 */
+	protected boolean disableEdgeStyle = true;
+
+	/**
+	 * Specifies if all edge points of traversed edges should be removed.
+	 * Default is true.
+	 */
+	protected boolean resetEdges = false;
+
+	/**
 	 * Constructor for mxOrganicLayout.
 	 */
 	public mxOrganicLayout(mxGraph graph)
@@ -368,34 +384,95 @@ public class mxOrganicLayout extends mxGraphLayout
 	 */
 	public void execute(Object parent)
 	{
+		mxIGraphModel model = graph.getModel();
+		mxGraphView view = graph.getView();
 		Object[] vertices = graph.getChildVertices(parent);
-		Object[] edges = graph.getChildEdges(parent);
+		HashSet<Object> vertexSet = new HashSet<Object>(Arrays.asList(vertices));
+
+		HashSet<Object> validEdges = new HashSet<Object>();
+
+		// Remove edges that do not have both source and target terminals visible
+		for (int i = 0; i < vertices.length; i++)
+		{
+			Object[] edges = mxGraphModel.getEdges(model, vertices[i], false, true, false);
+
+			for (int j = 0; j < edges.length; j++)
+			{
+				// Only deal with sources. To be valid in the layout, each edge must be attached
+				// at both source and target to a vertex in the layout. Doing this avoids processing
+				// each edge twice.
+				if (view.getVisibleTerminal(edges[j], true) == vertices[i] && vertexSet.contains(view.getVisibleTerminal(edges[j], false)))
+				{
+					validEdges.add(edges[j]);
+				}
+			}
+
+		}
+
+		Object[] edges = validEdges.toArray();
 
 		// If the bounds dimensions have not been set see if the average area
 		// per node has been
-		mxRectangle bounds = graph.getBoundsForCells(vertices, false, false,
-				true);
+		mxRectangle totalBounds = null;
+		mxRectangle bounds = null;
+		
+		// Form internal model of nodes
+		Map<Object, Integer> vertexMap = new Hashtable<Object, Integer>();
+		v = new CellWrapper[vertices.length];
+		for (int i = 0; i < vertices.length; i++)
+		{
+			v[i] = new CellWrapper(vertices[i]);
+			vertexMap.put(vertices[i], new Integer(i));
+			bounds = getVertexBounds(vertices[i]);
+			
+			if (totalBounds == null)
+			{
+				totalBounds = (mxRectangle) bounds.clone();
+			}
+			else
+			{
+				totalBounds.add(bounds);
+			}
+
+			// Set the X,Y value of the internal version of the cell to
+			// the center point of the vertex for better positioning
+			double width = bounds.getWidth();
+			double height = bounds.getHeight();
+			v[i].x = bounds.getX() + width / 2.0;
+			v[i].y = bounds.getY() + height / 2.0;
+			if (approxNodeDimensions)
+			{
+				v[i].radiusSquared = Math.min(width, height);
+				v[i].radiusSquared *= v[i].radiusSquared;
+			}
+			else
+			{
+				v[i].radiusSquared = width * width;
+				v[i].heightSquared = height * height;
+			}
+		}
+
 		if (averageNodeArea == 0.0)
 		{
-			if (boundsWidth == 0.0 && bounds != null)
+			if (boundsWidth == 0.0 && totalBounds != null)
 			{
 				// Just use current bounds of graph
-				boundsX = bounds.getX();
-				boundsY = bounds.getY();
-				boundsWidth = bounds.getWidth();
-				boundsHeight = bounds.getHeight();
+				boundsX = totalBounds.getX();
+				boundsY = totalBounds.getY();
+				boundsWidth = totalBounds.getWidth();
+				boundsHeight = totalBounds.getHeight();
 			}
 		}
 		else
 		{
-			// find the centre point of the current graph
+			// find the center point of the current graph
 			// based the new graph bounds on the average node area set
 			double newArea = averageNodeArea * vertices.length;
 			double squareLength = Math.sqrt(newArea);
 			if (bounds != null)
 			{
-				double centreX = bounds.getX() + bounds.getWidth() / 2.0;
-				double centreY = bounds.getY() + bounds.getHeight() / 2.0;
+				double centreX = totalBounds.getX() + totalBounds.getWidth() / 2.0;
+				double centreY = totalBounds.getY() + totalBounds.getHeight() / 2.0;
 				boundsX = centreX - squareLength / 2.0;
 				boundsY = centreY - squareLength / 2.0;
 			}
@@ -430,35 +507,10 @@ public class mxOrganicLayout extends mxGraphLayout
 
 		unchangedEnergyRoundCount = 0;
 
-		// Form internal model of nodes
-		Map<Object, Integer> vertexMap = new Hashtable<Object, Integer>();
-		v = new CellWrapper[vertices.length];
-		for (int i = 0; i < vertices.length; i++)
-		{
-			v[i] = new CellWrapper(vertices[i]);
-			vertexMap.put(vertices[i], new Integer(i));
-			bounds = graph.getCellBounds(vertices[i]);
-			// Set the X,Y value of the internal version of the cell to
-			// the center point of the vertex for better positioning
-			double width = bounds.getWidth();
-			double height = bounds.getHeight();
-			v[i].x = bounds.getX() + width / 2.0;
-			v[i].y = bounds.getY() + height / 2.0;
-			if (approxNodeDimensions)
-			{
-				v[i].radiusSquared = Math.min(width, height);
-				v[i].radiusSquared *= v[i].radiusSquared;
-			}
-			else
-			{
-				v[i].radiusSquared = width * width;
-				v[i].heightSquared = height * height;
-			}
-		}
 
 		// Form internal model of edges
 		e = new CellWrapper[edges.length];
-		mxIGraphModel model = graph.getModel();
+		
 		for (int i = 0; i < e.length; i++)
 		{
 			e[i] = new CellWrapper(edges[i]);
@@ -516,19 +568,40 @@ public class mxOrganicLayout extends mxGraphLayout
 			yNormTry[i] = Math.sin(angle);
 		}
 
+		
+		int childCount = model.getChildCount(parent);
+
+		for (int i = 0; i < childCount; i++)
+		{
+			Object cell = model.getChildAt(parent, i);
+
+			if (!isEdgeIgnored(cell))
+			{
+				if (isResetEdges())
+				{
+					graph.resetEdge(cell);
+				}
+
+				if (isDisableEdgeStyle())
+				{
+					setEdgeStyleEnabled(cell, false);
+				}
+			}
+		}
+		
 		// The main layout loop
 		for (iteration = 0; iteration < maxIterations; iteration++)
 		{
 			performRound();
 		}
 
-		// Obtain the final positions post them to the facade
+		// Obtain the final positions
 		double[][] result = new double[v.length][2];
 		for (int i = 0; i < v.length; i++)
 		{
 			vertices[i] = v[i].cell;
-			bounds = graph.getCellBounds(vertices[i]);
-			// Convert from vertex center points to top left points
+			bounds = getVertexBounds(vertices[i]);
+
 			result[i][0] = v[i].x - bounds.getWidth() / 2;
 			result[i][1] = v[i].y - bounds.getHeight() / 2;
 		}
@@ -575,6 +648,8 @@ public class mxOrganicLayout extends mxGraphLayout
 			int index = i;
 
 			// Obtain the energies for the node is its current position
+			// TODO The energy could be stored from the last iteration
+			// and used again, rather than re-calculate
 			double oldNodeDistribution = getNodeDistribution(index);
 			double oldEdgeDistance = getEdgeDistanceFromNode(index);
 			oldEdgeDistance += getEdgeDistanceAffectedNodes(index);
@@ -1049,7 +1124,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	protected double getEdgeDistanceAffectedNodes(int node)
 	{
 		double energy = 0.0;
-		for (int i = 0; i < v[node].connectedEdges.length; i++)
+		for (int i = 0; i < (v[node].connectedEdges.length); i++)
 		{
 			energy += getEdgeDistanceFromEdge(v[node].connectedEdges[i]);
 		}
@@ -1112,7 +1187,7 @@ public class mxOrganicLayout extends mxGraphLayout
 	}
 
 	/**
-	 * Returns all Edges that are not connected to the specifed cell
+	 * Returns all Edges that are not connected to the specified cell
 	 * 
 	 * @param cellIndex
 	 *            the cell index to which the edges are not connected
@@ -1744,5 +1819,37 @@ public class mxOrganicLayout extends mxGraphLayout
 	public void setApproxNodeDimensions(boolean approxNodeDimensions)
 	{
 		this.approxNodeDimensions = approxNodeDimensions;
+	}
+	
+	/**
+	 * @return the disableEdgeStyle
+	 */
+	public boolean isDisableEdgeStyle()
+	{
+		return disableEdgeStyle;
+	}
+
+	/**
+	 * @param disableEdgeStyle the disableEdgeStyle to set
+	 */
+	public void setDisableEdgeStyle(boolean disableEdgeStyle)
+	{
+		this.disableEdgeStyle = disableEdgeStyle;
+	}
+
+	/**
+	 * @return the resetEdges
+	 */
+	public boolean isResetEdges()
+	{
+		return resetEdges;
+	}
+
+	/**
+	 * @param resetEdges the resetEdges to set
+	 */
+	public void setResetEdges(boolean resetEdges)
+	{
+		this.resetEdges = resetEdges;
 	}
 }

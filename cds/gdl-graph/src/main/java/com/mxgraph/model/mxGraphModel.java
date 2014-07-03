@@ -1,9 +1,12 @@
 /**
- * $Id: mxGraphModel.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxGraphModel.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,7 +68,8 @@ import com.mxgraph.util.mxUndoableEdit;
  * mxEvent.UNDO fires after the change was dispatched in endUpdate. The
  * <code>edit</code> property contains the current mxUndoableEdit.
  */
-public class mxGraphModel extends mxEventSource implements mxIGraphModel
+public class mxGraphModel extends mxEventSource implements mxIGraphModel,
+		Serializable
 {
 
 	/**
@@ -244,7 +248,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getRoot()
+	 * @see com.mxgraph.model.mxIGraphModel#getRoot()
 	 */
 	public Object getRoot()
 	{
@@ -252,7 +256,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setRoot(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#setRoot(Object)
 	 */
 	public Object setRoot(Object root)
 	{
@@ -295,7 +299,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#cloneCells(Object[], boolean)
+	 * @see com.mxgraph.model.mxIGraphModel#cloneCells(Object[], boolean)
 	 */
 	public Object[] cloneCells(Object[] cells, boolean includeChildren)
 	{
@@ -394,7 +398,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#isAncestor(Object, Object)
+	 * @see com.mxgraph.model.mxIGraphModel#isAncestor(Object, Object)
 	 */
 	public boolean isAncestor(Object parent, Object child)
 	{
@@ -407,7 +411,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#contains(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#contains(Object)
 	 */
 	public boolean contains(Object cell)
 	{
@@ -415,7 +419,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getParent(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#getParent(Object)
 	 */
 	public Object getParent(Object child)
 	{
@@ -424,7 +428,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#add(Object, Object, int)
+	 * @see com.mxgraph.model.mxIGraphModel#add(Object, Object, int)
 	 */
 	public Object add(Object parent, Object child, int index)
 	{
@@ -519,7 +523,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#remove(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#remove(Object)
 	 */
 	public Object remove(Object cell)
 	{
@@ -598,7 +602,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getChildCount(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#getChildCount(Object)
 	 */
 	public int getChildCount(Object cell)
 	{
@@ -606,7 +610,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getChildAt(Object, int)
+	 * @see com.mxgraph.model.mxIGraphModel#getChildAt(Object, int)
 	 */
 	public Object getChildAt(Object parent, int index)
 	{
@@ -615,7 +619,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getTerminal(Object, boolean)
+	 * @see com.mxgraph.model.mxIGraphModel#getTerminal(Object, boolean)
 	 */
 	public Object getTerminal(Object edge, boolean isSource)
 	{
@@ -624,7 +628,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setTerminal(Object, Object, boolean)
+	 * @see com.mxgraph.model.mxIGraphModel#setTerminal(Object, Object, boolean)
 	 */
 	public Object setTerminal(Object edge, Object terminal, boolean isSource)
 	{
@@ -727,7 +731,21 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 		Object source = getTerminal(edge, true);
 		Object target = getTerminal(edge, false);
 		Object cell = null;
-
+		
+		// Uses the first non-relative descendants of the source terminal
+		while (source != null && !isEdge(source) &&
+			getGeometry(source) != null && getGeometry(source).isRelative())
+		{
+			source = getParent(source);
+		}
+		
+		// Uses the first non-relative descendants of the target terminal
+		while (target != null && !isEdge(target) &&
+			getGeometry(target) != null && getGeometry(target).isRelative())
+		{
+			target = getParent(target);
+		}
+		
 		if (isAncestor(root, source) && isAncestor(root, target))
 		{
 			if (source == target)
@@ -838,7 +856,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getEdgeCount(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#getEdgeCount(Object)
 	 */
 	public int getEdgeCount(Object cell)
 	{
@@ -846,7 +864,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getEdgeAt(Object, int)
+	 * @see com.mxgraph.model.mxIGraphModel#getEdgeAt(Object, int)
 	 */
 	public Object getEdgeAt(Object parent, int index)
 	{
@@ -855,7 +873,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#isVertex(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#isVertex(Object)
 	 */
 	public boolean isVertex(Object cell)
 	{
@@ -863,7 +881,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#isEdge(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#isEdge(Object)
 	 */
 	public boolean isEdge(Object cell)
 	{
@@ -871,7 +889,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#isConnectable(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#isConnectable(Object)
 	 */
 	public boolean isConnectable(Object cell)
 	{
@@ -880,7 +898,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getValue(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#getValue(Object)
 	 */
 	public Object getValue(Object cell)
 	{
@@ -888,7 +906,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setValue(Object, Object)
+	 * @see com.mxgraph.model.mxIGraphModel#setValue(Object, Object)
 	 */
 	public Object setValue(Object cell, Object value)
 	{
@@ -911,7 +929,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getGeometry(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#getGeometry(Object)
 	 */
 	public mxGeometry getGeometry(Object cell)
 	{
@@ -920,7 +938,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setGeometry(Object, mxGeometry)
+	 * @see com.mxgraph.model.mxIGraphModel#setGeometry(Object, mxGeometry)
 	 */
 	public mxGeometry setGeometry(Object cell, mxGeometry geometry)
 	{
@@ -945,7 +963,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#getStyle(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#getStyle(Object)
 	 */
 	public String getStyle(Object cell)
 	{
@@ -953,11 +971,11 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setStyle(Object, String)
+	 * @see com.mxgraph.model.mxIGraphModel#setStyle(Object, String)
 	 */
 	public String setStyle(Object cell, String style)
 	{
-		if (style != getStyle(cell))
+		if (style == null || !style.equals(getStyle(cell)))
 		{
 			execute(new mxStyleChange(this, cell, style));
 		}
@@ -978,7 +996,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#isCollapsed(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#isCollapsed(Object)
 	 */
 	public boolean isCollapsed(Object cell)
 	{
@@ -987,7 +1005,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setCollapsed(Object, boolean)
+	 * @see com.mxgraph.model.mxIGraphModel#setCollapsed(Object, boolean)
 	 */
 	public boolean setCollapsed(Object cell, boolean collapsed)
 	{
@@ -1014,7 +1032,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#isVisible(Object)
+	 * @see com.mxgraph.model.mxIGraphModel#isVisible(Object)
 	 */
 	public boolean isVisible(Object cell)
 	{
@@ -1022,7 +1040,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#setVisible(Object, boolean)
+	 * @see com.mxgraph.model.mxIGraphModel#setVisible(Object, boolean)
 	 */
 	public boolean setVisible(Object cell, boolean visible)
 	{
@@ -1061,7 +1079,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#beginUpdate()
+	 * @see com.mxgraph.model.mxIGraphModel#beginUpdate()
 	 */
 	public void beginUpdate()
 	{
@@ -1070,7 +1088,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 	}
 
 	/* (non-Javadoc)
-	 * @see mxIGraphModel#endUpdate()
+	 * @see com.mxgraph.model.mxIGraphModel#endUpdate()
 	 */
 	public void endUpdate()
 	{
@@ -1172,40 +1190,45 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 
 			for (int i = 0; i < childCount; i++)
 			{
-				Object child = from.getChildAt(i);
+				mxICell cell = from.getChildAt(i);
+				String id = cell.getId();
+				mxICell target = (mxICell) ((id != null && (!isEdge(cell) || !cloneAllEdges)) ? getCell(id)
+						: null);
 
-				if (child instanceof mxICell)
+				// Clones and adds the child if no cell exists for the id
+				if (target == null)
 				{
-					mxICell cell = (mxICell) child;
-					String id = cell.getId();
-					mxICell target = (mxICell) ((id != null && (!isEdge(cell) || !cloneAllEdges)) ? getCell(id)
-							: null);
+					mxCell clone = (mxCell) cell.clone();
+					clone.setId(id);
 
-					// Clones and adds the child if no cell exists for the id
-					if (target == null)
-					{
-						mxCell clone = (mxCell) cell.clone();
-						clone.setId(id);
-
-						// Do *NOT* use model.add as this will move the edge away
-						// from the parent in updateEdgeParent if maintainEdgeParent
-						// is enabled in the target model
-						target = to.insert(clone);
-						cellAdded(target);
-					}
-
-					// Stores the mapping for later reconnecting edges
-					mapping.put(cell, target);
-
-					// Recurses
-					mergeChildrenImpl(cell, target, cloneAllEdges, mapping);
+					// Do *NOT* use model.add as this will move the edge away
+					// from the parent in updateEdgeParent if maintainEdgeParent
+					// is enabled in the target model
+					target = to.insert(clone);
+					cellAdded(target);
 				}
+
+				// Stores the mapping for later reconnecting edges
+				mapping.put(cell, target);
+
+				// Recurses
+				mergeChildrenImpl(cell, target, cloneAllEdges, mapping);
 			}
 		}
 		finally
 		{
 			endUpdate();
 		}
+	}
+
+	/**
+	 * Initializes the currentEdit field if the model is deserialized.
+	 */
+	private void readObject(ObjectInputStream ois) throws IOException,
+			ClassNotFoundException
+	{
+		ois.defaultReadObject();
+		currentEdit = createUndoableEdit();
 	}
 
 	/**
@@ -1324,7 +1347,7 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 			Object source = model.getTerminal(edge, true);
 			Object target = model.getTerminal(edge, false);
 
-			if (includeLoops
+			if ((includeLoops && source == target)
 					|| ((source != target) && ((incoming && target == cell) || (outgoing && source == cell))))
 			{
 				result.add(edge);
@@ -1387,11 +1410,10 @@ public class mxGraphModel extends mxEventSource implements mxIGraphModel
 			Object edge = model.getEdgeAt(terminal, i);
 			Object src = model.getTerminal(edge, true);
 			Object trg = model.getTerminal(edge, false);
-			boolean isSource = src == source;
+			boolean directedMatch = (src == source) && (trg == target);
+			boolean oppositeMatch = (trg == source) && (src == target);
 
-			if (isSource
-					&& trg == target
-					|| (!directed && model.getTerminal(edge, !isSource) == target))
+			if (directedMatch || (!directed && oppositeMatch))
 			{
 				result.add(edge);
 			}

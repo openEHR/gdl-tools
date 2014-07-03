@@ -190,7 +190,7 @@ public class mxGraphHierarchyNode extends mxGraphAbstractHierarchyCell
 				return true;
 			}
 			
-			if (hashCode == null || hashCode == null)
+			if (hashCode == null)
 			{
 				return false;
 			}

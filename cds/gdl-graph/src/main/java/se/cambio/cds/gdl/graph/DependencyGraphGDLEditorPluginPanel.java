@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.graph;
 
-import org.jgraph.JGraph;
 import se.cambio.cds.view.swing.panel.AbstractPluginPanel;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -16,7 +15,7 @@ public class DependencyGraphGDLEditorPluginPanel extends AbstractPluginPanel {
      */
     private static final long serialVersionUID = 1L;
     private JScrollPane mainScrollPanel;
-    private JGraph jGraph;
+    private JComponent graph;
 
     public DependencyGraphGDLEditorPluginPanel(){
         init();
@@ -35,10 +34,10 @@ public class DependencyGraphGDLEditorPluginPanel extends AbstractPluginPanel {
     }
 
     private JComponent getGraphComponent(){
-        if (jGraph ==null){
-            jGraph = new JGraph();
+        if (graph ==null){
+            graph = new JPanel();
         }
-        return jGraph;
+        return graph;
     }
 
 
@@ -47,11 +46,11 @@ public class DependencyGraphGDLEditorPluginPanel extends AbstractPluginPanel {
         if (mainScrollPanel!=null){
             this.remove(mainScrollPanel);
             mainScrollPanel = null;
-            jGraph = null;
+            graph = null;
         }
         try {
             GDLDependencyGraph gdlDependencyGraph = new GDLDependencyGraph(getGuide());
-            jGraph = gdlDependencyGraph.getJGraph(getLanguage());
+            graph = gdlDependencyGraph.getGraph(getLanguage());
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e); //TODO
         }

@@ -1,5 +1,5 @@
 /**
- * $Id: mxObjectCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxObjectCodec.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2006, Gaudenz Alder
  */
 package com.mxgraph.io;
@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -62,6 +63,16 @@ public class mxObjectCodec
 	 * Maps from from XML attribute names to fieldnames.
 	 */
 	protected Map<String, String> reverse;
+
+	/**
+	 * Caches accessors for the given method names.
+	 */
+	protected Map<String, Method> accessors;
+
+	/**
+	 * Caches fields for faster access.
+	 */
+	protected Map<Class, Map<String, Field>> fields;
 
 	/**
 	 * Constructs a new codec for the specified template object.
@@ -199,6 +210,12 @@ public class mxObjectCodec
 			{
 				node = node.getFirstChild();
 
+				// Skips text nodes
+				while (node != null && !(node instanceof Element))
+				{
+					node = node.getNextSibling();
+				}
+
 				if (node != null && node instanceof Element
 						&& ((Element) node).hasAttribute("as"))
 				{
@@ -334,6 +351,8 @@ public class mxObjectCodec
 	 */
 	protected void encodeFields(mxCodec enc, Object obj, Node node)
 	{
+		// LATER: Use PropertyDescriptors in Introspector.getBeanInfo(clazz)
+		// see http://forum.jgraph.com/questions/1424
 		Class<?> type = obj.getClass();
 
 		while (type != null)
@@ -634,14 +653,40 @@ public class mxObjectCodec
 	{
 		Class<?> type = obj.getClass();
 
+		// Creates the fields cache
+		if (fields == null)
+		{
+			fields = new HashMap<Class, Map<String, Field>>();
+		}
+
+		// Creates the fields cache entry for the given type
+		Map<String, Field> map = fields.get(type);
+
+		if (map == null)
+		{
+			map = new HashMap<String, Field>();
+			fields.put(type, map);
+		}
+
+		// Tries to get cached field
+		Field field = map.get(fieldname);
+
+		if (field != null)
+		{
+			return field;
+		}
+
 		while (type != null)
 		{
 			try
 			{
-				Field field = type.getDeclaredField(fieldname);
+				field = type.getDeclaredField(fieldname);
 
 				if (field != null)
 				{
+					// Adds field to fields cache
+					map.put(fieldname, field);
+
 					return field;
 				}
 			}
@@ -677,23 +722,40 @@ public class mxObjectCodec
 			name = "get" + name;
 		}
 
-		try
+		Method method = (accessors != null) ? accessors.get(name) : null;
+
+		if (method == null)
 		{
-			if (isGetter)
+			try
 			{
-				return getMethod(obj, name, null);
+				if (isGetter)
+				{
+					method = getMethod(obj, name, null);
+				}
+				else
+				{
+					method = getMethod(obj, name,
+							new Class[] { field.getType() });
+				}
 			}
-			else
+			catch (Exception e1)
 			{
-				return getMethod(obj, name, new Class[] { field.getType() });
+				// ignore
 			}
-		}
-		catch (Exception e1)
-		{
-			// ignore
+
+			// Adds accessor to cache
+			if (method != null)
+			{
+				if (accessors == null)
+				{
+					accessors = new Hashtable<String, Method>();
+				}
+
+				accessors.put(name, method);
+			}
 		}
 
-		return null;
+		return method;
 	}
 
 	/**
@@ -740,25 +802,48 @@ public class mxObjectCodec
 			{
 				if (field != null)
 				{
-					value = field.get(obj);
+					if (Modifier.isPublic(field.getModifiers()))
+					{
+						value = field.get(obj);
+					}
+					else
+					{
+						value = getFieldValueWithAccessor(obj, field);
+					}
 				}
 			}
 			catch (IllegalAccessException e1)
 			{
-				if (field != null)
-				{
-					try
-					{
-						Method method = getAccessor(obj, field, true);
-						value = method.invoke(obj, (Object[]) null);
-					}
-					catch (Exception e2)
-					{
-						// ignore
-					}
-				}
+				value = getFieldValueWithAccessor(obj, field);
 			}
 			catch (Exception e)
+			{
+				// ignore
+			}
+		}
+
+		return value;
+	}
+
+	/**
+	 * Returns the value of the field using the accessor for the field if one exists.
+	 */
+	protected Object getFieldValueWithAccessor(Object obj, Field field)
+	{
+		Object value = null;
+
+		if (field != null)
+		{
+			try
+			{
+				Method method = getAccessor(obj, field, true);
+
+				if (method != null)
+				{
+					value = method.invoke(obj, (Object[]) null);
+				}
+			}
+			catch (Exception e2)
 			{
 				// ignore
 			}
@@ -779,21 +864,49 @@ public class mxObjectCodec
 		{
 			field = getField(obj, fieldname);
 
-			if (field.getType() == Boolean.class)
+			if (field != null)
 			{
-				value = new Boolean(value.equals("1")
-						|| String.valueOf(value).equalsIgnoreCase("true"));
-			}
+				if (field.getType() == Boolean.class)
+				{
+					value = (value.equals("1") || String.valueOf(value)
+							.equalsIgnoreCase("true")) ? Boolean.TRUE
+							: Boolean.FALSE;
+				}
 
-			field.set(obj, value);
+				if (Modifier.isPublic(field.getModifiers()))
+				{
+					field.set(obj, value);
+				}
+				else
+				{
+					setFieldValueWithAccessor(obj, field, value);
+				}
+			}
 		}
 		catch (IllegalAccessException e1)
 		{
-			if (field != null)
+			setFieldValueWithAccessor(obj, field, value);
+		}
+		catch (Exception e)
+		{
+			// ignore
+		}
+	}
+
+	/**
+	 * Sets the value of the given field using the accessor if one exists.
+	 */
+	protected void setFieldValueWithAccessor(Object obj, Field field,
+			Object value)
+	{
+		if (field != null)
+		{
+			try
 			{
-				try
+				Method method = getAccessor(obj, field, false);
+
+				if (method != null)
 				{
-					Method method = getAccessor(obj, field, false);
 					Class<?> type = method.getParameterTypes()[0];
 					value = convertValueFromXml(type, value);
 
@@ -801,25 +914,21 @@ public class mxObjectCodec
 					if (type.isArray() && value instanceof Collection)
 					{
 						Collection<?> coll = (Collection<?>) value;
-						value = coll.toArray((Object[]) Array.newInstance(type
-								.getComponentType(), coll.size()));
+						value = coll.toArray((Object[]) Array.newInstance(
+								type.getComponentType(), coll.size()));
 					}
 
 					method.invoke(obj, new Object[] { value });
 				}
-				catch (Exception e2)
-				{
-					System.err.println("setFieldValue: " + e2 + " on "
-							+ obj.getClass().getSimpleName() + "." + fieldname
-							+ " (" + field.getType().getSimpleName() + ") = "
-							+ value + " (" + value.getClass().getSimpleName()
-							+ ")");
-				}
 			}
-		}
-		catch (Exception e)
-		{
-			// ignore
+			catch (Exception e2)
+			{
+				System.err.println("setFieldValue: " + e2 + " on "
+						+ obj.getClass().getSimpleName() + "."
+						+ field.getName() + " ("
+						+ field.getType().getSimpleName() + ") = " + value
+						+ " (" + value.getClass().getSimpleName() + ")");
+			}
 		}
 	}
 
@@ -1023,8 +1132,8 @@ public class mxObjectCodec
 
 		if (fieldname == null || !isExcluded(obj, fieldname, child, false))
 		{
+			Object template = getFieldTemplate(obj, fieldname, child);
 			Object value = null;
-			Object template = getFieldValue(obj, fieldname);
 
 			if (child.getNodeName().equals("add"))
 			{
@@ -1037,38 +1146,67 @@ public class mxObjectCodec
 			}
 			else
 			{
-				// Arrays are replaced completely
-				if (template != null && template.getClass().isArray())
-				{
-					template = null;
-				}
-				// Collections are cleared
-				else if (template instanceof Collection)
-				{
-					((Collection<?>) template).clear();
-				}
-
 				value = dec.decode(child, template);
 				// System.out.println("Decoded " + child.getNodeName() + "."
 				// + fieldname + "=" + value);
 			}
 
-			if (value != null && !value.equals(template))
+			addObjectValue(obj, fieldname, value, template);
+		}
+	}
+
+	/**
+	 * Returns the template instance for the given field. This returns the
+	 * value of the field, null if the value is an array or an empty collection
+	 * if the value is a collection. The value is then used to populate the
+	 * field for a new instance. For strongly typed languages it may be
+	 * required to override this to return the correct collection instance
+	 * based on the encoded child.
+	 */
+	protected Object getFieldTemplate(Object obj, String fieldname, Node child)
+	{
+		Object template = getFieldValue(obj, fieldname);
+
+		// Arrays are replaced completely
+		if (template != null && template.getClass().isArray())
+		{
+			template = null;
+		}
+		// Collections are cleared
+		else if (template instanceof Collection)
+		{
+			((Collection<?>) template).clear();
+		}
+
+		return template;
+	}
+
+	/**
+	 * Sets the decoded child node as a value of the given object. If the
+	 * object is a map, then the value is added with the given fieldname as a
+	 * key. If the fieldname is not empty, then setFieldValue is called or
+	 * else, if the object is a collection, the value is added to the
+	 * collection. For strongly typed languages it may be required to
+	 * override this with the correct code to add an entry to an object.
+	 */
+	protected void addObjectValue(Object obj, String fieldname, Object value,
+			Object template)
+	{
+		if (value != null && !value.equals(template))
+		{
+			if (fieldname != null && obj instanceof Map)
 			{
-				if (fieldname != null && obj instanceof Map)
-				{
-					((Map) obj).put(fieldname, value);
-				}
-				else if (fieldname != null && fieldname.length() > 0)
-				{
-					setFieldValue(obj, fieldname, value);
-				}
-				// Arrays are treated as collections and
-				// converted in setFieldValue
-				else if (obj instanceof Collection)
-				{
-					((Collection) obj).add(value);
-				}
+				((Map) obj).put(fieldname, value);
+			}
+			else if (fieldname != null && fieldname.length() > 0)
+			{
+				setFieldValue(obj, fieldname, value);
+			}
+			// Arrays are treated as collections and
+			// converted in setFieldValue
+			else if (obj instanceof Collection)
+			{
+				((Collection) obj).add(value);
 			}
 		}
 	}

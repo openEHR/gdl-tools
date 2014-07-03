@@ -1,5 +1,5 @@
 /**
- * $Id: mxLine.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxLine.java,v 1.1 2012/11/15 13:26:39 gaudenz Exp $
  * Copyright (c) 2007-2010, Gaudenz Alder, David Benson
  */
 package com.mxgraph.util;
@@ -30,6 +30,16 @@ public class mxLine extends mxPoint
 		this.setY(startPt.getY());
 		this.endPoint = endPt;
 	}
+	
+	/**
+	 * Creates a new line
+	 */
+	public mxLine(double startPtX, double startPtY, mxPoint endPt)
+	{
+		x = startPtX;
+		y = startPtY;
+		this.endPoint = endPt;
+	}
 
 	/**
 	 * Returns the end point of the line.
@@ -51,6 +61,16 @@ public class mxLine extends mxPoint
 		this.endPoint = value;
 	}
 
+	/**
+	 * Sets the start and end points.
+	 */
+	public void setPoints(mxPoint startPt, mxPoint endPt)
+	{
+		this.setX(startPt.getX());
+		this.setY(startPt.getY());
+		this.endPoint = endPt;
+	}
+	
 	/**
 	 * Returns the square of the shortest distance from a point to this line.
 	 * The line is considered extrapolated infinitely in both directions for 

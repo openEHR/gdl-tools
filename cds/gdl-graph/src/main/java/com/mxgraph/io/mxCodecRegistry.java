@@ -1,5 +1,5 @@
 /**
- * $Id: mxCodecRegistry.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxCodecRegistry.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.io;
@@ -217,7 +217,7 @@ public class mxCodecRegistry
 	 * with the given instance..
 	 *
 	 * The I/O system uses unqualified classnames, eg. for a
-	 * <code>mxCell</code> this returns
+	 * <code>com.mxgraph.model.mxCell</code> this returns
 	 * <code>mxCell</code>.
 	 * 
 	 * @param instance Instance whose node name should be returned.

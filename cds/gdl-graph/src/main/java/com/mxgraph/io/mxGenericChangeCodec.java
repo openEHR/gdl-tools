@@ -1,5 +1,5 @@
 /**
- * $Id: mxGenericChangeCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxGenericChangeCodec.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2006, Gaudenz Alder
  */
 package com.mxgraph.io;
@@ -41,7 +41,7 @@ public class mxGenericChangeCodec extends mxObjectCodec
 	}
 
 	/* (non-Javadoc)
-	 * @see mxObjectCodec#afterDecode(mxCodec, org.w3c.dom.Node, java.lang.Object)
+	 * @see com.mxgraph.io.mxObjectCodec#afterDecode(com.mxgraph.io.mxCodec, org.w3c.dom.Node, java.lang.Object)
 	 */
 	@Override
 	public Object afterDecode(mxCodec dec, Node node, Object obj)

@@ -50,7 +50,7 @@ public class DecisionGraphGDLEditorPluginPanel extends AbstractPluginPanel {
         }
         try {
             GDLDecisionGraph gdlDecisionGraph = new GDLDecisionGraph(getGuide());
-            graphComponent = gdlDecisionGraph.getJGraph(getLanguage());
+            graphComponent = gdlDecisionGraph.getGraph(getLanguage());
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e); //TODO
         }

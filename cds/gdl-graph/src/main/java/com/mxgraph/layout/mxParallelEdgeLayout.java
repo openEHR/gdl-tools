@@ -12,6 +12,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 
@@ -44,7 +45,7 @@ public class mxParallelEdgeLayout extends mxGraphLayout
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxIGraphLayout#execute(java.lang.Object)
+	 * @see com.mxgraph.layout.mxIGraphLayout#execute(java.lang.Object)
 	 */
 	public void execute(Object parent)
 	{
@@ -109,8 +110,11 @@ public class mxParallelEdgeLayout extends mxGraphLayout
 	protected String getEdgeId(Object edge)
 	{
 		mxGraphView view = graph.getView();
-		Object src = view.getVisibleTerminal(edge, true);
-		Object trg = view.getVisibleTerminal(edge, false);
+		mxCellState state = view.getState(edge);
+		Object src = (state != null) ? state.getVisibleTerminal(true) : view
+				.getVisibleTerminal(edge, true);
+		Object trg = (state != null) ? state.getVisibleTerminal(false) : view
+				.getVisibleTerminal(edge, false);
 
 		if (src instanceof mxICell && trg instanceof mxICell)
 		{
@@ -185,8 +189,8 @@ public class mxParallelEdgeLayout extends mxGraphLayout
 	{
 		if (graph.isCellMovable(edge))
 		{
-			setEdgePoints(edge, Arrays
-					.asList(new mxPoint[] { new mxPoint(x, y) }));
+			setEdgePoints(edge,
+					Arrays.asList(new mxPoint[] { new mxPoint(x, y) }));
 		}
 	}
 

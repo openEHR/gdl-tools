@@ -1,12 +1,26 @@
+/**
+ * $Id: mxSwimlaneManager.java,v 1.2 2013/08/29 09:19:41 gaudenz Exp $
+ * Copyright (c) 2007, Gaudenz Alder
+ */
 package com.mxgraph.view;
+
+import java.util.Map;
 
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxIGraphModel;
-import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.util.mxRectangle;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxUtils;
 
+/**
+ * Manager for swimlanes and nested swimlanes that sets the size of newly added
+ * swimlanes to that of their siblings, and propagates changes to the size of a
+ * swimlane to its siblings, if siblings is true, and its ancestors, if
+ * bubbling is true.
+ */
 public class mxSwimlaneManager extends mxEventSource
 {
 
@@ -29,16 +43,15 @@ public class mxSwimlaneManager extends mxEventSource
 	protected boolean horizontal;
 
 	/**
-	 * Optional string that specifies the attributename to be passed to
-	 * mxCell.is to check if the rule applies to a cell.
+	 * Specifies if newly added cells should be resized to match the size of their
+	 * existing siblings. Default is true.
 	 */
-	protected boolean siblings;
+	protected boolean addEnabled;
 
 	/**
-	 * Optional string that specifies the attributename to be passed to
-	 * mxCell.is to check if the rule applies to a cell.
+	 * Specifies if resizing of swimlanes should be handled. Default is true.
 	 */
-	protected boolean bubbling;
+	protected boolean resizeEnabled;
 
 	/**
 	 * 
@@ -47,7 +60,7 @@ public class mxSwimlaneManager extends mxEventSource
 	{
 		public void invoke(Object source, mxEventObject evt)
 		{
-			if (isEnabled())
+			if (isEnabled() && isAddEnabled())
 			{
 				cellsAdded((Object[]) evt.getProperty("cells"));
 			}
@@ -61,7 +74,7 @@ public class mxSwimlaneManager extends mxEventSource
 	{
 		public void invoke(Object source, mxEventObject evt)
 		{
-			if (isEnabled())
+			if (isEnabled() && isResizeEnabled())
 			{
 				cellsResized((Object[]) evt.getProperty("cells"));
 			}
@@ -74,14 +87,6 @@ public class mxSwimlaneManager extends mxEventSource
 	public mxSwimlaneManager(mxGraph graph)
 	{
 		setGraph(graph);
-	}
-
-	/**
-	 * 
-	 */
-	public boolean isSwimlaneIgnored(Object swimlane)
-	{
-		return !getGraph().isSwimlane(swimlane);
 	}
 
 	/**
@@ -117,35 +122,35 @@ public class mxSwimlaneManager extends mxEventSource
 	}
 
 	/**
-	 * @return the bubbling
+	 * @return the addEnabled
 	 */
-	public boolean isSiblings()
+	public boolean isAddEnabled()
 	{
-		return siblings;
+		return addEnabled;
 	}
 
 	/**
-	 * @param value the bubbling to set
+	 * @param value the addEnabled to set
 	 */
-	public void setSiblings(boolean value)
+	public void setAddEnabled(boolean value)
 	{
-		siblings = value;
+		addEnabled = value;
 	}
 
 	/**
-	 * @return the bubbling
+	 * @return the resizeEnabled
 	 */
-	public boolean isBubbling()
+	public boolean isResizeEnabled()
 	{
-		return bubbling;
+		return resizeEnabled;
 	}
 
 	/**
-	 * @param value the bubbling to set
+	 * @param value the resizeEnabled to set
 	 */
-	public void setBubbling(boolean value)
+	public void setResizeEnabled(boolean value)
 	{
-		bubbling = value;
+		resizeEnabled = value;
 	}
 
 	/**
@@ -177,7 +182,34 @@ public class mxSwimlaneManager extends mxEventSource
 	}
 
 	/**
-	 * 
+	 *  Returns true if the given swimlane should be ignored.
+	 */
+	protected boolean isSwimlaneIgnored(Object swimlane)
+	{
+		return !getGraph().isSwimlane(swimlane);
+	}
+
+	/**
+	 * Returns true if the given cell is horizontal. If the given cell is not a
+	 * swimlane, then the <horizontal> value is returned.
+	 */
+	protected boolean isCellHorizontal(Object cell)
+	{
+		if (graph.isSwimlane(cell))
+		{
+			mxCellState state = graph.getView().getState(cell);
+			Map<String, Object> style = (state != null) ? state.getStyle()
+					: graph.getCellStyle(cell);
+
+			return mxUtils.isTrue(style, mxConstants.STYLE_HORIZONTAL, true);
+		}
+
+		return !isHorizontal();
+	}
+
+	/**
+	 * Called if any cells have been added. Calls swimlaneAdded for all swimlanes
+	 * where isSwimlaneIgnored returns false.
 	 */
 	protected void cellsAdded(Object[] cells)
 	{
@@ -204,110 +236,84 @@ public class mxSwimlaneManager extends mxEventSource
 	}
 
 	/**
-	 * 
+	 * Called for each swimlane which has been added. This finds a reference
+	 * sibling swimlane and applies its size to the newly added swimlane. If no
+	 * sibling can be found then the parent swimlane is resized so that the
+	 * new swimlane fits into the parent swimlane.
 	 */
 	protected void swimlaneAdded(Object swimlane)
 	{
 		mxIGraphModel model = getGraph().getModel();
-
-		// Tries to find existing swimlane for dimensions
-		// TODO: Use parent geometry - header if inside
-		// parent swimlane
-		mxGeometry geo = null;
 		Object parent = model.getParent(swimlane);
 		int childCount = model.getChildCount(parent);
+		mxGeometry geo = null;
 
+		// Finds the first valid sibling swimlane as reference
 		for (int i = 0; i < childCount; i++)
 		{
 			Object child = model.getChildAt(parent, i);
 
-			if (child != swimlane && !isSwimlaneIgnored(child))
+			if (child != swimlane && !this.isSwimlaneIgnored(child))
 			{
 				geo = model.getGeometry(child);
-				break;
+
+				if (geo != null)
+				{
+					break;
+				}
 			}
 		}
 
-		// Applies dimension to new child
+		// Applies the size of the refernece to the newly added swimlane
 		if (geo != null)
 		{
-			model.beginUpdate();
-			try
-			{
-				resizeSwimlane(swimlane, geo.getWidth(), geo.getHeight());
-			}
-			finally
-			{
-				model.endUpdate();
-			}
+			boolean parentHorizontal = (parent != null) ? isCellHorizontal(parent) : horizontal;
+			resizeSwimlane(swimlane, geo.getWidth(), geo.getHeight(), parentHorizontal);
 		}
 	}
 
 	/**
-	 * 
+	 * Called if any cells have been resizes. Calls swimlaneResized for all
+	 * swimlanes where isSwimlaneIgnored returns false.
 	 */
 	protected void cellsResized(Object[] cells)
 	{
 		if (cells != null)
 		{
-			mxIGraphModel model = getGraph().getModel();
-
+			mxIGraphModel model = this.getGraph().getModel();
+			
 			model.beginUpdate();
 			try
 			{
+				// Finds the top-level swimlanes and adds offsets
 				for (int i = 0; i < cells.length; i++)
 				{
-					if (!isSwimlaneIgnored(cells[i]))
+					if (!this.isSwimlaneIgnored(cells[i]))
 					{
-						swimlaneResized(cells[i]);
-					}
-				}
-			}
-			finally
-			{
-				model.endUpdate();
-			}
-		}
-	}
-
-	/**
-	 * 
-	 */
-	protected void swimlaneResized(Object swimlane)
-	{
-		mxIGraphModel model = getGraph().getModel();
-		mxGeometry geo = model.getGeometry(swimlane);
-
-		if (geo != null)
-		{
-			double w = geo.getWidth();
-			double h = geo.getHeight();
-
-			model.beginUpdate();
-			try
-			{
-				Object parent = model.getParent(swimlane);
-
-				if (isSiblings())
-				{
-					int childCount = model.getChildCount(parent);
-
-					for (int i = 0; i < childCount; i++)
-					{
-						Object child = model.getChildAt(parent, i);
-
-						if (child != swimlane && !isSwimlaneIgnored(child))
+						mxGeometry geo = model.getGeometry(cells[i]);
+						
+						if (geo != null)
 						{
-							resizeSwimlane(child, w, h);
+							mxRectangle size = new mxRectangle(0, 0, geo.getWidth(), geo.getHeight());
+							Object top = cells[i];
+							Object current = top;
+							
+							while (current != null)
+							{
+								top = current;
+								current = model.getParent(current);
+								mxRectangle tmp = (graph.isSwimlane(current)) ?
+										graph.getStartSize(current) :
+										new mxRectangle();
+								size.setWidth(size.getWidth() + tmp.getWidth());
+								size.setHeight(size.getHeight() + tmp.getHeight());
+							}
+							
+							boolean parentHorizontal = (current != null) ? isCellHorizontal(current) : horizontal;
+							resizeSwimlane(top, size.getWidth(), size.getHeight(), parentHorizontal);
 						}
 					}
 				}
-
-				if (isBubbling() && !isSwimlaneIgnored(parent))
-				{
-					resizeParent(parent, w, h);
-					swimlaneResized(parent);
-				}
 			}
 			finally
 			{
@@ -317,53 +323,61 @@ public class mxSwimlaneManager extends mxEventSource
 	}
 
 	/**
-	 * 
+	 * Sets the width or height of the given swimlane to the given value depending
+	 * on <horizontal>. If <horizontal> is true, then the width is set, otherwise,
+	 * the height is set.
 	 */
-	protected void resizeSwimlane(Object swimlane, double w, double h)
+	protected void resizeSwimlane(Object swimlane, double w, double h, boolean parentHorizontal)
 	{
 		mxIGraphModel model = getGraph().getModel();
-		mxGeometry geo = model.getGeometry(swimlane);
 
-		if (geo != null)
+		model.beginUpdate();
+		try
 		{
-			geo = (mxGeometry) geo.clone();
-
-			if (isHorizontal())
+			boolean horizontal = this.isCellHorizontal(swimlane);
+			
+			if (!this.isSwimlaneIgnored(swimlane))
 			{
-				geo.setWidth(w);
-			}
-			else
-			{
-				geo.setHeight(h);
+				mxGeometry geo = model.getGeometry(swimlane);
+
+				if (geo != null)
+				{
+
+					if ((parentHorizontal && geo.getHeight() != h)
+							|| (!parentHorizontal && geo.getWidth() != w))
+					{
+						geo = (mxGeometry) geo.clone();
+
+						if (parentHorizontal)
+						{
+							geo.setHeight(h);
+						}
+						else
+						{
+							geo.setWidth(w);
+						}
+
+						model.setGeometry(swimlane, geo);
+					}
+				}
 			}
 
-			model.setGeometry(swimlane, geo);
+			mxRectangle tmp = (graph.isSwimlane(swimlane)) ? graph
+					.getStartSize(swimlane) : new mxRectangle();
+			w -= tmp.getWidth();
+			h -= tmp.getHeight();
+
+			int childCount = model.getChildCount(swimlane);
+
+			for (int i = 0; i < childCount; i++)
+			{
+				Object child = model.getChildAt(swimlane, i);
+				resizeSwimlane(child, w, h, horizontal);
+			}
 		}
-	}
-
-	/**
-	 * 
-	 */
-	protected void resizeParent(Object parent, double w, double h)
-	{
-		mxIGraphModel model = getGraph().getModel();
-		mxGeometry geo = model.getGeometry(parent);
-
-		if (geo != null)
+		finally
 		{
-			geo = (mxGeometry) geo.clone();
-			mxRectangle size = graph.getStartSize(parent);
-
-			if (isHorizontal())
-			{
-				geo.setWidth(w + size.getWidth());
-			}
-			else
-			{
-				geo.setHeight(h + size.getHeight());
-			}
-
-			model.setGeometry(parent, geo);
+			model.endUpdate();
 		}
 	}
 

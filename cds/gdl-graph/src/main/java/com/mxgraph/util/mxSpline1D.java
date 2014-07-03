@@ -1,3 +1,7 @@
+/**
+ * $Id: mxSpline1D.java,v 1.1 2012/11/15 13:26:39 gaudenz Exp $
+ * Copyright (c) 2010, David Benson
+ */
 package com.mxgraph.util;
 
 import java.util.Arrays;
@@ -7,8 +11,8 @@ import java.util.Arrays;
  */
 public class mxSpline1D
 {
-	protected double[] xx;
-	protected double[] yy;
+	protected double[] len;
+	protected double[] pos1D;
 
 	protected double[] a;
 	protected double[] b;
@@ -18,27 +22,31 @@ public class mxSpline1D
 	/** tracks the last index found since that is mostly commonly the next one used */
 	private int storageIndex = 0;
 	
-			/**
+	/**
 	 * Creates a new Spline.
-	 * @param xx
-	 * @param yy
+	 * @param controlPointProportions the proportion along the curve, from 0->1
+	 * 			that each control point lies on
+	 * @param positions1D the co-ordinate position in the current dimension that
+	 * 			each control point lies on
 	 */
-	public mxSpline1D(double[] xx, double[] yy)
+	public mxSpline1D(double[] controlPointProportions, double[] positions1D)
 	{
-		setValues(xx, yy);
+		setValues(controlPointProportions, positions1D);
 	}
 
 	/**
 	 * Set values for this Spline.
-	 * @param xx
-	 * @param yy
+	 * @param controlPointProportions the proportion along the curve, from 0->1
+	 * 			that each control point lies on
+	 * @param positions1D the co-ordinate position in the current dimension that
+	 * 			each control point lies on
 	 */
-	public void setValues(double[] xx, double[] yy)
+	public void setValues(double[] controlPointProportions, double[] positions1D)
 	{
-		this.xx = xx;
-		this.yy = yy;
+		this.len = controlPointProportions;
+		this.pos1D = positions1D;
 		
-		if (xx.length > 1)
+		if (len.length > 1)
 		{
 			calculateCoefficients();
 		}
@@ -51,16 +59,16 @@ public class mxSpline1D
 	 */
 	public double getValue(double x)
 	{
-		if (xx.length == 0)
+		if (len.length == 0)
 		{
 			return Double.NaN;
 		}
 
-		if (xx.length == 1)
+		if (len.length == 1)
 		{
-			if (xx[0] == x)
+			if (len[0] == x)
 			{
-				return yy[0];
+				return pos1D[0];
 			}
 			else
 			{
@@ -68,22 +76,22 @@ public class mxSpline1D
 			}
 		}
 
-		int index = Arrays.binarySearch(xx, x);
+		int index = Arrays.binarySearch(len, x);
 		if (index > 0)
 		{
-			return yy[index];
+			return pos1D[index];
 		}
 
 		index = - (index + 1) - 1;
 		//TODO linear interpolation or extrapolation
 		if (index < 0) {
-			return yy[0];
+			return pos1D[0];
 		}
 
 		return a[index]
-			+ b[index] * (x - xx[index])
-			+ c[index] * Math.pow(x - xx[index], 2)
-			+ d[index] * Math.pow(x - xx[index], 3);
+			+ b[index] * (x - len[index])
+			+ c[index] * Math.pow(x - len[index], 2)
+			+ d[index] * Math.pow(x - len[index], 3);
 	}
 
 	/**
@@ -96,16 +104,16 @@ public class mxSpline1D
 	public double getFastValue(double x)
 	{
 		// Fast check to see if previous index is still valid
-		if (storageIndex > -1 && storageIndex < xx.length-1 && x > xx[storageIndex] && x < xx[storageIndex + 1])
+		if (storageIndex > -1 && storageIndex < len.length-1 && x > len[storageIndex] && x < len[storageIndex + 1])
 		{
 
 		}
 		else
 		{
-			int index = Arrays.binarySearch(xx, x);
+			int index = Arrays.binarySearch(len, x);
 			if (index > 0)
 			{
-				return yy[index];
+				return pos1D[index];
 			}
 			index = - (index + 1) - 1;
 			storageIndex = index;
@@ -114,28 +122,13 @@ public class mxSpline1D
 		//TODO linear interpolation or extrapolation
 		if (storageIndex < 0)
 		{
-			return yy[0];
+			return pos1D[0];
 		}
-		double value = x - xx[storageIndex];
+		double value = x - len[storageIndex];
 		return a[storageIndex]
 					+ b[storageIndex] * value
 					+ c[storageIndex] * (value * value)
 					+ d[storageIndex] * (value * value * value);
-	}
-
-	/**
-	 * Used to check the correctness of this spline
-	 */
-	public boolean checkValues()
-	{
-		if (xx.length < 2)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
 	}
 
 	/**
@@ -145,20 +138,20 @@ public class mxSpline1D
 	 */
 	public double getDx(double x)
 	{
-		if (xx.length == 0 || xx.length == 1)
+		if (len.length == 0 || len.length == 1)
 		{
 			return 0;
 		}
 
-		int index = Arrays.binarySearch(xx, x);
+		int index = Arrays.binarySearch(len, x);
 		if (index < 0)
 		{
 			index = - (index + 1) - 1;
 		}
 
 		return b[index]
-			+ 2 * c[index] * (x - xx[index])
-			+ 3 * d[index] * Math.pow(x - xx[index], 2);
+			+ 2 * c[index] * (x - len[index])
+			+ 3 * d[index] * Math.pow(x - len[index], 2);
 	}
 
 	/**
@@ -166,15 +159,15 @@ public class mxSpline1D
 	 */
 	private void calculateCoefficients()
 	{
-		int N = yy.length;
+		int N = pos1D.length;
 		a = new double[N];
 		b = new double[N];
 		c = new double[N];
 		d = new double[N];
 		
 		if (N == 2) {
-			a[0] = yy[0];
-			b[0] = yy[1] - yy[0];
+			a[0] = pos1D[0];
+			b[0] = pos1D[1] - pos1D[0];
 			return;
 		}
 
@@ -182,8 +175,8 @@ public class mxSpline1D
 		
 		for (int i = 0; i < N - 1; i++)
 		{
-			a[i] = yy[i];
-			h[i] = xx[i + 1] - xx[i];
+			a[i] = pos1D[i];
+			h[i] = len[i + 1] - len[i];
 			
 			// h[i] is used for division later, avoid a NaN
 			if (h[i] == 0.0)
@@ -191,7 +184,7 @@ public class mxSpline1D
 				h[i] = 0.01;
 			}
 		}
-		a[N - 1] = yy[N - 1];
+		a[N - 1] = pos1D[N - 1];
 
 		double[][] A = new double[N - 2][N - 2];
 		double[] y = new double[N - 2];
@@ -199,9 +192,9 @@ public class mxSpline1D
 		{
 			y[i] =
 				3
-					* ((yy[i + 2] - yy[i + 1]) / h[i
+					* ((pos1D[i + 2] - pos1D[i + 1]) / h[i
 						+ 1]
-						- (yy[i + 1] - yy[i]) / h[i]);
+						- (pos1D[i + 1] - pos1D[i]) / h[i]);
 
 			A[i][i] = 2 * (h[i] + h[i + 1]);
 

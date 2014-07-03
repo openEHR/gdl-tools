@@ -1,5 +1,5 @@
 /**
- * $Id: mxEventSource.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxEventSource.java,v 1.1 2012/11/15 13:26:39 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.util;
@@ -128,7 +128,7 @@ public class mxEventSource
 	{
 		if (eventListeners != null)
 		{
-			for (int i = eventListeners.size() - 2; i > 1; i -= 2)
+			for (int i = eventListeners.size() - 2; i > -1; i -= 2)
 			{
 				if (eventListeners.get(i + 1) == listener
 						&& (eventName == null || String.valueOf(

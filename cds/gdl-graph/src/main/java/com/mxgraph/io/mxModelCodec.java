@@ -1,6 +1,6 @@
 /**
- * $Id: mxModelCodec.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2006-2010, Gaudenz Alder, David Benson
+ * $Id: mxModelCodec.java,v 1.2 2013/10/28 08:45:08 gaudenz Exp $
+ * Copyright (c) 2006-2013, Gaudenz Alder, David Benson
  */
 package com.mxgraph.io;
 
@@ -46,26 +46,19 @@ public class mxModelCodec extends mxObjectCodec
 	}
 
 	/**
-	 * Encode the given mxGraphModel by writing a (flat) XML sequence
+	 * Encodes the given mxGraphModel by writing a (flat) XML sequence
 	 * of cell nodes as produced by the mxCellCodec. The sequence is
 	 * wrapped-up in a node with the name root.
 	 */
-	public Node encode(mxCodec enc, Object obj)
+	protected void encodeObject(mxCodec enc, Object obj, Node node)
 	{
-		Node node = null;
-
 		if (obj instanceof mxGraphModel)
 		{
-			mxGraphModel model = (mxGraphModel) obj;
-
-			node = enc.document.createElement(getName());
 			Node rootNode = enc.document.createElement("root");
-
+			mxGraphModel model = (mxGraphModel) obj;
 			enc.encodeCell((mxICell) model.getRoot(), rootNode, true);
 			node.appendChild(rootNode);
 		}
-
-		return node;
 	}
 
 	/**

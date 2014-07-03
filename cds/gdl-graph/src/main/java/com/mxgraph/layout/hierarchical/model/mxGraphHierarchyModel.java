@@ -1,6 +1,6 @@
 /*
- * $Id: mxGraphHierarchyModel.java,v 1.1 2010-11-30 20:36:47 david Exp $
- * Copyright (c) 2005-2010, David Benson, Gaudenz Alder
+ * $Id: mxGraphHierarchyModel.java,v 1.1 2012/11/15 13:26:42 gaudenz Exp $
+ * Copyright (c) 2005-2012, JGraph Ltd
  */
 package com.mxgraph.layout.hierarchical.model;
 
@@ -29,12 +29,6 @@ import com.mxgraph.view.mxGraph;
  */
 public class mxGraphHierarchyModel
 {
-
-	/**
-	 * Whether the rank assignment is done from the sinks or sources.
-	 */
-	protected boolean scanRanksFromSinks = true;
-
 	/**
 	 * Stores the largest rank number allocated
 	 */
@@ -71,15 +65,6 @@ public class mxGraphHierarchyModel
 	 */
 	protected int dfsCount = 0;
 
-	/**
-	 * Whether or not cells are ordered according to the order in the graph
-	 * model. Defaults to false since sorting usually produces quadratic
-	 * performance. Note that since JGraph 6 returns edges in a deterministic
-	 * order, it might be that this layout is always deterministic using that
-	 * JGraph regardless of this flag setting (i.e. leave it false in that case)
-	 */
-	protected boolean deterministic = false;
-
 	/** High value to start source layering scan rank value from */
 	private final int SOURCESCANSTARTRANK = 100000000;
 
@@ -91,21 +76,11 @@ public class mxGraphHierarchyModel
 	 *            the enclosing layout object
 	 * @param vertices
 	 *            the vertices for this hierarchy
-	 * @param ordered
-	 *            whether or not the vertices are already ordered
-	 * @param deterministic
-	 *            whether or not this layout should be deterministic on each
-	 * @param scanRanksFromSinks
-	 *            Whether the rank assignment is done from the sinks or sources.
-	 *            usage
 	 */
 	public mxGraphHierarchyModel(mxHierarchicalLayout layout,
-			Object[] vertices, List<Object> roots, Object parent,
-			boolean ordered, boolean deterministic, boolean scanRanksFromSinks)
+			Object[] vertices, List<Object> roots, Object parent)
 	{
 		mxGraph graph = layout.getGraph();
-		this.deterministic = deterministic;
-		this.scanRanksFromSinks = scanRanksFromSinks;
 		this.roots = roots;
 		this.parent = parent;
 
@@ -114,108 +89,21 @@ public class mxGraphHierarchyModel
 			vertices = graph.getChildVertices(parent);
 		}
 
-		if (ordered)
-		{
-			formOrderedHierarchy(layout, vertices, parent);
-		}
-		else
-		{
-			// map of cells to internal cell needed for second run through
-			// to setup the sink of edges correctly. Guess size by number
-			// of edges is roughly same as number of vertices.
-			vertexMapper = new Hashtable<Object, mxGraphHierarchyNode>(
-					vertices.length);
-			edgeMapper = new Hashtable<Object, mxGraphHierarchyEdge>(
-					vertices.length);
-			if (scanRanksFromSinks)
-			{
-				maxRank = 0;
-			}
-			else
-			{
-				maxRank = SOURCESCANSTARTRANK;
-			}
-			mxGraphHierarchyNode[] internalVertices = new mxGraphHierarchyNode[vertices.length];
-			createInternalCells(layout, vertices, internalVertices);
-
-			// Go through edges set their sink values. Also check the
-			// ordering if and invert edges if necessary
-			for (int i = 0; i < vertices.length; i++)
-			{
-				Collection<mxGraphHierarchyEdge> edges = internalVertices[i].connectsAsSource;
-				Iterator<mxGraphHierarchyEdge> iter = edges.iterator();
-
-				while (iter.hasNext())
-				{
-					mxGraphHierarchyEdge internalEdge = iter.next();
-					Collection<Object> realEdges = internalEdge.edges;
-					Iterator<Object> iter2 = realEdges.iterator();
-
-					if (iter2.hasNext())
-					{
-						Object realEdge = iter2.next();
-						Object targetCell = graph.getView().getVisibleTerminal(
-								realEdge, false);
-						mxGraphHierarchyNode internalTargetCell = vertexMapper
-								.get(targetCell);
-
-						if (internalTargetCell != null
-								&& internalVertices[i] != internalTargetCell)
-						{
-							internalEdge.target = internalTargetCell;
-
-							if (internalTargetCell.connectsAsTarget.size() == 0)
-							{
-								internalTargetCell.connectsAsTarget = new LinkedHashSet<mxGraphHierarchyEdge>(
-										4);
-							}
-
-							internalTargetCell.connectsAsTarget
-									.add(internalEdge);
-						}
-					}
-				}
-
-				// Use the temp variable in the internal nodes to mark this
-				// internal vertex as having been visited.
-				internalVertices[i].temp[0] = 1;
-			}
-		}
-	}
-
-	/**
-	 * Creates an internal ordered graph model using the vertices passed in. If
-	 * there are any, leftward edge need to be inverted in the internal model
-	 * 
-	 * @param layout
-	 *            reference to the layout algorithm
-	 * @param vertices
-	 *            the vertices to be laid out
-	 */
-	public void formOrderedHierarchy(mxHierarchicalLayout layout,
-			Object[] vertices, Object parent)
-	{
-		mxGraph graph = layout.getGraph();
-
 		// map of cells to internal cell needed for second run through
 		// to setup the sink of edges correctly. Guess size by number
 		// of edges is roughly same as number of vertices.
 		vertexMapper = new Hashtable<Object, mxGraphHierarchyNode>(
-				vertices.length * 2);
+				vertices.length);
 		edgeMapper = new Hashtable<Object, mxGraphHierarchyEdge>(
 				vertices.length);
-		maxRank = 0;
+
+		maxRank = SOURCESCANSTARTRANK;
+
 		mxGraphHierarchyNode[] internalVertices = new mxGraphHierarchyNode[vertices.length];
 		createInternalCells(layout, vertices, internalVertices);
 
 		// Go through edges set their sink values. Also check the
 		// ordering if and invert edges if necessary
-		// Need a temporary list to store which of these edges have been
-		// inverted in the internal model. If connectsAsSource were changed
-		// in the following while loop we'd get a
-		// ConcurrentModificationException
-		List<mxGraphHierarchyEdge> tempList = new ArrayList<mxGraphHierarchyEdge>();
-
 		for (int i = 0; i < vertices.length; i++)
 		{
 			Collection<mxGraphHierarchyEdge> edges = internalVertices[i].connectsAsSource;
@@ -227,6 +115,8 @@ public class mxGraphHierarchyModel
 				Collection<Object> realEdges = internalEdge.edges;
 				Iterator<Object> iter2 = realEdges.iterator();
 
+				// Only need to process the first real edge, since
+				// all the edges connect to the same other vertex
 				if (iter2.hasNext())
 				{
 					Object realEdge = iter2.next();
@@ -235,6 +125,14 @@ public class mxGraphHierarchyModel
 					mxGraphHierarchyNode internalTargetCell = vertexMapper
 							.get(targetCell);
 
+					if (internalVertices[i] == internalTargetCell)
+					{
+						// The real edge is reversed relative to the internal edge
+						targetCell = graph.getView().getVisibleTerminal(
+								realEdge, true);
+						internalTargetCell = vertexMapper.get(targetCell);
+					}
+
 					if (internalTargetCell != null
 							&& internalVertices[i] != internalTargetCell)
 					{
@@ -242,48 +140,21 @@ public class mxGraphHierarchyModel
 
 						if (internalTargetCell.connectsAsTarget.size() == 0)
 						{
-							internalTargetCell.connectsAsTarget = new ArrayList<mxGraphHierarchyEdge>(
+							internalTargetCell.connectsAsTarget = new LinkedHashSet<mxGraphHierarchyEdge>(
 									4);
 						}
 
-						// The vertices passed in were ordered, check that the
-						// target cell has not already been marked as visited
-						if (internalTargetCell.temp[0] == 1)
-						{
-							// Internal Edge is leftward, reverse it
-							internalEdge.invert();
-							// There must be a connectsAsSource list already
-							internalTargetCell.connectsAsSource
-									.add(internalEdge);
-							tempList.add(internalEdge);
-							internalVertices[i].connectsAsTarget
-									.add(internalEdge);
-						}
-						else
-						{
-							internalTargetCell.connectsAsTarget
-									.add(internalEdge);
-						}
+						internalTargetCell.connectsAsTarget.add(internalEdge);
 					}
 				}
 			}
-
-			// Remove the inverted edges as sources from this node
-			Iterator<mxGraphHierarchyEdge> iter2 = tempList.iterator();
-
-			while (iter2.hasNext())
-			{
-				internalVertices[i].connectsAsSource.remove(iter2.next());
-			}
-
-			tempList.clear();
 
 			// Use the temp variable in the internal nodes to mark this
 			// internal vertex as having been visited.
 			internalVertices[i].temp[0] = 1;
 		}
 	}
-
+	
 	/**
 	 * Creates all edges in the internal model
 	 * 
@@ -308,7 +179,7 @@ public class mxGraphHierarchyModel
 			vertexMapper.put(vertices[i], internalVertices[i]);
 
 			// If the layout is deterministic, order the cells
-			Object[] conns = graph.getConnections(vertices[i], parent);
+			Object[] conns = layout.getEdges(vertices[i]);
 			List<Object> outgoingCells = Arrays.asList(graph.getOpposites(
 					conns, vertices[i]));
 			internalVertices[i].connectsAsSource = new LinkedHashSet<mxGraphHierarchyEdge>(
@@ -327,18 +198,36 @@ public class mxGraphHierarchyModel
 				if (cell != vertices[i] && graph.getModel().isVertex(cell)
 						&& !layout.isVertexIgnored(cell))
 				{
-					// Allow for parallel edges
-					Object[] edges = graph.getEdgesBetween(vertices[i], cell,
-							true);
+					// We process all edge between this source and its targets
+					// If there are edges going both ways, we need to collect
+					// them all into one internal edges to avoid looping problems
+					// later. We assume this direction (source -> target) is the 
+					// natural direction if at least half the edges are going in
+					// that direction.
 
-					if (edges != null && edges.length > 0)
+					// The check below for edgeMapper.get(edges[0]) == null is
+					// in case we've processed this the other way around
+					// (target -> source) and the number of edges in each direction
+					// are the same. All the graph edges will have been assigned to
+					// an internal edge going the other way, so we don't want to 
+					// process them again
+					Object[] undirectEdges = graph.getEdgesBetween(vertices[i],
+							cell, false);
+					Object[] directedEdges = graph.getEdgesBetween(vertices[i],
+							cell, true);
+
+					if (undirectEdges != null
+							&& undirectEdges.length > 0
+							&& (edgeMapper.get(undirectEdges[0]) == null)
+							&& (directedEdges.length * 2 >= undirectEdges.length))
 					{
-						ArrayList<Object> listEdges = new ArrayList<Object>(
-								edges.length);
 
-						for (int j = 0; j < edges.length; j++)
+						ArrayList<Object> listEdges = new ArrayList<Object>(
+								undirectEdges.length);
+
+						for (int j = 0; j < undirectEdges.length; j++)
 						{
-							listEdges.add(edges[j]);
+							listEdges.add(undirectEdges[j]);
 						}
 
 						mxGraphHierarchyEdge internalEdge = new mxGraphHierarchyEdge(
@@ -357,7 +246,7 @@ public class mxGraphHierarchyModel
 							if (layout.isDisableEdgeStyle())
 							{
 								layout.setEdgeStyleEnabled(edge, false);
-								layout.setOrthogonalEdge(edge,true);
+								layout.setOrthogonalEdge(edge, true);
 							}
 						}
 
@@ -382,7 +271,7 @@ public class mxGraphHierarchyModel
 		Collection<mxGraphHierarchyNode> internalNodes = vertexMapper.values();
 		LinkedList<mxGraphHierarchyNode> startNodes = new LinkedList<mxGraphHierarchyNode>();
 
-		if (!scanRanksFromSinks && roots != null)
+		if (roots != null)
 		{
 			Iterator<Object> iter = roots.iterator();
 
@@ -392,38 +281,6 @@ public class mxGraphHierarchyModel
 						.next());
 
 				if (internalNode != null)
-				{
-					startNodes.add(internalNode);
-				}
-			}
-		}
-
-		if (scanRanksFromSinks)
-		{
-			Iterator<mxGraphHierarchyNode> iter = internalNodes.iterator();
-
-			while (iter.hasNext())
-			{
-				mxGraphHierarchyNode internalNode = iter.next();
-
-				if (internalNode.connectsAsSource == null
-						|| internalNode.connectsAsSource.isEmpty())
-				{
-					startNodes.add(internalNode);
-				}
-			}
-		}
-
-		if (startNodes.isEmpty())
-		{
-			// Start list from sources
-			Iterator<mxGraphHierarchyNode> iter = internalNodes.iterator();
-
-			while (iter.hasNext())
-			{
-				mxGraphHierarchyNode internalNode = iter.next();
-				if (internalNode.connectsAsTarget == null
-						|| internalNode.connectsAsTarget.isEmpty())
 				{
 					startNodes.add(internalNode);
 				}
@@ -448,16 +305,8 @@ public class mxGraphHierarchyModel
 			Collection<mxGraphHierarchyEdge> layerDeterminingEdges;
 			Collection<mxGraphHierarchyEdge> edgesToBeMarked;
 
-			if (scanRanksFromSinks)
-			{
-				layerDeterminingEdges = internalNode.connectsAsSource;
-				edgesToBeMarked = internalNode.connectsAsTarget;
-			}
-			else
-			{
-				layerDeterminingEdges = internalNode.connectsAsTarget;
-				edgesToBeMarked = internalNode.connectsAsSource;
-			}
+			layerDeterminingEdges = internalNode.connectsAsTarget;
+			edgesToBeMarked = internalNode.connectsAsSource;
 
 			// flag to keep track of whether or not all layer determining
 			// edges have been scanned
@@ -472,11 +321,7 @@ public class mxGraphHierarchyModel
 			// the layer determining edges variable. If we are starting
 			// from sources, need to start at some huge value and
 			// normalise down afterwards
-			int minimumLayer = 0;
-			if (!scanRanksFromSinks)
-			{
-				minimumLayer = SOURCESCANSTARTRANK;
-			}
+			int minimumLayer = SOURCESCANSTARTRANK;
 
 			while (allEdgesScanned && iter2.hasNext())
 			{
@@ -486,27 +331,9 @@ public class mxGraphHierarchyModel
 				{
 					// This edge has been scanned, get the layer of the
 					// node on the other end
-					mxGraphHierarchyNode otherNode;
-
-					if (scanRanksFromSinks)
-					{
-						otherNode = internalEdge.target;
-					}
-					else
-					{
-						otherNode = internalEdge.source;
-					}
-
-					if (scanRanksFromSinks)
-					{
-						minimumLayer = Math.max(minimumLayer,
-								otherNode.temp[0] + 1);
-					}
-					else
-					{
-						minimumLayer = Math.min(minimumLayer,
+					mxGraphHierarchyNode otherNode = internalEdge.source;
+					minimumLayer = Math.min(minimumLayer,
 								otherNode.temp[0] - 1);
-					}
 				}
 				else
 				{
@@ -519,14 +346,7 @@ public class mxGraphHierarchyModel
 			if (allEdgesScanned)
 			{
 				internalNode.temp[0] = minimumLayer;
-				if (scanRanksFromSinks)
-				{
-					maxRank = Math.max(maxRank, minimumLayer);
-				}
-				else
-				{
-					maxRank = Math.min(maxRank, minimumLayer);
-				}
+				maxRank = Math.min(maxRank, minimumLayer);
 
 				if (edgesToBeMarked != null)
 				{
@@ -535,23 +355,13 @@ public class mxGraphHierarchyModel
 
 					while (iter3.hasNext())
 					{
-						mxGraphHierarchyEdge internalEdge = iter3
-								.next();
+						mxGraphHierarchyEdge internalEdge = iter3.next();
 						// Assign unique stamp ( y/m/d/h )
 						internalEdge.temp[0] = 5270620;
 
 						// Add node on other end of edge to LinkedList of
 						// nodes to be analysed
-						mxGraphHierarchyNode otherNode;
-
-						if (scanRanksFromSinks)
-						{
-							otherNode = internalEdge.source;
-						}
-						else
-						{
-							otherNode = internalEdge.target;
-						}
+						mxGraphHierarchyNode otherNode = internalEdge.target;
 
 						// Only add node if it hasn't been assigned a layer
 						if (otherNode.temp[0] == -1)
@@ -587,44 +397,37 @@ public class mxGraphHierarchyModel
 			}
 		}
 
-		if (scanRanksFromSinks)
+		// Normalize the ranks down from their large starting value to place
+		// at least 1 sink on layer 0
+		iter = internalNodes.iterator();
+		while (iter.hasNext())
 		{
-			// Tighten the rank 0 nodes as far as possible
-			for (int i = 0; i < startNodesCopy.size(); i++)
-			{
-				mxGraphHierarchyNode internalNode = startNodesCopy
-						.get(i);
-				int currentMinLayer = 1000000;
-				Iterator<mxGraphHierarchyEdge> iter2 = internalNode.connectsAsTarget
-						.iterator();
+			mxGraphHierarchyNode internalNode = iter.next();
+			// Mark the node as not having had a layer assigned
+			internalNode.temp[0] -= maxRank;
+		}
+		
+		// Tighten the roots as far as possible
+		for (int i = 0; i < startNodesCopy.size(); i++)
+		{
+			mxGraphHierarchyNode internalNode = startNodesCopy.get(i);
+			int currentMaxLayer = 0;
+			Iterator<mxGraphHierarchyEdge> iter2 = internalNode.connectsAsSource
+					.iterator();
 
-				while (iter2.hasNext())
-				{
-					mxGraphHierarchyEdge internalEdge = iter2
-							.next();
-					mxGraphHierarchyNode otherNode = internalEdge.source;
-					internalNode.temp[0] = Math.min(currentMinLayer,
-							otherNode.temp[0] - 1);
-					currentMinLayer = internalNode.temp[0];
-				}
-			}
-		}
-		else
-		{
-			// Normalize the ranks down from their large starting value to place
-			// at least 1 sink on layer 0
-			iter = internalNodes.iterator();
-			while (iter.hasNext())
+			while (iter2.hasNext())
 			{
-				mxGraphHierarchyNode internalNode = iter
-						.next();
-				// Mark the node as not having had a layer assigned
-				internalNode.temp[0] -= maxRank;
+				mxGraphHierarchyEdge internalEdge = iter2.next();
+				mxGraphHierarchyNode otherNode = internalEdge.target;
+				internalNode.temp[0] = Math.max(currentMaxLayer,
+						otherNode.temp[0] + 1);
+				currentMaxLayer = internalNode.temp[0];
 			}
-			// Reset the maxRank to that which would be expected for a from-sink
-			// scan
-			maxRank = SOURCESCANSTARTRANK - maxRank;
 		}
+
+		// Reset the maxRank to that which would be expected for a from-sink
+		// scan
+		maxRank = SOURCESCANSTARTRANK - maxRank;
 	}
 
 	/**
@@ -662,15 +465,15 @@ public class mxGraphHierarchyModel
 
 		visit(new mxGraphHierarchyModel.CellVisitor()
 		{
-			public void visit(mxGraphHierarchyNode parent, mxGraphHierarchyNode cell,
+			public void visit(mxGraphHierarchyNode parent,
+					mxGraphHierarchyNode cell,
 					mxGraphHierarchyEdge connectingEdge, int layer, int seen)
 			{
 				mxGraphHierarchyNode node = cell;
 
 				if (seen == 0 && node.maxRank < 0 && node.minRank < 0)
 				{
-					rankList[node.temp[0]]
-							.add(cell);
+					rankList[node.temp[0]].add(cell);
 					node.maxRank = node.temp[0];
 					node.minRank = node.temp[0];
 
@@ -698,8 +501,8 @@ public class mxGraphHierarchyModel
 							// The connecting edge must be added to the
 							// appropriate ranks
 							rankList[i].add(edge);
-							edge.setGeneralPurposeVariable(i, rankList[i]
-									.size() - 1);
+							edge.setGeneralPurposeVariable(i,
+									rankList[i].size() - 1);
 						}
 					}
 				}
@@ -923,8 +726,9 @@ public class mxGraphHierarchyModel
 		 *            an int indicating whether this cell has been seen
 		 *            previously
 		 */
-		public void visit(mxGraphHierarchyNode parent, mxGraphHierarchyNode cell,
-				mxGraphHierarchyEdge connectingEdge, int layer, int seen);
+		public void visit(mxGraphHierarchyNode parent,
+				mxGraphHierarchyNode cell, mxGraphHierarchyEdge connectingEdge,
+				int layer, int seen);
 	}
 
 	/**
@@ -980,22 +784,5 @@ public class mxGraphHierarchyModel
 	public void setDfsCount(int dfsCount)
 	{
 		this.dfsCount = dfsCount;
-	}
-
-	/**
-	 * @return Returns the deterministic.
-	 */
-	public boolean isDeterministic()
-	{
-		return deterministic;
-	}
-
-	/**
-	 * @param deterministic
-	 *            The deterministic to set.
-	 */
-	public void setDeterministic(boolean deterministic)
-	{
-		this.deterministic = deterministic;
 	}
 }

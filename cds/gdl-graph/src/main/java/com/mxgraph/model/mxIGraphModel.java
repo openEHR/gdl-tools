@@ -1,11 +1,11 @@
 /**
- * $Id: mxIGraphModel.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxIGraphModel.java,v 1.1 2012/11/15 13:26:47 gaudenz Exp $
  * Copyright (c) 2007, Gaudenz Alder
  */
 package com.mxgraph.model;
 
-import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.util.mxUndoableEdit.mxUndoableChange;
+import com.mxgraph.util.mxEventSource;
+import com.mxgraph.util.mxUndoableEdit;
 
 /**
  * Defines the requirements for a graph model to be used with mxGraph.
@@ -16,7 +16,7 @@ public interface mxIGraphModel
 	/**
 	 * Defines the interface for an atomic change of the graph model.
 	 */
-	public abstract class mxAtomicGraphModelChange implements mxUndoableChange
+	public abstract class mxAtomicGraphModelChange implements mxUndoableEdit.mxUndoableChange
 	{
 		/**
 		 * Holds the model where the change happened.
@@ -318,20 +318,20 @@ public interface mxIGraphModel
 	 * Binds the specified function to the given event name. If no event name
 	 * is given, then the listener is registered for all events.
 	 */
-	void addListener(String eventName, mxIEventListener listener);
+	void addListener(String eventName, mxEventSource.mxIEventListener listener);
 
 	/**
 	 * Function: removeListener
 	 *
 	 * Removes the given listener from the list of listeners.
 	 */
-	void removeListener(mxIEventListener listener);
+	void removeListener(mxEventSource.mxIEventListener listener);
 
 	/**
 	 * Function: removeListener
 	 *
 	 * Removes the given listener from the list of listeners.
 	 */
-	void removeListener(mxIEventListener listener, String eventName);
+	void removeListener(mxEventSource.mxIEventListener listener, String eventName);
 
 }

@@ -6,7 +6,7 @@
  */
 package se.cambio.cds.gdl.graph;
 
-import org.jgraph.JGraph;
+import com.mxgraph.swing.mxGraphComponent;
 import se.cambio.cds.gdl.graph.popupmenu.ExportMenu;
 import se.cambio.openehr.util.ExceptionHandler;
 
@@ -50,8 +50,8 @@ public class GDLGraphContextMenu extends EventQueue{
         }
 
         // Selection tree
-        if(comp instanceof JGraph){
-            new ExportMenu(me, (JGraph)comp);
+        if(comp instanceof mxGraphComponent){
+            new ExportMenu(me, (mxGraphComponent)comp);
         }
     }
 } 

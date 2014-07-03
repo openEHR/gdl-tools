@@ -162,7 +162,7 @@ public class mxCircleLayout extends mxGraphLayout
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxIGraphLayout#execute(java.lang.Object)
+	 * @see com.mxgraph.layout.mxIGraphLayout#execute(java.lang.Object)
 	 */
 	public void execute(Object parent)
 	{
@@ -232,8 +232,8 @@ public class mxCircleLayout extends mxGraphLayout
 			// Moves the circle to the specified origin
 			if (moveCircle)
 			{
-				top = x0;
-				left = y0;
+				left = x0;
+				top = y0;
 			}
 
 			circle(vertices.toArray(), r, left.doubleValue(), top.doubleValue());

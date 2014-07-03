@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mxgraph.model.mxGeometry;
-import com.mxgraph.model.mxICell;
-import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.model.mxICell;
+import com.mxgraph.model.mxIGraphModel;
 
 public class mxPartitionLayout extends mxGraphLayout
 {
@@ -77,7 +77,7 @@ public class mxPartitionLayout extends mxGraphLayout
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxGraphLayout#move(java.lang.Object, double, double)
+	 * @see com.mxgraph.layout.mxGraphLayout#move(java.lang.Object, double, double)
 	 */
 	public void moveCell(Object cell, double x, double y)
 	{
@@ -128,7 +128,7 @@ public class mxPartitionLayout extends mxGraphLayout
 
 	/*
 	 * (non-Javadoc)
-	 * @see mxIGraphLayout#execute(java.lang.Object)
+	 * @see com.mxgraph.layout.mxIGraphLayout#execute(java.lang.Object)
 	 */
 	public void execute(Object parent)
 	{

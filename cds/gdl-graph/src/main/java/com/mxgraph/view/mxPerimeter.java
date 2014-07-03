@@ -1,5 +1,5 @@
 /**
- * $Id: mxPerimeter.java,v 1.1 2010-11-30 19:41:25 david Exp $
+ * $Id: mxPerimeter.java,v 1.1 2012/11/15 13:26:46 gaudenz Exp $
  * Copyright (c) 2007-2010, Gaudenz Alder, David Benson
  */
 package com.mxgraph.view;
@@ -50,7 +50,7 @@ public class mxPerimeter
 	{
 
 		/* (non-Javadoc)
-		 * @see mxPerimeter.mxPerimeterFunction#apply
+		 * @see com.mxgraph.view.mxPerimeter.mxPerimeterFunction#apply
 		 */
 		public mxPoint apply(mxRectangle bounds, mxCellState vertex,
 				mxPoint next, boolean orthogonal)
@@ -136,7 +136,7 @@ public class mxPerimeter
 	{
 
 		/* (non-Javadoc)
-		 * @see mxPerimeter.mxPerimeterFunction#apply
+		 * @see com.mxgraph.view.mxPerimeter.mxPerimeterFunction#apply
 		 */
 		public mxPoint apply(mxRectangle bounds, mxCellState vertex,
 				mxPoint next, boolean orthogonal)
@@ -155,9 +155,13 @@ public class mxPerimeter
 			double dx = px - cx;
 			double dy = py - cy;
 
-			if (dx == 0)
+			if (dx == 0 && dy != 0)
 			{
 				return new mxPoint(cx, cy + b * dy / Math.abs(dy));
+			}
+			else if (dx == 0 && dy == 0)
+			{
+				return new mxPoint(px, py);
 			}
 
 			if (orthogonal)
@@ -245,7 +249,7 @@ public class mxPerimeter
 	{
 
 		/* (non-Javadoc)
-		 * @see mxPerimeter.mxPerimeterFunction#apply
+		 * @see com.mxgraph.view.mxPerimeter.mxPerimeterFunction#apply
 		 */
 		public mxPoint apply(mxRectangle bounds, mxCellState vertex,
 				mxPoint next, boolean orthogonal)
@@ -335,7 +339,7 @@ public class mxPerimeter
 	{
 
 		/* (non-Javadoc)
-		 * @see mxPerimeter.mxPerimeterFunction#apply(com.mxgraph.utils.mxRectangle, mxCellState, mxCellState, boolean, com.mxgraph.utils.mxPoint)
+		 * @see com.mxgraph.view.mxPerimeter.mxPerimeterFunction#apply(com.mxgraph.utils.mxRectangle, com.mxgraph.view.mxCellState, com.mxgraph.view.mxCellState, boolean, com.mxgraph.utils.mxPoint)
 		 */
 		public mxPoint apply(mxRectangle bounds, mxCellState vertex,
 				mxPoint next, boolean orthogonal)

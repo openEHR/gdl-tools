@@ -1,6 +1,6 @@
 /**
- * $Id: mxUtils.java,v 1.1 2010-11-30 19:41:25 david Exp $
- * Copyright (c) 2007-2010, Gaudenz Alder, David Benson
+ * $Id: mxUtils.java,v 1.10 2014/01/16 14:39:49 gaudenz Exp $
+ * Copyright (c) 2007-2012, JGraph Ltd
  */
 package com.mxgraph.util;
 
@@ -11,7 +11,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
@@ -20,12 +19,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -45,23 +44,17 @@ import javax.imageio.ImageIO;
 import javax.swing.text.html.HTMLDocument;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import com.mxgraph.io.mxCodecRegistry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
 
-import com.mxgraph.io.mxCodecRegistry;
 import com.mxgraph.model.mxCellPath;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.model.mxIGraphModel;
@@ -72,6 +65,18 @@ import com.mxgraph.view.mxCellState;
  */
 public class mxUtils
 {
+
+	/**
+	 * True if the machine is a Mac.
+	 */
+	public static boolean IS_MAC = System.getProperty("os.name").toLowerCase()
+			.indexOf("mac") >= 0;
+
+	/**
+	 * True if the machine is running a linux kernel.
+	 */
+	public static boolean IS_LINUX = System.getProperty("os.name")
+			.toLowerCase().indexOf("linux") >= 0;
 
 	/**
 	 * Static Graphics used for Font Metrics.
@@ -99,17 +104,30 @@ public class mxUtils
 	 * body are converted into linebreaks.
 	 */
 	public static mxRectangle getLabelSize(String label,
-			Map<String, Object> style, boolean isHtml, int width)
+			Map<String, Object> style, boolean isHtml, double scale)
+	{
+		return getLabelSize(label, style, isHtml, scale, 0);
+	}
+
+	/**
+	 * Returns the size for the given label. If isHtml is true then any HTML
+	 * markup in the label is computed as HTML and all newlines inside the HTML
+	 * body are converted into linebreaks.
+	 */
+	public static mxRectangle getLabelSize(String label,
+			Map<String, Object> style, boolean isHtml, double scale,
+			double htmlWrapWidth)
 	{
 		mxRectangle size;
 
 		if (isHtml)
 		{
-			size = getSizeForHtml(getBodyMarkup(label, true), style);
+			size = getSizeForHtml(getBodyMarkup(label, true), style, scale,
+					htmlWrapWidth);
 		}
 		else
 		{
-			size = getSizeForString(label, getFont(style), width);
+			size = getSizeForString(label, getFont(style), scale);
 		}
 
 		return size;
@@ -149,39 +167,33 @@ public class mxUtils
 			Map<String, Object> style, boolean isHtml, mxPoint offset,
 			mxRectangle vertexBounds, double scale)
 	{
-		boolean horizontal = mxUtils.isTrue(style,
-				mxConstants.STYLE_HORIZONTAL, true);
-		int w = 0;
+		return getLabelPaintBounds(label, style, isHtml, offset, vertexBounds,
+				scale, false);
+	}
 
-		if (vertexBounds != null
-				&& getString(style, mxConstants.STYLE_WHITE_SPACE, "nowrap")
-						.equals("wrap"))
+	/**
+	 * Returns the paint bounds for the given label.
+	 */
+	public static mxRectangle getLabelPaintBounds(String label,
+			Map<String, Object> style, boolean isHtml, mxPoint offset,
+			mxRectangle vertexBounds, double scale, boolean isEdge)
+	{
+		double wrapWidth = 0;
+
+		if (isHtml
+				&& vertexBounds != null
+				&& mxUtils.getString(style, mxConstants.STYLE_WHITE_SPACE,
+						"nowrap").equals("wrap"))
 		{
-			if (horizontal)
-			{
-				w = (int) ((vertexBounds.getWidth() / scale)
-						- 2
-						* mxConstants.LABEL_INSET
-						- 2
-						* mxUtils.getDouble(style, mxConstants.STYLE_SPACING)
-						- mxUtils.getDouble(style,
-								mxConstants.STYLE_SPACING_LEFT) - mxUtils
-						.getDouble(style, mxConstants.STYLE_SPACING_RIGHT));
-			}
-			else
-			{
-				w = (int) ((vertexBounds.getHeight() / scale)
-						- 2
-						* mxConstants.LABEL_INSET
-						- 2
-						* mxUtils.getDouble(style, mxConstants.STYLE_SPACING)
-						- mxUtils.getDouble(style,
-								mxConstants.STYLE_SPACING_TOP) + mxUtils
-						.getDouble(style, mxConstants.STYLE_SPACING_BOTTOM));
-			}
+			wrapWidth = vertexBounds.getWidth();
 		}
 
-		mxRectangle size = mxUtils.getLabelSize(label, style, isHtml, w);
+		mxRectangle size = mxUtils.getLabelSize(label, style, isHtml, scale,
+				wrapWidth);
+
+		// Measures font with full scale and scales back
+		size.setWidth(size.getWidth() / scale);
+		size.setHeight(size.getHeight() / scale);
 
 		double x = offset.getX();
 		double y = offset.getY();
@@ -197,6 +209,8 @@ public class mxUtils
 					mxConstants.SHAPE_SWIMLANE))
 			{
 				// Limits the label to the swimlane title
+				boolean horizontal = mxUtils.isTrue(style,
+						mxConstants.STYLE_HORIZONTAL, true);
 				double start = mxUtils.getDouble(style,
 						mxConstants.STYLE_STARTSIZE,
 						mxConstants.DEFAULT_STARTSIZE)
@@ -215,7 +229,7 @@ public class mxUtils
 			}
 			else
 			{
-				width += vertexBounds.getWidth();
+				width += (isEdge) ? 0 : vertexBounds.getWidth();
 				height += vertexBounds.getHeight();
 			}
 		}
@@ -310,6 +324,21 @@ public class mxUtils
 	}
 
 	/**
+	 * Returns the font metrics of the static font graphics instance
+	 * @param font The font whose metrics are to be returned
+	 * @return the font metrics of the specified font
+	 */
+	public static FontMetrics getFontMetrics(Font font)
+	{
+		if (fontGraphics != null)
+		{
+			return fontGraphics.getFontMetrics(font);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Returns an <mxRectangle> with the size (width and height in pixels) of
 	 * the given string.
 	 * 
@@ -318,9 +347,11 @@ public class mxUtils
 	 * @param font
 	 *            Font to be used for the computation.
 	 */
-	public static mxRectangle getSizeForString(String text, Font font, int width)
+	public static mxRectangle getSizeForString(String text, Font font,
+			double scale)
 	{
 		FontRenderContext frc = new FontRenderContext(null, false, false);
+		font = font.deriveFont((float) (font.getSize2D() * scale));
 		FontMetrics metrics = null;
 
 		if (fontGraphics != null)
@@ -339,40 +370,34 @@ public class mxUtils
 			lineHeight += font.getSize2D() * 1.27;
 		}
 
-		String[] lines;
-
-		if (width > 0)
-		{
-			// The lines for wrapping within the given width are calcuated for no
-			// scale. The reason for this is the granularity of actual displayed 
-			// font can cause the displayed lines to change based on scale. A factor 
-			// is used to allow for different overalls widths, it ensures the largest 
-			// font size/scale factor still stays within the bounds. All this ensures
-			// the wrapped lines are constant overing scaling, at the expense the 
-			// label bounds will vary.
-			lines = mxUtils.wordWrap(text, metrics,
-					(int) (width * mxConstants.LABEL_SCALE_BUFFER));
-		}
-		else
-		{
-			lines = text.split("\n");
-		}
+		String[] lines = text.split("\n");
 
 		Rectangle2D boundingBox = null;
 
-		for (int i = 0; i < lines.length; i++)
+		if (lines.length == 0)
 		{
-			Rectangle2D bounds = font.getStringBounds(lines[i], frc);
+			boundingBox = font.getStringBounds("", frc);
+		}
+		else
+		{
+			for (int i = 0; i < lines.length; i++)
+			{
+				Rectangle2D bounds = font.getStringBounds(lines[i], frc);
 
-			if (boundingBox == null)
-			{
-				boundingBox = bounds;
-			}
-			else
-			{
-				boundingBox.setFrame(0, 0,
-						Math.max(boundingBox.getWidth(), bounds.getWidth()),
-						boundingBox.getHeight() + lineHeight);
+				if (boundingBox == null)
+				{
+					boundingBox = bounds;
+				}
+				else
+				{
+					boundingBox
+							.setFrame(
+									0,
+									0,
+									Math.max(boundingBox.getWidth(),
+											bounds.getWidth()),
+									boundingBox.getHeight() + lineHeight);
+				}
 			}
 		}
 
@@ -387,7 +412,8 @@ public class mxUtils
 	 * @param width the width that the text must fit within
 	 * @return the input text split in lines that fit the specified width
 	 */
-	public static String[] wordWrap(String text, FontMetrics metrics, int width)
+	public static String[] wordWrap(String text, FontMetrics metrics,
+			double width)
 	{
 		List<String> result = new ArrayList<String>();
 		// First split the processing into lines already delimited by
@@ -425,7 +451,7 @@ public class mxUtils
 
 				if (word.length() > 0)
 				{
-					// Concatenate any preceeding whitespace to the
+					// Concatenate any preceding whitespace to the
 					// word and calculate the number of characters of that
 					// whitespace
 					char firstWordLetter = word.charAt(0);
@@ -468,7 +494,7 @@ public class mxUtils
 						wordStack.push(word.trim());
 						lineWidth = 0;
 					}
-					else
+					else if (mxConstants.SPLIT_WORDS)
 					{
 						// There are no words on the current line and the 
 						// current word does not fit on it. Find the maximum
@@ -505,6 +531,18 @@ public class mxUtils
 							}
 						}
 					}
+					else
+					{
+						// There are no words on the current line, but
+						// we are not splitting.
+						word = word.trim();
+						result.add(word);
+						currentLine = new StringBuilder();
+						lineWidth = 0;
+						// Increment char counter allowing for white 
+						// space in the original word
+						charCount = word.length() + whitespaceCount;
+					}
 				}
 				else
 				{
@@ -526,12 +564,7 @@ public class mxUtils
 				}
 			}
 
-			// If there is anything in the current line after processing all of
-			// the words in this line, add it to the result.
-			if (currentLine.length() > 0 || result.isEmpty())
-			{
-				result.add(currentLine.toString());
-			}
+			result.add(currentLine.toString());
 		}
 
 		return result.toArray(new String[result.size()]);
@@ -545,22 +578,164 @@ public class mxUtils
 	 *            HTML markup whose size should be returned.
 	 */
 	public static mxRectangle getSizeForHtml(String markup,
-			Map<String, Object> style)
+			Map<String, Object> style, double scale, double wrapWidth)
 	{
 		mxLightweightLabel textRenderer = mxLightweightLabel
 				.getSharedInstance();
 
 		if (textRenderer != null)
 		{
+			// First run measures size with no wrapping
 			textRenderer.setText(createHtmlDocument(style, markup));
 			Dimension size = textRenderer.getPreferredSize();
 
-			return new mxRectangle(0, 0, size.width, size.height);
+			// Second run measures size with wrapping if required.
+			// Note that this is only required because max-width
+			// is not supported and we can't get the width of an
+			// inner HTML element (or is this possible?).
+			if (wrapWidth > 0)
+			{
+				textRenderer.setText(createHtmlDocument(
+						style,
+						markup,
+						1,
+						(int) Math.ceil(wrapWidth - mxConstants.LABEL_INSET
+								* scale)));
+				Dimension size2 = textRenderer.getPreferredSize();
+
+				// Uses wrapped text size if any text was actually wrapped
+				if (size2.width < size.width)
+				{
+					size = size2;
+				}
+			}
+
+			return new mxRectangle(0, 0, size.width * scale, size.height
+					* scale);
 		}
 		else
 		{
-			return getSizeForString(markup, getFont(style), 0);
+			return getSizeForString(markup, getFont(style), scale);
 		}
+	}
+
+	/**
+	 * Function: arcToCurves
+	 * 
+	 * Converts the given arc to a series of curves.
+	 */
+	public static double[] arcToCurves(double x0, double y0, double r1,
+			double r2, double angle, double largeArcFlag, double sweepFlag,
+			double x, double y)
+	{
+		x -= x0;
+		y -= y0;
+
+		if (r1 == 0 || r2 == 0)
+		{
+			return new double[0];
+		}
+
+		double fS = sweepFlag;
+		double psai = angle;
+		r1 = Math.abs(r1);
+		r2 = Math.abs(r2);
+		double ctx = -x / 2;
+		double cty = -y / 2;
+		double cpsi = Math.cos(psai * Math.PI / 180);
+		double spsi = Math.sin(psai * Math.PI / 180);
+		double rxd = cpsi * ctx + spsi * cty;
+		double ryd = -1 * spsi * ctx + cpsi * cty;
+		double rxdd = rxd * rxd;
+		double rydd = ryd * ryd;
+		double r1x = r1 * r1;
+		double r2y = r2 * r2;
+		double lamda = rxdd / r1x + rydd / r2y;
+		double sds;
+
+		if (lamda > 1)
+		{
+			r1 = Math.sqrt(lamda) * r1;
+			r2 = Math.sqrt(lamda) * r2;
+			sds = 0;
+		}
+		else
+		{
+			double seif = 1;
+
+			if (largeArcFlag == fS)
+			{
+				seif = -1;
+			}
+
+			sds = seif
+					* Math.sqrt((r1x * r2y - r1x * rydd - r2y * rxdd)
+							/ (r1x * rydd + r2y * rxdd));
+		}
+
+		double txd = sds * r1 * ryd / r2;
+		double tyd = -1 * sds * r2 * rxd / r1;
+		double tx = cpsi * txd - spsi * tyd + x / 2;
+		double ty = spsi * txd + cpsi * tyd + y / 2;
+		double rad = Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1)
+				- Math.atan2(0, 1);
+		double s1 = (rad >= 0) ? rad : 2 * Math.PI + rad;
+		rad = Math.atan2((-ryd - tyd) / r2, (-rxd - txd) / r1)
+				- Math.atan2((ryd - tyd) / r2, (rxd - txd) / r1);
+		double dr = (rad >= 0) ? rad : 2 * Math.PI + rad;
+
+		if (fS == 0 && dr > 0)
+		{
+			dr -= 2 * Math.PI;
+		}
+		else if (fS != 0 && dr < 0)
+		{
+			dr += 2 * Math.PI;
+		}
+
+		double sse = dr * 2 / Math.PI;
+		int seg = (int) Math.ceil(sse < 0 ? -1 * sse : sse);
+		double segr = dr / seg;
+		double t = 8 / 3 * Math.sin(segr / 4) * Math.sin(segr / 4)
+				/ Math.sin(segr / 2);
+		double cpsir1 = cpsi * r1;
+		double cpsir2 = cpsi * r2;
+		double spsir1 = spsi * r1;
+		double spsir2 = spsi * r2;
+		double mc = Math.cos(s1);
+		double ms = Math.sin(s1);
+		double x2 = -t * (cpsir1 * ms + spsir2 * mc);
+		double y2 = -t * (spsir1 * ms - cpsir2 * mc);
+		double x3 = 0;
+		double y3 = 0;
+
+		double[] result = new double[seg * 6];
+
+		for (int n = 0; n < seg; ++n)
+		{
+			s1 += segr;
+			mc = Math.cos(s1);
+			ms = Math.sin(s1);
+
+			x3 = cpsir1 * mc - spsir2 * ms + tx;
+			y3 = spsir1 * mc + cpsir2 * ms + ty;
+			double dx = -t * (cpsir1 * ms + spsir2 * mc);
+			double dy = -t * (spsir1 * ms - cpsir2 * mc);
+
+			// CurveTo updates x0, y0 so need to restore it
+			int index = n * 6;
+			result[index] = x2 + x0;
+			result[index + 1] = y2 + y0;
+			result[index + 2] = x3 - dx + x0;
+			result[index + 3] = y3 - dy + y0;
+			result[index + 4] = x3 + x0;
+			result[index + 5] = y3 + y0;
+
+			x2 = x3 + dx;
+			y2 = y3 + dy;
+		}
+
+		return result;
 	}
 
 	/**
@@ -606,6 +781,56 @@ public class mxUtils
 	}
 
 	/**
+	 * Find the first character matching the input character in the given
+	 * string where the character has no letter preceding it.
+	 * 
+	 * @param text the string to test for the presence of the input character
+	 * @param inputChar the test character
+	 * @param fromIndex the index position of the string to start from
+	 * @return the position of the first character matching the input character
+	 * 			in the given string where the character has no letter preceding it.
+	 */
+	public static int firstCharAt(String text, int inputChar, int fromIndex)
+	{
+		int result = 0;
+
+		while (result >= 0)
+		{
+			result = text.indexOf(inputChar, fromIndex);
+
+			if (result == 0)
+			{
+				return result;
+			}
+			else if (result > 0)
+			{
+				// Check there is a whitespace or symbol before the hit character
+				if (Character.isLetter(text.codePointAt(result - 1)))
+				{
+					// The pre-increment is used in if and else branches.
+					if (++fromIndex >= text.length())
+					{
+						return -1;
+					}
+					else
+					{
+						// Test again from next candidate character
+						// This isn't the first letter of this word
+						result = text.indexOf(inputChar, fromIndex);
+					}
+				}
+				else
+				{
+					return result;
+				}
+			}
+
+		}
+
+		return result;
+	}
+
+	/**
 	 * Rotates the given point by the given cos and sin.
 	 */
 	public static mxPoint getRotatedPoint(mxPoint pt, double cos, double sin)
@@ -630,7 +855,7 @@ public class mxUtils
 			{
 				mxPoint current = state.getAbsolutePoint(i);
 				double dist = new Line2D.Double(last.x, last.y, current.x,
-						current.y).ptLineDist(x, y);
+						current.y).ptSegDistSq(x, y);
 
 				if (dist < min)
 				{
@@ -658,6 +883,80 @@ public class mxUtils
 		double y1 = y * cos + x * sin;
 
 		return new mxPoint(x1 + c.getX(), y1 + c.getY());
+	}
+
+	/**
+	 * Returns an integer mask of the port constraints of the given map
+	 * @param terminal the cached cell state of the cell to determine the
+	 * 			port constraints for
+	 * @param edge the edge connected to the constrained terminal
+	 * @param source whether or not the edge specified is connected to the
+	 * 			terminal specified at its source end
+	 * @return the mask of port constraint directions
+	 */
+	public static int getPortConstraints(mxCellState terminal,
+			mxCellState edge, boolean source)
+	{
+		return getPortConstraints(terminal, edge, source,
+				mxConstants.DIRECTION_MASK_ALL);
+	}
+
+	/**
+	 * Returns an integer mask of the port constraints of the given map
+	 * @param terminal the cached cell state of the cell to determine the
+	 * 			port constraints for
+	 * @param edge the edge connected to the constrained terminal
+	 * @param source whether or not the edge specified is connected to the
+	 * 			terminal specified at its source end
+	 * @param defaultValue Default value to return if the key is undefined.
+	 * @return the mask of port constraint directions
+	 */
+	public static int getPortConstraints(mxCellState terminal,
+			mxCellState edge, boolean source, int defaultValue)
+	{
+		Object value = terminal.getStyle().get(
+				mxConstants.STYLE_PORT_CONSTRAINT);
+
+		if (value == null)
+		{
+			return defaultValue;
+		}
+		else
+		{
+			String directions = value.toString();
+			int returnValue = mxConstants.DIRECTION_MASK_NONE;
+
+			if (directions.indexOf(mxConstants.DIRECTION_NORTH) >= 0)
+			{
+				returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+			}
+			if (directions.indexOf(mxConstants.DIRECTION_WEST) >= 0)
+			{
+				returnValue |= mxConstants.DIRECTION_MASK_WEST;
+			}
+			if (directions.indexOf(mxConstants.DIRECTION_SOUTH) >= 0)
+			{
+				returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+			}
+			if (directions.indexOf(mxConstants.DIRECTION_EAST) >= 0)
+			{
+				returnValue |= mxConstants.DIRECTION_MASK_EAST;
+			}
+
+			return returnValue;
+		}
+	}
+
+	public static int reversePortConstraints(int constraint)
+	{
+		int result = 0;
+
+		result = (constraint & mxConstants.DIRECTION_MASK_WEST) << 3;
+		result |= (constraint & mxConstants.DIRECTION_MASK_NORTH) << 1;
+		result |= (constraint & mxConstants.DIRECTION_MASK_SOUTH) >> 1;
+		result |= (constraint & mxConstants.DIRECTION_MASK_EAST) >> 3;
+
+		return result;
 	}
 
 	/**
@@ -853,21 +1152,11 @@ public class mxUtils
 	 * @param style
 	 *            String of the form stylename[;key=value].
 	 * @return Returns the stylename from the given formatted string.
+	 * @deprecated Use <code>mxStyleUtils.getStylename(String)</code> (Jan 2012)
 	 */
 	public static String getStylename(String style)
 	{
-		if (style != null)
-		{
-			String[] pairs = style.split(";");
-			String stylename = pairs[0];
-
-			if (stylename.indexOf("=") < 0)
-			{
-				return stylename;
-			}
-		}
-
-		return "";
+		return mxStyleUtils.getStylename(style);
 	}
 
 	/**
@@ -877,125 +1166,32 @@ public class mxUtils
 	 * @param style
 	 *            String of the form stylename[;stylename][;key=value].
 	 * @return Returns the stylename from the given formatted string.
+	 * @deprecated Use <code>mxStyleUtils.getStylenames(String)</code> (Jan 2012)
 	 */
 	public static String[] getStylenames(String style)
 	{
-		List<String> result = new ArrayList<String>();
-
-		if (style != null)
-		{
-			String[] pairs = style.split(";");
-
-			for (int i = 0; i < pairs.length; i++)
-			{
-				if (pairs[i].indexOf("=") < 0)
-				{
-					result.add(pairs[i]);
-				}
-			}
-		}
-
-		return result.toArray(new String[result.size()]);
+		return mxStyleUtils.getStylenames(style);
 	}
 
 	/**
 	 * Returns the index of the given stylename in the given style. This returns
 	 * -1 if the given stylename does not occur (as a stylename) in the given
 	 * style, otherwise it returns the index of the first character.
+	 * @deprecated Use <code>mxStyleUtils.indexOfStylename(String, String)</code> (Jan 2012)
 	 */
 	public static int indexOfStylename(String style, String stylename)
 	{
-		if (style != null && stylename != null)
-		{
-			String[] tokens = style.split(";");
-			int pos = 0;
-
-			for (int i = 0; i < tokens.length; i++)
-			{
-				if (tokens[i].equals(stylename))
-				{
-					return pos;
-				}
-
-				pos += tokens[i].length() + 1;
-			}
-		}
-
-		return -1;
-	}
-
-	/**
-	 * Adds the specified stylename to the given style if it does not already
-	 * contain the stylename.
-	 */
-	public String addStylename(String style, String stylename)
-	{
-		if (indexOfStylename(style, stylename) < 0)
-		{
-			if (style == null)
-			{
-				style = "";
-			}
-			else if (style.length() > 0
-					&& style.charAt(style.length() - 1) != ';')
-			{
-				style += ';';
-			}
-
-			style += stylename;
-		}
-
-		return style;
-	}
-
-	/**
-	 * Removes all occurrences of the specified stylename in the given style and
-	 * returns the updated style. Trailing semicolons are preserved.
-	 */
-	public String removeStylename(String style, String stylename)
-	{
-		StringBuffer buffer = new StringBuffer();
-
-		if (style != null)
-		{
-			String[] tokens = style.split(";");
-
-			for (int i = 0; i < tokens.length; i++)
-			{
-				if (!tokens[i].equals(stylename))
-				{
-					buffer.append(tokens[i] + ";");
-				}
-			}
-		}
-
-		return (buffer.length() > 1) ? buffer.substring(0, buffer.length() - 1)
-				: buffer.toString();
+		return mxStyleUtils.indexOfStylename(style, stylename);
 	}
 
 	/**
 	 * Removes all stylenames from the given style and returns the updated
 	 * style.
+	 * @deprecated Use <code>mxStyleUtils.removeAllStylenames(String)</code> (Jan 2012)
 	 */
 	public static String removeAllStylenames(String style)
 	{
-		StringBuffer buffer = new StringBuffer();
-
-		if (style != null)
-		{
-			String[] tokens = style.split(";");
-
-			for (int i = 0; i < tokens.length; i++)
-			{
-				if (tokens[i].indexOf('=') >= 0)
-				{
-					buffer.append(tokens[i] + ";");
-				}
-			}
-		}
-
-		return (buffer.length() > 1) ? buffer.substring(0, buffer.length() - 1)
-				: buffer.toString();
+		return mxStyleUtils.removeAllStylenames(style);
 	}
 
 	/**
@@ -1010,30 +1206,12 @@ public class mxUtils
 	 *            Key of the style to be changed.
 	 * @param value
 	 *            New value for the given key.
+	 * @deprecated Use <code>mxStyleUtils.setCellStyles(mxIGraphModel, Object[], String, String)</code> (Jan 2012)
 	 */
 	public static void setCellStyles(mxIGraphModel model, Object[] cells,
 			String key, String value)
 	{
-		if (cells != null && cells.length > 0)
-		{
-			model.beginUpdate();
-			try
-			{
-				for (int i = 0; i < cells.length; i++)
-				{
-					if (cells[i] != null)
-					{
-						String style = setStyle(model.getStyle(cells[i]), key,
-								value);
-						model.setStyle(cells[i], style);
-					}
-				}
-			}
-			finally
-			{
-				model.endUpdate();
-			}
-		}
+		mxStyleUtils.setCellStyles(model, cells, key, value);
 	}
 
 	/**
@@ -1048,46 +1226,11 @@ public class mxUtils
 	 * @param value
 	 *            New value for the given key.
 	 * @return Returns the new style.
+	 * @deprecated Use <code>mxStyleUtils.setStyle(String, String, String)</code> (Jan 2012)
 	 */
 	public static String setStyle(String style, String key, String value)
 	{
-		boolean isValue = value != null && value.length() > 0;
-
-		if (style == null || style.length() == 0)
-		{
-			if (isValue)
-			{
-				style = key + "=" + value;
-			}
-		}
-		else
-		{
-			int index = style.indexOf(key + "=");
-
-			if (index < 0)
-			{
-				if (isValue)
-				{
-					String sep = (style.endsWith(";")) ? "" : ";";
-					style = style + sep + key + '=' + value;
-				}
-			}
-			else
-			{
-				String tmp = (isValue) ? key + "=" + value : "";
-				int cont = style.indexOf(";", index);
-
-				if (!isValue)
-				{
-					cont++;
-				}
-
-				style = style.substring(0, index) + tmp
-						+ ((cont > index) ? style.substring(cont) : "");
-			}
-		}
-
-		return style;
+		return mxStyleUtils.setStyle(style, key, value);
 	}
 
 	/**
@@ -1113,30 +1256,12 @@ public class mxUtils
 	 *            Integer for the bit to be changed.
 	 * @param value
 	 *            Optional boolean value for the flag.
+	 * @deprecated Use <code>mxStyleUtils.setCellStyleFlags(mxIGraphModel, Object[],String, int, Boolean)</code> (Jan 2012)
 	 */
 	public static void setCellStyleFlags(mxIGraphModel model, Object[] cells,
 			String key, int flag, Boolean value)
 	{
-		if (cells != null && cells.length > 0)
-		{
-			model.beginUpdate();
-			try
-			{
-				for (int i = 0; i < cells.length; i++)
-				{
-					if (cells[i] != null)
-					{
-						String style = setStyleFlag(model.getStyle(cells[i]),
-								key, flag, value);
-						model.setStyle(cells[i], style);
-					}
-				}
-			}
-			finally
-			{
-				model.endUpdate();
-			}
-		}
+		mxStyleUtils.setCellStyleFlags(model, cells, key, flag, value);
 	}
 
 	/**
@@ -1151,72 +1276,12 @@ public class mxUtils
 	 *            Integer for the bit to be changed.
 	 * @param value
 	 *            Optional boolean value for the given flag.
+	 * @deprecated Use <code>mxStyleUtils.setStyleFlag(String, String, int, Boolean)</code> (Jan 2012)
 	 */
 	public static String setStyleFlag(String style, String key, int flag,
 			Boolean value)
 	{
-		if (style == null || style.length() == 0)
-		{
-			if (value == null || value.booleanValue())
-			{
-				style = key + "=" + flag;
-			}
-			else
-			{
-				style = key + "=0";
-			}
-		}
-		else
-		{
-			int index = style.indexOf(key + "=");
-
-			if (index < 0)
-			{
-				String sep = (style.endsWith(";")) ? "" : ";";
-
-				if (value == null || value.booleanValue())
-				{
-					style = style + sep + key + "=" + flag;
-				}
-				else
-				{
-					style = style + sep + key + "=0";
-				}
-			}
-			else
-			{
-				int cont = style.indexOf(";", index);
-				String tmp = "";
-				int result = 0;
-
-				if (cont < 0)
-				{
-					tmp = style.substring(index + key.length() + 1);
-				}
-				else
-				{
-					tmp = style.substring(index + key.length() + 1, cont);
-				}
-
-				if (value == null)
-				{
-					result = Integer.parseInt(tmp) ^ flag;
-				}
-				else if (value.booleanValue())
-				{
-					result = Integer.parseInt(tmp) | flag;
-				}
-				else
-				{
-					result = Integer.parseInt(tmp) & ~flag;
-				}
-
-				style = style.substring(0, index) + key + "=" + result
-						+ ((cont >= 0) ? style.substring(cont) : "");
-			}
-		}
-
-		return style;
+		return mxStyleUtils.setStyleFlag(style, key, flag, value);
 	}
 
 	public static boolean intersectsHotspot(mxCellState state, int x, int y,
@@ -1421,6 +1486,24 @@ public class mxUtils
 	public static float[] getFloatArray(Map<String, Object> dict, String key,
 			float[] defaultValue)
 	{
+		return getFloatArray(dict, key, defaultValue, ",");
+	}
+
+	/**
+	 * Returns the value for key in dictionary as a float array or the given default
+	 * value if no value is defined for the key.
+	 * 
+	 * @param dict
+	 *            Dictionary that contains the key, value pairs.
+	 * @param key
+	 *            Key whose value should be returned.
+	 * @param defaultValue
+	 *            Default value to return if the key is undefined.
+	 * @return Returns the float array value for key in dict.
+	 */
+	public static float[] getFloatArray(Map<String, Object> dict, String key,
+			float[] defaultValue, String separator)
+	{
 		Object value = dict.get(key);
 
 		if (value == null)
@@ -1429,7 +1512,7 @@ public class mxUtils
 		}
 		else
 		{
-			String[] floatChars = value.toString().split(",");
+			String[] floatChars = value.toString().split(separator);
 			float[] result = new float[floatChars.length];
 
 			for (int i = 0; i < floatChars.length; i++)
@@ -1599,11 +1682,7 @@ public class mxUtils
 	 */
 	public static String hexString(Color color)
 	{
-		int r = color.getRed();
-		int g = color.getGreen();
-		int b = color.getBlue();
-
-		return String.format("#%02X%02X%02X", r, g, b);
+		return mxHtmlColor.hexString(color);
 	}
 
 	/**
@@ -1623,62 +1702,7 @@ public class mxUtils
 	public static Color parseColor(String colorString)
 			throws NumberFormatException
 	{
-		if (colorString.equalsIgnoreCase("white"))
-		{
-			return Color.white;
-		}
-		else if (colorString.equalsIgnoreCase("black"))
-		{
-			return Color.black;
-		}
-		else if (colorString.equalsIgnoreCase("red"))
-		{
-			return Color.red;
-		}
-		else if (colorString.equalsIgnoreCase("green"))
-		{
-			return Color.green;
-		}
-		else if (colorString.equalsIgnoreCase("blue"))
-		{
-			return Color.blue;
-		}
-		else if (colorString.equalsIgnoreCase("orange"))
-		{
-			return Color.orange;
-		}
-		else if (colorString.equalsIgnoreCase("yellow"))
-		{
-			return Color.yellow;
-		}
-		else if (colorString.equalsIgnoreCase("pink"))
-		{
-			return Color.pink;
-		}
-		else if (colorString.equalsIgnoreCase("turqoise"))
-		{
-			return new Color(0, 255, 255);
-		}
-		else if (colorString.equalsIgnoreCase("gray"))
-		{
-			return Color.gray;
-		}
-		else if (colorString.equalsIgnoreCase("none"))
-		{
-			return null;
-		}
-
-		int value;
-		try
-		{
-			value = (int) Long.parseLong(colorString, 16);
-		}
-		catch (NumberFormatException nfe)
-		{
-			value = Long.decode(colorString).intValue();
-		}
-
-		return new Color(value);
+		return mxHtmlColor.parseColor(colorString);
 	}
 
 	/**
@@ -1690,8 +1714,7 @@ public class mxUtils
 	 */
 	public static String getHexColorString(Color color)
 	{
-		return Integer.toHexString((color.getRGB() & 0x00FFFFFF)
-				| (color.getAlpha() << 24));
+		return mxHtmlColor.getHexColorString(color);
 	}
 
 	/**
@@ -1704,8 +1727,21 @@ public class mxUtils
 	 */
 	public static String readFile(String filename) throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(filename)));
+		return readInputStream(new FileInputStream(filename));
+	}
+
+	/**
+	 * Reads the given filename into a string.
+	 * 
+	 * @param filename
+	 *            Name of the file to be read.
+	 * @return Returns a string representing the file contents.
+	 * @throws IOException
+	 */
+	public static String readInputStream(InputStream stream) throws IOException
+	{
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(stream));
 		StringBuffer result = new StringBuffer();
 		String tmp = reader.readLine();
 
@@ -1831,6 +1867,9 @@ public class mxUtils
 	public static void setAntiAlias(Graphics2D g, boolean antiAlias,
 			boolean textAntiAlias)
 	{
+		g.setRenderingHint(RenderingHints.KEY_RENDERING,
+				(antiAlias) ? RenderingHints.VALUE_RENDER_QUALITY
+						: RenderingHints.VALUE_RENDER_SPEED);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				(antiAlias) ? RenderingHints.VALUE_ANTIALIAS_ON
 						: RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -1864,269 +1903,80 @@ public class mxUtils
 	 * memory to create the image then a OutOfMemoryError is thrown.
 	 */
 	public static BufferedImage createBufferedImage(int w, int h,
-			Color background) throws OutOfMemoryError
+			Color background)
 	{
 		BufferedImage result = null;
 
 		if (w > 0 && h > 0)
 		{
-			// Checks if there is enough memory for allocating the buffer
-			Runtime runtime = Runtime.getRuntime();
-			long maxMemory = runtime.maxMemory();
-			long allocatedMemory = runtime.totalMemory();
-			long freeMemory = runtime.freeMemory();
-			long totalFreeMemory = (freeMemory + (maxMemory - allocatedMemory)) / 1024;
+			int type = (background != null) ? BufferedImage.TYPE_INT_RGB
+					: BufferedImage.TYPE_INT_ARGB;
+			result = new BufferedImage(w, h, type);
 
-			int bytes = 4; // 1 if indexed
-			long memoryRequired = w * h * bytes / 1024;
-
-			if (memoryRequired <= totalFreeMemory)
+			// Clears background
+			if (background != null)
 			{
-				int type = (background != null) ? BufferedImage.TYPE_INT_RGB
-						: BufferedImage.TYPE_INT_ARGB;
-				result = new BufferedImage(w, h, type);
+				Graphics2D g2 = result.createGraphics();
+				clearRect(g2, new Rectangle(w, h), background);
+				g2.dispose();
+			}
+		}
 
-				// Clears background
-				if (background != null)
+		return result;
+	}
+
+	/**
+	 * Loads an image from the local filesystem, a data URI or any other URL.
+	 */
+	public static BufferedImage loadImage(String url)
+	{
+		BufferedImage img = null;
+
+		if (url != null)
+		{
+			// Parses data URIs of the form data:image/format;base64,xxx
+			if (url.startsWith("data:image/"))
+			{
+				try
 				{
-					Graphics2D g2 = result.createGraphics();
-					clearRect(g2, new Rectangle(w, h), background);
-					g2.dispose();
+					int comma = url.indexOf(',');
+					byte[] data = mxBase64.decode(url.substring(comma + 1));
+					ByteArrayInputStream is = new ByteArrayInputStream(data);
+					img = ImageIO.read(is);
+				}
+				catch (Exception e1)
+				{
+					// ignore
 				}
 			}
 			else
 			{
-				throw new OutOfMemoryError("Not enough memory for image (" + w
-						+ " x " + h + ")");
+				URL realUrl = null;
+
+				try
+				{
+					realUrl = new URL(url);
+				}
+				catch (Exception e)
+				{
+					realUrl = mxUtils.class.getResource(url);
+				}
+
+				if (realUrl != null)
+				{
+					try
+					{
+						img = ImageIO.read(realUrl);
+					}
+					catch (Exception e1)
+					{
+						e1.printStackTrace();
+					}
+				}
 			}
 		}
 
-		return result;
-	}
-
-	/**
-	 * Returns a new, empty DOM document.
-	 * 
-	 * @return Returns a new DOM document.
-	 */
-	public static Document createDocument()
-	{
-		Document result = null;
-
-		try
-		{
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder parser = factory.newDocumentBuilder();
-
-			result = parser.newDocument();
-		}
-		catch (Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
-
-		return result;
-	}
-
-	/**
-	 * Creates a new SVG document for the given width and height.
-	 */
-	public static Document createSvgDocument(int width, int height)
-	{
-		Document document = createDocument();
-		Element root = document.createElement("svg");
-
-		String w = String.valueOf(width);
-		String h = String.valueOf(height);
-
-		root.setAttribute("width", w);
-		root.setAttribute("height", h);
-		root.setAttribute("viewBox", "0 0 " + w + " " + h);
-		root.setAttribute("version", "1.1");
-		root.setAttribute("xmlns", mxConstants.NS_SVG);
-		root.setAttribute("xmlns:xlink", mxConstants.NS_XLINK);
-
-		document.appendChild(root);
-
-		return document;
-	}
-
-	/**
-	 * 
-	 */
-	public static Document createVmlDocument()
-	{
-		Document document = createDocument();
-
-		Element root = document.createElement("html");
-		root.setAttribute("xmlns:v", "urn:schemas-microsoft-com:vml");
-		root.setAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
-
-		document.appendChild(root);
-
-		Element head = document.createElement("head");
-
-		Element style = document.createElement("style");
-		style.setAttribute("type", "text/css");
-		style.appendChild(document
-				.createTextNode("<!-- v\\:* {behavior: url(#default#VML);} -->"));
-
-		head.appendChild(style);
-		root.appendChild(head);
-
-		Element body = document.createElement("body");
-		root.appendChild(body);
-
-		return document;
-	}
-
-	/**
-	 * Returns a document with a HTML node containing a HEAD and BODY node.
-	 */
-	public static Document createHtmlDocument()
-	{
-		Document document = createDocument();
-
-		Element root = document.createElement("html");
-
-		document.appendChild(root);
-
-		Element head = document.createElement("head");
-		root.appendChild(head);
-
-		Element body = document.createElement("body");
-		root.appendChild(body);
-
-		return document;
-	}
-
-	/**
-	 * Returns a new, empty DOM document.
-	 * 
-	 * @return Returns a new DOM document.
-	 */
-	public static String createHtmlDocument(Map<String, Object> style,
-			String text)
-	{
-		return createHtmlDocument(style, text, 1);
-	}
-
-	/**
-	 * Returns a new, empty DOM document.
-	 * 
-	 * @return Returns a new DOM document.
-	 */
-	public static String createHtmlDocument(Map<String, Object> style,
-			String text, double scale)
-	{
-		StringBuffer css = new StringBuffer();
-		css.append("font-family:"
-				+ getString(style, mxConstants.STYLE_FONTFAMILY,
-						mxConstants.DEFAULT_FONTFAMILIES) + ";");
-		css.append("font-size:"
-				+ (int) (getInt(style, mxConstants.STYLE_FONTSIZE,
-						mxConstants.DEFAULT_FONTSIZE) * scale) + " pt;");
-
-		String color = mxUtils.getString(style, mxConstants.STYLE_FONTCOLOR);
-
-		if (color != null)
-		{
-			css.append("color:" + color + ";");
-		}
-
-		int fontStyle = mxUtils.getInt(style, mxConstants.STYLE_FONTSTYLE);
-
-		if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
-		{
-			css.append("font-weight:bold;");
-		}
-
-		if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
-		{
-			css.append("font-style:italic;");
-		}
-
-		if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
-		{
-			css.append("text-decoration:underline;");
-		}
-
-		String align = getString(style, mxConstants.STYLE_ALIGN,
-				mxConstants.ALIGN_LEFT);
-
-		if (align.equals(mxConstants.ALIGN_CENTER))
-		{
-			css.append("text-align:center;");
-		}
-		else if (align.equals(mxConstants.ALIGN_RIGHT))
-		{
-			css.append("text-align:right;");
-		}
-
-		return "<html><body style=\"" + css.toString() + "\">" + text
-				+ "</body></html>";
-	}
-
-	/**
-	 * Returns a new, empty DOM document.
-	 * 
-	 * @return Returns a new DOM document.
-	 */
-	public static HTMLDocument createHtmlDocumentObject(
-			Map<String, Object> style, double scale)
-	{
-		// Applies the font settings
-		HTMLDocument document = new HTMLDocument();
-
-		StringBuffer rule = new StringBuffer("body {");
-		rule.append(" font-family: "
-				+ getString(style, mxConstants.STYLE_FONTFAMILY,
-						mxConstants.DEFAULT_FONTFAMILIES) + " ; ");
-		rule.append(" font-size: "
-				+ (int) (getInt(style, mxConstants.STYLE_FONTSIZE,
-						mxConstants.DEFAULT_FONTSIZE) * scale) + " pt ;");
-
-		String color = mxUtils.getString(style, mxConstants.STYLE_FONTCOLOR);
-
-		if (color != null)
-		{
-			rule.append("color: " + color + " ; ");
-		}
-
-		int fontStyle = mxUtils.getInt(style, mxConstants.STYLE_FONTSTYLE);
-
-		if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
-		{
-			rule.append(" font-weight: bold ; ");
-		}
-
-		if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
-		{
-			rule.append(" font-style: italic ; ");
-		}
-
-		if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
-		{
-			rule.append(" text-decoration: underline ; ");
-		}
-
-		String align = getString(style, mxConstants.STYLE_ALIGN,
-				mxConstants.ALIGN_LEFT);
-
-		if (align.equals(mxConstants.ALIGN_CENTER))
-		{
-			rule.append(" text-align: center ; ");
-		}
-		else if (align.equals(mxConstants.ALIGN_RIGHT))
-		{
-			rule.append(" text-align: right ; ");
-		}
-
-		rule.append(" } ");
-		document.getStyleSheet().addRule(rule.toString());
-
-		return document;
+		return img;
 	}
 
 	/**
@@ -2214,35 +2064,226 @@ public class mxUtils
 	}
 
 	/**
+	 * Returns a new, empty DOM document.
 	 * 
+	 * @return Returns a new DOM document.
+	 * @deprecated Use <code>mxDomUtils.createDocument</code> (Jan 2012)
 	 */
-	public static Image loadImage(String url)
+	public static Document createDocument()
 	{
-		Image img = null;
-		URL realUrl = null;
+		return mxDomUtils.createDocument();
+	}
 
-		try
+	/**
+	 * Creates a new SVG document for the given width and height.
+	 * @deprecated Use <code>mxDomUtils.createSvgDocument(int, int)</code> (Jan 2012)
+	 */
+	public static Document createSvgDocument(int width, int height)
+	{
+		return mxDomUtils.createSvgDocument(width, height);
+	}
+
+	/**
+	 * 
+	 * @deprecated Use <code>mxDomUtils.createVmlDocument</code> (Jan 2012)
+	 */
+	public static Document createVmlDocument()
+	{
+		return mxDomUtils.createVmlDocument();
+	}
+
+	/**
+	 * Returns a document with a HTML node containing a HEAD and BODY node.
+	 * @deprecated Use <code>mxDomUtils.createHtmlDocument</code> (Jan 2012)
+	 */
+	public static Document createHtmlDocument()
+	{
+		return mxDomUtils.createHtmlDocument();
+	}
+
+	/**
+	 * Returns a new, empty DOM document.
+	 * 
+	 * @return Returns a new DOM document.
+	 */
+	public static String createHtmlDocument(Map<String, Object> style,
+			String text)
+	{
+		return createHtmlDocument(style, text, 1, 0);
+	}
+
+	/**
+	 * Returns a new, empty DOM document.
+	 * 
+	 * @return Returns a new DOM document.
+	 */
+	public static String createHtmlDocument(Map<String, Object> style,
+			String text, double scale)
+	{
+		return createHtmlDocument(style, text, scale, 0);
+	}
+
+	/**
+	 * Returns a new, empty DOM document.
+	 * 
+	 * @return Returns a new DOM document.
+	 */
+	public static String createHtmlDocument(Map<String, Object> style,
+			String text, double scale, int width)
+	{
+		return createHtmlDocument(style, text, scale, width, null);
+	}
+
+	/**
+	 * Returns a new, empty DOM document. The head argument can be used to
+	 * provide an optional HEAD section without the HEAD tags as follows:
+	 * 
+	 * <pre>
+	 * mxUtils.createHtmlDocument(style,  text, 1, 0, "<style type=\"text/css\">.classname { color:red; }</style>")
+	 * </pre>
+	 * 
+	 * @return Returns a new DOM document.
+	 */
+	public static String createHtmlDocument(Map<String, Object> style,
+			String text, double scale, int width, String head)
+	{
+		return createHtmlDocument(style, text, scale, width, null, null);
+	};
+
+	/**
+	 * Returns a new, empty DOM document. The head argument can be used to
+	 * provide an optional HEAD section without the HEAD tags as follows:
+	 * 
+	 * <pre>
+	 * mxUtils.createHtmlDocument(style,  text, 1, 0, "<style type=\"text/css\">.classname { color:red; }</style>")
+	 * </pre>
+	 * 
+	 * @return Returns a new DOM document.
+	 */
+	public static String createHtmlDocument(Map<String, Object> style,
+			String text, double scale, int width, String head, String bodyCss)
+	{
+		StringBuffer css = (bodyCss != null) ? new StringBuffer(bodyCss)
+				: new StringBuffer();
+		css.append("font-family:"
+				+ getString(style, mxConstants.STYLE_FONTFAMILY,
+						mxConstants.DEFAULT_FONTFAMILIES) + ";");
+		css.append("font-size:"
+				+ (int) (getInt(style, mxConstants.STYLE_FONTSIZE,
+						mxConstants.DEFAULT_FONTSIZE) * scale) + "pt;");
+
+		String color = mxUtils.getString(style, mxConstants.STYLE_FONTCOLOR);
+
+		if (color != null)
 		{
-			realUrl = new URL(url);
-		}
-		catch (Exception e)
-		{
-			realUrl = mxUtils.class.getResource(url);
+			css.append("color:" + color + ";");
 		}
 
-		if (url != null)
+		int fontStyle = mxUtils.getInt(style, mxConstants.STYLE_FONTSTYLE);
+
+		if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
 		{
-			try
-			{
-				img = ImageIO.read(realUrl);
-			}
-			catch (Exception e1)
-			{
-				// ignore
-			}
+			css.append("font-weight:bold;");
 		}
 
-		return img;
+		if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
+		{
+			css.append("font-style:italic;");
+		}
+
+		if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
+		{
+			css.append("text-decoration:underline;");
+		}
+
+		String align = getString(style, mxConstants.STYLE_ALIGN,
+				mxConstants.ALIGN_LEFT);
+
+		if (align.equals(mxConstants.ALIGN_CENTER))
+		{
+			css.append("text-align:center;");
+		}
+		else if (align.equals(mxConstants.ALIGN_RIGHT))
+		{
+			css.append("text-align:right;");
+		}
+
+		if (width > 0)
+		{
+			// LATER: With max-width support, wrapped text can be measured in 1 step
+			css.append("width:" + width + "pt;");
+		}
+
+		String result = "<html>";
+
+		if (head != null)
+		{
+			result += "<head>" + head + "</head>";
+		}
+
+		return result + "<body style=\"" + css.toString() + "\">" + text
+				+ "</body></html>";
+	}
+
+	/**
+	 * Returns a new, empty DOM document.
+	 * 
+	 * @return Returns a new DOM document.
+	 */
+	public static HTMLDocument createHtmlDocumentObject(
+			Map<String, Object> style, double scale)
+	{
+		// Applies the font settings
+		HTMLDocument document = new HTMLDocument();
+
+		StringBuffer rule = new StringBuffer("body {");
+		rule.append("font-family:"
+				+ getString(style, mxConstants.STYLE_FONTFAMILY,
+						mxConstants.DEFAULT_FONTFAMILIES) + ";");
+		rule.append("font-size:"
+				+ (int) (getInt(style, mxConstants.STYLE_FONTSIZE,
+						mxConstants.DEFAULT_FONTSIZE) * scale) + "pt;");
+
+		String color = mxUtils.getString(style, mxConstants.STYLE_FONTCOLOR);
+
+		if (color != null)
+		{
+			rule.append("color:" + color + ";");
+		}
+
+		int fontStyle = mxUtils.getInt(style, mxConstants.STYLE_FONTSTYLE);
+
+		if ((fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD)
+		{
+			rule.append("font-weight:bold;");
+		}
+
+		if ((fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC)
+		{
+			rule.append("font-style:italic;");
+		}
+
+		if ((fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE)
+		{
+			rule.append("text-decoration:underline;");
+		}
+
+		String align = getString(style, mxConstants.STYLE_ALIGN,
+				mxConstants.ALIGN_LEFT);
+
+		if (align.equals(mxConstants.ALIGN_CENTER))
+		{
+			rule.append("text-align:center;");
+		}
+		else if (align.equals(mxConstants.ALIGN_RIGHT))
+		{
+			rule.append("text-align:right;");
+		}
+
+		rule.append("}");
+		document.getStyleSheet().addRule(rule.toString());
+
+		return document;
 	}
 
 	/**
@@ -2275,36 +2316,11 @@ public class mxUtils
 	 * @param xml
 	 *            String that represents the XML data.
 	 * @return Returns a new XML document.
-	 * @deprecated as of 31.08.2010. Use parseXML(String xml) instead
-	 */
-	public static Document parse(String xml)
-	{
-		return mxUtils.parseXml(xml);
-	}
-
-	/**
-	 * Returns a new document for the given XML string.
-	 * 
-	 * @param xml
-	 *            String that represents the XML data.
-	 * @return Returns a new XML document.
+	 * @deprecated Use <code>mxXmlUtils.parseXml</code> (Jan 2012)
 	 */
 	public static Document parseXml(String xml)
 	{
-		try
-		{
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-
-			return docBuilder.parse(new InputSource(new StringReader(xml)));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		return null;
+		return mxXmlUtils.parseXml(xml);
 	}
 
 	/**
@@ -2319,7 +2335,7 @@ public class mxUtils
 		if (dot > 0)
 		{
 			Class<?> clazz = mxCodecRegistry.getClassForName(expression
-					.substring(0, dot));
+                    .substring(0, dot));
 
 			if (clazz != null)
 			{
@@ -2411,27 +2427,11 @@ public class mxUtils
 	 * @param node
 	 *            Node to return the XML for.
 	 * @return Returns an XML string.
+	 * @deprecated Use <code>mxXmlUtils.getXml(Node)</code> (Jan 2012)
 	 */
 	public static String getXml(Node node)
 	{
-		try
-		{
-			Transformer tf = TransformerFactory.newInstance().newTransformer();
-
-			tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-			tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-
-			StreamResult dest = new StreamResult(new StringWriter());
-			tf.transform(new DOMSource(node), dest);
-
-			return dest.getWriter().toString();
-		}
-		catch (Exception e)
-		{
-			// ignore
-		}
-
-		return "";
+		return mxXmlUtils.getXml(node);
 	}
 
 	/**
