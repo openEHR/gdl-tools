@@ -4,6 +4,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.util.NodeConversor;
 
 import java.awt.*;
 import java.util.Collection;
@@ -40,6 +41,7 @@ public class TerminologyDialogs {
             getDelegate().terminologySelectableNodes.put(terminologyId, dialog);
         }
         rootNode = dialog.getNode();
+        NodeConversor.setAllVisible(rootNode);
         rootNode.setAllSelected(false, true); //Force cleaning all selection
         if (selectedCodes!=null){
             for (String selectedCode: selectedCodes){
