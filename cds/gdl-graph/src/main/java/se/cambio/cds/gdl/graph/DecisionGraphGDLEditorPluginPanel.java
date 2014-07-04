@@ -67,7 +67,7 @@ public class DecisionGraphGDLEditorPluginPanel extends AbstractPluginPanel {
 
     @Override
     public String getPluginName() {
-        return "g2"; //TODO I18n
+        return "Decision graph"; //TODO I18n
     }
 
     @Override

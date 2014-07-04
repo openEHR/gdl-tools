@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.graph;
 
 import com.mxgraph.view.mxGraph;
+import org.apache.log4j.Logger;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.Rule;
@@ -25,67 +26,69 @@ public class GDLDecisionGraph {
     private Guide _guide;
     private Map<String, GTCodeDefiner> _gtCodeElementsMap;
     private Map<String, Collection<String>> _writeGTCodesRuleMap;
+    private Map<ExpressionItem, Object> _nodesMap;
 
     public GDLDecisionGraph(Guide guide) throws InternalErrorException {
-             if (guide==null){
-                 throw new InternalErrorException(new Exception("null guideline!"));
-             }
-             _guide = guide;
-         }
+        if (guide==null){
+            throw new InternalErrorException(new Exception("null guideline!"));
+        }
+        _guide = guide;
+    }
 
     private Map<String, GTCodeDefiner> getGTCodeElementsMap(){
-             if (_gtCodeElementsMap==null){
-                 _gtCodeElementsMap = GuideImporter.generateGTCodeElementMap(_guide);
-             }
-             return _gtCodeElementsMap;
-         }
+        if (_gtCodeElementsMap==null){
+            _gtCodeElementsMap = GuideImporter.generateGTCodeElementMap(_guide);
+        }
+        return _gtCodeElementsMap;
+    }
 
     private Map<String, Collection<String>> getWriteGTCodesRuleMap() throws InternalErrorException {
-             if(_writeGTCodesRuleMap==null){
-                 _writeGTCodesRuleMap = new HashMap<String, Collection<String>>();
-                 if (_guide.getDefinition()!=null){
-                     for (Rule rule: _guide.getDefinition().getRules().values()){
-                         Collection<String> writeGTCodes = GuideUtil.getGTCodesInWrites(rule);
-                         _writeGTCodesRuleMap.put(rule.getId(), writeGTCodes);
-                     }
-                 }
-             }
-             return _writeGTCodesRuleMap;
-         }
+        if(_writeGTCodesRuleMap==null){
+            _writeGTCodesRuleMap = new HashMap<String, Collection<String>>();
+            if (_guide.getDefinition()!=null){
+                for (Rule rule: _guide.getDefinition().getRules().values()){
+                    Collection<String> writeGTCodes = GuideUtil.getGTCodesInWrites(rule);
+                    _writeGTCodesRuleMap.put(rule.getId(), writeGTCodes);
+                }
+            }
+        }
+        return _writeGTCodesRuleMap;
+    }
 
     public JComponent getGraph(String lang) throws InternalErrorException {
-             TermDefinition termDefinition = GuideImporter.getTermDefinition(_guide, lang);
-             if (termDefinition==null){
-                 throw new InternalErrorException(new Exception("No TermDefinition for language '"+lang+"' inside the guideline"));
-             }
-             //TODO We should not need to do this
-             for(GTCodeDefiner gtCodeDefiner: getGTCodeElementsMap().values()){
-                 gtCodeDefiner.getGTCodeRuleLineElement().getParentRuleLine().setTermDefinition(termDefinition);
-             }
-             // Construct Model and Graph
-             mxGraph graph = GDLGraphUtil.createGraph();
-
-             for(Rule rule: _guide.getDefinition().getRules().values()){
-                 createRuleNodes(graph, rule, termDefinition);
-             }
-             return  GDLGraphUtil.createGraphComponent(graph);
-         }
+        getNodesMap().clear();
+        TermDefinition termDefinition = GuideImporter.getTermDefinition(_guide, lang);
+        if (termDefinition==null){
+            throw new InternalErrorException(new Exception("No TermDefinition for language '"+lang+"' inside the guideline"));
+        }
+        //TODO We should not need to do this
+        for(GTCodeDefiner gtCodeDefiner: getGTCodeElementsMap().values()){
+            gtCodeDefiner.getGTCodeRuleLineElement().getParentRuleLine().setTermDefinition(termDefinition);
+        }
+        // Construct Model and Graph
+        mxGraph graph = GDLGraphUtil.createGraph();
+        for(Rule rule: _guide.getDefinition().getRules().values()){
+            createRuleNodes(graph, rule, termDefinition);
+        }
+        addDecisionGraphDependecies(graph);
+        return  GDLGraphUtil.createGraphComponent(graph);
+    }
 
     public void createRuleNodes(mxGraph graph, Rule rule, TermDefinition termDefinition)   throws InternalErrorException {
-             Object ruleNode = GDLGraphUtil.createRuleNode(graph, rule, termDefinition);
-             Collection<Object> currentNodes = Collections.singleton(ruleNode);
-             for(ExpressionItem expressionItem: rule.getWhenStatements()){
-                 Collection<Object> expressionNodes = addExpresionNodes(graph, rule.getId(), expressionItem, currentNodes, termDefinition);
-                 currentNodes = expressionNodes;
-             }
-             Object endNode = GDLGraphUtil.createEndNode(graph);
-             for(Object currentNode: currentNodes){
-                 GDLGraphUtil.insertDirectionalEdge(graph, currentNode, endNode);
-             }
-             for(AssignmentExpression assignmentExpression: rule.getThenStatements()){
-                 addAssignmentExpression(graph, assignmentExpression, endNode, termDefinition);
-             }
-         }
+        Object ruleNode = GDLGraphUtil.createRuleNode(graph, rule, termDefinition);
+        Collection<Object> currentNodes = Collections.singleton(ruleNode);
+        for(ExpressionItem expressionItem: rule.getWhenStatements()){
+            Collection<Object> expressionNodes = addExpresionNodes(graph, rule.getId(), expressionItem, currentNodes, termDefinition);
+            currentNodes = expressionNodes;
+        }
+        Object endNode = GDLGraphUtil.createEndNode(graph);
+        for(Object currentNode: currentNodes){
+            GDLGraphUtil.insertDirectionalEdge(graph, currentNode, endNode);
+        }
+        for(AssignmentExpression assignmentExpression: rule.getThenStatements()){
+            addAssignmentExpression(graph, assignmentExpression, endNode, termDefinition);
+        }
+    }
 
     public Collection<Object> addExpresionNodes(mxGraph graph, String ruleGTCode, ExpressionItem currentExpressionItem, Collection<Object> startNodes, TermDefinition termDefinition) throws InternalErrorException {
         if (currentExpressionItem instanceof BinaryExpression){
@@ -109,6 +112,7 @@ public class GDLDecisionGraph {
         }else{
             String label = getReadableExpression(currentExpressionItem, termDefinition);
             Object node = GDLGraphUtil.insertNode(graph, label, "#f8f668");
+            getNodesMap().put(currentExpressionItem, node);
             for(Object startNode: startNodes){
                 GDLGraphUtil.insertDirectionalEdge(graph, startNode, node);
             }
@@ -142,6 +146,7 @@ public class GDLDecisionGraph {
         }else{
             String label = getReadableExpression(assignmentExpression, termDefinition);
             Object node = GDLGraphUtil.insertNode(graph, label, "#7daeea");
+            getNodesMap().put(assignmentExpression, node);
             GDLGraphUtil.insertDirectionalEdge(graph, startNode, node);
         }
     }
@@ -156,11 +161,38 @@ public class GDLDecisionGraph {
                 return ((CreateInstanceActionRuleLine)ruleLine).toHTMLStringSingle(0,termDefinition.getId());
             }else{
                 return ruleLine.toHTMLString(termDefinition.getId());
-
             }
         }else{
             return null;
         }
+    }
+
+    public void addDecisionGraphDependecies(mxGraph graph) throws InternalErrorException {
+        GDLDecisionModelBuilder gdlDecisionModelBuilder = new GDLDecisionModelBuilder(Collections.singleton(_guide));
+        for(ExpressionItem expressionItem: getNodesMap().keySet()){
+            Object conditionNode = getNodesMap().get(expressionItem);
+            if (!(expressionItem instanceof AssignmentExpression)){
+                Collection<GDLDecisionModelBuilder.GuideAssignmentExpression> guideAssignmentExpressions =
+                        gdlDecisionModelBuilder.getAssignmentDependencies(_guide.getId(), expressionItem);
+                if (guideAssignmentExpressions!=null){
+                    for(GDLDecisionModelBuilder.GuideAssignmentExpression guideAssignmentExpression: guideAssignmentExpressions){
+                        Object assignmentNode =  getNodesMap().get(guideAssignmentExpression.getAssignmentExpression());
+                        if (assignmentNode!=null){
+                            GDLGraphUtil.insertDirectionalEdgeDashed(graph, assignmentNode, conditionNode);
+                        }else{
+                            Logger.getLogger(GDLDecisionGraph.class).warn("Assignment node for '"+guideAssignmentExpression.getAssignmentExpression()+"' not found!");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private Map<ExpressionItem, Object> getNodesMap(){
+        if (_nodesMap==null){
+            _nodesMap = new HashMap<ExpressionItem, Object>();
+        }
+        return _nodesMap;
     }
 
 }

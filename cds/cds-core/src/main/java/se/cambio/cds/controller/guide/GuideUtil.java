@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.guide;
 
+import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
@@ -133,7 +134,7 @@ public class GuideUtil {
     }
 
 
-    private static DataValue getDataValue(ConstantExpression e){
+    public static DataValue getDataValue(ConstantExpression e){
         if (e instanceof CodedTextConstant){
             return ((CodedTextConstant)e).getCodedText();
         } else if (e instanceof QuantityConstant){
@@ -145,6 +146,7 @@ public class GuideUtil {
         } else if (e instanceof DateTimeConstant){
             return new DvDateTime(e.getValue());
         } else {
+            Logger.getLogger(GuideUtil.class).warn("Unknown data value for constant expression '"+e+"'");
             return null; //TODO Proportion, date, time, count, etc
         }
     }

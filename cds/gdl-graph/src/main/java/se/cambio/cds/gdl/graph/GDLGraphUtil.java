@@ -90,10 +90,18 @@ public class GDLGraphUtil {
     public static void insertDirectionalEdge(mxGraph mxGraph, Object n1, Object n2){
         insertDirectionalEdge(mxGraph, null, n1, n2);
     }
+
     public static void insertDirectionalEdge(mxGraph mxGraph, String label, Object n1, Object n2){
         Object edge = mxGraph.insertEdge(mxGraph.getDefaultParent(), null, label, n1, n2);
         StringBuffer styleSB = new StringBuffer();
         //styleSB.append(mxConstants.STYLE_ALIGN+"="+mxConstants.ALIGN_CENTER+";");
+        mxGraph.getModel().setStyle(edge, styleSB.toString());
+    }
+
+    public static void insertDirectionalEdgeDashed(mxGraph mxGraph, Object n1, Object n2){
+        Object edge = mxGraph.insertEdge(mxGraph.getDefaultParent(), null, null, n1, n2);
+        StringBuffer styleSB = new StringBuffer();
+        styleSB.append(mxConstants.STYLE_DASHED +"=true;");
         mxGraph.getModel().setStyle(edge, styleSB.toString());
     }
 

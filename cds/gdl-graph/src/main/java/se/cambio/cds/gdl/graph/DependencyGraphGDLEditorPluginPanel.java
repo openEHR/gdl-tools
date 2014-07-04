@@ -67,7 +67,7 @@ public class DependencyGraphGDLEditorPluginPanel extends AbstractPluginPanel {
 
     @Override
     public String getPluginName() {
-        return "g1"; //TODO I18n
+        return "Dependency graph"; //TODO I18n
     }
 
     @Override
