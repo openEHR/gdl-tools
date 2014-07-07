@@ -5,7 +5,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable.TerminologyTableModel;
 import se.cambio.cds.gdl.model.Term;

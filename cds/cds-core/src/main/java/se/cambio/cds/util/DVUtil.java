@@ -250,20 +250,18 @@ public class DVUtil {
     public static ConstantExpression convertToExpression(DataValue dv){
         String dataValueStr = dv.serialise();
         dataValueStr = dataValueStr.substring(dataValueStr.indexOf(",")+1);
-        if (dv instanceof DvText
-                && !(dv instanceof DvCodedText
-                || dv instanceof DvOrdinal)){
-            return new StringConstant(dataValueStr);
+        if (dv instanceof DvCodedText){
+            DvCodedText dvCT = (DvCodedText)dv;
+            return new CodedTextConstant(dvCT.getValue(), dvCT.getDefiningCode());
+        }else if (dv instanceof DvOrdinal){
+            DvOrdinal dvOrdinal = (DvOrdinal)dv;
+            return new OrdinalConstant(dvOrdinal);
+        }else if (dv instanceof DvText){
+                return new StringConstant(dataValueStr);
         }else if (dv instanceof DvDateTime) {
             return new DateTimeConstant(dataValueStr);
         }else if (dv instanceof DvQuantity) {
             return new QuantityConstant((DvQuantity)dv);
-        }else if (dv instanceof DvCodedText) {
-            DvCodedText dvCT = (DvCodedText)dv;
-            return new CodedTextConstant(dvCT.getValue(), dvCT.getDefiningCode());
-        }else if (dv instanceof DvCodedText) {
-            DvOrdinal dvOrdinal = (DvOrdinal)dv;
-            return new OrdinalConstant(dvOrdinal);
         }else{
             return new ConstantExpression(dataValueStr);
         }

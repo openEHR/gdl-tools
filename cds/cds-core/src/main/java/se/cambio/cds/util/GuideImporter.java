@@ -36,47 +36,16 @@ public class GuideImporter {
 
     public static ReadableGuide importGuide(Guide guide, String language) throws InternalErrorException {
         Logger.getLogger(GuideImporter.class).debug("Importing guide: "+guide.getId()+", lang="+language);
-        Map<String, GTCodeDefiner> gtCodeElementMap =
-                new HashMap<String, GTCodeDefiner>();
-        ArchetypeElementInstantiationRuleLine dummyAEIRL = new ArchetypeElementInstantiationRuleLine(new ArchetypeInstantiationRuleLine());
-        dummyAEIRL.setGTCode("currentDateTime");
-        gtCodeElementMap.put("currentDateTime", dummyAEIRL);
         GuideDefinition guideDefinition = guide.getDefinition();
         TermDefinition termDefinition = getTermDefinition(guide, language);
         ReadableGuide readableGuide = new ReadableGuide(termDefinition);
+        Map<String, GTCodeDefiner> gtCodeElementMap = generateGTCodeElementMap(guide);
         if (guideDefinition!=null){
-            Map<String, ArchetypeBinding> ab = guideDefinition.getArchetypeBindings();
-            if (ab!=null){
-                for (ArchetypeBinding archetypeBinding: ab.values()) {
-                    ArchetypeInstantiationRuleLine airl =
-                            new ArchetypeInstantiationRuleLine();
-                    airl.setGTCode(archetypeBinding.getId());
-                    ArchetypeReference ar =
-                            new ArchetypeReference(
-                                    archetypeBinding.getDomain(),
-                                    archetypeBinding.getArchetypeId(),
-                                    archetypeBinding.getTemplateId());
-                    airl.setArchetypeReference(ar);
-                    gtCodeElementMap.put(archetypeBinding.getId(), airl);
+            Map<String, ArchetypeBinding> archetypeBindings = guideDefinition.getArchetypeBindings();
+            if (archetypeBindings!=null){
+                for (ArchetypeBinding archetypeBinding: archetypeBindings.values()) {
+                    ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) gtCodeElementMap.get(archetypeBinding.getId());
                     readableGuide.getDefinitionRuleLines().add(airl);
-                    if (archetypeBinding.getElements()!=null){
-                        for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
-                            ArchetypeElementInstantiationRuleLine aeirl =
-                                    new ArchetypeElementInstantiationRuleLine(airl);
-                            aeirl.setGTCode(elementBinding.getId());
-                            String elementId =
-                                    archetypeBinding.getArchetypeId()+elementBinding.getPath();
-                            ArchetypeElementVO archetypeElementVO =
-                                    ArchetypeElements.getArchetypeElement(
-                                            archetypeBinding.getTemplateId(),
-                                            elementId);
-
-                            log.debug("elementId: " + elementId + ", archetypeElementVO: " + archetypeElementVO);
-
-                            aeirl.setArchetypeElementVO(archetypeElementVO);
-                            gtCodeElementMap.put(elementBinding.getId(), aeirl);
-                        }
-                    }
                     if (archetypeBinding.getPredicateStatements()!=null){
                         for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
                             if (expressionItem instanceof BinaryExpression){
@@ -296,7 +265,7 @@ public class GuideImporter {
                 if (archetypeElementVO==null){
                     throw new InternalErrorException(new Exception("Archetype element not found for gtCode '"+gtCode+"'"));
                 }
-                log.debug("processAssigmentExpression for varialbe: " + gtCode);
+                log.debug("processAssigmentExpression for variable: " + gtCode);
 
                 String rmType = archetypeElementVO.getRMType();
                 DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO);
@@ -469,7 +438,7 @@ public class GuideImporter {
         }
     }
 
-    protected static void processExpressionItem(
+    public static void processExpressionItem(
             Collection<RuleLine> ruleLines,
             RuleLine parentRuleLine,
             ExpressionItem expressionItem,
@@ -499,6 +468,46 @@ public class GuideImporter {
         }
     }
 
+    public static Map<String, GTCodeDefiner> generateGTCodeElementMap(Guide guide){
+        Map<String, GTCodeDefiner> gtCodeElementMap = new HashMap<String, GTCodeDefiner>();
+        ArchetypeElementInstantiationRuleLine dummyAEIRL = new ArchetypeElementInstantiationRuleLine(new ArchetypeInstantiationRuleLine());
+        dummyAEIRL.setGTCode("currentDateTime");
+        gtCodeElementMap.put("currentDateTime", dummyAEIRL);
+        GuideDefinition guideDefinition = guide.getDefinition();
+        if (guideDefinition!=null){
+            Map<String, ArchetypeBinding> ab = guideDefinition.getArchetypeBindings();
+            if (ab!=null){
+                for (ArchetypeBinding archetypeBinding: ab.values()) {
+                    ArchetypeInstantiationRuleLine airl =
+                            new ArchetypeInstantiationRuleLine();
+                    airl.setGTCode(archetypeBinding.getId());
+                    ArchetypeReference ar =
+                            new ArchetypeReference(
+                                    archetypeBinding.getDomain(),
+                                    archetypeBinding.getArchetypeId(),
+                                    archetypeBinding.getTemplateId());
+                    airl.setArchetypeReference(ar);
+                    gtCodeElementMap.put(archetypeBinding.getId(), airl);
+                    if (archetypeBinding.getElements()!=null){
+                        for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
+                            ArchetypeElementInstantiationRuleLine aeirl =
+                                    new ArchetypeElementInstantiationRuleLine(airl);
+                            aeirl.setGTCode(elementBinding.getId());
+                            String elementId =
+                                    archetypeBinding.getArchetypeId()+elementBinding.getPath();
+                            ArchetypeElementVO archetypeElementVO =
+                                    ArchetypeElements.getArchetypeElement(
+                                            archetypeBinding.getTemplateId(),
+                                            elementId);
+                            aeirl.setArchetypeElementVO(archetypeElementVO);
+                            gtCodeElementMap.put(elementBinding.getId(), aeirl);
+                        }
+                    }
+                }
+            }
+        }
+        return gtCodeElementMap;
+    }
 
     private static Logger log = Logger.getLogger(GuideImporter.class);
 }

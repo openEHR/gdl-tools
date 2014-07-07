@@ -18,7 +18,7 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
 import se.cambio.cds.gdl.editor.view.dialog.DialogTerminologyIdSelection;
 import se.cambio.cds.gdl.editor.view.panels.GDLEditorMainPanel;
 import se.cambio.cds.gdl.editor.view.panels.GDLPanel;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;

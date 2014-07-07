@@ -16,6 +16,9 @@ public final class GDLEditorConfigurationParametersManager {
     private static final String CONFIGURATION_FILE = "GDLEditor.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
 
+    public static final String GDL_PLUGINS_KEY = "GDLEditor/Plugins";
+
+
     private static boolean usesJNDI;
     private static Map <Object,Object> parameters;
 

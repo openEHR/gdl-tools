@@ -1,4 +1,4 @@
-package se.cambio.cds.gdl.editor.view.panels.interfaces;
+package se.cambio.cds.view.swing.panel.interfaces;
 
 import javax.swing.JTabbedPane;
 

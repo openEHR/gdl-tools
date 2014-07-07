@@ -2,7 +2,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPlugin;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;

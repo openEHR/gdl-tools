@@ -22,7 +22,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.ClosableTabbebPane;
+import se.cambio.cds.view.swing.panel.interfaces.ClosableTabbebPane;
 
 public class ButtonTabComponent extends JPanel {
 

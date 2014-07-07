@@ -5,7 +5,7 @@ import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.LoadGuideAction;
 import se.cambio.cds.gdl.editor.view.menubar.SaveGuideAction;
-import se.cambio.cds.gdl.editor.view.panels.interfaces.RefreshablePanel;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 
 import javax.swing.*;
