@@ -27,7 +27,7 @@ public class GDLEditorPluginPanelManager {
         } catch (MissingConfigurationParameterException e) {
             Logger.getLogger(GDLEditorPluginPanelManager.class).info("No gdl editor plugins found.");
         }
-        if (gdlEditorPlugins!=null){
+        if (gdlEditorPlugins!=null && !gdlEditorPlugins.trim().isEmpty()){
             try{
                 String[] gdlEditorPluginsClasses = gdlEditorPlugins.split(",");
                 for(String gdlEditorPluginClass: gdlEditorPluginsClasses){
