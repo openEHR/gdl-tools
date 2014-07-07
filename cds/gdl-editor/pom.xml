@@ -172,11 +172,6 @@
         </dependency>
         <dependency>
             <groupId>se.cambio.cds</groupId>
-            <artifactId>gdl-graph</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>se.cambio.cds</groupId>
             <artifactId>cds-persistence</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
