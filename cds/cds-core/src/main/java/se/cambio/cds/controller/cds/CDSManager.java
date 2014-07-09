@@ -1,25 +1,16 @@
 package se.cambio.cds.controller.cds;
 
-import org.openehr.rm.datatypes.quantity.DvQuantity;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.gdl.model.ArchetypeBinding;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegate;
 import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegateFactory;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.DVUtil;
-import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.cds.util.GeneratedElementInstanceCollection;
-import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.cds.util.*;
 import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
@@ -85,6 +76,7 @@ public class CDSManager {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.addAll(eic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
         ars.addAll(eic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
+        addEventTimeElements(ars); //We add all the event time elements if they are not defined
         return getCompressedQueryArchetypeReferences(ars);
     }
 
@@ -212,6 +204,19 @@ public class CDSManager {
             return count;
         }
     }
+
+    private static void addEventTimeElements(Collection<ArchetypeReference> queryARs){
+        for(ArchetypeReference archetypeReference: queryARs){
+            String eventTimePath = DateTimeARFinder.getEventTimePath(archetypeReference.getIdArchetype());
+            if (eventTimePath!=null){
+                String eventTimeElementId = archetypeReference.getIdArchetype()+eventTimePath;
+                if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)){
+                    new GeneratedElementInstance(eventTimeElementId, null, archetypeReference, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                }
+            }
+        }
+    }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

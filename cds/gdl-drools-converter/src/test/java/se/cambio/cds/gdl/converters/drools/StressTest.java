@@ -38,9 +38,18 @@ public class StressTest {
     private static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
     private static String DIAGNOSIS_CODE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]";
     private static String DIAGNOSIS_DATE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]";
+
+    private static String MEDICATION_ARCHETYPE_ID = "openEHR-EHR-INSTRUCTION.medication.v1";
+    private static String MEDICATION_TEMPLATE_ID = "medication_atc_indicator";
+    private static String MEDICATION_CODE_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]";
+    private static String MEDICATION_DATE_INIT_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]";
+    private static String MEDICATION_DATE_END_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]";
+
+    private static String BASIC_DEMOGRAPHICS_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1";
+    private static String BIRTHDATE_DATE_END_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
+
     public static void main(String[] args) {
         try {
-
             //Load KM
             UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
             Terminologies.loadTerminologies();
@@ -48,7 +57,7 @@ public class StressTest {
             Archetypes.loadArchetypes();
             UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
             Templates.loadTemplates();
-            stressTest1();
+            stressTest2();
         } catch (InternalErrorException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
@@ -57,21 +66,31 @@ public class StressTest {
     }
 
     private static void stressTest1(){
-        Collection<ElementInstance> elementInstances = getGeneratedElementInstances();
+        Collection<ElementInstance> elementInstances = getGeneratedElementInstancesICD10();
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
             guideDTOs.add(parse("guides/CHA2DS2VASc_diagnosis_review.v1"));
             guideDTOs.add(parse("guides/Stroke_prevention_dashboard_case.v1"));
+            guideDTOs.add(parse("guides/MIE_Medication_in_elderly.v1"));
+
             GuideManager guideManager = new GuideManager(guideDTOs);
-            ElementInstanceCollection eic = new ElementInstanceCollection();
-            eic.addAll(elementInstances);
             Calendar cal = Calendar.getInstance();
-            CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
-            long startTime = System.currentTimeMillis();
-            RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, eic.getAllElementInstances(), cal);
-            System.out.println("Executed in: "+(System.currentTimeMillis()-startTime)+" ms");
-            System.out.println("Rules fired: "+rer.getFiredRules().size());
+            droolsREFD.execute(null, guideDTOs, new ArrayList<ElementInstance>(), null); //WARM UP THE ENGINE
+            long total = 0;
+            int numExec = 15;
+            for (int i=0;i<numExec;i++){
+                ElementInstanceCollection eic = new ElementInstanceCollection();
+                eic.addAll(elementInstances);
+                CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
+                long startTime = System.currentTimeMillis();
+                RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, eic.getAllElementInstances(), cal);
+                long execTime = (System.currentTimeMillis()-startTime);
+                System.out.println("Executed in: "+execTime+" ms");
+                System.out.println("Rules fired: "+rer.getFiredRules().size());
+                total += execTime;
+            }
+            System.out.println("Executed in: "+(total/numExec)+" ms");
         } catch (InternalErrorException e) {
             e.printStackTrace();
         } catch (PatientNotFoundException e) {
@@ -81,9 +100,9 @@ public class StressTest {
         }
     }
 
-    private static Collection<ElementInstance> getGeneratedElementInstances(){
+    private static Collection<ElementInstance> getGeneratedElementInstancesICD10(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
-        for (int i = 0; i<1; i++){
+        for (int i = 0; i<3; i++){
             for(String icd10Code: ICD10_CODES){
                 ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, DIAGNOSIS_ARCHETYPE_ID, DIAGNOSIS_TEMPLATE_ID);
                 DataValue dataValue = new DvCodedText(icd10Code, "ICD10", icd10Code);
@@ -94,8 +113,65 @@ public class StressTest {
                 elementInstances.add(eiDate);
             }
         }
-        System.out.println("Diagnosis codes generated "+elementInstances.size());
+        System.out.println("Diagnosis elements generated "+elementInstances.size());
         return elementInstances;
+    }
+
+    private static Collection<ElementInstance> getGeneratedElementInstancesATC(){
+        Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
+        for (int i = 0; i<1; i++){
+            for(String atcCodes: ATC_CODES){
+                ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, MEDICATION_ARCHETYPE_ID, MEDICATION_TEMPLATE_ID);
+                DataValue dataValue = new DvCodedText(atcCodes, "ATC", atcCodes);
+                ElementInstance eiCode = new ElementInstance(MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                dataValue = new DvDateTime(new DateTime().plus(-64000000L).toString());
+                ElementInstance eiInitDate = new ElementInstance(MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                dataValue = null;//new DvDateTime(new DateTime().plus(6400000L).toString());
+                ElementInstance eiEndDate = new ElementInstance(MEDICATION_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                elementInstances.add(eiCode);
+                elementInstances.add(eiInitDate);
+                elementInstances.add(eiEndDate);
+            }
+        }
+        System.out.println("Medication elements generated "+elementInstances.size());
+        return elementInstances;
+    }
+
+    private static void stressTest2(){
+        Collection<ElementInstance> elementInstances = getGeneratedElementInstancesATC();
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
+        DataValue dataValue = new DvDateTime("1900-01-01T12:00");
+        ElementInstance eiBirthdateDate = new ElementInstance(BIRTHDATE_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        elementInstances.add(eiBirthdateDate);
+        DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
+        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+        try {
+            guideDTOs.add(parse("guides/MIE_Medication_in_elderly.v1"));
+            GuideManager guideManager = new GuideManager(guideDTOs);
+            Calendar cal = Calendar.getInstance();
+            droolsREFD.execute(null, guideDTOs, new ArrayList<ElementInstance>(), null); //WARM UP THE ENGINE
+            long total = 0;
+            int numExec = 15;
+            for (int i=0;i<numExec;i++){
+                long startTime = System.currentTimeMillis();
+                ElementInstanceCollection eic = new ElementInstanceCollection();
+                eic.addAll(elementInstances);
+                CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
+                Collection<ElementInstance> eis = eic.getAllElementInstances();
+                RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, eis, cal);
+                long execTime = (System.currentTimeMillis()-startTime);
+                System.out.println("Executed in: "+execTime+" ms");
+                System.out.println("Rules fired: "+rer.getFiredRules().size());
+                total += execTime;
+            }
+            System.out.println("Executed in: "+(total/numExec)+" ms");
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+        } catch (PatientNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static GuideDTO parse(String guideId) throws Exception {
@@ -229,4 +305,79 @@ public class StressTest {
             "Z09","Z10","Z11","Z12","Z13","Z20","Z21","Z22","Z23","Z24","Z25","Z26","Z27","Z28","Z29","Z30","Z31",
             "Z32","Z33","Z34","Z35","Z36","Z37","Z38","Z39","Z40","Z41","Z42","Z43","Z44","Z45","Z46","Z47","Z48",
             "Z49","Z50","Z51","Z52","Z53","Z54","Z55","Z56","Z57","Z58","Z59","Z60","Z61","Z62","Z63","Z64","Z65"};
+
+    private static String[] ATC_CODES = new String[]{
+            "N02AX02","A02","A02B","A02BC","A02BC01","A02BC02","A02BC03","A03","A03A","A03AE","A03AE02",
+            "A03AE04","A03F","A03FA","A03FA02","A03FA03","A04","A04A","A04AA","A04AA02","A04AA05","A04AD",
+            "A04AD12","A05","A05A","A05AA","A05AA03","A06","A06A","A06AH","A06AH01","A07","A07A",
+            "A07AA","A07AA12","A08","A08A","A08AA","A08AA01","A08AA02","A08AA03","A08AA04","A08AA05","A08AA08",
+            "A08AA09","A08AA10","A08AB","A08AB01","A08AX","A08AX01","A10","A10A","A10AB","A10AB01","A10AB04",
+            "A10AB05","A10AB06","A10AC","A10AC01","A10AD","A10AD01","A10AD05","A10AE","A10AE04","A10AE05","A10AF",
+            "A10AF01","A10B","A10BA","A10BA02","A10BB","A10BB12","A10BD","A10BD03","A10BD04","A10BD05","A10BD06",
+            "A10BD07","A10BD08","A10BD11","A10BG","A10BG02","A10BG03","A10BH","A10BH01","A10BH02","A10BH03","A10BH05",
+            "A10BX","A10BX02","A10BX03","A10BX04","A10BX06","A10BX07","A11","A11H","A11HA","A11HA08","A16",
+            "A16A","A16AA","A16AA04","A16AA05","A16AA06","A16AB","A16AB02","A16AB03","A16AB04","A16AB05","A16AB07",
+            "A16AB08","A16AB09","A16AB10","A16AX","A16AX03","A16AX04","A16AX05","A16AX06","A16AX07","A16AX08","B",
+            "B01","B01A","B01AA03","B01AB","B01AB02","B01AC","B01AC04","B01AC06","B01AC09","B01AC11","B01AC16",
+            "B01AC17","B01AC22","B01AC24","B01AC30","B01AD","B01AD02","B01AD07","B01AD08","B01AD10","B01AD11","B01AD12",
+            "B01AE","B01AE01","B01AE02","B01AE06","A03BA","B01AX","B01AX05","B01AX06","B02","B02A","B02AA",
+            "B02AA02","B02AB","B02AB01","B02B","B02BC","B02BC30","B02BD","B02BD02","B02BD04","B02BD05","B02BD11",
+            "B02BX","B02BX04","B02BX05","B03","B03X","B03XA","B03XA01","B03XA02","B03XA03","B06","B06A",
+            "B06AC","B06AC01","C","C01","C01B","A03BB","C01BD04","C01BD07","C01E","C01EB","C01EB16",
+            "C01EB17","C01EB18","C01EB19","C01EB21","C02","C02C","C02CA","C02CA04","C02K","C02KX","C02KX01",
+            "C02KX02","C02KX03","C03","C03X","C03XA","C03XA01","C04","C04A","C04AX","C04AX21","C07",
+            "C07A","C07AB","C07AB52","C08","C08C","C08CA","C08CA01","C08CA02","C08CA05","C09","C09A",
+            "C09AA","C09AA01","C09AA02","C09AA03","C09AA04","C09AA05","C09AA08","N02AG","C09B","C09BA","C09BA08",
+            "C09BB","C09BB03","C09C","C09CA","C09CA01","C09CA03","C09CA04","C09CA07","C09CA09","C09D","C09DA",
+            "C09DA04","C09DA06","C09DA07","C09DB","C09DB01","C09DB04","C09DX","C09DX01","C09X","C09XA","C09XA02",
+            "C09XA52","C09XA53","C09XA54","C10","C10A","C10AA","C10AA01","C10AA03","C10AA04","C10AA05","C10AA06",
+            "C10AA07","C10AB","C10AB04","A04AD01","C10AC04","C10AD","C10AD52","C10AX","C10B","C10BA","C10BA03",
+            "D","D01","N05AB04","D01AC","D01AC15","D03","D03A","N04A","D03AX06","D05","D05A",
+            "D05AX","D05AX52","D06","D06A","D06AX","N05AH02","D06B","D06BB","D06BB10","D10","D10A",
+            "D10AD","D10AD04","D11","D11A","D11AH","D11AH01","D11AH02","D11AX","D11AX16","G","G02",
+            "G02C","G02CB","G02CB02","G02CX","G02CX01","G03","G03A","G03AA","G03AA14","G03AC","G03AC08",
+            "G03B","G03BA","G03BA03","G03F","G03FA","G03FA01","G03G","G03GA","G03GA01","G03GA05","G03GA06",
+            "G03GA07","G03GA09","G03X","G03XB","G03XB01","G03XC","G03XC01","G03XC02","G03XC03","G04","G04B",
+            "G04BD","G04BD04","G04BD10","G04BD11","G04BE","G04BE03","G04BE07","G04BE08","G04BE09","G04C","G04CA",
+            "G04CA04","H","H01","H01A","H01AB","H01AB01","H01AC","H01AC01","H01AC03","H01AX","H01AX01",
+            "H01C","H01CA","H01CA03","H01CB","H01CB05","H01CC","H01CC01","H02","H02A","H02AB","H02AB02",
+            "H02AB09","H05","H05A","H05AA","H05AA02","H05AA03","H05B","H05BA","H05BA01","H05BX","H05BX01",
+            "J","J01","J01A","J01AA","J01AA12","J01C","J01CE","N05BB01","J01CR","J01CR02","J01CR05",
+            "J01D","J01DC","J01DC02","J01DD","J01DD02","J01DD04","J01DF","J01DF01","J01DH","J01DH02","J01DH03",
+            "J01DH04","J01DH51","J01DI","J01DI01","J01DI02","J01F","J01FA","J01FA15","J01G","J01GB","J01GB01",
+            "J01M","J01MA","J01MA02","J01MA09","J01MA13","J01MA14","J01MA16","J01X","J01XA","J01XA02","J01XA03",
+            "J01XX","J01XX09","J02","J02A","R06AB","J02AC01","J02AC03","J02AC04","J02AX","J02AX04","J02AX05",
+            "J02AX06","J05","J05A","J05AB","J05AB01","J05AB04","J05AB06","J05AB09","J05AB11","J05AB12","J05AE",
+            "J05AE01","J05AE02","J05AE03","J05AE04","J05AE05","J05AE06","R06AX02","J05AE08","J05AE09","J05AE10","J05AF",
+            "J05AF04","J05AF05","J05AF06","J05AF07","J05AF08","J05AF09","J05AF10","J05AF11","J05AG","J05AG01","J05AG03",
+            "J05AG04","J05AG05","J05AH","J05AH02","J05AR","J05AR01","J05AR02","J05AR03","J05AR06","J05AR08","J05AX",
+            "J05AX07","J05AX08","J05AX09","J06","J06B","J06BA","J06BA01","J06BA02","J06BB","J06BB04","J06BB16",
+            "J07","J07A","J07AE","J07AE01","J07AH","J07AH08","J07AL","J07AL02","J07AL52","J07B","J07BA",
+            "J07BA02","J07BB","J07BB01","J07BB02","J07BB03","J07BC","J07BC01","J07BC20","J07BD","J07BD52","J07BD54",
+            "J07BH","J07BH01","J07BH02","J07BK","J07BK02","J07BL","J07BL01","J07BM","J07BM01",
+            "J07BM02","J07C","J07CA","J07CA01","J07CA05","J07CA07","J07CA08","J07CA09","J07CA10","J07CA12","M",
+            "M01","M01A","M01AC","M01AC01","M01AC05","M01AE","M01AE03","M01AH","M01AH02","M01AH03","M01AH04",
+            "M01AH05","M01AH06","M01AX","M01AX05","M01AX17","M03","M03A","M03AX","M03AX01","M03B","M03BA",
+            "M03BA02","M03BB","M03BB02","M03BX","M03BX04","M04","M04A","M04AA","M04AA03","M05","M05B",
+            "M05BA","M05BA04","M05BA06","M05BA08","M05BB","M05BB03","M05BC","M05BC01","M05BC02","M05BX","M05BX03",
+            "M05BX04","M09","M09A","M09AB","M09AB02","M09AX","M09AX02","N","N01","N01A","N01AH",
+            "N01AH01","N01B","N01BX","N01BX04","N02","N02A","N02AB","N02AB03","N02AX","N02AX02","N02B",
+            "N02BG","N02BG08","N02C","N02CX","N02CX04","N03","N03A","N03AF","N03AF03","N03AF04","N03AG",
+            "N03AG04","N03AX","N03AX09","N03AX11","N03AX12","N03AX14","N03AX15","N03AX16","N03AX17","N03AX18","N03AX21",
+            "N03AX22","N04","N04B","N04BA","N04BA03","N04BC","N04BC04","N04BC05","N04BC09","N04BD","N04BD02",
+            "N04BX","N04BX01","N04BX02","N05","N05A","N05AE","N05AE03","N05AH","N05AH02","N05AH03","N05AH04",
+            "N05AH05","N05AL","N05AL06","N05AX","N05AX08","N05AX12","N05AX13","N05C","N05CD","N05CD08","N05CF",
+            "N05CF03","N05CH","N05CH01","N05CM","N05CM18","N06","N06A","N06AB","N06AB03","N06AB04","N06AB05",
+            "N06AB06","N06AB08","N06AB10","N06AX","N06AX11","N06AX12","N06AX16","N06AX17","N06AX18","N06AX21","N06AX22",
+            "N06B","N06BA","N06BA04","N06BA09","N06BC","N06BC01","N06BC02","N06D","N06DA","N06DA03","N06DX",
+            "N06DX01","N07","N07B","N07BA","N07BA03","N07BC","N07BC03","N07BC51","N07C","N07CA","N07CA01",
+            "N07X","N07XX","N07XX02","N07XX04","N07XX05","N07XX07","N07XX08","P","P01","P01B","P01BF",
+            "P01BF05","R","R01","R01A","R01AD","R01AD12","R03","R03A","R03AC","R03AC02","R03AC13",
+            "R03AC18","R03AK","R03AK06","R03B","R03BA","R03BA02","R03BA08","R03BB","R03BB05","R03D","R03DC",
+            "R03DC03","R03DX","R03DX05","R03DX07","R05","R05C","R05CB","R05CB16","R05D","R05DA","R05DA08",
+            "R05DB","R05DB03","R06","R06A","R06AE","R06AE07","R06AX","R06AX12","R06AX13","R06AX25","R06AX27",
+            "R07","R07A","R07AX","R07AX01","S","S01","S01A","S01AD","S01AD08","S01AX","S01AX12",
+            "S01B","S01BA","S01BA01","S01BC","S01BC10","S01BC11","S01E","S01EC","S01EC04","S01ED","S01ED51",
+            "S01EE","S01EE01","S01EE03","S01EE04","S01G","S01GX","S01GX06","S01GX09","S01L","S01LA","S01LA01",
+            "S01LA03","S01LA04","V","V03","V03A","V03AB","V03AB17","V03AB33","V03AB35","V03AC","V03AC02"};
 }

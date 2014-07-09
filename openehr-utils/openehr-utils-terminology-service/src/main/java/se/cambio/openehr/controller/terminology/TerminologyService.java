@@ -1,17 +1,16 @@
 package se.cambio.openehr.controller.terminology;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-
 import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnknownPropertyException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class defines a minimal interface of a terminology service 
@@ -21,7 +20,6 @@ import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
  *
  */
 public interface TerminologyService {
-	
 	/**
 	 * Checks if codePhrase a is subclass of b with regards to
 	 * subsumption relationship

@@ -475,6 +475,7 @@ public class GDLDroolsConverter {
         String attribute = var.getAttribute();
         processAssigmentExpression(sb, gtCode, gtCode, attribute, assignmentExpression.getAssignment(), archetypeReferenceMap, elementMap, stats, creatingInstance);
     }
+
     protected void processAssigmentExpression(StringBuffer sb,
                                               String gtCode,
                                               String eiId,

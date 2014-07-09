@@ -65,7 +65,7 @@ public class DroolsExecutionManager {
             if (date==null){
                 date = Calendar.getInstance();
             }
-            DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
+            final DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
             session.setGlobal("$currentDateTime", currentDateTime);
             getDelegate()._logger = executionLogger;
             session.setGlobal("$executionLogger", executionLogger);

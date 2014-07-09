@@ -24,7 +24,7 @@ public class ExecutionLogger {
 
     public void addLog(KnowledgeHelper drools, ElementInstance elementInstance){
         getElementInstancesSet().add(elementInstance);
-        ExecutionLog executionLog =
+        final ExecutionLog executionLog =
                 new ExecutionLog(
                         drools.getRule().getName(),
                         elementInstance.getArchetypeReference().getIdTemplate(),
