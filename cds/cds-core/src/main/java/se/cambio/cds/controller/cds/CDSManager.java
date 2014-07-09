@@ -76,8 +76,13 @@ public class CDSManager {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.addAll(eic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
         ars.addAll(eic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
-        addEventTimeElements(ars); //We add all the event time elements if they are not defined
         return getCompressedQueryArchetypeReferences(ars);
+    }
+
+    public static Collection<ArchetypeReference> getEHRArchetypeReferencesWithEventTimeElements(GeneratedElementInstanceCollection eic){
+        Collection<ArchetypeReference> ars = getEHRArchetypeReferences(eic);
+        addEventTimeElements(ars); //We add all the event time elements if they are not defined
+        return ars;
     }
 
     private static Collection<ElementInstance> getElementInstances(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)

@@ -23,8 +23,8 @@ public class CDSManagerTest extends TestCase {
         gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new GeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         geic.add(gar);
-        Collection<ArchetypeReference> ars = CDSManager.getEHRArchetypeReferences(geic);
-        assertEquals(1, ars.size()); //Compact
+        Collection<ArchetypeReference> ars = CDSManager.getEHRArchetypeReferencesWithEventTimeElements(geic);
+        assertEquals(1, ars.size()); //Compact ars
         ArchetypeReference ar = ars.iterator().next();
         assertNotNull(ar.getElementInstancesMap().get("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]")); //Add event time paths
         assertNotNull(ar.getElementInstancesMap().get("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]"));
