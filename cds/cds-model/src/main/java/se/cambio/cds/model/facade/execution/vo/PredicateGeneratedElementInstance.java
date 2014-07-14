@@ -3,7 +3,6 @@ package se.cambio.cds.model.facade.execution.vo;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
-
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
@@ -57,6 +56,10 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
 
     public boolean hasNoValue(){
         return true;
+    }
+
+    public String toString(){
+        return "(P)"+super.toString();
     }
 }
 /*

@@ -70,11 +70,16 @@ public class DVUtil {
         }
     }
 
-    public static boolean equalDV(boolean inPredicate, ElementInstance ei, DataValue dv2) {
-        if (!inPredicate && ei instanceof PredicateGeneratedElementInstance){
-            return false;
+    public static boolean equalDV(boolean inPredicate, ElementInstance ei, DataValue dv2, boolean negated) {
+        if (ei instanceof PredicateGeneratedElementInstance){
+            return inPredicate;
         }else{
-            return DVUtil.equalDVs(ei.getDataValue(), dv2);
+            boolean result = DVUtil.equalDVs(ei.getDataValue(), dv2);
+            if (negated){
+                return !result;
+            }else{
+                return result;
+            }
         }
     }
 
@@ -168,7 +173,7 @@ public class DVUtil {
 
 
     public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
-         return isSubClassOfCached(inPredicate, ei, bindingsMap, true, dataValues);
+        return isSubClassOfCached(inPredicate, ei, bindingsMap, true, dataValues);
     }
 
     public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues){
@@ -257,7 +262,7 @@ public class DVUtil {
             DvOrdinal dvOrdinal = (DvOrdinal)dv;
             return new OrdinalConstant(dvOrdinal);
         }else if (dv instanceof DvText){
-                return new StringConstant(dataValueStr);
+            return new StringConstant(dataValueStr);
         }else if (dv instanceof DvDateTime) {
             return new DateTimeConstant(dataValueStr);
         }else if (dv instanceof DvQuantity) {

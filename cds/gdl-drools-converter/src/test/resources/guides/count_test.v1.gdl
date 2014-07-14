@@ -1,0 +1,210 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"count_test.v1">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0004"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+					["gt0040"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]!=null",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0018"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0019"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]!=null",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0041"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0042"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0099]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0039"] = (RULE) <
+				when = <"$gt0042==null",...>
+				then = <"$gt0042.magnitude=$gt0019.count",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ATC"] = (TERM_BINDING) <
+				bindings = <
+					["gt0019"] = (BINDING) <
+						codes = <[ATC::N05BA01], [ATC::N05CD02], [ATC::N05CD03]>
+						uri = <"">
+					>
+					["gt0020"] = (BINDING) <
+						codes = <[ATC::A03AB], [ATC::A03BA], [ATC::A03BB], [ATC::A04AD01], [ATC::C01BA], [ATC::G04BD], [ATC::N02AG], [ATC::N04A], [ATC::N05AA], [ATC::N05AB04], [ATC::N05AF03], [ATC::N05AH02], [ATC::N05BA01], [ATC::N05BB01], [ATC::N06AA], [ATC::R05CA10], [ATC::R06AA02], [ATC::R06AB], [ATC::R06AD], [ATC::R06AX02]>
+						uri = <"">
+					>
+					["gt0021"] = (BINDING) <
+						codes = <[ATC::N02AX02],...>
+						uri = <"">
+					>
+					["gt0022"] = (BINDING) <
+						codes = <[ATC::N05CM06],...>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Medication in elderly">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Generic name">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Set default">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Polypharmacy">
+						description = <"*">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Set polypharmacy present">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Contact type">
+						description = <"*">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Date (time) of first administration">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Date (time) of last administration">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Long-acting benzodiazepines">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Drugs with significant anticholinergic effects">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0021"] = (TERM) <
+						text = <"Tramadol">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0022"] = (TERM) <
+						text = <"Propiomazine">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0023"] = (TERM) <
+						text = <"Set long-acting benzodiazepines">
+					>
+					["gt0024"] = (TERM) <
+						text = <"Long-acting benzodiazepines">
+						description = <"*">
+					>
+					["gt0025"] = (TERM) <
+						text = <"Drugs with significant anticholinergic effects">
+						description = <"*">
+					>
+					["gt0026"] = (TERM) <
+						text = <"Tramadol">
+						description = <"*">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Propiomazine">
+						description = <"*">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Set drugs with significant anticholinergic effects">
+					>
+					["gt0029"] = (TERM) <
+						text = <"Set tramadol">
+					>
+					["gt0030"] = (TERM) <
+						text = <"Set propiomazine">
+					>
+					["gt0031"] = (TERM) <
+						text = <"Start date (time) of Propiomazine">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0032"] = (TERM) <
+						text = <"End date (time) of Propiomazine">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0033"] = (TERM) <
+						text = <"Start date (time) of Drugs with significant anticholinergic effects">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0034"] = (TERM) <
+						text = <"End date (time) of Drugs with significant anticholinergic effects">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0035"] = (TERM) <
+						text = <"Start date (time) of Long-acting benzodiazepines">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0036"] = (TERM) <
+						text = <"End date (time) of Long-acting benzodiazepines">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0037"] = (TERM) <
+						text = <"Start date (time) of Tramadol">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0038"] = (TERM) <
+						text = <"End date (time) of Tramadol">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0039"] = (TERM) <
+						text = <"test count">
+					>
+					["gt0040"] = (TERM) <
+						text = <"Date (time) of last administration">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0042"] = (TERM) <
+						text = <"count test">
+						description = <"*">
+					>
+				>
+			>
+		>
+	>
+>

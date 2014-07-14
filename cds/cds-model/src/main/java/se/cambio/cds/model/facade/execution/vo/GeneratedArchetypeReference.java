@@ -16,7 +16,12 @@ public class GeneratedArchetypeReference extends ArchetypeReference{
     }
     
     public String toString(){
-	return "(G)"+super.toString();
+	    return "(G)"+super.toString();
+    }
+
+    @Override
+    public GeneratedArchetypeReference clone(){
+        return new GeneratedArchetypeReference(getIdDomain(), getIdArchetype(), getIdTemplate());
     }
 }
 /*

@@ -46,8 +46,7 @@ public class ElementInstanceCollection {
             //Clone the AR
             ArchetypeReference arAux = archetypeReferenceToAdd.clone();
             for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
-                GeneratedElementInstance originalEI =
-                        (GeneratedElementInstance)archetypeReferenceToAdd.getElementInstancesMap().get(idElement);
+                ElementInstance originalEI = archetypeReferenceToAdd.getElementInstancesMap().get(idElement);
                 if (originalEI instanceof PredicateGeneratedElementInstance){
                     PredicateGeneratedElementInstance predicateOriginalEI =
                             (PredicateGeneratedElementInstance)originalEI;
@@ -74,11 +73,17 @@ public class ElementInstanceCollection {
                     //Should not allow value changes for generated elements in the future
                 }else{
                     //Clone a new instance
+                    /*
                     GeneratedElementInstance gei = new GeneratedElementInstance(
                             originalEI.getId(),
                             null, arAux,
                             null, null);
-                    gei.setRuleReferences(originalEI.getRuleReferences());
+                            */
+                    ElementInstance ei = originalEI.clone();
+                    ei.setArchetypeReference(arAux);
+                    if (originalEI instanceof GeneratedElementInstance){
+                        ((GeneratedElementInstance)ei).setRuleReferences(((GeneratedElementInstance)originalEI).getRuleReferences());
+                    }
                 }
             }
             archetypeReferenceToAdd = arAux;
@@ -107,9 +112,9 @@ public class ElementInstanceCollection {
                 }
             }
         } else {
-           if (!ruleReferences.isEmpty()){
-               return ruleReferences.iterator().next().getGuideId();
-           }
+            if (!ruleReferences.isEmpty()){
+                return ruleReferences.iterator().next().getGuideId();
+            }
         }
         return null;
     }

@@ -1,21 +1,17 @@
 package se.cambio.cds.gdl.editor.util;
 
-import java.util.Iterator;
-
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementAttributeRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeReferenceRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 
+import java.util.Iterator;
+
 public class DefinitionDependencyChecker {
-    
+
     /**
      * Checks if the definition of a Archetype Reference is used inside any rule line (preconditions, conditions or actions)
      * @param airl
@@ -23,64 +19,64 @@ public class DefinitionDependencyChecker {
      * @return true is the reference is beign used
      */
     public static boolean isBeingUsed(ArchetypeInstantiationRuleLine airl, GDLEditor controller){
-	boolean found = false;
-	ArchetypeReference ar = airl.getArchetypeReference();
-	Iterator<RuleLine> i = controller.getReadableGuide().getPreconditionRuleLines().iterator();
-	while(i.hasNext() && !found){
-	    if (isBeingReferenced(ar, i.next())){
-		found = true;
-	    }
-	}
-	Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
-	while(i2.hasNext() && !found){
-	    ReadableRule rr = i2.next();
-	    Iterator<RuleLine> i3 = rr.getConditionRuleLines().iterator();
-	    while(i3.hasNext() && !found){
-		if (isBeingReferenced(ar, i3.next())){
-		    found = true;
-		}
-	    }
-	    i3 = rr.getActionRuleLines().iterator();
-	    while(i3.hasNext() && !found){
-		if (isBeingReferenced(ar, i3.next())){
-		    found = true;
-		}
-	    }
-	}
-	return found;
+        boolean found = false;
+        ArchetypeReference ar = airl.getArchetypeReference();
+        Iterator<RuleLine> i = controller.getReadableGuide().getPreconditionRuleLines().iterator();
+        while(i.hasNext() && !found){
+            if (isBeingReferenced(ar, i.next())){
+                found = true;
+            }
+        }
+        Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
+        while(i2.hasNext() && !found){
+            ReadableRule rr = i2.next();
+            Iterator<RuleLine> i3 = rr.getConditionRuleLines().iterator();
+            while(i3.hasNext() && !found){
+                if (isBeingReferenced(ar, i3.next())){
+                    found = true;
+                }
+            }
+            i3 = rr.getActionRuleLines().iterator();
+            while(i3.hasNext() && !found){
+                if (isBeingReferenced(ar, i3.next())){
+                    found = true;
+                }
+            }
+        }
+        return found;
     }
 
     private static boolean isBeingReferenced(ArchetypeReference ar, RuleLine ruleLine){
-	boolean found = false;
-	Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
-	while(i.hasNext() && !found){
-	    if (isBeingReferenced(ar, i.next())){
-		found = true;
-	    }
-	}
-	Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().iterator();
-	while(i2.hasNext() && !found){
-	    if (isBeingReferenced(ar, i2.next())){
-		found = true;
-	    }
-	}
-	return found;
+        boolean found = false;
+        Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
+        while(i.hasNext() && !found){
+            if (isBeingReferenced(ar, i.next())){
+                found = true;
+            }
+        }
+        Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().iterator();
+        while(i2.hasNext() && !found){
+            if (isBeingReferenced(ar, i2.next())){
+                found = true;
+            }
+        }
+        return found;
     }
 
     private static boolean isBeingReferenced(ArchetypeReference ar, RuleLineElement ruleLineElement){
-	ArchetypeReference arAux = null;
-	if (ruleLineElement instanceof ArchetypeReferenceRuleLineElement){
-	    arAux = ((ArchetypeReferenceRuleLineElement)ruleLineElement).getArchetypeReference();
-	}else if (ruleLineElement instanceof ArchetypeElementRuleLineElement){
-	    arAux = ((ArchetypeElementRuleLineElement)ruleLineElement).getArchetypeReference();
-	}else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement){
-	    arAux = ((ArchetypeElementAttributeRuleLineElement)ruleLineElement).getArchetypeReference();
-	}
-	if (arAux!=null && arAux.equals(ar)){
-	    return true;
-	}else{
-	    return false;
-	}
+        ArchetypeReference arAux = null;
+        if (ruleLineElement instanceof ArchetypeReferenceRuleLineElement){
+            arAux = ((ArchetypeReferenceRuleLineElement)ruleLineElement).getArchetypeReference();
+        }else if (ruleLineElement instanceof ArchetypeElementRuleLineElement){
+            arAux = ((ArchetypeElementRuleLineElement)ruleLineElement).getArchetypeReference();
+        }else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement){
+            arAux = ((ArchetypeElementAttributeRuleLineElement)ruleLineElement).getArchetypeReference();
+        }
+        if (arAux!=null && arAux.equals(ar)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -90,73 +86,73 @@ public class DefinitionDependencyChecker {
      * @return if the archetype element is being used being used in the guide
      */
     public static boolean isBeingUsed(ArchetypeElementInstantiationRuleLine aeirl, GDLEditor controller){
-	boolean found = false;
-	String gtCode = aeirl.getGTCode();
-	Iterator<RuleLine> i = controller.getReadableGuide().getPreconditionRuleLines().iterator();
-	while(i.hasNext() && !found){
-	    if (isBeingReferenced(gtCode, i.next())){
-		found = true;
-	    }
-	}
-	Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
-	while(i2.hasNext() && !found){
-	    ReadableRule rr = i2.next();
-	    Iterator<RuleLine> i3 = rr.getConditionRuleLines().iterator();
-	    while(i3.hasNext() && !found){
-		if (isBeingReferenced(gtCode, i3.next())){
-		    found = true;
-		}
-	    }
-	    i3 = rr.getActionRuleLines().iterator();
-	    while(i3.hasNext() && !found){
-		if (isBeingReferenced(gtCode, i3.next())){
-		    found = true;
-		}
-	    }
-	}
-	return found;
+        boolean found = false;
+        String gtCode = aeirl.getGTCode();
+        Iterator<RuleLine> i = controller.getReadableGuide().getPreconditionRuleLines().iterator();
+        while(i.hasNext() && !found){
+            if (isBeingReferenced(gtCode, i.next())){
+                found = true;
+            }
+        }
+        Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
+        while(i2.hasNext() && !found){
+            ReadableRule rr = i2.next();
+            Iterator<RuleLine> i3 = rr.getConditionRuleLines().iterator();
+            while(i3.hasNext() && !found){
+                if (isBeingReferenced(gtCode, i3.next())){
+                    found = true;
+                }
+            }
+            i3 = rr.getActionRuleLines().iterator();
+            while(i3.hasNext() && !found){
+                if (isBeingReferenced(gtCode, i3.next())){
+                    found = true;
+                }
+            }
+        }
+        return found;
     }
 
     private static boolean isBeingReferenced(String gtCode, RuleLine ruleLine){
-	boolean found = false;
-	Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
-	while(i.hasNext() && !found){
-	    if (isBeingReferenced(gtCode, i.next())){
-		found = true;
-	    }
-	}
-	Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().iterator();
-	while(i2.hasNext() && !found){
-	    if (isBeingReferenced(gtCode, i2.next())){
-		found = true;
-	    }
-	}
-	return found;
+        boolean found = false;
+        Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
+        while(i.hasNext() && !found){
+            if (isBeingReferenced(gtCode, i.next())){
+                found = true;
+            }
+        }
+        Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().iterator();
+        while(i2.hasNext() && !found){
+            if (isBeingReferenced(gtCode, i2.next())){
+                found = true;
+            }
+        }
+        return found;
     }
 
     private static boolean isBeingReferenced(String gtCode, RuleLineElement ruleLineElement){
-	String gtCodeAux = null;
-	if (ruleLineElement instanceof ArchetypeElementRuleLineElement){
-	    GTCodeRuleLineElement gtcrle = ((ArchetypeElementRuleLineElement)ruleLineElement).getValue();
-	    if (gtcrle!=null){
-		gtCodeAux = gtcrle.getValue();
-	    }
-	}else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement){
-	    ArchetypeElementRuleLineElement aerle = ((ArchetypeElementAttributeRuleLineElement)ruleLineElement).getValue();
-	    if (aerle!=null){
-		GTCodeRuleLineElement gtcrle = aerle.getValue();
-		if (gtcrle!=null){
-		    gtCodeAux = gtcrle.getValue();
-		}
-	    }
-	}
-	if (gtCodeAux!=null && gtCodeAux.equals(gtCode)){
-	    return true;
-	}else{
-	    return false;
-	}
+        String gtCodeAux = null;
+        if (ruleLineElement instanceof ArchetypeElementRuleLineElement){
+            GTCodeRuleLineElement gtcrle = ((ArchetypeElementRuleLineElement)ruleLineElement).getValue();
+            if (gtcrle!=null){
+                gtCodeAux = gtcrle.getValue();
+            }
+        }else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement){
+            ArchetypeElementRuleLineElement aerle = ((ArchetypeElementAttributeRuleLineElement)ruleLineElement).getValue();
+            if (aerle!=null){
+                GTCodeRuleLineElement gtcrle = aerle.getValue();
+                if (gtcrle!=null){
+                    gtCodeAux = gtcrle.getValue();
+                }
+            }
+        }
+        if (gtCodeAux!=null && gtCodeAux.equals(gtCode)){
+            return true;
+        }else{
+            return false;
+        }
     }
-    
+
     /**
      * Checks if the definition of a Archetype Reference is used inside any rule line on an action
      * @param airl
@@ -164,19 +160,19 @@ public class DefinitionDependencyChecker {
      * @return if the archetype instance is being used being used in the guide
      */
     public static boolean isBeingUsedInAction(ArchetypeInstantiationRuleLine airl, GDLEditor controller){
-	boolean found = false;
-	ArchetypeReference ar = airl.getArchetypeReference();
-	Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
-	while(i2.hasNext() && !found){
-	    ReadableRule rr = i2.next();
-	    Iterator<RuleLine> i3 = rr.getActionRuleLines().iterator();
-	    while(i3.hasNext() && !found){
-		if (isBeingReferenced(ar, i3.next())){
-		    found = true;
-		}
-	    }
-	}
-	return found;
+        boolean found = false;
+        ArchetypeReference ar = airl.getArchetypeReference();
+        Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
+        while(i2.hasNext() && !found){
+            ReadableRule rr = i2.next();
+            Iterator<RuleLine> i3 = rr.getActionRuleLines().iterator();
+            while(i3.hasNext() && !found){
+                if (isBeingReferenced(ar, i3.next())){
+                    found = true;
+                }
+            }
+        }
+        return found;
     }
 }
 /*

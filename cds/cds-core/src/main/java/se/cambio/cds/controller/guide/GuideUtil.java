@@ -78,7 +78,11 @@ public class GuideUtil {
                             String idElement =
                                     archetypeBinding.getArchetypeId()+((Variable)l).getPath();
                             String gtCode = null;
-                            DataValue dv = getDataValue((ConstantExpression)r);
+                            ConstantExpression ce = (ConstantExpression)r;
+                            DataValue dv = null;
+                            if (!"null".equals(ce.getValue())){
+                                getDataValue(ce);
+                            }
                             if (dv instanceof DvCodedText){
                                 DvCodedText dvCodedText = ((DvCodedText)dv);
                                 //TOOD Will only work if the same code is used in predicate and definition
@@ -183,7 +187,7 @@ public class GuideUtil {
         }
         //Rules
         for(Rule rule: guide.getDefinition().getRules().values()){
-           gtCodes.addAll(getGTCodesInReads(rule));
+            gtCodes.addAll(getGTCodesInReads(rule));
         }
         //Preconditions
         gtCodes.addAll(getPreconditionGTCodesInReads(guide));

@@ -84,6 +84,10 @@ public class ElementInstance implements Serializable{
         return this.dataValue==null;
     }
 
+    public boolean hasNoValue(String gtCodeReference){
+        return hasNoValue(); //We don't care about the code reference (see GeneratedElementInstance)
+    }
+
     public ElementInstance clone(){
         return new ElementInstance(id, dataValue, archetypeReference.clone(), containerInstance, nullFlavour);
     }

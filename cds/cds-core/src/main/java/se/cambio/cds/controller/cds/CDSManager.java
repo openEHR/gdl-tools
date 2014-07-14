@@ -72,10 +72,10 @@ public class CDSManager {
         return cdsEIMap;
     }
 
-    public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection eic){
+    public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection geic){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
-        ars.addAll(eic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
-        ars.addAll(eic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
+        ars.addAll(geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
+        ars.addAll(geic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
         return getCompressedQueryArchetypeReferences(ars);
     }
 
@@ -130,11 +130,12 @@ public class CDSManager {
         Map<String, ArchetypeReference> archetypeReferencesMap = new HashMap<String, ArchetypeReference>();
         //Compress Archetype References with same archetype id
         for (ArchetypeReference arNew : generatedArchetypeReferences) {
+            GeneratedArchetypeReference gar = (GeneratedArchetypeReference)arNew;
             ArchetypeReference arPrev = archetypeReferencesMap.get(arNew.getIdArchetype());
             if (arPrev!=null){
                 compressQueryArchetypeReference(arPrev, arNew);
             }else{
-                arNew = getCleanArchetypeReferenceWithElements(arNew);
+                arNew = getCleanArchetypeReferenceWithElements(gar);
                 archetypeReferencesMap.put(arNew.getIdArchetype(), arNew);
             }
         }
@@ -174,8 +175,8 @@ public class CDSManager {
         }
     }
 
-    private static ArchetypeReference getCleanArchetypeReferenceWithElements(ArchetypeReference ar){
-        ArchetypeReference arNew = ar.clone();
+    private static GeneratedArchetypeReference getCleanArchetypeReferenceWithElements(GeneratedArchetypeReference ar){
+        GeneratedArchetypeReference arNew = ar.clone();
         for (ElementInstance ei : ar.getElementInstancesMap().values()) {
             cloneElementInstanceWithGTCodes(ei, arNew, true);
         }

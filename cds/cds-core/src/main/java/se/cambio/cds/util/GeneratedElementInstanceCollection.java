@@ -1,14 +1,7 @@
 package se.cambio.cds.util;
 
-import se.cambio.cds.controller.guide.GuideUtil;
-import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
-import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.model.instance.ElementInstance;
-
-import java.util.Set;
-
 public class GeneratedElementInstanceCollection extends ElementInstanceCollection{
-
+    /*
     public void add(ArchetypeReference archetypeReferenceToAdd){
         Set<ArchetypeReference> archetypeReferences = getArchetypeReferences(archetypeReferenceToAdd);
         if (archetypeReferences.isEmpty()){
@@ -20,7 +13,9 @@ public class GeneratedElementInstanceCollection extends ElementInstanceCollectio
                     if (!ElementInstanceCollectionUtil.containsAll(ar, archetypeReferenceToAdd)){
                         for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
                             if (!ar.getElementInstancesMap().containsKey(idElement)){
-                                new GeneratedElementInstance(idElement, null, ar, null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
+                                ElementInstance elementInstance = archetypeReferenceToAdd.getElementInstancesMap().get(idElement);
+                                elementInstance = elementInstance.clone();
+                                elementInstance.setArchetypeReference(ar);
                             }
                         }
                     }else{
@@ -40,7 +35,7 @@ public class GeneratedElementInstanceCollection extends ElementInstanceCollectio
                 archetypeReferences.add(archetypeReferenceToAdd);
             }
         }
-    }
+    } */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

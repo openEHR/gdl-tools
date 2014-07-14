@@ -7,7 +7,6 @@ import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVDefSerializer;
-import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
@@ -147,18 +146,18 @@ public class GDLDroolsConverter {
                 String archetypeId = archetypeBinding.getArchetypeId();
                 String templateId = archetypeBinding.getTemplateId();
                 archetypeBindingMVELSB.append("idArchetype==\""+archetypeId+"\"");
-                if ((Domains.CDS_ID.equals(archetypeBinding.getDomain()))
-                        &&
+                /*
+                if ((Domains.CDS_ID.equals(archetypeBinding.getDomain()))&&
                         archetypeBinding.getTemplateId()!=null){
                     archetypeBindingMVELSB.append(", idTemplate==\""+templateId+"\"");
                 }
+                */
                 archetypeBindingMVELSB.append(")\n");
                 String gtCode = archetypeBinding.getId();
                 archetypeReferenceMap.put(gtCode, new ArchetypeReference(idDomain, archetypeId, templateId));
                 // Predicates
                 if (archetypeBinding.getPredicateStatements() != null) {
-                    for (ExpressionItem expressionItem : archetypeBinding
-                            .getPredicateStatements()) {
+                    for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
                         if (expressionItem instanceof BinaryExpression) {
                             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
                             if (binaryExpression.getLeft() instanceof Variable){
@@ -173,33 +172,32 @@ public class GDLDroolsConverter {
                                     archetypeBindingMVELSB.append("      ");
                                     archetypeBindingMVELSB.append("$predicate"
                                             + predicateCount);
-                                    archetypeBindingMVELSB
-                                            .append(":ElementInstance(id==\""
-                                                    + idElement
-                                                    + "\", archetypeReference==$"
-                                                    + arID+arCount + ")\n");
-                                    ArchetypeElementVO archetypeElement = ArchetypeElements
-                                            .getArchetypeElement(
+                                    archetypeBindingMVELSB.append(":ElementInstance(id==\""
+                                            + idElement
+                                            + "\", archetypeReference==$"
+                                            + arID+arCount + ")\n");
+                                    ArchetypeElementVO archetypeElement =
+                                            ArchetypeElements.getArchetypeElement(
                                                     archetypeBinding.getTemplateId(),
                                                     idElement);
-                                    if (archetypeElement!=null){
-                                        String rmType = archetypeElement.getRMType();
-                                        archetypeBindingMVELSB.append("      ");
-                                        String dvStr = "null";
-                                        if (!constantExpression.getValue().equals("null")){
-                                            dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
-                                        }
-                                        archetypeBindingMVELSB
-                                                .append("eval("+
-                                                        getOperatorMVELLine(
-                                                                "$predicate"+ predicateCount,
-                                                                binaryExpression.getOperator(),
-                                                                dvStr,
-                                                                true)+
-                                                        ")\n");
-                                    }else{
+                                    if (archetypeElement==null){
                                         throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"+(archetypeBinding.getTemplateId()!=null?"("+archetypeBinding.getTemplateId()+")":"")));
                                     }
+                                    String rmType = archetypeElement.getRMType();
+                                    archetypeBindingMVELSB.append("      ");
+                                    String dvStr = "null";
+                                    if (!constantExpression.getValue().equals("null")){
+                                        dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
+                                    }
+                                    archetypeBindingMVELSB
+                                            .append("eval("+
+                                                    getOperatorMVELLine(
+                                                            "$predicate"+ predicateCount,
+                                                            binaryExpression.getOperator(),
+                                                            dvStr,
+                                                            true)+
+                                                    ")\n");
+
                                 }else if (binaryExpression.getRight() instanceof ExpressionItem) {
                                     String path = variable.getPath();
                                     String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
@@ -682,8 +680,7 @@ public class GDLDroolsConverter {
                     } else {
                         if (OperatorKind.EQUALITY.equals(binaryExpression
                                 .getOperator())) {
-                            sb.append("eval($" + var.getCode()
-                                    + ".hasNoValue())");
+                            sb.append("eval($" + var.getCode()+ ".hasNoValue(\""+guide.getId()+"/"+var.getCode()+"\"))");
                         } else if (OperatorKind.INEQUAL.equals(binaryExpression
                                 .getOperator())) {
                             sb.append("eval($" + var.getCode() + ".hasValue())");
@@ -803,9 +800,9 @@ public class GDLDroolsConverter {
             String handle, OperatorKind ok,
             String value, boolean inPredicate) {
         if (OperatorKind.EQUALITY.equals(ok)) {
-            return getEqualsString(handle, value, inPredicate);
+            return getEqualsString(handle, value, inPredicate, false);
         } else if (OperatorKind.INEQUAL.equals(ok)) {
-            return "!" + getEqualsString(handle, value, inPredicate);
+            return getEqualsString(handle, value, inPredicate, true);
         } else if (OperatorKind.IS_A.equals(ok)) {
             return "DVUtil.isSubClassOf("+ inPredicate+", "+ handle + ", $bindingMap, "+ getTermBindings(value) + ")";
         } else if (OperatorKind.IS_NOT_A.equals(ok)) {
@@ -824,9 +821,9 @@ public class GDLDroolsConverter {
     }
 
 
-    private static String getEqualsString(String handle, String value, boolean inPredicate){
+    private static String getEqualsString(String handle, String value, boolean inPredicate, boolean negated){
         StringBuffer sb = new StringBuffer();
-        sb.append("DVUtil.equalDV("+inPredicate+", "+handle+"," + value);
+        sb.append("DVUtil.equalDV("+inPredicate+", "+handle+"," + value+", "+negated);
         sb.append(getDataValueStrIfNeeded(value)+")");
         return sb.toString();
     }

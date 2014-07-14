@@ -16,13 +16,11 @@ import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.controller.terminology.session.data.Terminologies;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,19 +32,6 @@ import java.util.Collection;
  * Time: 15:21
  */
 public class StressTest {
-    private static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
-    private static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
-    private static String DIAGNOSIS_CODE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]";
-    private static String DIAGNOSIS_DATE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]";
-
-    private static String MEDICATION_ARCHETYPE_ID = "openEHR-EHR-INSTRUCTION.medication.v1";
-    private static String MEDICATION_TEMPLATE_ID = "medication_atc_indicator";
-    private static String MEDICATION_CODE_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]";
-    private static String MEDICATION_DATE_INIT_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]";
-    private static String MEDICATION_DATE_END_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]";
-
-    private static String BASIC_DEMOGRAPHICS_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1";
-    private static String BIRTHDATE_DATE_END_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
 
     public static void main(String[] args) {
         try {
@@ -70,9 +55,9 @@ public class StressTest {
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
-            guideDTOs.add(parse("guides/CHA2DS2VASc_diagnosis_review.v1"));
-            guideDTOs.add(parse("guides/Stroke_prevention_dashboard_case.v1"));
-            guideDTOs.add(parse("guides/MIE_Medication_in_elderly.v1"));
+            guideDTOs.add(GDLTestCase.parse("guides/CHA2DS2VASc_diagnosis_review.v1"));
+            guideDTOs.add(GDLTestCase.parse("guides/Stroke_prevention_dashboard_case.v1"));
+            guideDTOs.add(GDLTestCase.parse("guides/MIE_Medication_in_elderly.v1"));
 
             GuideManager guideManager = new GuideManager(guideDTOs);
             Calendar cal = Calendar.getInstance();
@@ -104,11 +89,11 @@ public class StressTest {
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
         for (int i = 0; i<3; i++){
             for(String icd10Code: ICD10_CODES){
-                ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, DIAGNOSIS_ARCHETYPE_ID, DIAGNOSIS_TEMPLATE_ID);
+                ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.DIAGNOSIS_ARCHETYPE_ID, GDLTestCase.DIAGNOSIS_TEMPLATE_ID);
                 DataValue dataValue = new DvCodedText(icd10Code, "ICD10", icd10Code);
-                ElementInstance eiCode = new ElementInstance(DIAGNOSIS_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                ElementInstance eiCode = new ElementInstance(GDLTestCase.DIAGNOSIS_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 dataValue = new DvDateTime(new DateTime().toString());
-                ElementInstance eiDate = new ElementInstance(DIAGNOSIS_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                ElementInstance eiDate = new ElementInstance(GDLTestCase.DIAGNOSIS_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 elementInstances.add(eiCode);
                 elementInstances.add(eiDate);
             }
@@ -120,14 +105,14 @@ public class StressTest {
     private static Collection<ElementInstance> getGeneratedElementInstancesATC(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
         for (int i = 0; i<1; i++){
-            for(String atcCodes: ATC_CODES){
-                ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, MEDICATION_ARCHETYPE_ID, MEDICATION_TEMPLATE_ID);
-                DataValue dataValue = new DvCodedText(atcCodes, "ATC", atcCodes);
-                ElementInstance eiCode = new ElementInstance(MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+            for(String atcCode: ATC_CODES){
+                ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.MEDICATION_ARCHETYPE_ID, GDLTestCase.MEDICATION_TEMPLATE_ID);
+                DataValue dataValue = new DvCodedText(atcCode, "ATC", atcCode);
+                ElementInstance eiCode = new ElementInstance(GDLTestCase.MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 dataValue = new DvDateTime(new DateTime().plus(-64000000L).toString());
-                ElementInstance eiInitDate = new ElementInstance(MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                ElementInstance eiInitDate = new ElementInstance(GDLTestCase.MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 dataValue = null;//new DvDateTime(new DateTime().plus(6400000L).toString());
-                ElementInstance eiEndDate = new ElementInstance(MEDICATION_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                ElementInstance eiEndDate = new ElementInstance(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 elementInstances.add(eiCode);
                 elementInstances.add(eiInitDate);
                 elementInstances.add(eiEndDate);
@@ -139,14 +124,14 @@ public class StressTest {
 
     private static void stressTest2(){
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesATC();
-        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
         DataValue dataValue = new DvDateTime("1900-01-01T12:00");
-        ElementInstance eiBirthdateDate = new ElementInstance(BIRTHDATE_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        ElementInstance eiBirthdateDate = new ElementInstance(GDLTestCase.BIRTHDATE_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         elementInstances.add(eiBirthdateDate);
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
-            guideDTOs.add(parse("guides/MIE_Medication_in_elderly.v1"));
+            guideDTOs.add(GDLTestCase.parse("guides/MIE_Medication_in_elderly.v1"));
             GuideManager guideManager = new GuideManager(guideDTOs);
             Calendar cal = Calendar.getInstance();
             droolsREFD.execute(null, guideDTOs, new ArrayList<ElementInstance>(), null); //WARM UP THE ENGINE
@@ -174,17 +159,6 @@ public class StressTest {
         }
     }
 
-    private static GuideDTO parse(String guideId) throws Exception {
-        InputStream is = load(guideId+".gdl");
-        String gdlStr = IOUtils.toString(is);
-        GuideDTO guideDTO = new GuideDTO(guideId, gdlStr, null, null, true, Calendar.getInstance().getTime());
-        DroolsGuideUtil.compileIfNeeded(guideDTO);
-        return guideDTO;
-    }
-
-    private static InputStream load(String fileName) throws Exception {
-        return StressTest.class.getClassLoader().getResourceAsStream(fileName);
-    }
     private static String[] ICD10_CODES = new String[]{"I48", "I63", "E12", "F12",
             "A00","A01","A02","A03","A04","A05","A06","A07","A08","A09","A15","A16","A17","A18","A19","A20","A21",
             "A22","A23","A24","A25","A26","A27","A28","A30","A31","A32","A33","A34","A35","A36","A37","A38","A39",

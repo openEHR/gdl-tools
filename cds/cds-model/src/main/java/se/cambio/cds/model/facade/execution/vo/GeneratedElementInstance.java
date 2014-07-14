@@ -45,6 +45,17 @@ public class GeneratedElementInstance extends ElementInstance{
     public String toString(){
         return "(G)"+super.toString();
     }
+
+    public boolean hasNoValue(String gtCodeReference){
+        if (gtCodeReference!=null){
+            for(RuleReference ruleReference: ruleReferences){
+                if (ruleReference.toString().equals(gtCodeReference)){
+                    return super.hasNoValue();
+                }
+            }
+        }
+        return false;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
