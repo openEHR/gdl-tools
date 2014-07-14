@@ -828,8 +828,8 @@ public class GDLDroolsConverter {
 
     private static String getEqualsString(String handle, String value, boolean inPredicate, boolean negated){
         StringBuffer sb = new StringBuffer();
-        sb.append("DVUtil.equalDV("+inPredicate+", "+handle+"," + value+", "+negated);
-        sb.append(getDataValueStrIfNeeded(value)+")");
+        sb.append("DVUtil.equalDV("+inPredicate+", "+handle+"," + value);
+        sb.append(getDataValueStrIfNeeded(value)+", "+negated+")");
         return sb.toString();
     }
 

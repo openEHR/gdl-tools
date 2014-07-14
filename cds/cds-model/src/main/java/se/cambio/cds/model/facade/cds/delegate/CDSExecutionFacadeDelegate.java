@@ -13,6 +13,7 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author iago.corbal
@@ -21,11 +22,11 @@ import java.util.Collection;
 public interface CDSExecutionFacadeDelegate {
 
     public RuleExecutionResult execute(
-	    String ehrId,
-	    Collection<ArchetypeReference> ehrData,
-	    Calendar date,
-	    ExecutionMode executionMode) 
-		    throws InternalErrorException, PatientNotFoundException;
+            String ehrId,
+            Collection<ArchetypeReference> ehrData,
+            Calendar date,
+            ExecutionMode executionMode)
+            throws InternalErrorException, PatientNotFoundException;
 
     public RuleExecutionResult execute(
             String ehrId,
@@ -34,11 +35,11 @@ public interface CDSExecutionFacadeDelegate {
             Calendar date)
             throws InternalErrorException, PatientNotFoundException;
 
-    public Collection<RuleExecutionResult> execute(
-	    Collection<String> ehrIds,
-	    Collection<String> guideIds,
-	    Calendar date)
-		    throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
+    public List<RuleExecutionResult> execute(
+            List<String> ehrIds,
+            Collection<String> guideIds,
+            Calendar date)
+            throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
 
     public DSVData executeDSV(
             String dsvId,
@@ -47,23 +48,21 @@ public interface CDSExecutionFacadeDelegate {
             Calendar date)
             throws InternalErrorException, PatientNotFoundException, GuideNotFoundException, InstanceNotFoundException;
 
-    public Collection<RuleExecutionResult> executeAndStore(
-	    Collection<String> ehrIds,
-	    Collection<String> guideIds,
-	    Calendar date,
-	    StoringMode storingMode) throws InternalErrorException, PatientNotFoundException;
-    
-    public Collection<Guide> searchAllGuides() 
-	    throws InternalErrorException;
+    public List<RuleExecutionResult> executeAndStore(
+            List<String> ehrIds,
+            Collection<String> guideIds,
+            Calendar date,
+            StoringMode storingMode) throws InternalErrorException, PatientNotFoundException;
+
+    public Collection<Guide> searchAllGuides()
+            throws InternalErrorException;
 
     public Collection<Guide> searchByGuideIds(Collection<String> guideIds)
-	    throws InternalErrorException, GuideNotFoundException;
+            throws InternalErrorException, GuideNotFoundException;
 
     public Collection<ArchetypeReference> searchEHRData(String ehrId, Calendar date, Collection<String> guideIds)
             throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
-
-    public void clearCachedKM() throws InternalErrorException;
-    }/*
+}/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
