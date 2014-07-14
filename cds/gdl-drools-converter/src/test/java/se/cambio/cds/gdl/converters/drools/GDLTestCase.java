@@ -2,9 +2,15 @@ package se.cambio.cds.gdl.converters.drools;
 
 import junit.framework.TestCase;
 import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.controller.session.data.Templates;
+import se.cambio.openehr.controller.terminology.session.data.Terminologies;
 import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 
 /**
@@ -27,6 +33,22 @@ public abstract class GDLTestCase extends TestCase {
 
     public static String BASIC_DEMOGRAPHICS_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1";
     public static String BIRTHDATE_DATE_END_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
+
+    public GDLTestCase(){
+        try {
+            //Load KM
+            UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
+            Terminologies.loadTerminologies();
+            UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+            Archetypes.loadArchetypes();
+            UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
+            Templates.loadTemplates();
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static GuideDTO parse(String guideId) throws Exception {

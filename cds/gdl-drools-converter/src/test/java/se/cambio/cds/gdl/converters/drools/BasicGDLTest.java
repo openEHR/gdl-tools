@@ -2,6 +2,7 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.cds.CDSManager;
@@ -28,6 +29,9 @@ import java.util.Collection;
  */
 public class BasicGDLTest extends GDLTestCase {
 
+    public BasicGDLTest(){
+        super();
+    }
 
     public void testCount(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
@@ -65,6 +69,13 @@ public class BasicGDLTest extends GDLTestCase {
             CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
             Collection<ElementInstance> eis = eic.getAllElementInstances();
             RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, eis, cal);
+            assertEquals(1, rer.getArchetypeReferences().size());
+            ArchetypeReference arResult = rer.getArchetypeReferences().iterator().next();
+            assertEquals(1, arResult.getElementInstancesMap().size());
+            ElementInstance ei = arResult.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]");
+            assertNotNull(ei);
+            assertTrue(ei.getDataValue() instanceof DvCount);
+            assertEquals(2, ((DvCount)ei.getDataValue()).getMagnitude().intValue());
             long execTime = (System.currentTimeMillis()-startTime);
             System.out.println("Executed in: "+execTime+" ms");
             System.out.println("Rules fired: "+rer.getFiredRules().size());
