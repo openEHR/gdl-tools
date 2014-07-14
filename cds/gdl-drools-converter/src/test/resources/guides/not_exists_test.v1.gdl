@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"MIE_Medication_in_elderly.v1">
+	id = <"not_exists_test.v1">
 	concept = <"gt0001">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -14,15 +14,6 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			["gt0002"] = (ARCHETYPE_BINDING) <
-				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
-				domain = <"EHR">
-				elements = <
-					["gt0003"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
-					>
-				>
-			>
 			["gt0004"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"EHR">
@@ -30,95 +21,11 @@
 					["gt0005"] = (ELEMENT_BINDING) <
 						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
 					>
-					["gt0013"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
-					>
-					["gt0014"] = (ELEMENT_BINDING) <
+					["gt0040"] = (ELEMENT_BINDING) <
 						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
 					>
 				>
-				template_id = <"medication_atc_indicator">
-			>
-			["gt0006"] = (ARCHETYPE_BINDING) <
-				archetype_id = <"openEHR-EHR-OBSERVATION.medication_in_elderly.v1">
-				domain = <"CDS">
-				elements = <
-					["gt0009"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
-					>
-					["gt0024"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]/items[at0008]">
-					>
-					["gt0025"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]/items[at0009]">
-					>
-					["gt0026"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]/items[at0010]">
-					>
-					["gt0027"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0007]/items[at0011]">
-					>
-				>
-			>
-			["gt0011"] = (ARCHETYPE_BINDING) <
-				archetype_id = <"openEHR-EHR-EVALUATION.contact.v1">
-				domain = <"EHR">
-				elements = <
-					["gt0012"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/items[at0006]">
-					>
-				>
-				predicates = <"max(/data[at0001]/items[at0003])",...>
-			>
-			["gt0015"] = (ARCHETYPE_BINDING) <
-				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
-				domain = <"EHR">
-				elements = <
-					["gt0022"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
-					>
-					["gt0031"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
-					>
-					["gt0032"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
-					>
-				>
-				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0022|Propiomazine|",...>
-				template_id = <"medication_atc_indicator">
-			>
-			["gt0016"] = (ARCHETYPE_BINDING) <
-				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
-				domain = <"EHR">
-				elements = <
-					["gt0021"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
-					>
-					["gt0037"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
-					>
-					["gt0038"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
-					>
-				>
-				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0021|Tramadol|",...>
-				template_id = <"medication_atc_indicator">
-			>
-			["gt0017"] = (ARCHETYPE_BINDING) <
-				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
-				domain = <"EHR">
-				elements = <
-					["gt0020"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
-					>
-					["gt0033"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
-					>
-					["gt0034"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
-					>
-				>
-				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0020|Drugs with significant anticholinergic effects|",...>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]!=null",...>
 				template_id = <"medication_atc_indicator">
 			>
 			["gt0018"] = (ARCHETYPE_BINDING) <
@@ -128,48 +35,29 @@
 					["gt0019"] = (ELEMENT_BINDING) <
 						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
 					>
-					["gt0035"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
-					>
-					["gt0036"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]!=null",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0043"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0044"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
 					>
 				>
-				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0019|Long-acting benzodiazepines|",...>
 				template_id = <"medication_atc_indicator">
 			>
 		>
-		pre_conditions = <"$gt0003.value<=($currentDateTime.value-75,a)",...>
 		rules = <
-			["gt0008"] = (RULE) <
-				when = <"$gt0009==null", "$gt0024==null", "$gt0025==null", "$gt0026==null", "$gt0027==null">
-				then = <"$gt0009=local::at0005|Absent|", "$gt0024=local::at0012|Absent|", "$gt0025=local::at0014|Absent|", "$gt0026=local::at0016|Absent|", "$gt0027=local::at0018|Absent|">
-				priority = <6>
-			>
-			["gt0010"] = (RULE) <
-				when = <"$gt0009!=local::at0006|Present|", "$gt0005.count>=10", "$gt0013!=null", "$gt0014==null", "$gt0012==local::at0008|Outpatient|">
-				then = <"$gt0009=local::at0006|Present|",...>
-				priority = <5>
-			>
-			["gt0023"] = (RULE) <
-				when = <"$gt0024!=local::at0013|Present|", "$gt0019!=null", "$gt0035!=null", "$gt0036==null">
-				then = <"$gt0024=local::at0013|Present|",...>
-				priority = <4>
-			>
-			["gt0028"] = (RULE) <
-				when = <"$gt0025!=local::at0015|Present|", "$gt0020!=null", "$gt0033!=null", "$gt0034==null">
-				then = <"$gt0025=local::at0015|Present|",...>
-				priority = <3>
-			>
-			["gt0029"] = (RULE) <
-				when = <"$gt0026!=local::at0017|Present|", "$gt0021!=null", "$gt0037!=null", "$gt0038==null">
-				then = <"$gt0026=local::at0017|Present|",...>
-				priority = <2>
-			>
-			["gt0030"] = (RULE) <
-				when = <"$gt0027!=local::at0019|Present|", "$gt0022!=null", "$gt0031!=null", "$gt0032==null">
-				then = <"$gt0027=local::at0019|Present|",...>
+			["gt0039"] = (RULE) <
+				when = <"$gt0005==null",...>
 				priority = <1>
+			>
+			["gt0045"] = (RULE) <
+				when = <"$gt0019!=null",...>
+				priority = <2>
 			>
 		>
 	>
@@ -207,7 +95,7 @@
 						description = <"*">
 					>
 					["gt0005"] = (TERM) <
-						text = <"Generic name">
+						text = <"Generic name3">
 						description = <"The generic name of the drug which is an alternative name to the name of medication">
 					>
 					["gt0008"] = (TERM) <
@@ -218,7 +106,7 @@
 						description = <"*">
 					>
 					["gt0010"] = (TERM) <
-						text = <"Set polypharmacy">
+						text = <"Set polypharmacy present">
 					>
 					["gt0012"] = (TERM) <
 						text = <"Contact type">
@@ -233,7 +121,7 @@
 						description = <"The date and time (if required) the medication is  to be administered for the last time">
 					>
 					["gt0019"] = (TERM) <
-						text = <"Long-acting benzodiazepines">
+						text = <"Generic name1">
 						description = <"The generic name of the drug which is an alternative name to the name of medication">
 					>
 					["gt0020"] = (TERM) <
@@ -307,6 +195,24 @@
 					["gt0038"] = (TERM) <
 						text = <"End date (time) of Tramadol">
 						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0039"] = (TERM) <
+						text = <"test does not exists">
+					>
+					["gt0040"] = (TERM) <
+						text = <"Date (time) of last administration">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0042"] = (TERM) <
+						text = <"count test">
+						description = <"*">
+					>
+					["gt0044"] = (TERM) <
+						text = <"Generic name2">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0045"] = (TERM) <
+						text = <"test does exist">
 					>
 				>
 			>

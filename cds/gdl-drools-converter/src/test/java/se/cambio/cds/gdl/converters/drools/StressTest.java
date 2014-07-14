@@ -149,7 +149,7 @@ public class StressTest {
                 System.out.println("Rules fired: "+rer.getFiredRules().size());
                 total += execTime;
             }
-            System.out.println("Executed in: "+(total/numExec)+" ms");
+            System.out.println("Avg ("+numExec+") executed in: "+(total/numExec)+" ms");
         } catch (InternalErrorException e) {
             e.printStackTrace();
         } catch (PatientNotFoundException e) {
@@ -303,7 +303,7 @@ public class StressTest {
             "C07A","C07AB","C07AB52","C08","C08C","C08CA","C08CA01","C08CA02","C08CA05","C09","C09A",
             "C09AA","C09AA01","C09AA02","C09AA03","C09AA04","C09AA05","C09AA08","N02AG","C09B","C09BA","C09BA08",
             "C09BB","C09BB03","C09C","C09CA","C09CA01","C09CA03","C09CA04","C09CA07","C09CA09","C09D","C09DA",
-            "C09DA04","C09DA06","C09DA07","C09DB","C09DB01","C09DB04","C09DX","C09DX01","C09X","C09XA","C09XA02",
+            /*"C09DA04","C09DA06","C09DA07","C09DB","C09DB01","C09DB04","C09DX","C09DX01","C09X","C09XA","C09XA02",
             "C09XA52","C09XA53","C09XA54","C10","C10A","C10AA","C10AA01","C10AA03","C10AA04","C10AA05","C10AA06",
             "C10AA07","C10AB","C10AB04","A04AD01","C10AC04","C10AD","C10AD52","C10AX","C10B","C10BA","C10BA03",
             "D","D01","N05AB04","D01AC","D01AC15","D03","D03A","N04A","D03AX06","D05","D05A",
@@ -353,5 +353,5 @@ public class StressTest {
             "R07","R07A","R07AX","R07AX01","S","S01","S01A","S01AD","S01AD08","S01AX","S01AX12",
             "S01B","S01BA","S01BA01","S01BC","S01BC10","S01BC11","S01E","S01EC","S01EC04","S01ED","S01ED51",
             "S01EE","S01EE01","S01EE03","S01EE04","S01G","S01GX","S01GX06","S01GX09","S01L","S01LA","S01LA01",
-            "S01LA03","S01LA04","V","V03","V03A","V03AB","V03AB17","V03AB33","V03AB35","V03AC","V03AC02"};
+            "S01LA03","S01LA04","V","V03","V03A","V03AB","V03AB17","V03AB33","V03AB35","V03AC","V03AC02"*/};
 }

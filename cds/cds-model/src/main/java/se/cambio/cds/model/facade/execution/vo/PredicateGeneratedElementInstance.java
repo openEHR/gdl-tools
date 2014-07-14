@@ -54,6 +54,10 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
         return true;
     }
 
+    public boolean hasNoValue(String gtCodeReference){
+        return hasNoValue();
+    }
+
     public boolean hasNoValue(){
         return true;
     }

@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"MIE_Medication_in_elderly.v1">
+	id = <"MIE_Medication_in_elderly.v1.1">
 	concept = <"gt0001">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -30,13 +30,8 @@
 					["gt0005"] = (ELEMENT_BINDING) <
 						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
 					>
-					["gt0013"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
-					>
-					["gt0014"] = (ELEMENT_BINDING) <
-						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
-					>
 				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]!=null", "/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]==null">
 				template_id = <"medication_atc_indicator">
 			>
 			["gt0006"] = (ARCHETYPE_BINDING) <
@@ -147,7 +142,7 @@
 				priority = <6>
 			>
 			["gt0010"] = (RULE) <
-				when = <"$gt0009!=local::at0006|Present|", "$gt0005.count>=10", "$gt0013!=null", "$gt0014==null", "$gt0012==local::at0008|Outpatient|">
+				when = <"$gt0009!=local::at0006|Present|", "$gt0005.count>=10", "$gt0012==local::at0008|Outpatient|">
 				then = <"$gt0009=local::at0006|Present|",...>
 				priority = <5>
 			>
@@ -218,7 +213,7 @@
 						description = <"*">
 					>
 					["gt0010"] = (TERM) <
-						text = <"Set polypharmacy">
+						text = <"Set polypharmacy present">
 					>
 					["gt0012"] = (TERM) <
 						text = <"Contact type">
@@ -307,6 +302,9 @@
 					["gt0038"] = (TERM) <
 						text = <"End date (time) of Tramadol">
 						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0039"] = (TERM) <
+						text = <"Set polypharamcy to absent">
 					>
 				>
 			>

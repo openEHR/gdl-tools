@@ -81,11 +81,11 @@ public class GuideUtil {
                             ConstantExpression ce = (ConstantExpression)r;
                             DataValue dv = null;
                             if (!"null".equals(ce.getValue())){
-                                getDataValue(ce);
+                                dv = getDataValue(ce);
                             }
                             if (dv instanceof DvCodedText){
                                 DvCodedText dvCodedText = ((DvCodedText)dv);
-                                //TOOD Will only work if the same code is used in predicate and definition
+                                //TODO Will only work if the same code is used in predicate and definition
                                 if ("local".equals(dvCodedText.getTerminologyId())){
                                     gtCode = dvCodedText.getCode();
                                 }

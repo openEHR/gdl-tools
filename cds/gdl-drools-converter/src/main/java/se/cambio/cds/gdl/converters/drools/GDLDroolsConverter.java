@@ -31,9 +31,10 @@ public class GDLDroolsConverter {
     private static String WHEN = "when";
     private static String THEN = "then";
     private static String END = "end";
-    private static String DEFAULT_CONFIG = "no-loop true\nauto-focus true";
+    private static String DEFAULT_CONFIG = "no-loop true";//\nauto-focus true";
     private static String AGENDA_GROUP = "agenda-group";
-
+    private static String TAB = "      ";
+    private static String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToElementId = new HashMap<String, String>();
@@ -119,6 +120,7 @@ public class GDLDroolsConverter {
                 sb.append(END + "\n\n");
             }
         }
+        sb.append(getAutoFocusRule());
         return sb.toString();
     }
 
@@ -135,7 +137,7 @@ public class GDLDroolsConverter {
             for(ArchetypeBinding archetypeBinding: archetypeBindings){
                 arCount++;
                 StringBuffer archetypeBindingMVELSB = new StringBuffer();
-                archetypeBindingMVELSB.append("   ");
+                archetypeBindingMVELSB.append(TAB);
                 archetypeBindingMVELSB.append("$"+arID+arCount);
                 String idDomain = archetypeBinding.getDomain();
                 archetypeBindingMVELSB.append(":ArchetypeReference");
@@ -169,7 +171,7 @@ public class GDLDroolsConverter {
                                     ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
                                     String idElement = archetypeBinding
                                             .getArchetypeId() + variable.getPath();
-                                    archetypeBindingMVELSB.append("      ");
+                                    archetypeBindingMVELSB.append(TAB);
                                     archetypeBindingMVELSB.append("$predicate"
                                             + predicateCount);
                                     archetypeBindingMVELSB.append(":ElementInstance(id==\""
@@ -184,7 +186,7 @@ public class GDLDroolsConverter {
                                         throw new InternalErrorException(new Exception("Element not found '"+idElement+"'"+(archetypeBinding.getTemplateId()!=null?"("+archetypeBinding.getTemplateId()+")":"")));
                                     }
                                     String rmType = archetypeElement.getRMType();
-                                    archetypeBindingMVELSB.append("      ");
+                                    archetypeBindingMVELSB.append(TAB);
                                     String dvStr = "null";
                                     if (!constantExpression.getValue().equals("null")){
                                         dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
@@ -204,7 +206,7 @@ public class GDLDroolsConverter {
                                     path = path.substring(0, path.length()-attribute.length()-7);
                                     String idElement = archetypeBinding
                                             .getArchetypeId() + path;
-                                    archetypeBindingMVELSB.append("      ");
+                                    archetypeBindingMVELSB.append(TAB);
                                     String predicateHandle = "predicate"+ predicateCount;
                                     archetypeBindingMVELSB.append("$"+predicateHandle);
                                     archetypeBindingMVELSB
@@ -221,7 +223,7 @@ public class GDLDroolsConverter {
                                         String rmName = archetypeElement.getRMType();
                                         String aritmeticExpStr = //We cast it to long because all elements from CurrentTime fit into this class, but we must make it more generic (TODO)
                                                 "((long)"+ExpressionUtil.getArithmeticExpressionStr(elementMap, binaryExpression.getRight(), null)+")";
-                                        archetypeBindingMVELSB.append("      ");
+                                        archetypeBindingMVELSB.append(TAB);
                                         archetypeBindingMVELSB.append("eval(");
                                         Variable var = new Variable(predicateHandle, predicateHandle, path, attribute);
                                         String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName,var);
@@ -245,7 +247,7 @@ public class GDLDroolsConverter {
                             Variable variable = (Variable) unaryExpression.getOperand();
                             String idElement = archetypeBinding
                                     .getArchetypeId() + variable.getPath();
-                            archetypeBindingMVELSB.append("      ");
+                            archetypeBindingMVELSB.append(TAB);
                             archetypeBindingMVELSB
                                     .append("ElementInstance(id==\""
                                             + idElement
@@ -271,13 +273,13 @@ public class GDLDroolsConverter {
 
                                 String predAuxDef = getComparisonPredicateChecks(archetypeBinding, predicateCount);
                                 String predicateArchetypeRef = "";
-                                archetypeBindingMVELSB.append("      ");
+                                archetypeBindingMVELSB.append(TAB);
                                 archetypeBindingMVELSB.append("not(\n");
                                 if (predAuxDef!=null){
                                     archetypeBindingMVELSB.append(predAuxDef);
                                     predicateArchetypeRef = "archetypeReference==$archetypeReferencePredicate"+predicateCount+",";
                                 }
-                                archetypeBindingMVELSB.append("      ");
+                                archetypeBindingMVELSB.append(TAB);
                                 archetypeBindingMVELSB
                                         .append("ElementInstance(id==\""
                                                 + idElement + "\", "
@@ -328,7 +330,7 @@ public class GDLDroolsConverter {
                     Variable variable = (Variable) binaryExpression.getLeft();
                     ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
                     String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
-                    sb.append("      ");
+                    sb.append(TAB);
                     sb.append("$predicateAux"+ predicateCount);
                     sb.append(":ElementInstance(id==\"");
                     sb.append(idElement);
@@ -343,7 +345,7 @@ public class GDLDroolsConverter {
                         if (!"null".equals(constantExpression.getValue())){
                             dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ ","+ constantExpression.getValue()));
                         }
-                        sb.append("      ");
+                        sb.append(TAB);
                         sb.append("eval("+
                                 getOperatorMVELLine(
                                         "$predicateAux"+ predicateCount,
@@ -358,7 +360,7 @@ public class GDLDroolsConverter {
         String predicateDef = sb.toString();
         if (!predicateDef.isEmpty()){
             sb = new StringBuffer();
-            sb.append("      ");
+            sb.append(TAB);
             sb.append("$archetypeReferencePredicate"+predicateCount+":ArchetypeReference(idDomain==\"EHR\",");
             sb.append("idArchetype==\""+archetypeBinding.getArchetypeId()+"\") and \n");
             return sb.toString()+predicateDef;
@@ -383,7 +385,8 @@ public class GDLDroolsConverter {
                 definition.append(archetypeBindingIndexToDefinition.get(archetypeBindingIndex));
                 archetypeDefinitions.put(archetypeBindingIndex, definition);
             }
-            definition.append("      $"+elementGtCode+":"+_gtElementToDefinition.get(elementGtCode)+"\n");
+            definition.append(TAB);
+            definition.append("$"+elementGtCode+":"+_gtElementToDefinition.get(elementGtCode)+"\n");
         }
         StringBuffer resultSB = new StringBuffer();
         for (StringBuffer definition : archetypeDefinitions.values()) {
@@ -391,8 +394,7 @@ public class GDLDroolsConverter {
         }
 
         for (String elementGtCode: gtCodesRef){
-            Integer archetypeBindingIndex = gtElementToArchetypeBindingIndex
-                    .get(elementGtCode);
+            Integer archetypeBindingIndex = gtElementToArchetypeBindingIndex.get(elementGtCode);
             _gtElementToWholeDefinition.put(elementGtCode, archetypeDefinitions.get(archetypeBindingIndex).toString());
         }
 
@@ -415,7 +417,7 @@ public class GDLDroolsConverter {
         StringBuffer sb = new StringBuffer();
         if (expressionItems != null) {
             for (ExpressionItem expressionItem : expressionItems) {
-                sb.append("   ");
+                sb.append(TAB);
                 processExpressionItem(sb, expressionItem, archetypeReferenceMap, elementMap, stats);
                 sb.append("\n");
             }
@@ -431,12 +433,12 @@ public class GDLDroolsConverter {
         StringBuffer sb = new StringBuffer();
         if (expressionItems != null) {
             for (ExpressionItem expressionItem : expressionItems) {
-                sb.append("   ");
+                sb.append(TAB);
                 processExpressionItem(sb, expressionItem, archetypeReferenceMap, elementMap, stats);
                 sb.append("\n");
             }
             for (String gtCodes : stats.get(RefStat.SET)) {
-                sb.append("   ");
+                sb.append(TAB);
                 sb.append("modify($"+gtCodes+"){};\n");
             }
         }
@@ -523,7 +525,8 @@ public class GDLDroolsConverter {
                 ArchetypeReference ar = archetypeReferenceMap.get(gtCode);
                 String arId = "newAR"+creationIndex;
                 sb.append("ArchetypeReference " + arId + " = new ArchetypeReference(\"CDS\", \"" + ar.getIdArchetype() + "\","+(ar.getIdTemplate()!=null?"\""+ar.getIdTemplate()+"\"":"null")+");\n");
-                sb.append("   insert("+arId+");\n");
+                sb.append(TAB);
+                sb.append("insert("+arId+");\n");
                 insertAssignments(sb, arId, archetypeReferenceMap, elementMap, expressionItemAux, stats);
                 creationIndex++;
             }else{
@@ -569,11 +572,12 @@ public class GDLDroolsConverter {
             if (eiId==null){
                 eiId = "ei"+creationIndex+"_"+i;
                 elementIdsMap.put(elementId, eiId);
-                sb.append("      ElementInstance $"+eiId+" = new ElementInstance(\""+elementId+"\", null, "+arId+", null, null);\n");
+                sb.append(TAB);
+                sb.append("ElementInstance $"+eiId+" = new ElementInstance(\""+elementId+"\", null, "+arId+", null, null);\n");
             }else{
                 sb.append("\n");
             }
-            sb.append("      ");
+            sb.append(TAB);
             String attribute = assignmentExpressionAux.getVariable().getAttribute();
             processAssigmentExpression(sb, gtCode, eiId, attribute, assignmentExpressionAux.getAssignment(), archetypeReferenceMap, elementMap, stats, true);
             sb.append("insert($" + eiId + ");");
@@ -774,17 +778,18 @@ public class GDLDroolsConverter {
                     String definition = _gtElementToWholeDefinition.get(code);
                     String defAux =
                             definition
-                                    .replace("\n"," and\n")
+                                    .replace("\n"," and\n"+TAB)
                                     .replace("$","$count_")
                                     .replace("eval(DVUtil.equalDV(true, $count_predicate", "eval(DVUtil.equalDV(false, $count_predicate")
                                     .replace("eval(DVUtil.isSubClassOf(true, $count_predicate", "eval(DVUtil.isSubClassOf(false, $count_predicate")
                                     .replace("$count_"+code+":ElementInstance(", "$count_"+code+":ElementInstance(!predicate, dataValue!=null, ")
                                     .replace("$count_"+OpenEHRConst.CURRENT_DATE_TIME_ID,"$"+OpenEHRConst.CURRENT_DATE_TIME_ID);
                     if (defAux.length()>5){
-                        //Remove last 'and'
-                        defAux = defAux.substring(0, defAux.length()-5);
+                        //Remove last ' and\n'+TAB
+                        defAux = defAux.substring(0, defAux.length()-5-TAB.length());
                     }
-                    sb.append("   Number($"+code+att+":intValue) from accumulate ("+defAux+", count($count_"+code+"))\n   ");
+                    sb.append(TAB);
+                    sb.append("Number($"+code+att+":intValue) from accumulate (\n"+TAB+defAux+",\n"+TAB+TAB+"count($count_"+code+"))\n");
                 }
             }
         }
@@ -946,6 +951,19 @@ public class GDLDroolsConverter {
                 OpenEHRDataValues.UNITS_ATT.equals(attribute) ||
                 OpenEHRDataValues.CODE_ATT.equals(attribute) ||
                 OpenEHRDataValues.TEMINOLOGYID_ATT.equals(attribute);
+    }
+
+    private String getAutoFocusRule(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(RULE + " \"" + guide.getId() + "/"+AGENDA_GROUP_LINK_ID+"\"\n");
+        sb.append(AGENDA_GROUP + " '"+guide.getId()+"'\n"); //Isolate rule execution to guide context
+        sb.append("salience 1000\n");
+        sb.append(DEFAULT_CONFIG + "\n");
+        sb.append("auto-focus true\n");
+        sb.append(WHEN + "\n");
+        sb.append(THEN + "\n");
+        sb.append(END + "\n");
+        return sb.toString();
     }
 
     private String getGuideHeader() {

@@ -12,14 +12,17 @@ public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
 
     @Override
     public void afterActivationFired(AfterActivationFiredEvent event) {
-	getFiredRules().add(event.getActivation().getRule().getName());
+        String ruleName = event.getActivation().getRule().getName();
+        if (!ruleName.endsWith("*agenda-group-link")){
+            getFiredRules().add(ruleName);
+        }
     }
 
     public ArrayList<String> getFiredRules(){
-	if (_firedRules==null){
-	    _firedRules = new  ArrayList<String>();
-	}
-	return _firedRules;
+        if (_firedRules==null){
+            _firedRules = new  ArrayList<String>();
+        }
+        return _firedRules;
     }
 
 

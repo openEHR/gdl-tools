@@ -1,26 +1,15 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
-import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
-import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
-import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.cds.controller.cds.CDSManager;
-import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.model.facade.execution.drools.DroolsRuleExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * User: Iago.Corbal
@@ -34,57 +23,71 @@ public class BasicGDLTest extends GDLTestCase {
     }
 
     public void testCount(){
-        Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
-        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.MEDICATION_ARCHETYPE_ID, GDLTestCase.MEDICATION_TEMPLATE_ID);
-        DataValue dataValue = new DvCodedText("N02AX02", "ATC", "N02AX02");
-        ElementInstance eiCode = new ElementInstance(GDLTestCase.MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        dataValue = new DvDateTime(new DateTime().plus(-64000000L).toString());
-        ElementInstance eiInitDate = new ElementInstance(GDLTestCase.MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        dataValue = null;//new DvDateTime(new DateTime().plus(6400000L).toString());
-        ElementInstance eiEndDate = new ElementInstance(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        elementInstances.add(eiCode);
-        elementInstances.add(eiInitDate);
-        elementInstances.add(eiEndDate);
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
+        ars.add(generateOngoingMedicationArchetypeReference("N02AX02"));
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        RuleExecutionResult rer = executeGuides(Collections.singleton("count_test.v1"), elementInstances);
 
-        ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.MEDICATION_ARCHETYPE_ID, GDLTestCase.MEDICATION_TEMPLATE_ID);
-        dataValue = new DvCodedText("A10BX03", "ATC", "A10BX03");
-        eiCode = new ElementInstance(GDLTestCase.MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        dataValue = new DvDateTime(new DateTime().plus(-64000000L).toString());
-        eiInitDate = new ElementInstance(GDLTestCase.MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        dataValue = null;//new DvDateTime(new DateTime().plus(6400000L).toString());
-        eiEndDate = new ElementInstance(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        elementInstances.add(eiCode);
-        elementInstances.add(eiInitDate);
-        elementInstances.add(eiEndDate);
+        assertEquals(1, rer.getArchetypeReferences().size());
+        ArchetypeReference arResult = rer.getArchetypeReferences().iterator().next();
+        assertEquals(1, arResult.getElementInstancesMap().size());
+        ElementInstance ei = arResult.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]");
+        assertNotNull(ei);
+        assertTrue(ei.getDataValue() instanceof DvCount);
+        assertEquals(2, ((DvCount)ei.getDataValue()).getMagnitude().intValue());
+    }
 
-        DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
-        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
-        try {
-            guideDTOs.add(GDLTestCase.parse("guides/count_test.v1"));
-            GuideManager guideManager = new GuideManager(guideDTOs);
-            Calendar cal = Calendar.getInstance();
-            long startTime = System.currentTimeMillis();
-            ElementInstanceCollection eic = new ElementInstanceCollection();
-            eic.addAll(elementInstances);
-            CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
-            Collection<ElementInstance> eis = eic.getAllElementInstances();
-            RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, eis, cal);
-            assertEquals(1, rer.getArchetypeReferences().size());
-            ArchetypeReference arResult = rer.getArchetypeReferences().iterator().next();
-            assertEquals(1, arResult.getElementInstancesMap().size());
-            ElementInstance ei = arResult.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]");
-            assertNotNull(ei);
-            assertTrue(ei.getDataValue() instanceof DvCount);
-            assertEquals(2, ((DvCount)ei.getDataValue()).getMagnitude().intValue());
-            long execTime = (System.currentTimeMillis()-startTime);
-            System.out.println("Executed in: "+execTime+" ms");
-            System.out.println("Rules fired: "+rer.getFiredRules().size());
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
-        } catch (PatientNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testNotExists(){
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        RuleExecutionResult rer = executeGuides(Collections.singleton("not_exists_test.v1"), elementInstances);
+        assertEquals(2, rer.getFiredRules().size());
+        assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1", "gt0045")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1","gt0039")));
+    }
+
+    public void testOrPredicates(){
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        RuleExecutionResult rer = executeGuides(Collections.singleton("test_or_predicates.v1"), elementInstances);
+        assertEquals(4, rer.getFiredRules().size());
+        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0002")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0012")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0013")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0014")));
+   }
+
+    public void testCreationAndOrder(){
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_creation_and_order_1");
+        guideIds.add("test_creation_and_order_2");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(4, rer.getFiredRules().size());
+        assertTrue(rer.getFiredRules().get(0).equals(new RuleReference("test_creation_and_order_2","gt0002")));
+        assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("test_creation_and_order_2","gt0005")));
+        assertTrue(rer.getFiredRules().get(2).equals(new RuleReference("test_creation_and_order_1","gt0005")));
+        assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("test_creation_and_order_1","gt0002")));
+    }
+
+    public void testCDSCount(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
+        ars.add(generateOngoingMedicationArchetypeReference("A10BX02"));
+        ars.add(generateOngoingMedicationArchetypeReference("N02AX02"));
+        ars.add(generateContactArchetypeReference(new DateTime().plus(-100000)));
+        ars.add(generateContactArchetypeReference(new DateTime().plus(100000)));
+        ars.add(generateContactArchetypeReference(new DateTime().plus(-200000)));
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("cds_count");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(4, rer.getFiredRules().size());
+        assertTrue(rer.getFiredRules().get(0).equals(new RuleReference("cds_count","gt0006")));
+        assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("cds_count","gt0006")));
+        assertTrue(rer.getFiredRules().get(2).equals(new RuleReference("cds_count","gt0006")));
+        assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("cds_count","gt0011")));
     }
 }
