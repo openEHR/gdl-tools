@@ -1,0 +1,158 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"multiple_results_test">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.medication_in_elderly.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+			>
+			["gt0004"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.polypharmacy_utility.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+				>
+			>
+			["gt0006"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0007"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
+					>
+				>
+			>
+			["gt0008"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.contact.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0009"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0006]">
+					>
+					["gt0010"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"max(/data[at0001]/items[at0004])",...>
+			>
+			["gt0011"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0012"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+					["gt0013"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]">
+					>
+					["gt0014"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]">
+					>
+				>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0018"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0019"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+				>
+				template_id = <"medication_atc_indicator">
+			>
+		>
+		rules = <
+			["gt0015"] = (RULE) <
+				when = <"$gt0003==null",...>
+				then = <"$gt0003=local::at0005|Absent|",...>
+				priority = <3>
+			>
+			["gt0016"] = (RULE) <
+				when = <"$gt0012!=null", "$gt0013<$gt0010", "($gt0014>$gt0010)||($gt0014==null)">
+				then = <"$gt0018.create($gt0019=$gt0012)", "$gt0004.create($gt0005=local::at0004|Present|)">
+				priority = <2>
+			>
+			["gt0017"] = (RULE) <
+				when = <"$gt0003!=local::at0006|Present|", "$gt0005.count>=10">
+				then = <"$gt0003=local::at0006|Present|",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Medication in elderly-Polypharmacy">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Polypharmacy">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Active medication">
+						description = <"*">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Contact type">
+						description = <"*">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Contact end time">
+						description = <"*">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Generic name">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Date (time) of first administration">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Date (time) of last administration">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Set default">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Set ongoing medication">
+					>
+					["gt0017"] = (TERM) <
+						text = <"Set polypharmacy">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Generic name">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+				>
+			>
+		>
+	>
+>

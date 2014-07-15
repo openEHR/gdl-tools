@@ -1,0 +1,74 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.polypharmacy_utility.v1
+
+concept
+	[at0000]	-- Polypharmacy utility
+language
+	original_language = <[ISO_639-1::en]>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"99A29D92D71A3DB9B5AAA0963C11CDD9">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Polypharmacy utility
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- Active medication
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0003, 	-- Absent
+									at0004]	-- Present
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Polypharmacy utility">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Active medication">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Absent">
+					description = <"*">
+				>
+				["at0004"] = <
+					text = <"Present">
+					description = <"*">
+				>
+			>
+		>
+	>

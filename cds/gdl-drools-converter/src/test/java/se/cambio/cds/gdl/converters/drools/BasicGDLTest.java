@@ -61,7 +61,7 @@ public class BasicGDLTest extends GDLTestCase {
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0012")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0013")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0014")));
-   }
+    }
 
     public void testCreationAndOrder(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
@@ -119,6 +119,32 @@ public class BasicGDLTest extends GDLTestCase {
             e.printStackTrace();
         } catch (InternalErrorException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void testMultipleResults(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
+        ars.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("A10BX02");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
+        ars.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("N02AX02");
+        ars.add(ar);
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
+        ars.add(generateContactArchetypeReference(new DateTime().plus(100000)));
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("multiple_results_test");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(7, rer.getArchetypeReferences().size());
+        assertEquals(4, rer.getFiredRules().size());
+        assertEquals(4, ars.size());
+        for(ArchetypeReference arAux: ars){
+           if (GDLTestCase.MEDICATION_ARCHETYPE_ID.equals(arAux.getIdArchetype())){
+               assertEquals(3, arAux.getElementInstancesMap().size()); //End date is generated in CDSManager
+           }
         }
     }
 }

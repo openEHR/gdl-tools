@@ -110,29 +110,43 @@ public class CDSManager {
     }
 
     public static void checkForMissingElements(
-            ElementInstanceCollection elementInstanceCollection,
-            ElementInstanceCollection completeEIC,
+            ElementInstanceCollection ehrEIC,
+            ElementInstanceCollection generatedEIC,
+            GuideManager guideManager,
+            Calendar date){
+        checkForWholeMissingElements(ehrEIC, generatedEIC, guideManager, date);
+        checkForMissingPathsInEHR(ehrEIC, generatedEIC, date);
+    }
+
+    private static void checkForWholeMissingElements(
+            ElementInstanceCollection ehrEIC,
+            ElementInstanceCollection generatedEIC,
             GuideManager guideManager,
             Calendar date){
         //Check for guide elements, if not present, create archetype reference
-        List<ArchetypeReference> guideArchetypeReferences = new ArrayList<ArchetypeReference>(completeEIC.getAllArchetypeReferences());
+        List<ArchetypeReference> guideArchetypeReferences = new ArrayList<ArchetypeReference>(generatedEIC.getAllArchetypeReferences());
         Collections.sort(guideArchetypeReferences, new ARNonEmptyPredicateComparator());
         for (ArchetypeReference archetypeReference : guideArchetypeReferences) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference)archetypeReference;
-            boolean matches = elementInstanceCollection.matches(gar, guideManager.getAllGuidesMap(), date);
+            boolean matches = ehrEIC.matches(gar, guideManager.getAllGuidesMap(), date);
             if (!matches){
-                elementInstanceCollection.add(archetypeReference, guideManager, date);
+                ehrEIC.add(archetypeReference, guideManager, date);
             }
         }
+    }
+
+    private static void checkForMissingPathsInEHR(
+            ElementInstanceCollection ehrEIC,
+            ElementInstanceCollection generatedEIC,
+            Calendar date){
         //Add missing elements (as null) to the ehr data
-        Map<String, ArchetypeReference> compressedARsMap = getCompressedQueryArchetypeReferencesMap(completeEIC.getAllArchetypeReferences());
-        for(ArchetypeReference ar: elementInstanceCollection.getAllArchetypeReferences()){
+        Map<String, ArchetypeReference> compressedARsMap = getCompressedQueryArchetypeReferencesMap(generatedEIC.getAllArchetypeReferences());
+        for(ArchetypeReference ar: ehrEIC.getAllArchetypeReferences()){
             ArchetypeReference compressedAR = compressedARsMap.get(ar.getIdArchetype());
             if (compressedAR!=null){
                 for (String elementId: compressedAR.getElementInstancesMap().keySet()){
                     if (!ar.getElementInstancesMap().containsKey(elementId)){
-                        GeneratedElementInstance gei = new GeneratedElementInstance(elementId, null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-                        gei.setRuleReferences(((GeneratedElementInstance)compressedAR.getElementInstancesMap().get(elementId)).getRuleReferences());
+                        new ElementInstance(elementId, null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                     }
                 }
             }
