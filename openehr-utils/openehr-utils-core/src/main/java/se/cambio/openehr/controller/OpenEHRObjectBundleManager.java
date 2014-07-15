@@ -214,7 +214,8 @@ public class OpenEHRObjectBundleManager {
         //CObject cObject = pathObjectMap.get(path);
         proccessCObject(ar.getDefinition(), ar, archId, idTemplate, archetypeElementVOs, clusterVOs, codedTextVOs, ordinalVOs, archetypeSlotVOs, unitVOs, proportionTypeVOs, language);
         //}
-        loadRMElements(archId, idTemplate, rmEntry, archetypeElementVOs);
+        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, idTemplate, rmEntry);
+        archetypeElementVOs.addAll(rmArchetypeElements);
     }
 
     private static void proccessCObject(
@@ -516,67 +517,6 @@ public class OpenEHRObjectBundleManager {
                 };
             }
         }
-    }
-
-
-
-    private static void loadRMElements(String idArchetype, String idTemplate, String entryType, Collection<ArchetypeElementVO> archetypeElementVOs){
-        if (OpenEHRConst.OBSERVATION.equals(entryType)){
-	    /*Origin (Use EventTime instead)
-	    archetypeElementVOs.add(
-		    new ArchetypeElementVO(
-			    LanguageManager.getMessage("Origin"), 
-			    LanguageManager.getMessage("OriginDesc"),
-			    OpenEHRDataValues.DV_DATE_TIME, null, 
-			    idArchetype, "/time"));
-	     */
-            //EventTime
-            archetypeElementVOs.add(
-                    new ArchetypeElementVO(
-                            OpenEHRLanguageManager.getMessage("EventTime"),
-                            OpenEHRLanguageManager.getMessage("EventTimeDesc"),
-                            OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, "/event/time"));
-        }else if (OpenEHRConst.INSTRUCTION.equals(entryType)){
-            //Expiry Time
-            archetypeElementVOs.add(
-                    new ArchetypeElementVO(
-                            OpenEHRLanguageManager.getMessage("ExpireTime"),
-                            OpenEHRLanguageManager.getMessage("ExpireTimeDesc"),
-                            OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, "/expiry_time"));
-            //Narrative Description
-            archetypeElementVOs.add(
-                    new ArchetypeElementVO(
-                            OpenEHRLanguageManager.getMessage("NarrativeDescription"),
-                            OpenEHRLanguageManager.getMessage("NarrativeDescriptionDesc"),
-                            OpenEHRDataValues.DV_TEXT, null,
-                            idArchetype, idTemplate, "/narrative"));
-        }else if (OpenEHRConst.ACTION.equals(entryType)){
-            //Date and time Action step performed
-            archetypeElementVOs.add(
-                    new ArchetypeElementVO(
-                            OpenEHRLanguageManager.getMessage("DateTimeActionPerformed"),
-                            OpenEHRLanguageManager.getMessage("DateTimeActionPerformedDesc"),
-                            OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, "/time"));
-            //Current Action State
-            archetypeElementVOs.add(
-                    new ArchetypeElementVO(
-                            OpenEHRLanguageManager.getMessage("CurrentActionState"),
-                            OpenEHRLanguageManager.getMessage("CurrentActionStateDesc"),
-                            OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, "/ism_transition/current_state"));
-        }else if (OpenEHRConst.EVALUATION.equals(entryType)){
-
-        }
-        //Template Id
-        archetypeElementVOs.add(
-                new ArchetypeElementVO(
-                        OpenEHRLanguageManager.getMessage("TemplateId"),
-                        OpenEHRLanguageManager.getMessage("TemplateIdDesc"),
-                        OpenEHRDataValues.DV_TEXT, null,
-                        idArchetype, idTemplate, "/archetype_details/template_id"));
     }
 
     private static void loadUnits(

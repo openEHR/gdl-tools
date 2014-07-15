@@ -124,10 +124,27 @@ public class CDSManager {
                 elementInstanceCollection.add(archetypeReference, guideManager, date);
             }
         }
+        //Add missing elements (as null) to the ehr data
+        Map<String, ArchetypeReference> compressedARsMap = getCompressedQueryArchetypeReferencesMap(completeEIC.getAllArchetypeReferences());
+        for(ArchetypeReference ar: elementInstanceCollection.getAllArchetypeReferences()){
+            ArchetypeReference compressedAR = compressedARsMap.get(ar.getIdArchetype());
+            if (compressedAR!=null){
+                for (String elementId: compressedAR.getElementInstancesMap().keySet()){
+                    if (!ar.getElementInstancesMap().containsKey(elementId)){
+                        GeneratedElementInstance gei = new GeneratedElementInstance(elementId, null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+                        gei.setRuleReferences(((GeneratedElementInstance)compressedAR.getElementInstancesMap().get(elementId)).getRuleReferences());
+                    }
+                }
+            }
+        }
     }
 
     private static Collection<ArchetypeReference> getCompressedQueryArchetypeReferences(Collection<ArchetypeReference> generatedArchetypeReferences){
-        Map<String, ArchetypeReference> archetypeReferencesMap = new HashMap<String, ArchetypeReference>();
+        return new ArrayList<ArchetypeReference>(getCompressedQueryArchetypeReferencesMap(generatedArchetypeReferences).values());
+    }
+
+    private static Map<String, ArchetypeReference> getCompressedQueryArchetypeReferencesMap(Collection<ArchetypeReference> generatedArchetypeReferences){
+        final Map<String, ArchetypeReference> archetypeReferencesMap = new HashMap<String, ArchetypeReference>();
         //Compress Archetype References with same archetype id
         for (ArchetypeReference arNew : generatedArchetypeReferences) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference)arNew;
@@ -139,7 +156,7 @@ public class CDSManager {
                 archetypeReferencesMap.put(arNew.getIdArchetype(), arNew);
             }
         }
-        return new ArrayList<ArchetypeReference>(archetypeReferencesMap.values());
+        return archetypeReferencesMap;
     }
 
     private static void compressQueryArchetypeReference(ArchetypeReference arPrev, ArchetypeReference arNew){

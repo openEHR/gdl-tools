@@ -6,6 +6,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRRMUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +24,6 @@ import java.util.Properties;
 public class DateTimeARFinder {
     private static DateTimeARFinder _delegate = null;
     //private static Pattern DATE_TIME_PATH_RE =  Pattern.compile("\\Q/data\\E[\\[.*\\]]?\\Q/events\\E[\\[.*\\]]?\\Q/time\\E[\\[.*\\]]?");
-    private static String EVENT_TIME_PATH = "/event/time"; //TODO FIX!!??!!
     public static final String CONFIGURATION_FILE = "DateTimePath.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
     private static Map <Object,Object> dvDateTimePathsByArchetypeId;
@@ -120,7 +120,7 @@ public class DateTimeARFinder {
                 }
             }
              */
-            return EVENT_TIME_PATH;
+            return OpenEHRRMUtil.EVENT_TIME_PATH;
         }else if (OpenEHRConst.EVALUATION.endsWith(rmName) ||
                 OpenEHRConst.ACTION.endsWith(rmName) ||
                 OpenEHRConst.INSTRUCTION.endsWith(rmName)){

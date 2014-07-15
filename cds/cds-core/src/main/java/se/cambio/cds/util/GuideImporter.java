@@ -22,16 +22,14 @@ import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRRMUtil;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
 public class GuideImporter {
-
-
     private GuideImporter(){
-
     }
 
     public static ReadableGuide importGuide(Guide guide, String language) throws InternalErrorException {
@@ -47,70 +45,7 @@ public class GuideImporter {
                     ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) gtCodeElementMap.get(archetypeBinding.getId());
                     readableGuide.getDefinitionRuleLines().add(airl);
                     if (archetypeBinding.getPredicateStatements()!=null){
-                        for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
-                            if (expressionItem instanceof BinaryExpression){
-                                BinaryExpression binaryExpression = (BinaryExpression)expressionItem;
-                                if (binaryExpression.getLeft() instanceof Variable &&
-                                        binaryExpression.getRight() instanceof ConstantExpression){
-                                    Variable variable = (Variable)binaryExpression.getLeft();
-                                    ConstantExpression constantExpression2 = (ConstantExpression)binaryExpression.getRight();
-                                    String path = variable.getPath();
-                                    String dvStr = constantExpression2.getValue();
-                                    ArchetypeElementVO archetypeElementVO =
-                                            ArchetypeElements.getArchetypeElement(
-                                                    archetypeBinding.getTemplateId(),
-                                                    archetypeBinding.getArchetypeId()+path);
-                                    if (!dvStr.equals("null")){
-                                        WithElementPredicateAttributeDefinitionRuleLine wepdrl = new WithElementPredicateAttributeDefinitionRuleLine();
-                                        airl.addChildRuleLine(wepdrl);
-                                        wepdrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
-                                        String rmType = archetypeElementVO.getRMType();
-                                        if (OpenEHRDataValues.DV_TEXT.equals(rmType) &&
-                                                (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))){
-                                            rmType = OpenEHRDataValues.DV_CODED_TEXT;
-                                        }
-                                        DataValue dv = parseGTDataValue(rmType, dvStr, termDefinition);
-                                        wepdrl.getDataValueRuleLineElement().setValue(dv);
-                                        wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
-                                    }else{
-                                        WithElementPredicateExistsDefinitionRuleLine wepedrl = new WithElementPredicateExistsDefinitionRuleLine();
-                                        airl.addChildRuleLine(wepedrl);
-                                        wepedrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
-                                        wepedrl.getExistenceOperatorRuleLineElement().setValue(binaryExpression.getOperator().getSymbol()+"null");
-                                    }
-
-
-                                }else if (binaryExpression.getLeft() instanceof Variable &&
-                                        binaryExpression.getRight() instanceof ExpressionItem){
-                                    Variable variable = (Variable)binaryExpression.getLeft();
-                                    ExpressionItem expressionItemAux = binaryExpression.getRight();
-                                    WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine(airl);
-                                    String path = variable.getPath();
-                                    String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
-                                    path = path.substring(0, path.length()-attribute.length()-7);
-                                    ArchetypeElementVO archetypeElementVO =
-                                            ArchetypeElements.getArchetypeElement(
-                                                    archetypeBinding.getTemplateId(),
-                                                    archetypeBinding.getArchetypeId()+path);
-                                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setValue(archetypeElementVO);
-                                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setAttribute(attribute);
-                                    wepdrl.getExpressionRuleLineElement().setValue(expressionItemAux);
-                                    wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
-                                }
-                            }else if (expressionItem instanceof UnaryExpression){
-                                UnaryExpression unaryExpression = (UnaryExpression)expressionItem;
-                                WithElementPredicateFunctionDefinitionRuleLine wefd = new WithElementPredicateFunctionDefinitionRuleLine();
-                                Variable variable = (Variable)unaryExpression.getOperand();
-                                airl.addChildRuleLine(wefd);
-                                String path = variable.getPath();
-                                ArchetypeElementVO archetypeElementVO =
-                                        ArchetypeElements.getArchetypeElement(
-                                                archetypeBinding.getTemplateId(),
-                                                archetypeBinding.getArchetypeId()+path);
-                                wefd.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
-                                wefd.getFunctionRuleLineElement().setValue(unaryExpression.getOperator());
-                            }
-                        }
+                        proccessPredicateExpressions(archetypeBinding, termDefinition, airl);
                     }
                 }
             }
@@ -148,6 +83,95 @@ public class GuideImporter {
         }
         updateTermDefinitions(readableGuide, termDefinition);
         return readableGuide;
+    }
+
+    private static void proccessPredicateExpressions(
+            ArchetypeBinding archetypeBinding,
+            TermDefinition termDefinition,
+            ArchetypeInstantiationRuleLine airl) throws InternalErrorException {
+        for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
+            if (expressionItem instanceof BinaryExpression){
+                BinaryExpression binaryExpression = (BinaryExpression)expressionItem;
+                if (binaryExpression.getLeft() instanceof Variable &&
+                        binaryExpression.getRight() instanceof ConstantExpression){
+                    Variable variable = (Variable)binaryExpression.getLeft();
+                    ConstantExpression constantExpression2 = (ConstantExpression)binaryExpression.getRight();
+                    String path = variable.getPath();
+                    if ("/event/time".equals(path)){
+                        //Old event time detected //TODO Remove later on
+                        path = OpenEHRRMUtil.EVENT_TIME_PATH;
+                    }
+                    String dvStr = constantExpression2.getValue();
+                    ArchetypeElementVO archetypeElementVO =
+                            ArchetypeElements.getArchetypeElement(
+                                    archetypeBinding.getTemplateId(),
+                                    archetypeBinding.getArchetypeId()+path);
+                    if (archetypeElementVO==null){
+                        throw new InternalErrorException(new Exception("Element '"+archetypeBinding.getArchetypeId()+path+(archetypeBinding.getTemplateId()!=null?" ("+archetypeBinding.getTemplateId()+")":"")+"' not found!"));
+                    }
+                    if (!dvStr.equals("null")){
+                        WithElementPredicateAttributeDefinitionRuleLine wepdrl = new WithElementPredicateAttributeDefinitionRuleLine();
+                        airl.addChildRuleLine(wepdrl);
+                        wepdrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                        String rmType = archetypeElementVO.getRMType();
+                        if (OpenEHRDataValues.DV_TEXT.equals(rmType) &&
+                                (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))){
+                            rmType = OpenEHRDataValues.DV_CODED_TEXT;
+                        }
+                        DataValue dv = parseGTDataValue(rmType, dvStr, termDefinition);
+                        wepdrl.getDataValueRuleLineElement().setValue(dv);
+                        wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
+                    }else{
+                        WithElementPredicateExistsDefinitionRuleLine wepedrl = new WithElementPredicateExistsDefinitionRuleLine();
+                        airl.addChildRuleLine(wepedrl);
+                        wepedrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                        wepedrl.getExistenceOperatorRuleLineElement().setValue(binaryExpression.getOperator().getSymbol()+"null");
+                    }
+                }else if (binaryExpression.getLeft() instanceof Variable &&
+                        binaryExpression.getRight() instanceof ExpressionItem){
+                    Variable variable = (Variable)binaryExpression.getLeft();
+                    ExpressionItem expressionItemAux = binaryExpression.getRight();
+                    WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine(airl);
+                    String path = variable.getPath();
+                    String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
+                    path = path.substring(0, path.length()-attribute.length()-7);
+                    if ("/event/time".equals(path)){
+                        //Old event time detected //TODO Remove later on
+                        path = OpenEHRRMUtil.EVENT_TIME_PATH;
+                    }
+                    ArchetypeElementVO archetypeElementVO =
+                            ArchetypeElements.getArchetypeElement(
+                                    archetypeBinding.getTemplateId(),
+                                    archetypeBinding.getArchetypeId()+path);
+                    if (archetypeElementVO==null){
+                        throw new InternalErrorException(new Exception("Element '"+archetypeBinding.getArchetypeId()+path+(archetypeBinding.getTemplateId()!=null?" ("+archetypeBinding.getTemplateId()+")":"")+"' not found!"));
+                    }
+                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setValue(archetypeElementVO);
+                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setAttribute(attribute);
+                    wepdrl.getExpressionRuleLineElement().setValue(expressionItemAux);
+                    wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
+                }
+            }else if (expressionItem instanceof UnaryExpression){
+                UnaryExpression unaryExpression = (UnaryExpression)expressionItem;
+                WithElementPredicateFunctionDefinitionRuleLine wefd = new WithElementPredicateFunctionDefinitionRuleLine();
+                Variable variable = (Variable)unaryExpression.getOperand();
+                airl.addChildRuleLine(wefd);
+                String path = variable.getPath();
+                if ("/event/time".equals(path)){
+                    //Old event time detected //TODO Remove later on
+                    path = OpenEHRRMUtil.EVENT_TIME_PATH;
+                }
+                ArchetypeElementVO archetypeElementVO =
+                        ArchetypeElements.getArchetypeElement(
+                                archetypeBinding.getTemplateId(),
+                                archetypeBinding.getArchetypeId()+path);
+                if (archetypeElementVO==null){
+                    throw new InternalErrorException(new Exception("Element '"+archetypeBinding.getArchetypeId()+path+(archetypeBinding.getTemplateId()!=null?" ("+archetypeBinding.getTemplateId()+")":"")+"' not found!"));
+                }
+                wefd.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
+                wefd.getFunctionRuleLineElement().setValue(unaryExpression.getOperator());
+            }
+        }
     }
 
     public static void updateTermDefinitions(ReadableGuide readableGuide, TermDefinition termDefinition){
@@ -468,7 +492,7 @@ public class GuideImporter {
         }
     }
 
-    public static Map<String, GTCodeDefiner> generateGTCodeElementMap(Guide guide){
+    public static Map<String, GTCodeDefiner> generateGTCodeElementMap(Guide guide) throws InternalErrorException {
         Map<String, GTCodeDefiner> gtCodeElementMap = new HashMap<String, GTCodeDefiner>();
         ArchetypeElementInstantiationRuleLine dummyAEIRL = new ArchetypeElementInstantiationRuleLine(new ArchetypeInstantiationRuleLine());
         dummyAEIRL.setGTCode("currentDateTime");
@@ -493,12 +517,19 @@ public class GuideImporter {
                             ArchetypeElementInstantiationRuleLine aeirl =
                                     new ArchetypeElementInstantiationRuleLine(airl);
                             aeirl.setGTCode(elementBinding.getId());
+                            if ("/event/time".equals(elementBinding.getPath())){
+                                //Old event time detected //TODO Remove later on
+                                elementBinding.setPath(OpenEHRRMUtil.EVENT_TIME_PATH);
+                            }
                             String elementId =
                                     archetypeBinding.getArchetypeId()+elementBinding.getPath();
                             ArchetypeElementVO archetypeElementVO =
                                     ArchetypeElements.getArchetypeElement(
                                             archetypeBinding.getTemplateId(),
                                             elementId);
+                            if (archetypeElementVO==null){
+                                throw new InternalErrorException(new Exception("Element '"+elementId+(archetypeBinding.getTemplateId()!=null?" ("+archetypeBinding.getTemplateId()+")":"")+"' not found!"));
+                            }
                             aeirl.setArchetypeElementVO(archetypeElementVO);
                             gtCodeElementMap.put(elementBinding.getId(), aeirl);
                         }

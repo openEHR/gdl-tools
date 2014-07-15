@@ -2,12 +2,17 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.DvCount;
+import se.cambio.cds.controller.cds.CDSManager;
+import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -89,5 +94,31 @@ public class BasicGDLTest extends GDLTestCase {
         assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("cds_count","gt0006")));
         assertTrue(rer.getFiredRules().get(2).equals(new RuleReference("cds_count","gt0006")));
         assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("cds_count","gt0011")));
+    }
+
+
+    public void testMissingElements(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
+        ars.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("A10BX02");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
+        ars.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("N02AX02");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
+        ars.add(ar);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_med_definition");
+        GuideManager guideManager = generateGuideManager(guideIds);
+        try {
+            Collection<ElementInstance> elementInstances =
+                    CDSManager.getElementInstances(null, guideIds, ars, guideManager, Calendar.getInstance());
+            assertEquals(9,elementInstances.size());
+        } catch (PatientNotFoundException e) {
+            e.printStackTrace();
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+        }
     }
 }

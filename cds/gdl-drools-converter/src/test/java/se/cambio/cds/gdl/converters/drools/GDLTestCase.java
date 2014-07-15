@@ -99,19 +99,29 @@ public abstract class GDLTestCase extends TestCase {
         return eis;
     }
 
-    public static RuleExecutionResult executeGuides(Collection<String> guideIds, Collection<ElementInstance> elementInstances){
+    public static GuideManager generateGuideManager(Collection<String> guideIds){
+        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+        for(String guideId: guideIds){
+            try {
+                guideDTOs.add(GDLTestCase.parse("guides/"+guideId));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new GuideManager(guideDTOs);
+    }
+
+        public static RuleExecutionResult executeGuides(Collection<String> guideIds, Collection<ElementInstance> elementInstances){
         RuleExecutionResult rer = null;
         try{
             StringBuffer guideIdsSB = new StringBuffer();
             DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
-            Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
             String prefix = "";
             for(String guideId: guideIds){
                 guideIdsSB.append(prefix+guideId);
-                guideDTOs.add(GDLTestCase.parse("guides/"+guideId));
                 prefix = ", ";
             }
-            GuideManager guideManager = new GuideManager(guideDTOs);
+            GuideManager guideManager = generateGuideManager(guideIds);
             Calendar cal = Calendar.getInstance();
             long startTime = System.currentTimeMillis();
             ElementInstanceCollection eic = new ElementInstanceCollection();
@@ -119,7 +129,7 @@ public abstract class GDLTestCase extends TestCase {
             CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
             Collection<ElementInstance> eis = eic.getAllElementInstances();
             System.out.println("Executing : "+guideIdsSB.toString());
-            rer = droolsREFD.execute(null, guideDTOs, eis, cal);
+            rer = droolsREFD.execute(null, guideManager.getAllGuidesDTO(), eis, cal);
             long execTime = (System.currentTimeMillis()-startTime);
             System.out.println("Executed in: "+execTime+" ms");
             System.out.println("Rules fired: "+rer.getFiredRules().size());

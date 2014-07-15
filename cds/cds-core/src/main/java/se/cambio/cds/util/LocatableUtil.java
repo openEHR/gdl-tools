@@ -1,10 +1,6 @@
 package se.cambio.cds.util;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
+import com.rits.cloning.Cloner;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.rm.common.archetyped.Locatable;
@@ -12,7 +8,6 @@ import org.openehr.rm.composition.content.entry.Activity;
 import org.openehr.rm.datastructure.itemstructure.representation.Element;
 import org.openehr.rm.util.GenerationStrategy;
 import org.openehr.rm.util.SkeletonGenerator;
-
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -26,8 +21,12 @@ import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.OpenEHRRMUtil;
 
-import com.rits.cloning.Cloner;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class LocatableUtil {
     public static Locatable createLocatable(ArchetypeReference archetypeReference) throws Exception{
@@ -99,7 +98,7 @@ public class LocatableUtil {
 
             if (elementInstance!=null && elementInstance.getDataValue()!=null){
                 //TODO Fix!
-                if (!pathAux.contains("/archetype_details/template_id") && !pathAux.contains("/event/time")){
+                if (!OpenEHRRMUtil.isRMPath(pathAux)){
                     Object obj = locatableAux.itemAtPath(pathAux);
                     if (obj instanceof Element){
                         ((Element)obj).setValue(elementInstance.getDataValue());
