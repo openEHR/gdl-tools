@@ -53,16 +53,17 @@ public class ElementInstanceCollection {
                     //Its a predicate, so keep it as a generated element instance, but resolve the data value
                     DataValue dv = originalEI.getDataValue();
                     if (guideManager!=null){
-                        if (!predicateOriginalEI.getRuleReferences().isEmpty()){
-                            //Resolve predicate if on guide manager (TODO pick only first reference?)
+                        Set<Guide> guides = new HashSet<Guide>();
+                        for(RuleReference ruleReference: predicateOriginalEI.getRuleReferences()){
                             String guideId = getReferenceGuideId(dv, predicateOriginalEI.getRuleReferences());
                             Guide guide = guideManager.getGuide(guideId);
-                            if (guide!=null){
-                                dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guide, date);
+                            if (guide==null){
+                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '"+ruleReference+"'");
                             }else{
-                                Logger.getLogger(ElementInstanceCollection.class).warn("Guide id '"+guideId+"' not found, resolving data value '"+dv.serialise()+"'.");
+                                guides.add(guide);
                             }
                         }
+                        dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
                     }
                     PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
                             predicateOriginalEI.getId(),

@@ -16,6 +16,7 @@ import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
@@ -90,17 +91,22 @@ public class ElementInstanceCollectionUtil {
                 if (ei1 instanceof PredicateGeneratedElementInstance){
                     if (ei2!=null){
                         PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance)ei1);
-                        Guide guide = null;
-                        if (!pgei.getRuleReferences().isEmpty()){
-                            guide = guideMap.get(pgei.getRuleReferences().iterator().next().getGuideId()); //TODO Should we look into the rest of guideIds?
+                        Set<Guide> guides = new HashSet<Guide>();
+                        for(RuleReference ruleReference: pgei.getRuleReferences()){
+                            Guide guide = guideMap.get(ruleReference.getGuideId());
+                            if (guide==null){
+                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '"+ruleReference+"'");
+                            }else{
+                                guides.add(guide);
+                            }
                         }
                         DataValue dv = null;
                         if (pgei.getOperatorKind().equals(OperatorKind.IS_A)){
                             dv = ei1.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
                         } else {
-                            dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(),guide, date);
+                            dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(), guides, date);
                         }
-                        if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guide)){
+                        if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guides)){
                             return false;
                         }
                     }else{
@@ -116,20 +122,22 @@ public class ElementInstanceCollectionUtil {
             DataValue dv1,
             DataValue dv2,
             OperatorKind operatorKind,
-            Guide guide){
+            Collection<Guide> guides){
         if (OperatorKind.IS_A.equals(operatorKind)){
             if (dv1 instanceof DvCodedText && dv2 instanceof DvCodedText){
                 CodePhrase elementCodePhrase = ((DvCodedText)dv2).getDefiningCode();
                 CodePhrase predicateCodePhrase = ((DvCodedText)dv1).getDefiningCode();
                 Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
-                if (guide!=null){
-                    if (guide.getOntology().getTermBindings()!=null){
-                        for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
-                            TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
-                            if (termBinding!=null){
-                                Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
-                                if (binding!=null && binding.getCodes()!=null){
-                                    codePhrases.addAll(binding.getCodes());
+                if (guides!=null){
+                    for(Guide guide: guides){
+                        if (guide.getOntology().getTermBindings()!=null){
+                            for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
+                                TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
+                                if (termBinding!=null){
+                                    Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
+                                    if (binding!=null && binding.getCodes()!=null){
+                                        codePhrases.addAll(binding.getCodes());
+                                    }
                                 }
                             }
                         }
@@ -186,24 +194,28 @@ public class ElementInstanceCollectionUtil {
         return false;
     }
 
-    public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Guide guide, Calendar date){
+    public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Collection<Guide> guides, Calendar date){
         if (OperatorKind.IS_A.equals(op)){
             if (dv instanceof DvCodedText){
                 DvCodedText dvCT = (DvCodedText)dv;
-                if (guide!=null && guide.getOntology().getTermBindings()!=null){
-                    for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
-                        TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
-                        if (termBinding!=null){
-                            Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
-                            if (binding!=null && binding.getCodes()!=null && !binding.getCodes().isEmpty()){
-                                CodePhrase cf = binding.getCodes().get(0);
-                                return new DvCodedText(dvCT.getValue(),cf);
+                if (guides!=null){
+                    for(Guide guide: guides){
+                        if (guide!=null && guide.getOntology().getTermBindings()!=null){
+                            for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
+                                TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
+                                if (termBinding!=null){
+                                    Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
+                                    if (binding!=null && binding.getCodes()!=null && !binding.getCodes().isEmpty()){
+                                        CodePhrase cf = binding.getCodes().get(0);
+                                        return new DvCodedText(dvCT.getValue(),cf);
+                                    }
+                                }
                             }
                         }
                     }
                 }
                 //If reaches here, no terminology was found (problem)
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No terminology binding for '"+dv+"' was found. (guide='"+(guide==null?"null":guide.getId())+"')");
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No terminology binding for '"+dv+"' was found.')");
                 return null;
             }else{
                 Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '"+dv+"'");
