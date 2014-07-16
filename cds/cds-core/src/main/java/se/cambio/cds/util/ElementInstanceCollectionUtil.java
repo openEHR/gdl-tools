@@ -105,6 +105,16 @@ public class ElementInstanceCollectionUtil {
                             dv = ei1.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
                         } else {
                             dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(), guides, date);
+                            if (dv==null){
+                                StringBuffer rrSB = new StringBuffer();
+                                String prefix = "";
+                                for(RuleReference ruleReference: pgei.getRuleReferences()){
+                                    rrSB.append(prefix);
+                                    rrSB.append(ruleReference);
+                                    prefix = ", ";
+                                }
+                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No Data Value returned after resolving predicate! (RuleRefs="+rrSB+")");
+                            }
                         }
                         if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guides)){
                             return false;
@@ -215,7 +225,7 @@ public class ElementInstanceCollectionUtil {
                     }
                 }
                 //If reaches here, no terminology was found (problem)
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No terminology binding for '"+dv+"' was found.')");
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No terminology binding for '"+dv+"' was found! (num guides='"+(guides==null?"0":guides.size())+"'");
                 return null;
             }else{
                 Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '"+dv+"'");

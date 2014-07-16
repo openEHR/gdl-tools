@@ -1,5 +1,6 @@
 package se.cambio.cds.util;
 
+import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -69,6 +70,9 @@ public class PredicateFilterUtil {
             boolean greaterThan, Calendar date){
         if (dv instanceof CurrentTimeExpressionDataValue){
             dv = ElementInstanceCollectionUtil.resolvePredicate(dv, OperatorKind.GREATER_THAN_OR_EQUAL, null, date);
+            if (dv==null){
+                Logger.getLogger(PredicateFilterUtil.class).warn("No Data Value returned after resolving predicate!");
+            }
         }
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<ArchetypeReference>();
         for (ArchetypeReference archetypeReference: ehrArchetypeReferences){
