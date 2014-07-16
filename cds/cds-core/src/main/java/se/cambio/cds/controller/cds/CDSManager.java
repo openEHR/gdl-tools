@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.cds;
 
+import org.apache.log4j.Logger;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
@@ -87,9 +88,7 @@ public class CDSManager {
 
     private static Collection<ElementInstance> getElementInstances(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
             throws InternalErrorException{
-
         KBFacadeDelegate kbfd = KBFacadeDelegateFactory.getDelegate();
-
         //Search for CDS templates (not looking into 'ANY' Domain)
         Collection<ElementInstance> cdsGeneratedElementInstances = guideManager.getCompleteElementInstanceCollection().getAllElementInstancesByDomain(Domains.CDS_ID);
         Set<String> idTemplates = new HashSet<String>();
@@ -103,7 +102,6 @@ public class CDSManager {
         if (!idTemplates.isEmpty()){
             eic.addAll(kbfd.getKBElementsByIdTemplate(idTemplates));
         }
-
         //Check for missing elements
         checkForMissingElements(eic, completeEIC, guideManager, date);
         return eic.getAllElementInstances();
@@ -247,9 +245,12 @@ public class CDSManager {
             String eventTimePath = DateTimeARFinder.getEventTimePath(archetypeReference.getIdArchetype());
             if (eventTimePath!=null){
                 String eventTimeElementId = archetypeReference.getIdArchetype()+eventTimePath;
+                Logger.getLogger(CDSManager.class).info("Adding event path '"+eventTimeElementId+"' for archetype '"+archetypeReference.getIdArchetype()+"'!");
                 if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)){
                     new GeneratedElementInstance(eventTimeElementId, null, archetypeReference, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 }
+            }else{
+                Logger.getLogger(CDSManager.class).warn("Could not find event path for archetype '"+archetypeReference.getIdArchetype()+"'!");
             }
         }
     }
