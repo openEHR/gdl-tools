@@ -54,11 +54,11 @@ public class ElementInstanceCollection {
                     DataValue dv = originalEI.getDataValue();
                     if (guideManager!=null){
                         Set<Guide> guides = new HashSet<Guide>();
-                        for(RuleReference ruleReference: predicateOriginalEI.getRuleReferences()){
-                            String guideId = getReferenceGuideId(dv, predicateOriginalEI.getRuleReferences());
+                        Collection<String> guideIds = getReferenceGuideIds(dv, predicateOriginalEI.getRuleReferences());
+                        for(String guideId: guideIds){
                             Guide guide = guideManager.getGuide(guideId);
                             if (guide==null){
-                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '"+ruleReference+"'");
+                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '"+guide+"'");
                             }else{
                                 guides.add(guide);
                             }
@@ -112,23 +112,23 @@ public class ElementInstanceCollection {
         archetypeReferencesInCollection.add(archetypeReferenceToAdd);
     }
 
-    public String getReferenceGuideId(DataValue dv, Collection<RuleReference> ruleReferences){
+    public Collection<String> getReferenceGuideIds(DataValue dv, Collection<RuleReference> ruleReferences){
+        Collection<String> guideIds = new ArrayList<String>();
         if (dv instanceof DvCodedText){
             DvCodedText dvCT = (DvCodedText)dv;
-            Iterator<RuleReference> i = ruleReferences.iterator();
-            while (i.hasNext()) {
-                RuleReference next =  i.next();
-                if (next.getGTCode().equals(dvCT.getCode())){
-                    return next.getGuideId();
+            for(RuleReference ruleReference: ruleReferences){
+                if (ruleReference.getGTCode().equals(dvCT.getCode())){
+                    guideIds.add(ruleReference.getGuideId());
                 }
             }
         } else {
-            if (!ruleReferences.isEmpty()){
-                return ruleReferences.iterator().next().getGuideId();
+            for(RuleReference ruleReference: ruleReferences){
+                guideIds.add(ruleReference.getGuideId());
             }
         }
-        return null;
+        return guideIds;
     }
+
     public void remove(ArchetypeReference archetypeReference){
         getArchetypeReferences(archetypeReference).remove(archetypeReference);
     }
