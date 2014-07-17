@@ -43,7 +43,15 @@ public class GeneratedElementInstance extends ElementInstance{
     }
 
     public String toString(){
-        return "(G)"+super.toString();
+        StringBuffer rrSB = new StringBuffer();
+        String prefix = "";
+        for(RuleReference ruleReference: getRuleReferences()){
+            rrSB.append(prefix);
+            rrSB.append(ruleReference);
+            prefix = ", ";
+        }
+        return "(G)"+super.toString()+"\n"+
+                "RuleRefs="+rrSB;
     }
 
     public boolean hasNoValue(String gtCodeReference){

@@ -65,14 +65,7 @@ public class ElementInstanceCollection {
                         }
                         dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
                         if (dv==null){
-                            StringBuffer rrSB = new StringBuffer();
-                            String prefix = "";
-                            for(RuleReference ruleReference: predicateOriginalEI.getRuleReferences()){
-                                rrSB.append(prefix);
-                                rrSB.append(ruleReference);
-                                prefix = ", ";
-                            }
-                            Logger.getLogger(ElementInstanceCollection.class).warn("No Data Value returned after resolving predicate! (RuleRefs="+rrSB+")");
+                            Logger.getLogger(ElementInstanceCollection.class).warn("No Data Value returned after resolving predicate! (pred="+predicateOriginalEI+")");
                         }
                     }
                     PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
