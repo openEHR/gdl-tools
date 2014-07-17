@@ -64,9 +64,7 @@ public class ElementInstanceCollection {
                             }
                         }
                         dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
-                        if (dv==null){
-                            Logger.getLogger(ElementInstanceCollection.class).warn("No Data Value returned after resolving predicate! (pred="+predicateOriginalEI+")");
-                        }
+                        //Might be null i.e. max(date/time) or path!=null
                     }
                     PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
                             predicateOriginalEI.getId(),
