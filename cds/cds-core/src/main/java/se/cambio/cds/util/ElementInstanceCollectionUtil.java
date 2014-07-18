@@ -15,6 +15,7 @@ import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
+import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -72,7 +73,11 @@ public class ElementInstanceCollectionUtil {
             ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
             ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
             if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2==null){
-                emptyElementInstances.add(ei1.clone());
+                ei2 = ei1.clone();
+                emptyElementInstances.add(ei2);
+            }
+            if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance){
+                ((GeneratedElementInstance)ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
             }
         }
         for (ElementInstance elementInstance : emptyElementInstances) {

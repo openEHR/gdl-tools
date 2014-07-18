@@ -217,4 +217,15 @@ public class BasicGDLTest extends GDLTestCase {
             }
         }
     }
+
+
+    public void testCDSInitialization(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_cds_init1");
+        guideIds.add("test_cds_init2");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(1, rer.getArchetypeReferences().size());
+    }
 }
