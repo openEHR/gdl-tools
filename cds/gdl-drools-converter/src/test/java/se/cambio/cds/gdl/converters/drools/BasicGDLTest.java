@@ -2,8 +2,11 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.DvCount;
+import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
+import se.cambio.cds.gdl.model.expression.OperatorKind;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -122,6 +125,73 @@ public class BasicGDLTest extends GDLTestCase {
         }
     }
 
+    public void testMedDefinitionWithPredicates(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
+        ars.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("A01AB06");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
+        ars.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("N02AX02");
+        ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
+        ars.add(ar);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_med_definition_with_predicates1");
+        guideIds.add("test_med_definition_with_predicates2");
+        GuideManager guideManager = generateGuideManager(guideIds);
+        try {
+            Collection<ElementInstance> elementInstances =
+                    CDSManager.getElementInstances(null, guideIds, ars, guideManager, Calendar.getInstance());
+            assertEquals(18,elementInstances.size());
+            boolean predicateForBValuesExists = false;
+            boolean predicateForGenericEqualsNullValuesExists = false;
+            boolean predicateForMinLastAdministrationExists = false;
+            for(ElementInstance elementInstance: elementInstances){
+                if (elementInstance instanceof PredicateGeneratedElementInstance){
+                    PredicateGeneratedElementInstance pgei = (PredicateGeneratedElementInstance)elementInstance;
+                    if (MEDICATION_CODE_ELEMENT_ID.equals(pgei.getId())){
+                        if(OperatorKind.INEQUAL.equals(pgei.getOperatorKind())){
+                            if (pgei.getDataValue()==null){
+                                fail("Predicate medication generic name!=null should not be generated!");
+                            }
+                        }else if(OperatorKind.EQUALITY.equals(pgei.getOperatorKind())){
+                            if (pgei.getDataValue()==null){
+                                predicateForGenericEqualsNullValuesExists = true;
+                            }
+                        }else if(OperatorKind.IS_A.equals(pgei.getOperatorKind())){
+                            if (pgei.getDataValue() instanceof DvCodedText){
+                                DvCodedText dvCodedText = (DvCodedText)pgei.getDataValue();
+                                String code = dvCodedText.getCode();
+                                if (code.equals("A01AB06")){
+                                    fail("Predicate medication generic name is_a 'A01AB06' should not be generated!");
+                                }else if (code.startsWith("B01")){
+                                    predicateForBValuesExists =true;
+                                }
+                            }
+                        }
+                    }else if (MEDICATION_DATE_INIT_ELEMENT_ID.equals(pgei.getId())){
+                        if(OperatorKind.MAX.equals(pgei.getOperatorKind())){
+                            fail("Predicate medication generic name!=null should not be generated!");
+                        }
+
+                    }else if (MEDICATION_DATE_END_ELEMENT_ID.equals(pgei.getId())){
+                        if(OperatorKind.MIN.equals(pgei.getOperatorKind())){
+                            predicateForMinLastAdministrationExists=true;
+                        }
+                    }
+                }
+            }
+            assertTrue(predicateForBValuesExists);
+            assertTrue(predicateForGenericEqualsNullValuesExists);
+            assertTrue(predicateForMinLastAdministrationExists);
+        } catch (PatientNotFoundException e) {
+            e.printStackTrace();
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void testMultipleResults(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
@@ -142,9 +212,9 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(4, rer.getFiredRules().size());
         assertEquals(4, ars.size());
         for(ArchetypeReference arAux: ars){
-           if (GDLTestCase.MEDICATION_ARCHETYPE_ID.equals(arAux.getIdArchetype())){
-               assertEquals(3, arAux.getElementInstancesMap().size()); //End date is generated in CDSManager
-           }
+            if (GDLTestCase.MEDICATION_ARCHETYPE_ID.equals(arAux.getIdArchetype())){
+                assertEquals(3, arAux.getElementInstancesMap().size()); //End date is generated in CDSManager
+            }
         }
     }
 }
