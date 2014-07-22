@@ -1,7 +1,9 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
+import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
@@ -227,5 +229,22 @@ public class BasicGDLTest extends GDLTestCase {
         guideIds.add("test_cds_init2");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(1, rer.getArchetypeReferences().size());
+    }
+
+    public void testDateOperation(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_date_operation");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(1, rer.getArchetypeReferences().size());
+        assertEquals(1, rer.getFiredRules().size());
+        ArchetypeReference ar = rer.getArchetypeReferences().iterator().next();
+        assertEquals(1, ar.getElementInstancesMap().size());
+        ElementInstance contactEndElement = ar.getElementInstancesMap().get(CONTACT_DATE_END_ELEMENT_ID);
+        assertNotNull(contactEndElement);
+        DataValue dv = contactEndElement.getDataValue();
+        assertTrue(dv instanceof DvDateTime);
+        assertEquals(Calendar.getInstance().get(Calendar.YEAR)-1,((DvDateTime)dv).getYear());
     }
 }

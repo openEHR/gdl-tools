@@ -80,7 +80,7 @@ public class ExpressionUtil {
     /*
      * Parse for units of hr and convert value to milliseconds
      */
-    public static String formatConstantValue(ConstantExpression exp) {
+    public static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
         String value = exp.getValue();
         int i = value.indexOf(",");
         if(i > 0 ){
@@ -107,9 +107,11 @@ public class ExpressionUtil {
             }else if (units.equals("s")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "1000L*" + d;
-            } else { //milliseconds or any other unit
+            } else if (units.equals("S")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "" + d;
+            }else{
+                throw new InternalErrorException(new Exception("Unknown time units '"+units+"'"));
             }
         }
         return value;

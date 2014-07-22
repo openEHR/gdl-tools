@@ -121,8 +121,8 @@ public class CDSImageUtil {
 	public static final ImageIcon FOLDER_OBJECT_ICON = OpenEHRImageUtil.getIcon("folder_object.png");
 	public static final ImageIcon FOLDER_ICON = OpenEHRImageUtil.getIcon("folder.png");
 	public static final ImageIcon SOURCE_ICON = OpenEHRImageUtil.getIcon("source.gif");
-	public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
-	
+    public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
+
 
 	/* Aggregation functions */
 	public static final ImageIcon AF_ALL_ICON = OpenEHRImageUtil.getIcon("af_all.png");

@@ -120,6 +120,8 @@ public class DataValueGenerator {
         }else{
             if ("value".equals(attributeName) && value instanceof Long){
                 cal.setTimeInMillis(((Long)value));
+            }else if ("value".equals(attributeName) && value instanceof Double){
+                cal.setTimeInMillis(((Double)value).longValue());
             }else{
                 Logger.getLogger(DataValueGenerator.class).warn("Wrong attribute name or class creating DvDateTime with value = '"+value+"'");
             }
