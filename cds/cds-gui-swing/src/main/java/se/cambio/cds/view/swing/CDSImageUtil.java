@@ -122,6 +122,7 @@ public class CDSImageUtil {
 	public static final ImageIcon FOLDER_ICON = OpenEHRImageUtil.getIcon("folder.png");
 	public static final ImageIcon SOURCE_ICON = OpenEHRImageUtil.getIcon("source.gif");
     public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
+    public static final ImageIcon PIE_CHART_ICON = OpenEHRImageUtil.getIcon("chart_pie.png");
 
 
 	/* Aggregation functions */
