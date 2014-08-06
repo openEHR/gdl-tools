@@ -15,7 +15,7 @@
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
     <scm>
-        <developerConnection>scm:git:ssh://git@css-cds-3:7999/cds/gdl-editor.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@css-cds-3:7999/cds/gdl-tools.git</developerConnection>
     </scm>
     <build>
         <plugins>
