@@ -15,9 +15,7 @@
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
     <scm>
-        <connection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</connection>
-		<developerConnection>scm:svn:https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</developerConnection>
-		<url>https://subversion.cambio.se/PC/Standard/CDS/openehr/gdl-tools/trunk/</url>
+        <developerConnection>scm:git:ssh://git@css-cds-3:7999/cds/gdl-editor.git</developerConnection>
     </scm>
     <build>
         <plugins>
