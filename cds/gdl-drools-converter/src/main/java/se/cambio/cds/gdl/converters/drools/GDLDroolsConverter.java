@@ -97,7 +97,7 @@ public class GDLDroolsConverter {
                 String functionExtraCode = getFunctionsExtraCode(functionsRefs);
                 sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
                 String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
-                sb.append(SALIENCE +" "+guideSalienceId+" + "+rule.getPriority()+"\n");
+                sb.append(SALIENCE + " "+ guideSalienceId + " + " + rule.getPriority() + "\n");
                 sb.append(DEFAULT_CONFIG + "\n");
                 sb.append(WHEN + "\n");
                 if (definition != null){

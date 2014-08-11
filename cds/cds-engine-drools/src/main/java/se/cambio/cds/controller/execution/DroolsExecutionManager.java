@@ -208,7 +208,7 @@ public class DroolsExecutionManager {
     }
 
     public static String getGuideSalienceId(String guideId){
-        return "$"+guideId.replace(".","_")+"_salience";
+        return "$"+guideId.replaceAll("[^a-zA-Z0-9]+","")+"_salience";
     }
 
 }
