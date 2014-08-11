@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.converters.drools;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.cds.CDSManager;
@@ -246,5 +247,34 @@ public class BasicGDLTest extends GDLTestCase {
         DataValue dv = contactEndElement.getDataValue();
         assertTrue(dv instanceof DvDateTime);
         assertEquals(Calendar.getInstance().get(Calendar.YEAR)-1,((DvDateTime)dv).getYear());
+    }
+
+    public void testCDSLinking(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Calendar birthdate = Calendar.getInstance();
+        birthdate.add(Calendar.YEAR, -75);
+        ars.add(generateBasicDemographicsArchetypeReference(birthdate, Gender.FEMALE));
+        ars.add(generateICD10DiagnosisArchetypeReference("I48"));
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("CHA2DS2VASc_Score_calculation.v1.1");
+        guideIds.add("Stroke_risks.v2");
+        guideIds.add("CHA2DS2VASc_diagnosis_review.v1");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(3, rer.getArchetypeReferences().size());
+        assertEquals(7, rer.getFiredRules().size());
+        boolean strokeARFound = false;
+        for(ArchetypeReference ar: rer.getArchetypeReferences()){
+            if (ar.getIdArchetype().equals("openEHR-EHR-OBSERVATION.stroke_risk.v1")){
+                strokeARFound = true;
+                assertEquals(1, ar.getElementInstancesMap().size());
+                ElementInstance strokeRiskElement = ar.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.stroke_risk.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]");
+                assertNotNull(strokeRiskElement);
+                DataValue dv = strokeRiskElement.getDataValue();
+                assertTrue(dv instanceof DvOrdinal);
+                assertEquals(3, ((DvOrdinal)dv).getValue());
+            }
+        }
+        assertTrue(strokeARFound);
     }
 }

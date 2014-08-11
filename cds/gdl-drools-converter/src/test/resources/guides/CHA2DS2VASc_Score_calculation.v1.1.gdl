@@ -1,0 +1,462 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"CHA2DS2VASc_Score_calculation.v1.1">
+	concept = <"gt0036">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"">
+				keywords = <"Atrial Fibrillation", "Stroke", "CHA2DS2-VASc">
+				misuse = <"">
+				purpose = <"Calculates stroke risk for patients with atrial fibrillation, possibly better than the CHADS2 score.">
+				use = <"Calculates stroke risk for patients with atrial fibrillation, possibly better than the CHADS2 score.">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2012/12/03">
+			["email"] = <"rong.chen@cambio.se">
+			["name"] = <"Rong Chen">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_contributors = <"Carlos Valladares",...>
+		other_details = <
+			["references"] = <"1. Lip GY, Nieuwlaat R, Pisters R, Lane DA, Crijns HJ. Refining clinical risk stratification for predicting stroke and thromboembolism in atrial fibrillation using a novel risk factor-based approach: the euro heart survey on atrial fibrillation. Chest. 2010 Feb;137(2):263-72. Epub 2009 Sep 17. PubMed PMID: 19762550. 
+2. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247.
+3. Lip GY, Frison L, Halperin JL, Lane DA. Identifying patients at high risk for stroke despite anticoagulation: a comparison of contemporary stroke risk stratification schemes in an anticoagulated atrial fibrillation cohort. Stroke. 2010 Dec;41(12):2731-8. Epub 2010 Oct 21. PubMed PMID: 20966417.">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0122"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0115"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0036]">
+					>
+					["gt0117"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0037]">
+					>
+					["gt0118"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0038]">
+					>
+					["gt0119"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0039]">
+					>
+					["gt0120"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0040]">
+					>
+					["gt0121"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0035]">
+					>
+				>
+			>
+			["gt0123"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+					["gt0113"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
+					>
+				>
+			>
+			["gt0124"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0009"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0046]">
+					>
+					["gt0010"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0032]">
+					>
+					["gt0011"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0035]">
+					>
+					["gt0012"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0026]">
+					>
+					["gt0013"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0039]">
+					>
+					["gt0014"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0029]">
+					>
+					["gt0015"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0042]">
+					>
+					["gt0016"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0099]">
+					>
+				>
+			>
+		>
+		pre_conditions = <"$gt0121==1|local::at0051|Present|",...>
+		rules = <
+			["gt0017"] = (RULE) <
+				when = <"$gt0012!=1|local::at0028|Present|", "$gt0118==1|local::at0051|Present|">
+				then = <"$gt0012=1|local::at0028|Present|",...>
+				priority = <10>
+			>
+			["gt0018"] = (RULE) <
+				when = <"$gt0014!=1|local::at0028|Present|", "$gt0120==1|local::at0051|Present|">
+				then = <"$gt0014=1|local::at0028|Present|",...>
+				priority = <11>
+			>
+			["gt0019"] = (RULE) <
+				when = <"$gt0010!=1|local::at0028|Present|", "$gt0115==1|local::at0051|Present|">
+				then = <"$gt0010=1|local::at0028|Present|",...>
+				priority = <9>
+			>
+			["gt0020"] = (RULE) <
+				when = <"$gt0013!=2|local::at0028|Present|", "$gt0117==1|local::at0051|Present|">
+				then = <"$gt0013=2|local::at0028|Present|",...>
+				priority = <8>
+			>
+			["gt0021"] = (RULE) <
+				when = <"$gt0113.value>($currentDateTime.value-65,a)",...>
+				then = <"$gt0011=0|local::at0036|Under 65|",...>
+				priority = <3>
+			>
+			["gt0022"] = (RULE) <
+				when = <"$gt0113.value<=($currentDateTime.value-65,a)", "$gt0113.value>($currentDateTime.value-75,a)">
+				then = <"$gt0011=1|local::at0037|Between 65-74|",...>
+				priority = <2>
+			>
+			["gt0023"] = (RULE) <
+				when = <"$gt0113.value<=($currentDateTime.value-75,a)",...>
+				then = <"$gt0011=2|local::at0038|Above or equals to 75|",...>
+				priority = <4>
+			>
+			["gt0024"] = (RULE) <
+				when = <"$gt0006==local::at0005|Male|",...>
+				then = <"$gt0015=0|local::at0043|Male|",...>
+				priority = <5>
+			>
+			["gt0025"] = (RULE) <
+				when = <"$gt0006==local::at0006|Female|",...>
+				then = <"$gt0015=1|local::at0044|Female|",...>
+				priority = <6>
+			>
+			["gt0026"] = (RULE) <
+				then = <"$gt0016.magnitude=(((((($gt0009.value+$gt0010.value)+$gt0011.value)+$gt0015.value)+$gt0012.value)+$gt0013.value)+$gt0014.value)",...>
+				priority = <1>
+			>
+			["gt0027"] = (RULE) <
+				when = <"$gt0015==null", "$gt0011==null", "$gt0010==null", "$gt0009==null", "$gt0012==null", "$gt0013==null", "$gt0014==null">
+				then = <"$gt0011=0|local::at0036|Under 65|", "$gt0015=0|local::at0043|Male|", "$gt0010=0|local::at0027|Absent|", "$gt0009=0|local::at0027|Absent|", "$gt0012=0|local::at0027|Absent|", "$gt0013=0|local::at0027|Absent|", "$gt0014=0|local::at0027|Absent|">
+				priority = <12>
+			>
+			["gt0028"] = (RULE) <
+				when = <"$gt0009!=1|local::at0028|Present|", "$gt0119==1|local::at0051|Present|">
+				then = <"$gt0009=1|local::at0028|Present|",...>
+				priority = <7>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0003"] = (TERM) <
+						text = <"Diagnosis">
+						description = <"The index diagnosis">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Age">
+						description = <"*">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Gender">
+						description = <"*">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Vascular diseases">
+						description = <"Prior myocardial infarction, Peripheral artery disease, Aortic plaque">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Diabetes">
+						description = <"*">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Age">
+						description = <"*">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Congestive Heart Failure">
+						description = <"*">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Previous stroke">
+						description = <"*">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Hypertension">
+						description = <"*">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Gender">
+						description = <"*">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Total score">
+						description = <"*">
+					>
+					["gt0017"] = (TERM) <
+						text = <"Set CHF present">
+					>
+					["gt0018"] = (TERM) <
+						text = <"Set hypertension">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Set diabetes">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Set previous stroke">
+					>
+					["gt0021"] = (TERM) <
+						text = <"Set age below 65">
+					>
+					["gt0022"] = (TERM) <
+						text = <"Set age between 65-74">
+					>
+					["gt0023"] = (TERM) <
+						text = <"Set age above or equals to 75">
+					>
+					["gt0024"] = (TERM) <
+						text = <"Set gender male">
+					>
+					["gt0025"] = (TERM) <
+						text = <"Set gender female">
+					>
+					["gt0026"] = (TERM) <
+						text = <"Calculate total score">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Set default">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Set vascular disease">
+					>
+					["gt0036"] = (TERM) <
+						text = <"CHA2DS2-VASc Score">
+						description = <"CHA2DS2-VASc Score for estimation stroke risks in atrial fibrillation">
+					>
+					["gt0100"] = (TERM) <
+						text = <"Congestive heart failure">
+					>
+					["gt0101"] = (TERM) <
+						text = <"Hypertension">
+					>
+					["gt0102"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0103"] = (TERM) <
+						text = <"Previous stroke or TIA">
+					>
+					["gt0104"] = (TERM) <
+						text = <"Vascular disease">
+					>
+					["gt0108"] = (TERM) <
+						text = <"Hypertension diagnosis">
+					>
+					["gt0109"] = (TERM) <
+						text = <"Diabetes diagnosis">
+					>
+					["gt0110"] = (TERM) <
+						text = <"Congestive heart failure diagnosis">
+					>
+					["gt0111"] = (TERM) <
+						text = <"Previous stroke or TIA diagnosis">
+					>
+					["gt0112"] = (TERM) <
+						text = <"Vascular disease diagnosis">
+					>
+					["gt0113"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
+					>
+					["gt0114"] = (TERM) <
+						text = <"Atrial fibrillation">
+						description = <"*">
+					>
+					["gt0115"] = (TERM) <
+						text = <"Diabetes review">
+						description = <"*">
+					>
+					["gt0117"] = (TERM) <
+						text = <"Stroke review">
+						description = <"*">
+					>
+					["gt0118"] = (TERM) <
+						text = <"Congestive heart failure review">
+						description = <"*">
+					>
+					["gt0119"] = (TERM) <
+						text = <"Vascular disease review">
+						description = <"*">
+					>
+					["gt0120"] = (TERM) <
+						text = <"Hypertension review">
+						description = <"*">
+					>
+					["gt0121"] = (TERM) <
+						text = <"Atrial fibrillation">
+						description = <"*">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0003"] = (TERM) <
+						text = <"Diagnos">
+						description = <"*The index diagnosis (en)">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Ålder">
+						description = <"** (en)">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Kön">
+						description = <"** (en)">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Vaskulär sjukdom">
+						description = <"*Prior myocardial infarction, Peripheral artery disease, Aortic plaque (en)">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Diabetes">
+						description = <"** (en)">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Ålder">
+						description = <"** (en)">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion">
+						description = <"** (en)">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Tidigare Stroke/TIA">
+						description = <"** (en)">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Hypertoni">
+						description = <"** (en)">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Kön">
+						description = <"** (en)">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Totalpoäng">
+						description = <"** (en)">
+					>
+					["gt0017"] = (TERM) <
+						text = <"Ange Hjärtsvikt/VK-dysfunktion finss">
+					>
+					["gt0018"] = (TERM) <
+						text = <"Ange hypertoni">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Ange diabetes">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Ange stroke/TIA">
+					>
+					["gt0021"] = (TERM) <
+						text = <"Ange ålder under 65">
+					>
+					["gt0022"] = (TERM) <
+						text = <"Ange ålder mellan 65-74">
+					>
+					["gt0023"] = (TERM) <
+						text = <"Ange ålder 75 eller högre">
+					>
+					["gt0024"] = (TERM) <
+						text = <"Ange kön man">
+					>
+					["gt0025"] = (TERM) <
+						text = <"Ange kön kvinna">
+					>
+					["gt0026"] = (TERM) <
+						text = <"Beräkna totala poäng">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Ange som förval">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Ange vaskulär sjukdom">
+					>
+					["gt0036"] = (TERM) <
+						text = <"CHA2DS2-VASc Poäng">
+						description = <"*CHA2DS2-VASc Score for estimation stroke risks in atrial fibrillation (en)">
+					>
+					["gt0100"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion">
+					>
+					["gt0101"] = (TERM) <
+						text = <"Hypertoni">
+					>
+					["gt0102"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0103"] = (TERM) <
+						text = <"Tidigare Stroke/TIA">
+					>
+					["gt0104"] = (TERM) <
+						text = <"Vaskulär sjukdom">
+					>
+					["gt0108"] = (TERM) <
+						text = <"Hypertoni diagnos">
+					>
+					["gt0109"] = (TERM) <
+						text = <"Diabetes diagnos">
+					>
+					["gt0110"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion diagnos">
+					>
+					["gt0111"] = (TERM) <
+						text = <"Tidigare Stroke/TIA diagnos">
+					>
+					["gt0112"] = (TERM) <
+						text = <"Vaskulär sjukdom diagnos">
+					>
+					["gt0113"] = (TERM) <
+						text = <"Födelsedatum">
+					>
+					["gt0114"] = (TERM) <
+						text = <"Förmaksflimmer">
+					>
+					["gt0115"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0117"] = (TERM) <
+						text = <"Tidigare Stroke/TIA">
+					>
+					["gt0118"] = (TERM) <
+						text = <" Hjärtsvikt/VK-dysfunktion">
+					>
+					["gt0119"] = (TERM) <
+						text = <"Vaskulär sjukdom">
+					>
+					["gt0120"] = (TERM) <
+						text = <"Hypertoni">
+					>
+					["gt0121"] = (TERM) <
+						text = <"Förmaksflimmer">
+					>
+				>
+			>
+		>
+	>
+>

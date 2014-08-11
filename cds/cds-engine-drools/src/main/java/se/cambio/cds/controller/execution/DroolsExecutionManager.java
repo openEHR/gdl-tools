@@ -47,11 +47,16 @@ public class DroolsExecutionManager {
         }else{
             kb = generateKnowledgeBase(guideDTOs);
         }
-        executeGuides(kb, date, workingMemoryObjects, executionLogger);
+        Collection<String> guideIds = new ArrayList<String>();
+        for(GuideDTO guideDTO: guideDTOs){
+            guideIds.add(guideDTO.getIdGuide());
+        }
+        executeGuides(guideIds, kb, date, workingMemoryObjects, executionLogger);
     }
 
 
     private static void executeGuides(
+            Collection<String> guideIds,
             KnowledgeBase knowledgeBase,
             Calendar date,
             Collection<Object> workingMemoryObjects,
@@ -71,6 +76,11 @@ public class DroolsExecutionManager {
             session.setGlobal("$executionLogger", executionLogger);
             session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
             session.setGlobal("$execute", true);
+            int initSalience = 0;
+            for(String guideId: guideIds) {
+                session.setGlobal(getGuideSalienceId(guideId), initSalience);
+                initSalience = initSalience+1000;
+            }
             session.execute(workingMemoryObjects);
             executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
         }catch(Exception e){
@@ -196,6 +206,11 @@ public class DroolsExecutionManager {
         }
         return getDelegate()._timeOutInMillis;
     }
+
+    public static String getGuideSalienceId(String guideId){
+        return "$"+guideId.replace(".","_")+"_salience";
+    }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
