@@ -48,7 +48,8 @@ public abstract class GDLTestCase extends TestCase {
     public static String MEDICATION_DATE_END_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]";
 
     public static String BASIC_DEMOGRAPHICS_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1";
-    public static String BIRTHDATE_DATE_END_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0004]/items[at0008]";
+    public static String BIRTHDATE_DATE_ELEMENT_ID =    "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
+    public static String GENDER_ELEMENT_ID =            "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]";
 
     public static String CONTACT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.contact.v1";
     public static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
@@ -67,6 +68,25 @@ public abstract class GDLTestCase extends TestCase {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code){
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.DIAGNOSIS_ARCHETYPE_ID, GDLTestCase.DIAGNOSIS_TEMPLATE_ID);
+        DataValue dataValue = new DvCodedText(icd10Code, "ICD10", icd10Code);
+        new ElementInstance(GDLTestCase.DIAGNOSIS_CODE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        dataValue = new DvDateTime(new DateTime().toString());
+        new ElementInstance(GDLTestCase.DIAGNOSIS_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        return ar;
+    }
+
+    public static ArchetypeReference generateBasicDemographicsArchetypeReference(Calendar birthdate, Gender gender){
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
+        String localGenderCode = gender==Gender.FEMALE?"at0006":"at0005";
+        DataValue dataValue = new DvCodedText(localGenderCode, "local", localGenderCode);
+        new ElementInstance(GENDER_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        dataValue = new DvDateTime(new DateTime(birthdate.getTimeInMillis()).toString());
+        new ElementInstance(BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        return ar;
     }
 
 
@@ -103,7 +123,7 @@ public abstract class GDLTestCase extends TestCase {
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         for(String guideId: guideIds){
             try {
-                guideDTOs.add(GDLTestCase.parse("guides/"+guideId));
+                guideDTOs.add(GDLTestCase.parse(guideId));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -111,7 +131,7 @@ public abstract class GDLTestCase extends TestCase {
         return new GuideManager(guideDTOs);
     }
 
-        public static RuleExecutionResult executeGuides(Collection<String> guideIds, Collection<ElementInstance> elementInstances){
+    public static RuleExecutionResult executeGuides(Collection<String> guideIds, Collection<ElementInstance> elementInstances){
         RuleExecutionResult rer = null;
         try{
             StringBuffer guideIdsSB = new StringBuffer();
@@ -145,7 +165,7 @@ public abstract class GDLTestCase extends TestCase {
 
 
     public static GuideDTO parse(String guideId) throws Exception {
-        InputStream is = load(guideId+".gdl");
+        InputStream is = load("guides/"+guideId+".gdl");
         String gdlStr = IOUtils.toString(is);
         GuideDTO guideDTO = new GuideDTO(guideId, gdlStr, null, null, true, Calendar.getInstance().getTime());
         DroolsGuideUtil.compileIfNeeded(guideDTO);
@@ -154,5 +174,9 @@ public abstract class GDLTestCase extends TestCase {
 
     private static InputStream load(String fileName) throws Exception {
         return StressTest.class.getClassLoader().getResourceAsStream(fileName);
+    }
+
+    public enum Gender{
+        MALE,FEMALE
     }
 }

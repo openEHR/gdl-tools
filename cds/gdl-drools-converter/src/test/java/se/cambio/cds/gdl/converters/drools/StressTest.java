@@ -55,9 +55,9 @@ public class StressTest {
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
-            guideDTOs.add(GDLTestCase.parse("guides/CHA2DS2VASc_diagnosis_review.v1"));
-            guideDTOs.add(GDLTestCase.parse("guides/Stroke_prevention_dashboard_case.v1"));
-            guideDTOs.add(GDLTestCase.parse("guides/MIE_Medication_in_elderly.v1"));
+            guideDTOs.add(GDLTestCase.parse("CHA2DS2VASc_diagnosis_review.v1"));
+            guideDTOs.add(GDLTestCase.parse("Stroke_prevention_dashboard_case.v1"));
+            guideDTOs.add(GDLTestCase.parse("MIE_Medication_in_elderly.v1"));
 
             GuideManager guideManager = new GuideManager(guideDTOs);
             Calendar cal = Calendar.getInstance();
@@ -126,7 +126,7 @@ public class StressTest {
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesATC();
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
         DataValue dataValue = new DvDateTime("1900-01-01T12:00");
-        ElementInstance eiBirthdateDate = new ElementInstance(GDLTestCase.BIRTHDATE_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        ElementInstance eiBirthdateDate = new ElementInstance(GDLTestCase.BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         elementInstances.add(eiBirthdateDate);
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();

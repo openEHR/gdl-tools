@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.converters.drools;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -31,8 +32,9 @@ public class GDLDroolsConverter {
     private static String WHEN = "when";
     private static String THEN = "then";
     private static String END = "end";
-    private static String DEFAULT_CONFIG = "no-loop true";//\nauto-focus true";
+    private static String DEFAULT_CONFIG = "no-loop true";
     private static String AGENDA_GROUP = "agenda-group";
+    private static String SALIENCE = "salience";
     private static String TAB = "      ";
     private static String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
@@ -94,8 +96,8 @@ public class GDLDroolsConverter {
                 functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
                 String functionExtraCode = getFunctionsExtraCode(functionsRefs);
                 sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
-                sb.append(AGENDA_GROUP + " '"+guide.getId()+"'\n"); //Isolate rule execution to guide context
-                sb.append("salience " + rule.getPriority() + "\n");
+                String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
+                sb.append(SALIENCE +" "+guideSalienceId+" + "+rule.getPriority()+"\n");
                 sb.append(DEFAULT_CONFIG + "\n");
                 sb.append(WHEN + "\n");
                 if (definition != null){
@@ -120,7 +122,6 @@ public class GDLDroolsConverter {
                 sb.append(END + "\n\n");
             }
         }
-        sb.append(getAutoFocusRule());
         return sb.toString();
     }
 
@@ -953,19 +954,6 @@ public class GDLDroolsConverter {
                 OpenEHRDataValues.TEMINOLOGYID_ATT.equals(attribute);
     }
 
-    private String getAutoFocusRule(){
-        StringBuffer sb = new StringBuffer();
-        sb.append(RULE + " \"" + guide.getId() + "/"+AGENDA_GROUP_LINK_ID+"\"\n");
-        sb.append(AGENDA_GROUP + " '"+guide.getId()+"'\n"); //Isolate rule execution to guide context
-        sb.append("salience 1000\n");
-        sb.append(DEFAULT_CONFIG + "\n");
-        sb.append("auto-focus true\n");
-        sb.append(WHEN + "\n");
-        sb.append(THEN + "\n");
-        sb.append(END + "\n");
-        return sb.toString();
-    }
-
     private String getGuideHeader() {
         return "package se.cambio.cds;\n"
                 + "import se.cambio.cds.model.instance.ArchetypeReference;\n"
@@ -989,6 +977,7 @@ public class GDLDroolsConverter {
                 + "global org.openehr.rm.datatypes.basic.DataValue $auxDV;\n"
                 + "global org.openehr.rm.datatypes.quantity.datetime.DvDateTime $"+OpenEHRConst.CURRENT_DATE_TIME_ID + ";\n"
                 + "global java.util.Map<se.cambio.cds.model.instance.ElementInstance, java.util.Map<String, Boolean>> $bindingMap;\n"
+                + "global java.lang.Integer "+DroolsExecutionManager.getGuideSalienceId(guide.getId())+";\n"
                 + "\n";
     }
 }
