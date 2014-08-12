@@ -539,7 +539,6 @@ public class GuideImporter {
         }
         return gtCodeElementMap;
     }
-
     private static Logger log = Logger.getLogger(GuideImporter.class);
 }
 /*
