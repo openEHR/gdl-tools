@@ -12,6 +12,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 import se.cambio.cds.gdl.model.readable.util.RulePriorityComparator;
@@ -538,6 +539,29 @@ public class GuideImporter {
             }
         }
         return gtCodeElementMap;
+    }
+
+    private static Map<String, GTCodeRuleLineElement> generateGTCodeRLEMap(ReadableGuide readableGuide){
+        Map<String, GTCodeRuleLineElement> gtCodeRuleLineElementMap = new HashMap<String, GTCodeRuleLineElement>();
+        for(RuleLine ruleLine: readableGuide.getDefinitionRuleLines()){
+            for(GTCodeRuleLineElement gtCodeRuleLineElement: getGTCodeRLEs(ruleLine)){
+                gtCodeRuleLineElementMap.put(gtCodeRuleLineElement.getValue(), gtCodeRuleLineElement);
+            }
+        }
+        return gtCodeRuleLineElementMap;
+    }
+
+    private static Collection<GTCodeRuleLineElement> getGTCodeRLEs(RuleLine ruleLine){
+        Collection<GTCodeRuleLineElement> gtCodeRuleLineElements = new ArrayList<GTCodeRuleLineElement>();
+        for(RuleLineElement ruleLineElement: ruleLine.getRuleLineElements()){
+            if (ruleLineElement instanceof GTCodeRuleLineElement){
+                gtCodeRuleLineElements.add((GTCodeRuleLineElement) ruleLineElement);
+            }
+        }
+        for(RuleLine childRuleLine: ruleLine.getChildrenRuleLines()){
+            gtCodeRuleLineElements.addAll(getGTCodeRLEs(childRuleLine));
+        }
+        return gtCodeRuleLineElements;
     }
 
     private static Logger log = Logger.getLogger(GuideImporter.class);

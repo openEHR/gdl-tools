@@ -1,9 +1,8 @@
 package se.cambio.cds.util;
 
 import org.apache.commons.jxpath.JXPathContext;
-import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.Term;
-import se.cambio.cds.gdl.model.TermDefinition;
+import org.openehr.rm.datatypes.text.CodePhrase;
+import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
@@ -25,6 +24,7 @@ public class ExportUtils {
 
     private static String TR_TD_FONT_OPEN = "<tr valign='top'><td><font face='Calibri'>";
     private static String TR_TD_FONT_OPEN_WITH_BG = "<tr bgcolor='#dbe5f1' valign='top'><td><font face='Calibri'>";
+    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr bgcolor='#9ec2ef' valign='top'><td><font face='Calibri'>";
     private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</font></td><td align='left'><font face='Calibri'>";
     private static String FONT_TD_TR_CLOSE = "</font></td></tr>";
 
@@ -138,6 +138,33 @@ public class ExportUtils {
             }
             sb.append("</table>");
         }
+
+        if (guide.getOntology()!=null &&
+                guide.getOntology().getTermBindings()!=null){
+            sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Bindings")));
+            for (TermBinding termBinding : guide.getOntology().getTermBindings().values()) {
+                sb.append("<table width=100%>\n");
+                sb.append(TR_TD_FONT_OPEN_WITH_BG2);
+                sb.append("<b>");
+                sb.append(termBinding.getId());
+                sb.append("</b>");
+                sb.append(FONT_TD_TR_CLOSE);
+                for (Binding binding: termBinding.getBindings().values()){
+                    sb.append(TR_TD_FONT_OPEN_WITH_BG);
+                    sb.append("<b>");
+                    sb.append(getTermText(binding.getId(), td)+": ");
+                    sb.append("</b>");
+                    String prefix = "";
+                    for(CodePhrase codePhrase: binding.getCodes()){
+                        sb.append(prefix);
+                        sb.append(codePhrase.getCodeString());
+                        prefix = ", ";
+                    }
+                    sb.append(FONT_TD_TR_CLOSE);
+                }
+                sb.append("</table><br>");
+            }
+        }
         sb.append("</HTML>");
         return sb.toString();
     }
@@ -177,6 +204,8 @@ public class ExportUtils {
         }
         return str!=null?str:"";
     }
+
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
