@@ -24,6 +24,9 @@ public class PredicateFilterUtil {
             Collection<ArchetypeReference> ehrArchetypeReferences, Calendar date){
         for (ArchetypeReference archetypeReference: definitionArchetypeReferences){
             for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
+                if(hasOtherPredicates(elementInstance, definitionArchetypeReferences)){
+                    continue;
+                }
                 if (elementInstance instanceof PredicateGeneratedElementInstance) {
                     PredicateGeneratedElementInstance pgei = (PredicateGeneratedElementInstance) elementInstance;
                     if (OperatorKind.MAX.equals(pgei.getOperatorKind())){
@@ -98,6 +101,21 @@ public class PredicateFilterUtil {
         }else{
             return compare<0;
         }
+    }
+
+    //Check if there are other predicates in archetype references with same archetype Id. If so -> skip
+    private static boolean hasOtherPredicates(ElementInstance elementInstance, Collection<ArchetypeReference> archetypeReferences){
+        ArchetypeReference ar = elementInstance.getArchetypeReference();
+        for(ArchetypeReference archetypeReference: archetypeReferences){
+            if (ar.getIdArchetype().equals(archetypeReference.getIdArchetype())){
+                for (ElementInstance elementInstanceAux: archetypeReference.getElementInstancesMap().values()){
+                    if (elementInstanceAux instanceof PredicateGeneratedElementInstance && !elementInstanceAux.equals(elementInstance)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }
