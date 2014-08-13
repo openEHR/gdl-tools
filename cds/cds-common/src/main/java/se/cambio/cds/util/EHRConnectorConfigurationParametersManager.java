@@ -1,25 +1,18 @@
 package se.cambio.cds.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.naming.InitialContext;
-
 import org.apache.log4j.Logger;
-
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
-@SuppressWarnings("resource")
+import javax.naming.InitialContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.*;
+
 public final class EHRConnectorConfigurationParametersManager {
 
-    private static final String JNDI_PREFIX = "java:comp/env/";
+    private static final String JNDI_PREFIX = "java:global/cds/";
 
     public static final String EHR_USERNAME = "EhrUsername";
     public static final String EHR_PASSWORD = "EhrPassword";
@@ -33,39 +26,50 @@ public final class EHRConnectorConfigurationParametersManager {
     private static boolean usesJNDI;
     private static Map <Object,Object> parameters;
 
-    static {
-	/*         
-	 * We use a synchronized map because it will be filled by using a 
-	 * lazy strategy.
-	 */             
-	parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
-	try {
-	    /* Read property file (if exists).*/    
-	    Class<EHRConnectorConfigurationParametersManager> configurationParametersManagerClass = 
-		    EHRConnectorConfigurationParametersManager.class;
-	    ClassLoader classLoader =
-		    configurationParametersManagerClass.getClassLoader();
-	    File configFile = getConfigFile();
-	    InputStream inputStream = null;
-	    if (configFile!=null){
-		inputStream = new FileInputStream(configFile);
-		Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
-	    }else{
-		inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-		Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
-	    }
-	    Properties properties = new Properties();
-	    properties.load(inputStream);
-	    inputStream.close();
+    private static final Map<String, String> defaultParameters =
+            new HashMap<String, String>(){
+                {
+                    put(EHR_USERNAME, "admin");
+                    put(EHR_PASSWORD, "admin");
+                    put(EHR_HOST, "localhost");
+                    put(EHR_PORT, "7778");
+                    put(EHR_NAMESPACE, "default");
+                }
+            };
 
-	    /* We have been able to read the file. */
-	    usesJNDI = false;
-	    parameters.putAll(properties);
-	} catch (Exception e) {
-	    /* We have not been able to read the file. */
-	    usesJNDI = true;
-	    Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
-	}
+
+    static {
+        /*
+         * We use a synchronized map because it will be filled by using a lazy strategy.
+         */
+        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
+        try{
+	        /* Read property file (if exists).*/
+            Class<EHRConnectorConfigurationParametersManager> configurationParametersManagerClass =
+                    EHRConnectorConfigurationParametersManager.class;
+            ClassLoader classLoader =
+                    configurationParametersManagerClass.getClassLoader();
+            File configFile = getConfigFile();
+            InputStream inputStream = null;
+            if (configFile!=null){
+                inputStream = new FileInputStream(configFile);
+                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
+            }else{
+                inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
+                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+            }
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            inputStream.close();
+
+	        /* We have been able to read the file. */
+            usesJNDI = false;
+            parameters.putAll(properties);
+        }catch (Exception e) {
+	        /* We have not been able to read the file. */
+            usesJNDI = true;
+            Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
+        }
     }
 
     private EHRConnectorConfigurationParametersManager() {}
@@ -93,7 +97,6 @@ public final class EHRConnectorConfigurationParametersManager {
             if (file.exists()){
                 return file;
             }
-
         }catch(Throwable t2){
             //Problem finding config folder
             //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
@@ -101,63 +104,35 @@ public final class EHRConnectorConfigurationParametersManager {
         return null;
     }
 
-    public static String getParameter(String name) 
-	    throws MissingConfigurationParameterException {
+    public static String getParameter(String key)
+            throws MissingConfigurationParameterException {
+        String value = (String) parameters.get(key);
+        if (value == null) {
+            if (usesJNDI) {
+                try {
+                    InitialContext initialContext = new InitialContext();
+                    value = (String) initialContext.lookup(JNDI_PREFIX + key);
+                    parameters.put(key, value);
+                } catch (Exception e) {
+                    value = defaultParameters.get(key);
+                    if (value!=null){
+                        Logger.getLogger(EHRConnectorConfigurationParametersManager.class).warn("Using default value for '"+key+"' = '"+value+"'");
+                        return value;
+                    }else{
+                        throw new MissingConfigurationParameterException(key);
+                    }
+                }
+            } else {
+                throw new MissingConfigurationParameterException(key);
 
-	String value = (String) parameters.get(name);
-
-	if (value == null) {
-	    //System.out.println("Missing "+name);
-	    if (usesJNDI) {
-		try {
-		    InitialContext initialContext = new InitialContext();
-		    value = (String) initialContext.lookup(
-			    JNDI_PREFIX + name);
-		    parameters.put(name, value);
-		} catch (Exception e) {
-		    throw new MissingConfigurationParameterException(name);
-		}
-	    } else {
-		throw new MissingConfigurationParameterException(name);
-
-	    }
-	}
-
-	return value;
-
-    }     
-
-    public static void loadParameters(Hashtable<Object,Object> usrConfig){
-	parameters.putAll(usrConfig);
+            }
+        }
+        return value;
     }
 
-    public static Object getObjectParameter(String name) 
-	    throws MissingConfigurationParameterException {
-
-	Object value = (Object) parameters.get(name);
-
-	if (value == null) {
-	    //System.out.println("Missing "+name);
-	    if (usesJNDI) {
-		try {
-		    InitialContext initialContext = new InitialContext();
-
-		    value = (Object) initialContext.lookup(
-			    JNDI_PREFIX + name);
-		    parameters.put(name, value);
-		} catch (Exception e) {
-		    throw new MissingConfigurationParameterException(name);
-		}
-	    } else {
-		throw new MissingConfigurationParameterException(name);
-
-	    }
-	}
-
-	return value;
-
-    }    
-
+    public static void loadParameters(Hashtable<Object,Object> usrConfig){
+        parameters.putAll(usrConfig);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
