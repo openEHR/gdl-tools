@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-@SuppressWarnings("resource")
 public final class EHRConnectorConfigurationParametersManager {
 
     private static final String JNDI_PREFIX = "java:global/cds/";
@@ -40,13 +39,12 @@ public final class EHRConnectorConfigurationParametersManager {
 
 
     static {
-	/*         
-	 * We use a synchronized map because it will be filled by using a 
-	 * lazy strategy.
-	 */
+        /*
+         * We use a synchronized map because it will be filled by using a lazy strategy.
+         */
         parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
-        try {
-	    /* Read property file (if exists).*/
+        try{
+	        /* Read property file (if exists).*/
             Class<EHRConnectorConfigurationParametersManager> configurationParametersManagerClass =
                     EHRConnectorConfigurationParametersManager.class;
             ClassLoader classLoader =
@@ -64,11 +62,11 @@ public final class EHRConnectorConfigurationParametersManager {
             properties.load(inputStream);
             inputStream.close();
 
-	    /* We have been able to read the file. */
+	        /* We have been able to read the file. */
             usesJNDI = false;
             parameters.putAll(properties);
-        } catch (Exception e) {
-	    /* We have not been able to read the file. */
+        }catch (Exception e) {
+	        /* We have not been able to read the file. */
             usesJNDI = true;
             Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
         }
@@ -99,7 +97,6 @@ public final class EHRConnectorConfigurationParametersManager {
             if (file.exists()){
                 return file;
             }
-
         }catch(Throwable t2){
             //Problem finding config folder
             //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
