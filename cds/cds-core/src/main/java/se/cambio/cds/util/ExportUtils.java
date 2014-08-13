@@ -57,6 +57,7 @@ public class ExportUtils {
         JXPathContext c = JXPathContext.newContext(guide.getDescription());
         StringBuffer sb = new StringBuffer();
         sb.append("<HTML>");
+        sb.append("<HEAD><meta charset='UTF-8'></HEAD>");
         sb.append("<TITLE>"+guide.getId()+"</TITLE>");
 
         sb.append("<b><font face='Calibri' size='6'>"+getTermText(guide.getConcept(), td)+"</font></b>");
