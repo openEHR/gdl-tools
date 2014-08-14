@@ -3,12 +3,12 @@
     <parent>
         <groupId>se.cambio</groupId>
         <artifactId>gdl-tools</artifactId>
-        <version>0.95.3</version>
+        <version>0.95.4-SNAPSHOT</version>
     </parent>
 	<groupId>se.cambio.cds</groupId>
 	<artifactId>cds</artifactId>
 	<packaging>pom</packaging>
-	<version>0.95.3</version>
+	<version>0.95.4-SNAPSHOT</version>
 	<name>Clinical Decision Support System</name>
 	<organization>
 		<name>Cambio</name>
@@ -21,7 +21,7 @@
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
         <developerConnection>scm:git:git@github.com:openEHR/gdl-tools.git</developerConnection>
         <url>scm:git:git@github.com:openEHR/gdl-tools.git</url>
-      <tag>gdl-tools-0.95.3</tag>
+      <tag>HEAD</tag>
   </scm>
 	<build>
 		<plugins>
