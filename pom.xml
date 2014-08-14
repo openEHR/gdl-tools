@@ -100,7 +100,6 @@
             <id>repo.cambio.se_snapshots</id>
             <name>snapshots</name>
             <url>http://repo.cambio.se/content/repositories/snapshots</url>
-            <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 </project>
