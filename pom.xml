@@ -3,7 +3,7 @@
     <groupId>se.cambio</groupId>
     <artifactId>gdl-tools</artifactId>
     <packaging>pom</packaging>
-    <version>0.95.3-SNAPSHOT</version>
+    <version>0.95.3</version>
     <name>GDL Tools</name>
     <organization>
         <name>Cambio</name>
@@ -16,7 +16,8 @@
     </properties>
     <scm>
         <developerConnection>scm:git:ssh://git@css-cds-3:7999/cds/gdl-tools.git</developerConnection>
-    </scm>
+      <tag>gdl-tools-0.95.3</tag>
+  </scm>
     <build>
         <plugins>
             <plugin>

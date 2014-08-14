@@ -3,7 +3,7 @@
     <parent>
         <groupId>se.cambio</groupId>
         <artifactId>gdl-tools</artifactId>
-        <version>0.95.3-SNAPSHOT</version>
+        <version>0.95.3</version>
     </parent>
 	<groupId>org.openehr.utils</groupId>
 	<artifactId>openehr-utils</artifactId>
@@ -20,7 +20,8 @@
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
         <developerConnection>scm:git:git@github.com:openEHR/gdl-tools.git</developerConnection>
         <url>scm:git:git@github.com:openEHR/gdl-tools.git</url>
-    </scm>
+      <tag>gdl-tools-0.95.3</tag>
+  </scm>
 	<build>
 		<plugins>
 			<plugin>

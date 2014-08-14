@@ -3,7 +3,7 @@
     <parent>
         <groupId>se.cambio.cds</groupId>
         <artifactId>cds</artifactId>
-        <version>0.95.3-SNAPSHOT</version>
+        <version>0.95.3</version>
     </parent>
     <artifactId>gdl-editor</artifactId>
     <name>GDL editor</name>
