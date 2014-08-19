@@ -176,7 +176,7 @@ public class Guides {
         return guideDTO!=null && guideDTO.isActive();
     }
 
-    private static Map<String, GuideDTO> getGuidesMap(){
+    private synchronized static Map<String, GuideDTO> getGuidesMap(){
         if (getDelegate()._guidesMap==null){
             getDelegate()._guidesMap = new HashMap<String, GuideDTO>();
         }
