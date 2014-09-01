@@ -36,6 +36,7 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
      * Do not use inside core (unless totally necessary)
      */
     public void setDataValue(DataValue dataValue) {
+
         Logger.getLogger(PredicateGeneratedElementInstance.class).warn("Attempt to change data value of generated element (from '"+getDataValue()+"' to '"+dataValue+"')");
     }
 

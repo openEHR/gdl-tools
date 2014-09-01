@@ -1,0 +1,137 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_predicates_as_default_value.v1">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.height.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+				predicates = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]==30,cm",...>
+			>
+			["gt0004"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
+					>
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+				predicates = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]==local::at0006|Female|", "/data[at0001]/events[at0002]/data[at0003]/items[at0008]==(2013-09-21T06:00:00)">
+			>
+			["gt0007"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.stroke_prevention_review.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0008"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0004]==true",...>
+			>
+			["gt0013"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0014"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+					["gt0015"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
+					>
+				>
+				predicates = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]==local::at0006|Female|", "/data[at0001]/events[at0002]/data[at0003]/items[at0008]==(2014-08-07T16:17:08)">
+			>
+		>
+		rules = <
+			["gt0009"] = (RULE) <
+				when = <"$gt0008==true",...>
+				priority = <5>
+			>
+			["gt0010"] = (RULE) <
+				when = <"$gt0005==(2013-09-21T06:00:00)",...>
+				priority = <4>
+			>
+			["gt0011"] = (RULE) <
+				when = <"$gt0003==30,cm",...>
+				priority = <3>
+			>
+			["gt0012"] = (RULE) <
+				when = <"$gt0006==local::at0006|Female|",...>
+				priority = <2>
+			>
+			["gt0016"] = (RULE) <
+				when = <"$gt0014==null", "$gt0015==null">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Height/Length">
+						description = <"The length of the body from crown of head to sole of foot.">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Gender">
+						description = <"*">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Follow-CDS Recommendation">
+						description = <"*">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Test default values (boolean)">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Test default values (date/time)">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Test default values (quantity)">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Test default values (coded text)">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Gender">
+						description = <"*">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Test inexistence of default values in EHR">
+					>
+				>
+			>
+		>
+	>
+>

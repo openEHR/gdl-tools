@@ -789,8 +789,7 @@ public class GDLEditor {
         List<ExpressionItem> list = new ArrayList<ExpressionItem>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {
-                ExpressionItem ei = ((ExpressionRuleLine) ruleLine)
-                        .toExpressionItem();
+                ExpressionItem ei = ((ExpressionRuleLine) ruleLine).toExpressionItem();
                 if (ei != null) {
                     list.add(ei);
                 }

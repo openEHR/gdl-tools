@@ -57,6 +57,10 @@ public class DVUtil {
             DvProportion dvProportion1 = (DvProportion) dv1;
             DvProportion dvProportion2 = (DvProportion) dv2;
             return (dvProportion1.getNumerator()/dvProportion1.getDenominator())==(dvProportion2.getNumerator()/dvProportion2.getDenominator());
+        }else if (dv1 instanceof DvTemporal && dv2 instanceof DvTemporal){
+            DvTemporal dvTemporal1 = (DvTemporal)dv1;
+            DvTemporal dvTemporal2 = (DvTemporal)dv2;
+            return dvTemporal1.getDateTime().getMillis()==dvTemporal2.getDateTime().getMillis();
         }else{
             if (dv1==null && dv2==null){
                 return true;
@@ -70,6 +74,7 @@ public class DVUtil {
         }
     }
 
+    //Used by the drools engine
     public static boolean equalDV(boolean inPredicate, ElementInstance ei, DataValue dv2, boolean negated) {
         if (ei instanceof PredicateGeneratedElementInstance){
             return inPredicate;
@@ -264,7 +269,7 @@ public class DVUtil {
         }else if (dv instanceof DvText){
             return new StringConstant(dataValueStr);
         }else if (dv instanceof DvDateTime) {
-            return new DateTimeConstant(dataValueStr);
+            return new DateTimeConstant(removeMillisAndTimeZoneFromDateTime(dataValueStr));
         }else if (dv instanceof DvQuantity) {
             return new QuantityConstant((DvQuantity)dv);
         }else{
@@ -284,6 +289,15 @@ public class DVUtil {
             }
         }else{
             return false;
+        }
+    }
+
+    private static String removeMillisAndTimeZoneFromDateTime(String dateTimeDVStr){
+        //Ignore millis and timezone
+        if (dateTimeDVStr.indexOf(".")>0){
+            return dateTimeDVStr.substring(0,dateTimeDVStr.indexOf("."));
+        }else{
+            return dateTimeDVStr;
         }
     }
 

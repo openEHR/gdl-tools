@@ -30,6 +30,7 @@ public class UserConfigurationManager {
     private static final String CONFIGURATION_FILE = "UserConfig.properties";
     private static Map <Object,Object> parameters;
     private static File _configFile = null;
+    private static Locale _locale = null;
 
     private static Map<String, String> _defaultValues = new HashMap<String, String>();
     static{
@@ -214,13 +215,6 @@ public class UserConfigurationManager {
 
     public static boolean saveConfig(){
         try{
-	    /*
-	    Class<UserConfigurationManager> clazz = 
-		    UserConfigurationManager.class;
-	    ClassLoader classLoader =
-		    clazz.getClassLoader();
-	    String resourceFolder = classLoader.getResource(".").getPath();
-	     */
             if (_configFile!=null){
                 _configFile.createNewFile();
                 OutputStream out = new FileOutputStream(_configFile);
