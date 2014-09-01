@@ -789,8 +789,7 @@ public class GDLEditor {
         List<ExpressionItem> list = new ArrayList<ExpressionItem>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {
-                ExpressionItem ei = ((ExpressionRuleLine) ruleLine)
-                        .toExpressionItem();
+                ExpressionItem ei = ((ExpressionRuleLine) ruleLine).toExpressionItem();
                 if (ei != null) {
                     list.add(ei);
                 }
@@ -1286,13 +1285,11 @@ public class GDLEditor {
     public static boolean checkParsedGuide(String guideSrc, Guide guide){
         String guideSrcAux = GDLEditor.serializeGuide(guide);
         if (guide!=null){
-            if (guideSrc.equals(guideSrcAux)){
+            Patch patch = DiffUtils.diff(stringToLines(guideSrc), stringToLines(guideSrcAux));
+            if (patch.getDeltas().isEmpty()){
                 return true;
             }else{
-                Patch patch = DiffUtils.diff(stringToLines(guideSrc), stringToLines(guideSrcAux));
-
                 StringBuffer diff = new StringBuffer();
-
                 for (Delta delta : patch.getDeltas()) {
                     diff.append("-------------------------------------\n");
                     diff.append(" line:"+delta.getOriginal().getPosition()+1+"\n");

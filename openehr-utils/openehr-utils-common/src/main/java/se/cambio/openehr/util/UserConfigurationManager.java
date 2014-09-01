@@ -214,13 +214,6 @@ public class UserConfigurationManager {
 
     public static boolean saveConfig(){
         try{
-	    /*
-	    Class<UserConfigurationManager> clazz = 
-		    UserConfigurationManager.class;
-	    ClassLoader classLoader =
-		    clazz.getClassLoader();
-	    String resourceFolder = classLoader.getResource(".").getPath();
-	     */
             if (_configFile!=null){
                 _configFile.createNewFile();
                 OutputStream out = new FileOutputStream(_configFile);

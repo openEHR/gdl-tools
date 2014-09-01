@@ -277,4 +277,13 @@ public class BasicGDLTest extends GDLTestCase {
         }
         assertTrue(strokeARFound);
     }
+
+    public void testPredicateAsDefaultCDSValues(){
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        Collection<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_predicates_as_default_value.v1");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(5, rer.getFiredRules().size());
+    }
 }

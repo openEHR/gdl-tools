@@ -452,7 +452,7 @@ public class DVDefSerializer {
             DecimalFormat format = getDecimalFormat(dvProportion.getPrecision());
             return format.format(dvProportion.getNumerator())+"/"+format.format(dvProportion.getDenominator());
         }else if (dv instanceof DvDateTime){
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
             Date date = ((DvDateTime)dv).getDateTime().toDate();
             return df.format(date);
         }else if (dv instanceof DvDate){

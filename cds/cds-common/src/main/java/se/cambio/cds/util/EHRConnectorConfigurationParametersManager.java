@@ -2,7 +2,6 @@ package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
 import javax.naming.InitialContext;
 import java.io.File;
@@ -68,7 +67,7 @@ public final class EHRConnectorConfigurationParametersManager {
         }catch (Exception e) {
 	        /* We have not been able to read the file. */
             usesJNDI = true;
-            Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
+            Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
         }
     }
 
@@ -76,7 +75,7 @@ public final class EHRConnectorConfigurationParametersManager {
 
     private static File getConfigFile(){
         try{
-            File jarFile = new File(OpenEHRConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            File jarFile = new File(EHRConnectorConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
             for (File file:jarFile.getParentFile().getParentFile().listFiles()){
                 if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){

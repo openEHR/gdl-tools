@@ -2,6 +2,7 @@ package se.cambio.cds.controller.guide;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.basic.DvBoolean;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
@@ -19,8 +20,11 @@ import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
+import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
+import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -90,14 +94,10 @@ public class GuideUtil {
                                     gtCode = dvCodedText.getCode();
                                 }
                             }
-                            PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
-                                    idElement,
-                                    dv,
-                                    ar,
-                                    null,
-                                    null,
-                                    be.getOperator());
-                            pgei.getRuleReferences().add(new RuleReference(guideId, gtCode));
+                            ElementInstance ei = generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv);
+                            if (ei instanceof PredicateGeneratedElementInstance){
+                                ((PredicateGeneratedElementInstance)ei).getRuleReferences().add(new RuleReference(guideId, gtCode));
+                            }
                         }else if (r instanceof ExpressionItem){
                             String path = ((Variable)l).getPath();
                             String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
@@ -105,13 +105,7 @@ public class GuideUtil {
                             String idElement =
                                     archetypeBinding.getArchetypeId()+path;
                             DataValue dv = new CurrentTimeExpressionDataValue(r, attribute);
-                            PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
-                                    idElement,
-                                    dv,
-                                    ar,
-                                    null,
-                                    null,
-                                    be.getOperator());
+                            generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv);
                             //TODO No rule references added (no gt codes)
                         }
                     }
@@ -123,17 +117,29 @@ public class GuideUtil {
                         String idElement =
                                 archetypeBinding.getArchetypeId()+((Variable)o).getPath();
                         DataValue dv = null;
-                        new PredicateGeneratedElementInstance(
-                                idElement,
-                                dv,
-                                ar,
-                                null,
-                                null,
-                                op);
+                        generateElementInstanceForPredicate(ar, op, idElement, dv);
                         //TODO No rule references added (no gt codes)
                     }
                 }
             }
+        }
+    }
+
+    private static ElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv) {
+        if (Domains.CDS_ID.equals(ar.getIdDomain())){
+            if (!OperatorKind.EQUALITY.equals(op) && !OperatorKind.IS_A.equals(op)){
+                dv = null;
+                Logger.getLogger(GuideUtil.class).warn("Operation "+op+" not allowed on CDS domain for predicates!");
+            }
+            return new GeneratedElementInstance(idElement, dv, ar, null, dv!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        }else {
+            return new PredicateGeneratedElementInstance(
+                    idElement,
+                    dv,
+                    ar,
+                    null,
+                    null,
+                    op);
         }
     }
 
@@ -149,6 +155,9 @@ public class GuideUtil {
             return ((OrdinalConstant)e).getOrdinal();
         } else if (e instanceof DateTimeConstant){
             return new DvDateTime(e.getValue());
+        //TODO Use proper BooleanConstant (create) object
+        } else if ("true".equals(e.getValue()) || "false".equals(e.getValue())){
+            return new DvBoolean(e.getValue());
         } else {
             Logger.getLogger(GuideUtil.class).warn("Unknown data value for constant expression '"+e+"'");
             return null; //TODO Proportion, date, time, count, etc

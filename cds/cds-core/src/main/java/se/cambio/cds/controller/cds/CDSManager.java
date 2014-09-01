@@ -245,8 +245,8 @@ public class CDSManager {
             String eventTimePath = DateTimeARFinder.getEventTimePath(archetypeReference.getIdArchetype());
             if (eventTimePath!=null){
                 String eventTimeElementId = archetypeReference.getIdArchetype()+eventTimePath;
-                Logger.getLogger(CDSManager.class).info("Adding event path '"+eventTimeElementId+"' for archetype '"+archetypeReference.getIdArchetype()+"'!");
                 if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)){
+                    Logger.getLogger(CDSManager.class).info("Adding event path '"+eventTimeElementId+"' for archetype '"+archetypeReference.getIdArchetype()+"'!");
                     new GeneratedElementInstance(eventTimeElementId, null, archetypeReference, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 }
             }else{
