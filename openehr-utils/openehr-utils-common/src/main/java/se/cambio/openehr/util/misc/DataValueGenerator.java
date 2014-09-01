@@ -26,8 +26,7 @@ import java.util.TimeZone;
  * Date: 2013-11-29
  * Time: 08:52
  */
-public class
-        DataValueGenerator {
+public class DataValueGenerator {
 
     private final static Map<String, DataValue> dataValueMap;
 

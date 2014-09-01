@@ -155,6 +155,7 @@ public class GuideUtil {
             return ((OrdinalConstant)e).getOrdinal();
         } else if (e instanceof DateTimeConstant){
             return new DvDateTime(e.getValue());
+        //TODO Use proper BooleanConstant (create) object
         } else if ("true".equals(e.getValue()) || "false".equals(e.getValue())){
             return new DvBoolean(e.getValue());
         } else {

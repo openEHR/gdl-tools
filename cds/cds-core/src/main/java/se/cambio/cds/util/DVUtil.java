@@ -45,22 +45,22 @@ public class DVUtil {
         }else if (dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal){
             DvOrdinal dvOrdinal1 = (DvOrdinal) dv1;
             DvOrdinal dvOrdinal2 = (DvOrdinal) dv2;
-            return dvOrdinal1.getValue()==dvOrdinal2.getValue() && equalDVs(dvOrdinal1.getSymbol(), dvOrdinal2.getSymbol());
+            return dvOrdinal1.getValue() == dvOrdinal2.getValue() && equalDVs(dvOrdinal1.getSymbol(), dvOrdinal2.getSymbol());
         }else if (dv1 instanceof DvQuantity && dv2 instanceof DvQuantity){
             DvQuantity dvQuantity1 = (DvQuantity) dv1;
             DvQuantity dvQuantity2 = (DvQuantity) dv2;
             int precision = Math.max(dvQuantity1.getPrecision(), dvQuantity2.getPrecision());
             double magnitude1 = round(dvQuantity1.getMagnitude(), precision);
             double magnitude2 = round(dvQuantity2.getMagnitude(), precision);
-            return SimpleMeasurementService.getInstance().compare(dvQuantity1.getUnits(), magnitude1, dvQuantity2.getUnits(), magnitude2)==0;
+            return SimpleMeasurementService.getInstance().compare(dvQuantity1.getUnits(), magnitude1, dvQuantity2.getUnits(), magnitude2) == 0;
         }else if (dv1 instanceof DvProportion && dv2 instanceof DvProportion){
             DvProportion dvProportion1 = (DvProportion) dv1;
             DvProportion dvProportion2 = (DvProportion) dv2;
-            return (dvProportion1.getNumerator()/dvProportion1.getDenominator())==(dvProportion2.getNumerator()/dvProportion2.getDenominator());
+            return (dvProportion1.getNumerator()/dvProportion1.getDenominator()) == (dvProportion2.getNumerator()/dvProportion2.getDenominator());
         }else if (dv1 instanceof DvTemporal && dv2 instanceof DvTemporal){
             DvTemporal dvTemporal1 = (DvTemporal)dv1;
             DvTemporal dvTemporal2 = (DvTemporal)dv2;
-            return dvTemporal1.getDateTime().getMillis()==dvTemporal2.getDateTime().getMillis();
+            return dvTemporal1.getDateTime().getMillis() == dvTemporal2.getDateTime().getMillis();
         }else{
             if (dv1==null && dv2==null){
                 return true;
@@ -269,7 +269,7 @@ public class DVUtil {
         }else if (dv instanceof DvText){
             return new StringConstant(dataValueStr);
         }else if (dv instanceof DvDateTime) {
-            return new DateTimeConstant(removeMillisAndTimeZoneFromDateTime(dataValueStr));
+            return new DateTimeConstant(getDateTimeStrWithoutMillisAndTimezone(dataValueStr));
         }else if (dv instanceof DvQuantity) {
             return new QuantityConstant((DvQuantity)dv);
         }else{
@@ -292,10 +292,14 @@ public class DVUtil {
         }
     }
 
-    private static String removeMillisAndTimeZoneFromDateTime(String dateTimeDVStr){
-        //Ignore millis and timezone
+    private static String getDateTimeStrWithoutMillisAndTimezone(String dateTimeDVStr){
+        //Ignore millis if found
         if (dateTimeDVStr.indexOf(".")>0){
             return dateTimeDVStr.substring(0,dateTimeDVStr.indexOf("."));
+        }else if (dateTimeDVStr.indexOf("+")>0){
+            return dateTimeDVStr.substring(0,dateTimeDVStr.indexOf("+"));
+        }else if (dateTimeDVStr.indexOf("-")>0){
+            return dateTimeDVStr.substring(0,dateTimeDVStr.indexOf("-"));
         }else{
             return dateTimeDVStr;
         }

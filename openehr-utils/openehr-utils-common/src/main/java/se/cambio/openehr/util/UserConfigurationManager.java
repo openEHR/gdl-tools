@@ -30,7 +30,6 @@ public class UserConfigurationManager {
     private static final String CONFIGURATION_FILE = "UserConfig.properties";
     private static Map <Object,Object> parameters;
     private static File _configFile = null;
-    private static Locale _locale = null;
 
     private static Map<String, String> _defaultValues = new HashMap<String, String>();
     static{
