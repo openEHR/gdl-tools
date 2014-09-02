@@ -1,6 +1,8 @@
 package se.cambio.cds.gdl.editor.controller.exportplugins;
 
 import org.apache.log4j.Logger;
+import se.cambio.cds.controller.guide.GuideExportPlugin;
+import se.cambio.cds.gdl.converters.drools.DroolsGuideExportPlugin;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 

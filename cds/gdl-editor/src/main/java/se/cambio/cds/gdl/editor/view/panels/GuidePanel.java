@@ -1,8 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPlugin;
-import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.editor.controller.panelplugins.GDLEditorPluginPanelManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -88,13 +86,6 @@ public class GuidePanel extends JPanel {
                         abstractPluginPanel.getPluginName(),
                         abstractPluginPanel.getPluginIcon(),
                         abstractPluginPanel
-                );
-            }
-            for (GuideExportPlugin guideExportPlugin : GuideExportPluginDirectory.getGuideExportPlugins()) {
-                guideEditorTabPane.addTab(
-                        guideExportPlugin.getPluginName(),
-                        GDLEditorImageUtil.CONNECT_ICON,
-                        new GuideExportPluginPanel(_controller, guideExportPlugin)
                 );
             }
 
