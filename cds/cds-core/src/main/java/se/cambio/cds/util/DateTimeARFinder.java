@@ -108,22 +108,12 @@ public class DateTimeARFinder {
 
     public static String getEventTimePath(String archetypeId){
         String rmName = AqlUtil.getKind(archetypeId);
-        if (OpenEHRConst.OBSERVATION.endsWith(rmName)){
-            /* If we use a format /data[at****]/events[at****]/time we need to iterate through the different paths looking for the one that matches the regular expression
-            Iterator<ElementInstance> i = ar.getElementInstancesMap().values().iterator();
-            while(i.hasNext()){
-                ElementInstance ei = i.next();
-                String path = ei.getId().substring(ei.getId().indexOf("/"));
-                if (DATE_TIME_PATH_RE.matcher(path).find()){
-                    dvDateTimePath = path;
-                    break;
-                }
-            }
-             */
+        if (OpenEHRConst.OBSERVATION.equals(rmName)){
             return OpenEHRRMUtil.EVENT_TIME_PATH;
-        }else if (OpenEHRConst.EVALUATION.endsWith(rmName) ||
-                OpenEHRConst.ACTION.endsWith(rmName) ||
-                OpenEHRConst.INSTRUCTION.endsWith(rmName)){
+        }else if (OpenEHRConst.ACTION.equals(rmName)){
+            return OpenEHRRMUtil.TIME_PATH;
+        }else if (OpenEHRConst.EVALUATION.equals(rmName) ||
+                OpenEHRConst.INSTRUCTION.equals(rmName)){
             String dateTimePath = (String)dvDateTimePathsByArchetypeId.get(archetypeId);
             if (dateTimePath==null){
                 Logger.getLogger(DateTimeARFinder.class).warn("Unregistered DvDateTime for '"+archetypeId+"', please add the path to '"+CONFIGURATION_FILE+"'");
