@@ -6,14 +6,12 @@
  */
 package se.cambio.cds.view.swing;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-
-import javax.swing.ImageIcon;
-
-import se.cambio.openehr.util.OpenEHRImageUtil;
 
 /**
  * @author icorram
@@ -113,8 +111,9 @@ public class CDSImageUtil {
 	public static final ImageIcon WARNING_LOW_ICON = OpenEHRImageUtil.getIcon("flag_yellow.png");
 	public static final ImageIcon WARNING_MEDIUM_ICON = OpenEHRImageUtil.getIcon("warning.png");
 	public static final ImageIcon WARNING_HIGH_ICON = OpenEHRImageUtil.getIcon("exclamation.png");
-	public static final ImageIcon ERROR_ICON = OpenEHRImageUtil.getIcon("error.png");
-	
+    public static final ImageIcon ERROR_ICON = OpenEHRImageUtil.getIcon("error.png");
+    public static final ImageIcon CONNECT_ICON = OpenEHRImageUtil.getIcon("connect.png");
+
 	public static final ImageIcon SEARCH_ICON = OpenEHRImageUtil.getIcon("magnifier.png");
 	public static final ImageIcon ADD_ICON = OpenEHRImageUtil.getIcon("add.png");
 	public static final ImageIcon DELETE_ICON = OpenEHRImageUtil.getIcon("delete.png");
