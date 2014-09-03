@@ -8,17 +8,11 @@ package se.cambio.cds.view.swing;
 
 import se.cambio.openehr.util.OpenEHRImageUtil;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import javax.swing.ImageIcon;
 
-/**
- * @author icorram
- *
-
-
- */
 public class CDSImageUtil {
 
 	//OpenEHR - Entries
