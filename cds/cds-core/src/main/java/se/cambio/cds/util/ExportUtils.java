@@ -23,7 +23,7 @@ import java.util.List;
 public class ExportUtils {
 
     private static String TR_TD_FONT_OPEN = "<tr valign='top'><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr bgcolor='#dbe5f1' valign='top'><td><font face='Calibri'>";
+    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr bgcolor='#dbe5f1' valign='top' ><td><font face='Calibri'>";
     private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr bgcolor='#9ec2ef' valign='top'><td><font face='Calibri'>";
     private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</font></td><td align='left'><font face='Calibri'>";
     private static String FONT_TD_TR_CLOSE = "</font></td></tr>";
@@ -132,10 +132,13 @@ public class ExportUtils {
         if (readableGuide.getReadableRules()!=null && !readableGuide.getReadableRules().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("RuleList")));
             sb.append("<table width=100%>");
+            String ruleSpacing = "";
             for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
+                sb.append(ruleSpacing);
                 sb.append(TR_TD_FONT_OPEN_WITH_BG);
                 sb.append(readableRule.toHTMLString(lang));
                 sb.append("</font></tr><tr><td></td></tr>");
+                ruleSpacing = "</br>";
             }
             sb.append("</table>");
         }
