@@ -17,3 +17,11 @@ CREATE TABLE cds_overview
     src TEXT NOT NULL,
     PRIMARY KEY (overviewid)
 );
+
+CREATE TABLE cds_study
+(
+    studyid VARCHAR(255) NOT NULL,
+    studySrc TEXT NOT NULL,
+    lastUpdate TIMESTAMP WITHOUT TIME ZONE,
+    PRIMARY KEY (studyid)
+);
