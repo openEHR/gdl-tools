@@ -213,6 +213,7 @@ public class DescriptionPanel extends JPanel{
             ta.setWrapStyleWord(true);
             connect(_conceptContext, "/description",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
+            ta.setCaretPosition(0);
             descriptionPanel.add(ta, BorderLayout.CENTER);
         }
         return descriptionPanel;
@@ -227,6 +228,7 @@ public class DescriptionPanel extends JPanel{
             String lang = _controller.getCurrentGuideLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/purpose",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
+            ta.setCaretPosition(0);
             purposePanel.add(ta, BorderLayout.CENTER);
         }
         return purposePanel;
@@ -241,6 +243,7 @@ public class DescriptionPanel extends JPanel{
             String lang = _controller.getCurrentGuideLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/use",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
+            ta.setCaretPosition(0);
             usePanel.add(ta, BorderLayout.CENTER);
         }
         return usePanel;
@@ -256,6 +259,7 @@ public class DescriptionPanel extends JPanel{
             String lang = _controller.getCurrentGuideLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/misuse",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
+            ta.setCaretPosition(0);
             misusePanel.add(ta, BorderLayout.CENTER);
         }
         return misusePanel;
@@ -269,6 +273,7 @@ public class DescriptionPanel extends JPanel{
             ta.setWrapStyleWord(true);
             connect(_descriptionContext, "/otherDetails/references",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
+            ta.setCaretPosition(0);
             references.add(ta, BorderLayout.CENTER);
         }
         return references;
