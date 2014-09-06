@@ -5,7 +5,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
-import se.cambio.cds.gdl.editor.view.frame.GDLEditorFrame;
+import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegateFactory;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.WindowManager;
@@ -17,7 +17,7 @@ import java.io.File;
 public class InitGDLEditor {
 
     public static void main(String[] args) {
-        GDLEditorFrame ef = EditorManager.createEditorFrame();
+        EditorFrame ef = EditorManager.createEditorFrame();
         DialogSplash dialog = new DialogSplash(ef, true);
         WindowManager.registerMainWindow(ef);
         WindowManager.registerProgressManager(new InfoDialog(ef));

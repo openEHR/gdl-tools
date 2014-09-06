@@ -19,8 +19,11 @@ public interface SQLStudyDAO {
     public Collection<StudyDTO> searchAll(Connection connection)
             throws InternalErrorException;
 
-    public void upsert(Connection connection, StudyDTO studyDTO)
+    public void insert(Connection connection, StudyDTO studyDTO)
             throws InternalErrorException;
+
+    public void update(Connection connection, StudyDTO studyDTO)
+            throws InternalErrorException, InstanceNotFoundException ;
 
     public void remove(Connection connection, String studyId)
             throws InternalErrorException, InstanceNotFoundException;

@@ -3,7 +3,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathNotFoundException;
 import se.cambio.cds.formgen.view.util.SpringUtilities;
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class DescriptionPanel extends JPanel{
      */
     private static final long serialVersionUID = 1L;
 
-    private GDLEditor _controller = null;
+    private EditorController _controller = null;
 
     private JSplitPane mainSplitPane;
     private JScrollPane leftPanel;
@@ -37,8 +37,8 @@ public class DescriptionPanel extends JPanel{
     private JPanel conceptPanel;
     private JPanel descriptionPanel;
 
-    public DescriptionPanel(GDLEditor gdlEditor){
-        _controller = gdlEditor;
+    public DescriptionPanel(EditorController controller){
+        _controller = controller;
         _descriptionContext = JXPathContext.newContext(_controller.getResourceDescription());
         _conceptContext = JXPathContext.newContext(_controller.getConceptTerm());
         init();
@@ -79,7 +79,7 @@ public class DescriptionPanel extends JPanel{
     public JPanel getConceptPanel(){
         if (conceptPanel==null){
             conceptPanel = new JPanel(new SpringLayout());
-            conceptPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("GuideName")+":"));
+            conceptPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Name")+":"));
             JTextField nameTF = new JTextField();
             connect(_conceptContext, "/text", nameTF);
             conceptPanel.add(nameTF);
@@ -141,7 +141,7 @@ public class DescriptionPanel extends JPanel{
             authorshipLifecyclePanel.add(lyfeCB);
             authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Copyright")+":"));
             JTextField copyrightTF = new JTextField();
-            String lang = _controller.getCurrentGuideLanguageCode();
+            String lang = _controller.getCurrentLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/copyright", copyrightTF);
             authorshipLifecyclePanel.add(copyrightTF);
 
@@ -154,7 +154,7 @@ public class DescriptionPanel extends JPanel{
     }
     public ListPanel getKeywordsPanel(){
         if (keywordsPanel==null){
-            String lang = _controller.getCurrentGuideLanguageCode();
+            String lang = _controller.getCurrentLanguageCode();
             keywordsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Keywords"), "/details/"+lang+"/keywords", _descriptionContext);
         }
         return keywordsPanel;
@@ -225,7 +225,7 @@ public class DescriptionPanel extends JPanel{
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            String lang = _controller.getCurrentGuideLanguageCode();
+            String lang = _controller.getCurrentLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/purpose",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
@@ -240,7 +240,7 @@ public class DescriptionPanel extends JPanel{
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            String lang = _controller.getCurrentGuideLanguageCode();
+            String lang = _controller.getCurrentLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/use",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
@@ -256,7 +256,7 @@ public class DescriptionPanel extends JPanel{
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            String lang = _controller.getCurrentGuideLanguageCode();
+            String lang = _controller.getCurrentLanguageCode();
             connect(_descriptionContext, "/details/"+lang+"/misuse",ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);

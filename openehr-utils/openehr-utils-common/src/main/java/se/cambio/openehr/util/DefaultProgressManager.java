@@ -2,6 +2,7 @@ package se.cambio.openehr.util;
 
 import org.apache.log4j.Logger;
 
+import java.util.Observable;
 import java.util.concurrent.Future;
 
 /**

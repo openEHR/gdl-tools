@@ -1,10 +1,7 @@
-package se.cambio.cds.model.guide;
+package se.cambio.cds.model.study;
 
-import org.openehr.rm.common.resource.ResourceDescription;
 import se.cambio.cds.gdl.model.Language;
-import se.cambio.cds.gdl.model.TermDefinition;
-import se.cambio.cds.model.study.GTCodeReference;
-import se.cambio.cds.model.study.IndicatorRange;
+import se.cambio.cds.gdl.model.ResourceDescription;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,28 +13,28 @@ import java.util.Map;
  */
 public class Study {
     private String studyId;
-    private String concept;
     private Language language;
     private ResourceDescription resourceDescription;
-    private Map<String, TermDefinition> termDefinitions;
+    private Map<String, StudyDefinition> studyDefinitions;
+    private Collection<String> guideIds;
     private Collection<GTCodeReference> filters;
     private Collection<GTCodeReference> indicators;
     private Collection<IndicatorRange> indicatorRanges;
 
     public Study(
             String studyId,
-            String concept,
             Language language,
             ResourceDescription resourceDescription,
-            Map<String, TermDefinition> termDefinitions,
+            Map<String, StudyDefinition> studyDefinitions,
+            Collection<String> guideIds,
             Collection<GTCodeReference> filters,
             Collection<GTCodeReference> indicators,
             Collection<IndicatorRange> indicatorRanges) {
         this.studyId = studyId;
-        this.concept = concept;
         this.language = language;
         this.resourceDescription = resourceDescription;
-        this.termDefinitions = termDefinitions;
+        this.studyDefinitions = studyDefinitions;
+        this.guideIds = guideIds;
         this.filters = filters;
         this.indicators = indicators;
         this.indicatorRanges = indicatorRanges;
@@ -51,13 +48,6 @@ public class Study {
         this.studyId = studyId;
     }
 
-    public String getConcept() {
-        return concept;
-    }
-
-    public void setConcept(String concept) {
-        this.concept = concept;
-    }
 
     public Language getLanguage() {
         return language;
@@ -75,12 +65,20 @@ public class Study {
         this.resourceDescription = resourceDescription;
     }
 
-    public Map<String, TermDefinition> getTermDefinitions() {
-        return termDefinitions;
+    public Map<String, StudyDefinition> getStudyDefinitions() {
+        return studyDefinitions;
     }
 
-    public void setTermDefinitions(Map<String, TermDefinition> termDefinitions) {
-        this.termDefinitions = termDefinitions;
+    public void setStudyDefinitions(Map<String, StudyDefinition> studyDefinitions) {
+        this.studyDefinitions = studyDefinitions;
+    }
+
+    public Collection<String> getGuideIds() {
+        return guideIds;
+    }
+
+    public void setGuideIds(Collection<String> guideIds) {
+        this.guideIds = guideIds;
     }
 
     public Collection<GTCodeReference> getFilters() {

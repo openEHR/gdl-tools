@@ -81,7 +81,7 @@ public class GuidePanel extends JPanel {
             Guide guide = _controller.getGuide();
             for (AbstractPluginPanel abstractPluginPanel : GDLEditorPluginPanelManager.getPluginPanels()) {
                 abstractPluginPanel.setGuide(guide);
-                abstractPluginPanel.setLanguage(_controller.getCurrentGuideLanguageCode());
+                abstractPluginPanel.setLanguage(_controller.getCurrentLanguageCode());
                 guideEditorTabPane.addTab(
                         abstractPluginPanel.getPluginName(),
                         abstractPluginPanel.getPluginIcon(),

@@ -181,10 +181,14 @@ public class Templates {
     }
 
     public int hashCode(){
-        List<TemplateDTO> templateDTOs = getAllTemplates();
-        Collections.sort(templateDTOs, new TemplateComparator());
+        return generateHashCode(getTemplatesMap().values());
+    }
+
+    public static int generateHashCode(Collection<TemplateDTO> templateDTOs) {
+        List<TemplateDTO> templateDTOsList = new ArrayList<TemplateDTO>(templateDTOs);
+        Collections.sort(templateDTOsList, new TemplateComparator());
         List<String> defs = new ArrayList<String>();
-        for(TemplateDTO templateDTO: templateDTOs){
+        for(TemplateDTO templateDTO: templateDTOsList){
             defs.add(templateDTO.getArchetype());
         }
         return defs.hashCode();

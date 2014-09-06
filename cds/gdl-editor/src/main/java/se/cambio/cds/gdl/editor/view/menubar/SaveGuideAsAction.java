@@ -35,7 +35,7 @@ public class SaveGuideAsAction extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        EditorManager.getActiveGDLEditor().saveGuideAs();
+        EditorManager.getActiveGDLEditor().saveAs();
     }
 
 

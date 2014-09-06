@@ -1,5 +1,6 @@
 package se.cambio.cds.model.study.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * Date: 2014-09-04
  * Time: 11:56
  */
-public class StudyDTO {
+public class StudyDTO implements Serializable{
     private String studyId;
     private String studySrc;
     private Date lastUpdate;

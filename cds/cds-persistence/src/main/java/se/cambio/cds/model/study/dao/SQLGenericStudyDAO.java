@@ -52,12 +52,25 @@ public class SQLGenericStudyDAO implements GenericStudyDAO {
         }
     }
 
-    public void upsert(StudyDTO studyDTO)
+    public void insert(StudyDTO studyDTO)
             throws InternalErrorException {
         Connection conexion = null;
         try {
             conexion = dataSource.getConnection();
-            dao.upsert(conexion, studyDTO);
+            dao.insert(conexion, studyDTO);
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeConnection(conexion);
+        }
+    }
+
+    public void update(StudyDTO studyDTO)
+            throws InternalErrorException, InstanceNotFoundException  {
+        Connection conexion = null;
+        try {
+            conexion = dataSource.getConnection();
+            dao.update(conexion, studyDTO);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {

@@ -40,7 +40,7 @@ public class ExportToHTMLAction extends AbstractAction {
         ExportUtils.exportToHTML(
                 EditorManager.getActiveEditorWindow(),
                 guide,
-                controller.getCurrentGuideLanguageCode());
+                controller.getCurrentLanguageCode());
     }
 }
 /*

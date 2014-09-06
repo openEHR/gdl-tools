@@ -18,8 +18,11 @@ public interface GenericStudyDAO {
     public Collection<StudyDTO> searchAll()
             throws InternalErrorException;
 
-    public void upsert(StudyDTO studyDTO)
+    public void insert(StudyDTO studyDTO)
             throws InternalErrorException;
+
+    public void update(StudyDTO studyDTO)
+            throws InternalErrorException, InstanceNotFoundException ;
 
     public void remove(String studyId)
             throws InternalErrorException, InstanceNotFoundException;

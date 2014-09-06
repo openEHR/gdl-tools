@@ -86,9 +86,42 @@ public class StandardSQLStudyDAO implements SQLStudyDAO {
         }
     }
 
-    @Override
-    public void upsert(Connection connection, StudyDTO studyDTO)
+    public void insert(Connection connection, StudyDTO studyDTO)
             throws InternalErrorException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+	    /* Create "preparedStatement". */
+            String queryString = "INSERT INTO cds_study (studyid, studySrc, lastUpdate) VALUES (?, ?, ?)";
+            preparedStatement = connection.prepareStatement(queryString);
+
+	    /* Fill "preparedStatement". */
+            int i = 1;
+            preparedStatement.setString(i++, studyDTO.getStudyId());
+            preparedStatement.setString(i++, studyDTO.getStudySrc());
+            preparedStatement.setTimestamp(i++, DBConversion.toTimestamp(studyDTO.getLastUpdate()));
+	    /* Execute query. */
+            int insertedRows = preparedStatement.executeUpdate();
+
+            if (insertedRows == 0) {
+                throw new SQLException("Can not add row to table 'cds_guide'");
+            }
+
+            if (insertedRows > 1) {
+                throw new SQLException("Duplicate row in table 'cds_guide'");
+            }
+        } catch (SQLException e) {
+            throw new InternalErrorException(e);
+        } finally {
+            GeneralOperations.closeResultSet(resultSet);
+            GeneralOperations.closeStatement(preparedStatement);
+        }
+    }
+
+    @Override
+    public void update(Connection connection, StudyDTO studyDTO)
+            throws InternalErrorException, InstanceNotFoundException  {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
@@ -104,6 +137,9 @@ public class StandardSQLStudyDAO implements SQLStudyDAO {
             int updatedRows = preparedStatement.executeUpdate();
             if (updatedRows > 1) {
                 throw new SQLException("Duplicate row in table 'cds_study'");
+            }
+            if (updatedRows == 0) {
+                throw new InstanceNotFoundException(studyDTO.getStudyId(), StudyDTO.class.getName());
             }
         } catch (SQLException e) {
             throw new InternalErrorException(e);

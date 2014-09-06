@@ -8,10 +8,10 @@ package se.cambio.cds.view.swing;
 
 import se.cambio.openehr.util.OpenEHRImageUtil;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import javax.swing.ImageIcon;
 
 public class CDSImageUtil {
 
@@ -115,6 +115,7 @@ public class CDSImageUtil {
 	public static final ImageIcon FOLDER_ICON = OpenEHRImageUtil.getIcon("folder.png");
 	public static final ImageIcon SOURCE_ICON = OpenEHRImageUtil.getIcon("source.gif");
     public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
+    public static final ImageIcon STUDY_ICON = OpenEHRImageUtil.getIcon("study.png");
     public static final ImageIcon PIE_CHART_ICON = OpenEHRImageUtil.getIcon("chart_pie.png");
 
 

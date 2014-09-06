@@ -9,6 +9,7 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.view.dialog.CDSFormGenDialog;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.controller.sw.CheckGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.CompileGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.SaveGuideOnFileRSW;
@@ -49,7 +50,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 
-public class GDLEditor {
+public class GDLEditor implements EditorController{
 
     private static String UNKOWN_GUIDE_ID = "unknown";
     private GDLEditorMainPanel _gdlEditorMainPanel = null;
@@ -90,12 +91,12 @@ public class GDLEditor {
     }
 
     public String getTitle() {
+        String appName = GDLEditorLanguageManager.getMessage("GDLEditor");
         String conceptName = getGTName(getConceptGTCode());
-        if (conceptName != null) {
-            return conceptName;
-        } else {
-            return GDLEditorLanguageManager.getMessage("Guide");
+        if (conceptName == null) {
+            conceptName = GDLEditorLanguageManager.getMessage("Guide");
         }
+        return appName+" - "+conceptName;
     }
 
     public boolean checkRuleLineDelete(RuleLine ruleLine) {
@@ -142,7 +143,7 @@ public class GDLEditor {
         return _gdlEditorMainPanel;
     }
 
-    public void saveGuideAs(){
+    public void saveAs(){
         _gdlEditorMainPanel.requestFocus();
         runIfOkWithEditorState(new Runnable() {
             @Override
@@ -152,7 +153,7 @@ public class GDLEditor {
         });
     }
 
-    public void saveGuide() {
+    public void save() {
         _gdlEditorMainPanel.requestFocus();
         runIfOkWithEditorState(new Runnable() {
             @Override
@@ -203,7 +204,7 @@ public class GDLEditor {
                             true,
                             Calendar.getInstance().getTime());
             FormGeneratorController formGenerator =
-                    new FormGeneratorController(guideDTO, controller.getCurrentGuideLanguageCode());
+                    new FormGeneratorController(guideDTO, controller.getCurrentLanguageCode());
             Date date = UserConfigurationManager.getCustomDate();
             if (date!=null){
                 Calendar cal = Calendar.getInstance();
@@ -298,7 +299,7 @@ public class GDLEditor {
     private void initResourceDescription() {
         getOriginalAuthor();
         getOtherContributors();
-        getResourceDescriptionItem(getCurrentGuideLanguageCode());
+        getResourceDescriptionItem(getCurrentLanguageCode());
         getOtherDetails();
         getKeywords();
     }
@@ -346,11 +347,11 @@ public class GDLEditor {
 
     public ResourceDescriptionItem getResourceDescriptionItem() {
         ResourceDescriptionItem resourceDescriptionItem =
-                getResourceDescription().getDetails().get(getCurrentGuideLanguageCode());
+                getResourceDescription().getDetails().get(getCurrentLanguageCode());
         if (resourceDescriptionItem == null) {
             resourceDescriptionItem = new ResourceDescriptionItem();
             getResourceDescription().getDetails().put(
-                    getCurrentGuideLanguageCode(), resourceDescriptionItem);
+                    getCurrentLanguageCode(), resourceDescriptionItem);
         }
         return resourceDescriptionItem;
     }
@@ -467,7 +468,7 @@ public class GDLEditor {
     }
 
     public TermDefinition getCurrentTermDefinition() {
-        return getTermDefinition(getCurrentGuideLanguageCode());
+        return getTermDefinition(getCurrentLanguageCode());
     }
 
     private Language getLanguage() {
@@ -480,7 +481,7 @@ public class GDLEditor {
         return _language;
     }
 
-    public String getCurrentGuideLanguageCode() {
+    public String getCurrentLanguageCode() {
         if (_currentGuideLanguageCode == null) {
             String editorLanguage = UserConfigurationManager.getLanguage();
             if (getSupportedLanguageCodes().contains(editorLanguage)) {
@@ -559,7 +560,15 @@ public class GDLEditor {
     }
 
     public Map<String, Term> getCurrentTermsMap() {
-        return getTermsMap(getCurrentGuideLanguageCode());
+        return getTermsMap(getCurrentLanguageCode());
+    }
+
+    @Override
+    public Collection<String> getUsedCodes() {
+        Collection<String> gtCodesUsed = new ArrayList<String>();
+        gtCodesUsed.addAll(getGTCodesUsedInDefinitions());
+        gtCodesUsed.addAll(getGTCodesUsedInBindings());
+        return gtCodesUsed;
     }
 
     public Map<String, Term> getTermsMap(String langCode) {
@@ -572,7 +581,7 @@ public class GDLEditor {
     }
 
     public Term getTerm(String gtCode) {
-        return getTerm(getCurrentGuideLanguageCode(), gtCode);
+        return getTerm(getCurrentLanguageCode(), gtCode);
     }
 
     public Term getTerm(String langCode, String gtCode) {
@@ -1006,7 +1015,7 @@ public class GDLEditor {
         _guideOntology.setTermBindings(_termBindings);
         generateGTCodesForArchetypeBindings(guide);
         _readableGuide =
-                GuideImporter.importGuide(guide, getCurrentGuideLanguageCode());
+                GuideImporter.importGuide(guide, getCurrentLanguageCode());
         initResourceDescription();
         updateOriginal();
         return true;
@@ -1089,7 +1098,7 @@ public class GDLEditor {
 
     public Collection<String> getGTCodesUsedInGuide() {
         TermDefinition td =
-                getTermDefinitions().get(getCurrentGuideLanguageCode());
+                getTermDefinitions().get(getCurrentLanguageCode());
         if (td != null) {
             return td.getTerms().keySet();
         } else {
