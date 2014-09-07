@@ -132,13 +132,11 @@ public class ExportUtils {
         if (readableGuide.getReadableRules()!=null && !readableGuide.getReadableRules().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("RuleList")));
             sb.append("<table width=100%>");
-            String ruleSpacing = "";
             for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
-                sb.append(ruleSpacing);
                 sb.append(TR_TD_FONT_OPEN_WITH_BG);
                 sb.append(readableRule.toHTMLString(lang));
-                sb.append("</font></tr><tr><td></td></tr>");
-                ruleSpacing = "</br>";
+                sb.append("</font>");
+                sb.append("</font></tr><tr><td><br></td></tr>");
             }
             sb.append("</table>");
         }
@@ -153,18 +151,20 @@ public class ExportUtils {
                 sb.append(termBinding.getId());
                 sb.append("</b>");
                 sb.append(FONT_TD_TR_CLOSE);
-                for (Binding binding: termBinding.getBindings().values()){
-                    sb.append(TR_TD_FONT_OPEN_WITH_BG);
-                    sb.append("<b>");
-                    sb.append(getTermText(binding.getId(), td)+": ");
-                    sb.append("</b>");
-                    String prefix = "";
-                    for(CodePhrase codePhrase: binding.getCodes()){
-                        sb.append(prefix);
-                        sb.append(codePhrase.getCodeString());
-                        prefix = ", ";
+                if (termBinding.getBindings()!= null){
+                    for (Binding binding: termBinding.getBindings().values()){
+                        sb.append(TR_TD_FONT_OPEN_WITH_BG);
+                        sb.append("<b>");
+                        sb.append(getTermText(binding.getId(), td)+": ");
+                        sb.append("</b>");
+                        String prefix = "";
+                        for(CodePhrase codePhrase: binding.getCodes()){
+                            sb.append(prefix);
+                            sb.append(codePhrase.getCodeString());
+                            prefix = ", ";
+                        }
+                        sb.append(FONT_TD_TR_CLOSE);
                     }
-                    sb.append(FONT_TD_TR_CLOSE);
                 }
                 sb.append("</table><br>");
             }
