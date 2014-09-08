@@ -173,7 +173,7 @@ public class ExportUtils {
         return sb.toString();
     }
 
-    private static String getTermText(String gtCode, TermDefinition td){
+    public static String getTermText(String gtCode, TermDefinition td){
         Term term = td.getTerms().get(gtCode);
         String text = term!=null?td.getTerms().get(gtCode).getText():null;
         if (text!=null){
@@ -204,7 +204,7 @@ public class ExportUtils {
     public static String getValue(JXPathContext c, String path){
         String str = (String)c.getValue(path);
         if (str!=null){
-            str = str.replace("\\\"","\"");
+            str = str.replace("\\\"","\"").replace("\n","<br>");
         }
         return str!=null?str:"";
     }

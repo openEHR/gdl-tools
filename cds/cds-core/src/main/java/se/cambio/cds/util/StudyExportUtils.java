@@ -3,7 +3,6 @@ package se.cambio.cds.util;
 import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.study.GTCodeReference;
 import se.cambio.cds.model.study.Study;
@@ -73,23 +72,23 @@ public class StudyExportUtils {
         sb.append("<table><font face='Calibri'>");
         String desc = studyDefinition.getDescription();
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(desc!=null?desc:"")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
         if (c.getValue("/otherDetails")!=null){
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
         }
         sb.append("</font></table>");
         sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("AuthorDetails")));
         sb.append("<table><font face='Calibri'>");
         if (c.getValue("/originalAuthor")!=null){
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
         }
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
         sb.append("</font></table>");
 
         java.util.List<String> keywords = (java.util.List<String>)c.getValue("/details/"+lang+"/keywords");
@@ -203,29 +202,7 @@ public class StudyExportUtils {
 
     private static String getTermText(GTCodeReference gtCodeReference, String lang) throws GuideNotFoundException {
         TermDefinition td = getTermDefinition(gtCodeReference, lang);
-        return getTermText(gtCodeReference.getGtCode(), td);
-    }
-
-    private static String getTermText(String gtCode, TermDefinition td){
-        Term term = td.getTerms().get(gtCode);
-        String text = term!=null?td.getTerms().get(gtCode).getText():null;
-        if (text!=null){
-            text = text.replace("\\\"","\"");
-            return text;
-        }else{
-            return "";
-        }
-    }
-
-    private static String getTermDescription(String gtCode, TermDefinition td){
-        Term term = td.getTerms().get(gtCode);
-        String desc = term!=null?td.getTerms().get(gtCode).getDescription():null;
-        if (desc!=null){
-            desc = desc.replace("\\\"","\"");
-            return desc;
-        }else{
-            return "";
-        }
+        return ExportUtils.getTermText(gtCodeReference.getGtCode(), td);
     }
 
     private static String getBoxWithTitleStart(String title){
@@ -233,13 +210,4 @@ public class StudyExportUtils {
         sb.append("<br><div style='background-color:#92b842; padding:5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
         return  sb.toString();
     }
-
-    public static String getValue(JXPathContext c, String path){
-        String str = (String)c.getValue(path);
-        if (str!=null){
-            str = str.replace("\\\"","\"");
-        }
-        return str!=null?str:"";
-    }
-
 }
