@@ -29,10 +29,10 @@ import java.util.List;
  */
 public class StudyExportUtils {
 
-    private static String TR_TD_FONT_OPEN = "<tr valign='top'><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr bgcolor='#dbe5c4' valign='top' ><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr bgcolor='#92b842' valign='top'><td><font face='Calibri'>";
-    private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</font></td><td align='left'><font face='Calibri'>";
+    private static String TR_TD_FONT_OPEN = "<tr valign='top'><td style='font-family: Calibri;'>";
+    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr style='background-color: #dbe5c4; font-family: Calibri;' valign='top'><td>";
+    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr style='background-color: #92b842; font-family: Calibri;' valign='top'><td>";
+    private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</td><td style='font-family: Calibri;' align='left'>";
     private static String FONT_TD_TR_CLOSE = "</font></td></tr>";
 
     public static void exportToHTML(Window owner, Study study, String lang){

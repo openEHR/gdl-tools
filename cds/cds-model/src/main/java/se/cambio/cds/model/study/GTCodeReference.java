@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Date: 2014-09-04
  * Time: 12:03
  */
-public class GTCodeReference implements Serializable{
+public class GTCodeReference implements Serializable {
 
     private String guideId;
     private String gtCode;

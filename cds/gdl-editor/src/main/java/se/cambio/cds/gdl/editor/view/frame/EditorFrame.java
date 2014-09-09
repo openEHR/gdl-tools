@@ -6,11 +6,9 @@ import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.cds.util.misc.Version;
-import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -51,35 +49,17 @@ public class EditorFrame extends JFrame implements EditorViewer{
         int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
         this.setLocation(locx,locy);
         this.setResizable(true);
-        this.addWindowListener(new CancelarCambiosAction());
+        this.addWindowListener(new WindowListener());
         this.setJMenuBar(getMainMenuBar());
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setIconImage(GDLEditorImageUtil.LOGO.getImage());
     }
 
 
-    protected class CancelarCambiosAction extends WindowAdapter{
-
-        public void windowOpened(WindowEvent e){
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            EditorManager.closeEditor();
-        }
-
+    protected class WindowListener extends WindowAdapter{
         public void windowClosing(WindowEvent we) {
             EditorManager.getActiveEditorController().getEditorPanel().requestFocusInWindow();
-            try {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        EditorManager.closeEditor();
-                    }
-                });
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
-            }
-
+            EditorManager.closeEditor();
         }
     }
 

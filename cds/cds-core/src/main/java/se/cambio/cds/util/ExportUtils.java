@@ -22,11 +22,11 @@ import java.util.List;
 
 public class ExportUtils {
 
-    private static String TR_TD_FONT_OPEN = "<tr valign='top'><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr bgcolor='#dbe5f1' valign='top' ><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr bgcolor='#9ec2ef' valign='top'><td><font face='Calibri'>";
-    private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</font></td><td align='left'><font face='Calibri'>";
-    private static String FONT_TD_TR_CLOSE = "</font></td></tr>";
+    private static String TR_TD_FONT_OPEN = "<tr valign='top'><td style='font-family: Calibri;'>";
+    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr style='background-color: #dbe5f1; font-family: Calibri;' valign='top'><td>";
+    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr style='background-color: #9ec2ef; font-family: Calibri;' valign='top'><td>";
+    private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</td><td style='font-family: Calibri;' align='left'>";
+    private static String FONT_TD_TR_CLOSE = "</td></tr>";
 
     public static void exportToHTML(Window owner, Guide guide, String lang){
         JFileChooser fileChooser = new JFileChooser();
@@ -143,7 +143,7 @@ public class ExportUtils {
         }
 
         if (guide.getOntology()!=null &&
-                guide.getOntology().getTermBindings()!=null){
+                guide.getOntology().getTermBindings()!=null && !guide.getOntology().getTermBindings().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Bindings")));
             for (TermBinding termBinding: guide.getOntology().getTermBindings().values()) {
                 sb.append("<table width=100%>\n");
