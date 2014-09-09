@@ -29,78 +29,78 @@ public class SQLGenericStudyDAO implements GenericStudyDAO {
 
     public StudyDTO searchByStudyId(String studyId)
             throws InternalErrorException, InstanceNotFoundException {
-        Connection conexion = null;
+        Connection connection  = null;
         try {
-            conexion = dataSource.getConnection();
-            return dao.searchByStudyId(conexion, studyId);
+            connection  = dataSource.getConnection();
+            return dao.searchByStudyId(connection , studyId);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
-            GeneralOperations.closeConnection(conexion);
+            GeneralOperations.closeConnection(connection );
         }
     }
 
     public Collection<StudyDTO> searchAll() throws InternalErrorException {
-        Connection conexion = null;
+        Connection connection  = null;
         try {
-            conexion = dataSource.getConnection();
-            return dao.searchAll(conexion);
+            connection  = dataSource.getConnection();
+            return dao.searchAll(connection );
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
-            GeneralOperations.closeConnection(conexion);
+            GeneralOperations.closeConnection(connection );
         }
     }
 
     public void insert(StudyDTO studyDTO)
             throws InternalErrorException {
-        Connection conexion = null;
+        Connection connection  = null;
         try {
-            conexion = dataSource.getConnection();
-            dao.insert(conexion, studyDTO);
+            connection  = dataSource.getConnection();
+            dao.insert(connection , studyDTO);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
-            GeneralOperations.closeConnection(conexion);
+            GeneralOperations.closeConnection(connection );
         }
     }
 
     public void update(StudyDTO studyDTO)
             throws InternalErrorException, InstanceNotFoundException  {
-        Connection conexion = null;
+        Connection connection  = null;
         try {
-            conexion = dataSource.getConnection();
-            dao.update(conexion, studyDTO);
+            connection  = dataSource.getConnection();
+            dao.update(connection , studyDTO);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
-            GeneralOperations.closeConnection(conexion);
+            GeneralOperations.closeConnection(connection );
         }
     }
 
     public void remove(String studyId)
             throws InternalErrorException, InstanceNotFoundException {
-        Connection conexion = null;
+        Connection connection  = null;
         try {
-            conexion = dataSource.getConnection();
-            dao.remove(conexion,studyId);
+            connection  = dataSource.getConnection();
+            dao.remove(connection ,studyId);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
-            GeneralOperations.closeConnection(conexion);
+            GeneralOperations.closeConnection(connection );
         }
     }
 
     @Override
     public Date getLastUpdateDate() throws InternalErrorException {
-        Connection conexion = null;
+        Connection connection  = null;
         try {
-            conexion = dataSource.getConnection();
-            return dao.getLastUpdateDate(conexion);
+            connection  = dataSource.getConnection();
+            return dao.getLastUpdateDate(connection );
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
-            GeneralOperations.closeConnection(conexion);
+            GeneralOperations.closeConnection(connection );
         }
     }
 }

@@ -20,6 +20,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * User: Iago.Corbal
@@ -63,32 +64,33 @@ public class StudyExportUtils {
         StudyDefinition studyDefinition = study.getStudyDefinitions().get(lang);
         StringBuffer sb = new StringBuffer();
         sb.append("<HTML>");
-        sb.append("<HEAD><meta charset='UTF-8'></HEAD>");
+        sb.append("<HEAD><meta charset='UTF-8'>");
         sb.append("<TITLE>"+study.getStudyId()+"</TITLE>");
-
+        sb.append("</HEAD>");
+        sb.append("<BODY>");
         String name = studyDefinition.getName();
         sb.append("<b><font face='Calibri' size='6'>"+(name!=null?name:"")+"</font></b>");
         sb.append(getBoxWithTitleStart("Study details")); //TODO i18n
         sb.append("<table><font face='Calibri'>");
         String desc = studyDefinition.getDescription();
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(desc!=null?desc:"")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(desc!=null?desc:"")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
         if (c.getValue("/otherDetails")!=null){
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("References")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
         }
         sb.append("</font></table>");
         sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("AuthorDetails")));
         sb.append("<table><font face='Calibri'>");
         if (c.getValue("/originalAuthor")!=null){
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Name")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
         }
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+ExportUtils.getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
         sb.append("</font></table>");
 
         java.util.List<String> keywords = (java.util.List<String>)c.getValue("/details/"+lang+"/keywords");
@@ -97,7 +99,7 @@ public class StudyExportUtils {
 
             sb.append("<font face='Calibri'><i>");
             boolean first = true;
-            for (String keyword : keywords) {
+            for (String keyword: keywords) {
                 keyword = keyword.replace("\\\"","\"");
                 if (!first){
                     sb.append(", ");
@@ -108,12 +110,12 @@ public class StudyExportUtils {
             sb.append("</i></font><br>");
         }
 
-        java.util.List<String> contributors = (java.util.List<String>)c.getValue("/otherContributors");
+        List<String> contributors = (List<String>)c.getValue("/otherContributors");
         if (contributors!=null && !contributors.isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Contributors")));
             boolean first = true;
             sb.append("<font face='Calibri'><i>");
-            for (String contributor : contributors) {
+            for (String contributor: contributors) {
                 contributor = contributor.replace("\\\"","\"");
                 if (!first){
                     sb.append(", ");
@@ -125,10 +127,10 @@ public class StudyExportUtils {
         }
         sb.append(getBoxWithTitleStart("Study Criteria")); //TODO i18n
         sb.append("<table><font face='Calibri'>");
-        String inclusionCriteria = studyDefinition.getInclusionCriteria();
-        String exclusionCriteria = studyDefinition.getExclusionCriteria();
-        sb.append(TR_TD_FONT_OPEN+"<b>"+"Inclusion criteria"+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(inclusionCriteria!=null?inclusionCriteria:"")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+"Exclusion criteria"+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(exclusionCriteria!=null?exclusionCriteria:"")+FONT_TD_TR_CLOSE);
+        String inclusionCriteria = ExportUtils.formatToHTMLString(studyDefinition.getInclusionCriteria());
+        String exclusionCriteria = ExportUtils.formatToHTMLString(studyDefinition.getExclusionCriteria());
+        sb.append(TR_TD_FONT_OPEN+"<b>"+"Inclusion criteria"+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(inclusionCriteria!=null?inclusionCriteria:"")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+"Exclusion criteria"+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(exclusionCriteria!=null?exclusionCriteria:"")+FONT_TD_TR_CLOSE);
         sb.append("</font></table>");
 
         sb.append(getBoxWithTitleStart("Definition")); //TODO i18n
@@ -136,10 +138,11 @@ public class StudyExportUtils {
         String filters = getFilters(study, lang);
         String indicators = getIndicators(study, lang);
         sb.append("<table><font face='Calibri'>");
-        sb.append(TR_TD_FONT_OPEN+"<b>"+"Guidelines"+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(guideline!=null?guideline:"")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+"Filters"+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(filters!=null?filters:"")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+"Indicators"+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(indicators!=null?indicators:"")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+"Guidelines"+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(guideline!=null?guideline:"")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+"Filters"+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(filters!=null?filters:"")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+"Indicators"+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+(indicators!=null?indicators:"")+FONT_TD_TR_CLOSE);
         sb.append("</font></table>");
+        sb.append("</BODY>");
         sb.append("</HTML>");
         return sb.toString();
     }
@@ -193,7 +196,7 @@ public class StudyExportUtils {
     private static TermDefinition getTermDefinition(GTCodeReference gtCodeReference, String lang) throws GuideNotFoundException {
         Guide guide = Guides.getGuide(gtCodeReference.getGuideId());
         TermDefinition td = guide.getOntology().getTermDefinitions().get(lang);
-        if (td == null ||  td.getTerms().get(gtCodeReference.getGtCode())==null){
+        if (td == null || td.getTerms().get(gtCodeReference.getGtCode()) == null){
             String originalLang = guide.getLanguage().getOriginalLanguage().getCodeString();
             td =  guide.getOntology().getTermDefinitions().get(originalLang);
         }
@@ -207,7 +210,7 @@ public class StudyExportUtils {
 
     private static String getBoxWithTitleStart(String title){
         StringBuffer sb = new StringBuffer();
-        sb.append("<br><div style='background-color:#92b842; padding:5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
+        sb.append("<br><div style='background-color: #92b842; padding: 5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
         return  sb.toString();
     }
 }
