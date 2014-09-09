@@ -1,0 +1,329 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"Stroke_prevention_compliance_checking_in_AF.v2">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				keywords = <"Atrial Fibrillation", "Stroke", "CHA2DS2-VASc">
+				misuse = <"">
+				purpose = <"Estimates the compliance to the ESC guidelines for stroke prevention in patients with atrial fibrillation.">
+				use = <"Use to assess if a treatment is compliant to the ESC guidelines in patients with atrial fribrillation.">
+			>
+			["es"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2013/12/19">
+			["email"] = <"rong.chen@cambio.se">
+			["name"] = <"Rong Chen">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_details = <
+			["references"] = <"1. Lip GY, Nieuwlaat R, Pisters R, Lane DA, Crijns HJ. Refining clinical risk stratification for predicting stroke and thromboembolism in atrial fibrillation using a novel risk factor-based approach: the euro heart survey on atrial fibrillation. Chest. 2010 Feb;137(2):263-72. Epub 2009 Sep 17. PubMed PMID: 19762550. 
+2. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247.
+3. Lip GY, Frison L, Halperin JL, Lane DA. Identifying patients at high risk for stroke despite anticoagulation: a comparison of contemporary stroke risk stratification schemes in an anticoagulated atrial fibrillation cohort. Stroke. 2010 Dec;41(12):2731-8. Epub 2010 Oct 21. PubMed PMID: 20966417.">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0046"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0039"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+					["gt0043"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0017]">
+					>
+				>
+			>
+			["gt0047"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0099]">
+					>
+				>
+			>
+			["gt0048"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0026"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0036|Oral anticoagulant|",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0049"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0027"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+			>
+			["gt0050"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0045"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0035]">
+					>
+				>
+			>
+		>
+		pre_conditions = <"$gt0045==1|local::at0051|Present|",...>
+		rules = <
+			["gt0005"] = (RULE) <
+				when = <"$gt0039==null", "$gt0004==1", "$gt0027!=local::at0006|Female|", "$gt0026==null">
+				then = <"$gt0039=local::at0004|Non compliant|",...>
+				priority = <5>
+			>
+			["gt0006"] = (RULE) <
+				when = <"$gt0039==null", "$gt0004>=2", "$gt0026==null">
+				then = <"$gt0039=local::at0004|Non compliant|",...>
+				priority = <4>
+			>
+			["gt0034"] = (RULE) <
+				when = <"$gt0039==null", "$gt0004!=null">
+				then = <"$gt0039=local::at0003|Compliant|",...>
+				priority = <3>
+			>
+			["gt0042"] = (RULE) <
+				when = <"$gt0043==null", "$gt0026!=null">
+				then = <"$gt0043=local::at0018|Present|",...>
+				priority = <2>
+			>
+			["gt0044"] = (RULE) <
+				when = <"$gt0043==null", "$gt0026==null">
+				then = <"$gt0043=local::at0019|Absent|",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ATC"] = (TERM_BINDING) <
+				bindings = <
+					["gt0036"] = (BINDING) <
+						codes = <[ATC::B01AA03], [ATC::B01AE07], [ATC::B01AF01], [ATC::B01AF02]>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"CHA2DS2-VASc Score compliance">
+						description = <"Compliance to the ESC guidelines for stroke prevention in patients with atrial fibrillation.">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Compliant with ESC guidelines">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Total score">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"NON compliant  with ESC guidelines">
+					>
+					["gt0006"] = (TERM) <
+						text = <"NON compliant with ESC guidelines">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Compliant with ESC guidelines">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Compliant with ESC guidelines">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Non compliant with ESC guidelines">
+					>
+					["gt0026"] = (TERM) <
+						text = <"Anti-coagulation medication">
+						description = <"Dose">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Gender">
+						description = <"Gender">
+					>
+					["gt0034"] = (TERM) <
+						text = <"Compliant with ESC guidelines">
+					>
+					["gt0035"] = (TERM) <
+						text = <"Non-compliant with ESC guidelines">
+						description = <"">
+					>
+					["gt0036"] = (TERM) <
+						text = <"Oral anticoagulant">
+					>
+					["gt0039"] = (TERM) <
+						text = <"Stroke prevention treatment compliance">
+						description = <"CHA2DS2-VASc Compliance">
+					>
+					["gt0040"] = (TERM) <
+						text = <"CHA2DS2-VASc Score">
+						description = <"*">
+					>
+					["gt0042"] = (TERM) <
+						text = <"Anti-coagulation medication present">
+					>
+					["gt0043"] = (TERM) <
+						text = <"Stroke medication">
+						description = <"*">
+					>
+					["gt0044"] = (TERM) <
+						text = <"Anti-coagulation medication absent">
+					>
+					["gt0045"] = (TERM) <
+						text = <"Atrial fibrillation">
+					>
+				>
+			>
+			["es"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Conformidad con las guÃ­as CHADVAS">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Conforme con las guÃ­as ESC (PuntuaciÃ³n==0)">
+					>
+					["gt0004"] = (TERM) <
+						text = <"PuntuaciÃ³n CHADVAS">
+						description = <"PuntuaciÃ³n CHADVAS">
+					>
+					["gt0005"] = (TERM) <
+						text = <"NO conforme con las guÃ­as ESC (PuntuaciÃ³n==1)">
+					>
+					["gt0006"] = (TERM) <
+						text = <"NO conforme con las guÃ­as ESC (PuntuaciÃ³n==2)">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Conforme con las guÃ­as ESC">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Conforme con las guÃ­as ESC">
+					>
+					["gt0016"] = (TERM) <
+						text = <"No conforme con las guÃ­as ESC">
+					>
+					["gt0026"] = (TERM) <
+						text = <"Dose">
+						description = <"Dose">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Gender">
+						description = <"Gender">
+					>
+					["gt0034"] = (TERM) <
+						text = <"Conforme con las guÃ­as ESC">
+					>
+					["gt0035"] = (TERM) <
+						text = <"NO conforme con las guÃ­as ESC">
+					>
+					["gt0036"] = (TERM) <
+						text = <"*Warfarin medication (en)">
+					>
+					["gt0039"] = (TERM) <
+						text = <"CHA2DS2-VASc Compliance">
+						description = <"CHA2DS2-VASc Compliance">
+					>
+					["gt0040"] = (TERM) <
+						text = <"CHA2DS2-VASc Score">
+						description = <"*">
+					>
+					["gt0042"] = (TERM) <
+					>
+					["gt0043"] = (TERM) <
+					>
+					["gt0044"] = (TERM) <
+					>
+					["gt0045"] = (TERM) <
+						text = <"*Atrial fibrillation (en)">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Förenlig med Socialstyrelsens riktlinjer">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Förenlig med Socialstyrelsens riktlinjer">
+					>
+					["gt0004"] = (TERM) <
+						text = <"CHA2DS2-VASc poäng">
+						description = <"CHA2DS2-VASc poÃ¤ng">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med Socialstyrelsens riktlinjer för strokeprofylax hos patienter med förmaksflimmer, dec 2013">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med Socialstyrelsens riktlinjer för strokeprofylax hos patienter med förmaksflimmer, dec 2013">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Förenlig med Socialstyrelsens riktlinjer">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Förenlig med Socialstyrelsens riktlinjer">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med Socialstyrelsens riktlinjer för strokeprofylax hos patienter med förmaksflimmer, dec 2013">
+					>
+					["gt0026"] = (TERM) <
+						text = <"Antikoagulantiaordination">
+						description = <"Dose">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Kön">
+						description = <"Gender">
+					>
+					["gt0034"] = (TERM) <
+						text = <"Förenlig med Socialstyrelsens riktlinjer">
+					>
+					["gt0035"] = (TERM) <
+						text = <"Ej förenlig med Socialstyrelsens riktlinjer">
+						description = <"Behandlingen Ã¤r ej i enlighet med ESC's riktlinjer fÃ¶r strokeprofylax hos patienter med fÃ¶rmaksflimmer, 2012 Ã¥rs uppdatering.">
+					>
+					["gt0036"] = (TERM) <
+						text = <"Oral antikoagulantiaordination">
+					>
+					["gt0039"] = (TERM) <
+						text = <"Förenlighet med strokeprofylaxbehandling">
+						description = <"CHA2DS2-VASc Compliance">
+					>
+					["gt0040"] = (TERM) <
+						text = <"CHA2DS2-VASc poäng">
+						description = <"*">
+					>
+					["gt0042"] = (TERM) <
+						text = <"Antikoagulantordination finns">
+					>
+					["gt0043"] = (TERM) <
+						text = <"Strokeordination">
+					>
+					["gt0044"] = (TERM) <
+						text = <"Antikoagulantiaordination finns ej">
+					>
+					["gt0045"] = (TERM) <
+						text = <"Förmaksflimmer">
+					>
+				>
+			>
+		>
+	>
+>

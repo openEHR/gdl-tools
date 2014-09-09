@@ -22,9 +22,7 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
-import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
-import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -126,21 +124,13 @@ public class GuideUtil {
     }
 
     private static ElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv) {
-        if (Domains.CDS_ID.equals(ar.getIdDomain())){
-            if (!OperatorKind.EQUALITY.equals(op) && !OperatorKind.IS_A.equals(op)){
-                dv = null;
-                Logger.getLogger(GuideUtil.class).warn("Operation "+op+" not allowed on CDS domain for predicates!");
-            }
-            return new GeneratedElementInstance(idElement, dv, ar, null, dv!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        }else {
-            return new PredicateGeneratedElementInstance(
-                    idElement,
-                    dv,
-                    ar,
-                    null,
-                    null,
-                    op);
-        }
+        return new PredicateGeneratedElementInstance(
+                idElement,
+                dv,
+                ar,
+                null,
+                null,
+                op);
     }
 
 

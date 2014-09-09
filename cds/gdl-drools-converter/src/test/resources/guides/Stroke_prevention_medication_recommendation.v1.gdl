@@ -1,0 +1,233 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"Stroke_prevention_medication_recommendation.v1">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				keywords = <"Atrial Fibrillation", "Stroke", "CHA2DS2-VASc">
+				purpose = <"Provides recommended list of drugs to be used for stroke prevention in patients with atrial fibrillation">
+				use = <"Use to recommend a list of drugs for stroke prevention in patients with atrial fibrillation">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2014/02/25">
+			["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+			["name"] = <"Konstantino Kalliamvakos">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_details = <
+			["references"] = <"1. Heidbuchel H, Verhamme P, Alings M, Antz M, Hacke W, Oldgren J, et al. European Heart Rhythm Association Practical Guide on the use of new oral anticoagulants in patients with non-valvular atrial fibrillation. Europace. 2013 May;15(5):625–51. 
+2. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247.">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0013"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0007"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+					["gt0012"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0001]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0007|Apixaban|",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0014"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0008"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+					["gt0011"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0001]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0008|Rivaroxaban|",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0015"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+					["gt0010"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0001]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0006|Dabigatran etexilate|",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0016"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
+					>
+					["gt0009"] = (ELEMENT_BINDING) <
+						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0001]">
+					>
+				>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0004|Warfarin|",...>
+				template_id = <"medication_atc_indicator">
+			>
+			["gt0017"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0002"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0009]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0015] is_a local::gt0003|Stroke prevention alert|",...>
+				template_id = <"coded_alert">
+			>
+		>
+		rules = <
+			["gt0005"] = (RULE) <
+				when = <"$gt0002==local::at0011|Active|", "$gt0012==null", "$gt0011==null", "$gt0010==null", "$gt0009==null">
+				then = <"$gt0012='Eliquis'", "$gt0011='Xarelto'", "$gt0010='Pradaxa'", "$gt0009='Waran or Warfarin Orion'">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ALERTS"] = (TERM_BINDING) <
+				bindings = <
+					["gt0003"] = (BINDING) <
+						codes = <[ALERTS::1001.4], [ALERTS::1001.5], [ALERTS::1001.3], [ALERTS::1001.6]>
+						uri = <"">
+					>
+				>
+			>
+			["ATC"] = (TERM_BINDING) <
+				bindings = <
+					["gt0004"] = (BINDING) <
+						codes = <[ATC::B01AA03],...>
+						uri = <"">
+					>
+					["gt0006"] = (BINDING) <
+						codes = <[ATC::B01AE07],...>
+						uri = <"">
+					>
+					["gt0007"] = (BINDING) <
+						codes = <[ATC::B01AF02],...>
+						uri = <"">
+					>
+					["gt0008"] = (BINDING) <
+						codes = <[ATC::B01AF01],...>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Stroke medication recommendation">
+						description = <"Medication recommendation for treatment for stroke prevention in patients with atrial fibrillation">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Status">
+						description = <"An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again.">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Stroke prevention alert">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Warfarin">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Set stroke prevention medication recommendation">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Dabigatran etexilate">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Apixaban">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Rivaroxaban">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Waran or Warfarin Orion">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Pradaxa">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Xarelto">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Eliquis">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Rekommenderad stroke-medicin">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Status">
+						description = <"*An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again. (en)">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Varningar / Rekommendationer">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Warfarin">
+						description = <"*The generic name of the drug which is an alternative name to the name of medication (en)">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Sätt rekommenderad medicin för strokeprofylax">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Dabigatran etexilate">
+						description = <"*The generic name of the drug which is an alternative name to the name of medication (en)">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Apixaban">
+						description = <"*The generic name of the drug which is an alternative name to the name of medication (en)">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Rivaroxaban">
+						description = <"*The generic name of the drug which is an alternative name to the name of medication (en)">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Waran eller Warfarin Orion">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Pradaxa">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Xarelto">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Eliquis">
+					>
+				>
+			>
+		>
+	>
+>

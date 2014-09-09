@@ -53,16 +53,7 @@ public class ElementInstanceCollection {
                     //Its a predicate, so keep it as a generated element instance, but resolve the data value
                     DataValue dv = originalEI.getDataValue();
                     if (guideManager!=null){
-                        Set<Guide> guides = new HashSet<Guide>();
-                        Collection<String> guideIds = getReferenceGuideIds(dv, predicateOriginalEI.getRuleReferences());
-                        for(String guideId: guideIds){
-                            Guide guide = guideManager.getGuide(guideId);
-                            if (guide==null){
-                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '"+guide+"'");
-                            }else{
-                                guides.add(guide);
-                            }
-                        }
+                        Set<Guide> guides = getGuides(guideManager, predicateOriginalEI, dv);
                         dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
                         //Might be null i.e. max(date/time) or path!=null
                     }
@@ -84,7 +75,8 @@ public class ElementInstanceCollection {
                     ElementInstance ei = originalEI.clone();
                     ei.setArchetypeReference(arAux);
                     if (originalEI instanceof GeneratedElementInstance){
-                        ((GeneratedElementInstance)ei).setRuleReferences(((GeneratedElementInstance)originalEI).getRuleReferences());
+                        GeneratedElementInstance generatedElementInstance = (GeneratedElementInstance)originalEI;
+                        ((GeneratedElementInstance)ei).setRuleReferences(generatedElementInstance.getRuleReferences());
                     }
                 }
             }
@@ -101,6 +93,20 @@ public class ElementInstanceCollection {
         //}
         //System.out.println("Addding:\n"+archetypeReferenceToAdd.toString());
         archetypeReferencesInCollection.add(archetypeReferenceToAdd);
+    }
+
+    private Set<Guide> getGuides(GuideManager guideManager, GeneratedElementInstance predicateOriginalEI, DataValue dv) {
+        Set<Guide> guides = new HashSet<Guide>();
+        Collection<String> guideIds = getReferenceGuideIds(dv, predicateOriginalEI.getRuleReferences());
+        for(String guideId: guideIds){
+            Guide guide = guideManager.getGuide(guideId);
+            if (guide==null){
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '"+guide+"'");
+            }else{
+                guides.add(guide);
+            }
+        }
+        return guides;
     }
 
     public Collection<String> getReferenceGuideIds(DataValue dv, Collection<RuleReference> ruleReferences){

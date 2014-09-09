@@ -1,0 +1,148 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1
+
+concept
+	[at0000]	-- Cha2ds2vasc compliance
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"*(sv)">
+			use = <"*(sv)">
+			misuse = <"*(sv)">
+			copyright = <"*(sv)">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"**(sv)(en)">
+			use = <"**(sv)(en)">
+			misuse = <"**(sv)(en)">
+			copyright = <"**(sv)(en)">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"CA39E9793DB8DC72E989CC4C90B3158A">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Cha2ds2vasc compliance
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- Stroke prevention treatment compliance
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0003, 	-- Compliant
+									at0004]	-- Non compliant
+								}
+							}
+						}
+					}
+					ELEMENT[at0017] occurrences matches {0..1} matches {	-- Anti-coagulant medication
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0018, 	-- Present
+									at0019]	-- Absent
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Cha2ds2vasc compliance">
+					description = <"">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"">
+				>
+				["at0002"] = <
+					text = <"Stroke prevention treatment compliance">
+					description = <"Study criteria: Atrial Fibrillation = Present">
+				>
+				["at0003"] = <
+					text = <"Compliant">
+					description = <"">
+				>
+				["at0004"] = <
+					text = <"Non compliant">
+					description = <"">
+				>
+				["at0017"] = <
+					text = <"Anti-coagulant medication">
+					description = <"Study criteria: Atrial Fibrillation = Present">
+				>
+				["at0018"] = <
+					text = <"Present">
+					description = <"">
+				>
+				["at0019"] = <
+					text = <"Absent">
+					description = <"">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Cha2ds2vasc compliance">
+					description = <"**unknown(sv)(en)">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"**@ internal @(sv)(en)">
+				>
+				["at0002"] = <
+					text = <"Förenlighet med strokeprofylaxbehandling">
+					description = <"*CHA2DS2-VASc Compliance(en)">
+				>
+				["at0003"] = <
+					text = <"Förenlig">
+					description = <"*Compliant(en)">
+				>
+				["at0004"] = <
+					text = <"Ej förenlig">
+					description = <"*Non compliant(en)">
+				>
+				["at0017"] = <
+					text = <"Antikoagulantia">
+					description = <"**(en)">
+				>
+				["at0018"] = <
+					text = <"Finns">
+					description = <"*Present(en)">
+				>
+				["at0019"] = <
+					text = <"Finns ej">
+					description = <"*Absent(en)">
+				>
+			>
+		>
+	>

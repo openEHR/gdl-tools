@@ -1,0 +1,461 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"Stroke_prevention_alert.v1.1">
+	concept = <"gt0000">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				keywords = <"Atrial Fibrillation", "Stroke", "CHA2DS2-VASc">
+				purpose = <"Provides alerts in case of non-compliant stroke prevention treatment according to the ESC guidelines.">
+				use = <"Use to alert in case of non-compliant stroke prevention treatment according to the ESC guidelines.">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2014/02/13">
+			["email"] = <"rong.chen@cambio.se">
+			["name"] = <"Rong Chen">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_details = <
+			["references"] = <"">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0047"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0044"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0035]">
+					>
+				>
+			>
+			["gt0048"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0041"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0041|Exclusion diagnosis|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			["gt0049"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0024"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0009]">
+					>
+					["gt0025"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0015]">
+					>
+					["gt0028"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0015] is_a local::gt0025|Documented deviation older than 6 months alert|",...>
+				template_id = <"coded_alert">
+			>
+			["gt0050"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0022"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0009]">
+					>
+					["gt0023"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0015]">
+					>
+					["gt0029"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0015] is_a local::gt0023|Documented deviation with different CHADSVASc score alert|",...>
+				template_id = <"coded_alert">
+			>
+			["gt0051"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0020"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0009]">
+					>
+					["gt0021"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0015]">
+					>
+					["gt0030"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0015] is_a local::gt0021|No documented deviation in review record alert|",...>
+				template_id = <"coded_alert">
+			>
+			["gt0052"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0009]">
+					>
+					["gt0019"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0015]">
+					>
+					["gt0027"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0015] is_a local::gt0019|No previous review record alert|",...>
+				template_id = <"coded_alert">
+			>
+			["gt0053"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.stroke_prevention_review.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0004]">
+					>
+					["gt0007"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+					["gt0011"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0008]">
+					>
+					["gt0013"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0006]">
+					>
+					["gt0014"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0007]">
+					>
+					["gt0045"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0012]">
+					>
+					["gt0046"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0013]">
+					>
+				>
+				predicates = <"max(/data[at0001]/items[at0007])",...>
+			>
+			["gt0054"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0008"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0099]">
+					>
+				>
+			>
+			["gt0055"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0026"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002]">
+					>
+				>
+			>
+		>
+		pre_conditions = <"$gt0044==1|local::at0051|Present|", "$gt0041==null", "($currentDateTime.value>=($gt0014.value+($gt0045.magnitude*1,d)))||($gt0045==null)">
+		rules = <
+			["gt0001"] = (RULE) <
+				when = <"$gt0026==local::at0004|Non compliant|", "$gt0020==null", "$gt0006==true">
+				then = <"$gt0030=ALERT_CATEGORY::HIGH|High level|", "$gt0020=local::at0011|Active|">
+				priority = <4>
+			>
+			["gt0009"] = (RULE) <
+				when = <"$gt0026==local::at0004|Non compliant|", "$gt0003==null", "$gt0011==null">
+				then = <"$gt0027=ALERT_CATEGORY::HIGH|High level|", "$gt0003=local::at0011|Active|">
+				priority = <3>
+			>
+			["gt0010"] = (RULE) <
+				when = <"$gt0026==local::at0004|Non compliant|", "$gt0022==null", "$gt0007!=$gt0008", "$gt0011!=null", "$gt0006==false">
+				then = <"$gt0029=ALERT_CATEGORY::HIGH|High level|", "$gt0022=local::at0011|Active|">
+				priority = <2>
+			>
+			["gt0012"] = (RULE) <
+				when = <"$gt0026==local::at0004|Non compliant|", "$gt0024==null", "$gt0006==false", "$gt0014.value<($currentDateTime.value-180,d)">
+				then = <"$gt0028=ALERT_CATEGORY::HIGH|High level|", "$gt0024=local::at0011|Active|">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ALERTS"] = (TERM_BINDING) <
+				bindings = <
+					["gt0019"] = (BINDING) <
+						codes = <[ALERTS::1001.3],...>
+						uri = <"">
+					>
+					["gt0021"] = (BINDING) <
+						codes = <[ALERTS::1001.4],...>
+						uri = <"">
+					>
+					["gt0023"] = (BINDING) <
+						codes = <[ALERTS::1001.5],...>
+						uri = <"">
+					>
+					["gt0025"] = (BINDING) <
+						codes = <[ALERTS::1001.6],...>
+						uri = <"">
+					>
+				>
+			>
+			["ICD10"] = (TERM_BINDING) <
+				bindings = <
+					["gt0041"] = (BINDING) <
+						codes = <[ICD10::Z992], [ICD10::T824], [ICD10::Y602], [ICD10::Y841], [ICD10::N185]>
+						uri = <"">
+					>
+					["gt0043"] = (BINDING) <
+						codes = <[ICD10::I48],...>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0000"] = (TERM) <
+						text = <"Alerts">
+						description = <"Alerts for non-compliant stroke prevention treatment according to ESC guidelines.">
+					>
+					["gt0001"] = (TERM) <
+						text = <"Raise alert when there is no documented deviation in previous review record">
+					>
+					["gt0003"] = (TERM) <
+						text = <"No previous review record status">
+						description = <"An indication of whether the alert is considered to be an active or inactive issue">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Follow-CDS Recommendation">
+						description = <"*">
+					>
+					["gt0007"] = (TERM) <
+						text = <"CHA2DS2-VASc Score">
+						description = <"*">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Total score">
+						description = <"*">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Raise alert when there is no previous review record">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Raise alert when there is documented deviation with different CHADSVASc score">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Reason for deviation">
+						description = <"*">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Raise alert when documented deviation is older than 6 months">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Actual treatment">
+						description = <"*">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Review date">
+						description = <"*">
+					>
+					["gt0019"] = (TERM) <
+						text = <"No previous review record alert">
+						description = <"Identification of the alert.">
+					>
+					["gt0020"] = (TERM) <
+						text = <"No documented deviation in review record status">
+						description = <"An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again.">
+					>
+					["gt0021"] = (TERM) <
+						text = <"No documented deviation in review record alert">
+						description = <"Identification of the alert.">
+					>
+					["gt0022"] = (TERM) <
+						text = <"Documented deviation with different CHADSVASc score status">
+						description = <"An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again.">
+					>
+					["gt0023"] = (TERM) <
+						text = <"Documented deviation with different CHADSVASc score alert">
+						description = <"Identification of the alert.">
+					>
+					["gt0024"] = (TERM) <
+						text = <"Documented deviation older than 6 months status">
+						description = <"An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again.">
+					>
+					["gt0025"] = (TERM) <
+						text = <"Documented deviation older than 6 months alert">
+						description = <"Identification of the alert.">
+					>
+					["gt0026"] = (TERM) <
+						text = <"CHA2DS2-VASc Compliance">
+						description = <"CHA2DS2-VASc Compliance">
+					>
+					["gt0027"] = (TERM) <
+						text = <"No previous review record category">
+						description = <"The category of alert.">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Documented deviation older than 6 months category">
+						description = <"The category of alert.">
+					>
+					["gt0029"] = (TERM) <
+						text = <"Documented deviation with different CHADSVASc score category">
+						description = <"The category of alert.">
+					>
+					["gt0030"] = (TERM) <
+						text = <"No documented deviation in review record category">
+						description = <"The category of alert.">
+					>
+					["gt0041"] = (TERM) <
+						text = <"Exclusion diagnosis">
+						description = <"The index diagnosis">
+					>
+					["gt0042"] = (TERM) <
+						text = <"Atrial fibrillation diagnosis">
+						description = <"The index diagnosis">
+					>
+					["gt0043"] = (TERM) <
+						text = <"Atrial fibrillation diagnosis code">
+					>
+					["gt0044"] = (TERM) <
+						text = <"Atrial fibrillation">
+						description = <"*">
+					>
+					["gt0045"] = (TERM) <
+						text = <"Decision delayed ">
+						description = <"*">
+					>
+					["gt0046"] = (TERM) <
+						text = <"Reason for delayed decision">
+						description = <"*">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0000"] = (TERM) <
+						text = <"Rekommendationer">
+					>
+					["gt0001"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med strokeprofylax för förmaksflimmer, ingen tidigare dokumenterad avvikelse registrerad">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Ingen tidigare översyn av diagnos registrerad, status">
+						description = <"*An indication of whether the alert is considered to be an active or inactive issue (en)">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Följt rekommendation">
+						description = <"** (en)">
+					>
+					["gt0007"] = (TERM) <
+						text = <"CHA2DS2-VASc poäng">
+						description = <"** (en)">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Poäng">
+						description = <"** (en)">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med strokeprofylax för förmaksflimmer, ingen tidigare översyn av diagnos registrerad">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med strokeprofylax för förmaksflimmer, dokumenterad avvikelse med annan CHADSVASc-poäng">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Orsak till avvikelse">
+						description = <"** (en)">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Behandlingen är ej i enlighet med strokeprofylax för förmaksflimmer, dokumenterad avvikelse är äldre än 6 månader ">
+					>
+					["gt0013"] = (TERM) <
+						text = <"Kommentar">
+						description = <"** (en)">
+					>
+					["gt0014"] = (TERM) <
+						text = <"Datum för granskning">
+						description = <"** (en)">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Ingen tidigare översyn av diagnos registrerad, varning">
+						description = <"*Identification of the alert. (en)">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Ingen tidigare dokumenterad avvikelse registrerad, status">
+						description = <"*An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again. (en)">
+					>
+					["gt0021"] = (TERM) <
+						text = <"Ingen tidigare dokumenterad avvikelse registrerad, varning">
+						description = <"*Identification of the alert. (en)">
+					>
+					["gt0022"] = (TERM) <
+						text = <"Status för dokumenterad avvikelse med olika CHADSVASc poäng">
+						description = <"*An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again. (en)">
+					>
+					["gt0023"] = (TERM) <
+						text = <"Dokumenterad avvikelse med olika CHADSVASc poäng, varning">
+						description = <"*Identification of the alert. (en)">
+					>
+					["gt0024"] = (TERM) <
+						text = <"Dokumenterad avvikelse är äldre än 6 månader, status">
+						description = <"*An indication of whether the alert is considered to be an active, currently inactive, or resolved and not likely to impact on the patient again. (en)">
+					>
+					["gt0025"] = (TERM) <
+						text = <"Dokumenterad avvikelse är äldre än 6 månader, varning">
+						description = <"*Identification of the alert. (en)">
+					>
+					["gt0026"] = (TERM) <
+						text = <"CHA2DS2-VASc Förenlighet">
+						description = <"*CHA2DS2-VASc Compliance (en)">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Ingen tidigare översyn av diagnos registrerad, kategori">
+						description = <"*The category of alert. (en)">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Dokumenterad avvikelse är äldre än 6 månader, kategori">
+						description = <"*The category of alert. (en)">
+					>
+					["gt0029"] = (TERM) <
+						text = <"Dokumenterad avvikelse med olika CHADSVASc poäng, kategori">
+						description = <"*The category of alert. (en)">
+					>
+					["gt0030"] = (TERM) <
+						text = <"Ingen tidigare dokumenterad avvikelse registrerad, kategori">
+						description = <"*The category of alert. (en)">
+					>
+					["gt0041"] = (TERM) <
+						text = <"Negeras av diagnos">
+						description = <"*The index diagnosis (en)">
+					>
+					["gt0042"] = (TERM) <
+						text = <"Diagnos av förmaksflimmer">
+					>
+					["gt0043"] = (TERM) <
+						text = <"Diagnos av förmaksflimmer code">
+					>
+					["gt0044"] = (TERM) <
+						text = <"Förmaksflimmer">
+					>
+					["gt0045"] = (TERM) <
+						text = <"Beslutet uppskjutet">
+					>
+					["gt0046"] = (TERM) <
+						text = <"Orsak till uppskjutningen">
+					>
+				>
+			>
+		>
+	>
+>
