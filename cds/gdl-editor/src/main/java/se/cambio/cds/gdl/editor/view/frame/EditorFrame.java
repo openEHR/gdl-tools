@@ -40,19 +40,26 @@ public class EditorFrame extends JFrame implements EditorViewer{
      * This method initializes this
      */
     private  void initialize() {
-        ToolTipManager.sharedInstance().setDismissDelay(30000);
-        Dimension screenSize =
-                Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension labelSize = this.getSize();
-        this.setSize(new Dimension(1000, 600));
-        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-        this.setLocation(locx,locy);
+        setTooltipDelay();
+        setPositionAndDimension();
         this.setResizable(true);
         this.addWindowListener(new WindowListener());
         this.setJMenuBar(getMainMenuBar());
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setIconImage(GDLEditorImageUtil.LOGO.getImage());
+    }
+
+    private void setPositionAndDimension() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension labelSize = this.getSize();
+        this.setSize(new Dimension(1000, 600));
+        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
+        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
+        this.setLocation(locx,locy);
+    }
+
+    private void setTooltipDelay() {
+        ToolTipManager.sharedInstance().setDismissDelay(30000);
     }
 
 

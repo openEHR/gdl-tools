@@ -61,10 +61,10 @@ public class ExportUtils {
         sb.append("<TITLE>"+guide.getId()+"</TITLE>");
         sb.append("></HEAD>");
         sb.append("<BODY>");
-        sb.append("<b><font face='Calibri' size='6'>"+getTermText(guide.getConcept(), td)+"</font></b>");
+        sb.append("<b><font face='Calibri' size='6'>"+td.getTermText(guide.getConcept())+"</font></b>");
         sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("GuideDetails")));
         sb.append("<table><font face='Calibri'>");
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getTermDescription(guide.getConcept(), td)+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+td.getTermDescription(guide.getConcept())+FONT_TD_TR_CLOSE);
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
         sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
@@ -156,7 +156,7 @@ public class ExportUtils {
                     for (Binding binding: termBinding.getBindings().values()){
                         sb.append(TR_TD_FONT_OPEN_WITH_BG);
                         sb.append("<b>");
-                        sb.append(getTermText(binding.getId(), td)+": ");
+                        sb.append(td.getTermText(binding.getId())+": ");
                         sb.append("</b>");
                         String prefix = "";
                         for(CodePhrase codePhrase: binding.getCodes()){
@@ -173,28 +173,6 @@ public class ExportUtils {
         sb.append("</BODY>");
         sb.append("</HTML>");
         return sb.toString();
-    }
-
-    public static String getTermText(String gtCode, TermDefinition td){
-        Term term = td.getTerms().get(gtCode);
-        String text = term!=null?td.getTerms().get(gtCode).getText():null;
-        if (text!=null){
-            text = text.replace("\\\"","\"");
-            return text;
-        }else{
-            return "";
-        }
-    }
-
-    private static String getTermDescription(String gtCode, TermDefinition td){
-        Term term = td.getTerms().get(gtCode);
-        String desc = term!=null?td.getTerms().get(gtCode).getDescription():null;
-        if (desc!=null){
-            desc = desc.replace("\\\"","\"");
-            return desc;
-        }else{
-            return "";
-        }
     }
 
     private static String getBoxWithTitleStart(String title){

@@ -205,7 +205,7 @@ public class StudyExportUtils {
 
     private static String getTermText(GTCodeReference gtCodeReference, String lang) throws GuideNotFoundException {
         TermDefinition td = getTermDefinition(gtCodeReference, lang);
-        return ExportUtils.getTermText(gtCodeReference.getGtCode(), td);
+        return td.getTermText(gtCodeReference.getGtCode());
     }
 
     private static String getBoxWithTitleStart(String title){

@@ -91,12 +91,19 @@ public class GDLEditor implements EditorController{
     }
 
     public String getTitle() {
-        String appName = GDLEditorLanguageManager.getMessage("GDLEditor");
+        return getAppName()+" - "+getConceptName();
+    }
+
+    private String getConceptName() {
         String conceptName = getGTName(getConceptGTCode());
         if (conceptName == null) {
             conceptName = GDLEditorLanguageManager.getMessage("Guide");
         }
-        return appName+" - "+conceptName;
+        return conceptName;
+    }
+
+    private String getAppName() {
+        return GDLEditorLanguageManager.getMessage("GDLEditor");
     }
 
     public boolean checkRuleLineDelete(RuleLine ruleLine) {

@@ -9,14 +9,21 @@ import java.io.Serializable;
  * @author rong.chen
  * 
  */
-public class Guide implements Serializable{
+public class Guide implements Serializable {
 
-	/**
-     * 
-     */
+    private String gdlVersion;
+    private String id;
+    private String concept;
+    private Language language;
+    private ResourceDescription description;
+    private GuideDefinition definition;
+    private GuideOntology ontology;
     private static final long serialVersionUID = 1L;
 
 	public Guide() {
+        language = new Language();
+        description = new ResourceDescription();
+        definition = new GuideDefinition();
 	}
 
 	/**
@@ -123,14 +130,6 @@ public class Guide implements Serializable{
 	public void setOntology(GuideOntology ontology) {
 		this.ontology = ontology;
 	}
-
-	private String gdlVersion;
-	private String id;
-	private String concept;
-	private Language language;
-	private ResourceDescription description;
-	private GuideDefinition definition;
-	private GuideOntology ontology;
 
 	/*
 	 * (non-Javadoc)
