@@ -2,13 +2,13 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable.TerminologyTableModel;
 import se.cambio.cds.gdl.model.Term;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
      *
      */
     private static final long serialVersionUID = 1L;
-    private GDLEditor _controller = null;
+    private EditorController _controller = null;
     private JXPathContext _context = null;
     private JScrollPane terminologyScrollPanel;
     private TerminologyTable terminologyTable;
@@ -33,8 +33,8 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
     private JPanel mainPanel;
     private JPanel editButtonPanel;
 
-    public TerminologyPanel(GDLEditor gdlEditor){
-        _controller = gdlEditor;
+    public TerminologyPanel(EditorController controller){
+        _controller = controller;
         init();
     }
 
@@ -148,9 +148,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
     private void deleteTermDefinitionInModel() {
         TerminologyTableModel ttm = null;
         //Look for referenced codes
-        Collection<String> gtCodesUsed = new ArrayList<String>();
-        gtCodesUsed.addAll(_controller.getGTCodesUsedInDefinitions());
-        gtCodesUsed.addAll(_controller.getGTCodesUsedInBindings());
+        Collection<String> gtCodesUsed = _controller.getUsedCodes();
         for (String gtCode : getSelectedGTCodes()) {
             if (gtCodesUsed.contains(gtCode)){
                 JOptionPane.showMessageDialog(

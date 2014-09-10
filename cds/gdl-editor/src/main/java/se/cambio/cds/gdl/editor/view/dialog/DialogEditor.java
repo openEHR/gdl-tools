@@ -7,7 +7,7 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.openehr.view.util.ScreenUtil;
@@ -24,7 +24,7 @@ import java.awt.event.WindowEvent;
  *
  */
 
-public class DialogGDLEditor extends JDialog implements EditorViewer{
+public class DialogEditor extends JDialog implements EditorViewer{
 
 
     /**
@@ -36,7 +36,7 @@ public class DialogGDLEditor extends JDialog implements EditorViewer{
     /**
      * This is the default constructor
      */
-    public DialogGDLEditor(Window owner) {
+    public DialogEditor(Window owner) {
         super(owner, "", ModalityType.APPLICATION_MODAL);
         initialize();
     }
@@ -53,7 +53,7 @@ public class DialogGDLEditor extends JDialog implements EditorViewer{
         this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
-    public void initController(GDLEditor controller) {
+    public void initController(EditorController controller) {
         setTitle(controller.getTitle());
         setContent(controller.getEditorPanel());
     }

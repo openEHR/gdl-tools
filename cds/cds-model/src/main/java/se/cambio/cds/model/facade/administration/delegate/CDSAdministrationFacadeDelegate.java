@@ -2,6 +2,7 @@ package se.cambio.cds.model.facade.administration.delegate;
 
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.cds.model.study.dto.StudyDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -15,6 +16,7 @@ import java.util.Collection;
  */
 public interface CDSAdministrationFacadeDelegate {
 
+    //Guides
     public Collection<GuideDTO> searchAllGuides() throws InternalErrorException;
 
     public Collection<GuideDTO> searchAllGuidesDefinitions() throws InternalErrorException;
@@ -31,7 +33,8 @@ public interface CDSAdministrationFacadeDelegate {
     public void upsertGuide(GuideDTO guideDTO) throws InternalErrorException, GuideNotFoundException;
     
     public void removeGuide(String guideId) throws InternalErrorException, GuideNotFoundException;
-    
+
+    //Views
     public Collection<OverviewDTO> searchAllOverviews() throws InternalErrorException;
 
     //TODO input argument should be a collection
@@ -42,6 +45,19 @@ public interface CDSAdministrationFacadeDelegate {
     public void upsertOverview(OverviewDTO overviewDTO) throws InternalErrorException, InstanceNotFoundException;
 
     public void removeOverview(String overviewId) throws InternalErrorException, InstanceNotFoundException;
+
+
+    //Studies
+    public Collection<StudyDTO> searchAllStudies() throws InternalErrorException;
+
+    //TODO input argument should be a collection
+    public StudyDTO searchStudy(String studyId) throws InternalErrorException, InstanceNotFoundException;
+
+    public int getStudiesHashCode() throws InternalErrorException;
+
+    public void upsertStudy(StudyDTO studyDTO) throws InternalErrorException, InstanceNotFoundException;
+
+    public void removeStudy(String studyId) throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

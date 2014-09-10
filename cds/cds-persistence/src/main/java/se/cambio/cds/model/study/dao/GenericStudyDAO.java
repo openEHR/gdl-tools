@@ -1,16 +1,35 @@
-package se.cambio.cds.gdl.editor.controller.interfaces;
+package se.cambio.cds.model.study.dao;
 
-import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
+import se.cambio.cds.model.study.dto.StudyDTO;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import javax.swing.*;
+import java.util.Collection;
+import java.util.Date;
 
+/**
+ * @author iago.corbal
+ */
+public interface GenericStudyDAO {
 
-public abstract interface EditorViewer{
-    
+    public StudyDTO searchByStudyId(String studyId)
+            throws InternalErrorException, InstanceNotFoundException;
 
-    public void initController(EditorController controller);
-    public MainMenuBar getMainMenuBar();
-    public void setContent(JPanel panel);
+    public Collection<StudyDTO> searchAll()
+            throws InternalErrorException;
+
+    public void insert(StudyDTO studyDTO)
+            throws InternalErrorException;
+
+    public void update(StudyDTO studyDTO)
+            throws InternalErrorException, InstanceNotFoundException ;
+
+    public void remove(String studyId)
+            throws InternalErrorException, InstanceNotFoundException;
+
+    public Date getLastUpdateDate()
+            throws InternalErrorException;
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

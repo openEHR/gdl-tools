@@ -13,7 +13,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
+import java.awt.Window;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -22,11 +22,11 @@ import java.util.List;
 
 public class ExportUtils {
 
-    private static String TR_TD_FONT_OPEN = "<tr valign='top'><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr bgcolor='#dbe5f1' valign='top' ><td><font face='Calibri'>";
-    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr bgcolor='#9ec2ef' valign='top'><td><font face='Calibri'>";
-    private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</font></td><td align='left'><font face='Calibri'>";
-    private static String FONT_TD_TR_CLOSE = "</font></td></tr>";
+    private static String TR_TD_FONT_OPEN = "<tr valign='top'><td style='font-family: Calibri;'>";
+    private static String TR_TD_FONT_OPEN_WITH_BG = "<tr style='background-color: #dbe5f1; font-family: Calibri;' valign='top'><td>";
+    private static String TR_TD_FONT_OPEN_WITH_BG2 = "<tr style='background-color: #9ec2ef; font-family: Calibri;' valign='top'><td>";
+    private static String TD_FONT_CLOSE_TD_FONT_OPEN = "</td><td style='font-family: Calibri;' align='left'>";
+    private static String FONT_TD_TR_CLOSE = "</td></tr>";
 
     public static void exportToHTML(Window owner, Guide guide, String lang){
         JFileChooser fileChooser = new JFileChooser();
@@ -56,31 +56,32 @@ public class ExportUtils {
         TermDefinition td = GuideImporter.getTermDefinition(guide, lang);
         JXPathContext c = JXPathContext.newContext(guide.getDescription());
         StringBuffer sb = new StringBuffer();
-        sb.append("<HTML>");
-        sb.append("<HEAD><meta charset='UTF-8'></HEAD>");
+        sb.append("<!DOCTYPE html><html lang=\""+lang+"\"><HTML>");
+        sb.append("<HEAD><meta charset='UTF-8'");
         sb.append("<TITLE>"+guide.getId()+"</TITLE>");
-
-        sb.append("<b><font face='Calibri' size='6'>"+getTermText(guide.getConcept(), td)+"</font></b>");
+        sb.append("></HEAD>");
+        sb.append("<BODY>");
+        sb.append("<b><font face='Calibri' size='6'>"+td.getTermText(guide.getConcept())+"</font></b>");
         sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("GuideDetails")));
         sb.append("<table><font face='Calibri'>");
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getTermDescription(guide.getConcept(), td)+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Description")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+td.getTermDescription(guide.getConcept())+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Purpose")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/purpose")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Use")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/use")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Misuse")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/misuse")+FONT_TD_TR_CLOSE);
         if (c.getValue("/otherDetails")!=null){
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("References")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("References")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/otherDetails/references")+FONT_TD_TR_CLOSE);
         }
         sb.append("</font></table>");
         sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("AuthorDetails")));
         sb.append("<table><font face='Calibri'>");
         if (c.getValue("/originalAuthor")!=null){
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Name")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
-            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Name")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/name")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Email")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/email")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Organisation")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/organisation")+FONT_TD_TR_CLOSE);
+            sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Date")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/originalAuthor/date")+FONT_TD_TR_CLOSE);
         }
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
-        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+":</b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("AuthorshipLifecycle")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/lifecycleState")+FONT_TD_TR_CLOSE);
+        sb.append(TR_TD_FONT_OPEN+"<b>"+CDSLanguageManager.getMessage("Copyright")+": </b>"+TD_FONT_CLOSE_TD_FONT_OPEN+getValue(c,"/details/"+lang+"/copyright")+FONT_TD_TR_CLOSE);
         sb.append("</font></table>");
 
         List<String> keywords = (List<String>)c.getValue("/details/"+lang+"/keywords");
@@ -105,7 +106,7 @@ public class ExportUtils {
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Contributors")));
             boolean first = true;
             sb.append("<font face='Calibri'><i>");
-            for (String contributor : contributors) {
+            for (String contributor: contributors) {
                 contributor = contributor.replace("\\\"","\"");
                 if (!first){
                     sb.append(", ");
@@ -121,7 +122,7 @@ public class ExportUtils {
         if (readableGuide.getPreconditionRuleLines()!=null && !readableGuide.getPreconditionRuleLines().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Preconditions")));
             sb.append("<table width=100%>");
-            for (RuleLine ruleLine : readableGuide.getPreconditionRuleLines()) {
+            for (RuleLine ruleLine: readableGuide.getPreconditionRuleLines()) {
                 sb.append(TR_TD_FONT_OPEN_WITH_BG);
                 sb.append(ruleLine.toHTMLString(lang));
                 sb.append(FONT_TD_TR_CLOSE);
@@ -132,81 +133,65 @@ public class ExportUtils {
         if (readableGuide.getReadableRules()!=null && !readableGuide.getReadableRules().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("RuleList")));
             sb.append("<table width=100%>");
-            String ruleSpacing = "";
-            for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
-                sb.append(ruleSpacing);
+            for (ReadableRule readableRule: readableGuide.getReadableRules().values()) {
                 sb.append(TR_TD_FONT_OPEN_WITH_BG);
                 sb.append(readableRule.toHTMLString(lang));
-                sb.append("</font></tr><tr><td></td></tr>");
-                ruleSpacing = "</br>";
+                sb.append("</font>");
+                sb.append("</font></tr><tr><td><br></td></tr>");
             }
             sb.append("</table>");
         }
 
         if (guide.getOntology()!=null &&
-                guide.getOntology().getTermBindings()!=null){
+                guide.getOntology().getTermBindings()!=null && !guide.getOntology().getTermBindings().isEmpty()){
             sb.append(getBoxWithTitleStart(CDSLanguageManager.getMessage("Bindings")));
-            for (TermBinding termBinding : guide.getOntology().getTermBindings().values()) {
+            for (TermBinding termBinding: guide.getOntology().getTermBindings().values()) {
                 sb.append("<table width=100%>\n");
                 sb.append(TR_TD_FONT_OPEN_WITH_BG2);
                 sb.append("<b>");
                 sb.append(termBinding.getId());
                 sb.append("</b>");
                 sb.append(FONT_TD_TR_CLOSE);
-                for (Binding binding: termBinding.getBindings().values()){
-                    sb.append(TR_TD_FONT_OPEN_WITH_BG);
-                    sb.append("<b>");
-                    sb.append(getTermText(binding.getId(), td)+": ");
-                    sb.append("</b>");
-                    String prefix = "";
-                    for(CodePhrase codePhrase: binding.getCodes()){
-                        sb.append(prefix);
-                        sb.append(codePhrase.getCodeString());
-                        prefix = ", ";
+                if (termBinding.getBindings()!= null){
+                    for (Binding binding: termBinding.getBindings().values()){
+                        sb.append(TR_TD_FONT_OPEN_WITH_BG);
+                        sb.append("<b>");
+                        sb.append(td.getTermText(binding.getId())+": ");
+                        sb.append("</b>");
+                        String prefix = "";
+                        for(CodePhrase codePhrase: binding.getCodes()){
+                            sb.append(prefix);
+                            sb.append(codePhrase.getCodeString());
+                            prefix = ", ";
+                        }
+                        sb.append(FONT_TD_TR_CLOSE);
                     }
-                    sb.append(FONT_TD_TR_CLOSE);
                 }
                 sb.append("</table><br>");
             }
         }
+        sb.append("</BODY>");
         sb.append("</HTML>");
         return sb.toString();
     }
 
-    private static String getTermText(String gtCode, TermDefinition td){
-        Term term = td.getTerms().get(gtCode);
-        String text = term!=null?td.getTerms().get(gtCode).getText():null;
-        if (text!=null){
-            text = text.replace("\\\"","\"");
-            return text;
-        }else{
-            return "";
-        }
-    }
-
-    private static String getTermDescription(String gtCode, TermDefinition td){
-        Term term = td.getTerms().get(gtCode);
-        String desc = term!=null?td.getTerms().get(gtCode).getDescription():null;
-        if (desc!=null){
-            desc = desc.replace("\\\"","\"");
-            return desc;
-        }else{
-            return "";
-        }
-    }
-
     private static String getBoxWithTitleStart(String title){
         StringBuffer sb = new StringBuffer();
-        sb.append("<br><div style='background-color:#4f81bd; padding:5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
+        sb.append("<br><div style='background-color: #4f81bd; padding: 5px'><font size='+1' face='Calibri' color='white'><b>"+title.toUpperCase()+"</b></font></div>");
         return  sb.toString();
     }
 
     public static String getValue(JXPathContext c, String path){
         String str = (String)c.getValue(path);
-        if (str!=null){
-            str = str.replace("\\\"","\"");
-        }
+        str = formatToHTMLString(str);
         return str!=null?str:"";
+    }
+
+    public static String formatToHTMLString(String str){
+        if (str!=null){
+            str = str.replace("\\\"","\"").replace("\n","<br>");
+        }
+        return str;
     }
 
 

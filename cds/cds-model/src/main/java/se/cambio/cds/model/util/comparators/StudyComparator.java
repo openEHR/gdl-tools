@@ -1,16 +1,15 @@
-package se.cambio.cds.gdl.editor.controller.interfaces;
+package se.cambio.cds.model.util.comparators;
 
-import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
+import se.cambio.cds.model.study.dto.StudyDTO;
 
-import javax.swing.*;
+import java.util.Comparator;
 
+public class StudyComparator implements Comparator<StudyDTO>{
 
-public abstract interface EditorViewer{
-    
+    public int compare(StudyDTO o1, StudyDTO o2) {
+	return o1.getStudyId().compareTo(o2.getStudyId());
+    }
 
-    public void initController(EditorController controller);
-    public MainMenuBar getMainMenuBar();
-    public void setContent(JPanel panel);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

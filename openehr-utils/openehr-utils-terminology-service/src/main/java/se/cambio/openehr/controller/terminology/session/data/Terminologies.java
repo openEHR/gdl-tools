@@ -72,10 +72,14 @@ public class Terminologies {
 
 
     public int hashCode(){
-        List<TerminologyDTO> terminologyDTOs = getAllTerminologies();
-        Collections.sort(terminologyDTOs, new TerminologyComparator());
+        return generateHashCode(getTerminologiesMap().values());
+    }
+
+    public static int generateHashCode(Collection<TerminologyDTO> terminologyDTOs) {
+        List<TerminologyDTO> terminologyDTOsList = new ArrayList<TerminologyDTO>(terminologyDTOs);
+        Collections.sort(terminologyDTOsList, new TerminologyComparator());
         List<Integer> defs = new ArrayList<Integer>();
-        for (TerminologyDTO terminologyDTO: terminologyDTOs){
+        for (TerminologyDTO terminologyDTO: terminologyDTOsList){
             defs.add(terminologyDTO.getTerminologyId().hashCode()+ Arrays.hashCode(terminologyDTO.getSrc()));
         }
         return defs.hashCode();

@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
 import javax.swing.*;
@@ -13,11 +13,11 @@ public class RefreshableDescriptionPanel extends JPanel implements RefreshablePa
      */
     private static final long serialVersionUID = 1L;
 
-    private GDLEditor _controller = null;
+    private EditorController _controller = null;
     private DescriptionPanel descriptionPanel = null;
 
-    public RefreshableDescriptionPanel(GDLEditor gdlEditor){
-        _controller = gdlEditor;
+    public RefreshableDescriptionPanel(EditorController controller){
+        _controller = controller;
         init();
     }
 

@@ -78,10 +78,14 @@ public class Overviews {
     }
 
     public int hashCode(){
-        List<OverviewDTO> overviewDTOs = getAllOverviews();
-        Collections.sort(overviewDTOs, new OverviewComparator());
+        return generateHashCode(getOverviewsMap().values());
+    }
+
+    public static int generateHashCode(Collection<OverviewDTO> overviewDTOs) {
+        List<OverviewDTO> overviewDTOList = new ArrayList<OverviewDTO>(overviewDTOs);
+        Collections.sort(overviewDTOList, new OverviewComparator());
         List<String> defs = new ArrayList<String>();
-        for(OverviewDTO overviewDTO: overviewDTOs){
+        for(OverviewDTO overviewDTO: overviewDTOList){
             defs.add(overviewDTO.getOverviewSrc());
         }
         return defs.hashCode();

@@ -1,8 +1,9 @@
 package se.cambio.cds.gdl.editor.controller;
 
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
-import se.cambio.cds.gdl.editor.view.dialog.DialogGDLEditor;
-import se.cambio.cds.gdl.editor.view.frame.GDLEditorFrame;
+import se.cambio.cds.gdl.editor.view.dialog.DialogEditor;
+import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -12,7 +13,7 @@ import java.io.File;
 
 public class EditorManager {
     private static EditorManager _instance = null;
-    private GDLEditor _controller = null;
+    private EditorController _controller = null;
     private Window _editorViewer = null;
     private boolean _exitOnClose = true;
 
@@ -24,11 +25,15 @@ public class EditorManager {
     }
 
     public static GDLEditor getActiveGDLEditor(){
-        return getDelegate()._controller;
+        if (getDelegate()._controller instanceof GDLEditor){
+            return (GDLEditor)getActiveEditorController();
+        }else{
+            return null;
+        }
     }
 
-    public static void setActiveGDLEditor(GDLEditor controller){
-        getDelegate()._controller = controller;
+    public static EditorController getActiveEditorController(){
+        return getDelegate()._controller;
     }
 
     public static Window getActiveEditorWindow(){
@@ -68,7 +73,7 @@ public class EditorManager {
         }
     }
 
-    public static void initController(GDLEditor controller) throws InternalErrorException{
+    public static void initController(EditorController controller) throws InternalErrorException{
         getDelegate()._controller = controller;
         if (getDelegate()._editorViewer!=null){
             getActiveEditorViewer().initController(controller);
@@ -77,16 +82,16 @@ public class EditorManager {
         }
     }
 
-    public static GDLEditorFrame createEditorFrame(){
-        GDLEditorFrame ef = new GDLEditorFrame();
+    public static EditorFrame createEditorFrame(){
+        EditorFrame ef = new EditorFrame();
         getDelegate()._editorViewer = ef;
         setExitOnClose(true);
         return ef;
     }
 
 
-    public static DialogGDLEditor createEditorDialog(Window owner){
-        DialogGDLEditor ed = new DialogGDLEditor(owner);
+    public static DialogEditor createEditorDialog(Window owner){
+        DialogEditor ed = new DialogEditor(owner);
         getDelegate()._editorViewer = ed;
         setExitOnClose(false);
         return ed;

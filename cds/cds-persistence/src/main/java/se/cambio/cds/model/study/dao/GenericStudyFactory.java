@@ -1,16 +1,38 @@
-package se.cambio.cds.gdl.editor.controller.interfaces;
+package se.cambio.cds.model.study.dao;
 
-import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
+import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import javax.swing.*;
+/**
+ * @author iago.corbal
+ */
+public class GenericStudyFactory {
 
+    private static String DAO_CLASS_STUDY = "GenericStudyDAO/Class";
 
-public abstract interface EditorViewer{
-    
+    private GenericStudyFactory() {
+    }
 
-    public void initController(EditorController controller);
-    public MainMenuBar getMainMenuBar();
-    public void setContent(JPanel panel);
+    private static Class<?> getDAOClass() throws InternalErrorException {
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    CDSConfigurationParametersManager.getParameter(DAO_CLASS_STUDY);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+        return theClass;
+    }
+
+    public static GenericStudyDAO getDAO()
+            throws InternalErrorException {
+        try {
+            return (GenericStudyDAO)getDAOClass().newInstance();
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

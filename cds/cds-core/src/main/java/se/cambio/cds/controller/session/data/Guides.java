@@ -195,10 +195,14 @@ public class Guides {
     }
 
     public int hashCode(){
-        List<GuideDTO> guideDTOs = getAllGuides();
-        Collections.sort(guideDTOs, new GuidesComparator());
+        return generateHashCode(getGuidesMap().values());
+    }
+
+    public static int generateHashCode(Collection<GuideDTO> guideDTOs) {
+        List<GuideDTO> guideDTOList = new ArrayList<GuideDTO>(guideDTOs);
+        Collections.sort(guideDTOList, new GuidesComparator());
         List<String> defs = new ArrayList<String>();
-        for (GuideDTO guideDTO: guideDTOs){
+        for (GuideDTO guideDTO: guideDTOList){
             defs.add(guideDTO.getGuideSrc()+guideDTO.isActive());
         }
         return defs.hashCode();

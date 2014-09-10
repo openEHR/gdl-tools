@@ -225,10 +225,14 @@ public class Archetypes {
     }
 
     public int hashCode(){
-        List<ArchetypeDTO> archetypeDTOs = getAllArchetypes();
-        Collections.sort(archetypeDTOs, new ArchetypeComparator());
+        return generateHashCode(getArchetypeDTOMap().values());
+    }
+
+    public static int generateHashCode(Collection<ArchetypeDTO> archetypeDTOs) {
+        List<ArchetypeDTO> archetypeDTOsList = new ArrayList<ArchetypeDTO>(archetypeDTOs);
+        Collections.sort(archetypeDTOsList, new ArchetypeComparator());
         List<String> defs = new ArrayList<String>();
-        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+        for(ArchetypeDTO archetypeDTO: archetypeDTOsList){
             defs.add(archetypeDTO.getArchetype());
         }
         return defs.hashCode();
