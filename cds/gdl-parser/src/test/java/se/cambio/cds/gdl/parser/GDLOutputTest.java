@@ -37,7 +37,7 @@ public class GDLOutputTest extends TestCase {
 		//write(list, "output2.dadl");
 		
 		Guide actual = parse(list);
-		guide.getLanguage().setTranslations(null);
+		//guide.getLanguage().setTranslations(null);
 		assertEquals(guide, actual);
 	}
 	

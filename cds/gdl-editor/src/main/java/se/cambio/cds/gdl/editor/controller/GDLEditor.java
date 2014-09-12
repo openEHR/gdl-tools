@@ -19,17 +19,17 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
 import se.cambio.cds.gdl.editor.view.dialog.DialogTerminologyIdSelection;
 import se.cambio.cds.gdl.editor.view.panels.GDLEditorMainPanel;
 import se.cambio.cds.gdl.editor.view.panels.GDLPanel;
-import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.util.GuideImporter;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -480,10 +480,7 @@ public class GDLEditor implements EditorController{
 
     private Language getLanguage() {
         if (_language == null) {
-            _language = new Language(
-                    new CodePhrase(LANGUAGE_TERMINOLOGY,
-                            UserConfigurationManager.getLanguage()),
-                    new HashMap<String, TranslationDetails>());
+            _language = new Language();
         }
         return _language;
     }
@@ -501,6 +498,12 @@ public class GDLEditor implements EditorController{
     }
 
     public String getOriginalLanguageCode() {
+        CodePhrase originalLanuageCodePhrase = getLanguage().getOriginalLanguage();
+        if (originalLanuageCodePhrase==null){
+            originalLanuageCodePhrase = new CodePhrase(
+                    LANGUAGE_TERMINOLOGY, UserConfigurationManager.getLanguage());
+            getLanguage().setOriginalLanguage(originalLanuageCodePhrase);
+        }
         return getLanguage().getOriginalLanguage().getCodeString();
     }
 
@@ -1278,21 +1281,17 @@ public class GDLEditor implements EditorController{
                 ArchetypeDTO archetypeDTO = Archetypes.getArchetypeDTO(archetypeId);
                 if (archetypeDTO == null) {
                     int result = ImportUtils.showImportArchetypeDialogAndAddToRepo(
-                            EditorManager.getActiveEditorWindow(), new File(
-                            archetypeId + ".adl"));
+                            EditorManager.getActiveEditorWindow(), new File(archetypeId + ".adl"));
                     if (result == JFileChooser.CANCEL_OPTION) {
-                        throw new InternalErrorException(new Exception(
-                                "Archetype '" + archetypeId + "' not found."));
+                        throw new InternalErrorException(new Exception("Archetype '" + archetypeId + "' not found."));
                     }
                 }
             } else {
                 if (Templates.getTemplateDTO(templateId) == null) {
                     int result = ImportUtils.showImportTemplateDialog(
-                            EditorManager.getActiveEditorWindow(), new File(
-                            templateId + ".oet"));
+                            EditorManager.getActiveEditorWindow(), new File(templateId + ".oet"));
                     if (result == JFileChooser.CANCEL_OPTION) {
-                        throw new InternalErrorException(new Exception(
-                                "Template '" + templateId + "' not found."));
+                        throw new InternalErrorException(new Exception("Template '" + templateId + "' not found."));
                     }
                 }
             }
