@@ -18,11 +18,19 @@ import java.util.Map;
 
 public class GuideDefinition implements Serializable{
 
-    /**
-     *
-     */
+    private Map<String, ArchetypeBinding> archetypeBindings;
+    private List<String> preConditions;
+    private Map<String,Rule> rules;
+    private List<ExpressionItem> preConditionExpressions;
+
+    public static String ARCHETYPE_BINDING_PREFIX = "ab";
+
     private static final long serialVersionUID = 1L;
     public GuideDefinition() {
+        archetypeBindings = new HashMap<String, ArchetypeBinding>();
+        preConditions = new ArrayList<String>();
+        rules = new HashMap<String, Rule>();
+        preConditionExpressions = new ArrayList<ExpressionItem>();
     }
 
     public GuideDefinition(Map<String, ArchetypeBinding> archetypeBindings,
@@ -155,11 +163,7 @@ public class GuideDefinition implements Serializable{
         return true;
     }
 
-    private Map<String, ArchetypeBinding> archetypeBindings;
-    private List<String> preConditions;
-    private Map<String,Rule> rules;
-    private List<ExpressionItem> preConditionExpressions;
-    public static String ARCHETYPE_BINDING_PREFIX = "ab";
+
     /**
      * @return the preConditionExpressions
      */

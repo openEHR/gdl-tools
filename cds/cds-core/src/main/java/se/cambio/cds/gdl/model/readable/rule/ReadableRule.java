@@ -68,11 +68,11 @@ public class ReadableRule {
         sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Rule")+"</font><font> "+getName(gtCode)+"</font></b><br>");
         sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("When")+"</font></b><br>");
         for (RuleLine ruleLine : getConditionRuleLines()) {
-            sb.append(ruleLine.toHTMLString(1, lang)+"</div><br>");
+            sb.append(ruleLine.toHTMLString(1, lang)+"<br>");
         }
         sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Then")+"</font></b><br>");
         for (RuleLine ruleLine : getActionRuleLines()) {
-            sb.append(ruleLine.toHTMLString(1, lang)+"</div><br>");
+            sb.append(ruleLine.toHTMLString(1, lang)+"<br>");
         }
         return sb.toString();
     }

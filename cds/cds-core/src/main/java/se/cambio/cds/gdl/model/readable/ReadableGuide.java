@@ -13,19 +13,19 @@ public class ReadableGuide {
     private List<RuleLine> definitionRuleLines = null;
     private List<RuleLine> preconditionRuleLines = null;
     private TermDefinition _termDefinition = null;
-    
-    
+
+
     public ReadableGuide(TermDefinition termDefinition){
-	_termDefinition = termDefinition;
-	renderableRules = new LinkedHashMap<String, ReadableRule>();
-	definitionRuleLines = new ArrayList<RuleLine>();
-	preconditionRuleLines = new ArrayList<RuleLine>();
+        _termDefinition = termDefinition;
+        renderableRules = new LinkedHashMap<String, ReadableRule>();
+        definitionRuleLines = new ArrayList<RuleLine>();
+        preconditionRuleLines = new ArrayList<RuleLine>();
     }
-    
+
     public String getLanguage(){
-	return _termDefinition.getId();
+        return _termDefinition.getId();
     }
-    
+
     public LinkedHashMap<String, ReadableRule> getReadableRules() {
         return renderableRules;
     }

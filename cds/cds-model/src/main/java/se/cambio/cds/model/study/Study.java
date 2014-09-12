@@ -3,7 +3,9 @@ package se.cambio.cds.model.study;
 import se.cambio.cds.gdl.model.Language;
 import se.cambio.cds.gdl.model.ResourceDescription;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,6 +22,15 @@ public class Study {
     private Collection<GTCodeReference> filters;
     private Collection<GTCodeReference> indicators;
     private Collection<IndicatorRange> indicatorRanges;
+
+    public Study() {
+        language = new Language();
+        studyDefinitions = new HashMap<String, StudyDefinition>();
+        guideIds = new ArrayList<String>();
+        filters = new ArrayList<GTCodeReference>();
+        indicators = new ArrayList<GTCodeReference>();
+        resourceDescription = new ResourceDescription();
+    }
 
     public Study(
             String studyId,

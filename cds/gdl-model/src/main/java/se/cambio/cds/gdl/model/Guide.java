@@ -24,6 +24,7 @@ public class Guide implements Serializable {
         language = new Language();
         description = new ResourceDescription();
         definition = new GuideDefinition();
+        ontology = new GuideOntology();
 	}
 
 	/**

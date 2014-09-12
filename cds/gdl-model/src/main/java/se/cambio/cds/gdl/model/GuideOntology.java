@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GuideOntology implements Serializable{
@@ -11,7 +12,13 @@ public class GuideOntology implements Serializable{
     private static final long serialVersionUID = 1L;
 	private Map<String, TermDefinition> termDefinitions;
 	private Map<String, TermBinding> termBindings;
-	/**
+
+    public GuideOntology() {
+        termDefinitions = new HashMap<String, TermDefinition>();
+        termBindings = new HashMap<String, TermBinding>();
+    }
+
+    /**
 	 * @return the termDefinitions
 	 */
 	public Map<String, TermDefinition> getTermDefinitions() {

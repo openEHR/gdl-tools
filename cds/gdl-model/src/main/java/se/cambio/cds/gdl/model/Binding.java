@@ -1,18 +1,21 @@
 package se.cambio.cds.gdl.model;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Binding  implements Serializable{
-	
-	/**
-     * 
-     */
+
+    private String id;
+    private List<CodePhrase> codes;
+    private String Uri;
+
     private static final long serialVersionUID = 1L;
 
-	public Binding(){		
+	public Binding(){
+        codes = new ArrayList<CodePhrase>();
 	}
 
 	public Binding(String id, List<CodePhrase> codes) {
@@ -25,12 +28,8 @@ public class Binding  implements Serializable{
 		super();
 		this.id = id;
 		this.codes = codes;
-		Uri = uri;
+		this.Uri = uri;
 	}
-
-	private String id;
-	private List<CodePhrase> codes;
-	private String Uri;
 
 	/**
 	 * @return the id

@@ -1,9 +1,10 @@
 package se.cambio.cds.gdl.model;
 
-import java.io.Serializable;
-import java.util.Map;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Language implements Serializable{
 
@@ -11,7 +12,11 @@ public class Language implements Serializable{
      * 
      */
     private static final long serialVersionUID = 1L;
+    private CodePhrase originalLanguage;
+    private Map<String, TranslationDetails> translations;
+
 	public Language(){
+        translations = new HashMap<String, TranslationDetails>();
 	}
 	
 	public Language(CodePhrase originalLanguage,
@@ -87,9 +92,6 @@ public class Language implements Serializable{
 			return false;
 		return true;
 	}
-
-	private CodePhrase originalLanguage;
-	private Map<String, TranslationDetails> translations;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
