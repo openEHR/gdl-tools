@@ -160,6 +160,11 @@ public class GDLEditor implements EditorController{
         });
     }
 
+    @Override
+    public void entitySaved() {
+        updateOriginal();
+    }
+
     public void save() {
         _gdlEditorMainPanel.requestFocus();
         runIfOkWithEditorState(new Runnable() {
@@ -179,7 +184,7 @@ public class GDLEditor implements EditorController{
                     JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"), GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                String gdlGuide = serializeCurrentGuide();
+                String gdlGuide = getSerializedEntity();
                 if (gdlGuide!=null){
                     CompileGuideSW sw = new CompileGuideSW(){
                         protected void done() {
@@ -200,11 +205,11 @@ public class GDLEditor implements EditorController{
 
     private void generateDialogForm(byte[] compiledGuide, Guide guide){
         GDLEditor controller = EditorManager.getActiveGDLEditor();
-        String gdlGuide = controller.serializeCurrentGuide();
+        String gdlGuide = controller.getSerializedEntity();
         if (compiledGuide!=null && gdlGuide!=null){
             GuideDTO guideDTO =
                     new GuideDTO(
-                            controller.getIdGuide(),
+                            controller.getEntityId(),
                             gdlGuide,
                             IOUtils.getBytes(guide),
                             compiledGuide,
@@ -718,7 +723,7 @@ public class GDLEditor implements EditorController{
             }
         }
         Guide guide = new Guide();
-        guide.setId(getIdGuide());
+        guide.setId(getEntityId());
         guide.setGdlVersion(GDL_VERSION);
         guide.setLanguage(getLanguage());
         guide.setConcept(getConceptGTCode());
@@ -761,16 +766,26 @@ public class GDLEditor implements EditorController{
     }
 
     public void updateOriginal() {
-        _originalGuide = serializeCurrentGuide();
+        _originalGuide = getSerializedEntity();
     }
 
-    public String serializeCurrentGuide() {
+    public String getSerializedEntity() {
         Guide guide = getGuide();
         if (guide != null) {
             return serializeGuide(guide);
         } else {
             return null;
         }
+    }
+
+    @Override
+    public String getEntityName() {
+        return GDLEditorLanguageManager.getMessage("Guide");
+    }
+
+    @Override
+    public String getEntityExtension() {
+        return "gdl";
     }
 
     public static String serializeGuide(Guide guide) {
@@ -830,11 +845,11 @@ public class GDLEditor implements EditorController{
         return list;
     }
 
-    public String getIdGuide() {
+    public String getEntityId() {
         return _idGuide;
     }
 
-    public void setIdGuide(String idGuide) {
+    public void setEntityId(String idGuide) {
         _idGuide = idGuide;
     }
 
@@ -1142,13 +1157,13 @@ public class GDLEditor implements EditorController{
 
     public void saveCompiledGuideAsObject(byte[] compiledGuide, Guide guide) {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
-        String idGuide = controller.getIdGuide();
+        String idGuide = controller.getEntityId();
         if (idGuide == null) {
             idGuide = GDLEditorLanguageManager.getMessage("Guide");
         }
         if (compiledGuide != null) {
             try {
-                String guideSource = controller.serializeCurrentGuide();
+                String guideSource = controller.getSerializedEntity();
                 if (guideSource != null) {
                     JFileChooser fileChooser = new JFileChooser();
                     FileNameExtensionFilter filter = new FileNameExtensionFilter(

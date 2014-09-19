@@ -30,7 +30,7 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
                             GDLEditorLanguageManager.getMessage("Guide"),new String[]{"gdl"});
             fileChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SaveGuide"));
             fileChooser.setFileFilter(filter);
-            String guideId = _controller.getIdGuide();
+            String guideId = _controller.getEntityId();
             if (guideId==null){
                 GDLEditorLanguageManager.getMessage("Guide");
             }
@@ -48,26 +48,26 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
                 }
                 //Set guide Id
                 guideId = getGuideIdFromFile(_guideFile);
-                _controller.setIdGuide(guideId);
+                _controller.setEntityId(guideId);
             }
         }
         if (_guideFile!=null){
             //Check guide Id
             String guideId = getGuideIdFromFile(_guideFile);
-            if (!guideId.equals(_controller.getIdGuide())){
+            if (!guideId.equals(_controller.getEntityId())){
                 int result =
                         JOptionPane.showConfirmDialog(
                                 EditorManager.getActiveEditorWindow(),
-                                GDLEditorLanguageManager.getMessage("ChangeOfGuideIdFound", new String[]{_controller.getIdGuide(), guideId}));
+                                GDLEditorLanguageManager.getMessage("ChangeOfGuideIdFound", new String[]{_controller.getEntityId(), guideId}));
                 if (result==JOptionPane.CANCEL_OPTION){
                     _guideFile = null;
                 }else{
                     if (result==JOptionPane.YES_OPTION){
-                        _controller.setIdGuide(guideId);
+                        _controller.setEntityId(guideId);
                     }
                 }
             }
-            _guideStr = _controller.serializeCurrentGuide();
+            _guideStr = _controller.getSerializedEntity();
         }
     }
 
@@ -103,7 +103,7 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
 
     protected void done() {
         if (_guideFile!=null && _guideStr!=null && !_guideStr.isEmpty()){
-            EditorManager.getActiveGDLEditor().updateOriginal();
+            EditorManager.getActiveGDLEditor().entitySaved();
             EditorManager.setLastFileLoaded(_guideFile);
             EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
         }

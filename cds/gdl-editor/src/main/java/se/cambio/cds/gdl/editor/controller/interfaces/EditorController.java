@@ -26,4 +26,10 @@ public interface EditorController {
     public Collection<String> getSupportedLanguageCodes();
     public void save();
     public void saveAs();
+    public void entitySaved();
+    public String getEntityId();
+    public void setEntityId(String entityId);
+    public String getSerializedEntity();
+    public String getEntityName();
+    public String getEntityExtension();
 }

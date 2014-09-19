@@ -5,6 +5,8 @@ import se.cambio.cds.gdl.model.ResourceDescription;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: iago.corbal
@@ -14,19 +16,30 @@ import java.util.Collection;
 public class DecisionSupportView {
     private String dsViewId;
     private Language language;
+    private Map<String, DecisionSuportViewDefinition> decisionSuportViewDefinitions;
     private ResourceDescription resourceDescription;
     private Collection<String> alertGuideIds;
     private Collection<String> executionGuideIds;
+    private Map<String, TerminologyAlertBinding> alertBindings;
 
     public DecisionSupportView() {
     }
 
-    public DecisionSupportView(String dsViewId, Language language, ResourceDescription resourceDescription, Collection<String> alertGuideIds, Collection<String> executionGuideIds) {
+    public DecisionSupportView(
+            String dsViewId,
+            Language language,
+            Map<String, DecisionSuportViewDefinition> decisionSuportViewDefinitions,
+            ResourceDescription resourceDescription,
+            Collection<String> alertGuideIds,
+            Collection<String> executionGuideIds,
+            Map<String, TerminologyAlertBinding> alertBindings) {
         this.dsViewId = dsViewId;
         this.language = language;
+        this.decisionSuportViewDefinitions = decisionSuportViewDefinitions;
         this.resourceDescription = resourceDescription;
         this.alertGuideIds = alertGuideIds;
         this.executionGuideIds = executionGuideIds;
+        this.alertBindings = alertBindings;
     }
 
     public String getDsViewId() {
@@ -79,5 +92,27 @@ public class DecisionSupportView {
 
     public void setExecutionGuideIds(Collection<String> executionGuideIds) {
         this.executionGuideIds = executionGuideIds;
+    }
+
+    public Map<String, DecisionSuportViewDefinition> getDecisionSuportViewDefinitions() {
+        if (decisionSuportViewDefinitions == null) {
+            decisionSuportViewDefinitions = new HashMap<String, DecisionSuportViewDefinition>();
+        }
+        return decisionSuportViewDefinitions;
+    }
+
+    public void setDecisionSuportViewDefinitions(Map<String, DecisionSuportViewDefinition> decisionSuportViewDefinitions) {
+        this.decisionSuportViewDefinitions = decisionSuportViewDefinitions;
+    }
+
+    public Map<String, TerminologyAlertBinding> getAlertBindings() {
+        if (alertBindings == null) {
+            alertBindings = new HashMap<String, TerminologyAlertBinding>();
+        }
+        return alertBindings;
+    }
+
+    public void setAlertBindings(Map<String, TerminologyAlertBinding> alertBindings) {
+        this.alertBindings = alertBindings;
     }
 }
