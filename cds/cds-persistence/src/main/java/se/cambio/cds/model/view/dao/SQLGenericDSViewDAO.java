@@ -1,7 +1,7 @@
-package se.cambio.cds.model.overview.dao;
+package se.cambio.cds.model.view.dao;
 
 import se.cambio.cds.model.CDSGlobalNames;
-import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.openehr.model.util.sql.DataSourceLocator;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -15,23 +15,23 @@ import java.util.Collection;
 /**
  * @author iago.corbal
  */
-public class SQLGenericOverviewDAO implements GenericOverviewDAO {
+public class SQLGenericDSViewDAO implements GenericDSViewDAO {
 
 
-    private SQLOverviewDAO dao;
+    private SQLDSViewDAO dao;
     private DataSource dataSource;
 
-    public SQLGenericOverviewDAO() throws InternalErrorException {
-        dao = SQLOverviewFactory.getDAO();
+    public SQLGenericDSViewDAO() throws InternalErrorException {
+        dao = SQLDSViewFactory.getDAO();
         dataSource = DataSourceLocator.getDataSource(CDSGlobalNames.CDSS_DATA_SOURCE);
     }
 
-    public OverviewDTO searchByOverviewId(String idOverview)
+    public DSViewDTO searchByDSViewId(String dsViewId)
             throws InternalErrorException, InstanceNotFoundException {
         Connection conexion = null;
         try {
             conexion = dataSource.getConnection();
-            return dao.searchByOverviewId(conexion, idOverview);
+            return dao.searchByOverviewId(conexion, dsViewId);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
@@ -39,7 +39,7 @@ public class SQLGenericOverviewDAO implements GenericOverviewDAO {
         }
     }
 
-    public Collection<OverviewDTO> searchAll() throws InternalErrorException {
+    public Collection<DSViewDTO> searchAll() throws InternalErrorException {
         Connection conexion = null;
         try {
             conexion = dataSource.getConnection();
@@ -52,12 +52,12 @@ public class SQLGenericOverviewDAO implements GenericOverviewDAO {
     }
 
 
-    public void insert(OverviewDTO OverviewDTO)
+    public void insert(DSViewDTO dsViewDTO)
             throws InternalErrorException {
         Connection conexion = null;
         try {
             conexion = dataSource.getConnection();
-            dao.insert(conexion,OverviewDTO);
+            dao.insert(conexion, dsViewDTO);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
@@ -65,12 +65,12 @@ public class SQLGenericOverviewDAO implements GenericOverviewDAO {
         }
     }
 
-    public void update(OverviewDTO OverviewDTO)
+    public void update(DSViewDTO dsViewDTO)
             throws InternalErrorException, InstanceNotFoundException {
         Connection conexion = null;
         try {
             conexion = dataSource.getConnection();
-            dao.update(conexion,OverviewDTO);
+            dao.update(conexion, dsViewDTO);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
@@ -78,12 +78,12 @@ public class SQLGenericOverviewDAO implements GenericOverviewDAO {
         }
     }
 
-    public void remove(String idOverview)
+    public void remove(String dsViewId)
             throws InternalErrorException, InstanceNotFoundException {
         Connection conexion = null;
         try {
             conexion = dataSource.getConnection();
-            dao.remove(conexion,idOverview);
+            dao.remove(conexion, dsViewId);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {

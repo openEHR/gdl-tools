@@ -17,7 +17,7 @@ public class UserConfigurationManager {
     public static String TERMINOLOGIES_FOLDER_KW = "TerminologiesFolder";
     public static String ONTOLOGIES_FOLDER_KW = "OntologiesFolder";
     public static String DOCUMENTS_FOLDER_KW = "DocumentsFolder";
-    public static String OVERVIEWS_FOLDER_KW = "OverviewsFolder";
+    public static String VIEWS_FOLDER_KW = "ViewsFolder";
     public static String STUDIES_FOLDER_KW = "StudiesFolder";
     public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
     public static final String LANGUAGE = "Messages/Language";
@@ -39,7 +39,7 @@ public class UserConfigurationManager {
         _defaultValues.put(GUIDES_FOLDER_KW, "guidelines");
         _defaultValues.put(TERMINOLOGIES_FOLDER_KW, "terminologies");
         _defaultValues.put(ONTOLOGIES_FOLDER_KW, "ontologies");
-        _defaultValues.put(OVERVIEWS_FOLDER_KW, "views");
+        _defaultValues.put(VIEWS_FOLDER_KW, "views");
         _defaultValues.put(STUDIES_FOLDER_KW, "studies");
         _defaultValues.put(DOCUMENTS_FOLDER_KW, "docs");
         _defaultValues.put(CURRENT_DATE_TIME_KW, null);
@@ -202,8 +202,8 @@ public class UserConfigurationManager {
         return new File(folderStr);
     }
 
-    public static File getOverviewsFolder(){
-        String folderStr = getParameterWithDefault(OVERVIEWS_FOLDER_KW);
+    public static File getDSViewsFolder(){
+        String folderStr = getParameterWithDefault(VIEWS_FOLDER_KW);
         return new File(folderStr);
     }
 

@@ -1,4 +1,4 @@
-package se.cambio.cds.overview.model;
+package se.cambio.cds.model.dsvdata;
 
 /**
  * User: Iago.Corbal

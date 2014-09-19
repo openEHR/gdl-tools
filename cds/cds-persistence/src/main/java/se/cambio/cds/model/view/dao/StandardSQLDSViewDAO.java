@@ -1,6 +1,6 @@
-package se.cambio.cds.model.overview.dao;
+package se.cambio.cds.model.view.dao;
 
-import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -16,9 +16,9 @@ import java.util.Collection;
  * @author iago.corbal
  *
  */
-public class StandardSQLOverviewDAO implements SQLOverviewDAO {
+public class StandardSQLDSViewDAO implements SQLDSViewDAO {
 
-    public OverviewDTO searchByOverviewId(Connection connection, String overviewId)
+    public DSViewDTO searchByOverviewId(Connection connection, String overviewId)
             throws InternalErrorException, InstanceNotFoundException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -36,7 +36,7 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
             resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next()) {
-                throw new InstanceNotFoundException(overviewId, OverviewDTO.class.getName());
+                throw new InstanceNotFoundException(overviewId, DSViewDTO.class.getName());
             }
 
 	    /* Get results. */
@@ -45,7 +45,7 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
             String description = resultSet.getString(i++);
             String overviewSrc = resultSet.getString(i++);
 	    /* Return the value object. */
-            return new OverviewDTO(overviewId, name, description, overviewSrc);
+            return new DSViewDTO(overviewId, name, description, overviewSrc);
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
@@ -54,7 +54,7 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
         }
     }
 
-    public Collection<OverviewDTO> searchAll(Connection connection)
+    public Collection<DSViewDTO> searchAll(Connection connection)
             throws InternalErrorException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -69,9 +69,9 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
 	    /* Execute query. */
             resultSet = preparedStatement.executeQuery();
 
-            Collection<OverviewDTO> overviewDTOs = new ArrayList<OverviewDTO>();
+            Collection<DSViewDTO> DSViewDTOs = new ArrayList<DSViewDTO>();
             if (!resultSet.next()) {
-                return overviewDTOs;
+                return DSViewDTOs;
             }
             do {
 		/* Get results. */
@@ -80,13 +80,13 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
                 String name = resultSet.getString(i++);
                 String description = resultSet.getString(i++);
                 String overviewSrc = resultSet.getString(i++);
-                OverviewDTO overviewDTO =
-                        new OverviewDTO(overviewId, name, description,overviewSrc);
-                overviewDTOs.add(overviewDTO);
+                DSViewDTO DSViewDTO =
+                        new DSViewDTO(overviewId, name, description,overviewSrc);
+                DSViewDTOs.add(DSViewDTO);
             } while (resultSet.next());
 
 	    /* Return value objects. */
-            return overviewDTOs;
+            return DSViewDTOs;
         } catch (SQLException e) {
             throw new InternalErrorException(e);
         } finally {
@@ -95,7 +95,7 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
         }
     }
 
-    public void insert(Connection connection, OverviewDTO overviewDTO)
+    public void insert(Connection connection, DSViewDTO DSViewDTO)
             throws InternalErrorException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -107,10 +107,10 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
 
 	    /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setString(i++, overviewDTO.getIdOverview());
-            preparedStatement.setString(i++, overviewDTO.getName());
-            preparedStatement.setString(i++, overviewDTO.getDescription());
-            preparedStatement.setString(i++, overviewDTO.getOverviewSrc());
+            preparedStatement.setString(i++, DSViewDTO.getDsViewId());
+            preparedStatement.setString(i++, DSViewDTO.getName());
+            preparedStatement.setString(i++, DSViewDTO.getDescription());
+            preparedStatement.setString(i++, DSViewDTO.getDSViewSrc());
 	    
 	    /* Execute query. */
             int insertedRows = preparedStatement.executeUpdate();
@@ -130,7 +130,7 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
         }
     }
 
-    public void update(Connection connection, OverviewDTO overviewDTO)
+    public void update(Connection connection, DSViewDTO DSViewDTO)
             throws InternalErrorException, InstanceNotFoundException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -142,17 +142,17 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
 
 	    /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setString(i++, overviewDTO.getName());
-            preparedStatement.setString(i++, overviewDTO.getDescription());
-            preparedStatement.setString(i++, overviewDTO.getOverviewSrc());
-            preparedStatement.setString(i++, overviewDTO.getIdOverview());
+            preparedStatement.setString(i++, DSViewDTO.getName());
+            preparedStatement.setString(i++, DSViewDTO.getDescription());
+            preparedStatement.setString(i++, DSViewDTO.getDSViewSrc());
+            preparedStatement.setString(i++, DSViewDTO.getDsViewId());
 
 	    /* Execute query. */
             int updatedRows = preparedStatement.executeUpdate();
 
             if (updatedRows == 0) {
                 throw new InstanceNotFoundException(
-                        overviewDTO.getIdOverview(), OverviewDTO.class.getName());
+                        DSViewDTO.getDsViewId(), DSViewDTO.class.getName());
             }
 
             if (updatedRows > 1) {
@@ -183,7 +183,7 @@ public class StandardSQLOverviewDAO implements SQLOverviewDAO {
 	    /* Execute query. */
             int deletedRows = preparedStatement.executeUpdate();
             if (deletedRows == 0) {
-                throw new InstanceNotFoundException(overviewId, OverviewDTO.class.getName());
+                throw new InstanceNotFoundException(overviewId, DSViewDTO.class.getName());
             }
         } catch (SQLException e) {
             throw new InternalErrorException(e);

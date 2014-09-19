@@ -1,15 +1,46 @@
-package se.cambio.cds.model.util.comparators;
+package se.cambio.cds.model.view.dto;
 
-import se.cambio.cds.model.overview.dto.OverviewDTO;
+import java.io.Serializable;
 
-import java.util.Comparator;
+public class DSViewDTO implements Serializable{
 
-public class OverviewComparator implements Comparator<OverviewDTO>{
+    private static final long serialVersionUID = 20120412L;
+    private String dsViewId;
+    private String name;
+    private String description;
+    private String dsViewSrc;
 
-    public int compare(OverviewDTO o1, OverviewDTO o2) {
-	return o1.getIdOverview().compareTo(o2.getIdOverview());
+    public DSViewDTO(String dsViewId, String name, String description, String dsViewSrc) {
+	super();
+	this.dsViewId = dsViewId;
+	this.name = name;
+	this.description = description;
+	this.dsViewSrc = dsViewSrc;
     }
-
+    public String getDsViewId() {
+	return dsViewId;
+    }
+    public void setDsViewId(String dsViewId) {
+	this.dsViewId = dsViewId;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getDSViewSrc() {
+	return dsViewSrc;
+    }
+    public void setDsViewSrc(String guideSrc) {
+	this.dsViewSrc = guideSrc;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

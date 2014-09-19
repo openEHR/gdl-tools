@@ -1,6 +1,6 @@
-package se.cambio.cds.model.overview.dao;
+package se.cambio.cds.model.view.dao;
 
-import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.Resources;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -11,27 +11,27 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class InJarOverviewDAO implements GenericOverviewDAO{
+public class InJarDSViewDAO implements GenericDSViewDAO {
 
 
-    public OverviewDTO searchByOverviewId(String idOverview)
+    public DSViewDTO searchByDSViewId(String dsViewId)
 	    throws InternalErrorException, InstanceNotFoundException {
-	InputStream is = InJarOverviewDAO.class.getClassLoader().getResourceAsStream(idOverview+".dsv");
+	InputStream is = InJarDSViewDAO.class.getClassLoader().getResourceAsStream(dsViewId +".dsv");
 	if (is!=null){
 	    try {
-		String overviewSrc = IOUtils.toString(is, "UTF-8");
-		return new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc);
+		String dsViewSrc = IOUtils.toString(is, "UTF-8");
+		return new DSViewDTO(dsViewId, dsViewId, dsViewId, dsViewSrc);
 	    } catch (IOException e) {
 		throw new InternalErrorException(e);
 	    }
 	}
-	throw new InstanceNotFoundException(idOverview, OverviewDTO.class.getName());
+	throw new InstanceNotFoundException(dsViewId, DSViewDTO.class.getName());
     }
 
-    public Collection<OverviewDTO> searchAll() throws InternalErrorException {
-	Collection<OverviewDTO> overviews = new ArrayList<OverviewDTO>();
+    public Collection<DSViewDTO> searchAll() throws InternalErrorException {
+	Collection<DSViewDTO> dsViewDTOs = new ArrayList<DSViewDTO>();
 	try{
-	    InputStream is = InJarOverviewDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
+	    InputStream is = InJarDSViewDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
 	    if (is!=null) {
 		Collection<String> fileNames = new ArrayList<String>();
 		String resourceList = IOUtils.toString(is, "UTF-8");
@@ -45,12 +45,12 @@ public class InJarOverviewDAO implements GenericOverviewDAO{
 		}
 		for (String fileName : fileNames) {
 		    try{
-			is =InJarOverviewDAO.class.getClassLoader().getResourceAsStream(fileName);
+			is =InJarDSViewDAO.class.getClassLoader().getResourceAsStream(fileName);
 			if (is!=null){
 			    try {
-				String overviewSrc = IOUtils.toString(is, "UTF-8");
-				String idOverview = fileName.substring(fileName.lastIndexOf("/")+1,fileName.length()-4);
-				overviews.add(new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc));
+				String dsViewSrc = IOUtils.toString(is, "UTF-8");
+				String dsViewId = fileName.substring(fileName.lastIndexOf("/")+1,fileName.length()-4);
+				dsViewDTOs.add(new DSViewDTO(dsViewId, dsViewId, dsViewId, dsViewSrc));
 			    } catch (IOException e) {
 				throw new InternalErrorException(e);
 			    }
@@ -65,21 +65,21 @@ public class InJarOverviewDAO implements GenericOverviewDAO{
 	}catch(IOException e){
 	    throw new InternalErrorException(e);
 	}
-	return overviews;
+	return dsViewDTOs;
     }
 
     @Override
-    public void insert(OverviewDTO overviewDTO) throws InternalErrorException {
+    public void insert(DSViewDTO dsViewDTO) throws InternalErrorException {
         //Generated
     }
 
     @Override
-    public void update(OverviewDTO overviewDTO) throws InternalErrorException, InstanceNotFoundException {
+    public void update(DSViewDTO dsViewDTO) throws InternalErrorException, InstanceNotFoundException {
         //Generated
     }
 
     @Override
-    public void remove(String overviewId) throws InternalErrorException, InstanceNotFoundException {
+    public void remove(String dsViewId) throws InternalErrorException, InstanceNotFoundException {
         //Generated
     }
 }

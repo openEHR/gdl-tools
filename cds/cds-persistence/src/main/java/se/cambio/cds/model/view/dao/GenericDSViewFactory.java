@@ -1,4 +1,4 @@
-package se.cambio.cds.model.overview.dao;
+package se.cambio.cds.model.view.dao;
 
 import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -6,18 +6,18 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 /**
  * @author iago.corbal
  */
-public class GenericOverviewFactory {
+public class GenericDSViewFactory {
 
-    private static String DAO_CLASS_GUIDE = "GenericOverviewDAO/Class";
+    private static String DAO_CLASS_DSVIEW = "GenericDSViewDAO/Class";
 
-    private GenericOverviewFactory() {
+    private GenericDSViewFactory() {
     }
 
     private static Class<?> getDAOClass() throws InternalErrorException {
 	Class<?> theClass = null;
 	try {
 	    String delegateClassName = 
-		    CDSConfigurationParametersManager.getParameter(DAO_CLASS_GUIDE);
+		    CDSConfigurationParametersManager.getParameter(DAO_CLASS_DSVIEW);
 	    theClass = Class.forName(delegateClassName);
 	} catch (Exception e) {
 	    throw new InternalErrorException(e);
@@ -25,10 +25,10 @@ public class GenericOverviewFactory {
 	return theClass;
     }
     
-    public static GenericOverviewDAO getDAO() 
+    public static GenericDSViewDAO getDAO()
 	    throws InternalErrorException {
 	try {
-	    return (GenericOverviewDAO)getDAOClass().newInstance();
+	    return (GenericDSViewDAO)getDAOClass().newInstance();
 	} catch (Exception e) {
 	    throw new InternalErrorException(e);
 	} 

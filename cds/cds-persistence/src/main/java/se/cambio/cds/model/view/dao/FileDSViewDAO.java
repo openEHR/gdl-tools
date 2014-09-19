@@ -1,6 +1,6 @@
-package se.cambio.cds.model.overview.dao;
+package se.cambio.cds.model.view.dao;
 
-import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -14,11 +14,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class FileOverviewDAO implements GenericOverviewDAO{
+public class FileDSViewDAO implements GenericDSViewDAO {
 
-    public OverviewDTO searchByOverviewId(String idOverview)
+    public DSViewDTO searchByDSViewId(String dsViewId)
             throws InternalErrorException, InstanceNotFoundException {
-        File folder = UserConfigurationManager.getOverviewsFolder();
+        File folder = UserConfigurationManager.getDSViewsFolder();
         if (!folder.isDirectory()){
             throw new FolderNotFoundException(folder.getAbsolutePath());
         }
@@ -26,57 +26,57 @@ public class FileOverviewDAO implements GenericOverviewDAO{
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
                 String fileName = listOfFiles[i].getName();
-                if (fileName.equals(idOverview+".dsv")){
+                if (fileName.equals(dsViewId+".dsv")){
                     try{
                         InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
-                        String overviewSrc = IOUtils.toString(fis, "UTF-8");
-                        return new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc);
+                        String dsViewSrc = IOUtils.toString(fis, "UTF-8");
+                        return new DSViewDTO(dsViewId, dsViewId, dsViewId, dsViewSrc);
                     }catch(Exception e){
                         ExceptionHandler.handle(e);
                     }
                 }
             }
         }
-        throw new InstanceNotFoundException(idOverview, OverviewDTO.class.getName());
+        throw new InstanceNotFoundException(dsViewId, DSViewDTO.class.getName());
     }
 
-    public Collection<OverviewDTO> searchAll() throws InternalErrorException {
-        File folder = UserConfigurationManager.getOverviewsFolder();
+    public Collection<DSViewDTO> searchAll() throws InternalErrorException {
+        File folder = UserConfigurationManager.getDSViewsFolder();
         if (!folder.isDirectory()){
             throw new FolderNotFoundException(folder.getAbsolutePath());
         }
         File[] listOfFiles = folder.listFiles();
-        Collection<OverviewDTO> overviewDTOs = new ArrayList<OverviewDTO>();
+        Collection<DSViewDTO> DSViewDTOs = new ArrayList<DSViewDTO>();
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
                 String fileName = listOfFiles[i].getName();
                 if (fileName.endsWith(".dsv")){
                     try{
                         InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
-                        String idOverview = fileName.substring(0,fileName.length()-4);
-                        String overviewSrc = IOUtils.toString(fis, "UTF-8");
-                        overviewDTOs.add(new OverviewDTO(idOverview, idOverview, idOverview, overviewSrc));
+                        String dsViewId = fileName.substring(0,fileName.length()-4);
+                        String dsViewSrc = IOUtils.toString(fis, "UTF-8");
+                        DSViewDTOs.add(new DSViewDTO(dsViewId, dsViewId, dsViewId, dsViewSrc));
                     }catch(Exception e){
                         ExceptionHandler.handle(e);
                     }
                 }
             }
         }
-        return overviewDTOs;
+        return DSViewDTOs;
     }
 
     @Override
-    public void insert(OverviewDTO overviewDTO) throws InternalErrorException {
+    public void insert(DSViewDTO dsViewDTO) throws InternalErrorException {
         //Generated
     }
 
     @Override
-    public void update(OverviewDTO overviewDTO) throws InternalErrorException, InstanceNotFoundException {
+    public void update(DSViewDTO dsViewDTO) throws InternalErrorException, InstanceNotFoundException {
         //Generated
     }
 
     @Override
-    public void remove(String overviewId) throws InternalErrorException, InstanceNotFoundException {
+    public void remove(String dsViewId) throws InternalErrorException, InstanceNotFoundException {
         //Generated
     }
 }
