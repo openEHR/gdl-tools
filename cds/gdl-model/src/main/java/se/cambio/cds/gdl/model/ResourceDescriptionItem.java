@@ -23,7 +23,7 @@ public class ResourceDescriptionItem implements Serializable{
 	private String copyright;
 
     public ResourceDescriptionItem() {
-        keywords = new ArrayList<String>();
+
     }
 
 	/**
@@ -75,7 +75,10 @@ public class ResourceDescriptionItem implements Serializable{
 	 * @return the keywords
 	 */
 	public List<String> getKeywords() {
-		return keywords;
+        if (keywords == null) {
+            keywords = new ArrayList<String>();
+        }
+        return keywords;
 	}
 
 	/**

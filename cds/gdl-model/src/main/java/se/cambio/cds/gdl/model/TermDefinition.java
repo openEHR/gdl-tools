@@ -14,7 +14,7 @@ public class TermDefinition implements Serializable{
     private Map<String, Term> terms;
 
     public TermDefinition() {
-        terms = new HashMap<String, Term>();
+
     }
 
     /**
@@ -36,6 +36,9 @@ public class TermDefinition implements Serializable{
      * @return the terms
      */
     public Map<String, Term> getTerms() {
+        if (terms == null) {
+            terms = new HashMap<String, Term>();
+        }
         return terms;
     }
 

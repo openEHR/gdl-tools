@@ -14,15 +14,16 @@ public class GuideOntology implements Serializable{
 	private Map<String, TermBinding> termBindings;
 
     public GuideOntology() {
-        termDefinitions = new HashMap<String, TermDefinition>();
-        termBindings = new HashMap<String, TermBinding>();
     }
 
     /**
 	 * @return the termDefinitions
 	 */
 	public Map<String, TermDefinition> getTermDefinitions() {
-		return termDefinitions;
+        if (termDefinitions == null) {
+            termDefinitions = new HashMap<String, TermDefinition>();
+        }
+        return termDefinitions;
 	}
 	/**
 	 * @param termDefinitions the termDefinitions to set
@@ -34,7 +35,10 @@ public class GuideOntology implements Serializable{
 	 * @return the termBindings
 	 */
 	public Map<String, TermBinding> getTermBindings() {
-		return termBindings;
+        if (termBindings == null) {
+            termBindings = new HashMap<String, TermBinding>();
+        }
+        return termBindings;
 	}
 	/**
 	 * @param termBindings the termBindings to set

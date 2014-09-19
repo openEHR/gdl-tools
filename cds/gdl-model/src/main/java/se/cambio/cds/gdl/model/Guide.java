@@ -21,10 +21,6 @@ public class Guide implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	public Guide() {
-        language = new Language();
-        description = new ResourceDescription();
-        definition = new GuideDefinition();
-        ontology = new GuideOntology();
 	}
 
 	/**
@@ -52,21 +48,30 @@ public class Guide implements Serializable {
 	 * @return the language
 	 */
 	public Language getLanguage() {
-		return language;
+        if (language == null) {
+            language = new Language();
+        }
+        return language;
 	}
 
 	/**
 	 * @return the description
 	 */
 	public ResourceDescription getDescription() {
-		return description;
+        if (description == null) {
+            description = new ResourceDescription();
+        }		
+        return description;
 	}
 
 	/**
 	 * @return the definition
 	 */
 	public GuideDefinition getDefinition() {
-		return definition;
+        if (definition == null) {
+            definition = new GuideDefinition();
+        }
+        return definition;
 	}
 
 	/**
@@ -121,7 +126,10 @@ public class Guide implements Serializable {
 	 * @return the ontology
 	 */
 	public GuideOntology getOntology() {
-		return ontology;
+        if (ontology == null) {
+            ontology = new GuideOntology();
+        }
+        return ontology;
 	}
 
 	/**

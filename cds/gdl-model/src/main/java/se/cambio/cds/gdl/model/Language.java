@@ -16,7 +16,7 @@ public class Language implements Serializable{
     private Map<String, TranslationDetails> translations;
 
 	public Language(){
-        translations = new HashMap<String, TranslationDetails>();
+
 	}
 	
 	public Language(CodePhrase originalLanguage,
@@ -29,14 +29,17 @@ public class Language implements Serializable{
 	 * @return the originalLanguage
 	 */
 	public CodePhrase getOriginalLanguage() {
-		return originalLanguage;
+        return originalLanguage;
 	}
 
 	/**
 	 * @return the translations
 	 */
 	public Map<String, TranslationDetails> getTranslations() {
-		return translations;
+        if (translations == null) {
+            translations = new HashMap<String, TranslationDetails>();
+        }
+        return translations;
 	}
 	
 	/**

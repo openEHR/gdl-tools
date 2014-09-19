@@ -124,6 +124,23 @@ public class EditorManager {
         getDelegate()._checkOnExit = checkOnExit;
     }
 
+
+    public static void runIfOkWithCurrentEditor(Runnable runnable){
+        EditorController editorController = getActiveEditorController();
+        if(editorController!=null){
+            editorController.runIfOKToExit(runnable);
+        }else{
+            runnable.run();
+        }
+    }
+
+    public static void requestFocusInWindow(){
+        EditorController editorController = getActiveEditorController();
+        if(editorController!=null){
+            editorController.getEditorPanel().requestFocusInWindow();
+        }
+    }
+
     public static EditorManager getDelegate(){
         if (_instance==null){
             _instance = new EditorManager();

@@ -1,10 +1,11 @@
 package se.cambio.cds.gdl.model;
 
-import java.io.Serializable;
-import java.util.*;
-
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Rule implements Serializable{
 
@@ -12,17 +13,16 @@ public class Rule implements Serializable{
      * 
      */
     private static final long serialVersionUID = 1L;
+    private String id; // gt-code
+    private List<String> when;
+    private List<String> then;
+    private int priority;
+
+    private List<ExpressionItem> whenStatements;
+    private List<AssignmentExpression> thenStatements;
 
 	public Rule() {
 	}
-
-	private String id; // gt-code
-	private List<String> when;
-	private List<String> then;
-	private int priority;
-
-	private List<ExpressionItem> whenStatements;
-	private List<AssignmentExpression> thenStatements;
 
 	/**
 	 * @return the id
@@ -87,7 +87,10 @@ public class Rule implements Serializable{
 	 * @return the whenStatements
 	 */
 	public List<ExpressionItem> getWhenStatements() {
-		return whenStatements;
+        if (whenStatements == null) {
+            whenStatements = new ArrayList<ExpressionItem>();
+        }
+        return whenStatements;
 	}
 
 	/**
@@ -109,7 +112,10 @@ public class Rule implements Serializable{
 	 * @return the thenStatements
 	 */
 	public List<AssignmentExpression> getThenStatements() {
-		return thenStatements;
+        if (thenStatements == null) {
+            thenStatements = new ArrayList<AssignmentExpression>();
+        }
+        return thenStatements;
 	}
 
 	/**

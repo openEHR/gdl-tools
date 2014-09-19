@@ -76,7 +76,7 @@ public class OpenEHRRMUtil {
                     new ArchetypeElementVO(
                             OpenEHRLanguageManager.getMessage("CurrentActionState"),
                             OpenEHRLanguageManager.getMessage("CurrentActionStateDesc"),
-                            OpenEHRDataValues.DV_DATE_TIME, null,
+                            OpenEHRDataValues.DV_CODED_TEXT, null,
                             idArchetype, idTemplate, ISM_TRANSITION_PATH));
         }else if (OpenEHRConst.EVALUATION.equals(entryType)){
 

@@ -27,12 +27,8 @@ public class OpenEHRAdministrationFacadeDelegateFactory {
             throws InternalErrorException {
         try {
             return (OpenEHRAdministrationFacadeDelegate)getDelegateClass().newInstance();
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             throw new InternalErrorException(e);
-        } catch (IllegalAccessException e) {
-            throw new InternalErrorException(e);
-        } catch (Throwable th) {
-            throw new InternalErrorException(new Exception(th.getMessage()));
         }
     }
 }

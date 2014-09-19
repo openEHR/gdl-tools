@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TermBinding implements Serializable{
@@ -15,8 +16,7 @@ public class TermBinding implements Serializable{
 	public TermBinding() {
 	}
 	
-	public TermBinding(String p_id , Map<String, Binding> p_bindings)
-	{
+	public TermBinding(String p_id , Map<String, Binding> p_bindings){
 		this.id = p_id;
 		this.bindings = p_bindings;
 	}
@@ -36,7 +36,10 @@ public class TermBinding implements Serializable{
 	 * @return the bindings
 	 */
 	public Map<String, Binding> getBindings() {
-		return bindings;
+        if (bindings == null) {
+            bindings = new HashMap<String, Binding>();
+        }
+        return bindings;
 	}
 	/**
 	 * @param bindings the bindings to set

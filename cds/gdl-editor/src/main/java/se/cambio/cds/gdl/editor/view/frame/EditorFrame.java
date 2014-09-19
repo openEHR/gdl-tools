@@ -65,7 +65,7 @@ public class EditorFrame extends JFrame implements EditorViewer{
 
     protected class WindowListener extends WindowAdapter{
         public void windowClosing(WindowEvent we) {
-            EditorManager.getActiveEditorController().getEditorPanel().requestFocusInWindow();
+            EditorManager.requestFocusInWindow();
             EditorManager.closeEditor();
         }
     }

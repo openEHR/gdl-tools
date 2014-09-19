@@ -36,15 +36,15 @@ public class GuideDefinition implements Serializable{
     public GuideDefinition(Map<String, ArchetypeBinding> archetypeBindings,
                            List<String> preConditions, Map<String,Rule> rules) {
         super();
-        this.archetypeBindings = archetypeBindings;
-        this.preConditions = preConditions;
-        this.rules = rules;
     }
 
     /**
      * @return the archetypeBindings
      */
     public Map<String, ArchetypeBinding> getArchetypeBindings() {
+        if (archetypeBindings == null) {
+            archetypeBindings = new HashMap<String, ArchetypeBinding>();
+        }
         return archetypeBindings;
     }
 
@@ -66,6 +66,9 @@ public class GuideDefinition implements Serializable{
      * @return the rules
      */
     public Map<String,Rule> getRules() {
+        if (rules == null) {
+            rules = new HashMap<String, Rule>();
+        }
         return rules;
     }
 
@@ -168,6 +171,9 @@ public class GuideDefinition implements Serializable{
      * @return the preConditionExpressions
      */
     public List<ExpressionItem> getPreConditionExpressions() {
+        if (preConditionExpressions == null) {
+            preConditionExpressions = new ArrayList<ExpressionItem>();
+        }
         return preConditionExpressions;
     }
 

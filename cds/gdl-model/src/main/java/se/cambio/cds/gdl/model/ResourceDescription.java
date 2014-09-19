@@ -25,10 +25,6 @@ public class ResourceDescription implements Serializable{
 	private Map<String, String> otherDetails;
 
     public ResourceDescription() {
-        originalAuthor = new HashMap<String, String>();
-        otherContributors = new ArrayList<String>();
-        details = new HashMap<String, ResourceDescriptionItem>();
-        otherDetails = new HashMap<String, String>();
     }
 
     /*
@@ -109,7 +105,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the originalAuthor
 	 */
 	public Map<String, String> getOriginalAuthor() {
-		return originalAuthor;
+        if (originalAuthor == null) {
+            originalAuthor = new HashMap<String, String>();
+        }
+        return originalAuthor;
 	}
 
 	/**
@@ -124,7 +123,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the otherContributors
 	 */
 	public List<String> getOtherContributors() {
-		return otherContributors;
+        if (otherContributors == null) {
+            otherContributors = new ArrayList<String>();
+        }
+        return otherContributors;
 	}
 
 	/**
@@ -154,7 +156,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the details
 	 */
 	public Map<String, ResourceDescriptionItem> getDetails() {
-		return details;
+        if (details == null) {
+            details = new HashMap<String, ResourceDescriptionItem>();
+        }
+        return details;
 	}
 
 	/**
@@ -184,7 +189,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the otherDetails
 	 */
 	public Map<String, String> getOtherDetails() {
-		return otherDetails;
+        if (otherDetails == null) {
+            otherDetails = new HashMap<String, String>();
+        }
+        return otherDetails;
 	}
 
 	/**

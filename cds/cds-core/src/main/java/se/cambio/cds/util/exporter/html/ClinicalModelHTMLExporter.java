@@ -76,10 +76,14 @@ public abstract class ClinicalModelHTMLExporter<E> {
 
 
     public String convertToHTML() throws InternalErrorException {
-        InputStream is = getInputStreamTemplate();
-        InputStreamReader isr = new InputStreamReader(is);
-        HTMLRenderer htmlRenderer = new HTMLRenderer(isr);
-        return htmlRenderer.proccess(getObjectsMap());
+        try {
+            InputStream is = getInputStreamTemplate();
+            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+            HTMLRenderer htmlRenderer = new HTMLRenderer(isr);
+            return htmlRenderer.proccess(getObjectsMap());
+        } catch (UnsupportedEncodingException e) {
+            throw new InternalErrorException(e);
+        }
     }
 
     public abstract Map<String, Object> getEntityObjectsMap() throws InternalErrorException;

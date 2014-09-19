@@ -28,7 +28,6 @@ public class ExportToHTMLAction extends AbstractAction {
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
-        //putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
     /* (non-Javadoc)

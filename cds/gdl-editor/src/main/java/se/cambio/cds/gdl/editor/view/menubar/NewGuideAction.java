@@ -39,7 +39,7 @@ public class NewGuideAction extends AbstractAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        EditorManager.getActiveGDLEditor().runIfOKToExit(
+        EditorManager.runIfOkWithCurrentEditor(
                 new Runnable() {
                     @Override
                     public void run() {

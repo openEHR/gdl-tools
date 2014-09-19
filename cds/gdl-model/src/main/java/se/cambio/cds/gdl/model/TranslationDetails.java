@@ -1,9 +1,10 @@
 package se.cambio.cds.gdl.model;
 
-import java.io.Serializable;
-import java.util.Map;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class providing details of a natural language translation
@@ -18,13 +19,14 @@ public class TranslationDetails implements Serializable{
      */
     private static final long serialVersionUID = 1L;
 
+    /* fields */
+    private String id;
+    private CodePhrase language;
+    private Map<String, String> author;
+
 	public TranslationDetails() {
 	}
 
-	/* fields */
-	private String id;
-	private CodePhrase language;
-	private Map<String, String> author;
 
 	/**
 	 * @return the id
@@ -60,7 +62,10 @@ public class TranslationDetails implements Serializable{
 	 * @return the author
 	 */
 	public Map<String, String> getAuthor() {
-		return author;
+        if (author == null) {
+            author = new HashMap<String, String>();
+        }
+        return author;
 	}
 
 	/**

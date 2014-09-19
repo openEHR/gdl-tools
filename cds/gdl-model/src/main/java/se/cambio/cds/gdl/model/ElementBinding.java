@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class ElementBinding  implements Serializable{
 
-	/**
-     * 
-     */
+    private String id;
+    private String path;
+
     private static final long serialVersionUID = 1L;
 	public ElementBinding() {
 	}
@@ -58,8 +58,6 @@ public class ElementBinding  implements Serializable{
 		this.path = path;
 	}
 
-	private String id;
-	private String path;
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

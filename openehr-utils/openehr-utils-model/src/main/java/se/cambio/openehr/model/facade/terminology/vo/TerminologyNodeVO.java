@@ -16,6 +16,9 @@ import java.util.List;
  */
 public class TerminologyNodeVO implements Serializable{
 
+    private final DvCodedText value;
+    private final List<TerminologyNodeVO> children;
+
 	public TerminologyNodeVO(DvCodedText value, List<TerminologyNodeVO> children) {
 		if (value == null) {
 			throw new IllegalArgumentException("value is null");
@@ -58,9 +61,6 @@ public class TerminologyNodeVO implements Serializable{
 				.append(children, node.children)
 				.isEquals();
 	}
-
-	private final DvCodedText value;
-	private final List<TerminologyNodeVO> children;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
