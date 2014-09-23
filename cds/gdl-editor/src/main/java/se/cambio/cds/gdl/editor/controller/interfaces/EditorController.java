@@ -31,5 +31,5 @@ public interface EditorController {
     public void setEntityId(String entityId);
     public String getSerializedEntity();
     public String getEntityName();
-    public String getEntityExtension();
+    public Collection<String> getSupportedEntityExtensions();
 }

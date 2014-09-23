@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.editor.view.util;
 
-import org.openehr.rm.datatypes.text.CodePhrase;
+import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
@@ -380,7 +380,7 @@ public class NodeDefinitionConversor {
     public static SelectableNode<Object> getSelectableNodeTerminologyCodes(TerminologyNodeVO node, Collection <String> selectedCodes){
         String code = node.getValue().getDefiningCode().getCodeString();
         SelectableNodeWithIcon<Object> selectableNode =
-                new SelectableNodeWithIcon<Object>(node.getValue().getValue() +" ("+code+")", node.getValue().getDefiningCode(), false, selectedCodes!=null && selectedCodes.contains(code), GDLEditorImageUtil.ONTOLOGY_ICON);
+                new SelectableNodeWithIcon<Object>(node.getValue().getValue() +" ("+code+")", node.getValue(), false, selectedCodes!=null && selectedCodes.contains(code), GDLEditorImageUtil.ONTOLOGY_ICON);
         selectableNode.setHierarchySelection(false);
         for (TerminologyNodeVO node2 : node.getChildren()) {
             selectableNode.add(getSelectableNodeTerminologyCodes(node2, selectedCodes));
@@ -389,8 +389,8 @@ public class NodeDefinitionConversor {
     }
 
     public static boolean selectCodesWith(SelectableNode<?> node, Object object, boolean multiple){
-        if (node.getObject() instanceof CodePhrase){
-            if (object.equals(((CodePhrase)node.getObject()).getCodeString())){
+        if (node.getObject() instanceof DvCodedText){
+            if (object.equals(((DvCodedText)node.getObject()).getDefiningCode().getCodeString())){
                 node.setSelected(true);
                 node.cambioEstado(node);
                 if (!multiple){

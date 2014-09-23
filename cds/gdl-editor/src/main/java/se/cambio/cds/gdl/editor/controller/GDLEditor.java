@@ -79,6 +79,9 @@ public class GDLEditor implements EditorController{
 
     public GDLEditor(Guide guide) {
         try {
+            if (guide==null) {
+                guide = new Guide();
+            }
             setGuide(guide);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e); //TODO
@@ -260,8 +263,7 @@ public class GDLEditor implements EditorController{
     }
 
     public String createNewTerminologyBinding() {
-        DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(
-                EditorManager.getActiveEditorWindow(), this);
+        DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(EditorManager.getActiveEditorWindow());
         dialog.setVisible(true);
         String terminologyId = dialog.getSelectedObject();
         if (terminologyId != null) {
@@ -784,8 +786,8 @@ public class GDLEditor implements EditorController{
     }
 
     @Override
-    public String getEntityExtension() {
-        return "gdl";
+    public Collection<String> getSupportedEntityExtensions() {
+        return Collections.singleton("gdl");
     }
 
     public static String serializeGuide(Guide guide) {

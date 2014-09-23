@@ -6,6 +6,8 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.study.Study;
 import se.cambio.cds.model.study.StudyDefinition;
+import se.cambio.cds.model.view.DecisionSuportViewDefinition;
+import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.cds.util.exporter.html.*;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
@@ -13,6 +15,7 @@ import se.cambio.openehr.controller.terminology.session.data.Terminologies;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -116,6 +119,22 @@ public class HTMLExportTest extends TestCase {
             TerminologyHTMLExporter terminologyHTMLExporter = new TerminologyHTMLExporter("ALERTS","en");
             String html = terminologyHTMLExporter.convertToHTML();
             assertTrue(html.contains("Non compliant stroke prevention found, documented deviation older than 6 months"));
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testDSVHTMLExport() throws IOException {
+        DecisionSupportView dsv = new DecisionSupportView();
+        dsv.setDsViewId("testDSVHTML");
+        dsv.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
+        dsv.getDecisionSuportViewDefinitions().put("en", new DecisionSuportViewDefinition());
+        DSViewHTMLExporter dsvHTMLExporter = new DSViewHTMLExporter(dsv, "en");
+        try {
+            String html = dsvHTMLExporter.convertToHTML();
+            assertTrue(html.contains("testDSVHTML"));
+            //Files.write(Paths.get("test.html"), html.getBytes());
         } catch (InternalErrorException e) {
             e.printStackTrace();
             fail();
