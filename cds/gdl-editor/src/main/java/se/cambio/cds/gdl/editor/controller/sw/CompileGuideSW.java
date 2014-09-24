@@ -23,13 +23,13 @@ public class CompileGuideSW extends CDSSwingWorker{
     @Override
     protected void executeCDSSW() throws InternalErrorException{
         try{
-            _guide = _controller.getGuide();
+            _guide = _controller.getEntity();
             if (_guide!=null){
                 _compiledGuide = GuideExportPluginDirectory.compile(_guide);
             }
         }catch(Throwable e){
             _errorMsg = e.getMessage();
-            Logger.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getGuide().getId()+"': "+e.getMessage());
+            Logger.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getEntity().getId()+"': "+e.getMessage());
             ExceptionHandler.handle(e);
         }
     }

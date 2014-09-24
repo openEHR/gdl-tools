@@ -5,6 +5,7 @@ import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
 import se.cambio.cds.gdl.editor.view.dialog.DialogEditor;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -122,6 +123,21 @@ public class EditorManager {
 
     public static void setCheckOnExit(boolean checkOnExit){
         getDelegate()._checkOnExit = checkOnExit;
+    }
+
+    public static void initializeNewEditor(final EditorController editorController){
+        runIfOkWithCurrentEditor(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        EditorManager.setLastFileLoaded(null);
+                        try {
+                            EditorManager.initController(editorController);
+                        } catch (InternalErrorException e1) {
+                            ExceptionHandler.handle(e1);
+                        }
+                    }
+                });
     }
 
 

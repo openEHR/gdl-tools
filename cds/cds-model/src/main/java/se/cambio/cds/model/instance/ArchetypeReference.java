@@ -16,18 +16,20 @@ public class ArchetypeReference implements Serializable{
         this.idDomain = idDomain;
         this.idArchetype = idArchetype;
         this.idTemplate = idTemplate;
-        this.elementInstancesMap = new HashMap<String, ElementInstance>();
     }
 
     protected void addElementInstance(ElementInstance ei){
-        this.elementInstancesMap.put(ei.getId(), ei);
+        getElementInstancesMap().put(ei.getId(), ei);
     }
 
     protected void removeElementInstance(ElementInstance ei){
-        this.elementInstancesMap.remove(ei.getId());
+        getElementInstancesMap().remove(ei.getId());
     }
 
     public Map<String,ElementInstance> getElementInstancesMap(){
+        if (elementInstancesMap == null) {
+            elementInstancesMap = new HashMap<String, ElementInstance>();
+        }
         return elementInstancesMap;
     }
 
@@ -67,8 +69,8 @@ public class ArchetypeReference implements Serializable{
             sb.append(", "+idTemplate);
         }
         sb.append("\n");
-        for (String idElement : elementInstancesMap.keySet()) {
-            sb.append(elementInstancesMap.get(idElement).toString()+"\n");
+        for (String idElement : getElementInstancesMap().keySet()) {
+            sb.append(getElementInstancesMap().get(idElement).toString()+"\n");
         }
         return sb.toString();
     }

@@ -36,7 +36,6 @@ public class DialogSplash extends JDialog implements Observer{
     private JButton cancelButton;
     private boolean _loading = false;
     private JButton closeButton;
-    private static Integer NUM_OBJ_TO_LOAD = 4;
 
     /**
      * This method initializes 
@@ -150,17 +149,13 @@ public class DialogSplash extends JDialog implements Observer{
 
     public void update() {
         getSplashLabel().setText(_description);
-        _progressValue =  (int)(100*getTotalLoadingProgress());
+        _progressValue =  (int)(100*InitialLoadingObservable.getTotalLoadingProgress());
         if (_progressValue>=0){
             //getJProgressBar().setVisible(true);
             getJProgressBar().setValue(_progressValue);
         }
     }
 
-    public static Double getTotalLoadingProgress(){
-        return ((double)InitialLoadingObservable.getNumLoaded()/NUM_OBJ_TO_LOAD) +
-                InitialLoadingObservable.getCurrentStageProgress()/NUM_OBJ_TO_LOAD;
-    }
     @Override
     public void update(Observable o, Object arg) {
         _description = GDLLoadingUtility.getCurrentLoadingStageName();

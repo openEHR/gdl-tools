@@ -1,6 +1,6 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
-import se.cambio.cds.util.exporter.html.util.TerminologyDefinitionHTMLRenderer;
+import se.cambio.cds.util.export.html.util.TerminologyDefinitionHTMLRenderer;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;

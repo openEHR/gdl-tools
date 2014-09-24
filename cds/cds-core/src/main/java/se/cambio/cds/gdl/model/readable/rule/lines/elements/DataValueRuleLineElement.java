@@ -7,7 +7,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.util.DVDefSerializer;
+import se.cambio.cds.util.export.json.DVDefSerializer;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 

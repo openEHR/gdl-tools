@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html.util;
+package se.cambio.cds.util.export.html.util;
 
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Archetypes;

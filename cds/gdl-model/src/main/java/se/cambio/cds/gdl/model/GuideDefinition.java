@@ -27,15 +27,6 @@ public class GuideDefinition implements Serializable{
 
     private static final long serialVersionUID = 1L;
     public GuideDefinition() {
-        archetypeBindings = new HashMap<String, ArchetypeBinding>();
-        preConditions = new ArrayList<String>();
-        rules = new HashMap<String, Rule>();
-        preConditionExpressions = new ArrayList<ExpressionItem>();
-    }
-
-    public GuideDefinition(Map<String, ArchetypeBinding> archetypeBindings,
-                           List<String> preConditions, Map<String,Rule> rules) {
-        super();
     }
 
     /**
@@ -52,7 +43,7 @@ public class GuideDefinition implements Serializable{
      * @return the preConditions, list of pre-conditions joined by default AND operator
      */
     public List<String> getPreConditions() {
-        if(preConditionExpressions == null || preConditionExpressions.size() == 0) {
+        if(getPreConditionExpressions().isEmpty()) {
             return preConditions;
         }
         List<String> lines = new ArrayList<String>();
@@ -180,8 +171,7 @@ public class GuideDefinition implements Serializable{
     /**
      * @param preConditionExpressions the preConditionExpressions to set
      */
-    public void setPreConditionExpressions(
-            List<ExpressionItem> preConditionExpressions) {
+    public void setPreConditionExpressions(List<ExpressionItem> preConditionExpressions) {
         this.preConditionExpressions = preConditionExpressions;
         List<String> lines = new ArrayList<String>();
         if (preConditionExpressions!=null){

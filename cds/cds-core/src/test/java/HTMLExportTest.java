@@ -4,11 +4,15 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.ResourceDescriptionItem;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
+import se.cambio.cds.model.app.CDSApp;
+import se.cambio.cds.model.app.CDSAppDefinition;
+import se.cambio.cds.model.scenario.Scenario;
+import se.cambio.cds.model.scenario.ScenarioDefinition;
 import se.cambio.cds.model.study.Study;
 import se.cambio.cds.model.study.StudyDefinition;
-import se.cambio.cds.model.view.DecisionSuportViewDefinition;
 import se.cambio.cds.model.view.DecisionSupportView;
-import se.cambio.cds.util.exporter.html.*;
+import se.cambio.cds.model.view.DecisionSupportViewDefinition;
+import se.cambio.cds.util.export.html.*;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.controller.terminology.session.data.Terminologies;
@@ -33,9 +37,9 @@ public class HTMLExportTest extends TestCase {
         TermDefinition td = new TermDefinition();
         td.getTerms().put("test", new Term());
         guide.getOntology().getTermDefinitions().put("en", td);
-        GuideHTMLExporter guideHTMLExporter = new GuideHTMLExporter(guide, "en");
+        GuideHTMLExporter htmlExporter = new GuideHTMLExporter(guide, "en");
         try {
-            String html = guideHTMLExporter.convertToHTML();
+            String html = htmlExporter.convertToHTML();
             assertTrue(html.contains("testGuideHTML"));
         } catch (InternalErrorException e) {
             e.printStackTrace();
@@ -48,9 +52,9 @@ public class HTMLExportTest extends TestCase {
         study.setStudyId("testStudyHTML");
         study.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         study.getStudyDefinitions().put("en", new StudyDefinition());
-        StudyHTMLExporter studyHTMLExporter = new StudyHTMLExporter(study, "en");
+        StudyHTMLExporter htmlExporter = new StudyHTMLExporter(study, "en");
         try {
-            String html = studyHTMLExporter.convertToHTML();
+            String html = htmlExporter.convertToHTML();
             assertTrue(html.contains("testStudyHTML"));
         } catch (InternalErrorException e) {
             e.printStackTrace();
@@ -71,10 +75,10 @@ public class HTMLExportTest extends TestCase {
             fail();
         }
         Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
-        ArchetypeHTMLExporter archetypeHTMLExporter = new ArchetypeHTMLExporter(archetype, null, "en");
-        archetypeHTMLExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
+        ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en");
+        htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         try {
-            String html = archetypeHTMLExporter.convertToHTML();
+            String html = htmlExporter.convertToHTML();
             assertTrue(html.contains("openEHR-EHR-OBSERVATION.body_weight.v1"));
         } catch (InternalErrorException e) {
             e.printStackTrace();
@@ -97,10 +101,10 @@ public class HTMLExportTest extends TestCase {
             fail();
         }
         Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
-        TemplateHTMExporter templateHTMExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
-        templateHTMExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
+        TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
+        htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         try {
-            String html = templateHTMExporter.convertToHTML();
+            String html = htmlExporter.convertToHTML();
             assertTrue(html.contains("diagnosis_icd10"));
         } catch (InternalErrorException e) {
             e.printStackTrace();
@@ -116,8 +120,8 @@ public class HTMLExportTest extends TestCase {
         }
         try {
             Terminologies.loadTerminologies();
-            TerminologyHTMLExporter terminologyHTMLExporter = new TerminologyHTMLExporter("ALERTS","en");
-            String html = terminologyHTMLExporter.convertToHTML();
+            TerminologyHTMLExporter htmlExporter = new TerminologyHTMLExporter("ALERTS","en");
+            String html = htmlExporter.convertToHTML();
             assertTrue(html.contains("Non compliant stroke prevention found, documented deviation older than 6 months"));
         } catch (InternalErrorException e) {
             e.printStackTrace();
@@ -129,12 +133,43 @@ public class HTMLExportTest extends TestCase {
         DecisionSupportView dsv = new DecisionSupportView();
         dsv.setDsViewId("testDSVHTML");
         dsv.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
-        dsv.getDecisionSuportViewDefinitions().put("en", new DecisionSuportViewDefinition());
-        DSViewHTMLExporter dsvHTMLExporter = new DSViewHTMLExporter(dsv, "en");
+        dsv.getDecisionSupportViewDefinitions().put("en", new DecisionSupportViewDefinition());
+        DSViewHTMLExporter htmlExporter = new DSViewHTMLExporter(dsv, "en");
         try {
-            String html = dsvHTMLExporter.convertToHTML();
+            String html = htmlExporter.convertToHTML();
             assertTrue(html.contains("testDSVHTML"));
-            //Files.write(Paths.get("test.html"), html.getBytes());
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testCDSAppExport() throws IOException {
+        CDSApp cdsApp = new CDSApp();
+        cdsApp.setCdsAppId("testCDSAppId");
+        cdsApp.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
+        cdsApp.getCdsAppDefinitions().put("en", new CDSAppDefinition());
+        CDSAppHTMLExporter htmlExporter = new CDSAppHTMLExporter(cdsApp, "en");
+        try {
+            String html = htmlExporter.convertToHTML();
+            assertTrue(html.contains("testCDSAppId"));
+            //Files.write(Paths.get("testCDSApp.html"), html.getBytes());
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testScenarioExport() throws IOException {
+        Scenario scenario = new Scenario();
+        scenario.setScenarioId("testScenarioId");
+        scenario.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
+        scenario.getScenarioDefinitions().put("en", new ScenarioDefinition());
+        ScenarioHTMLExporter htmlExporter = new ScenarioHTMLExporter(scenario, "en");
+        try {
+            String html = htmlExporter.convertToHTML();
+            assertTrue(html.contains("testScenarioId"));
+            //Files.write(Paths.get("testScenario.html"), html.getBytes());
         } catch (InternalErrorException e) {
             e.printStackTrace();
             fail();

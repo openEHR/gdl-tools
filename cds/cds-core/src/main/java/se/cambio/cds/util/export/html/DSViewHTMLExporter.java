@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -23,7 +23,7 @@ public class DSViewHTMLExporter extends ClinicalModelHTMLExporter<DecisionSuppor
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("dsv", getEntity());
         objectMap.put("dsv_description", getEntity().getResourceDescription().getDetails().get(getLanguage()));
-        objectMap.put("dsv_definitions", getEntity().getDecisionSuportViewDefinitions().get(getLanguage()));
+        objectMap.put("dsv_definitions", getEntity().getDecisionSupportViewDefinitions().get(getLanguage()));
         return objectMap;
     }
 

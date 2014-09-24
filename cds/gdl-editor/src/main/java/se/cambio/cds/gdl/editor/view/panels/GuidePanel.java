@@ -78,7 +78,7 @@ public class GuidePanel extends JPanel {
                     GDLEditorImageUtil.HTML_ICON,
                     getHTMLPanel());
             guideEditorTabPane.setFocusable(true);
-            Guide guide = _controller.getGuide();
+            Guide guide = _controller.getEntity();
             for (AbstractPluginPanel abstractPluginPanel : GDLEditorPluginPanelManager.getPluginPanels()) {
                 abstractPluginPanel.setGuide(guide);
                 abstractPluginPanel.setLanguage(_controller.getCurrentLanguageCode());

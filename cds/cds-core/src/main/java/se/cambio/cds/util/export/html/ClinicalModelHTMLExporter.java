@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.util.misc.CDSLanguageManager;
 import se.cambio.openehr.util.ExceptionHandler;

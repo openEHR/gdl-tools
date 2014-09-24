@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;

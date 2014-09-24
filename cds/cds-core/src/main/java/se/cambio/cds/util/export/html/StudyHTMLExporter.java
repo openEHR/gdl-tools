@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
 import freemarker.ext.beans.StringModel;
 import freemarker.template.SimpleScalar;

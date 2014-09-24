@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html.util;
+package se.cambio.cds.util.export.html.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
 import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.util.exceptions.InternalErrorException;

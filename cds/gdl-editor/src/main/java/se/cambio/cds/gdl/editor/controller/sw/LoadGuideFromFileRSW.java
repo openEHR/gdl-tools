@@ -80,7 +80,7 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
     protected void done() {
         try{
             if (_editor!=null){
-                if (GDLEditor.checkParsedGuide(_guideStr, _editor.getGuide())){
+                if (GDLEditor.checkParsedGuide(_guideStr, _editor.getEntity())){
                     EditorManager.setLastFileLoaded(_guideFile);
                     EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
                     try {

@@ -1,4 +1,4 @@
-package se.cambio.cds.util;
+package se.cambio.cds.util.export.json;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
@@ -12,6 +12,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
+import se.cambio.cds.util.DVUtil;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.controller.session.data.ProportionTypesUI;
@@ -83,7 +84,7 @@ public class DVDefSerializer {
             DvProportion dvProportion = (DvProportion) dataValue;
             return getDVInstantiationWithoutQuotes(
                     DvProportion.class.getSimpleName(),
-                    ""+DVUtil.round(dvProportion.getNumerator(), dvProportion.getPrecision())+","+
+                    ""+ DVUtil.round(dvProportion.getNumerator(), dvProportion.getPrecision())+","+
                             DVUtil.round(dvProportion.getDenominator(), dvProportion.getPrecision())+","+
                             ProportionTypesUI.getInstanceID(dvProportion.getType())+","+
                             dvProportion.getPrecision());

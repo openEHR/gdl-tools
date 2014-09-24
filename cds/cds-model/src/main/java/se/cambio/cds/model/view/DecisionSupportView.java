@@ -16,7 +16,7 @@ import java.util.Map;
 public class DecisionSupportView {
     private String dsViewId;
     private Language language;
-    private Map<String, DecisionSuportViewDefinition> decisionSuportViewDefinitions;
+    private Map<String, DecisionSupportViewDefinition> decisionSupportViewDefinitions;
     private ResourceDescription resourceDescription;
     private Collection<String> alertGuideIds;
     private Collection<String> executionGuideIds;
@@ -28,14 +28,14 @@ public class DecisionSupportView {
     public DecisionSupportView(
             String dsViewId,
             Language language,
-            Map<String, DecisionSuportViewDefinition> decisionSuportViewDefinitions,
+            Map<String, DecisionSupportViewDefinition> decisionSupportViewDefinitions,
             ResourceDescription resourceDescription,
             Collection<String> alertGuideIds,
             Collection<String> executionGuideIds,
             Map<String, TerminologyAlertBinding> alertBindings) {
         this.dsViewId = dsViewId;
         this.language = language;
-        this.decisionSuportViewDefinitions = decisionSuportViewDefinitions;
+        this.decisionSupportViewDefinitions = decisionSupportViewDefinitions;
         this.resourceDescription = resourceDescription;
         this.alertGuideIds = alertGuideIds;
         this.executionGuideIds = executionGuideIds;
@@ -94,15 +94,15 @@ public class DecisionSupportView {
         this.executionGuideIds = executionGuideIds;
     }
 
-    public Map<String, DecisionSuportViewDefinition> getDecisionSuportViewDefinitions() {
-        if (decisionSuportViewDefinitions == null) {
-            decisionSuportViewDefinitions = new HashMap<String, DecisionSuportViewDefinition>();
+    public Map<String, DecisionSupportViewDefinition> getDecisionSupportViewDefinitions() {
+        if (decisionSupportViewDefinitions == null) {
+            decisionSupportViewDefinitions = new HashMap<String, DecisionSupportViewDefinition>();
         }
-        return decisionSuportViewDefinitions;
+        return decisionSupportViewDefinitions;
     }
 
-    public void setDecisionSuportViewDefinitions(Map<String, DecisionSuportViewDefinition> decisionSuportViewDefinitions) {
-        this.decisionSuportViewDefinitions = decisionSuportViewDefinitions;
+    public void setDecisionSupportViewDefinitions(Map<String, DecisionSupportViewDefinition> decisionSupportViewDefinitions) {
+        this.decisionSupportViewDefinitions = decisionSupportViewDefinitions;
     }
 
     public Map<String, TerminologyAlertBinding> getAlertBindings() {

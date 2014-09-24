@@ -1,4 +1,4 @@
-package se.cambio.cds.util.exporter.html;
+package se.cambio.cds.util.export.html;
 
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
@@ -9,7 +9,7 @@ import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.openehr.rm.common.resource.ResourceDescriptionItem;
-import se.cambio.cds.util.exporter.html.util.ArchetypeDefinitionHTMLRenderer;
+import se.cambio.cds.util.export.html.util.ArchetypeDefinitionHTMLRenderer;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
