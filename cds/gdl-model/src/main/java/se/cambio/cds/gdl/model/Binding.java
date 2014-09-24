@@ -1,18 +1,21 @@
 package se.cambio.cds.gdl.model;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Binding  implements Serializable{
-	
-	/**
-     * 
-     */
+
+    private String id;
+    private List<CodePhrase> codes;
+    private String uri;
+
     private static final long serialVersionUID = 1L;
 
-	public Binding(){		
+	public Binding(){
+        codes = new ArrayList<CodePhrase>();
 	}
 
 	public Binding(String id, List<CodePhrase> codes) {
@@ -25,12 +28,8 @@ public class Binding  implements Serializable{
 		super();
 		this.id = id;
 		this.codes = codes;
-		Uri = uri;
+		this.uri = uri;
 	}
-
-	private String id;
-	private List<CodePhrase> codes;
-	private String Uri;
 
 	/**
 	 * @return the id
@@ -66,7 +65,7 @@ public class Binding  implements Serializable{
 	 * @return the uri
 	 */
 	public String getUri() {
-		return Uri;
+		return uri;
 	}
 
 	/**
@@ -74,7 +73,7 @@ public class Binding  implements Serializable{
 	 *            the uri to set
 	 */
 	public void setUri(String uri) {
-		Uri = uri;
+		this.uri = uri;
 	}
 
 	/*
@@ -86,7 +85,7 @@ public class Binding  implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Uri == null) ? 0 : Uri.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		result = prime * result + ((codes == null) ? 0 : codes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
@@ -106,10 +105,10 @@ public class Binding  implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Binding other = (Binding) obj;
-		if (Uri == null) {
-			if (other.Uri != null)
+		if (uri == null) {
+			if (other.uri != null)
 				return false;
-		} else if (!Uri.equals(other.Uri))
+		} else if (!uri.equals(other.uri))
 			return false;
 		if (codes == null) {
 			if (other.codes != null)

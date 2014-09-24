@@ -18,25 +18,33 @@ import java.util.Map;
 
 public class GuideDefinition implements Serializable{
 
-    /**
-     *
-     */
+    private Map<String, ArchetypeBinding> archetypeBindings;
+    private List<String> preConditions;
+    private Map<String,Rule> rules;
+    private List<ExpressionItem> preConditionExpressions;
+
+    public static String ARCHETYPE_BINDING_PREFIX = "ab";
+
     private static final long serialVersionUID = 1L;
     public GuideDefinition() {
+        archetypeBindings = new HashMap<String, ArchetypeBinding>();
+        preConditions = new ArrayList<String>();
+        rules = new HashMap<String, Rule>();
+        preConditionExpressions = new ArrayList<ExpressionItem>();
     }
 
     public GuideDefinition(Map<String, ArchetypeBinding> archetypeBindings,
                            List<String> preConditions, Map<String,Rule> rules) {
         super();
-        this.archetypeBindings = archetypeBindings;
-        this.preConditions = preConditions;
-        this.rules = rules;
     }
 
     /**
      * @return the archetypeBindings
      */
     public Map<String, ArchetypeBinding> getArchetypeBindings() {
+        if (archetypeBindings == null) {
+            archetypeBindings = new HashMap<String, ArchetypeBinding>();
+        }
         return archetypeBindings;
     }
 
@@ -58,6 +66,9 @@ public class GuideDefinition implements Serializable{
      * @return the rules
      */
     public Map<String,Rule> getRules() {
+        if (rules == null) {
+            rules = new HashMap<String, Rule>();
+        }
         return rules;
     }
 
@@ -155,15 +166,14 @@ public class GuideDefinition implements Serializable{
         return true;
     }
 
-    private Map<String, ArchetypeBinding> archetypeBindings;
-    private List<String> preConditions;
-    private Map<String,Rule> rules;
-    private List<ExpressionItem> preConditionExpressions;
-    public static String ARCHETYPE_BINDING_PREFIX = "ab";
+
     /**
      * @return the preConditionExpressions
      */
     public List<ExpressionItem> getPreConditionExpressions() {
+        if (preConditionExpressions == null) {
+            preConditionExpressions = new ArrayList<ExpressionItem>();
+        }
         return preConditionExpressions;
     }
 

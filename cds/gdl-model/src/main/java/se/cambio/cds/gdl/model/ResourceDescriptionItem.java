@@ -1,9 +1,10 @@
 package se.cambio.cds.gdl.model;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ResourceDescriptionItem
@@ -12,14 +13,7 @@ import org.openehr.rm.datatypes.text.CodePhrase;
  */
 public class ResourceDescriptionItem implements Serializable{
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-
-	public ResourceDescriptionItem() {
-	}
-
 	private String id;
 	private CodePhrase language;
 	private String purpose;
@@ -27,6 +21,10 @@ public class ResourceDescriptionItem implements Serializable{
 	private String use;
 	private String misuse;
 	private String copyright;
+
+    public ResourceDescriptionItem() {
+
+    }
 
 	/**
 	 * @return the id
@@ -77,7 +75,10 @@ public class ResourceDescriptionItem implements Serializable{
 	 * @return the keywords
 	 */
 	public List<String> getKeywords() {
-		return keywords;
+        if (keywords == null) {
+            keywords = new ArrayList<String>();
+        }
+        return keywords;
 	}
 
 	/**

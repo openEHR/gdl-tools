@@ -61,7 +61,7 @@ public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLine
 
     @Override
     public String toHTMLString(String lang) {
-        return "<font>"+toString()+"</font>";
+        return toString();
     }
 }
 /*

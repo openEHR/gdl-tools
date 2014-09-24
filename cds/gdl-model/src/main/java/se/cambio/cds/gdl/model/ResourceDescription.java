@@ -1,6 +1,8 @@
 package se.cambio.cds.gdl.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +24,14 @@ public class ResourceDescription implements Serializable{
 	private String resourcePackageUri;
 	private Map<String, String> otherDetails;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+    public ResourceDescription() {
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#hashCode()
+     */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -100,7 +105,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the originalAuthor
 	 */
 	public Map<String, String> getOriginalAuthor() {
-		return originalAuthor;
+        if (originalAuthor == null) {
+            originalAuthor = new HashMap<String, String>();
+        }
+        return originalAuthor;
 	}
 
 	/**
@@ -115,7 +123,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the otherContributors
 	 */
 	public List<String> getOtherContributors() {
-		return otherContributors;
+        if (otherContributors == null) {
+            otherContributors = new ArrayList<String>();
+        }
+        return otherContributors;
 	}
 
 	/**
@@ -145,7 +156,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the details
 	 */
 	public Map<String, ResourceDescriptionItem> getDetails() {
-		return details;
+        if (details == null) {
+            details = new HashMap<String, ResourceDescriptionItem>();
+        }
+        return details;
 	}
 
 	/**
@@ -175,7 +189,10 @@ public class ResourceDescription implements Serializable{
 	 * @return the otherDetails
 	 */
 	public Map<String, String> getOtherDetails() {
-		return otherDetails;
+        if (otherDetails == null) {
+            otherDetails = new HashMap<String, String>();
+        }
+        return otherDetails;
 	}
 
 	/**

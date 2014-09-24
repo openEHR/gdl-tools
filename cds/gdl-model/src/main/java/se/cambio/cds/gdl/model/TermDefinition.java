@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TermDefinition implements Serializable{
@@ -9,12 +10,12 @@ public class TermDefinition implements Serializable{
      *
      */
     private static final long serialVersionUID = 1L;
-
-    public TermDefinition() {
-    }
-
     private String id;
     private Map<String, Term> terms;
+
+    public TermDefinition() {
+
+    }
 
     /**
      * @return the id
@@ -35,6 +36,9 @@ public class TermDefinition implements Serializable{
      * @return the terms
      */
     public Map<String, Term> getTerms() {
+        if (terms == null) {
+            terms = new HashMap<String, Term>();
+        }
         return terms;
     }
 
