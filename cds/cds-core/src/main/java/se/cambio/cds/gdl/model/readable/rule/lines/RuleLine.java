@@ -2,7 +2,6 @@ package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,16 @@ public abstract class RuleLine {
     }
 
     public String toString(){
-        return toHTMLString(UserConfigurationManager.getLanguage());
+        StringBuffer sb = new StringBuffer();
+        int i = 0;
+        for (RuleLineElement ruleLineElement : ruleLineElements) {
+            sb.append(ruleLineElement.toString());
+            i++;
+            if (i<ruleLineElements.size()){
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
     }
 
     public String toHTMLString(String lang){
