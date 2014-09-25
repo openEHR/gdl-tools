@@ -69,7 +69,7 @@ public class HTMLExportTest extends TestCase {
         }
         Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
         ArchetypeHTMLExporter archetypeHTMLExporter = new ArchetypeHTMLExporter(archetype, null, "en");
-        archetypeHTMLExporter.getArchetypeDefinitionHTMLRenderer().setIconPath("cds/cds-gui-swing/src/main/resources/img");
+        archetypeHTMLExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         try {
             String html = archetypeHTMLExporter.convertToHTML();
             assertTrue(html.contains("openEHR-EHR-OBSERVATION.body_weight.v1"));
@@ -95,7 +95,7 @@ public class HTMLExportTest extends TestCase {
         }
         Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
         TemplateHTMExporter templateHTMExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
-        templateHTMExporter.getArchetypeDefinitionHTMLRenderer().setIconPath("cds/cds-gui-swing/src/main/resources/img");
+        templateHTMExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         try {
             String html = templateHTMExporter.convertToHTML();
             assertTrue(html.contains("diagnosis_icd10"));

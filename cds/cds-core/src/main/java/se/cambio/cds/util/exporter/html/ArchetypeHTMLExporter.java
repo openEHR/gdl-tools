@@ -118,7 +118,7 @@ public class ArchetypeHTMLExporter extends ClinicalModelHTMLExporter<Archetype> 
         return archetypeTerm.getDescription();
     }
 
-    public ArchetypeDefinitionHTMLRenderer getArchetypeDefinitionHTMLRenderer() {
+    private ArchetypeDefinitionHTMLRenderer getArchetypeDefinitionHTMLRenderer() {
         return archetypeDefinitionHTMLRenderer;
     }
 
@@ -134,5 +134,13 @@ public class ArchetypeHTMLExporter extends ClinicalModelHTMLExporter<Archetype> 
 
     public String getTemplateId() {
         return templateId;
+    }
+
+    public String getIconPath() {
+        return getArchetypeDefinitionHTMLRenderer().getIconPath();
+    }
+
+    public void setIconPath(String iconPath) {
+        getArchetypeDefinitionHTMLRenderer().setIconPath(iconPath);
     }
 }
