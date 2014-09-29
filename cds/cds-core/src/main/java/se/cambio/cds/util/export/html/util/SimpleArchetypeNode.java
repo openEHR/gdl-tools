@@ -3,11 +3,6 @@ package se.cambio.cds.util.export.html.util;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-15
- * Time: 11:05
- */
 public class SimpleArchetypeNode {
     private String elementId;
     private String name;

@@ -8,11 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-06
- * Time: 11:30
- */
 public class ScenarioHTMLExporter extends ClinicalModelHTMLExporter<Scenario> {
 
     public ScenarioHTMLExporter(Scenario entity, String lang) {

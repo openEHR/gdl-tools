@@ -17,13 +17,13 @@ public class DecisionSupportViews {
     private DecisionSupportViews(){
     }
 
-    public static void loadDSViews() throws InternalErrorException{
+    public void loadDSViews() throws InternalErrorException{
         CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
         Collection<DSViewDTO> DSViewDTOs = adminFD.searchAllDSViews();
         loadDSViews(DSViewDTOs);
     }
 
-    public static void loadDSViewsById(Collection<String> dsViewIds) throws InternalErrorException, InstanceNotFoundException {
+    public void loadDSViewsById(Collection<String> dsViewIds) throws InternalErrorException, InstanceNotFoundException {
         CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
         for (String dsViewId : dsViewIds){
             DSViewDTO DSViewDTO = adminFD.searchDSView(dsViewId);   //TODO Load all in one call
@@ -31,54 +31,54 @@ public class DecisionSupportViews {
         }
     }
 
-    public static void loadDSViews(Collection<DSViewDTO> dsViewDTOs) throws InternalErrorException{
+    public void loadDSViews(Collection<DSViewDTO> dsViewDTOs) throws InternalErrorException{
         init();
         for (DSViewDTO dsViewDTO : dsViewDTOs) {
             registerDSView(dsViewDTO);
         }
     }
 
-    public static void registerDSView(DSViewDTO DSViewDTO){
+    public void registerDSView(DSViewDTO DSViewDTO){
         getDSViewsMap().put(DSViewDTO.getDsViewId(), DSViewDTO);
         Logger.getLogger(DecisionSupportViews.class).info("Registering dsv: '" + DSViewDTO.getDsViewId() + "'.");
     }
 
-    public static DSViewDTO getDSViewDTO(String dsViewId){
+    public DSViewDTO getDSViewDTO(String dsViewId){
         return getDSViewsMap().get(dsViewId);
     }
 
-    public static List<DSViewDTO> getAllDSViews(){
+    public List<DSViewDTO> getAllDSViews(){
         return new ArrayList<DSViewDTO>(getDSViewsMap().values());
     }
 
-    public static Collection<String> getAllDSViewIds(){
+    public Collection<String> getAllDSViewIds(){
         return new ArrayList<String>(getDSViewsMap().keySet());
     }
 
-    public static void removeDSView(String dsViewId) throws InternalErrorException{
+    public void removeDSView(String dsViewId) throws InternalErrorException{
         getDSViewsMap().remove(dsViewId);
     }
 
-    public static DecisionSupportViews getDelegate(){
+    public static DecisionSupportViews getInstance(){
         if (_instance == null){
             _instance = new DecisionSupportViews();
         }
         return _instance;
     }
 
-    private static void init(){
+    private void init(){
         getDSViewsMap().clear();
     }
 
-    private static Map<String, DSViewDTO> getDSViewsMap(){
-        if (getDelegate()._dsViewsMap ==null){
-            getDelegate()._dsViewsMap = new HashMap<String, DSViewDTO>();
+    private Map<String, DSViewDTO> getDSViewsMap(){
+        if (getInstance()._dsViewsMap ==null){
+            getInstance()._dsViewsMap = new HashMap<String, DSViewDTO>();
         }
-        return getDelegate()._dsViewsMap;
+        return getInstance()._dsViewsMap;
     }
 
-    public int hashCode(){
-        return generateHashCode(getDSViewsMap().values());
+    public int generateHashCode() {
+        return generateHashCode(getAllDSViews());
     }
 
     public static int generateHashCode(Collection<DSViewDTO> dsViewDTOs) {

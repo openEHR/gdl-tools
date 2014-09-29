@@ -12,11 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: iago.corbal
- * Date: 2014-09-12
- * Time: 13:31
- */
 public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
 
     public GuideHTMLExporter(Guide guide, String lang) {

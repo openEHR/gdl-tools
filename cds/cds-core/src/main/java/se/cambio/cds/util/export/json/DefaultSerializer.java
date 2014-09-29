@@ -3,11 +3,6 @@ package se.cambio.cds.util.export.json;
 import com.google.gson.Gson;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-/**
- * User: iago.corbal
- * Date: 2014-09-23
- * Time: 19:23
- */
 public class DefaultSerializer<E> implements JSONSerializer<E> {
 
     private Class<E> clazz;

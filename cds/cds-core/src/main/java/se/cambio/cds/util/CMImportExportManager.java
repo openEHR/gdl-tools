@@ -66,7 +66,7 @@ public class CMImportExportManager {
         exportTemplates(out, generateDTOs);
         exportTerminologies(out);
         exportGuidelines(out, generateDTOs);
-        exportOverviews(out);
+        exportViews(out);
         out.close();
     }
 
@@ -154,8 +154,8 @@ public class CMImportExportManager {
         }
     }
 
-    public static void exportOverviews(ZipOutputStream out) throws IOException {
-        for (DSViewDTO DSViewDTO : DecisionSupportViews.getAllDSViews()){
+    public static void exportViews(ZipOutputStream out) throws IOException {
+        for (DSViewDTO DSViewDTO : DecisionSupportViews.getInstance().getAllDSViews()){
             InputStream in = new ByteArrayInputStream(DSViewDTO.getDSViewSrc().getBytes());
             // name the file inside the zip  file
             out.putNextEntry(new ZipEntry(DSVVIEWS_PREFIX + DSViewDTO.getDsViewId()+ DSVIEWS_POSTFIX));
@@ -243,7 +243,7 @@ public class CMImportExportManager {
                 Templates.loadTemplates(templateSourceDTOs);
             }
             Terminologies.loadTerminologies(terminologyDTOs);
-            DecisionSupportViews.loadDSViews(DSViewDTOs);
+            DecisionSupportViews.getInstance().loadDSViews(DSViewDTOs);
             if (useGuidelineDTOs){
                 Guides.loadGuides(guideDTOs);
             }else{

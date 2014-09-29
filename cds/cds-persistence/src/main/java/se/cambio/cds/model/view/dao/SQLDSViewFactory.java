@@ -3,9 +3,6 @@ package se.cambio.cds.model.view.dao;
 
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-/**
- * @author iago.corbal
- */
 public class SQLDSViewFactory {
 
     public static SQLDSViewDAO getDAO() throws InternalErrorException {

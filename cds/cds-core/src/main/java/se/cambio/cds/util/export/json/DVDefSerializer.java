@@ -42,11 +42,15 @@ public class DVDefSerializer {
 
     public static String getDVInstantiation(DataValue dataValue){
         if (dataValue instanceof DvQuantity){
-            return getDVInstantiationWithoutQuotes(
-                    DvQuantity.class.getSimpleName(),
-                    "\""+((DvQuantity)dataValue).getUnits()+"\","+
-                            ((DvQuantity)dataValue).getMagnitude()+","+
-                            ((DvQuantity)dataValue).getPrecision());
+            StringBuilder sb = new StringBuilder();
+            sb.append("\"");
+            sb.append(((DvQuantity)dataValue).getUnits());
+            sb.append("\"");
+            sb.append(",");
+            sb.append(((DvQuantity)dataValue).getMagnitude());
+            sb.append(",");
+            sb.append(((DvQuantity)dataValue).getPrecision());
+            return getDVInstantiationWithoutQuotes(DvQuantity.class.getSimpleName(), sb.toString());
         }if (dataValue instanceof DvDuration){
             return getDVInstantiation(DvDuration.class.getSimpleName(), ((DvDuration)dataValue).getValue());
         }if (dataValue instanceof DvDateTime){
@@ -61,43 +65,56 @@ public class DVDefSerializer {
         }if (dataValue instanceof DvOrdinal){
             DvOrdinal dvOrdinal = (DvOrdinal)dataValue;
             DvCodedText dvCodedText = dvOrdinal.getSymbol();
-            return getDVInstantiationWithoutQuotes(
-                    DvOrdinal.class.getSimpleName(),
-                    dvOrdinal.getValue()+",\""+
-                            dvCodedText.getValue()+"\",\""+
-                            dvCodedText.getDefiningCode().getTerminologyId().getValue()+"\",\""+
-                            dvCodedText.getDefiningCode().getCodeString()+"\"");
+            StringBuilder sb = new StringBuilder();
+            sb.append(dvOrdinal.getValue());
+            sb.append(",\"");
+            sb.append(dvCodedText.getValue());
+            sb.append("\",\"");
+            sb.append(dvCodedText.getDefiningCode().getTerminologyId().getValue());
+            sb.append("\",\"");
+            sb.append(dvCodedText.getDefiningCode().getCodeString());
+            sb.append("\"");
+            return getDVInstantiationWithoutQuotes(DvOrdinal.class.getSimpleName(), sb.toString());
         }if (dataValue instanceof DvCodedText){
             DvCodedText dvCodedText = (DvCodedText)dataValue;
-            return getDVInstantiationWithoutQuotes(
-                    DvCodedText.class.getSimpleName(), "\""+
-                    dvCodedText.getValue()+"\",\""+
-                    dvCodedText.getDefiningCode().getTerminologyId().getValue()+"\",\""+
-                    dvCodedText.getDefiningCode().getCodeString()+"\"");
+            StringBuilder sb = new StringBuilder();
+            sb.append("\"");
+            sb.append(dvCodedText.getValue());
+            sb.append("\",\"");
+            sb.append(dvCodedText.getDefiningCode().getTerminologyId().getValue());
+            sb.append("\",\"");
+            sb.append(dvCodedText.getDefiningCode().getCodeString());
+            sb.append("\"");
+            return getDVInstantiationWithoutQuotes(DvCodedText.class.getSimpleName(), sb.toString());
         }if (dataValue instanceof DvCount){
-            return getDVInstantiationWithoutQuotes(DvCount.class.getSimpleName(), ""+((DvCount)dataValue).getMagnitude());
+            StringBuilder sb = new StringBuilder();
+            sb.append(((DvCount)dataValue).getMagnitude());
+            return getDVInstantiationWithoutQuotes(DvCount.class.getSimpleName(), sb.toString());
         }if (dataValue instanceof DvText){
             return getDVInstantiation(DvText.class.getSimpleName(), ((DvText)dataValue).getValue());
         }if (dataValue instanceof DvBoolean){
-            return getDVInstantiationWithoutQuotes(DvBoolean.class.getSimpleName(), ""+((DvBoolean) dataValue).getValue());
+            StringBuilder sb = new StringBuilder();
+            sb.append(((DvBoolean) dataValue).getValue());
+            return getDVInstantiationWithoutQuotes(DvBoolean.class.getSimpleName(), sb.toString());
         }if (dataValue instanceof DvProportion){
             DvProportion dvProportion = (DvProportion) dataValue;
-            return getDVInstantiationWithoutQuotes(
-                    DvProportion.class.getSimpleName(),
-                    ""+ DVUtil.round(dvProportion.getNumerator(), dvProportion.getPrecision())+","+
-                            DVUtil.round(dvProportion.getDenominator(), dvProportion.getPrecision())+","+
-                            ProportionTypesUI.getInstanceID(dvProportion.getType())+","+
-                            dvProportion.getPrecision());
+            StringBuilder sb = new StringBuilder();
+            sb.append(DVUtil.round(dvProportion.getNumerator(), dvProportion.getPrecision()));
+            sb.append(",");
+            sb.append(DVUtil.round(dvProportion.getDenominator(), dvProportion.getPrecision()));
+            sb.append(",");
+            sb.append(ProportionTypesUI.getInstanceID(dvProportion.getType()));
+            sb.append(",");
+            sb.append(dvProportion.getPrecision());
+            return getDVInstantiationWithoutQuotes(DvProportion.class.getSimpleName(), sb.toString());
         }if (dataValue instanceof DvList){
             Collection<DataValue> dataValues = ((DvList)dataValue).getDataValues();
             StringBuffer sb = new StringBuffer();
-            int i = 0;
+            String prefix = "";
             for (DataValue dataValueAux : dataValues) {
+                sb.append(prefix);
                 sb.append(getDVInstantiation(dataValueAux));
-                i++;
-                if (i<dataValues.size()){
-                    sb.append(", ");
-                }
+                prefix = ", ";
             }
             return sb.toString();
         }else{

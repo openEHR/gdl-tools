@@ -7,11 +7,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-06
- * Time: 11:30
- */
 public class DSViewHTMLExporter extends ClinicalModelHTMLExporter<DecisionSupportView> {
 
     public DSViewHTMLExporter(DecisionSupportView entity, String lang) {

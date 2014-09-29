@@ -2,11 +2,6 @@ package se.cambio.cds.model.dsvdata;
 
 import java.util.Collection;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-02-19
- * Time: 11:18
- */
 public class DSVGTCodeDef {
 
     private String gtCode;

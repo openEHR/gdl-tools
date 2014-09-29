@@ -6,11 +6,6 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-02-20
- * Time: 09:52
- */
 public class DSVData {
     private DomainData ehrDomainData;
     private DomainData cdsDomainData;

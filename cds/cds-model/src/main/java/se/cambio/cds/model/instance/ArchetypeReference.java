@@ -37,10 +37,6 @@ public class ArchetypeReference implements Serializable{
         return idDomain;
     }
 
-    public void setIdDomain(String idDomain) {
-        this.idDomain = idDomain;
-    }
-
     public String getIdArchetype() {
         return idArchetype;
     }

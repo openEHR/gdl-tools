@@ -4,11 +4,6 @@ import org.openehr.am.archetype.Archetype;
 
 import java.util.Collection;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-15
- * Time: 10:59
- */
 public class ArchetypeDefinitionHTMLRenderer {
     private String iconPath = null;
 

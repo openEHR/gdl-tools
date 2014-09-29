@@ -19,11 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-06
- * Time: 11:30
- */
 public class StudyHTMLExporter extends ClinicalModelHTMLExporter<Study> {
 
     public StudyHTMLExporter(Study entity, String lang) {

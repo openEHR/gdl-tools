@@ -25,23 +25,6 @@ public class DecisionSupportView {
     public DecisionSupportView() {
     }
 
-    public DecisionSupportView(
-            String dsViewId,
-            Language language,
-            Map<String, DecisionSupportViewDefinition> decisionSupportViewDefinitions,
-            ResourceDescription resourceDescription,
-            Collection<String> alertGuideIds,
-            Collection<String> executionGuideIds,
-            Map<String, TerminologyAlertBinding> alertBindings) {
-        this.dsViewId = dsViewId;
-        this.language = language;
-        this.decisionSupportViewDefinitions = decisionSupportViewDefinitions;
-        this.resourceDescription = resourceDescription;
-        this.alertGuideIds = alertGuideIds;
-        this.executionGuideIds = executionGuideIds;
-        this.alertBindings = alertBindings;
-    }
-
     public String getDsViewId() {
         return dsViewId;
     }

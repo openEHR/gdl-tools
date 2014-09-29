@@ -11,35 +11,23 @@ public class DSViewDTO implements Serializable{
     private String dsViewSrc;
 
     public DSViewDTO(String dsViewId, String name, String description, String dsViewSrc) {
-	super();
-	this.dsViewId = dsViewId;
-	this.name = name;
-	this.description = description;
-	this.dsViewSrc = dsViewSrc;
+        super();
+        this.dsViewId = dsViewId;
+        this.name = name;
+        this.description = description;
+        this.dsViewSrc = dsViewSrc;
     }
     public String getDsViewId() {
-	return dsViewId;
-    }
-    public void setDsViewId(String dsViewId) {
-	this.dsViewId = dsViewId;
+        return dsViewId;
     }
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
     public String getDescription() {
         return description;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
     public String getDSViewSrc() {
-	return dsViewSrc;
-    }
-    public void setDsViewSrc(String guideSrc) {
-	this.dsViewSrc = guideSrc;
+        return dsViewSrc;
     }
 }
 /*

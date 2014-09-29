@@ -5,11 +5,6 @@ import se.cambio.cds.gdl.model.ResourceDescription;
 
 import java.util.*;
 
-/**
- * User: iago.corbal
- * Date: 2014-09-23
- * Time: 16:30
- */
 public class Scenario {
     private String scenarioId;
     private Language language;
@@ -19,15 +14,6 @@ public class Scenario {
     private Date executionDate;
 
     public Scenario() {
-    }
-
-    public Scenario(String scenarioId, Language language, Map<String, ScenarioDefinition> scenarioDefinitions, ResourceDescription resourceDescription, Collection<String> guideIds, Date executionDate) {
-        this.scenarioId = scenarioId;
-        this.language = language;
-        this.scenarioDefinitions = scenarioDefinitions;
-        this.resourceDescription = resourceDescription;
-        this.guideIds = guideIds;
-        this.executionDate = executionDate;
     }
 
     public String getScenarioId() {

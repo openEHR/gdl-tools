@@ -3,11 +3,6 @@ package se.cambio.cds.model.dsvdata;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-02-19
- * Time: 11:14
- */
 public class DSVDef {
 
     private String dsvId;
