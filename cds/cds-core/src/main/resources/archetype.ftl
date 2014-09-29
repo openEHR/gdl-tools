@@ -5,7 +5,7 @@
     <style>
         body {font-family: Calibri;}
         h1 {font-size: 26px; margin:0px;}
-        h2 {background-color: #4f81bd; color: white; padding: 5px;  font-size: 110%; margin-bottom:0px; margin-top:10px; font-weight: bold;}
+        h2 {background-color: #6156d2; color: white; padding: 5px;  font-size: 110%; margin-bottom:0px; margin-top:10px; font-weight: bold;}
         .details-label {font-weight: bold; margin-right: 5px;}
         .tree,
         .tree ul {
@@ -67,7 +67,7 @@
         <tr valign='top'><td class="details-label">${texts.Misuse}:</td><td align='left'>${archetype_description_item.misuse?if_exists?replace("\n", "<br>")}</td></tr>
         <tr valign='top'><td class="details-label">${texts.References}:</td><td align='left'>${archetype.description.otherDetails.references?if_exists?replace("\n", "<br>")}</td></tr>
 </table>
-<br><h2>${texts.AuthorDetails?upper_case}</h2>
+<h2>${texts.AuthorDetails?upper_case}</h2>
 <table>
     <tr valign='top'><td class="details-label">${texts.Name}:</td><td align='left'>${archetype.description.originalAuthor.name?if_exists}</td></tr>
     <tr valign='top'><td class="details-label">${texts.Email}:</td><td align='left'>${archetype.description.originalAuthor.email?if_exists}</td></tr>
@@ -81,17 +81,13 @@
     <#list archetype_description_item.keywords as keyword><i>
         ${keyword}<#if keyword_has_next>, </#if>
     </i></#list>
-    <br>
 </#if>
 <#if archetype.description.otherContributors?has_content>
      <h2>${texts.Contributors?upper_case}</h2>
     <#list archetype.description.otherContributors as otherContributor><i>
         ${otherContributor}<#if otherContributor_has_next>, </#if>
     </i></#list>
-    <br>
 </#if>
-
- <br>
  <div class="header1">${texts.ArchetypeDefinition?upper_case}</h2>
  ${archetype_definition}
 </body>

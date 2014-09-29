@@ -6,6 +6,7 @@ import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 import javax.swing.*;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -171,7 +172,8 @@ public class MainMenuBar extends JMenuBar {
         ButtonGroup itemGroup = new ButtonGroup();
         EditorController controller = EditorManager.getActiveEditorController();
         String currentLang= controller.getCurrentLanguageCode();
-        for (String languageCode : controller.getSupportedLanguageCodes()) {
+        Collection<String> supportedLanguageCodes = controller.getSupportedLanguageCodes();
+        for (String languageCode : supportedLanguageCodes) {
             JRadioButtonMenuItem rbMenuItem =
                     new JRadioButtonMenuItem(new ChangeGuideLanguageAction(languageCode));
             getLanguageRadioButtonMenuItemsMap().put(currentLang, rbMenuItem);

@@ -57,17 +57,6 @@ public class ElementInstance implements Serializable{
         this.dataValue = dataValue;
     }
 
-    /*
-    public void setAttribute(String attName, Object value){
-	try{
-	    Method method = 
-		    getDataValue().getClass().getMethod("set"+StringUtils.capitalize(attName), value.getClass());
-	    method.invoke(getDataValue(), value);
-	}catch(Exception e){
-	    ExceptionHandler.handle(e);
-	}
-    }*/
-
     public DvCodedText getNullFlavour() {
         return nullFlavour;
     }

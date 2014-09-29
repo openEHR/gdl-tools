@@ -1,9 +1,9 @@
 package se.cambio.cds.util;
 
+import se.cambio.cds.controller.session.data.DecisionSupportViews;
 import se.cambio.cds.controller.session.data.Guides;
-import se.cambio.cds.controller.session.data.Overviews;
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.model.overview.dto.OverviewDTO;
+import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.controller.terminology.session.data.Terminologies;
@@ -33,20 +33,20 @@ public class CMImportExportManager {
     private static String TEMPLATES_FOLDER_NAME = "templates";
     private static String TERMINOLOGIES_FOLDER_NAME = "terminologies";
     private static String GUIDELINES_FOLDER_NAME = "guidelines";
-    private static String OVERVIEWS_FOLDER_NAME = "views";
+    private static String DSVIEWS_FOLDER_NAME = "views";
 
     private static String ARCHETYPE_POSTFIX = ".adl";
     private static String TEMPLATES_POSTFIX = ".oet";
     private static String TERMINOLOGY_POSTFIX = ".csv";
     private static String GUIDELINES_POSTFIX = ".gdl";
-    private static String OVERVIEWS_POSTFIX = ".dsv";
+    private static String DSVIEWS_POSTFIX = ".dsv";
     private static String DTO_POSTFIX = ".dto";
 
     private static String ARCHETYPE_PREFIX = ARCHETYPES_FOLDER_NAME+"\\";
     private static String TEMPLATES_PREFIX = TEMPLATES_FOLDER_NAME+"\\";
     private static String TERMINOLOGY_PREFIX = TERMINOLOGIES_FOLDER_NAME+"\\";
     private static String GUIDELINES_PREFIX = GUIDELINES_FOLDER_NAME+"\\";
-    private static String OVERVIEWS_PREFIX = OVERVIEWS_FOLDER_NAME+"\\";
+    private static String DSVVIEWS_PREFIX = DSVIEWS_FOLDER_NAME +"\\";
 
     private static String ARCHETYPE_DTO_PREFIX = ARCHETYPES_FOLDER_NAME+DTO_POSTFIX;
     private static String TEMPLATES_DTO_PREFIX = TEMPLATES_FOLDER_NAME+DTO_POSTFIX;
@@ -66,7 +66,7 @@ public class CMImportExportManager {
         exportTemplates(out, generateDTOs);
         exportTerminologies(out);
         exportGuidelines(out, generateDTOs);
-        exportOverviews(out);
+        exportViews(out);
         out.close();
     }
 
@@ -154,11 +154,11 @@ public class CMImportExportManager {
         }
     }
 
-    public static void exportOverviews(ZipOutputStream out) throws IOException {
-        for (OverviewDTO overviewDTO: Overviews.getAllOverviews()){
-            InputStream in = new ByteArrayInputStream(overviewDTO.getOverviewSrc().getBytes());
+    public static void exportViews(ZipOutputStream out) throws IOException {
+        for (DSViewDTO DSViewDTO : DecisionSupportViews.getInstance().getAllDSViews()){
+            InputStream in = new ByteArrayInputStream(DSViewDTO.getDSViewSrc().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(OVERVIEWS_PREFIX+overviewDTO.getIdOverview()+OVERVIEWS_POSTFIX));
+            out.putNextEntry(new ZipEntry(DSVVIEWS_PREFIX + DSViewDTO.getDsViewId()+ DSVIEWS_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -178,7 +178,7 @@ public class CMImportExportManager {
         Collection<TemplateDTO> templateSourceDTOs = new ArrayList<TemplateDTO>();
         Collection<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
         Collection<TerminologyDTO> terminologyDTOs = new ArrayList<TerminologyDTO>();
-        Collection<OverviewDTO> overviewDTOs = new ArrayList<OverviewDTO>();
+        Collection<DSViewDTO> DSViewDTOs = new ArrayList<DSViewDTO>();
         Collection<GuideDTO> guideSourceDTOs = new ArrayList<GuideDTO>();
         Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
 
@@ -205,10 +205,10 @@ public class CMImportExportManager {
                     byte[] src = IOUtils.toByteArray(zis);
                     String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length()+1, entry.getName().length()-TERMINOLOGY_POSTFIX.length());
                     terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
-                }else if (entry.getName().startsWith(OVERVIEWS_FOLDER_NAME) && entry.getName().endsWith(OVERVIEWS_POSTFIX)){
+                }else if (entry.getName().startsWith(DSVIEWS_FOLDER_NAME) && entry.getName().endsWith(DSVIEWS_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
-                    String overviewId = entry.getName().substring(OVERVIEWS_FOLDER_NAME.length()+1, entry.getName().length()-OVERVIEWS_POSTFIX.length());
-                    overviewDTOs.add(new OverviewDTO(overviewId, overviewId, overviewId, src));
+                    String dsViewId = entry.getName().substring(DSVIEWS_FOLDER_NAME.length() + 1, entry.getName().length() - DSVIEWS_POSTFIX.length());
+                    DSViewDTOs.add(new DSViewDTO(dsViewId, dsViewId, dsViewId, src));
                 }else if (entry.getName().startsWith(GUIDELINES_FOLDER_NAME) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
                     String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length()+1, entry.getName().length()-GUIDELINES_POSTFIX.length());
@@ -243,7 +243,7 @@ public class CMImportExportManager {
                 Templates.loadTemplates(templateSourceDTOs);
             }
             Terminologies.loadTerminologies(terminologyDTOs);
-            Overviews.loadOverviews(overviewDTOs);
+            DecisionSupportViews.getInstance().loadDSViews(DSViewDTOs);
             if (useGuidelineDTOs){
                 Guides.loadGuides(guideDTOs);
             }else{

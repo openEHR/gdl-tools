@@ -41,7 +41,6 @@ public class RuleLineDirectory {
             getDelegate()._selectableConditions.add(new ElementComparisonWithElementConditionRuleLine());
             getDelegate()._selectableConditions.add(new ElementAttributeComparisonConditionRuleLine());
             getDelegate()._selectableConditions.add(new ElementInitializedConditionRuleLine());
-            //getDelegate()._selectableConditions.add(new ForAllOperatorRuleLine()); //Deprecated
             getDelegate()._selectableConditions.add(new OrOperatorRuleLine());
         }
         return getDelegate()._selectableConditions;

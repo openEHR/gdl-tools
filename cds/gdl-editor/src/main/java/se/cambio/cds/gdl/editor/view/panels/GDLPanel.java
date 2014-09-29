@@ -59,7 +59,7 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
         }
         this.add(getMainScrollPanel());
         getEditorPane().setContentType("text/gdl");
-        String gdlStr = _controller.serializeCurrentGuide();
+        String gdlStr = _controller.getSerializedEntity();
         if (gdlStr!=null){
             getEditorPane().setText(gdlStr);
         }

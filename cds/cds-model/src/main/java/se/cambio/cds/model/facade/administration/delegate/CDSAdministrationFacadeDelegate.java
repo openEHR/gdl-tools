@@ -1,8 +1,8 @@
 package se.cambio.cds.model.facade.administration.delegate;
 
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.model.overview.dto.OverviewDTO;
 import se.cambio.cds.model.study.dto.StudyDTO;
+import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -35,16 +35,16 @@ public interface CDSAdministrationFacadeDelegate {
     public void removeGuide(String guideId) throws InternalErrorException, GuideNotFoundException;
 
     //Views
-    public Collection<OverviewDTO> searchAllOverviews() throws InternalErrorException;
+    public Collection<DSViewDTO> searchAllDSViews() throws InternalErrorException;
 
     //TODO input argument should be a collection
-    public OverviewDTO searchOverview(String overviewId) throws InternalErrorException, InstanceNotFoundException;
+    public DSViewDTO searchDSView(String dsViewId) throws InternalErrorException, InstanceNotFoundException;
 
-    public int getOverviewsHashCode() throws InternalErrorException;
+    public int getDSViewsHashCode() throws InternalErrorException;
 
-    public void upsertOverview(OverviewDTO overviewDTO) throws InternalErrorException, InstanceNotFoundException;
+    public void upsertDSView(DSViewDTO dsViewDTO) throws InternalErrorException, InstanceNotFoundException;
 
-    public void removeOverview(String overviewId) throws InternalErrorException, InstanceNotFoundException;
+    public void removeDSView(String dsViewId) throws InternalErrorException, InstanceNotFoundException;
 
 
     //Studies

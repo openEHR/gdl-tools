@@ -82,12 +82,12 @@ public class GDLParser {
 	private List<ExpressionItem> parseExpressions(List<String> lines)
 			throws Exception {
 		if (lines == null) {
-			return null;
-		}
-		List<ExpressionItem> items = new ArrayList<ExpressionItem>();
-		for (String line : lines) {
-			items.add(Expressions.parse(line));
-		}
+            return null;
+        }
+        List<ExpressionItem> items = new ArrayList<ExpressionItem>();
+        for (String line : lines) {
+            items.add(Expressions.parse(line));
+        }
 		return items;
 	}
 }

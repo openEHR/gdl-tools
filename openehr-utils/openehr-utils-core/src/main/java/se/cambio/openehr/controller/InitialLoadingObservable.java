@@ -11,13 +11,13 @@ public class InitialLoadingObservable extends Observable{
     private static InitialLoadingObservable _instance = null;
 
     public static enum LoadingStage{
-        ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES
+        ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES, VIEWS
     }
-
     private LoadingStage _currentLoadingStage = null;
     //From 0 to 1
     private Double _currentProgress = 0.0;
     private int _numLoaded = 0;
+    private int _totalNumberToLoad = LoadingStage.values().length;
     private Collection<InternalErrorException> _loadingExeptions = null;
 
     private InitialLoadingObservable(){
@@ -31,7 +31,6 @@ public class InitialLoadingObservable extends Observable{
     }
 
     public static void setCurrentLoadingStageFinished(){
-        //getDelegate()._currentLoadingStage = null;
         getDelegate()._currentProgress = 0.0;
         getDelegate()._numLoaded++;
         stageUpdated();
@@ -55,6 +54,14 @@ public class InitialLoadingObservable extends Observable{
         return getDelegate()._numLoaded;
     }
 
+    public static Integer getTotalNumberToLoad(){
+        return getDelegate()._totalNumberToLoad;
+    }
+
+    public void setTotalNumberToLoad(int totalNumberToLoad) {
+        _totalNumberToLoad = totalNumberToLoad;
+    }
+
     public static Double getCurrentStageProgress(){
         return getDelegate()._currentProgress;
     }
@@ -65,6 +72,11 @@ public class InitialLoadingObservable extends Observable{
 
     public static Collection<InternalErrorException> getLoadingExceptions(){
         return getDelegate()._loadingExeptions;
+    }
+
+    public static Double getTotalLoadingProgress(){
+        return ((double)getNumLoaded()/getTotalNumberToLoad()) +
+                getCurrentStageProgress()/getTotalNumberToLoad();
     }
 
     public static InitialLoadingObservable getDelegate(){

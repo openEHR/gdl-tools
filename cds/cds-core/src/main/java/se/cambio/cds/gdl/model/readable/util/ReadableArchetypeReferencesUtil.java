@@ -8,7 +8,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineEl
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateArchetypeElementAttributeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateAttributeComparisonOperatorRuleLineElement;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.util.DVDefSerializer;
+import se.cambio.cds.util.export.json.DVDefSerializer;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;

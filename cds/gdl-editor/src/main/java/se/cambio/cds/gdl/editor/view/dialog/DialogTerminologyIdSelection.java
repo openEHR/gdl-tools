@@ -19,7 +19,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
     private JButton addTerminologyButton;
     private String _terminologyIdCreated = null;
 
-    public DialogTerminologyIdSelection(Window owner, GDLEditor controller) {
+    public DialogTerminologyIdSelection(Window owner) {
         super(
                 owner,
                 GDLEditorLanguageManager.getMessage("AddTerminologyDesc"),

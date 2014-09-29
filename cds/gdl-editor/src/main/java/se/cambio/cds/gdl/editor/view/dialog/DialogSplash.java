@@ -15,42 +15,28 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Future;
-/**
- * @author icorram
- *
- */
+
 public class DialogSplash extends JDialog implements Observer{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -2310821412359230220L;
     private JProgressBar jProgressBar = null;
-    private JPanel jPanel1 = null;  //  @jve:decl-index=0:visual-constraint="372,178"
+    private JPanel jPanel1 = null;
     private JLabel jLabel2 = null;
 
     private Future<?> _currentThread = null;
-    //private boolean _isProgresoActivo = false;
     private int _progressValue = 0;
     private String _description = null;
     private JButton cancelButton;
     private boolean _loading = false;
     private JButton closeButton;
-    private static Integer NUM_OBJ_TO_LOAD = 4;
 
-    /**
-     * This method initializes 
-     *
-     */
     public DialogSplash(Window owner, boolean loading) {
         super(owner, "", ModalityType.APPLICATION_MODAL);
         _description = "";
         _loading = loading;
         initialize();
     }
-    /**
-     * This method initializes this
-     */
+
     private void initialize() {
         Dimension screenSize =
                 Toolkit.getDefaultToolkit().getScreenSize();
@@ -70,30 +56,13 @@ public class DialogSplash extends JDialog implements Observer{
         this.validate();
     }
 
-    /*
-    public void start(){
-	_isProgresoActivo = true;
-	_progressValue = 1;
-	new Thread(new ProgresoActivo()).start();
-	this.setVisible(true);
-    }*/
-
     public void stop(){
-        //_isProgresoActivo = false;
         _progressValue = -100;
         _currentThread = null;
         InitialLoadingObservable.getDelegate().deleteObserver(this);
         getCancelButton().setVisible(false);
         this.setVisible(false);
     }
-
-    /*
-    private void setCurrentProgress(String msg, double progress){
-	_isProgresoActivo = false;
-	_progressValue = (int)(100*progress);
-	_description = msg;
-	update();
-    }*/
 
     public void setCurrentThread(Future<?> currentThread){
         _currentThread = currentThread;
@@ -130,11 +99,6 @@ public class DialogSplash extends JDialog implements Observer{
         return jLabel2;
     }
 
-    /**
-     * This method initializes jProgressBar	
-     *
-     * @return javax.swing.JProgressBar
-     */
     private JProgressBar getJProgressBar() {
         if (jProgressBar == null) {
             jProgressBar = new JProgressBar();
@@ -144,54 +108,20 @@ public class DialogSplash extends JDialog implements Observer{
         return jProgressBar;
     }
 
-    /* (non-Javadoc)
-     * @see es.sergas.canalejo.sisegtx.model.facade.vo.StatusObserver#stateUpdated()
-     */
-
     public void update() {
         getSplashLabel().setText(_description);
-        _progressValue =  (int)(100*getTotalLoadingProgress());
+        _progressValue =  (int)(100*InitialLoadingObservable.getTotalLoadingProgress());
         if (_progressValue>=0){
-            //getJProgressBar().setVisible(true);
             getJProgressBar().setValue(_progressValue);
         }
     }
 
-    public static Double getTotalLoadingProgress(){
-        return ((double)InitialLoadingObservable.getNumLoaded()/NUM_OBJ_TO_LOAD) +
-                InitialLoadingObservable.getCurrentStageProgress()/NUM_OBJ_TO_LOAD;
-    }
     @Override
     public void update(Observable o, Object arg) {
         _description = GDLLoadingUtility.getCurrentLoadingStageName();
         update();
     }
 
-
-
-    /*
-    private class ProgresoActivo implements Runnable{
-	private boolean up = true;
-	public void run() {
-	    while (_isProgresoActivo){
-		if (up) _progressValue = _progressValue+3;
-		else _progressValue = _progressValue-3;
-		if (_progressValue>=100) up = false;
-		else if (_progressValue<=1) up = true;
-		update();
-		try {
-		    Thread.sleep(50);
-		} catch (InterruptedException e) {
-		}
-	    }
-	}
-    }
-     */
-    /**
-     * This method initializes jPanel1	
-     *
-     * @return javax.swing.JPanel
-     */
     private JPanel getJPanel1() {
         if (jPanel1 == null) {
             jPanel1 = new JPanel(new BorderLayout());
@@ -232,7 +162,7 @@ public class DialogSplash extends JDialog implements Observer{
         new DialogSplash(null, false).setVisible(true);
     }
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+}
 /*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

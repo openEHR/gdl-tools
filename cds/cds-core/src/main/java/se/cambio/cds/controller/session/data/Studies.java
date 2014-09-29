@@ -18,13 +18,13 @@ public class Studies {
     private Studies(){
     }
 
-    public static void loadStudies() throws InternalErrorException{
+    public void loadStudies() throws InternalErrorException{
         CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
         Collection<StudyDTO> studyDTOs = adminFD.searchAllStudies();
         loadStudies(studyDTOs);
     }
 
-    public static void loadStudiesById(Collection<String> studyIds) throws InternalErrorException, InstanceNotFoundException {
+    public void loadStudiesById(Collection<String> studyIds) throws InternalErrorException, InstanceNotFoundException {
         CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
         for (String studyId : studyIds){
             StudyDTO studyDTO = adminFD.searchStudy(studyId);   //TODO Load all in one call
@@ -32,54 +32,54 @@ public class Studies {
         }
     }
 
-    public static void loadStudies(Collection<StudyDTO> studyDTOs) throws InternalErrorException{
+    public void loadStudies(Collection<StudyDTO> studyDTOs) throws InternalErrorException{
         init();
         for (StudyDTO studyDTO : studyDTOs) {
             registerStudy(studyDTO);
         }
     }
 
-    public static void registerStudy(StudyDTO studyDTO){
+    public void registerStudy(StudyDTO studyDTO){
         getStudiesMap().put(studyDTO.getStudyId(), studyDTO);
         Logger.getLogger(Studies.class).info("Registering dsv: '"+studyDTO.getStudyId()+"'.");
     }
 
-    public static StudyDTO getStudyDTO(String idStudy){
+    public StudyDTO getStudyDTO(String idStudy){
         return getStudiesMap().get(idStudy);
     }
 
-    public static List<StudyDTO> getAllStudies(){
+    public List<StudyDTO> getAllStudies(){
         return new ArrayList<StudyDTO>(getStudiesMap().values());
     }
 
-    public static Collection<String> getAllStudyIds(){
+    public Collection<String> getAllStudyIds(){
         return new ArrayList<String>(getStudiesMap().keySet());
     }
 
-    public static void removeStudy(String studyId) throws InternalErrorException{
+    public void removeStudy(String studyId) throws InternalErrorException{
         getStudiesMap().remove(studyId);
     }
 
-    public static Studies getDelegate(){
+    public Studies getInstance(){
         if (_instance == null){
             _instance = new Studies();
         }
         return _instance;
     }
 
-    private static void init(){
+    private void init(){
         getStudiesMap().clear();
     }
 
-    private static Map<String, StudyDTO> getStudiesMap(){
-        if (getDelegate()._studiesMap ==null){
-            getDelegate()._studiesMap = new HashMap<String, StudyDTO>();
+    private Map<String, StudyDTO> getStudiesMap(){
+        if (getInstance()._studiesMap ==null){
+            getInstance()._studiesMap = new HashMap<String, StudyDTO>();
         }
-        return getDelegate()._studiesMap;
+        return getInstance()._studiesMap;
     }
 
-    public int hashCode(){
-        return generateHashCode(getStudiesMap().values());
+    public int generateHashCode() {
+        return generateHashCode(getAllStudies());
     }
 
     public static int generateHashCode(Collection<StudyDTO> studyDTOs){
