@@ -60,7 +60,7 @@ public class Studies {
         getStudiesMap().remove(studyId);
     }
 
-    public Studies getInstance(){
+    public static Studies getInstance(){
         if (_instance == null){
             _instance = new Studies();
         }
