@@ -15,12 +15,9 @@ import se.cambio.cds.model.view.DecisionSupportViewDefinition;
 import se.cambio.cds.util.export.html.*;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -53,9 +50,8 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testArchetypeHTMLExport() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, HTMLExportTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        Archetypes.loadArchetypes();
+    public void testArchetypeHTMLExport(){
+        CMUtil.testLoadCM();
         Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
         ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
@@ -64,11 +60,8 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testTemplateHTMLExport() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, HTMLExportTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, HTMLExportTest.class.getClassLoader().getResource("templates").toURI().getPath());
-        Archetypes.loadArchetypes();
-        Templates.loadTemplates();
+    public void testTemplateHTMLExport(){
+        CMUtil.testLoadCM();
         Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
         TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
@@ -78,12 +71,16 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testTerminologyTMLExport() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, HTMLExportTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        Terminologies.loadTerminologies();
-        TerminologyHTMLExporter htmlExporter = new TerminologyHTMLExporter("ALERTS","en");
-        String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("Non compliant stroke prevention found, documented deviation older than 6 months"));
+    public void testTerminologyTMLExport(){
+        CMUtil.testLoadCM();
+        try {
+            TerminologyHTMLExporter htmlExporter = new TerminologyHTMLExporter("ALERTS","en");
+            String html = htmlExporter.convertToHTML();
+            assertTrue(html.contains("Non compliant stroke prevention found, documented deviation older than 6 months"));
+        } catch (InternalErrorException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
