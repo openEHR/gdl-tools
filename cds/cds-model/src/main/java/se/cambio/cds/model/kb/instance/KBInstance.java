@@ -1,6 +1,7 @@
 package se.cambio.cds.model.kb.instance;
 
 import org.openehr.rm.common.archetyped.Locatable;
+import se.cambio.cds.gdl.model.Language;
 import se.cambio.cds.gdl.model.ResourceDescription;
 
 import java.util.HashMap;
@@ -13,22 +14,13 @@ import java.util.Map;
  */
 public class KBInstance {
     private String kbiId;
+    private Language language;
     private ResourceDescription resourceDescription;
     private Map<String, KBInstanceDefinition> kbInstanceDefinitions;
     private Locatable locatable;
 
-    public KBInstance() {
-    }
-
-    public KBInstance(
-            String kbiId,
-            ResourceDescription resourceDescription,
-            Map<String, KBInstanceDefinition> kbInstanceDefinitions,
-            Locatable locatable) {
+    public KBInstance(String kbiId) {
         this.kbiId = kbiId;
-        this.resourceDescription = resourceDescription;
-        this.kbInstanceDefinitions = kbInstanceDefinitions;
-        this.locatable = locatable;
     }
 
     public String getKbiId() {
@@ -39,6 +31,13 @@ public class KBInstance {
         this.kbiId = kbiId;
     }
 
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
 
     public ResourceDescription getResourceDescription() {
         return resourceDescription;

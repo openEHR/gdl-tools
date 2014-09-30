@@ -13,7 +13,8 @@ public class Scenario {
     private Collection<String> guideIds;
     private Date executionDate;
 
-    public Scenario() {
+    public Scenario(String scenarioId) {
+        this.scenarioId = scenarioId;
     }
 
     public String getScenarioId() {

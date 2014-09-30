@@ -40,8 +40,7 @@ public class HTMLExportTest {
 
     @Test
     public void testStudyHTMLExport() throws InternalErrorException {
-        Study study = new Study();
-        study.setStudyId("testStudyHTML");
+        Study study = new Study("testStudyHTML");
         study.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         study.getStudyDefinitions().put("en", new StudyDefinition());
         StudyHTMLExporter htmlExporter = new StudyHTMLExporter(study, "en");

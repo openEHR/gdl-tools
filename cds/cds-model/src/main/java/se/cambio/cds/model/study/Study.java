@@ -23,32 +23,8 @@ public class Study {
     private Collection<GTCodeReference> indicators;
     private Collection<IndicatorRange> indicatorRanges;
 
-    public Study() {
-        language = new Language();
-        studyDefinitions = new HashMap<String, StudyDefinition>();
-        guideIds = new ArrayList<String>();
-        filters = new ArrayList<GTCodeReference>();
-        indicators = new ArrayList<GTCodeReference>();
-        resourceDescription = new ResourceDescription();
-    }
-
-    public Study(
-            String studyId,
-            Language language,
-            ResourceDescription resourceDescription,
-            Map<String, StudyDefinition> studyDefinitions,
-            Collection<String> guideIds,
-            Collection<GTCodeReference> filters,
-            Collection<GTCodeReference> indicators,
-            Collection<IndicatorRange> indicatorRanges) {
+    public Study(String studyId){
         this.studyId = studyId;
-        this.language = language;
-        this.resourceDescription = resourceDescription;
-        this.studyDefinitions = studyDefinitions;
-        this.guideIds = guideIds;
-        this.filters = filters;
-        this.indicators = indicators;
-        this.indicatorRanges = indicatorRanges;
     }
 
     public String getStudyId() {
@@ -69,6 +45,9 @@ public class Study {
     }
 
     public ResourceDescription getResourceDescription() {
+        if (resourceDescription == null) {
+            resourceDescription = new ResourceDescription();
+        }
         return resourceDescription;
     }
 
@@ -77,6 +56,9 @@ public class Study {
     }
 
     public Map<String, StudyDefinition> getStudyDefinitions() {
+        if (studyDefinitions == null) {
+            studyDefinitions = new HashMap<String, StudyDefinition>();
+        }
         return studyDefinitions;
     }
 
@@ -85,6 +67,9 @@ public class Study {
     }
 
     public Collection<String> getGuideIds() {
+        if (guideIds == null) {
+            guideIds = new ArrayList<String>();
+        }
         return guideIds;
     }
 
@@ -93,6 +78,9 @@ public class Study {
     }
 
     public Collection<GTCodeReference> getFilters() {
+        if (filters == null) {
+            filters = new ArrayList<GTCodeReference>();
+        }
         return filters;
     }
 
@@ -101,6 +89,9 @@ public class Study {
     }
 
     public Collection<GTCodeReference> getIndicators() {
+        if (indicators == null) {
+            indicators = new ArrayList<GTCodeReference>();
+        }
         return indicators;
     }
 
@@ -109,6 +100,9 @@ public class Study {
     }
 
     public Collection<IndicatorRange> getIndicatorRanges() {
+        if (indicatorRanges == null) {
+            indicatorRanges = new ArrayList<IndicatorRange>();
+        }
         return indicatorRanges;
     }
 

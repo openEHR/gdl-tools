@@ -1,4 +1,4 @@
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.rm.common.archetyped.Locatable;
 import org.openehr.rm.util.GenerationStrategy;
@@ -13,17 +13,19 @@ import se.cambio.openehr.util.IOUtils;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import static org.junit.Assert.*;
+
 /**
  * User: Iago.Corbal
  * Date: 2014-09-29
  * Time: 09:05
  */
-public class KBInstanceTest extends TestCase{
+public class KBInstanceTest{
 
+    @Test
     public void testKBInstanceRoundTrip(){
         CMUtil.testLoadCM();
-        KBInstance kbInstance = new KBInstance();
-        kbInstance.setKbiId("testKBInstance");
+        KBInstance kbInstance = new KBInstance("testKBInstance");
         String templateId = "diagnosis_icd10";
         Archetype archetype = Templates.getTemplateAOM(templateId);
         try {
