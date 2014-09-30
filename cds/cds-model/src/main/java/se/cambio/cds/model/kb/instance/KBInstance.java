@@ -40,24 +40,24 @@ public class KBInstance {
     }
 
     public ResourceDescription getResourceDescription() {
+        if (resourceDescription == null) {
+            resourceDescription = new ResourceDescription();
+        }
         return resourceDescription;
     }
 
     public void setResourceDescription(ResourceDescription resourceDescription) {
-        if (resourceDescription == null) {
-            resourceDescription = new ResourceDescription();
-        }
         this.resourceDescription = resourceDescription;
     }
 
     public Map<String, KBInstanceDefinition> getKbInstanceDefinitions() {
+        if (kbInstanceDefinitions == null) {
+            kbInstanceDefinitions = new HashMap<String, KBInstanceDefinition>();
+        }
         return kbInstanceDefinitions;
     }
 
     public void setKbInstanceDefinitions(Map<String, KBInstanceDefinition> kbInstanceDefinitions) {
-        if (kbInstanceDefinitions == null) {
-            kbInstanceDefinitions = new HashMap<String, KBInstanceDefinition>();
-        }
         this.kbInstanceDefinitions = kbInstanceDefinitions;
     }
 
@@ -68,4 +68,5 @@ public class KBInstance {
     public void setLocatable(Locatable locatable) {
         this.locatable = locatable;
     }
+
 }

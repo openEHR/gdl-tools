@@ -22,18 +22,18 @@ public class ArchetypeDefinitionHTMLRenderer {
         return htmlSB.toString();
     }
 
-    private String getNodeHTML(SimpleArchetypeNode simpleArchetypeNode){
+    protected String getNodeHTML(SimpleArchetypeNode rootSimpleArchetypeNode){
         StringBuffer htmlSB = new StringBuffer();
-        htmlSB.append(simpleArchetypeNode.getName());
-        Collection<SimpleArchetypeNode> children = simpleArchetypeNode.getChildren();
+        htmlSB.append(rootSimpleArchetypeNode.getName());
+        Collection<SimpleArchetypeNode> children = rootSimpleArchetypeNode.getChildren();
         if (!children.isEmpty()) {
             htmlSB.append("<ul>");
-            for (SimpleArchetypeNode simpleArchetypeNode1 : children) {
+            for (SimpleArchetypeNode simpleArchetypeNode : children) {
                 htmlSB.append("<li>");
-                htmlSB.append("<div title='"+simpleArchetypeNode1.getDescription()+"'>");
-                htmlSB.append(getImageHTMLTag(simpleArchetypeNode1));
+                htmlSB.append("<div title='"+simpleArchetypeNode.getDescription()+"'>");
+                htmlSB.append(getImageHTMLTag(simpleArchetypeNode));
                 htmlSB.append(" ");
-                htmlSB.append(getNodeHTML(simpleArchetypeNode1));
+                htmlSB.append(getNodeHTML(simpleArchetypeNode));
                 htmlSB.append("</div>");
                 htmlSB.append("</li>");
             }
@@ -42,7 +42,7 @@ public class ArchetypeDefinitionHTMLRenderer {
         return htmlSB.toString();
     }
 
-    private String getImageHTMLTag(SimpleArchetypeNode simpleArchetypeNode){
+    protected String getImageHTMLTag(SimpleArchetypeNode simpleArchetypeNode){
         String iconFileName = simpleArchetypeNode.getIconFileName();
         StringBuffer htmlSB = new StringBuffer();
         if (iconFileName!=null){
@@ -58,15 +58,6 @@ public class ArchetypeDefinitionHTMLRenderer {
         }
         return htmlSB.toString();
     }
-
-    private static String getBlankSpaces(int length){
-        StringBuffer outputBuffer = new StringBuffer(length);
-        for (int i = 0; i < length; i++){
-            outputBuffer.append("&nbsp;");
-        }
-        return outputBuffer.toString();
-    }
-
     public String getIconPath() {
         return iconPath;
     }

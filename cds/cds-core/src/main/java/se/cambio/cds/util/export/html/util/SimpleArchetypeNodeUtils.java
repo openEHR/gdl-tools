@@ -1,5 +1,8 @@
 package se.cambio.cds.util.export.html.util;
 
+import org.openehr.rm.common.archetyped.Locatable;
+import org.openehr.rm.datatypes.basic.DataValue;
+import se.cambio.cds.util.export.json.DVDefSerializer;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Clusters;
@@ -42,6 +45,42 @@ public class SimpleArchetypeNodeUtils {
         String name = ArchetypeElements.getText(archetypeElementVO, lang);
         String desc = ArchetypeElements.getDescription(archetypeElementVO, lang);
         return new SimpleArchetypeNode(archetypeElementVO.getId(), name, desc, OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType()));
+    }
+
+    public static SimpleArchetypeNode getSimpleArchetypeNode(String archetypeId, String idTemplate, Locatable locatable, String lang){
+        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(archetypeId);
+        SimpleArchetypeNode rootNode = new SimpleArchetypeNode("/", archetypeVO.getName(), archetypeVO.getDescription(), OpenEHRConstUI.getIconName(archetypeVO.getRMName()));
+        Map<String, SimpleArchetypeNode> rmNodes = new HashMap<String, SimpleArchetypeNode>();
+        Map<String, SimpleArchetypeNode> clusters = new HashMap<String, SimpleArchetypeNode>();
+        Collection<ArchetypeElementVO> archetypeElementVOs = ArchetypeElements.getArchetypeElementsVO(archetypeId, idTemplate);
+        for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
+            SimpleArchetypeNode rmNode = getRMNode(rootNode, rmNodes, archetypeElementVO.getPath());
+            SimpleArchetypeNode clusterNode =
+                    getClusterNode(
+                            idTemplate,
+                            archetypeElementVO.getIdParent(),
+                            rmNode, clusters, lang);
+            SimpleArchetypeNode nodoOrigen = createElementNode(archetypeElementVO, locatable, lang);
+            clusterNode.getChildren().add(nodoOrigen);
+        }
+        return rootNode;
+    }
+
+    private static SimpleArchetypeNode createElementNode(ArchetypeElementVO archetypeElementVO, Locatable locatable, String lang){
+        String name = ArchetypeElements.getText(archetypeElementVO, lang);
+        String desc = ArchetypeElements.getDescription(archetypeElementVO, lang);
+        Object obj = locatable.itemAtPath(archetypeElementVO.getPath()+"/value");
+        String valueStr = null;
+        if (obj instanceof DataValue){
+            valueStr = DVDefSerializer.getReadableValue((DataValue)obj, null);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(name);
+        if (valueStr!=null){
+            sb.append(" = ");
+            sb.append(valueStr);
+        }
+        return new SimpleArchetypeNode(archetypeElementVO.getId(), sb.toString(), desc, OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType()));
     }
 
     public static SimpleArchetypeNode getRMNode(

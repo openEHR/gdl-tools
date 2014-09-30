@@ -16,7 +16,7 @@ public class OrderSet {
     private Collection<String> guideIds;
 
     public OrderSet(String orderSetId) {
-        this.orderSetDefinitions = orderSetDefinitions;
+        this.orderSetId = orderSetId;
     }
 
     public String getOrderSetId() {
@@ -36,13 +36,13 @@ public class OrderSet {
     }
 
     public ResourceDescription getResourceDescription() {
+        if (resourceDescription == null) {
+            resourceDescription = new ResourceDescription();
+        }
         return resourceDescription;
     }
 
     public void setResourceDescription(ResourceDescription resourceDescription) {
-        if (resourceDescription == null) {
-            resourceDescription = new ResourceDescription();
-        }
         this.resourceDescription = resourceDescription;
     }
 

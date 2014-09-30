@@ -5,7 +5,7 @@
     <style>
         body {font-family: Calibri;}
         h1 {font-size: 26px; margin:0px;}
-        h2 {background-color: #92b842; color: white; padding: 5px;  font-size: 110%; margin-bottom:0px; margin-top:10px; font-weight: bold;}
+        h2 {background-color: #6f804f; color: white; padding: 5px;  font-size: 110%; margin-bottom:0px; margin-top:10px; font-weight: bold;}
         .details-label {font-weight: bold; margin-right: 5px;}
     </style>
 </head>
