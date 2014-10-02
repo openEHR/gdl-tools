@@ -41,7 +41,7 @@ public class Studies {
 
     public void registerStudy(StudyDTO studyDTO){
         getStudiesMap().put(studyDTO.getStudyId(), studyDTO);
-        Logger.getLogger(Studies.class).info("Registering dsv: '"+studyDTO.getStudyId()+"'.");
+        Logger.getLogger(Studies.class).info("Registering study: '"+studyDTO.getStudyId()+"'.");
     }
 
     public StudyDTO getStudyDTO(String idStudy){

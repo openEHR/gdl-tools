@@ -25,3 +25,11 @@ CREATE TABLE cds_study
     lastUpdate TIMESTAMP WITHOUT TIME ZONE,
     PRIMARY KEY (studyid)
 );
+
+CREATE TABLE cds_app
+(
+    cdsappid VARCHAR(255) NOT NULL,
+    appSrc TEXT NOT NULL,
+    lastUpdate TIMESTAMP WITHOUT TIME ZONE,
+    PRIMARY KEY (cdsappid)
+);
