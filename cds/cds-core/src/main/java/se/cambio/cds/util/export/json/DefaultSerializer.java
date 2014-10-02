@@ -1,6 +1,7 @@
 package se.cambio.cds.util.export.json;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class DefaultSerializer<E> implements JSONSerializer<E> {
@@ -10,7 +11,7 @@ public class DefaultSerializer<E> implements JSONSerializer<E> {
 
     public DefaultSerializer(Class<E> clazz) {
         this.clazz = clazz;
-        gson = new Gson();
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
 

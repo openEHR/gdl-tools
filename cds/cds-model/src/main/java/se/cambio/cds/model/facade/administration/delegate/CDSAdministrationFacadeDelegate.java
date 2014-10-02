@@ -1,5 +1,6 @@
 package se.cambio.cds.model.facade.administration.delegate;
 
+import se.cambio.cds.model.app.dto.CDSAppDTO;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.study.dto.StudyDTO;
 import se.cambio.cds.model.view.dto.DSViewDTO;
@@ -58,6 +59,18 @@ public interface CDSAdministrationFacadeDelegate {
     public void upsertStudy(StudyDTO studyDTO) throws InternalErrorException, InstanceNotFoundException;
 
     public void removeStudy(String studyId) throws InternalErrorException, InstanceNotFoundException;
+
+    //Apps
+    public Collection<CDSAppDTO> searchAllCDSApps() throws InternalErrorException;
+
+    //TODO input argument should be a collection
+    public CDSAppDTO searchCDSApp(String cdsAppId) throws InternalErrorException, InstanceNotFoundException;
+
+    public int getCDSAppHashCode() throws InternalErrorException;
+
+    public void upsertCDSApp(CDSAppDTO cdsAppDTO) throws InternalErrorException, InstanceNotFoundException;
+
+    public void removeCDSApp(String cdsAppId) throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

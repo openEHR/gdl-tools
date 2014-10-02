@@ -88,7 +88,7 @@
         ${otherContributor}<#if otherContributor_has_next>, </#if>
     </i></#list>
 </#if>
- <div class="header1">${texts.ArchetypeDefinition?upper_case}</h2>
+ <h2>${texts.ArchetypeDefinition?upper_case}</h2>
  ${archetype_definition}
 </body>
 </html>
