@@ -22,7 +22,10 @@ import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 
@@ -39,7 +42,7 @@ public class HTMLExportTest {
         guide.getOntology().getTermDefinitions().put("en", td);
         GuideHTMLExporter htmlExporter = new GuideHTMLExporter(guide, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testGuideHTML"));
+        assertThat(html, containsString("testGuideHTML"));
     }
 
     @Test
@@ -49,35 +52,35 @@ public class HTMLExportTest {
         study.getStudyDefinitions().put("en", new StudyDefinition());
         StudyHTMLExporter htmlExporter = new StudyHTMLExporter(study, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testStudyHTML"));
+        assertThat(html, containsString("testStudyHTML"));
     }
 
     @Test
-    public void testArchetypeHTMLExport() throws InternalErrorException {
+    public void testArchetypeHTMLExport() throws InternalErrorException, URISyntaxException {
         CMUtil.testLoadCM();
         Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
         ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("openEHR-EHR-OBSERVATION.body_weight.v1"));
+        assertThat(html, containsString("openEHR-EHR-OBSERVATION.body_weight.v1"));
     }
 
     @Test
-    public void testTemplateHTMLExport() throws InternalErrorException {
+    public void testTemplateHTMLExport() throws InternalErrorException, URISyntaxException {
         CMUtil.testLoadCM();
         Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
         TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("diagnosis_icd10"));
+        assertThat(html, containsString("diagnosis_icd10"));
     }
 
     @Test
-    public void testTerminologyTMLExport() throws InternalErrorException {
+    public void testTerminologyTMLExport() throws InternalErrorException, URISyntaxException {
         CMUtil.testLoadCM();
         TerminologyHTMLExporter htmlExporter = new TerminologyHTMLExporter("ALERTS","en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("Non compliant stroke prevention found, documented deviation older than 6 months"));
+        assertThat(html, containsString("Non compliant stroke prevention found, documented deviation older than 6 months"));
     }
 
     @Test
@@ -88,7 +91,7 @@ public class HTMLExportTest {
         dsv.getDecisionSupportViewDefinitions().put("en", new DecisionSupportViewDefinition());
         DSViewHTMLExporter htmlExporter = new DSViewHTMLExporter(dsv, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testDSVHTML"));
+        assertThat(html, containsString("testDSVHTML"));
     }
 
     @Test
@@ -99,7 +102,7 @@ public class HTMLExportTest {
         cdsApp.getCdsAppDefinitions().put("en", new CDSAppDefinition());
         CDSAppHTMLExporter htmlExporter = new CDSAppHTMLExporter(cdsApp, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testCDSAppId"));
+        assertThat(html, containsString("testCDSAppId"));
     }
 
     @Test
@@ -109,7 +112,7 @@ public class HTMLExportTest {
         scenario.getScenarioDefinitions().put("en", new ScenarioDefinition());
         ScenarioHTMLExporter htmlExporter = new ScenarioHTMLExporter(scenario, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testScenarioId"));
+        assertThat(html, containsString("testScenarioId"));
     }
 
     @Test
@@ -119,7 +122,7 @@ public class HTMLExportTest {
         kbInstance.getKbInstanceDefinitions().put("en", new KBInstanceDefinition());
         KBInstanceHTMLExporter htmlExporter = new KBInstanceHTMLExporter(kbInstance, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testKBInstanceId"));
+        assertThat(html, containsString("testKBInstanceId"));
     }
 
     @Test
@@ -129,6 +132,6 @@ public class HTMLExportTest {
         orderSet.getOrderSetDefinitions().put("en", new OrderSetDefinition());
         OrderSetHTMLExporter htmlExporter = new OrderSetHTMLExporter(orderSet, "en");
         String html = htmlExporter.convertToHTML();
-        assertTrue(html.contains("testOrderSetId"));
+        assertThat(html, containsString("testOrderSetId"));
     }
 }

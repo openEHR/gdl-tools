@@ -7,11 +7,6 @@ import se.cambio.cds.gdl.model.ResourceDescription;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: iago.corbal
- * Date: 2014-09-04
- * Time: 12:00
- */
 public class KBInstance {
     private String kbiId;
     private Language language;

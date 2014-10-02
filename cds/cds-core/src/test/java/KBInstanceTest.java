@@ -7,39 +7,29 @@ import se.cambio.cds.model.kb.instance.KBInstance;
 import se.cambio.cds.util.export.json.JSONSerialization;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-29
- * Time: 09:05
- */
-public class KBInstanceTest{
+public class KBInstanceTest {
 
     @Test
-    public void testKBInstanceRoundTrip(){
+    public void shouldHaveEqualValueAfterRoundTrip() throws Exception {
         CMUtil.testLoadCM();
         KBInstance kbInstance = new KBInstance("testKBInstance");
         String templateId = "diagnosis_icd10";
         Archetype archetype = Templates.getTemplateAOM(templateId);
-        try {
-            Object obj = SkeletonGenerator.getInstance().create(archetype, templateId, Archetypes.getArchetypeMap(), GenerationStrategy.MINIMUM);
-            assertTrue(obj instanceof Locatable);
-            kbInstance.setLocatable((Locatable)obj);
-            String kbiSerialized = JSONSerialization.serialize(KBInstance.class, kbInstance);
-            InputStream is = KBInstanceTest.class.getClassLoader().getResourceAsStream("kbInstance/diagnosisTest.json");
-            byte[] kbiInFileBytes = IOUtils.toByteArray(is);
-            String kbiInFileStr = new String(kbiInFileBytes, Charset.forName("UTF8"));
-            assertEquals(kbiInFileStr.trim().replaceAll("\\r\\n|\\r|\\n", ""), kbiSerialized.trim().replaceAll("\\r\\n|\\r|\\n", ""));
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
-            fail();
-        }
+        Object obj = SkeletonGenerator.getInstance().create(archetype, templateId, Archetypes.getArchetypeMap(), GenerationStrategy.MINIMUM);
+        assertTrue(obj instanceof Locatable);
+        kbInstance.setLocatable((Locatable)obj);
+        String kbiSerialized = JSONSerialization.serialize(KBInstance.class, kbInstance);
+        InputStream is = KBInstanceTest.class.getClassLoader().getResourceAsStream("kbInstance/diagnosisTest.json");
+        byte[] kbiInFileBytes = IOUtils.toByteArray(is);
+        String kbiInFileStr = new String(kbiInFileBytes, Charset.forName("UTF8"));
+        assertEquals(kbiInFileStr.trim().replaceAll("\\r\\n|\\r|\\n", ""), kbiSerialized.trim().replaceAll("\\r\\n|\\r|\\n", ""));
     }
 }

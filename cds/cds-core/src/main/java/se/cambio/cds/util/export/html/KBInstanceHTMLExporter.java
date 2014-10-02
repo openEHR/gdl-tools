@@ -1,5 +1,7 @@
 package se.cambio.cds.util.export.html;
 
+import org.openehr.rm.common.archetyped.Archetyped;
+import org.openehr.rm.common.archetyped.Locatable;
 import se.cambio.cds.model.kb.instance.KBInstance;
 import se.cambio.cds.util.export.html.util.ArchetypeDataDefinitionHTMLRenderer;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -8,11 +10,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-06
- * Time: 11:30
- */
 public class KBInstanceHTMLExporter extends ClinicalModelHTMLExporter<KBInstance> {
 
     private ArchetypeDataDefinitionHTMLRenderer archetypeDataDefinitionHTMLRenderer;
@@ -27,13 +24,15 @@ public class KBInstanceHTMLExporter extends ClinicalModelHTMLExporter<KBInstance
         objectMap.put("kbInstance", getEntity());
         objectMap.put("kbInstance_description", getEntity().getResourceDescription().getDetails().get(getLanguage()));
         objectMap.put("kbInstance_definitions", getEntity().getKbInstanceDefinitions().get(getLanguage()));
-        if (getEntity().getLocatable()!=null) {
-            String archetypeId = getEntity().getLocatable().getArchetypeDetails().getArchetypeId().getValue();
+        Locatable locatable = getEntity().getLocatable();
+        if (locatable != null) {
+            Archetyped archetypeDetails = locatable.getArchetypeDetails();
+            String archetypeId = archetypeDetails.getArchetypeId().getValue();
             String templateId = null;
-            if (getEntity().getLocatable().getArchetypeDetails().getTemplateId()!=null) {
-                templateId = getEntity().getLocatable().getArchetypeDetails().getTemplateId().getValue();
+            if (archetypeDetails.getTemplateId()!=null) {
+                templateId = archetypeDetails.getTemplateId().getValue();
             }
-            objectMap.put("kbInstance_data", getArchetypeDataDefinitionHTMLRenderer().generateHTML(archetypeId, templateId, getEntity().getLocatable(), getLanguage()));
+            objectMap.put("kbInstance_data", getArchetypeDataDefinitionHTMLRenderer().generateHTML(archetypeId, templateId, locatable, getLanguage()));
         }
         return objectMap;
     }
