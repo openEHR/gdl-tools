@@ -1,8 +1,11 @@
 package se.cambio.cds.model.app.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class CDSAppDTO {
+public class CDSAppDTO implements Serializable{
+    private static final long serialVersionUID = 2012054542L;
+
     private String cdaAppId;
     private String appSrc;
     private Date lastUpdate;
