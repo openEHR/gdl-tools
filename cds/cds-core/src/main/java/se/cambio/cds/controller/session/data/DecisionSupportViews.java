@@ -13,14 +13,21 @@ import java.util.*;
 public class DecisionSupportViews {
     private static DecisionSupportViews _instance = null;
     private Map<String, DSViewDTO> _dsViewsMap = null;
+    private boolean _loaded = false;
 
     private DecisionSupportViews(){
     }
 
-    public void loadDSViews() throws InternalErrorException{
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        Collection<DSViewDTO> DSViewDTOs = adminFD.searchAllDSViews();
-        loadDSViews(DSViewDTOs);
+    public void loadDSViews() throws InternalErrorException {
+        loadDSViews(false);
+    }
+    public void loadDSViews(boolean force) throws InternalErrorException{
+        if (!_loaded || force) {
+            CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
+            Collection<DSViewDTO> DSViewDTOs = adminFD.searchAllDSViews();
+            loadDSViews(DSViewDTOs);
+            _loaded = true;
+        }
     }
 
     public void loadDSViewsById(Collection<String> dsViewIds) throws InternalErrorException, InstanceNotFoundException {
