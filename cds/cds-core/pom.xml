@@ -47,6 +47,11 @@
             <version>2.1.1</version>
         </dependency>
         <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.openehr.utils</groupId>
             <artifactId>openehr-utils-server</artifactId>
             <version>${project.version}</version>
