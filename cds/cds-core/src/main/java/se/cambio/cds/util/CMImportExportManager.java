@@ -74,7 +74,7 @@ public class CMImportExportManager {
         for (ArchetypeDTO archetypeDTO: Archetypes.getAllArchetypes()){
             InputStream in = new ByteArrayInputStream(archetypeDTO.getArchetype().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX+archetypeDTO.getIdArchetype()+ARCHETYPE_POSTFIX));
+            out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX+archetypeDTO.getArchetypeId()+ARCHETYPE_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -83,7 +83,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (generateDTOs){
-                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX+"\\"+archetypeDTO.getIdArchetype()+DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX+"\\"+archetypeDTO.getArchetypeId()+DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(archetypeDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -97,7 +97,7 @@ public class CMImportExportManager {
         for (TemplateDTO templateDTO: Templates.getAllTemplates()){
             InputStream in = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX+templateDTO.getIdTemplate()+TEMPLATES_POSTFIX));
+            out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX+templateDTO.getTemplateId()+TEMPLATES_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -106,7 +106,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (generateDTOs){
-                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX+"\\"+templateDTO.getIdTemplate()+DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX+"\\"+templateDTO.getTemplateId()+DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(templateDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);

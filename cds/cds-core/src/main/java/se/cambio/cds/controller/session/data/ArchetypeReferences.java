@@ -129,7 +129,7 @@ public class ArchetypeReferences {
         String[] pathArray = archetypeElementVO.getPath().split("\\/");
         StringBuffer pathSB = new StringBuffer();
         StringBuffer clusterPathSB = new StringBuffer();
-        clusterPathSB.append(archetypeVO.getIdArchetype());
+        clusterPathSB.append(archetypeVO.getArchetypeId());
         for (String pathNode : pathArray) {
             if (!pathNode.isEmpty()){
                 clusterPathSB.append("/"+pathNode);

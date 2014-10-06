@@ -80,7 +80,7 @@ public class NodeDefinitionConversor {
         ArchetypeReference arAux = airl.getArchetypeReference();
         if (arAux!=null){
             String idArchetype = arAux.getIdArchetype();
-            //String idTemplate = airl.getArchetypeReference().getIdArchetype();
+            //String idTemplate = airl.getArchetypeReference().getArchetypeId();
             if ((!onlyCDSDomain || Domains.CDS_ID.equals(airl.getArchetypeReference().getIdDomain()) && (ar==null||ar.equals(airl.getArchetypeReference())))){
                 return new SelectableNodeWithIcon<Object>(
                         ReadableArchetypeReferencesUtil.getName(airl),
@@ -186,7 +186,7 @@ public class NodeDefinitionConversor {
         SelectableNode<Object> rootNode = new SelectableNodeWithIcon<Object>(
                 archetypeVO.getName(),
                 null, singleSelection, false,
-                Archetypes.getIcon(archetypeVO.getIdArchetype()),
+                Archetypes.getIcon(archetypeVO.getArchetypeId()),
                 archetypeVO.getDescription());
 
         Map<String, SelectableNode<Object>> rmNodes =

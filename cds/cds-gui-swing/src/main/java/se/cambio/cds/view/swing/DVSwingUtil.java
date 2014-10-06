@@ -40,8 +40,8 @@ public class DVSwingUtil {
     public static ElementInstance getElementInstance(ArchetypeElementVO archetypeElementVO, boolean last){
 	ArchetypeReference ar =
 		new ArchetypeReference(
-			archetypeElementVO.getIdArchetype(), 
-			archetypeElementVO.getIdTemplate(), 
+			archetypeElementVO.getArchetypeId(),
+			archetypeElementVO.getTemplateId(),
 			(last?AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST:null));
 	return new ElementInstance(
 		archetypeElementVO.getId(), 

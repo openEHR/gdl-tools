@@ -1,5 +1,5 @@
-import junit.framework.TestCase;
 import org.joda.time.DateTime;
+import org.junit.Test;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -17,12 +17,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-08-11
- * Time: 15:31
- */
-public class EHRFilteringTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+
+public class EHRFilteringTest {
 
     private Collection<ElementInstance> generateElementInstances(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
@@ -59,6 +57,7 @@ public class EHRFilteringTest extends TestCase {
         return new DateTime(Calendar.getInstance().getTimeInMillis());
     }
 
+    @Test
     public void testEHRFilterWithOnePredicate(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
@@ -95,6 +94,7 @@ public class EHRFilteringTest extends TestCase {
         assertEquals(2, archetypeReferenceSet.size());
     }
 
+    @Test
     public void testEHRFilterWithMultiplePredicatesDifferentAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);

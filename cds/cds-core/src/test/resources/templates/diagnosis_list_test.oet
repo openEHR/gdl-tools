@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="openEHR/v1/Template">
+  <id>fab7cdf8-39a9-459e-bfb2-9817d7edb0ed</id>
+  <name>diagnosis_list_test</name>
+  <description>
+    <lifecycle_state>Initial</lifecycle_state>
+    <details>
+      <purpose />
+      <use />
+      <misuse />
+    </details>
+    <other_details>
+      <item>
+        <key>MetaDataSet:Sample Set </key>
+        <value>Template metadata sample set </value>
+      </item>
+      <item>
+        <key>Acknowledgements</key>
+        <value />
+      </item>
+      <item>
+        <key>Business Process Level</key>
+        <value />
+      </item>
+      <item>
+        <key>Care setting</key>
+        <value />
+      </item>
+      <item>
+        <key>Client group</key>
+        <value />
+      </item>
+      <item>
+        <key>Clinical Record Element</key>
+        <value />
+      </item>
+      <item>
+        <key>Copyright</key>
+        <value />
+      </item>
+      <item>
+        <key>Issues</key>
+        <value />
+      </item>
+      <item>
+        <key>Owner</key>
+        <value />
+      </item>
+      <item>
+        <key>Sign off</key>
+        <value />
+      </item>
+      <item>
+        <key>Speciality</key>
+        <value />
+      </item>
+      <item>
+        <key>User roles</key>
+        <value />
+      </item>
+    </other_details>
+  </description>
+  <definition xsi:type="COMPOSITION" archetype_id="openEHR-EHR-COMPOSITION.encounter.v1" concept_name="Encounter">
+    <Content xsi:type="SECTION" archetype_id="openEHR-EHR-SECTION.diagnosis.v1" concept_name="Diagnosis" path="/content">
+      <Item xsi:type="EVALUATION" archetype_id="openEHR-EHR-EVALUATION.problem-diagnosis.v1" concept_name="Diagnosis" max="1" path="/items" name="Diagnosis1">
+        <Rule path="/data[at0001]/items[at0005]" max="0" />
+        <Rule path="/data[at0001]/items[at0009]" max="0" />
+        <Rule path="/data[at0001]/items[at0010]" max="0" />
+        <Rule path="/data[at0001]/items[at0011]" max="0" />
+        <Rule path="/data[at0001]/items[at0014]" max="0" />
+        <Rule path="/data[at0001]/items[at0018]" max="0" />
+        <Rule path="/data[at0001]/items[at0026]" max="0" />
+        <Rule path="/data[at0001]/items[at0030]" max="0" />
+        <Rule path="/data[at0001]/items[at0.35]" max="0" />
+        <Rule path="/protocol[at0032]/items[at0033]" max="0" />
+      </Item>
+      <Item xsi:type="EVALUATION" archetype_id="openEHR-EHR-EVALUATION.problem-diagnosis.v1" concept_name="Diagnosis" max="1" path="/items" name="Diagnosis2">
+        <Rule path="/data[at0001]/items[at0005]" max="0" />
+        <Rule path="/data[at0001]/items[at0009]" max="0" />
+        <Rule path="/data[at0001]/items[at0010]" max="0" />
+        <Rule path="/data[at0001]/items[at0011]" max="0" />
+        <Rule path="/data[at0001]/items[at0014]" max="0" />
+        <Rule path="/data[at0001]/items[at0018]" max="0" />
+        <Rule path="/data[at0001]/items[at0026]" max="0" />
+        <Rule path="/data[at0001]/items[at0030]" max="0" />
+        <Rule path="/data[at0001]/items[at0.35]" max="0" />
+        <Rule path="/protocol[at0032]/items[at0033]" max="0" />
+      </Item>
+    </Content>
+    <Context />
+  </definition>
+</template>

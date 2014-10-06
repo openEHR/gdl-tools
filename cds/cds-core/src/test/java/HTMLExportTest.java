@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.gdl.model.Guide;
@@ -26,10 +27,14 @@ import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 
 public class HTMLExportTest {
+
+    @Before
+    public void loadCM() throws URISyntaxException, InternalErrorException {
+        CMUtil.testLoadCM();
+    }
 
     @Test
     public void testGuideHTMLExport() throws InternalErrorException {
@@ -56,8 +61,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testArchetypeHTMLExport() throws InternalErrorException, URISyntaxException {
-        CMUtil.testLoadCM();
+    public void testArchetypeHTMLExport() throws InternalErrorException {
         Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
         ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
@@ -66,8 +70,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testTemplateHTMLExport() throws InternalErrorException, URISyntaxException {
-        CMUtil.testLoadCM();
+    public void testTemplateHTMLExport() throws InternalErrorException {
         Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
         TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
@@ -76,8 +79,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testTerminologyTMLExport() throws InternalErrorException, URISyntaxException {
-        CMUtil.testLoadCM();
+    public void testTerminologyTMLExport() throws InternalErrorException {
         TerminologyHTMLExporter htmlExporter = new TerminologyHTMLExporter("ALERTS","en");
         String html = htmlExporter.convertToHTML();
         assertThat(html, containsString("Non compliant stroke prevention found, documented deviation older than 6 months"));

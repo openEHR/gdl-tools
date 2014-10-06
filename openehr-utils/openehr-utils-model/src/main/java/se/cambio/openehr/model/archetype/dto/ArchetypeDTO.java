@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class ArchetypeDTO implements Serializable{
 
-    private java.lang.String idArchetype;
+    private java.lang.String archetypeId;
     private java.lang.String name;
     private java.lang.String description;
     private java.lang.String rmName;
@@ -18,10 +18,10 @@ public class ArchetypeDTO implements Serializable{
 
     private static final long serialVersionUID = 23032012L;
 
-    public ArchetypeDTO(String idArchetype, String name, String description,
+    public ArchetypeDTO(String archetypeId, String name, String description,
                         String entryType, String archetype, byte[] aom, byte[] aobcVO) {
         super();
-        this.idArchetype = idArchetype;
+        this.archetypeId = archetypeId;
         this.name = name;
         this.description = description;
         this.rmName = entryType;
@@ -30,12 +30,12 @@ public class ArchetypeDTO implements Serializable{
         this.aobcVO = aobcVO;
     }
 
-    public java.lang.String getIdArchetype() {
-        return idArchetype;
+    public java.lang.String getArchetypeId() {
+        return archetypeId;
     }
 
-    public void setIdArchetype(java.lang.String idArchetype) {
-        this.idArchetype = idArchetype;
+    public void setArchetypeId(java.lang.String archetypeId) {
+        this.archetypeId = archetypeId;
     }
 
     public java.lang.String getName() {

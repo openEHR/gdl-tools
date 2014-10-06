@@ -151,7 +151,7 @@ public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
             Collection<ArchetypeDTO> archetypeDTOs = searchAllArchetypes();
             Map<String, Archetype> archetypeMap = new HashMap<String, Archetype>();
             for(ArchetypeDTO archetypeDTO: archetypeDTOs){
-                archetypeMap.put(archetypeDTO.getIdArchetype(), (Archetype) IOUtils.getObject(archetypeDTO.getAom()));
+                archetypeMap.put(archetypeDTO.getArchetypeId(), (Archetype) IOUtils.getObject(archetypeDTO.getAom()));
             }
             TemplateDTO templateDTO = templateDTOs.iterator().next();
             Archetype templateAOM = (Archetype) IOUtils.getObject(templateDTO.getAom());

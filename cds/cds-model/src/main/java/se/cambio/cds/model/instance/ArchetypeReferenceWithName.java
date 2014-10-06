@@ -27,17 +27,17 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
 
     public void init(){
 	/*
-	if (getIdArchetype()!=null){   
-	    for (ArchetypeElementVO archetypeElementVO : ArchetypeElements.getArchetypeElementsVO(getIdArchetype(), getIdTemplate())) {
+	if (getArchetypeId()!=null){
+	    for (ArchetypeElementVO archetypeElementVO : ArchetypeElements.getArchetypeElementsVO(getArchetypeId(), getTemplateId())) {
 		String path = archetypeElementVO.getPath();
 		getElementInstancesAtPath(path);
 	    }
 	}
-	if (getIdTemplate()!=null){
+	if (getTemplateId()!=null){
 	    Collection<ElementInstance> elementInstances = elementInstancesVOsByPath.get("/archetype_details/template_id");
 	    //TemplateID is always included
 	    ElementInstance elementInstance = elementInstances.iterator().next();
-	    elementInstance.setDataValue(new DvText(getIdTemplate()));
+	    elementInstance.setDataValue(new DvText(getTemplateId()));
 	    elementInstance.setNullFlavour(null);
 	}*/
     }
@@ -48,7 +48,7 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
 	    ContainerInstance containerInstance = getContainerInstancesMap().get(clusterVO);
 	    if(containerInstance==null){
 		ContainerInstance parentContainerInstance = 
-			getContainerInstance(clusterVO.getIdTemplate(), clusterVO.getIdParent());
+			getContainerInstance(clusterVO.getTemplateId(), clusterVO.getIdParent());
 		containerInstance = new ContainerInstance(clusterVO.getId(), parentContainerInstance);
 		getContainerInstancesMap().put(clusterVO, containerInstance);
 	    }
@@ -111,15 +111,15 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
     public Collection<ElementInstance> getElementInstancesAtPath(String path){
 	Collection<ElementInstance> elements = getElementInstancesByPath().get(path);
 	if (elements==null){
-	    String id = getIdArchetype()+path;
-	    ArchetypeElementVO archetypeElement = ArchetypeElements.getArchetypeElement(getIdTemplate(), id);
+	    String id = getArchetypeId()+path;
+	    ArchetypeElementVO archetypeElement = ArchetypeElements.getArchetypeElement(getTemplateId(), id);
 	    if (archetypeElement!=null){
 		elements = new ArrayList<ElementInstance>();
 		ElementInstance elementInstance = new ElementInstance(
 			id,
 			null,
 			this,
-			getContainerInstance(getIdTemplate(), archetypeElement.getIdParent()),
+			getContainerInstance(getTemplateId(), archetypeElement.getIdParent()),
 			InstanceEditorController.NULL_FLAVOUR_VALUE);
 		ArrayList<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
 		elementInstances.add(elementInstance);

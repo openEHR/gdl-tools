@@ -1,4 +1,4 @@
-import junit.framework.TestCase;
+import org.junit.Test;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
@@ -12,12 +12,12 @@ import se.cambio.openehr.util.OpenEHRConstUI;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-07-09
- * Time: 12:37
- */
-public class CDSManagerTest extends TestCase {
+import static org.junit.Assert.*;
+
+
+public class CDSManagerTest {
+
+    @Test
     public void testEHRQuery(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
@@ -34,6 +34,7 @@ public class CDSManagerTest extends TestCase {
         assertNotNull(ar.getElementInstancesMap().get("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]"));
     }
 
+    @Test
     public void testCompactingPredicates(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);

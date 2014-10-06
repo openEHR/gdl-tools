@@ -365,7 +365,7 @@ public class DialogArchetypeChooser extends JDialog{
             nodoOrigen = new SelectableNodeWithIcon<Object>(
                     archetypeVO.getName(),archetypeVO,true,
                     false,
-                    Archetypes.getIcon(archetypeVO.getIdArchetype()),
+                    Archetypes.getIcon(archetypeVO.getArchetypeId()),
                     archetypeVO.getDescription());
             entryRoot.add(nodoOrigen);
         }
@@ -404,10 +404,10 @@ public class DialogArchetypeChooser extends JDialog{
         Collections.sort(templateDTOs, new TemplateComparator());
         for (TemplateDTO templateDTO : templateDTOs) {
             nodoOrigen = new SelectableNodeWithIcon<Object>(
-                    templateDTO.getName()+" - "+templateDTO.getIdTemplate(),templateDTO,true,
+                    templateDTO.getName()+" - "+templateDTO.getTemplateId(),templateDTO,true,
                     false,
                     OpenEHRConstUI.getIcon(templateDTO.getRMName()),
-                    templateDTO.getIdTemplate());
+                    templateDTO.getTemplateId());
             entryRoot.add(nodoOrigen);
         }
         root.add(entryRoot);
@@ -422,12 +422,12 @@ public class DialogArchetypeChooser extends JDialog{
         if (getArchetypeTemplateTabbedPane().getSelectedIndex()==0){
             selected = NodeConversor.getSelectedObject(getArchetypeNode());
             if (selected instanceof ArchetypeDTO){
-                return ((ArchetypeDTO)selected).getIdArchetype();
+                return ((ArchetypeDTO)selected).getArchetypeId();
             }
         }else{
             selected = NodeConversor.getSelectedObject(getTemplateNode());
             if (selected instanceof TemplateDTO){
-                return ((TemplateDTO)selected).getIdArchetype();
+                return ((TemplateDTO)selected).getArcehtypeId();
             }
         }
         return null;
@@ -441,7 +441,7 @@ public class DialogArchetypeChooser extends JDialog{
         }else{
             selected = NodeConversor.getSelectedObject(getTemplateNode());
             if (selected instanceof TemplateDTO){
-                return ((TemplateDTO)selected).getIdTemplate();
+                return ((TemplateDTO)selected).getTemplateId();
             }
         }
         return null;

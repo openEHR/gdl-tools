@@ -84,7 +84,7 @@ public class FileTemplateDAO implements GenericTemplateDAO{
         if (!folder.isDirectory()){
             throw new FolderNotFoundException(folder.getAbsolutePath());
         }
-        String fileName = templateVO.getIdTemplate()+".oet";
+        String fileName = templateVO.getTemplateId()+".oet";
         File newFile = new File(folder.getAbsolutePath()+"/"+fileName);
         Writer output = null;
         try{

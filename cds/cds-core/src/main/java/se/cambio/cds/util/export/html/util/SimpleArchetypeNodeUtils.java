@@ -122,14 +122,7 @@ public class SimpleArchetypeNodeUtils {
             String lang){
         if (idCluster!=null && !idCluster.endsWith("/")){
             ClusterVO clusterVO = Clusters.getClusterVO(idTemplate, idCluster);
-            if (clusterVO!=null){
-                if ((!OpenEHRConst.SECTION.equals(clusterVO.getRMType()) &&
-                        !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))){
-                    //Skip node  (simplified tree)
-                    return getClusterNode(idTemplate, clusterVO.getIdParent(),
-                            rootNode, clusters, lang);
-                }
-            }else{
+            if (clusterVO==null){
                 ExceptionHandler.handle(new Exception("Cluster id '" + idCluster + "' not found"));
                 return rootNode;
             }

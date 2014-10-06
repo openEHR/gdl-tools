@@ -178,14 +178,14 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
 
 	    /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setString(i++, templateDTO.getIdTemplate());
-            preparedStatement.setString(i++, templateDTO.getIdArchetype());
+            preparedStatement.setString(i++, templateDTO.getTemplateId());
+            preparedStatement.setString(i++, templateDTO.getArcehtypeId());
             preparedStatement.setString(i++, templateDTO.getName());
             preparedStatement.setString(i++, templateDTO.getDescription());
             preparedStatement.setString(i++, templateDTO.getRMName());
             preparedStatement.setString(i++, templateDTO.getArchetype());
             preparedStatement.setObject(i++, templateDTO.getAom());
-            preparedStatement.setObject(i++, templateDTO.getTobcVO());
+            preparedStatement.setObject(i++, templateDTO.getAobcVO());
 
 	    /* Execute query. */
             int insertedRows = preparedStatement.executeUpdate();
@@ -221,21 +221,21 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
             preparedStatement.setString(i++, templateDTO.getDescription());
             preparedStatement.setString(i++, templateDTO.getArchetype());
             preparedStatement.setObject(i++, templateDTO.getAom());
-            preparedStatement.setObject(i++, templateDTO.getTobcVO());
-            preparedStatement.setString(i++, templateDTO.getIdTemplate());
+            preparedStatement.setObject(i++, templateDTO.getAobcVO());
+            preparedStatement.setString(i++, templateDTO.getTemplateId());
 
 	    /* Execute query. */
             int updatedRows = preparedStatement.executeUpdate();
 
             if (updatedRows == 0) {
                 throw new InstanceNotFoundException(
-                        templateDTO.getIdTemplate(),
+                        templateDTO.getTemplateId(),
                         TemplateDTO.class.getName());
             }
 
             if (updatedRows > 1) {
                 throw new SQLException("Duplicate row for template = '" +
-                        templateDTO.getIdTemplate() + "' in table 'openehr_template'");
+                        templateDTO.getTemplateId() + "' in table 'openehr_template'");
             }
         } catch (SQLException e) {
             throw new InternalErrorException(e);

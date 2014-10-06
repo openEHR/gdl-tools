@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.rm.common.archetyped.Locatable;
@@ -8,14 +9,21 @@ import se.cambio.cds.util.export.json.JSONSerialization;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class KBInstanceTest {
+
+    @Before
+    public void loadCM() throws URISyntaxException, InternalErrorException {
+        CMUtil.testLoadCM();
+    }
 
     @Test
     public void shouldHaveEqualValueAfterRoundTrip() throws Exception {

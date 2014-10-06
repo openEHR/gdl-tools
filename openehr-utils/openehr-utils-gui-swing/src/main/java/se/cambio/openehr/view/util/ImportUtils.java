@@ -5,19 +5,16 @@ import org.openehr.am.archetype.Archetype;
 import org.openehr.am.template.Flattener;
 import org.openehr.am.template.FlatteningException;
 import org.openehr.am.template.UnknownArchetypeException;
-import se.acode.openehr.parser.ParseException;
-import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
+import se.cambio.openehr.controller.TemplateObjectBundleManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice.MessageType;
 
@@ -78,8 +75,7 @@ public class ImportUtils {
         if (fileName.endsWith(".adl")){
             try{
                 ArchetypeDTO archetypeDTO = getArchetypeDTOFromFile(file);
-                Archetypes.loadArchetypeDTO(archetypeDTO);
-                OpenEHRObjectBundleManager.addArchetype(archetypeDTO);
+                Archetypes.loadArchetype(archetypeDTO);
             }catch(final Exception e){
                 ExceptionHandler.handle(e);
                 try {
@@ -117,13 +113,8 @@ public class ImportUtils {
             String idArchetype = fileName.substring(0, fileName.length()-4);
             ArchetypeDTO archetypeDTO =
                     new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null);
-            OpenEHRObjectBundleManager.generateArchetypeObjectBundleCustomVO(archetypeDTO);
             return archetypeDTO;
-        }catch(MissingConfigurationParameterException e){
-            throw new InternalErrorException(e);
         } catch (FileNotFoundException e) {
-            throw new InternalErrorException(e);
-        } catch (ParseException e) {
             throw new InternalErrorException(e);
         } catch (IOException e) {
             throw new InternalErrorException(e);
@@ -190,7 +181,7 @@ public class ImportUtils {
     public static TemplateDTO importTemplate(Window owner, String idTemplate, String archetypeSrc) throws Exception{
         TemplateDTO templateDTO =
                 new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
-        TEMPLATE template = OpenEHRObjectBundleManager.getParsedTemplate(templateDTO.getArchetype());
+        TEMPLATE template = TemplateObjectBundleManager.getParsedTemplate(templateDTO.getArchetype());
         Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
         boolean lookupForArchetypes = true;
         while(lookupForArchetypes){
@@ -215,81 +206,14 @@ public class ImportUtils {
             }
         }
         String idArchetype = template.getDefinition().getArchetypeId();
-        templateDTO.setIdArchetype(idArchetype);
+        templateDTO.setArcehtypeId(idArchetype);
         templateDTO.setName(template.getName());
         //TODO
         if (template.getDescription()!=null && template.getDescription().getDetails()!=null&&template.getDescription().getDetails().getPurpose()!=null){
             templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
         }
-        OpenEHRObjectBundleManager.generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
-        OpenEHRObjectBundleManager.addTemplate(templateDTO);
-        Templates.loadTemplateObjectBundle(templateDTO);
+        Templates.loadTemplate(templateDTO);
         return templateDTO;
-    }
-
-    public static TemplateDTO getTemplateDTOFromFile(File file) throws InternalErrorException{
-        InputStream fis = null;
-        try{
-            fis = new FileInputStream(file);
-            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-            ubis.skipBOM();
-            String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-            String fileName = file.getName();
-            String idTemplate = fileName.substring(0,fileName.length()-4);
-            TemplateDTO templateDTO =
-                    new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
-            Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
-            OpenEHRObjectBundleManager.generateTemplateObjectBundleCustomVO(templateDTO, archetypeMap);
-            return templateDTO;
-        }catch(MissingConfigurationParameterException e){
-            throw new InternalErrorException(e);
-        } catch (FileNotFoundException e) {
-            throw new InternalErrorException(e);
-        } catch (ParseException e) {
-            throw new InternalErrorException(e);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        } finally{
-            if (fis!=null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    ExceptionHandler.handle(e);
-                }
-            }
-        }
-    }
-
-
-    public static TerminologyDTO getTerminologyDTOFromFile(File file) throws InternalErrorException{
-        InputStream fis = null;
-        try{
-            fis = new FileInputStream(file);
-            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-            ubis.skipBOM();
-            byte[] termSetSrc = IOUtils.toByteArray(ubis);
-            String fileName = file.getName();
-            String terminologyId = fileName.substring(0,fileName.length()-4);
-            TerminologyDTO terminologyDTO =
-                    new TerminologyDTO(terminologyId,termSetSrc);
-            return terminologyDTO;
-        } catch (FileNotFoundException e) {
-            throw new InternalErrorException(e);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        } finally{
-            if (fis!=null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    ExceptionHandler.handle(e);
-                }
-            }
-        }
     }
 }
 /*
