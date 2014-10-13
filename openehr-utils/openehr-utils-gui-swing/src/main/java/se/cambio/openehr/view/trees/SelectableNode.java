@@ -85,7 +85,7 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         return this.visible;
     }
 
-    public void setVisible(Boolean visible) {
+    public void setVisible(boolean visible) {
         this.visible = visible;
         if (this.parent!=null){
             if (visible){
@@ -134,10 +134,6 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         return this.bold;
     }
 
-    public void setBold(Boolean bold) {
-        this.bold = bold;
-    }
-
     public Color getForegroundColor() {
         return this.foregroundColor;
     }
@@ -146,8 +142,20 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         this.foregroundColor = color;
     }
 
-    public void setItalics(Boolean italics) {
-        this.italic = italics;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public void setBold(boolean bold) {
+        this.bold = bold;
+    }
+
+    public void setItalic(boolean italic) {
+        this.italic = italic;
+    }
+
+    public void setIcon(Icon icon) {
+        this.icon = icon;
     }
 
     public boolean isItalic() {
