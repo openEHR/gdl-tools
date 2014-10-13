@@ -47,6 +47,7 @@ public class TemplateObjectBundleManager {
             throws InternalErrorException {
         try {
             TEMPLATE template = getParsedTemplate(templateDTO.getArchetype());
+            templateDTO.setArcehtypeId(template.getDefinition().getArchetypeId());
             templateDTO.setName(template.getName());
             if (template.getDescription()!=null && template.getDescription().getDetails()!=null && template.getDescription().getDetails().getPurpose() != null){
                 templateDTO.setDescription(template.getDescription().getDetails().getPurpose());

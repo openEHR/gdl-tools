@@ -11,7 +11,7 @@ public class InitialLoadingObservable extends Observable{
     private static InitialLoadingObservable _instance = null;
 
     public static enum LoadingStage{
-        ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES, VIEWS
+        ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES, VIEWS, KB_INSTANCES, ORDERSETS
     }
     private LoadingStage _currentLoadingStage = null;
     //From 0 to 1

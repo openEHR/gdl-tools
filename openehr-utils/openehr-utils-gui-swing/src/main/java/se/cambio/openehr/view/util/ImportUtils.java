@@ -10,6 +10,7 @@ import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -182,7 +183,7 @@ public class ImportUtils {
         TemplateDTO templateDTO =
                 new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
         TEMPLATE template = TemplateObjectBundleManager.getParsedTemplate(templateDTO.getArchetype());
-        Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
+        Map<String, Archetype> archetypeMap = null;
         boolean lookupForArchetypes = true;
         while(lookupForArchetypes){
             lookupForArchetypes = false;
@@ -214,6 +215,67 @@ public class ImportUtils {
         }
         Templates.loadTemplate(templateDTO);
         return templateDTO;
+    }
+
+    public static TemplateDTO getTemplateDTOFromFile(File file) throws InternalErrorException{
+        InputStream fis = null;
+        try{
+            fis = new FileInputStream(file);
+            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+            ubis.skipBOM();
+            String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
+            String fileName = file.getName();
+            String idTemplate = fileName.substring(0,fileName.length()-4);
+            TemplateDTO templateDTO =
+                    new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
+            Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
+            new TemplateObjectBundleManager(templateDTO).generateArchetypeObjectBundleCustomVO();
+            return templateDTO;
+        } catch (FileNotFoundException e) {
+            throw new InternalErrorException(e);
+        } catch (IOException e) {
+            throw new InternalErrorException(e);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        } finally{
+            if (fis!=null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    ExceptionHandler.handle(e);
+                }
+            }
+        }
+    }
+
+
+    public static TerminologyDTO getTerminologyDTOFromFile(File file) throws InternalErrorException{
+        InputStream fis = null;
+        try{
+            fis = new FileInputStream(file);
+            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+            ubis.skipBOM();
+            byte[] termSetSrc = IOUtils.toByteArray(ubis);
+            String fileName = file.getName();
+            String terminologyId = fileName.substring(0,fileName.length()-4);
+            TerminologyDTO terminologyDTO =
+                    new TerminologyDTO(terminologyId,termSetSrc);
+            return terminologyDTO;
+        } catch (FileNotFoundException e) {
+            throw new InternalErrorException(e);
+        } catch (IOException e) {
+            throw new InternalErrorException(e);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        } finally{
+            if (fis!=null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    ExceptionHandler.handle(e);
+                }
+            }
+        }
     }
 }
 /*

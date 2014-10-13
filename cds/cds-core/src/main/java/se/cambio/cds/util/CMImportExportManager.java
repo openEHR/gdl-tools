@@ -42,39 +42,39 @@ public class CMImportExportManager {
     private static String DSVIEWS_POSTFIX = ".dsv";
     private static String DTO_POSTFIX = ".dto";
 
-    private static String ARCHETYPE_PREFIX = ARCHETYPES_FOLDER_NAME+"\\";
-    private static String TEMPLATES_PREFIX = TEMPLATES_FOLDER_NAME+"\\";
-    private static String TERMINOLOGY_PREFIX = TERMINOLOGIES_FOLDER_NAME+"\\";
-    private static String GUIDELINES_PREFIX = GUIDELINES_FOLDER_NAME+"\\";
-    private static String DSVVIEWS_PREFIX = DSVIEWS_FOLDER_NAME +"\\";
+    private static String ARCHETYPE_PREFIX = ARCHETYPES_FOLDER_NAME + "\\";
+    private static String TEMPLATES_PREFIX = TEMPLATES_FOLDER_NAME + "\\";
+    private static String TERMINOLOGY_PREFIX = TERMINOLOGIES_FOLDER_NAME + "\\";
+    private static String GUIDELINES_PREFIX = GUIDELINES_FOLDER_NAME + "\\";
+    private static String DSVVIEWS_PREFIX = DSVIEWS_FOLDER_NAME  + "\\";
 
-    private static String ARCHETYPE_DTO_PREFIX = ARCHETYPES_FOLDER_NAME+DTO_POSTFIX;
-    private static String TEMPLATES_DTO_PREFIX = TEMPLATES_FOLDER_NAME+DTO_POSTFIX;
-    private static String GUIDELINES_DTO_PREFIX = GUIDELINES_FOLDER_NAME+DTO_POSTFIX;
+    private static String ARCHETYPE_DTO_PREFIX = ARCHETYPES_FOLDER_NAME + DTO_POSTFIX;
+    private static String TEMPLATES_DTO_PREFIX = TEMPLATES_FOLDER_NAME + DTO_POSTFIX;
+    private static String GUIDELINES_DTO_PREFIX = GUIDELINES_FOLDER_NAME + DTO_POSTFIX;
 
-
+    public static enum GenerationStrategy {DTOS, NONE}
 
     public static void exportCurrentCM(File file) throws IOException {
-        exportCurrentCM(file, false);
+        exportCurrentCM(file, GenerationStrategy.NONE);
     }
 
-    public static void exportCurrentCM(File file, boolean generateDTOs) throws IOException {
+    public static void exportCurrentCM(File file, GenerationStrategy generationStrategy) throws IOException {
 
         // out put file
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-        exportArchetypes(out, generateDTOs);
-        exportTemplates(out, generateDTOs);
+        exportArchetypes(out, generationStrategy);
+        exportTemplates(out, generationStrategy);
         exportTerminologies(out);
-        exportGuidelines(out, generateDTOs);
+        exportGuidelines(out, generationStrategy);
         exportViews(out);
         out.close();
     }
 
-    public static void exportArchetypes(ZipOutputStream out, boolean generateDTOs) throws IOException {
+    public static void exportArchetypes(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
         for (ArchetypeDTO archetypeDTO: Archetypes.getAllArchetypes()){
             InputStream in = new ByteArrayInputStream(archetypeDTO.getArchetype().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX+archetypeDTO.getArchetypeId()+ARCHETYPE_POSTFIX));
+            out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX + archetypeDTO.getArchetypeId() + ARCHETYPE_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -82,8 +82,8 @@ public class CMImportExportManager {
                 out.write(b, 0, count);
             }
             in.close();
-            if (generateDTOs){
-                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX+"\\"+archetypeDTO.getArchetypeId()+DTO_POSTFIX));
+            if (GenerationStrategy.DTOS.equals(generationStrategy)){
+                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX + "\\" + archetypeDTO.getArchetypeId() + DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(archetypeDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -93,11 +93,11 @@ public class CMImportExportManager {
         }
     }
 
-    public static void exportTemplates(ZipOutputStream out, boolean generateDTOs) throws IOException {
+    public static void exportTemplates(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
         for (TemplateDTO templateDTO: Templates.getAllTemplates()){
             InputStream in = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX+templateDTO.getTemplateId()+TEMPLATES_POSTFIX));
+            out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX + templateDTO.getTemplateId() + TEMPLATES_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -105,8 +105,8 @@ public class CMImportExportManager {
                 out.write(b, 0, count);
             }
             in.close();
-            if (generateDTOs){
-                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX+"\\"+templateDTO.getTemplateId()+DTO_POSTFIX));
+            if (GenerationStrategy.DTOS.equals(generationStrategy)){
+                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX + "\\" + templateDTO.getTemplateId() + DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(templateDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -120,7 +120,7 @@ public class CMImportExportManager {
         for (TerminologyDTO terminologyDTO: Terminologies.getAllTerminologies()){
             InputStream in = new ByteArrayInputStream(terminologyDTO.getSrc());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(TERMINOLOGY_PREFIX+terminologyDTO.getTerminologyId()+TERMINOLOGY_POSTFIX));
+            out.putNextEntry(new ZipEntry(TERMINOLOGY_PREFIX + terminologyDTO.getTerminologyId() + TERMINOLOGY_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -131,11 +131,11 @@ public class CMImportExportManager {
         }
     }
 
-    public static void exportGuidelines(ZipOutputStream out, boolean generateDTOs) throws IOException {
+    public static void exportGuidelines(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
         for (GuideDTO guideDTO: Guides.getAllGuides()){
             InputStream in = new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(GUIDELINES_PREFIX+guideDTO.getIdGuide()+GUIDELINES_POSTFIX));
+            out.putNextEntry(new ZipEntry(GUIDELINES_PREFIX + guideDTO.getIdGuide() + GUIDELINES_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -143,8 +143,8 @@ public class CMImportExportManager {
                 out.write(b, 0, count);
             }
             in.close();
-            if (generateDTOs){
-                out.putNextEntry(new ZipEntry(GUIDELINES_DTO_PREFIX+"\\"+guideDTO.getIdGuide()+DTO_POSTFIX));
+            if (GenerationStrategy.DTOS.equals(generationStrategy)){
+                out.putNextEntry(new ZipEntry(GUIDELINES_DTO_PREFIX + "\\" + guideDTO.getIdGuide() + DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(guideDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -158,7 +158,7 @@ public class CMImportExportManager {
         for (DSViewDTO DSViewDTO : DecisionSupportViews.getInstance().getAllDSViews()){
             InputStream in = new ByteArrayInputStream(DSViewDTO.getDSViewSrc().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(DSVVIEWS_PREFIX + DSViewDTO.getDsViewId()+ DSVIEWS_POSTFIX));
+            out.putNextEntry(new ZipEntry(DSVVIEWS_PREFIX + DSViewDTO.getDsViewId() + DSVIEWS_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -195,23 +195,23 @@ public class CMImportExportManager {
             while((entry = zis.getNextEntry())!=null){
                 if (entry.getName().startsWith(ARCHETYPES_FOLDER_NAME) && entry.getName().endsWith(ARCHETYPE_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
-                    String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length()+1, entry.getName().length()-ARCHETYPE_POSTFIX.length());
+                    String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length() + 1, entry.getName().length() - ARCHETYPE_POSTFIX.length());
                     archetypeSourceDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, src, null, null));
                 }else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
-                    String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length()+1, entry.getName().length()-TEMPLATES_POSTFIX.length());
+                    String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length() + 1, entry.getName().length() - TEMPLATES_POSTFIX.length());
                     templateSourceDTOs.add(new TemplateDTO(templateId, templateId, templateId, null, null, src, null, null));
                 }else if (entry.getName().startsWith(TERMINOLOGIES_FOLDER_NAME) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
                     byte[] src = IOUtils.toByteArray(zis);
-                    String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length()+1, entry.getName().length()-TERMINOLOGY_POSTFIX.length());
+                    String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length() + 1, entry.getName().length() - TERMINOLOGY_POSTFIX.length());
                     terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
                 }else if (entry.getName().startsWith(DSVIEWS_FOLDER_NAME) && entry.getName().endsWith(DSVIEWS_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
-                    String dsViewId = entry.getName().substring(DSVIEWS_FOLDER_NAME.length() + 1, entry.getName().length() - DSVIEWS_POSTFIX.length());
+                    String dsViewId = entry.getName().substring(DSVIEWS_FOLDER_NAME.length() + 1, entry.getName().length()  -  DSVIEWS_POSTFIX.length());
                     DSViewDTOs.add(new DSViewDTO(dsViewId, dsViewId, dsViewId, src));
                 }else if (entry.getName().startsWith(GUIDELINES_FOLDER_NAME) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
-                    String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length()+1, entry.getName().length()-GUIDELINES_POSTFIX.length());
+                    String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length() + 1, entry.getName().length() - GUIDELINES_POSTFIX.length());
                     guideSourceDTOs.add(new GuideDTO(guideId, src, null, null, false, Calendar.getInstance().getTime()));
                 }else if (entry.getName().startsWith(ARCHETYPE_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
                     ArchetypeDTO archetypeDTO = (ArchetypeDTO)IOUtils.getObject(IOUtils.toByteArray(zis));

@@ -83,7 +83,7 @@ public class LocalCM {
                 hostname = "local";
             }
             File file = new File(AUTO_SAVE_FILE_CM_PREFIX+"."+hostname+".zip");
-            CMImportExportManager.exportCurrentCM(file, true);
+            CMImportExportManager.exportCurrentCM(file, CMImportExportManager.GenerationStrategy.DTOS);
         } catch (IOException e) {
             throw new InternalErrorException(e);
         }

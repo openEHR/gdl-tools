@@ -1,19 +1,38 @@
-package se.cambio.cds.model.facade.kb.delegate;
+package se.cambio.cds.model.kb.instance.dao;
 
-import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-
-import java.util.Collection;
-
 
 /**
  * @author iago.corbal
- *
  */
-public interface KBFacadeDelegate {
+public class GenericKBInstanceFactory {
 
-    public Collection<ElementInstance> getKBElementsByIdTemplate(Collection<String> idTemplates)
-	    throws InternalErrorException;
+    private static String DAO_CLASS = "GenericKBInstanceDAO/Class";
+
+    private GenericKBInstanceFactory() {
+    }
+
+    private static Class<?> getDAOClass() throws InternalErrorException {
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    CDSConfigurationParametersManager.getParameter(DAO_CLASS);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+        return theClass;
+    }
+
+    public static GenericKBInstanceDAO getDAO()
+            throws InternalErrorException {
+        try {
+            return (GenericKBInstanceDAO)getDAOClass().newInstance();
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

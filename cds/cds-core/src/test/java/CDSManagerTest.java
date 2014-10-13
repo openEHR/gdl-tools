@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class CDSManagerTest {
 
     @Test
-    public void testEHRQuery(){
+    public void shouldContainGeneratedElementInstances(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new GeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
@@ -35,7 +35,7 @@ public class CDSManagerTest {
     }
 
     @Test
-    public void testCompactingPredicates(){
+    public void shouldContainPredicateGeneratedElementInstances(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.INEQUAL);

@@ -20,6 +20,7 @@ import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.view.dialogs.DialogEditor;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 import se.cambio.openehr.view.util.NodeConversor;
 
 import javax.swing.*;
@@ -111,7 +112,7 @@ public class DialogExpressionEditor extends DialogEditor {
 
     public SelectionPanel getSelectionPanel(){
         if (selectionPanel==null){
-            selectionPanel = new SelectionPanel(new SelectableNode<Object>());
+            selectionPanel = new SelectionPanel(new SelectableNodeBuilder().createSelectableNode());
             selectionPanel.setPreferredSize(new Dimension(300, 600));
             updateSelectionPanel();
         }

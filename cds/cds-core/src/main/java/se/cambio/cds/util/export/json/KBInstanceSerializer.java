@@ -46,9 +46,11 @@ public class KBInstanceSerializer implements JSONSerializer<KBInstance> {
     public KBInstance parse(String src) throws InternalErrorException {
         KBInstanceWithSource kbInstance = gson.fromJson(src, KBInstanceWithSource.class);
         try {
-            ContentObject contentObject = new DADLParser(kbInstance.getLocatableSrc()).parse();
-            Locatable locatable = (Locatable)new DADLBinding().bind(contentObject);
-            kbInstance.setLocatable(locatable);
+            if (kbInstance.getLocatableSrc()!=null) {
+                ContentObject contentObject = new DADLParser(kbInstance.getLocatableSrc()).parse();
+                Locatable locatable = (Locatable) new DADLBinding().bind(contentObject);
+                kbInstance.setLocatable(locatable);
+            }
         } catch (ParseException e) {
             throw new InternalErrorException(e);
         } catch (RMObjectBuildingException e) {

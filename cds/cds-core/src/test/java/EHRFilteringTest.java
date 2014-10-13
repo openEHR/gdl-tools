@@ -58,7 +58,7 @@ public class EHRFilteringTest {
     }
 
     @Test
-    public void testEHRFilterWithOnePredicate(){
+    public void shouldFilterUsingOnePredicate(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance(
@@ -74,7 +74,8 @@ public class EHRFilteringTest {
         assertEquals(1, archetypeReferenceSet.size());
     }
 
-    public void testEHRFilterWithMultiplePredicatesSameAR(){
+    @Test
+    public void shouldNotFilterMultiplePredicatesWithSameAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance(
@@ -85,17 +86,17 @@ public class EHRFilteringTest {
         new PredicateGeneratedElementInstance(
                 "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
                 null, gar, null,
-                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.MIN);
+                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO,
+                OperatorKind.MIN);
         geic.add(gar);
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =
                 EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
-
         assertEquals(2, archetypeReferenceSet.size());
     }
 
     @Test
-    public void testEHRFilterWithMultiplePredicatesDifferentAR(){
+    public void shouldNotFilterMultiplePredicatesWithDifferentAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance(
@@ -114,8 +115,6 @@ public class EHRFilteringTest {
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =
                 EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
-
         assertEquals(2, archetypeReferenceSet.size());
     }
-
 }

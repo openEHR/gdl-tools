@@ -1,19 +1,13 @@
-package se.cambio.cds.model.facade.kb.delegate;
+package se.cambio.cds.model.util.comparators;
 
-import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.cds.model.kb.instance.dto.KBInstanceDTO;
 
-import java.util.Collection;
+import java.util.Comparator;
 
-
-/**
- * @author iago.corbal
- *
- */
-public interface KBFacadeDelegate {
-
-    public Collection<ElementInstance> getKBElementsByIdTemplate(Collection<String> idTemplates)
-	    throws InternalErrorException;
+public class KBInstanceComparator implements Comparator<KBInstanceDTO>{
+    public int compare(KBInstanceDTO o1, KBInstanceDTO o2) {
+        return o1.getKbInstanceId().compareTo(o2.getKbInstanceId());
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

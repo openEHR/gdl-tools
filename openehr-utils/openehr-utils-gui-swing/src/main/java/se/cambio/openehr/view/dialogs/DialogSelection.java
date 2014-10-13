@@ -122,9 +122,9 @@ public class DialogSelection extends DialogEditor {
 
     class DoubleClickMouseListener extends MouseAdapter{
         public void mouseClicked(MouseEvent e) {
-            if(e.getClickCount()>1){
+            if(e.getClickCount() > 1){
                 SelectableNode<?> selectableNode = NodeConversor.getSelectedNode(_rootNode, false);
-                if (selectableNode!=null && selectableNode.getSeleccionUnica() && selectableNode.getObject()!=null){
+                if (selectableNode != null && selectableNode.isSingleSelectionMode() && selectableNode.getObject() != null){
                     accept();
                 }
             }

@@ -76,7 +76,7 @@ public class SimpleArchetypeNodeUtils {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(name);
-        if (valueStr!=null){
+        if (valueStr != null){
             sb.append(" = ");
             sb.append(valueStr);
         }
@@ -103,11 +103,11 @@ public class SimpleArchetypeNodeUtils {
 
     public static String getIdRMClassifier(String path){
         int index = path.indexOf("[", 1);
-        if (index>0){
+        if (index > 0){
             return path.substring(1, index);
         }else{
             index = path.indexOf("/", 1);
-            if (index>0){
+            if (index > 0){
                 return path.substring(1, index);
             }else{
                 return path.substring(1, path.length());
@@ -122,12 +122,12 @@ public class SimpleArchetypeNodeUtils {
             String lang){
         if (idCluster!=null && !idCluster.endsWith("/")){
             ClusterVO clusterVO = Clusters.getClusterVO(idTemplate, idCluster);
-            if (clusterVO==null){
+            if (clusterVO == null){
                 ExceptionHandler.handle(new Exception("Cluster id '" + idCluster + "' not found"));
                 return rootNode;
             }
             SimpleArchetypeNode clusterNode = clusters.get(idCluster);
-            if(clusterNode==null){
+            if(clusterNode == null){
                 SimpleArchetypeNode parentNode =
                         getClusterNode(idTemplate, clusterVO.getIdParent(),
                                 rootNode, clusters, lang);

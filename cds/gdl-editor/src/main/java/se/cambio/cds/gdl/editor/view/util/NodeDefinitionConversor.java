@@ -26,7 +26,7 @@ import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
-import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
+import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 
 import javax.swing.*;
 import java.util.*;
@@ -35,16 +35,16 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getElementInstancesSelectionNodes(
             Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
-        SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(
-                GDLEditorLanguageManager.getMessage("Definitions"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
-        SelectableNode<Object> elementsNode = new SelectableNodeWithIcon<Object>(
-                GDLEditorLanguageManager.getMessage("ElementInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
+        SelectableNode<Object> root = new SelectableNodeBuilder<Object>()
+                .setName(GDLEditorLanguageManager.getMessage("Definitions"))
+                .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
+                .createSelectableNode();
+        SelectableNode<Object> elementsNode = new SelectableNodeBuilder<Object>()
+                .setName(GDLEditorLanguageManager.getMessage("ElementInstances"))
+                .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
+                .createSelectableNode();
         root.add(elementsNode);
         addElementInstanceToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
-	/*
-	if (!onlyCDSDomain){
-	    elementsNode.add(getCurrentDateTimeArchetypeElementRuleLineElementNode(getCurrentDateTimeGTCodeRuleLineElement()));
-	}*/
         root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
         return root;
     }
@@ -54,7 +54,7 @@ public class NodeDefinitionConversor {
             if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
                 SelectableNode<Object> nodeAux =
                         getArchetypeElementRuleLineElementNode((ArchetypeElementInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
-                if(nodeAux!=null){
+                if(nodeAux != null){
                     node.add(nodeAux);
                 }
             }
@@ -63,8 +63,10 @@ public class NodeDefinitionConversor {
     }
 
     public static SelectableNode<Object> getArchetypeInstancesSelectionNodes(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
-        SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(
-                GDLEditorLanguageManager.getMessage("ArchetypeInstances"),null, true, false, GDLEditorImageUtil.FOLDER_OBJECT_ICON);
+        SelectableNode<Object> root =  new SelectableNodeBuilder<Object>()
+                .setName(GDLEditorLanguageManager.getMessage("ArchetypeInstances"))
+                .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
+                .createSelectableNode();
         for (RuleLine ruleLine : definitionRuleLines) {
             if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                 SelectableNode<Object> node = getArchetypeElementRuleLineElementNode((ArchetypeInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
@@ -78,17 +80,15 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getArchetypeElementRuleLineElementNode(ArchetypeInstantiationRuleLine airl, boolean onlyCDSDomain, ArchetypeReference ar){
         ArchetypeReference arAux = airl.getArchetypeReference();
-        if (arAux!=null){
+        if (arAux != null){
             String idArchetype = arAux.getIdArchetype();
             //String idTemplate = airl.getArchetypeReference().getArchetypeId();
-            if ((!onlyCDSDomain || Domains.CDS_ID.equals(airl.getArchetypeReference().getIdDomain()) && (ar==null||ar.equals(airl.getArchetypeReference())))){
-                return new SelectableNodeWithIcon<Object>(
-                        ReadableArchetypeReferencesUtil.getName(airl),
-                        airl,
-                        true,
-                        false,
-                        Archetypes.getIcon(idArchetype),
-                        ReadableArchetypeReferencesUtil.getHTMLTooltip(airl));
+            if ((!onlyCDSDomain || Domains.CDS_ID.equals(airl.getArchetypeReference().getIdDomain()) && (ar == null || ar.equals(airl.getArchetypeReference())))){
+                return new SelectableNodeBuilder<Object>()
+                        .setName(ReadableArchetypeReferencesUtil.getName(airl))
+                        .setDescription(ReadableArchetypeReferencesUtil.getHTMLTooltip(airl))
+                        .setIcon(Archetypes.getIcon(idArchetype))
+                        .createSelectableNode();
             }
         }
         return null;
@@ -106,13 +106,12 @@ public class NodeDefinitionConversor {
                         name = "*EMPTY*";
                     }
                     name = name.length()>30?name.substring(0, 30)+"...":name;
-                    return new SelectableNodeWithIcon<Object>(
-                            name,
-                            aeirl.getGTCodeRuleLineElement(),
-                            true,
-                            false,
-                            getIcons(aeirl.getGTCodeRuleLineElement()),
-                            ArchetypeReferences.getHTMLTooltip(archetypeElementVO, arAux));
+                    return new SelectableNodeBuilder<Object>()
+                            .setName(name)
+                            .setDescription(ArchetypeReferences.getHTMLTooltip(archetypeElementVO, arAux))
+                            .setIcon(getIcons(aeirl.getGTCodeRuleLineElement()))
+                            .setObject(aeirl.getGTCodeRuleLineElement())
+                            .createSelectableNode();
                 }
             }
         }
@@ -121,12 +120,11 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getCurrentDateTimeArchetypeElementRuleLineElementNode(GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement){
         String name = GDLEditorLanguageManager.getMessage("CurrentDateTime");
-        return new SelectableNodeWithIcon<Object>(
-                name,
-                currentDateTimeGTCodeRuleLineElement,
-                true,
-                false,
-                OpenEHRDataValuesUI.getIcon(OpenEHRDataValues.DV_DATE_TIME));
+        return new SelectableNodeBuilder<Object>()
+                .setName(name)
+                .setIcon(OpenEHRDataValuesUI.getIcon(OpenEHRDataValues.DV_DATE_TIME))
+                .setObject(currentDateTimeGTCodeRuleLineElement)
+                .createSelectableNode();
     }
 
     private static GTCodeRuleLineElement getCurrentDateTimeGTCodeRuleLineElement(){
@@ -143,13 +141,13 @@ public class NodeDefinitionConversor {
         if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
             ArchetypeElementRuleLineDefinitionElement aerlde =
                     ((ArchetypeElementInstantiationRuleLine)ruleLine).getArchetypeElementRuleLineDefinitionElement();
-            if (aerlde.getValue()!=null){
+            if (aerlde.getValue() != null){
                 return getIconsArchetypeElement(aerlde);
             }
         }else if (ruleLine instanceof ArchetypeInstantiationRuleLine){
             ArchetypeReferenceRuleLineDefinitionElement arrlde =
                     ((ArchetypeInstantiationRuleLine)ruleLine).getArchetypeReferenceRuleLineDefinitionElement();
-            if (arrlde.getValue()!=null){
+            if (arrlde.getValue() != null){
                 return getIconsArchetypeReference(arrlde);
             }
         }
@@ -183,19 +181,20 @@ public class NodeDefinitionConversor {
     public static SelectableNode<Object> getElementsInArchetypeNode(
             String idArchetype, String idTemplate, boolean singleSelection, boolean simplifiedTree){
         ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
-        SelectableNode<Object> rootNode = new SelectableNodeWithIcon<Object>(
-                archetypeVO.getName(),
-                null, singleSelection, false,
-                Archetypes.getIcon(archetypeVO.getArchetypeId()),
-                archetypeVO.getDescription());
-
+        SelectableNode.SelectionMode selectionMode = getSelectionMode(singleSelection);
+        SelectableNode<Object> rootNode = new SelectableNodeBuilder<Object>()
+                .setName(archetypeVO.getName())
+                .setDescription(archetypeVO.getDescription())
+                .setSelectionMode(selectionMode)
+                .setIcon(Archetypes.getIcon(archetypeVO.getArchetypeId()))
+                .createSelectableNode();
         Map<String, SelectableNode<Object>> rmNodes =
                 new HashMap<String, SelectableNode<Object>>();
 
         Map<Object, SelectableNode<Object>> clusters =
                 new HashMap<Object, SelectableNode<Object>>();
 
-        SelectableNode<Object> nodoOrigen = null;
+        SelectableNode<Object> nodoOrigen;
         Collection<ArchetypeElementVO> archetypeElementVOs = ArchetypeElements.getArchetypeElementsVO(idArchetype, idTemplate);
         for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
             SelectableNode<Object> rmNode = ClusterNodesUtil.getRMNode(rootNode, rmNodes, archetypeElementVO.getPath());
@@ -206,18 +205,26 @@ public class NodeDefinitionConversor {
                             rmNode, clusters,
                             singleSelection,
                             simplifiedTree);
-            nodoOrigen = createElementNode(archetypeElementVO, singleSelection);
+            nodoOrigen = createElementNode(archetypeElementVO, selectionMode);
             clusterNode.add(nodoOrigen);
         }
         return rootNode;
     }
 
-    private static SelectableNodeWithIcon<Object> createElementNode(ArchetypeElementVO archetypeElementVO, boolean singleSelection){
+    private static SelectableNode.SelectionMode getSelectionMode(boolean singleSelection) {
+        return singleSelection ? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
+    }
+
+    private static SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode){
         String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         String desc = ArchetypeElements.getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
-        return new SelectableNodeWithIcon<Object>(
-                name, archetypeElementVO,singleSelection, false,
-                OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()), desc);
+        return  new SelectableNodeBuilder<Object>()
+                .setName(name)
+                .setDescription(desc)
+                .setSelectionMode(selectionMode)
+                .setIcon(OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()))
+                .setObject(archetypeElementVO)
+                .createSelectableNode();
     }
 
     public static void addElementInstanceAttributesAndFunctionsToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar){
@@ -248,11 +255,12 @@ public class NodeDefinitionConversor {
             AttributeFunctionContainerNode attributeNode = new AttributeFunctionContainerNode(
                     gtCodeRuleLineElement,
                     fieldName);
-            SelectableNodeWithIcon<Object> fieldNode =
-                    new SelectableNodeWithIcon<Object>(
-                            fieldName,
-                            attributeNode,
-                            true, false, GDLEditorImageUtil.OBJECT_ICON);
+            SelectableNode<Object> fieldNode =
+                    new SelectableNodeBuilder<Object>()
+                            .setName(fieldName)
+                            .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                            .setObject(attributeNode)
+                            .createSelectableNode();
             node.add(fieldNode);
         }
     }
@@ -265,17 +273,22 @@ public class NodeDefinitionConversor {
             AttributeFunctionContainerNode functionNode = new AttributeFunctionContainerNode(
                     gtCodeRuleLineElement,
                     functionName);
-            SelectableNodeWithIcon<Object> fieldNode =
-                    new SelectableNodeWithIcon<Object>(
-                            functionName,
-                            functionNode,
-                            true, false, GDLEditorImageUtil.FUNCTION_ICON);
+            SelectableNode<Object> fieldNode =
+                    new SelectableNodeBuilder<Object>()
+                            .setName(functionName)
+                            .setIcon(GDLEditorImageUtil.FUNCTION_ICON)
+                            .setObject(functionNode)
+                            .createSelectableNode();
             node.add(fieldNode);
         }
     }
 
     public static SelectableNode<Object> getSingleNodeAttributesAndFunctions(){
-        return new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes")+"/"+GDLEditorLanguageManager.getMessage("Functions"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+        String name = GDLEditorLanguageManager.getMessage("Attributes")+"/"+GDLEditorLanguageManager.getMessage("Functions");
+        return new SelectableNodeBuilder<Object>()
+                .setName(name)
+                .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                .createSelectableNode();
     }
 
     public static SelectableNode<Object> getNodeAttributesAndFunctions(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
@@ -293,7 +306,10 @@ public class NodeDefinitionConversor {
     }
 
     public static SelectableNode<Object> getNodeAttributesAndFunctionsPredicate(){
-        SelectableNode<Object> root = new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+        SelectableNode<Object> root = new SelectableNodeBuilder<Object>()
+                .setName(GDLEditorLanguageManager.getMessage("Attributes"))
+                .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                .createSelectableNode();
         GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
         SelectableNode<Object> currentDateTimeNode =
                 getCurrentDateTimeArchetypeElementRuleLineElementNode(currentDateTimeGTCodeRuleLineElement);
@@ -303,18 +319,23 @@ public class NodeDefinitionConversor {
     }
     public static SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId){
         SelectableNode<Object> root =
-                new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Attributes"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+                new SelectableNodeBuilder<Object>()
+                        .setName(GDLEditorLanguageManager.getMessage("Attributes"))
+                        .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                        .createSelectableNode();
         Collection<ArchetypeElementVO> archetypeElementVOs = ArchetypeElements.getArchetypeElementsVO(archetypteId, templateId);
         for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
-            SelectableNode<Object> elementNode = createElementNode(archetypeElementVO, true);
+            SelectableNode<Object> elementNode = createElementNode(archetypeElementVO, SelectableNode.SelectionMode.SINGLE);
             String[] fieldNames =
                     OpenEHRDataValuesUI.getFieldNames(archetypeElementVO.getRMType());
             for (String fieldName : fieldNames) {
-                SelectableNodeWithIcon<Object> fieldNode =
-                        new SelectableNodeWithIcon<Object>(
-                                fieldName,
-                                new PredicateAttributeVO(archetypeElementVO, fieldName),
-                                true, false, GDLEditorImageUtil.OBJECT_ICON);
+                PredicateAttributeVO predicateAttributeVO = new PredicateAttributeVO(archetypeElementVO, fieldName);
+                SelectableNode<Object> fieldNode =
+                        new SelectableNodeBuilder<Object>()
+                                .setName(fieldName)
+                                .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                                .setObject(predicateAttributeVO)
+                                .createSelectableNode();
                 elementNode.add(fieldNode);
             }
             root.add(elementNode);
@@ -323,16 +344,23 @@ public class NodeDefinitionConversor {
     }
 
     public static SelectableNode<Object> getNodeGTCodes(Map<String, Term> termsMap, Collection<String> gtCodesToBeIgnored){
-        SelectableNodeWithIcon<Object> root =
-                new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("LocalTerms"), null, true, false, GDLEditorImageUtil.OBJECT_ICON);
+        SelectableNode<Object> root =
+                new SelectableNodeBuilder<Object>()
+                        .setName(GDLEditorLanguageManager.getMessage("LocalTerms"))
+                        .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                        .createSelectableNode();
         ArrayList<String> terms = new ArrayList<String>(termsMap.keySet());
         Collections.sort(terms);
         for (String gtCode : terms) {
             if (!gtCodesToBeIgnored.contains(gtCode)){
                 String name = termsMap.get(gtCode).getText();
                 String gtDesc = gtCode + (name!=null?" - " + name:"");
-                SelectableNodeWithIcon<Object> nodeAux =
-                        new SelectableNodeWithIcon<Object>(gtDesc, gtCode, true, false, GDLEditorImageUtil.OBJECT_ICON);
+                SelectableNode<Object> nodeAux =
+                        new SelectableNodeBuilder<Object>()
+                                .setName(gtDesc)
+                                .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                                .setObject(gtCode)
+                                .createSelectableNode();
                 root.add(nodeAux);
             }
         }
@@ -340,12 +368,19 @@ public class NodeDefinitionConversor {
     }
 
     public static SelectableNode<Object> getNodeTerminologyIds(){
-        SelectableNodeWithIcon<Object> root =
-                new SelectableNodeWithIcon<Object>(GDLEditorLanguageManager.getMessage("Terminologies"), null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
+        SelectableNode<Object> root =
+                new SelectableNodeBuilder<Object>()
+                        .setName(GDLEditorLanguageManager.getMessage("Terminologies"))
+                        .setIcon(GDLEditorImageUtil.ONTOLOGY_ICON)
+                        .createSelectableNode();
         try{
             for (String terminologyId : OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies()) {
-                SelectableNodeWithIcon<Object> nodeAux =
-                        new SelectableNodeWithIcon<Object>(terminologyId, terminologyId, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
+                SelectableNode<Object> nodeAux =
+                        new SelectableNodeBuilder<Object>()
+                                .setName(terminologyId)
+                                .setIcon(GDLEditorImageUtil.ONTOLOGY_ICON)
+                                .setObject(terminologyId)
+                                .createSelectableNode();
                 root.add(nodeAux);
             }
         }catch (InternalErrorException e){
@@ -355,8 +390,11 @@ public class NodeDefinitionConversor {
     }
 
     public static SelectableNode<Object> getNodeAllTerminologyCodes(String terminologyId, Collection<String> selectedCodes){
-        SelectableNodeWithIcon<Object> root =
-                new SelectableNodeWithIcon<Object>(terminologyId, null, true, false, GDLEditorImageUtil.ONTOLOGY_ICON);
+        SelectableNode<Object> root =
+                new SelectableNodeBuilder<Object>()
+                        .setName(terminologyId)
+                        .setIcon(GDLEditorImageUtil.ONTOLOGY_ICON)
+                        .createSelectableNode();
         List<TerminologyNodeVO> nodes = null;
         try{
             nodes = OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveAll(terminologyId, OpenEHRDataValuesUI.getLanguageCodePhrase());
@@ -379,9 +417,17 @@ public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getSelectableNodeTerminologyCodes(TerminologyNodeVO node, Collection <String> selectedCodes){
         String code = node.getValue().getDefiningCode().getCodeString();
-        SelectableNodeWithIcon<Object> selectableNode =
-                new SelectableNodeWithIcon<Object>(node.getValue().getValue() +" ("+code+")", node.getValue(), false, selectedCodes!=null && selectedCodes.contains(code), GDLEditorImageUtil.ONTOLOGY_ICON);
-        selectableNode.setHierarchySelection(false);
+        String name = node.getValue().getValue() +" ("+code+")";
+        boolean selected = selectedCodes!=null && selectedCodes.contains(code);
+        SelectableNode<Object> selectableNode =
+                new SelectableNodeBuilder<Object>()
+                        .setName(name)
+                        .setIcon(GDLEditorImageUtil.ONTOLOGY_ICON)
+                        .setObject(node.getValue())
+                        .setSelectionMode(SelectableNode.SelectionMode.MULTIPLE)
+                        .setSelectionPropagationMode(SelectableNode.SelectionPropagationMode.NONE)
+                        .setSelected(selected)
+                        .createSelectableNode();
         for (TerminologyNodeVO node2 : node.getChildren()) {
             selectableNode.add(getSelectableNodeTerminologyCodes(node2, selectedCodes));
         }
@@ -392,7 +438,7 @@ public class NodeDefinitionConversor {
         if (node.getObject() instanceof DvCodedText){
             if (object.equals(((DvCodedText)node.getObject()).getDefiningCode().getCodeString())){
                 node.setSelected(true);
-                node.cambioEstado(node);
+                node.stateChange(node);
                 if (!multiple){
                     return true;
                 }

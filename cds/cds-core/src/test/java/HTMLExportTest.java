@@ -37,7 +37,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testGuideHTMLExport() throws InternalErrorException {
+    public void shouldExportGuideToHTML() throws InternalErrorException {
         Guide guide = new Guide();
         guide.setId("testGuideHTML");
         guide.setConcept("test");
@@ -51,7 +51,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testStudyHTMLExport() throws InternalErrorException {
+    public void shouldExportStudyToHTML() throws InternalErrorException {
         Study study = new Study("testStudyHTML");
         study.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         study.getStudyDefinitions().put("en", new StudyDefinition());
@@ -61,7 +61,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testArchetypeHTMLExport() throws InternalErrorException {
+    public void shouldExportArchetypeToHTML() throws InternalErrorException {
         Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
         ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
@@ -70,7 +70,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testTemplateHTMLExport() throws InternalErrorException {
+    public void shouldExportTemplateToHTML() throws InternalErrorException {
         Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
         TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
@@ -79,14 +79,14 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testTerminologyTMLExport() throws InternalErrorException {
+    public void shouldExportTerminologyToHTML() throws InternalErrorException {
         TerminologyHTMLExporter htmlExporter = new TerminologyHTMLExporter("ALERTS","en");
         String html = htmlExporter.convertToHTML();
         assertThat(html, containsString("Non compliant stroke prevention found, documented deviation older than 6 months"));
     }
 
     @Test
-    public void testDSVHTMLExport() throws IOException, InternalErrorException {
+    public void shouldExportViewToHTML() throws IOException, InternalErrorException {
         DecisionSupportView dsv = new DecisionSupportView();
         dsv.setDsViewId("testDSVHTML");
         dsv.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
@@ -97,7 +97,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testCDSAppExport() throws IOException, InternalErrorException {
+    public void shouldExportAppToHTML() throws IOException, InternalErrorException {
         CDSApp cdsApp = new CDSApp();
         cdsApp.setCdsAppId("testCDSAppId");
         cdsApp.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
@@ -108,7 +108,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testScenarioExport() throws IOException, InternalErrorException {
+    public void shouldExportScenarioToHTML() throws IOException, InternalErrorException {
         Scenario scenario = new Scenario("testScenarioId");
         scenario.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         scenario.getScenarioDefinitions().put("en", new ScenarioDefinition());
@@ -118,7 +118,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testKBInstanceExport() throws IOException, InternalErrorException {
+    public void shouldExportInstanceToHTML() throws IOException, InternalErrorException {
         KBInstance kbInstance = new KBInstance("testKBInstanceId");
         kbInstance.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         kbInstance.getKbInstanceDefinitions().put("en", new KBInstanceDefinition());
@@ -128,7 +128,7 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void testOrderSetExport() throws IOException, InternalErrorException {
+    public void shouldExportOrderSetToHTML() throws IOException, InternalErrorException {
         OrderSet orderSet = new OrderSet("testOrderSetId");
         orderSet.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         orderSet.getOrderSetDefinitions().put("en", new OrderSetDefinition());

@@ -8,7 +8,7 @@ package se.cambio.openehr.view.trees.renderers;
 
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.trees.SelectableNode;
-import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
+import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 import se.cambio.openehr.view.util.MultipleIcon;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
  */
 public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     private JCheckBox leafRenderer = new JCheckBox();
-    private SelectableNode<E> _nodoSeleccionable = new SelectableNode<E>();
+    private SelectableNode<E> _nodoSeleccionable = new SelectableNodeBuilder().createSelectableNode();
 
 
     Color selectionBorderColor, selectionForeground, selectionBackground,
@@ -66,9 +66,9 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
 					expanded, leaf, row, false);
 	     */
             SelectableNode<?> nodo = (SelectableNode<?>)value;
-            leafRenderer.setText(nodo.getDescripcion());
-            leafRenderer.setToolTipText(nodo.getToolTip());
-            tree.setToolTipText(nodo.getToolTip());
+            leafRenderer.setText(nodo.getName());
+            leafRenderer.setToolTipText(nodo.getDescription());
+            tree.setToolTipText(nodo.getDescription());
         }
         leafRenderer.setSelected(false);
         leafRenderer.setEnabled(tree.isEnabled());
@@ -85,56 +85,56 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
             if (value instanceof SelectableNode<?>) {
                 SelectableNode<E> node = (SelectableNode<E>) value;
                 _nodoSeleccionable = node;
-                leafRenderer.setText(node.getDescripcion());
+                leafRenderer.setText(node.getName());
                 Font fontValue = UIManager.getFont("Tree.font");
                 if (fontValue != null) {
                     leafRenderer.setFont(fontValue);
                 }
-                if (node.isCursiva()){
+                if (node.isItalic()){
                     leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.ITALIC));
                 }
                 if (node.isBold()){
                     leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.BOLD));
                 }
-                if (node.getForeground()!=null){
-                    leafRenderer.setForeground(node.getForeground());
+                if (node.getForegroundColor()!=null){
+                    leafRenderer.setForeground(node.getForegroundColor());
                 }
-                if (!node.getSeleccionUnica()){
+                if (node.isMultipleSelectionMode()){
                     Icon selectedIcon = OpenEHRImageUtil.ACCEPT_ICON;
                     Icon unSelectedIcon = OpenEHRImageUtil.UNACCEPT_ICON;
                     Icon halfSelectedIcon = OpenEHRImageUtil.HALF_ACCEPT_ICON;
-                    if (value instanceof SelectableNodeWithIcon<?>){
+                    if (value instanceof SelectableNode<?>){
                         selectedIcon = new MultipleIcon( new Icon[]{
                                 selectedIcon,
-                                ((SelectableNodeWithIcon<?>)value).getIcono()});
+                                ((SelectableNode<?>)value).getIcon()});
                         unSelectedIcon = new MultipleIcon( new Icon[]{
                                 unSelectedIcon,
-                                ((SelectableNodeWithIcon<?>)value).getIcono()});
+                                ((SelectableNode<?>)value).getIcon()});
                         halfSelectedIcon = new MultipleIcon( new Icon[]{
                                 halfSelectedIcon,
-                                ((SelectableNodeWithIcon<?>)value).getIcono()});
+                                ((SelectableNode<?>)value).getIcon()});
                     }
                     //leafRenderer.setIcon(new MultipleIcon(unSelectedicons));
                     leafRenderer.setSelectedIcon(selectedIcon);
                     leafRenderer.setDisabledSelectedIcon(unSelectedIcon);
-                    if (node.getSeleccionado().booleanValue()){
+                    if (node.isSelected().booleanValue()){
                         leafRenderer.setIcon(selectedIcon);
-                    } else if (node.getContineneSeleccionado()){
+                    } else if (node.hasChildrenSelected()){
                         leafRenderer.setIcon(halfSelectedIcon);
                     }else{
                         leafRenderer.setIcon(unSelectedIcon);
                     }
                 }else{
-                    Icon icono = OpenEHRImageUtil.EMPTY_ICON;
-                    if (value instanceof SelectableNodeWithIcon<?>){
-                        icono = ((SelectableNodeWithIcon<?>)value).getIcono();
+                    Icon icon = OpenEHRImageUtil.EMPTY_ICON;
+                    if (value instanceof SelectableNode<?>){
+                        icon = ((SelectableNode<?>)value).getIcon();
                     }
-                    leafRenderer.setIcon(icono);
-                    leafRenderer.setSelectedIcon(icono);
-                    leafRenderer.setDisabledSelectedIcon(icono);
+                    leafRenderer.setIcon(icon);
+                    leafRenderer.setSelectedIcon(icon);
+                    leafRenderer.setDisabledSelectedIcon(icon);
                 }
                 leafRenderer.setDisabledIcon(leafRenderer.getIcon());
-                leafRenderer.setSelected(node.getSeleccionado().booleanValue());
+                leafRenderer.setSelected(node.isSelected().booleanValue());
             }
 
         }
@@ -144,7 +144,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     class CheckBoxNodeActionListener implements ActionListener{
 
         public void actionPerformed(ActionEvent e) {
-            _nodoSeleccionable.cambioEstado(_nodoSeleccionable);
+            _nodoSeleccionable.stateChange(_nodoSeleccionable);
         }
     }
 }
