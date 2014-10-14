@@ -90,16 +90,16 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
                 if (fontValue != null) {
                     leafRenderer.setFont(fontValue);
                 }
-                if (node.isItalic()){
+                if (node.isItalic()) {
                     leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.ITALIC));
                 }
-                if (node.isBold()){
+                if (node.isBold()) {
                     leafRenderer.setFont(leafRenderer.getFont().deriveFont(Font.BOLD));
                 }
-                if (node.getForegroundColor()!=null){
+                if (node.getForegroundColor() != null) {
                     leafRenderer.setForeground(node.getForegroundColor());
                 }
-                if (node.isMultipleSelectionMode()){
+                if (node.isMultipleSelectionMode()) {
                     Icon selectedIcon = OpenEHRImageUtil.ACCEPT_ICON;
                     Icon unSelectedIcon = OpenEHRImageUtil.UNACCEPT_ICON;
                     Icon halfSelectedIcon = OpenEHRImageUtil.HALF_ACCEPT_ICON;
@@ -117,16 +117,16 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
                     //leafRenderer.setIcon(new MultipleIcon(unSelectedicons));
                     leafRenderer.setSelectedIcon(selectedIcon);
                     leafRenderer.setDisabledSelectedIcon(unSelectedIcon);
-                    if (node.isSelected().booleanValue()){
+                    if (node.isSelected().booleanValue()) {
                         leafRenderer.setIcon(selectedIcon);
-                    } else if (node.hasChildrenSelected()){
+                    } else if (node.hasChildrenSelected()) {
                         leafRenderer.setIcon(halfSelectedIcon);
-                    }else{
+                    } else {
                         leafRenderer.setIcon(unSelectedIcon);
                     }
-                }else{
+                } else {
                     Icon icon = OpenEHRImageUtil.EMPTY_ICON;
-                    if (value instanceof SelectableNode<?>){
+                    if (value instanceof SelectableNode<?>) {
                         icon = ((SelectableNode<?>)value).getIcon();
                     }
                     leafRenderer.setIcon(icon);
@@ -141,8 +141,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
         return leafRenderer;
     }
 
-    class CheckBoxNodeActionListener implements ActionListener{
-
+    class CheckBoxNodeActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             _nodoSeleccionable.stateChange(_nodoSeleccionable);
         }

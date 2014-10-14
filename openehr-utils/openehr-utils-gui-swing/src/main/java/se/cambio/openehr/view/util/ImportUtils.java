@@ -10,6 +10,7 @@ import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
@@ -115,10 +116,6 @@ public class ImportUtils {
             ArchetypeDTO archetypeDTO =
                     new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null);
             return archetypeDTO;
-        } catch (FileNotFoundException e) {
-            throw new InternalErrorException(e);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
         } catch (Exception e) {
             throw new InternalErrorException(e);
         } catch (Error e) {
@@ -180,8 +177,13 @@ public class ImportUtils {
     }
 
     public static TemplateDTO importTemplate(Window owner, String idTemplate, String archetypeSrc) throws Exception{
-        TemplateDTO templateDTO =
-                new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
+        TemplateDTO templateDTO = new TemplateDTOBuilder()
+                .setTemplateId(idTemplate)
+                .setArcehtypeId(idTemplate)
+                .setName(idTemplate)
+                .setDescription(idTemplate)
+                .setArchetype(archetypeSrc)
+                .createTemplateDTO();
         TEMPLATE template = TemplateObjectBundleManager.getParsedTemplate(templateDTO.getArchetype());
         Map<String, Archetype> archetypeMap = null;
         boolean lookupForArchetypes = true;
@@ -226,15 +228,15 @@ public class ImportUtils {
             String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
             String fileName = file.getName();
             String idTemplate = fileName.substring(0,fileName.length()-4);
-            TemplateDTO templateDTO =
-                    new TemplateDTO(idTemplate, idTemplate, idTemplate, idTemplate, null, archetypeSrc, null, null);
-            Map<String, Archetype> archetypeMap = Archetypes.getArchetypeMap();
+            TemplateDTO templateDTO = new TemplateDTOBuilder()
+                    .setTemplateId(idTemplate)
+                    .setArcehtypeId(idTemplate)
+                    .setName(idTemplate)
+                    .setDescription(idTemplate)
+                    .setArchetype(archetypeSrc)
+                    .createTemplateDTO();
             new TemplateObjectBundleManager(templateDTO).generateArchetypeObjectBundleCustomVO();
             return templateDTO;
-        } catch (FileNotFoundException e) {
-            throw new InternalErrorException(e);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
         } catch (Exception e) {
             throw new InternalErrorException(e);
         } finally{
@@ -258,13 +260,8 @@ public class ImportUtils {
             byte[] termSetSrc = IOUtils.toByteArray(ubis);
             String fileName = file.getName();
             String terminologyId = fileName.substring(0,fileName.length()-4);
-            TerminologyDTO terminologyDTO =
-                    new TerminologyDTO(terminologyId,termSetSrc);
+            TerminologyDTO terminologyDTO = new TerminologyDTO(terminologyId,termSetSrc);
             return terminologyDTO;
-        } catch (FileNotFoundException e) {
-            throw new InternalErrorException(e);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
         } catch (Exception e) {
             throw new InternalErrorException(e);
         } finally{

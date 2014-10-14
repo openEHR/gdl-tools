@@ -77,6 +77,7 @@ public class LocalCM {
         try{
             hostname = OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
         } catch (MissingConfigurationParameterException e) {
+            Logger.getLogger(LocalCM.class).info("OpenEHR hostname not found using default localhost");
         }
         try {
             if (hostname==null){

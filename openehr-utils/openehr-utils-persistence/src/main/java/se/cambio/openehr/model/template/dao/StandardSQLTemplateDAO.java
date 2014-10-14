@@ -1,6 +1,7 @@
 package se.cambio.openehr.model.template.dao;
 
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.model.util.sql.GeneralOperations;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -66,7 +67,17 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 String archetype = resultSet.getString(i++);
                 byte[] aom = resultSet.getBytes(i++);
                 byte[] tobcvo = resultSet.getBytes(i++);
-                templateDTO.add(new TemplateDTO(templateId, idArchetype, name, description, rmName, archetype, aom, tobcvo));
+                TemplateDTO templateDTO1 = new TemplateDTOBuilder()
+                        .setTemplateId(templateId)
+                        .setArcehtypeId(idArchetype)
+                        .setName(name)
+                        .setDescription(description)
+                        .setEntryType(rmName)
+                        .setArchetype(archetype)
+                        .setAom(aom)
+                        .setAobcVO(tobcvo)
+                        .createTemplateDTO();
+                templateDTO.add(templateDTO1);
             } while (resultSet.next());
 
 	    /* Return the value object. */
@@ -110,7 +121,17 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 String archetype = resultSet.getString(i++);
                 byte[] aom = resultSet.getBytes(i++);
                 byte[] tobcvo = resultSet.getBytes(i++);
-                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, name, description, rmName, archetype, aom, tobcvo));
+                TemplateDTO templateDTO = new TemplateDTOBuilder()
+                        .setTemplateId(idTemplate)
+                        .setArcehtypeId(idArchetype)
+                        .setName(name)
+                        .setDescription(description)
+                        .setEntryType(rmName)
+                        .setArchetype(archetype)
+                        .setAom(aom)
+                        .setAobcVO(tobcvo)
+                        .createTemplateDTO();
+                templateDTOs.add(templateDTO);
             } while (resultSet.next());
 
 	    /* Return the value object. */
@@ -151,7 +172,15 @@ public class StandardSQLTemplateDAO implements SQLTemplateDAO {
                 String description = resultSet.getString(i++);
                 String rmName = resultSet.getString(i++);
                 String archetype = resultSet.getString(i++);
-                templateDTOs.add(new TemplateDTO(idTemplate, idArchetype, name, description, rmName, archetype, null, null));
+                TemplateDTO templateDTO = new TemplateDTOBuilder()
+                        .setTemplateId(idTemplate)
+                        .setArcehtypeId(idArchetype)
+                        .setName(name)
+                        .setDescription(description)
+                        .setEntryType(rmName)
+                        .setArchetype(archetype)
+                        .createTemplateDTO();
+                templateDTOs.add(templateDTO);
             } while (resultSet.next());
 
 	    /* Return the value object. */

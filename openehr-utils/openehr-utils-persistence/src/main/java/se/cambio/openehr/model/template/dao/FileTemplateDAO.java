@@ -2,6 +2,7 @@ package se.cambio.openehr.model.template.dao;
 
 import org.apache.log4j.Logger;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -32,7 +33,11 @@ public class FileTemplateDAO implements GenericTemplateDAO{
                         InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
                         String templateId = fileName.substring(0,fileName.length()-4);
                         String archetype = IOUtils.toString(fis);
-                        TemplateDTO templateDTO = new TemplateDTO(templateId, null, templateId, null, null, archetype, null, null);
+                        TemplateDTO templateDTO = new TemplateDTOBuilder()
+                                .setTemplateId(templateId)
+                                .setName(templateId)
+                                .setArchetype(archetype)
+                                .createTemplateDTO();
                         templateVOs.add(templateDTO);
                     }
                 }catch(Throwable e){
@@ -68,7 +73,12 @@ public class FileTemplateDAO implements GenericTemplateDAO{
                 try {
                     InputStream fis = new FileInputStream(listOfFiles[i].getAbsolutePath());
                     String archetype = IOUtils.toString(fis);
-                    templateDTOs.add(new TemplateDTO(templateId, null, templateId, null, null, archetype, null, null));
+                    TemplateDTO templateDTO = new TemplateDTOBuilder()
+                            .setTemplateId(templateId)
+                            .setName(templateId)
+                            .setArchetype(archetype)
+                            .createTemplateDTO();
+                    templateDTOs.add(templateDTO);
                 } catch (Exception e) {
                     ExceptionHandler.handle(e);
                 }

@@ -9,6 +9,7 @@ import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.controller.terminology.session.data.Terminologies;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
@@ -200,7 +201,13 @@ public class CMImportExportManager {
                 }else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
                     String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length() + 1, entry.getName().length() - TEMPLATES_POSTFIX.length());
-                    templateSourceDTOs.add(new TemplateDTO(templateId, templateId, templateId, null, null, src, null, null));
+                    TemplateDTO templateDTO = new TemplateDTOBuilder()
+                            .setTemplateId(templateId)
+                            .setArcehtypeId(templateId)
+                            .setName(templateId)
+                            .setArchetype(src)
+                            .createTemplateDTO();
+                    templateSourceDTOs.add(templateDTO);
                 }else if (entry.getName().startsWith(TERMINOLOGIES_FOLDER_NAME) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
                     byte[] src = IOUtils.toByteArray(zis);
                     String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length() + 1, entry.getName().length() - TERMINOLOGY_POSTFIX.length());

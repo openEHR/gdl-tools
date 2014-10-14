@@ -1,6 +1,7 @@
 package se.cambio.openehr.model.template.dao;
 
 import se.cambio.openehr.model.template.dto.TemplateDTO;
+import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.Resources;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -37,7 +38,13 @@ public class InJarTemplateDAO implements GenericTemplateDAO{
                         InputStream fis =InJarTemplateDAO.class.getClassLoader().getResourceAsStream(templateFileName);
                         String templateId = templateFileName.substring(templateFileName.lastIndexOf("/")+1,templateFileName.length()-4);
                         String archetype = IOUtils.toString(fis);
-                        templateDTOs.add(new TemplateDTO(templateId,templateId, templateId, null, null, archetype, null, null));
+                        TemplateDTO templateDTO = new TemplateDTOBuilder()
+                                .setTemplateId(templateId)
+                                .setArcehtypeId(templateId)
+                                .setName(templateId)
+                                .setArchetype(archetype)
+                                .createTemplateDTO();
+                        templateDTOs.add(templateDTO);
                     }catch(Exception e){
                         throw new InternalErrorException(e);
                     }
@@ -64,7 +71,13 @@ public class InJarTemplateDAO implements GenericTemplateDAO{
             for (String templateId : templateIds) {
                 InputStream fis =InJarTemplateDAO.class.getClassLoader().getResourceAsStream(templateId+".oet");
                 String archetype = IOUtils.toString(fis);
-                templateDTOs.add(new TemplateDTO(templateId,templateId,templateId, null, null, archetype, null, null));
+                TemplateDTO templateDTO = new TemplateDTOBuilder()
+                        .setTemplateId(templateId)
+                        .setArcehtypeId(templateId)
+                        .setName(templateId)
+                        .setArchetype(archetype)
+                        .createTemplateDTO();
+                templateDTOs.add(templateDTO);
             }
             return templateDTOs;
         }catch(Exception e){
