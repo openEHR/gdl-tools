@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class KBInstanceComparator implements Comparator<KBInstanceDTO>{
     public int compare(KBInstanceDTO o1, KBInstanceDTO o2) {
-        return o1.getKbInstanceId().compareTo(o2.getKbInstanceId());
+        return o1.getId().compareTo(o2.getId());
     }
 }
 /*

@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class CDSAppComparator implements Comparator<CDSAppDTO>{
 
     public int compare(CDSAppDTO o1, CDSAppDTO o2) {
-	return o1.getCdaAppId().compareTo(o2.getCdaAppId());
+	return o1.getId().compareTo(o2.getId());
     }
 
 }

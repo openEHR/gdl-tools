@@ -1,37 +1,42 @@
 package se.cambio.cds.model.kb.instance.dto;
 
+import se.cambio.openehr.model.util.CMElement;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="caseStudy")
-public class KBInstanceDTO {
+@Table(name="cm_kb_instance")
+public class KBInstanceDTO implements CMElement{
     @Id
-    private String kbInstanceId;
+    private String id;
     @Lob
-    private String kbInstanceSrc;
+    private String source;
     private Date lastUpdate;
 
-    public KBInstanceDTO(String kbInstanceId) {
-        this.kbInstanceId = kbInstanceId;
+    public KBInstanceDTO(String id) {
+        this.id = id;
     }
 
-    public String getKbInstanceId() {
-        return kbInstanceId;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setKbInstanceId(String kbInstanceId) {
-        this.kbInstanceId = kbInstanceId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getKbInstanceSrc() {
-        return kbInstanceSrc;
+    @Override
+    public String getSource() {
+        return source;
     }
 
-    public void setKbInstanceSrc(String kbInstanceSrc) {
-        this.kbInstanceSrc = kbInstanceSrc;
+    public void setSource(String source) {
+        this.source = source;
     }
 
+    @Override
     public Date getLastUpdate() {
         return lastUpdate;
     }

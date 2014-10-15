@@ -7,6 +7,7 @@ import se.cambio.cds.model.orderset.dto.OrderSetDTO;
 import se.cambio.cds.model.study.dto.StudyDTO;
 import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
+import se.cambio.openehr.model.util.CMElement;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -65,8 +66,7 @@ public interface CDSAdministrationFacadeDelegate {
     //Apps
     public Collection<CDSAppDTO> searchAllCDSApps() throws InternalErrorException;
 
-    //TODO input argument should be a collection
-    public CDSAppDTO searchCDSApp(String cdsAppId) throws InternalErrorException, InstanceNotFoundException;
+    public Collection<CDSAppDTO> searchCDSApp(Collection<String> cdsAppId) throws InternalErrorException, InstanceNotFoundException;
 
     public int getCDSAppHashCode() throws InternalErrorException;
 
@@ -96,6 +96,14 @@ public interface CDSAdministrationFacadeDelegate {
     public void upsertOrderSet(OrderSetDTO orderSetDTO) throws InternalErrorException, InstanceNotFoundException;
 
     public void removeOrderSet(String orderSetId) throws InternalErrorException, InstanceNotFoundException;
+
+    //Generic
+    public <E extends CMElement>Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
+    public <E extends CMElement>Collection<String> getAllCMElementIds(Class<E> cmElementClass) throws InternalErrorException;
+    public <E extends CMElement>Collection<E> searchCMElementsByIds(Class<E> cmElementClass, Collection<String> ids) throws InternalErrorException, InstanceNotFoundException;
+    public <E extends CMElement>void upsertCMElement(E cmElement) throws InternalErrorException;
+    public <E extends CMElement>void removeCMElement(Class<E> cmElementClass, String id) throws InternalErrorException, InstanceNotFoundException;
+    public <E extends CMElement>String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

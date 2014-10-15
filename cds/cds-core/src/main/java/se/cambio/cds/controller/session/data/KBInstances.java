@@ -40,8 +40,8 @@ public class KBInstances {
     }
 
     public void registerKBInstance(KBInstanceDTO kbInstanceDTO){
-        getKBInstancesMap().put(kbInstanceDTO.getKbInstanceId(), kbInstanceDTO);
-        Logger.getLogger(KBInstances.class).info("Registering kb instance: '"+kbInstanceDTO.getKbInstanceId()+"'.");
+        getKBInstancesMap().put(kbInstanceDTO.getId(), kbInstanceDTO);
+        Logger.getLogger(KBInstances.class).info("Registering kb instance: '"+kbInstanceDTO.getId()+"'.");
     }
 
     public KBInstanceDTO getKBInstanceDTO(String kbInstanceId){
@@ -87,7 +87,7 @@ public class KBInstances {
         Collections.sort(kbInstanceDTOList, new KBInstanceComparator());
         List<String> defs = new ArrayList<String>();
         for(KBInstanceDTO kbInstanceDTO: kbInstanceDTOList){
-            defs.add(kbInstanceDTO.getKbInstanceSrc());
+            defs.add(kbInstanceDTO.getSource());
         }
         return defs.hashCode();
     }

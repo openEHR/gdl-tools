@@ -1,38 +1,10 @@
-package se.cambio.cds.model.kb.instance.dao;
+package se.cambio.cds.model.app.dao;
 
-import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.cds.model.app.dto.CDSAppDTO;
+import se.cambio.cds.model.cm.element.dao.SQLGenericCMElementDAO;
 
-/**
- * @author iago.corbal
- */
-public class GenericKBInstanceFactory {
+public class SQLAppDAOSQL extends SQLGenericCMElementDAO<CDSAppDTO> {
 
-    private static String DAO_CLASS = "GenericKBInstanceDAO/Class";
-
-    private GenericKBInstanceFactory() {
-    }
-
-    private static Class<?> getDAOClass() throws InternalErrorException {
-        Class<?> theClass = null;
-        try {
-            String delegateClassName =
-                    CDSConfigurationParametersManager.getParameter(DAO_CLASS);
-            theClass = Class.forName(delegateClassName);
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        }
-        return theClass;
-    }
-
-    public static GenericKBInstanceDAO getDAO()
-            throws InternalErrorException {
-        try {
-            return (GenericKBInstanceDAO)getDAOClass().newInstance();
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        }
-    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -40,8 +40,8 @@ public class Studies {
     }
 
     public void registerStudy(StudyDTO studyDTO){
-        getStudiesMap().put(studyDTO.getStudyId(), studyDTO);
-        Logger.getLogger(Studies.class).info("Registering study: '"+studyDTO.getStudyId()+"'.");
+        getStudiesMap().put(studyDTO.getId(), studyDTO);
+        Logger.getLogger(Studies.class).info("Registering study: '"+studyDTO.getId()+"'.");
     }
 
     public StudyDTO getStudyDTO(String idStudy){
@@ -87,7 +87,7 @@ public class Studies {
         Collections.sort(studyDTOsList, new StudyComparator());
         List<String> defs = new ArrayList<String>();
         for(StudyDTO studyDTO: studyDTOsList){
-            defs.add(studyDTO.getStudySrc());
+            defs.add(studyDTO.getSource());
         }
         return defs.hashCode();
     }

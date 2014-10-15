@@ -65,22 +65,14 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Collection<ArchetypeDTO> archetypesVO = new ArrayList<ArchetypeDTO>();
-        String idsArquetiposStr = "";
-        if (archetypeIds!=null && !archetypeIds.isEmpty()){
-            for (String archetypeId : archetypeIds) {
-                idsArquetiposStr += "'"+archetypeId+"',";
-            }
-            if (idsArquetiposStr.length()>1){
-                idsArquetiposStr = idsArquetiposStr.substring(0, idsArquetiposStr.length()-1);
-            }
-        }else{
+        if (archetypeIds==null || archetypeIds.isEmpty()) {
             return archetypesVO;
         }
+        String archetypeIdStr = getArchetypeIdStr(archetypeIds);
         try {
-
 	    /* Create "preparedStatement". */
             String queryString = "SELECT archetypeid, rmname, archetype, aom, aobcvo"
-                    + " FROM openehr_archetype WHERE archetypeid IN ("+idsArquetiposStr+")";
+                    + " FROM openehr_archetype WHERE archetypeid IN ("+archetypeIdStr+")";
             preparedStatement = connection.prepareStatement(queryString);
 
 	    /* Execute query. */
@@ -110,6 +102,17 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
             GeneralOperations.closeResultSet(resultSet);
             GeneralOperations.closeStatement(preparedStatement);
         }
+    }
+
+    private String getArchetypeIdStr(Collection<String> archetypeIds) {
+        String archetypeIdStr = "";
+        for (String archetypeId : archetypeIds) {
+            archetypeIdStr += "'"+archetypeId+"',";
+        }
+        if (archetypeIdStr.length()>1){
+            archetypeIdStr = archetypeIdStr.substring(0, archetypeIdStr.length()-1);
+        }
+        return archetypeIdStr;
     }
 
 

@@ -1,35 +1,16 @@
 package se.cambio.cds.model.app.dao;
 
 import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.cds.model.cm.element.dao.FileGenericCMElementDAO;
+import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.sql.Connection;
-import java.util.Collection;
-import java.util.Date;
+import java.util.Collections;
 
-/**
- * @author iago.corbal
- */
-public interface SQLAppDAO {
+public class FileAppDAO extends FileGenericCMElementDAO<CDSAppDTO> {
 
-    public CDSAppDTO searchByCDSAppId(Connection connection, String cdsAppId)
-            throws InternalErrorException, InstanceNotFoundException;
-
-    public Collection<CDSAppDTO> searchAll(Connection connection)
-	    throws InternalErrorException;
-
-    public CDSAppDTO insert(Connection connection, CDSAppDTO cdsAppDTO)
-	    throws InternalErrorException;
-
-    public void update(Connection connection, CDSAppDTO cdsAppDTO)
-    throws InternalErrorException, InstanceNotFoundException;
-    
-    public void remove(Connection connection, String cdsAppId)
-	    throws InternalErrorException, InstanceNotFoundException;
-
-    public Date getLastUpdateDate(Connection connection)
-            throws InternalErrorException;
+    public FileAppDAO() {
+        super(UserConfigurationManager.getAppsFolder(), Collections.singleton("app"));
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

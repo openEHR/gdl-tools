@@ -26,8 +26,8 @@ public class CDSApps {
 
     public void loadStudiesById(Collection<String> cdsAppIds) throws InternalErrorException, InstanceNotFoundException {
         CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        for (String cdsAppId : cdsAppIds){
-            CDSAppDTO cdsAppDTO = adminFD.searchCDSApp(cdsAppId);
+        Collection<CDSAppDTO> cdsAppDTOs = adminFD.searchCDSApp(cdsAppIds);
+        for (CDSAppDTO cdsAppDTO : cdsAppDTOs){
             registerApp(cdsAppDTO);
         }
     }
@@ -40,8 +40,8 @@ public class CDSApps {
     }
 
     public void registerApp(CDSAppDTO cdsAppDTO){
-        getAppsMap().put(cdsAppDTO.getCdaAppId(), cdsAppDTO);
-        Logger.getLogger(CDSApps.class).info("Registering app: '"+cdsAppDTO.getCdaAppId()+"'.");
+        getAppsMap().put(cdsAppDTO.getId(), cdsAppDTO);
+        Logger.getLogger(CDSApps.class).info("Registering app: '"+cdsAppDTO.getId()+"'.");
     }
 
     public CDSAppDTO getCDSAppDTO(String idStudy){
@@ -87,7 +87,7 @@ public class CDSApps {
         Collections.sort(cdsAppDTOsList, new CDSAppComparator());
         List<String> defs = new ArrayList<String>();
         for(CDSAppDTO cdsAppDTO: cdsAppDTOsList){
-            defs.add(cdsAppDTO.getAppSrc());
+            defs.add(cdsAppDTO.getSource());
         }
         return defs.hashCode();
     }

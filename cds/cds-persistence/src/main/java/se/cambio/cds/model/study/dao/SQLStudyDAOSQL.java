@@ -1,34 +1,9 @@
-package se.cambio.cds.model.app.dao;
+package se.cambio.cds.model.study.dao;
 
-import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.cds.model.cm.element.dao.SQLGenericCMElementDAO;
+import se.cambio.cds.model.study.dto.StudyDTO;
 
-import java.util.Collection;
-import java.util.Date;
-
-/**
- * @author iago.corbal
- */
-public interface GenericAppDAO {
-
-	public CDSAppDTO searchByCDSAppId(String cdsAppId)
-	throws InternalErrorException, InstanceNotFoundException;
-	
-	public Collection<CDSAppDTO> searchAll()
-	throws InternalErrorException;
-
-	public CDSAppDTO add(CDSAppDTO cdsAppDTO)
-	throws InternalErrorException;
-
-	public void update(CDSAppDTO cdsAppDTO)
-	throws InternalErrorException, InstanceNotFoundException;
-
-	public void remove(String cdsAppId)
-	throws InternalErrorException, InstanceNotFoundException;
-
-    public Date getLastUpdateDate()
-            throws InternalErrorException;
+public class SQLStudyDAOSQL extends SQLGenericCMElementDAO<StudyDTO> {
 
 }
 /*

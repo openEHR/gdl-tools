@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class StudyComparator implements Comparator<StudyDTO>{
 
     public int compare(StudyDTO o1, StudyDTO o2) {
-	return o1.getStudyId().compareTo(o2.getStudyId());
+	return o1.getId().compareTo(o2.getId());
     }
 
 }
