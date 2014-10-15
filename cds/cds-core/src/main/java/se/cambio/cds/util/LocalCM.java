@@ -77,13 +77,14 @@ public class LocalCM {
         try{
             hostname = OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
         } catch (MissingConfigurationParameterException e) {
+            Logger.getLogger(LocalCM.class).info("OpenEHR hostname not found using default localhost");
         }
         try {
             if (hostname==null){
                 hostname = "local";
             }
             File file = new File(AUTO_SAVE_FILE_CM_PREFIX+"."+hostname+".zip");
-            CMImportExportManager.exportCurrentCM(file, true);
+            CMImportExportManager.exportCurrentCM(file, CMImportExportManager.GenerationStrategy.DTOS);
         } catch (IOException e) {
             throw new InternalErrorException(e);
         }

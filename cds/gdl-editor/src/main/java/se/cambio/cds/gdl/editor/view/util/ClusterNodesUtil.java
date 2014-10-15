@@ -8,7 +8,7 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.trees.SelectableNode;
-import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
+import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 
 import java.util.Map;
 
@@ -62,9 +62,10 @@ public class ClusterNodesUtil {
         }
         SelectableNode<Object> rmNode = rmNodes.get(idRMClassifier);
         if (rmNode==null){
-            rmNode = new SelectableNodeWithIcon<Object>(
-                    idRMClassifier, null, true, false,
-                    GDLEditorImageUtil.OBJECT_ICON);
+            rmNode = new SelectableNodeBuilder<Object>()
+                    .setName(idRMClassifier)
+                    .setIcon(GDLEditorImageUtil.OBJECT_ICON)
+                    .createSelectableNode();
             rmNodes.put(idRMClassifier, rmNode);
             rootNode.add(rmNode);
         }
@@ -90,11 +91,14 @@ public class ClusterNodesUtil {
                 (clusterVO.getUpperCardinality()==null?" [*]":clusterVO.getUpperCardinality()>1?" ["+clusterVO.getUpperCardinality()+"]":"");
         String name = Clusters.getText(clusterVO, UserConfigurationManager.getLanguage());
         String desc = Clusters.getDescription(clusterVO, UserConfigurationManager.getLanguage());
-
-        return new SelectableNodeWithIcon<Object>(
-                name+upperNumOcurrences, object ,singleSelection, false,
-                OpenEHRConstUI.getIcon(clusterVO.getRMType()),
-                desc);
+        SelectableNode.SelectionMode selectionMode = singleSelection? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
+        return new SelectableNodeBuilder<Object>()
+                .setName(name+upperNumOcurrences)
+                .setDescription(desc)
+                .setSelectionMode(selectionMode)
+                .setIcon(OpenEHRConstUI.getIcon(clusterVO.getRMType()))
+                .setObject(object)
+                .createSelectableNode();
     }
 }
 /*

@@ -36,32 +36,20 @@ public class DVSwingUtil {
     private static String ITEMS_STR = "/items[";
     private static Border defaultBorder = new LineBorder(Color.BLACK);
 
-    /*
-    public static ElementInstance getElementInstance(ArchetypeElementVO archetypeElementVO, boolean last){
-	ArchetypeReference ar =
-		new ArchetypeReference(
-			archetypeElementVO.getIdArchetype(), 
-			archetypeElementVO.getIdTemplate(), 
-			(last?AggregationFunctions.ID_AGGREGATION_FUNCTION_LAST:null));
-	return new ElementInstance(
-		archetypeElementVO.getId(), 
-		null, ar, null, GuideUtil.NULL_FLAVOUR_VALUE);
-    }
-     */
-    public static ArchetypeReference getEHRArchetypeReference(String idArchetype){
+    public static ArchetypeReference getEHRArchetypeReference(String idArchetype) {
         return new ArchetypeReference(
                 Domains.EHR_ID,
                 idArchetype,
                 null);
     }
 
-    public static ElementInstance getElementInstance(String elementId, ArchetypeReference ar){
+    public static ElementInstance getElementInstance(String elementId, ArchetypeReference ar) {
         return new ElementInstance(
                 elementId,
                 null, ar, null, GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
     }
 
-    public static ElementInstance getEHRElementInstance(String elementId){
+    public static ElementInstance getEHRElementInstance(String elementId) {
         String idArchetype = getIdArchetype(elementId);
         return new ElementInstance(
                 elementId,
@@ -73,19 +61,19 @@ public class DVSwingUtil {
         return elementId.substring(0, elementId.indexOf("/",1));
     }
 
-    public static String getElementIdWithoutSection(String elementId){
+    public static String getElementIdWithoutSection(String elementId) {
         String archetypeId = getIdArchetypeInsideSection(elementId);
         int endArch = elementId.indexOf(archetypeId)+archetypeId.length()+1;
         return archetypeId+elementId.substring(endArch);
     }
 
-    private static String getIdArchetypeInsideSection(String elementId){
+    private static String getIdArchetypeInsideSection(String elementId) {
         int startArch = elementId.indexOf(ITEMS_STR)+ITEMS_STR.length();
         int endArch = elementId.indexOf("]", startArch);
         return elementId.substring(startArch, endArch);
     }
 
-    public static ArchetypeElementVO getArchetypeElementVO(ElementInstance elementInstance){
+    public static ArchetypeElementVO getArchetypeElementVO(ElementInstance elementInstance) {
         String idTemplate = null;
         if (elementInstance.getArchetypeReference()!=null){
             idTemplate = elementInstance.getArchetypeReference().getIdTemplate();
@@ -97,7 +85,7 @@ public class DVSwingUtil {
         return ae;
     }
 
-    public static JLabel createLabelForElement(ArchetypeElementVO archetypeElementVO){
+    public static JLabel createLabelForElement(ArchetypeElementVO archetypeElementVO) {
         JLabel label = null;
         String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         String tooltip = name;
@@ -111,7 +99,7 @@ public class DVSwingUtil {
         return label;
     }
 
-    public static JLabel createLabelForElement(ElementInstance elementInstance, TermDefinition termDefinition){
+    public static JLabel createLabelForElement(ElementInstance elementInstance, TermDefinition termDefinition) {
         ArchetypeElementVO archetypeElement =
                 ArchetypeElements.getArchetypeElement(
                         elementInstance.getArchetypeReference().getIdTemplate(),
@@ -138,15 +126,7 @@ public class DVSwingUtil {
                 }
             }
         }
-
-	/*if(_formGenerator.isLinkedInput(elementInstance)){
-	    label = new JLinkLabel();
-	    label.setText(name);
-	    label.setToolTipText(tooltip);
-	    ((JLinkLabel)label).addActionListener(_formGenerator.createLinkedFormGeneratorActionListener(elementInstance));
-	}else{*/
         label = new JLabel(name);
-        //}
         label.setToolTipText(
                 ArchetypeReferences.getHTMLTooltip(
                         archetypeElement,
@@ -161,7 +141,7 @@ public class DVSwingUtil {
     public static ClusterVO getSection(ArchetypeElementVO archetypeElementVO, int level){
         int sectionCount = 0;
         for (ClusterVO clusterVO : ArchetypeElements.getClusters(archetypeElementVO)) {
-            if (clusterVO.getRMType().equals(OpenEHRConst.SECTION) && sectionCount==level){
+            if (clusterVO.getRMType().equals(OpenEHRConst.SECTION) && sectionCount == level){
                 return clusterVO;
             }else{
                 sectionCount++;
@@ -170,7 +150,7 @@ public class DVSwingUtil {
         return null;
     }
 
-    public static DVGenericPanel getDVGenericForElement(ArchetypeElementVO archetypeElement){
+    public static DVGenericPanel getDVGenericForElement(ArchetypeElementVO archetypeElement) {
         String rmType = archetypeElement.getRMType();
         DVGenericPanel dvGenericPanel =
                 DVPanelFactory.createDVPanel(
@@ -180,7 +160,7 @@ public class DVSwingUtil {
         return dvGenericPanel;
     }
 
-    public static DVGenericPanel createDVGenericPanel(ElementInstance elementInstance){
+    public static DVGenericPanel createDVGenericPanel(ElementInstance elementInstance) {
         if (!Domains.CDS_ID.equals(elementInstance.getArchetypeReference().getIdDomain()) &&
                 elementInstance instanceof PredicateGeneratedElementInstance){
             //Remove predicates for ehr data
@@ -206,7 +186,7 @@ public class DVSwingUtil {
         return dvGenericPanel;
     }
 
-    public static DVGenericPanel getDVGenericForElement(ElementInstance elementInstance){
+    public static DVGenericPanel getDVGenericForElement(ElementInstance elementInstance) {
         String idTemplate = elementInstance.getArchetypeReference().getIdTemplate();
         String idElement = elementInstance.getId();
         ArchetypeElementVO archetypeElement =
@@ -215,7 +195,7 @@ public class DVSwingUtil {
                         idElement);
         String rmType = archetypeElement.getRMType();
         DVGenericPanel dvGenericPanel = DVPanelFactory.createDVPanel(idElement, idTemplate, rmType, true, true, false);
-        if (dvGenericPanel!=null){
+        if (dvGenericPanel != null){
             dvGenericPanel.setDataValue(elementInstance.getDataValue());
         }
         return dvGenericPanel;

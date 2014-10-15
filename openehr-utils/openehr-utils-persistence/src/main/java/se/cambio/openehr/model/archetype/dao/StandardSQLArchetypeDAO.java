@@ -164,7 +164,7 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
 
 	    /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setString(i++, archetypeDTO.getIdArchetype());
+            preparedStatement.setString(i++, archetypeDTO.getArchetypeId());
             preparedStatement.setString(i++, archetypeDTO.getRMName());
             preparedStatement.setString(i++, archetypeDTO.getArchetype());
             preparedStatement.setObject(i++, archetypeDTO.getAom());
@@ -203,20 +203,20 @@ public class StandardSQLArchetypeDAO implements SQLArchetypeDAO {
             preparedStatement.setString(i++, archetypeDTO.getArchetype());
             preparedStatement.setObject(i++, archetypeDTO.getAom());
             preparedStatement.setObject(i++, archetypeDTO.getAobcVO());
-            preparedStatement.setString(i++, archetypeDTO.getIdArchetype());
+            preparedStatement.setString(i++, archetypeDTO.getArchetypeId());
 
 	    /* Execute query. */
             int updatedRows = preparedStatement.executeUpdate();
 
             if (updatedRows == 0) {
                 throw new InstanceNotFoundException(
-                        archetypeDTO.getIdArchetype(),
+                        archetypeDTO.getArchetypeId(),
                         ArchetypeDTO.class.getName());
             }
 
             if (updatedRows > 1) {
                 throw new SQLException("Duplicate row for archetype = '" +
-                        archetypeDTO.getIdArchetype() + "' in table 'openehr_archetype'");
+                        archetypeDTO.getArchetypeId() + "' in table 'openehr_archetype'");
             }
         } catch (SQLException e) {
             throw new InternalErrorException(e);

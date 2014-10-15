@@ -6,8 +6,6 @@ import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
-import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegate;
-import se.cambio.cds.model.facade.kb.delegate.KBFacadeDelegateFactory;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.*;
@@ -22,18 +20,18 @@ public class CDSManager {
     public static Collection<ElementInstance> getElementInstances(
             String ehrId,
             Collection<String> guideIds,
-            Collection<ArchetypeReference> ehrData,
+            Collection<ArchetypeReference> data,
             GuideManager guideManager,
             Calendar date)
             throws PatientNotFoundException, InternalErrorException{
         ElementInstanceCollection eic = new ElementInstanceCollection();
-        if (ehrData!=null){
-            eic.addAll(ehrData, guideManager);
+        if (data != null){
+            eic.addAll(data, guideManager);
         }
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         //Search for EHR elements
         //Query EHR for elements
-        if (ehrId!=null){
+        if (ehrId != null){
             Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
             Map<String, Collection<ElementInstance>> elementInstanceMap =
                     CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(Collections.singleton(ehrId), ars, date);
@@ -88,20 +86,6 @@ public class CDSManager {
 
     private static Collection<ElementInstance> getElementInstances(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
             throws InternalErrorException{
-        KBFacadeDelegate kbfd = KBFacadeDelegateFactory.getDelegate();
-        //Search for CDS templates (not looking into 'ANY' Domain)
-        Collection<ElementInstance> cdsGeneratedElementInstances = guideManager.getCompleteElementInstanceCollection().getAllElementInstancesByDomain(Domains.CDS_ID);
-        Set<String> idTemplates = new HashSet<String>();
-        for (ElementInstance elementInstance : cdsGeneratedElementInstances) {
-            String idTemplate = elementInstance.getArchetypeReference().getIdTemplate();
-            if (idTemplate!=null){
-                idTemplates.add(idTemplate);
-            }
-        }
-        //Query KB for CDS elements
-        if (!idTemplates.isEmpty()){
-            eic.addAll(kbfd.getKBElementsByIdTemplate(idTemplates));
-        }
         //Check for missing elements
         checkForMissingElements(eic, completeEIC, guideManager, date);
         return eic.getAllElementInstances();
@@ -117,7 +101,7 @@ public class CDSManager {
     }
 
     private static void checkForWholeMissingElements(
-            ElementInstanceCollection ehrEIC,
+            ElementInstanceCollection eic,
             ElementInstanceCollection generatedEIC,
             GuideManager guideManager,
             Calendar date){
@@ -126,9 +110,9 @@ public class CDSManager {
         Collections.sort(guideArchetypeReferences, new ARNonEmptyPredicateComparator());
         for (ArchetypeReference archetypeReference : guideArchetypeReferences) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference)archetypeReference;
-            boolean matches = ehrEIC.matches(gar, guideManager.getAllGuidesMap(), date);
+            boolean matches = eic.matches(gar, guideManager.getAllGuidesMap(), date);
             if (!matches){
-                ehrEIC.add(archetypeReference, guideManager, date);
+                eic.add(archetypeReference, guideManager, date);
             }
         }
     }

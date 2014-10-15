@@ -1,109 +1,67 @@
 package se.cambio.openehr.view.trees;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.util.Enumeration;
 import java.util.Vector;
 
-/**
- * @author icorram
- *
- */
 public class SelectableNode<E> extends DefaultMutableTreeNode {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -7670845142505301936L;
-    private Boolean _selected = Boolean.FALSE;
-    private Boolean _containsSelected = Boolean.FALSE;
-    private Boolean _visible = Boolean.TRUE;
-    private String _descripcion = null;
-    private String _tooltip = null;
-    private boolean _uniqueSelection = false;
-    private boolean _hierarchySelection = true;
-    private boolean _bold = false;
-    private Color _foreground = null;
-    private boolean _cursiva = false;
-    private E _objeto = null;
-    private SelectableNode<?> _parent = null;
-    private Vector<SelectableNode<?>> _visibleChildren = new Vector<SelectableNode<?>>();
+    public enum SelectionMode {SINGLE, MULTIPLE}
+    public enum SelectionPropagationMode {HIERARCHICAL, NONE}
 
-    /**
-     * An enumeration that is always empty. This is used when an enumeration
-     * of a leaf node's children is requested.
-     */
+    private static final long serialVersionUID = 1;
+    private boolean selected = false;
+    private boolean childrenSelected = false;
+    private boolean visible = true;
 
-    public SelectableNode() {
-        super();
+    private String name = null;
+    private String description = null;
+    private SelectionMode selectionMode = SelectionMode.SINGLE;
+    private SelectionPropagationMode selectionPropagationMode = SelectionPropagationMode.HIERARCHICAL;
+    private boolean bold = false;
+    private boolean italic = false;
+    private Color foregroundColor = null;
+    private E object = null;
+    private Icon icon = null;
+
+    private SelectableNode<?> parent = null;
+    private Vector<SelectableNode<?>> visibleChildren = new Vector<SelectableNode<?>>();
+
+    protected SelectableNode(String name, String description, E object, SelectionMode selectionMode, SelectionPropagationMode selectionPropagationMode, boolean selected, boolean bold, boolean italic, Color foregroundColor, Icon icon) {
+        super(name);
+        this.name = name;
+        this.description = description;
+        this.object = object;
+        this.selectionMode = selectionMode;
+        this.selected = selected;
+        this.selectionPropagationMode = selectionPropagationMode;
+        this.bold = bold;
+        this.italic = italic;
+        this.foregroundColor = foregroundColor;
+        this.icon = icon;
     }
 
-    public SelectableNode(String descripcion) {
-        super(descripcion);
-        _descripcion = descripcion;
+    public Boolean isSelected() {
+        return this.selected;
     }
 
-    public SelectableNode(String descripcion, E objeto) {
-        super(descripcion);
-        _descripcion = descripcion;
-        _objeto = objeto;
+    public SelectionMode getSelectionMode() {
+        return selectionMode;
     }
 
-    public SelectableNode(String descripcion,
-                          E objeto, Boolean seleccionado) {
-        super(descripcion);
-        _selected = seleccionado;
-        _descripcion = descripcion;
-        _objeto = objeto;
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 
-
-    public SelectableNode(String descripcion,
-                          E objeto, Boolean seleccionUnica, Boolean seleccionado) {
-        super(descripcion);
-        _selected = seleccionado;
-        _uniqueSelection = seleccionUnica;
-        _descripcion = descripcion;
-        _objeto = objeto;
+    public boolean hasChildrenSelected() {
+        return this.childrenSelected;
     }
 
-    public SelectableNode(String descripcion,
-                          E objeto, Boolean seleccionUnica, Boolean seleccionado, String tooltip) {
-        super(descripcion);
-        _selected = seleccionado;
-        _uniqueSelection = seleccionUnica;
-        _descripcion = descripcion;
-        _objeto = objeto;
-        _tooltip = tooltip;
-    }
-
-    public Boolean getSeleccionado() {
-        return _selected;
-    }
-
-    public Boolean getSeleccionUnica() {
-        return _uniqueSelection;
-    }
-
-    public void setSingleSelection(Boolean seleccionUnica) {
-        _uniqueSelection = seleccionUnica;
-    }
-
-    public void setSelected(Boolean seleccionado) {
-        _selected = seleccionado;
-    }
-
-    public Boolean getContineneSeleccionado() {
-        return _containsSelected;
-    }
-
-    public void setContainsSelected(Boolean seleccionado) {
-        _containsSelected = seleccionado;
-    }
-
-    public void setHierarchySelection(boolean hierarchySelection){
-        _hierarchySelection = hierarchySelection;
+    public void setChildrenSelected(boolean childrenSelected) {
+        this.childrenSelected = childrenSelected;
     }
 
     public void setAllSelected(Boolean selected) {
@@ -111,10 +69,10 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     }
 
     public void setAllSelected(Boolean selected, boolean force) {
-        _selected = selected;
-        _containsSelected = selected;
-        if (_hierarchySelection || force){
-            if (!_uniqueSelection || !selected){
+        this.selected = selected;
+        this.childrenSelected = selected;
+        if (isHierarchicalSelectionPropagationMode() || force){
+            if (isMultipleSelectionMode() || !selected){
                 Enumeration<?> e = children();
                 while (e.hasMoreElements()){
                     ((SelectableNode<?>)e.nextElement()).setAllSelected(selected, force);
@@ -124,123 +82,139 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     }
 
     public Boolean getVisible() {
-        return _visible;
+        return this.visible;
     }
 
-    public void setVisible(Boolean visible) {
-        this._visible = visible;
-        if (_parent!=null){
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        if (this.parent!=null){
             if (visible){
-                if (!_parent.getVisibleChildren().contains(this)){
-                    _parent.getVisibleChildren().add(this);
+                if (!this.parent.getVisibleChildren().contains(this)){
+                    this.parent.getVisibleChildren().add(this);
                 }
             }else{
-                _parent.getVisibleChildren().remove(this);
+                this.parent.getVisibleChildren().remove(this);
             }
         }
     }
 
-    public String getDescripcion() {
-        return _descripcion;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String descripcion) {
-        _descripcion = descripcion;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getToolTip() {
-        return _tooltip;
+    public String getDescription() {
+        return description;
     }
 
-    public void setToolTip(String tooltip) {
-        _tooltip = tooltip;
+    public void setDescription(String tooltip) {
+        this.description = tooltip;
+    }
+
+    public SelectionPropagationMode getSelectionPropagationMode() {
+        return selectionPropagationMode;
+    }
+
+    public Icon getIcon() {
+        return icon;
     }
 
     public E getObject() {
-        return _objeto;
+        return object;
     }
 
     public void setObject(E obj) {
-        _objeto=obj;
+        object = obj;
     }
 
     public Boolean isBold() {
-        return _bold;
+        return this.bold;
     }
 
-    public void setBold(Boolean bold) {
-        _bold = bold;
+    public Color getForegroundColor() {
+        return this.foregroundColor;
     }
 
-    public Color getForeground() {
-        return _foreground;
+    public void setForegroundColor(Color color) {
+        this.foregroundColor = color;
     }
 
-    public void setForeground(Color color) {
-        _foreground = color;
-    }
-    public void setItalics(Boolean cursiva) {
-        _cursiva = cursiva;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
-    public Boolean isCursiva() {
-        return _cursiva;
+    public void setBold(boolean bold) {
+        this.bold = bold;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void cambioEstado(SelectableNode<?> nodoSeleccionable){
-        if (_uniqueSelection && this.equals(nodoSeleccionable)){
-            SelectableNode<E> nodoRaiz = this;
-            while (nodoRaiz.getParent()!=null){
-                nodoRaiz = (SelectableNode)nodoRaiz.getParent();
+    public void setItalic(boolean italic) {
+        this.italic = italic;
+    }
+
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+    }
+
+    public boolean isItalic() {
+        return italic;
+    }
+
+    public void stateChange(SelectableNode<?> selectableNode){
+        if (isSingleSelectionMode() && this.equals(selectableNode)){
+            SelectableNode<E> rootNode = this;
+            while (rootNode.getParent()!=null){
+                rootNode = (SelectableNode)rootNode.getParent();
             }
 
             //Delete all previous selections
-            nodoRaiz.setAllSelected(false);
-            if (!this.equals(nodoRaiz)){
-                if (_hierarchySelection){
+            rootNode.setAllSelected(false);
+            if (!this.equals(rootNode)){
+                if (isHierarchicalSelectionPropagationMode()){
                     this.setSelected(true);
                 }
-                this.setContainsSelected(true);
+                this.setChildrenSelected(true);
             }
         }
-        if (this.children !=null && this.children.contains(nodoSeleccionable)){
-            boolean seleccionado = !_uniqueSelection && getChildCount()>0;
-            boolean contieneSeleccionado = false;
+        if (this.children !=null && this.children.contains(selectableNode)){
+            boolean selected = isMultipleSelectionMode() && getChildCount()>0;
+            boolean containsSelected = false;
             Enumeration<?> e = getAllchildren();
             while (e.hasMoreElements()){
                 SelectableNode<?> child = ((SelectableNode<?>)e.nextElement());
-                if (!child.getSeleccionado()){
-                    seleccionado = false;
+                if (!child.isSelected()){
+                    selected = false;
                 }
-                if (child.getContineneSeleccionado() || child.getSeleccionado()){
-                    contieneSeleccionado = true;
+                if (child.hasChildrenSelected() || child.isSelected()){
+                    containsSelected = true;
                 }
             }
-            nodoSeleccionable = this;
-            if (_hierarchySelection){
-                _selected = seleccionado;
+            selectableNode = this;
+            if (isHierarchicalSelectionPropagationMode()){
+                this.selected = selected;
             }
-            _containsSelected = contieneSeleccionado;
+            this.childrenSelected = containsSelected;
         }
         if (getParent() instanceof SelectableNode<?>){
-            ((SelectableNode<E>)getParent()).cambioEstado(nodoSeleccionable);
+            ((SelectableNode<E>)getParent()).stateChange(selectableNode);
         }
     }
 
     public void add(SelectableNode<?> newChild) {
         super.add(newChild);
-        if (newChild.getSeleccionado()){
-            if (_hierarchySelection && getChildCount()==1 && _uniqueSelection){
-                _selected = true;
+        if (newChild.isSelected()){
+            if (isHierarchicalSelectionPropagationMode() && getChildCount() == 1 && isSingleSelectionMode()){
+                this.selected = true;
             }
-            _containsSelected = true;
+            this.childrenSelected = true;
         }else{
-            if (_hierarchySelection){
-                _selected = false;
+            if (isHierarchicalSelectionPropagationMode()){
+                this.selected = false;
             }
-            if (newChild.getContineneSeleccionado()){
-                _containsSelected = true;
+            if (newChild.hasChildrenSelected()){
+                this.childrenSelected = true;
             }
         }
         newChild.setParentNode(this);
@@ -249,22 +223,24 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         }
     }
 
+    public boolean isSingleSelectionMode() {
+        return SelectionMode.SINGLE.equals(selectionMode);
+    }
+
+    public boolean isMultipleSelectionMode() {
+        return SelectionMode.MULTIPLE.equals(selectionMode);
+    }
+
+    private boolean isHierarchicalSelectionPropagationMode() {
+        return SelectionPropagationMode.HIERARCHICAL.equals(selectionPropagationMode);
+    }
+
     public void setParentNode(SelectableNode<?> parent){
-        _parent = parent;
+        this.parent = parent;
     }
 
     private Vector<SelectableNode<?>> getVisibleChildren(){
-	/*
-	Vector<Object> visibleChildren = new Vector<Object>();
-	for (Object child : children) {
-	    if (child instanceof SelectableNode<?>){
-		if (((SelectableNode<?>)child).getVisible()){
-		    visibleChildren.add(child);
-		}
-	    }
-	}
-	return visibleChildren;*/
-        return _visibleChildren;
+        return this.visibleChildren;
     }
 
     public Enumeration<?> children() {
@@ -285,14 +261,14 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     }
 
     public boolean isLeaf(){
-        return !(children!=null && children.size()>0);
+        return !(children!=null && children.size() > 0);
     }
 
     public TreeNode getChildAt(int index) {
         if (children == null) {
             throw new ArrayIndexOutOfBoundsException("node has no children");
         }
-        return (TreeNode)getVisibleChildren().elementAt(index);
+        return getVisibleChildren().elementAt(index);
     }
 
     public int getChildCount() {
@@ -320,13 +296,8 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         if (!isNodeChild(aChild)) {
             return -1;
         }
-        return getVisibleChildren().indexOf(aChild);	// linear search
+        return getVisibleChildren().indexOf(aChild);
     }
-
-    public SelectableNode<E> clone(){
-        return new SelectableNode<E>(_descripcion, _objeto, _uniqueSelection, _selected);
-    }
-
 }
 
 /*

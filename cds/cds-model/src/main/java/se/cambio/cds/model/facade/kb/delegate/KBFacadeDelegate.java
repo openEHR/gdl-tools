@@ -1,9 +1,9 @@
 package se.cambio.cds.model.facade.kb.delegate;
 
-import java.util.Collection;
-
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.Collection;
 
 
 /**
@@ -11,9 +11,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
  *
  */
 public interface KBFacadeDelegate {
-
-    public Collection<String> getAllIdTemplates()
-	    throws InternalErrorException;
 
     public Collection<ElementInstance> getKBElementsByIdTemplate(Collection<String> idTemplates)
 	    throws InternalErrorException;

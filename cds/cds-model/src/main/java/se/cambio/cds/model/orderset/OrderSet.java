@@ -14,6 +14,7 @@ public class OrderSet {
     private ResourceDescription resourceDescription;
     private Map<String, OrderSetDefinition> orderSetDefinitions;
     private Collection<String> guideIds;
+    private Collection<String> kbInstanceIds;
 
     public OrderSet(String orderSetId) {
         this.orderSetId = orderSetId;
@@ -57,7 +58,6 @@ public class OrderSet {
         this.orderSetDefinitions = orderSetDefinitions;
     }
 
-
     public Collection<String> getGuideIds() {
         if (guideIds == null) {
             guideIds = new ArrayList<String>();
@@ -67,5 +67,12 @@ public class OrderSet {
 
     public void setGuideIds(Collection<String> guideIds) {
         this.guideIds = guideIds;
+    }
+
+    public Collection<String> getKbInstanceIds() {
+        if (kbInstanceIds == null) {
+            kbInstanceIds = new ArrayList<String>();
+        }
+        return kbInstanceIds;
     }
 }

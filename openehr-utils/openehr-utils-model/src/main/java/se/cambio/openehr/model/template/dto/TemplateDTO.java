@@ -8,46 +8,46 @@ import java.io.Serializable;
  */
 public class TemplateDTO implements Serializable{
 
-    private java.lang.String idTemplate;
-    private java.lang.String idArchetype;
+    private java.lang.String templateId;
+    private java.lang.String arcehtypeId;
     private java.lang.String name;
     private java.lang.String description;
     private java.lang.String rmName;
     private java.lang.String archetype;
     private byte[] aom;
-    private byte[] tobcVO;
+    private byte[] aobcVO;
 
 
     private static final long serialVersionUID = 23032012L;
 
-    public TemplateDTO(String idTemplate, String idArchetype,
+    public TemplateDTO(String templateId, String arcehtypeId,
                        String name, String description,
-                       String entryType, String archetype, byte[] aom, byte[] tobcVO) {
+                       String entryType, String archetype, byte[] aom, byte[] aobcVO) {
         super();
-        this.idTemplate = idTemplate;
-        this.idArchetype = idArchetype;
+        this.templateId = templateId;
+        this.arcehtypeId = arcehtypeId;
         this.name = name;
         this.description = description;
         this.rmName = entryType;
         this.archetype = archetype;
         this.aom = aom;
-        this.tobcVO = tobcVO;
+        this.aobcVO = aobcVO;
     }
 
-    public java.lang.String getIdTemplate() {
-        return idTemplate;
+    public java.lang.String getTemplateId() {
+        return templateId;
     }
 
-    public void setIdTemplate(java.lang.String idTemplate) {
-        this.idTemplate = idTemplate;
+    public void setTemplateId(java.lang.String templateId) {
+        this.templateId = templateId;
     }
 
-    public java.lang.String getIdArchetype() {
-        return idArchetype;
+    public java.lang.String getArcehtypeId() {
+        return arcehtypeId;
     }
 
-    public void setIdArchetype(java.lang.String idArchetype) {
-        this.idArchetype = idArchetype;
+    public void setArcehtypeId(java.lang.String arcehtypeId) {
+        this.arcehtypeId = arcehtypeId;
     }
 
     public String getDescription() {
@@ -90,17 +90,17 @@ public class TemplateDTO implements Serializable{
         this.archetype = archetype;
     }
 
-    public byte[] getTobcVO() {
-        return tobcVO;
+    public byte[] getAobcVO() {
+        return aobcVO;
     }
 
-    public void setTobcVO(byte[] tobcVO) {
-        this.tobcVO = tobcVO;
+    public void setAobcVO(byte[] aobcVO) {
+        this.aobcVO = aobcVO;
     }
 
     /*
     public int hashCode() {
-        return (archetype!=null?archetype.hashCode():0)+(aom!=null?aom.hashCode():1)+(tobcVO!=null?tobcVO.hashCode():2);
+        return (archetype!=null?archetype.hashCode():0)+(aom!=null?aom.hashCode():1)+(aobcVO!=null?aobcVO.hashCode():2);
     }
     */
 }

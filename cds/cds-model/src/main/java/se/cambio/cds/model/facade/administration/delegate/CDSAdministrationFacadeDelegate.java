@@ -2,6 +2,8 @@ package se.cambio.cds.model.facade.administration.delegate;
 
 import se.cambio.cds.model.app.dto.CDSAppDTO;
 import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cds.model.kb.instance.dto.KBInstanceDTO;
+import se.cambio.cds.model.orderset.dto.OrderSetDTO;
 import se.cambio.cds.model.study.dto.StudyDTO;
 import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.cds.util.exceptions.GuideNotFoundException;
@@ -71,6 +73,29 @@ public interface CDSAdministrationFacadeDelegate {
     public void upsertCDSApp(CDSAppDTO cdsAppDTO) throws InternalErrorException, InstanceNotFoundException;
 
     public void removeCDSApp(String cdsAppId) throws InternalErrorException, InstanceNotFoundException;
+
+
+    //KBInstances
+    public Collection<KBInstanceDTO> searchAllKBInstances() throws InternalErrorException;
+
+    public Collection<KBInstanceDTO> searchKBInstances(Collection<String> kbInstances) throws InternalErrorException, InstanceNotFoundException;
+
+    public int getKBInstanceHashCode() throws InternalErrorException;
+
+    public void upsertKBInstance(KBInstanceDTO kbInstanceDTO) throws InternalErrorException, InstanceNotFoundException;
+
+    public void removeKBInstance(String kbInstanceId) throws InternalErrorException, InstanceNotFoundException;
+
+    //OrderSets
+    public Collection<OrderSetDTO> searchAllOrderSets() throws InternalErrorException;
+
+    public Collection<OrderSetDTO> searchOrderSets(Collection<String> kbInstances) throws InternalErrorException, InstanceNotFoundException;
+
+    public int getOrderSetHashCode() throws InternalErrorException;
+
+    public void upsertOrderSet(OrderSetDTO orderSetDTO) throws InternalErrorException, InstanceNotFoundException;
+
+    public void removeOrderSet(String orderSetId) throws InternalErrorException, InstanceNotFoundException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -8,7 +8,7 @@ import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.view.trees.SelectableNode;
-import se.cambio.openehr.view.trees.SelectableNodeWithIcon;
+import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 import se.cambio.openehr.view.util.NodeConversor;
 import se.cambio.openehr.view.util.SelectCodeActionListener;
 
@@ -56,33 +56,42 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
 
     public SelectableNode<CodedTextVO> getRootNode(){
         if (rootNode==null){
-            rootNode = new SelectableNodeWithIcon<CodedTextVO>(
-                    OpenEHRLanguageManager.getMessage("Terms"), null, true, false, OpenEHRImageUtil.DV_CODED_TEXT_ICON);
+            rootNode = new SelectableNodeBuilder<CodedTextVO>()
+                    .setName(OpenEHRLanguageManager.getMessage("Terms"))
+                    .setSelectionMode(SelectableNode.SelectionMode.SINGLE)
+                    .setIcon(OpenEHRImageUtil.DV_CODED_TEXT_ICON)
+                    .createSelectableNode();
             Collection<CodedTextVO> codedTextsVO =
                     CodedTexts.getCodedTextVOs(getIdTemplate(), getIdElement());
             Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap =
                     new HashMap<CodedTextVO, SelectableNode<CodedTextVO>>();
+            SelectableNode.SelectionMode selectionMode =
+                    _multipleSelection? SelectableNode.SelectionMode.MULTIPLE : SelectableNode.SelectionMode.SINGLE;
             for (CodedTextVO codedTextVO : codedTextsVO) {
-                addCodedText(rootNode, codedTextVO, nodeMap, _multipleSelection);
+                addCodedText(rootNode, codedTextVO, nodeMap, selectionMode);
             }
         }
         return rootNode;
     }
 
-    private static void addCodedText(SelectableNode<CodedTextVO> rootNode, CodedTextVO codedTextVO, Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap, boolean multipleSelection){
+    private static void addCodedText(SelectableNode<CodedTextVO> rootNode, CodedTextVO codedTextVO, Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap, SelectableNode.SelectionMode selectionMode){
         if (!nodeMap.containsKey(codedTextVO)){
             String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
             String codedTextName = name+(codedTextVO.getCode()!=null?" ("+codedTextVO.getCode()+")":"");
-            SelectableNodeWithIcon<CodedTextVO> node = new SelectableNodeWithIcon<CodedTextVO>(
-                    codedTextName, codedTextVO, !multipleSelection, false, OpenEHRImageUtil.DV_CODED_TEXT_ICON, codedTextVO.getDescription());
+            SelectableNode<CodedTextVO> node = new SelectableNodeBuilder<CodedTextVO>()
+                    .setName(codedTextName)
+                    .setDescription(codedTextVO.getDescription())
+                    .setSelectionMode(selectionMode)
+                    .setIcon(OpenEHRImageUtil.DV_CODED_TEXT_ICON)
+                    .createSelectableNode();
             CodedTextVO parentCodedTextVO = codedTextVO.getParentCodedText();
-            if (parentCodedTextVO!=null){
+            if (parentCodedTextVO != null){
                 SelectableNode<CodedTextVO> parentNode = nodeMap.get(parentCodedTextVO);
-                if (parentNode==null){
-                    addCodedText(rootNode, parentCodedTextVO, nodeMap, multipleSelection);
+                if (parentNode == null){
+                    addCodedText(rootNode, parentCodedTextVO, nodeMap, selectionMode);
                 }
                 parentNode = nodeMap.get(parentCodedTextVO);
-                if (parentNode!=null){
+                if (parentNode != null){
                     parentNode.add(node);
                 }
             }else{

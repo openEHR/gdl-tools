@@ -1,5 +1,5 @@
-import junit.framework.TestCase;
 import org.joda.time.DateTime;
+import org.junit.Test;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -17,12 +17,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-08-11
- * Time: 15:31
- */
-public class EHRFilteringTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+
+public class EHRFilteringTest {
 
     private Collection<ElementInstance> generateElementInstances(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
@@ -59,7 +57,8 @@ public class EHRFilteringTest extends TestCase {
         return new DateTime(Calendar.getInstance().getTimeInMillis());
     }
 
-    public void testEHRFilterWithOnePredicate(){
+    @Test
+    public void shouldFilterUsingOnePredicate(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance(
@@ -75,7 +74,8 @@ public class EHRFilteringTest extends TestCase {
         assertEquals(1, archetypeReferenceSet.size());
     }
 
-    public void testEHRFilterWithMultiplePredicatesSameAR(){
+    @Test
+    public void shouldNotFilterMultiplePredicatesWithSameAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance(
@@ -86,16 +86,17 @@ public class EHRFilteringTest extends TestCase {
         new PredicateGeneratedElementInstance(
                 "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
                 null, gar, null,
-                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.MIN);
+                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO,
+                OperatorKind.MIN);
         geic.add(gar);
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =
                 EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
-
         assertEquals(2, archetypeReferenceSet.size());
     }
 
-    public void testEHRFilterWithMultiplePredicatesDifferentAR(){
+    @Test
+    public void shouldNotFilterMultiplePredicatesWithDifferentAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstance(
@@ -114,8 +115,6 @@ public class EHRFilteringTest extends TestCase {
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =
                 EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
-
         assertEquals(2, archetypeReferenceSet.size());
     }
-
 }

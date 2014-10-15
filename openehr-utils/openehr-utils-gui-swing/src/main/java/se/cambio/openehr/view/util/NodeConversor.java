@@ -32,11 +32,11 @@ public class NodeConversor {
         }
     }
 
-    public static void filterByText(SelectableNode<?> raizNodo, String filtro){
+    public static void filterByText(SelectableNode<?> rootNode, String filtro){
         boolean visible = false;
-        if (raizNodo.getDescripcion()!=null){
+        if (rootNode.getName()!=null){
             if (filtro.trim().length()>0){
-                String desc1 = Normalizer.normalize(raizNodo.getDescripcion(), Normalizer.Form.NFD);
+                String desc1 = Normalizer.normalize(rootNode.getName(), Normalizer.Form.NFD);
                 desc1 = FormatConverter.textWithoutPunctuation(desc1);
                 String desc2 = Normalizer.normalize(filtro, Normalizer.Form.NFD);
                 desc2 = FormatConverter.textWithoutPunctuation(desc2);
@@ -45,22 +45,22 @@ public class NodeConversor {
                 visible = true;
             }
         }
-        if (raizNodo.getSeleccionUnica()){
-            raizNodo.setSelected(false);
+        if (rootNode.isSingleSelectionMode()){
+            rootNode.setSelected(false);
         }
-        raizNodo.setVisible(visible);
+        rootNode.setVisible(visible);
         if (visible){
             filtro = new String();
         }
-        if (!raizNodo.isLeaf()){
-            Enumeration<?> e = raizNodo.getAllchildren();
+        if (!rootNode.isLeaf()){
+            Enumeration<?> e = rootNode.getAllchildren();
             while (e.hasMoreElements()){
                 NodeConversor.filterByText(
                         (SelectableNode<?>)e.nextElement(),
                         filtro);
             }
-            if (raizNodo.getChildCount()!=0) {
-                raizNodo.setVisible(true);
+            if (rootNode.getChildCount()!=0) {
+                rootNode.setVisible(true);
             }
         }
     }
@@ -78,12 +78,12 @@ public class NodeConversor {
     public static <K>SelectableNode<K> getSelectedNode(SelectableNode<K> nodoRaiz, boolean allowParent){
         Enumeration<?> e = nodoRaiz.getAllchildren();
         while (e.hasMoreElements()){
-            SelectableNode<K> nodo = (SelectableNode<K>)e.nextElement();
-            if (nodo.getSeleccionado() && (allowParent || nodo.isLeaf() || !nodo.getSeleccionUnica())){
-                return nodo;
+            SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
+            if (node.isSelected() && (allowParent || node.isLeaf() || node.isMultipleSelectionMode())){
+                return node;
             }else {
-                if (!nodo.isLeaf() && nodo.getContineneSeleccionado()){
-                    return getSelectedNode(nodo, allowParent);
+                if (!node.isLeaf() && node.hasChildrenSelected()){
+                    return getSelectedNode(node, allowParent);
                 }
             }
         }
@@ -108,14 +108,14 @@ public class NodeConversor {
         Enumeration<?> e = nodoRaiz.getAllchildren();
         while (e.hasMoreElements()){
             SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
-            if (node.getSeleccionado()){
+            if (node.isSelected()){
                 if (searchType!=SearchType.SEARCH_ONLY_LEAVES || node.isLeaf()){
                     selectedNodes.add(node);
                 }
                 if (searchType!=SearchType.SEARCH_ONLY_PARENT){
                     addSelectedNodes(node, selectedNodes, searchType);
                 }
-            }else if (node.getContineneSeleccionado()){
+            }else if (node.hasChildrenSelected()){
                 if (searchType!=SearchType.SEARCH_ONLY_PARENT || !node.isLeaf()){
                     addSelectedNodes(node, selectedNodes, searchType);
                 }
@@ -124,13 +124,13 @@ public class NodeConversor {
     }
 
 
-    public static boolean selectObject(SelectableNode<?> nodoRaiz, Object obj){
-        Enumeration<?> e = nodoRaiz.getAllchildren();
+    public static boolean selectObject(SelectableNode<?> rootNode, Object obj){
+        Enumeration<?> e = rootNode.getAllchildren();
         while (e.hasMoreElements()){
             SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
             if (obj.equals(node.getObject())){
                 node.setSelected(true);
-                node.cambioEstado(node);
+                node.stateChange(node);
                 return true;
             }else{
                 boolean found = selectObject(node, obj);

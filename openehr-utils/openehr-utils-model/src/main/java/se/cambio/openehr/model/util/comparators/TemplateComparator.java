@@ -7,7 +7,7 @@ import se.cambio.openehr.model.template.dto.TemplateDTO;
 public class TemplateComparator implements Comparator<TemplateDTO>{
 
     public int compare(TemplateDTO o1, TemplateDTO o2) {
-	return o1.getIdTemplate().compareTo(o2.getIdTemplate());
+	return o1.getTemplateId().compareTo(o2.getTemplateId());
     }
 
 }

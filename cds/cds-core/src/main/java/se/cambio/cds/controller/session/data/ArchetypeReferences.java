@@ -24,7 +24,7 @@ public class ArchetypeReferences {
     public static String getName(ArchetypeReference ar, boolean withPredicate){
         if (ar!=null){
             ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-            if (archetypeVO!=null){
+            if (archetypeVO != null){
                 String name = archetypeVO.getName();
                 if (withPredicate){
                     String predicateDesc = getShortPredicateDescription(ar);
@@ -55,7 +55,7 @@ public class ArchetypeReferences {
                     sb.append(", ");
                 }
                 String name = ArchetypeElements.getText(ar.getIdTemplate(), elementInstance.getId(), UserConfigurationManager.getLanguage());
-                if (name!=null){
+                if (name != null){
                     sb.append(name+"="+DVDefSerializer.getReadableValue(elementInstance.getDataValue(), null));
                     first = false;
                 }else{
@@ -69,7 +69,7 @@ public class ArchetypeReferences {
 
     public static String getDescription(ArchetypeReference ar){
         ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-        if (archetypeVO!=null){
+        if (archetypeVO != null){
             String name = archetypeVO.getDescription();
             return name;
         }else{
@@ -101,7 +101,7 @@ public class ArchetypeReferences {
         ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(archetypeElementVO.getIdArchetype());
 
         String idDomain = null;
-        if (ar!=null){
+        if (ar != null){
             idDomain = ar.getIdDomain();
         }
 
@@ -119,7 +119,7 @@ public class ArchetypeReferences {
             for (String unit : Units.getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId())) {
                 unitsSB.append(unit+", ");
             }
-            if (unitsSB.length()>1){
+            if (unitsSB.length() > 1){
                 units = unitsSB.toString();
                 units = units.substring(0, units.length()-2);
             }
@@ -129,7 +129,7 @@ public class ArchetypeReferences {
         String[] pathArray = archetypeElementVO.getPath().split("\\/");
         StringBuffer pathSB = new StringBuffer();
         StringBuffer clusterPathSB = new StringBuffer();
-        clusterPathSB.append(archetypeVO.getIdArchetype());
+        clusterPathSB.append(archetypeVO.getArchetypeId());
         for (String pathNode : pathArray) {
             if (!pathNode.isEmpty()){
                 clusterPathSB.append("/"+pathNode);

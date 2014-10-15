@@ -36,7 +36,7 @@ public class DomainDataGTCodeUtil {
                 ArchetypeReference ar = i.next();
                 Iterator<ArchetypeReference> arsI = geic.getArchetypeReferences(ar).iterator();
                 boolean fullMatch = false;
-                while(arsI.hasNext() && !fullMatch){
+                while(arsI.hasNext()){
                     ArchetypeReference arAux = arsI.next();
                     if (arAux instanceof GeneratedArchetypeReference){
                         GeneratedArchetypeReference gar = (GeneratedArchetypeReference)arAux;
@@ -47,7 +47,7 @@ public class DomainDataGTCodeUtil {
                                 ElementInstance elementInstance = gar.getElementInstancesMap().get(elementId);
                                 if (elementInstance instanceof GeneratedElementInstance){
                                     GeneratedElementInstance gei = (GeneratedElementInstance) elementInstance;
-                                    eiValue.setRuleReferences(gei.getRuleReferences());
+                                    eiValue.getRuleReferences().addAll(gei.getRuleReferences());
                                 }else{
                                     fullMatch = false;
                                 }

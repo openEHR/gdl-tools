@@ -4,9 +4,9 @@ import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.ontology.ArchetypeOntology;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import org.openehr.am.archetype.ontology.OntologyDefinitions;
-import se.cambio.openehr.controller.OpenEHRObjectBundleManager;
+import se.cambio.openehr.controller.TemplateObjectBundleManager;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.archetype.vo.TemplateObjectBundleCustomVO;
+import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.util.comparators.TemplateComparator;
 import se.cambio.openehr.util.IOUtils;
@@ -45,14 +45,16 @@ public class Templates {
     public static void loadTemplates(Collection<TemplateDTO> templateDTOs, boolean force) throws InternalErrorException{
         if (!getDelegate()._loaded || force){
             init();
-            OpenEHRObjectBundleManager.generateTemplateObjectBundles(templateDTOs);
+            for (TemplateDTO templateDTO: templateDTOs){
+                loadTemplate(templateDTO);
+            }
             loadTemplateObjectBundles(templateDTOs);
             getDelegate()._loaded = true;
         }
     }
 
     public static void loadTemplate(TemplateDTO templateDTO) throws InternalErrorException{
-        OpenEHRObjectBundleManager.generateTemplateObjectBundles(Collections.singleton(templateDTO));
+        new TemplateObjectBundleManager(templateDTO).generateArchetypeObjectBundleCustomVO();
         registerTemplate(templateDTO);
     }
 
@@ -61,8 +63,8 @@ public class Templates {
     }
 
     private static void registerTemplate(TemplateDTO templateDTO){
-        getTemplatesMap().put(templateDTO.getIdTemplate(), templateDTO);
-        generateArchetypeDefinitionsMap(templateDTO.getIdTemplate());
+        getTemplatesMap().put(templateDTO.getTemplateId(), templateDTO);
+        generateArchetypeDefinitionsMap(templateDTO.getTemplateId());
     }
 
     private static void generateArchetypeDefinitionsMap(String templateId){
@@ -120,14 +122,13 @@ public class Templates {
 
     public static void loadTemplateObjectBundle(TemplateDTO templateDTO){
         registerTemplate(templateDTO);
-        TemplateObjectBundleCustomVO templateObjectBundleCustomVO =
-                (TemplateObjectBundleCustomVO)IOUtils.getObject(templateDTO.getTobcVO());
-        ArchetypeElements.loadArchetypeElements(templateObjectBundleCustomVO.getElementVOs());
-        Clusters.loadClusters(templateObjectBundleCustomVO.getClusterVOs());
-        CodedTexts.loadCodedTexts(templateObjectBundleCustomVO.getCodedTextVOs());
-        Ordinals.loadOrdinals(templateObjectBundleCustomVO.getOrdinalVOs());
-        //ArchetypeSlots.loadArchetypeNodes(templateObjectBundleCustomVO.getSlotVOs());
-        Units.loadUnits(templateObjectBundleCustomVO.getUnitVOs());
+        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO =
+                (ArchetypeObjectBundleCustomVO)IOUtils.getObject(templateDTO.getAobcVO());
+        ArchetypeElements.loadArchetypeElements(archetypeObjectBundleCustomVO.getElementVOs());
+        Clusters.loadClusters(archetypeObjectBundleCustomVO.getClusterVOs());
+        CodedTexts.loadCodedTexts(archetypeObjectBundleCustomVO.getCodedTextVOs());
+        Ordinals.loadOrdinals(archetypeObjectBundleCustomVO.getOrdinalVOs());
+        Units.loadUnits(archetypeObjectBundleCustomVO.getUnitVOs());
     }
 
     public static ArrayList<TemplateDTO> getTemplates(String entryType){

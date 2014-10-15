@@ -88,7 +88,7 @@ public class FileArchetypeDAO implements GenericArchetypeDAO{
         if (!folder.isDirectory()){
             throw new FolderNotFoundException(folder.getPath());
         }
-        String fileName = archetypeVO.getIdArchetype()+".adl";
+        String fileName = archetypeVO.getArchetypeId()+".adl";
         File newFile = new File(folder.getPath()+File.separator+fileName);
         Writer output = null;
         try{
