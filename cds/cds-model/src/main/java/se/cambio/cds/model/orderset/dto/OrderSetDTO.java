@@ -1,30 +1,32 @@
 package se.cambio.cds.model.orderset.dto;
 
+import se.cambio.openehr.model.util.CMElement;
+
 import java.util.Date;
 
-public class OrderSetDTO {
-    private String orderSetId;
-    private String orderSetSrc;
+public class OrderSetDTO implements CMElement{
+    private String id;
+    private String source;
     private Date lastUpdate;
 
-    public OrderSetDTO(String orderSetId) {
-        this.orderSetId = orderSetId;
+    public OrderSetDTO(String id) {
+        this.id = id;
     }
 
-    public String getOrderSetId() {
-        return orderSetId;
+    public String getId() {
+        return id;
     }
 
-    public void setOrderSetId(String orderSetId) {
-        this.orderSetId = orderSetId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getOrderSetSrc() {
-        return orderSetSrc;
+    public String getSource() {
+        return source;
     }
 
-    public void setOrderSetSrc(String orderSetSrc) {
-        this.orderSetSrc = orderSetSrc;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public Date getLastUpdate() {
