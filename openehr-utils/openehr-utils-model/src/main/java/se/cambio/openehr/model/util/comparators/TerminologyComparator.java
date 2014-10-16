@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class TerminologyComparator implements Comparator<TerminologyDTO>{
 
     public int compare(TerminologyDTO o1, TerminologyDTO o2) {
-	return o1.getTerminologyId().compareTo(o2.getTerminologyId());
+	return o1.getId().compareTo(o2.getId());
     }
 
 }

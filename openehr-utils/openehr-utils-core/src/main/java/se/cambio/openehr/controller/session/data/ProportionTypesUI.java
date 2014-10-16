@@ -1,17 +1,15 @@
 package se.cambio.openehr.controller.session.data;
 
+import org.openehr.rm.datatypes.quantity.ProportionKind;
+import se.cambio.openehr.model.archetype.vo.ProportionTypeVO;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openehr.rm.datatypes.quantity.ProportionKind;
-
-import se.cambio.openehr.model.archetype.vo.ProportionTypeVO;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
-
 public class ProportionTypesUI {
-    private static ProportionTypesUI _instance = null;
     private Map<String, Collection<ProportionKind>> _proportionTypesByIdElement = null;
     private Map<String, Map<String, Collection<ProportionKind>>> _templateProportionTypesByTemplateIdAndId = null;
 
@@ -19,13 +17,13 @@ public class ProportionTypesUI {
     private Map<ProportionKind, String> _proportionTypeDescriptions = null;
     private Map<ProportionKind, String> _proportionTypeIDs = null;
 
-    private static String RATIO_ID = "RATIO";
-    private static String UNITARY_ID = "UNITARY";
-    private static String PERCENT_ID = "PERCENT";
-    private static String FRACTION_ID = "FRACTION";
-    private static String INTEGER_FRACTION_ID = "INTEGER_FRACTION";
+    private String RATIO_ID = "RATIO";
+    private String UNITARY_ID = "UNITARY";
+    private String PERCENT_ID = "PERCENT";
+    private String FRACTION_ID = "FRACTION";
+    private String INTEGER_FRACTION_ID = "INTEGER_FRACTION";
 
-    private ProportionTypesUI(){
+    public ProportionTypesUI(){
         init();
     }
 
@@ -55,13 +53,13 @@ public class ProportionTypesUI {
         _proportionTypeIDs.put(ProportionKind.INTEGER_FRACTION, ProportionKind.class.getSimpleName()+"."+INTEGER_FRACTION_ID);
     }
 
-    public static void loadProportionTypes(Collection<ProportionTypeVO> proportionTypeVOs){
+    public void loadProportionTypes(Collection<ProportionTypeVO> proportionTypeVOs){
         for (ProportionTypeVO proportionTypeVO : proportionTypeVOs) {
             registerProportionType(proportionTypeVO);
         }
     }
 
-    public static void registerProportionType(ProportionTypeVO proportionTypeVO){
+    public void registerProportionType(ProportionTypeVO proportionTypeVO){
         if (proportionTypeVO.getIdTemplate()==null){
             getProportionTypes(proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
         }else{
@@ -69,16 +67,16 @@ public class ProportionTypesUI {
         }
     }
 
-    private static Map<String, Collection<ProportionKind>> getProportionTypesInTemplate(String idTemplate){
-        Map<String, Collection<ProportionKind>> map = getDelegate()._templateProportionTypesByTemplateIdAndId.get(idTemplate);
+    private Map<String, Collection<ProportionKind>> getProportionTypesInTemplate(String idTemplate){
+        Map<String, Collection<ProportionKind>> map = _templateProportionTypesByTemplateIdAndId.get(idTemplate);
         if (map==null){
             map = new HashMap<String, Collection<ProportionKind>>();
-            getDelegate()._templateProportionTypesByTemplateIdAndId.put(idTemplate, map);
+            _templateProportionTypesByTemplateIdAndId.put(idTemplate, map);
         }
         return map;
     }
 
-    public static Collection<ProportionKind> getProportionTypes(String idTemplate, String idElement){
+    public Collection<ProportionKind> getProportionTypes(String idTemplate, String idElement){
         if (idTemplate==null){
             return getProportionTypes(idElement);
         }else{
@@ -91,31 +89,25 @@ public class ProportionTypesUI {
         }
     }
 
-    private static Collection<ProportionKind> getProportionTypes(String idElement){
-        Collection<ProportionKind> proportionTypes = getDelegate()._proportionTypesByIdElement.get(idElement);
+    private Collection<ProportionKind> getProportionTypes(String idElement){
+        Collection<ProportionKind> proportionTypes = _proportionTypesByIdElement.get(idElement);
         if (proportionTypes==null){
             proportionTypes = new ArrayList<ProportionKind>();
-            getDelegate()._proportionTypesByIdElement.put(idElement, proportionTypes);
+            _proportionTypesByIdElement.put(idElement, proportionTypes);
         }
         return proportionTypes;
     }
 
-    public static String getName(ProportionKind proportionType){
-        return getDelegate()._proportionTypeNames.get(proportionType);
+    public String getName(ProportionKind proportionType){
+        return _proportionTypeNames.get(proportionType);
     }
 
-    public static String getDescription(ProportionKind proportionType){
-        return getDelegate()._proportionTypeDescriptions.get(proportionType);
+    public String getDescription(ProportionKind proportionType){
+        return _proportionTypeDescriptions.get(proportionType);
     }
 
-    public static String getInstanceID(ProportionKind proportionKind){
-        return getDelegate()._proportionTypeIDs.get(proportionKind);
-    }
-    public static ProportionTypesUI getDelegate(){
-        if (_instance == null){
-            _instance = new ProportionTypesUI();
-        }
-        return _instance;
+    public String getInstanceID(ProportionKind proportionKind){
+        return _proportionTypeIDs.get(proportionKind);
     }
 }
 /*

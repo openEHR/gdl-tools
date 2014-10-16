@@ -1,7 +1,7 @@
 package se.cambio.cds.model.app.dao;
 
 import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.cds.model.cm.element.dao.SQLGenericCMElementDAO;
+import se.cambio.openehr.model.cm.element.dao.SQLGenericCMElementDAO;
 
 public class SQLAppDAOSQL extends SQLGenericCMElementDAO<CDSAppDTO> {
 

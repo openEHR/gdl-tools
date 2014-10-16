@@ -1,25 +1,53 @@
 package se.cambio.openehr.model.ontology.dto;
 
-public class OntologyDTO {
-    private String terminologyId = null;
-    private byte[] src = null;
+import se.cambio.openehr.model.util.CMElement;
 
-    public OntologyDTO(String terminologyId, byte[] src) {
-	super();
-	this.terminologyId = terminologyId;
-	this.src = src;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import java.util.Date;
+
+@Entity
+@Table(name="cm_ontology")
+public class OntologyDTO implements CMElement{
+    @Id
+    private String id = null;
+    @Lob
+    private String source = null;
+    private Date lastUpdate;
+
+    public OntologyDTO() {
     }
-    public String getTerminologyId() {
-        return terminologyId;
+
+    @Override
+    public String getId() {
+        return id;
     }
-    public void setTerminologyId(String terminologyId) {
-        this.terminologyId = terminologyId;
+
+    @Override
+    public String getSource() {
+        return source;
     }
-    public byte[] getSrc() {
-        return src;
+
+    @Override
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
-    public void setSrc(byte[] src) {
-        this.src = src;
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Override
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }
 /*

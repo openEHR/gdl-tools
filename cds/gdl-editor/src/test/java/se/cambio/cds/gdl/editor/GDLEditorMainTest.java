@@ -7,7 +7,7 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;

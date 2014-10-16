@@ -1,7 +1,7 @@
 package se.cambio.cds.model.app.dao;
 
 import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.cds.model.cm.element.dao.FileGenericCMElementDAO;
+import se.cambio.openehr.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.Collections;
 public class FileAppDAO extends FileGenericCMElementDAO<CDSAppDTO> {
 
     public FileAppDAO() {
-        super(UserConfigurationManager.getAppsFolder(), Collections.singleton("app"));
+        super(CDSAppDTO.class, UserConfigurationManager.getAppsFolder(), Collections.singleton("app"));
     }
 }
 /*

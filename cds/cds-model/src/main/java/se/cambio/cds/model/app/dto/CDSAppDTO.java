@@ -18,9 +18,7 @@ public class CDSAppDTO implements CMElement {
     private String source;
     private Date lastUpdate;
 
-    public CDSAppDTO(String id) {
-        this.id = id;
-    }
+    public CDSAppDTO() {}
 
     @Override
     public String getId() {

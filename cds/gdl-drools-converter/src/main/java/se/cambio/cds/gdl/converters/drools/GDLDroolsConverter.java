@@ -151,7 +151,7 @@ public class GDLDroolsConverter {
                 archetypeBindingMVELSB.append("idArchetype==\""+archetypeId+"\"");
                 /*
                 if ((Domains.CDS_ID.equals(archetypeBinding.getDomain()))&&
-                        archetypeBinding.getTemplateId()!=null){
+                        archetypeBinding.getId()!=null){
                     archetypeBindingMVELSB.append(", idTemplate==\""+templateId+"\"");
                 }
                 */

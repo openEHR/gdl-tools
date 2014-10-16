@@ -6,8 +6,9 @@ import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.view.dto.DSViewDTO;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.openehr.model.archetype.dto.ArchetypeDTOBuilder;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
@@ -60,8 +61,6 @@ public class CMImportExportManager {
     }
 
     public static void exportCurrentCM(File file, GenerationStrategy generationStrategy) throws IOException {
-
-        // out put file
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
         exportArchetypes(out, generationStrategy);
         exportTemplates(out, generationStrategy);
@@ -72,10 +71,10 @@ public class CMImportExportManager {
     }
 
     public static void exportArchetypes(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
-        for (ArchetypeDTO archetypeDTO: Archetypes.getAllArchetypes()){
-            InputStream in = new ByteArrayInputStream(archetypeDTO.getArchetype().getBytes());
+        for (ArchetypeDTO archetypeDTO: Archetypes.getInstance().getAllInCache()){
+            InputStream in = new ByteArrayInputStream(archetypeDTO.getSource().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX + archetypeDTO.getArchetypeId() + ARCHETYPE_POSTFIX));
+            out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX + archetypeDTO.getId() + ARCHETYPE_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -84,7 +83,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (GenerationStrategy.DTOS.equals(generationStrategy)){
-                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX + "\\" + archetypeDTO.getArchetypeId() + DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(ARCHETYPE_DTO_PREFIX + "\\" + archetypeDTO.getId() + DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(archetypeDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -95,10 +94,10 @@ public class CMImportExportManager {
     }
 
     public static void exportTemplates(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
-        for (TemplateDTO templateDTO: Templates.getAllTemplates()){
-            InputStream in = new ByteArrayInputStream(templateDTO.getArchetype().getBytes());
+        for (TemplateDTO templateDTO: Templates.getInstance().getAllInCache()){
+            InputStream in = new ByteArrayInputStream(templateDTO.getSource().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX + templateDTO.getTemplateId() + TEMPLATES_POSTFIX));
+            out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX + templateDTO.getId() + TEMPLATES_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -107,7 +106,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (GenerationStrategy.DTOS.equals(generationStrategy)){
-                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX + "\\" + templateDTO.getTemplateId() + DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(TEMPLATES_DTO_PREFIX + "\\" + templateDTO.getId() + DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(templateDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -118,10 +117,10 @@ public class CMImportExportManager {
     }
 
     public static void exportTerminologies(ZipOutputStream out) throws IOException {
-        for (TerminologyDTO terminologyDTO: Terminologies.getAllTerminologies()){
-            InputStream in = new ByteArrayInputStream(terminologyDTO.getSrc());
+        for (TerminologyDTO terminologyDTO: Terminologies.getInstance().getAllInCache()){
+            InputStream in = new ByteArrayInputStream(terminologyDTO.getSource().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(TERMINOLOGY_PREFIX + terminologyDTO.getTerminologyId() + TERMINOLOGY_POSTFIX));
+            out.putNextEntry(new ZipEntry(TERMINOLOGY_PREFIX + terminologyDTO.getId() + TERMINOLOGY_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -197,21 +196,30 @@ public class CMImportExportManager {
                 if (entry.getName().startsWith(ARCHETYPES_FOLDER_NAME) && entry.getName().endsWith(ARCHETYPE_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
                     String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length() + 1, entry.getName().length() - ARCHETYPE_POSTFIX.length());
-                    archetypeSourceDTOs.add(new ArchetypeDTO(archetypeId, archetypeId, archetypeId, null, src, null, null));
-                }else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)){
+                    ArchetypeDTO archetypeDTO = new ArchetypeDTOBuilder()
+                            .setId(archetypeId)
+                            .setName(archetypeId)
+                            .setDescription(archetypeId)
+                            .setSource(src)
+                            .createArchetypeDTO();
+                    archetypeDTOs.add(archetypeDTO);
+                } else if (entry.getName().startsWith(TEMPLATES_FOLDER_NAME) && entry.getName().endsWith(TEMPLATES_POSTFIX)) {
                     String src = IOUtils.toString(zis,"UTF-8");
                     String templateId = entry.getName().substring(TEMPLATES_FOLDER_NAME.length() + 1, entry.getName().length() - TEMPLATES_POSTFIX.length());
                     TemplateDTO templateDTO = new TemplateDTOBuilder()
-                            .setTemplateId(templateId)
+                            .setId(templateId)
                             .setArcehtypeId(templateId)
                             .setName(templateId)
-                            .setArchetype(src)
+                            .setSource(src)
                             .createTemplateDTO();
                     templateSourceDTOs.add(templateDTO);
                 }else if (entry.getName().startsWith(TERMINOLOGIES_FOLDER_NAME) && entry.getName().endsWith(TERMINOLOGY_POSTFIX)){
-                    byte[] src = IOUtils.toByteArray(zis);
+                    String src = IOUtils.toString(zis, "UTF-8");
                     String terminologyId = entry.getName().substring(TERMINOLOGIES_FOLDER_NAME.length() + 1, entry.getName().length() - TERMINOLOGY_POSTFIX.length());
-                    terminologyDTOs.add(new TerminologyDTO(terminologyId, src));
+                    TerminologyDTO terminologyDTO = new TerminologyDTO();
+                    terminologyDTO.setId(terminologyId);
+                    terminologyDTO.setSource(src);
+                    terminologyDTOs.add(terminologyDTO);
                 }else if (entry.getName().startsWith(DSVIEWS_FOLDER_NAME) && entry.getName().endsWith(DSVIEWS_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
                     String dsViewId = entry.getName().substring(DSVIEWS_FOLDER_NAME.length() + 1, entry.getName().length()  -  DSVIEWS_POSTFIX.length());
@@ -235,21 +243,20 @@ public class CMImportExportManager {
                 }
             }
         }finally{
-            // we must always close the zip file.
             zis.close();
         }
         try {
             if (useArchetypeDTOs){
-                Archetypes.loadArchetypes(archetypeDTOs);
+                Archetypes.getInstance().registerCMElementsInCache(archetypeDTOs);
             }else{
-                Archetypes.loadArchetypes(archetypeSourceDTOs);
+                Archetypes.getInstance().registerCMElementsInCache(archetypeSourceDTOs);
             }
             if (useTemplateDTOs){
-                Templates.loadTemplates(templateDTOs);
+                Templates.getInstance().registerCMElementsInCache(templateDTOs);
             }else{
-                Templates.loadTemplates(templateSourceDTOs);
+                Templates.getInstance().registerCMElementsInCache(templateSourceDTOs);
             }
-            Terminologies.loadTerminologies(terminologyDTOs);
+            Terminologies.getInstance().registerCMElementsInCache(terminologyDTOs);
             DecisionSupportViews.getInstance().loadDSViews(DSViewDTOs);
             if (useGuidelineDTOs){
                 Guides.loadGuides(guideDTOs);

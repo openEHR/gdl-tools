@@ -1,7 +1,7 @@
 package se.cambio.cds.model.kb.instance.dao;
 
 import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.cds.model.cm.element.dao.FileGenericCMElementDAO;
+import se.cambio.openehr.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.Collections;
 public class FileKBInstanceDAO extends FileGenericCMElementDAO<CDSAppDTO> {
 
     public FileKBInstanceDAO() {
-        super(UserConfigurationManager.getKBInstancesFolder(), Collections.singleton("kbi"));
+        super(CDSAppDTO.class, UserConfigurationManager.getKBInstancesFolder(), Collections.singleton("kbi"));
     }
 }
 /*

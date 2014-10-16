@@ -1,0 +1,148 @@
+package se.cambio.openehr.model.cm.element.dao;
+
+import se.cambio.openehr.model.util.CMElement;
+import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.Resources;
+import se.cambio.openehr.util.UnicodeBOMInputStream;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+
+public class ResourceGenericCMElementDAO <E extends CMElement> implements GenericCMElementDAO<E>{
+
+    private Class<E> cmElementClass;
+    private Collection<String> fileExtensions;
+
+    public ResourceGenericCMElementDAO(Class<E> cmElementClass, Collection<String> fileExtensions){
+        this.cmElementClass = cmElementClass;
+        this.fileExtensions = fileExtensions;
+    }
+    @Override
+    public Collection<E> searchByIds(Collection<String> ids) throws InternalErrorException, InstanceNotFoundException {
+        Collection<E> cmElements = new ArrayList<E>();
+        InputStream is = getInputStreamForResourceList();
+        if (is!=null) {
+            Collection<String> resourceFileNamesIdsMap = getResourceFileNames(is);
+            for (String resourceFileName : resourceFileNamesIdsMap) {
+                try{
+                    String fileExtension = matchingFileExtension(resourceFileName);
+                    String id = resourceFileName.substring(resourceFileName.lastIndexOf("/") + 1, resourceFileName.length() - fileExtension.length() - 1);
+                    if (ids.contains(id)) {
+                        E cmElement = getCMElement(resourceFileName);
+                        cmElements.add(cmElement);
+                    }
+                }catch(Exception e){
+                    throw new InternalErrorException(e);
+                }
+            }
+        }else{
+            throw new InternalErrorException(new Exception("Resource list not found!"));
+        }
+        return cmElements;
+    }
+
+    @Override
+    public Collection<E> searchAll() throws InternalErrorException {
+        Collection<E> cmElements = new ArrayList<E>();
+        InputStream is = getInputStreamForResourceList();
+        if (is!=null) {
+            Collection<String> resourceFileNamesIdsMap = getResourceFileNames(is);
+            for (String resourceFileName : resourceFileNamesIdsMap) {
+                try{
+                    E cmElement = getCMElement(resourceFileName);
+                    cmElements.add(cmElement);
+                }catch(Exception e){
+                    throw new InternalErrorException(e);
+                }
+            }
+        }else{
+            throw new InternalErrorException(new Exception("Resource list not found!"));
+        }
+        return cmElements;
+    }
+
+    private E getCMElement(String resourceFileName) throws IOException, InternalErrorException {
+        InputStream fis = ResourceGenericCMElementDAO.class.getClassLoader().getResourceAsStream(resourceFileName);
+        UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
+        ubis.skipBOM();
+        String fileExtension = matchingFileExtension(resourceFileName);
+        String id = resourceFileName.substring(resourceFileName.lastIndexOf("/") + 1, resourceFileName.length() - fileExtension.length() - 1);
+        String source = IOUtils.toString(ubis, "UTF-8");
+        E cmElement = new CMElementBuilder<E>().build(cmElementClass);
+        cmElement.setId(id);
+        cmElement.setSource(source);
+        cmElement.setLastUpdate(Calendar.getInstance().getTime());
+        return cmElement;
+    }
+
+    private InputStream getInputStreamForResourceList() throws InternalErrorException {
+        return ResourceGenericCMElementDAO.class.getClassLoader().getResourceAsStream(Resources.RESOURCES_LIST);
+    }
+
+    private Collection<String> getResourceFileNames(InputStream is) throws InternalErrorException {
+        Collection<String> resourceFileNames = new ArrayList<String>();
+        try {
+            String resourceList = IOUtils.toString(is, "UTF-8");
+            for (String resourceFileName : resourceList.split("\n")) {
+                resourceFileName = resourceFileName.trim();
+                String fileExtension = matchingFileExtension(resourceFileName);
+                if (fileExtension != null) {
+                    //Remove the leading '\'
+                    resourceFileName = resourceFileName.replaceAll("\\\\", "/");
+                    resourceFileNames.add(resourceFileName.substring(1, resourceFileName.length()));
+                }
+            }
+        }catch (IOException e){
+            throw new InternalErrorException(e);
+        }
+        return resourceFileNames;
+    }
+
+    @Override
+    public Collection<String> searchAllIds() throws InternalErrorException {
+        Collection<String> ids = new ArrayList<String>();
+        InputStream is = getInputStreamForResourceList();
+        Collection<String> resourceFileNames = getResourceFileNames(is);
+        for (String resourceFileName : resourceFileNames) {
+            String fileExtension = matchingFileExtension(resourceFileName);
+            String id = resourceFileName.substring(resourceFileName.lastIndexOf("/")+1,resourceFileName.length()-fileExtension.length()-1);
+            ids.add(id);
+        }
+        return ids;
+    }
+
+    @Override
+    public void insert(E cmElement) throws InternalErrorException {
+        throw new UnsupportedOperationException("Not allowed on resources DAO");
+    }
+
+    @Override
+    public void update(E cmElement) throws InternalErrorException, InstanceNotFoundException {
+        throw new UnsupportedOperationException("Not allowed on resources DAO");
+    }
+
+    @Override
+    public void remove(String id) throws InternalErrorException, InstanceNotFoundException {
+        throw new UnsupportedOperationException("Not allowed on resources DAO");
+    }
+
+    @Override
+    public Date getLastUpdateDate() throws InternalErrorException {
+        return Calendar.getInstance().getTime();
+    }
+
+    private String matchingFileExtension(String fileName){
+        for(String fileExtension: fileExtensions){
+            if (fileName.endsWith("."+fileExtension)){
+                return fileExtension;
+            }
+        }
+        return null;
+    }
+}

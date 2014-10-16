@@ -1,41 +1,44 @@
 package se.cambio.openehr.model.archetype.dto;
 
-import java.io.Serializable;
+import se.cambio.openehr.model.util.CMElement;
 
-/**
- * @author iago.corbal
- *
- */
-public class ArchetypeDTO implements Serializable{
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import java.util.Date;
 
-    private java.lang.String archetypeId;
+
+@Entity
+@Table(name="cm_archetype")
+public class ArchetypeDTO implements CMElement{
+
+    @Id
+    private java.lang.String id;
     private java.lang.String name;
     private java.lang.String description;
     private java.lang.String rmName;
-    private java.lang.String archetype;
+    @Lob
+    private java.lang.String source;
     private byte[] aom;
     private byte[] aobcVO;
+    private Date lastUpdate;
 
     private static final long serialVersionUID = 23032012L;
 
-    public ArchetypeDTO(String archetypeId, String name, String description,
-                        String entryType, String archetype, byte[] aom, byte[] aobcVO) {
+    public ArchetypeDTO() {
         super();
-        this.archetypeId = archetypeId;
+    }
+
+    public ArchetypeDTO(String id, String name, String description, String rmName, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.rmName = entryType;
-        this.archetype = archetype;
+        this.rmName = rmName;
+        this.source = source;
         this.aom = aom;
         this.aobcVO = aobcVO;
-    }
-
-    public java.lang.String getArchetypeId() {
-        return archetypeId;
-    }
-
-    public void setArchetypeId(java.lang.String archetypeId) {
-        this.archetypeId = archetypeId;
+        this.lastUpdate = lastUpdate;
     }
 
     public java.lang.String getName() {
@@ -70,14 +73,6 @@ public class ArchetypeDTO implements Serializable{
         this.aom = aom;
     }
 
-    public java.lang.String getArchetype() {
-        return archetype;
-    }
-
-    public void setArchetype(java.lang.String archetype) {
-        this.archetype = archetype;
-    }
-
     public byte[] getAobcVO() {
         return aobcVO;
     }
@@ -85,11 +80,36 @@ public class ArchetypeDTO implements Serializable{
     public void setAobcVO(byte[] aobcVO) {
         this.aobcVO = aobcVO;
     }
-    /*
-    public int hashCode() {
-        return (archetype!=null?archetype.hashCode():0)+(aom!=null?aom.hashCode():1)+(aobcVO!=null?aobcVO.hashCode():2);
+
+    @Override
+    public String getId() {
+        return id;
     }
-    */
+
+    @Override
+    public String getSource() {
+        return source;
+    }
+
+    @Override
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Override
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

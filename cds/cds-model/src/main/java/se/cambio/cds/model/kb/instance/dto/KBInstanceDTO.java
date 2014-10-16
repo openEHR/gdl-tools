@@ -14,9 +14,7 @@ public class KBInstanceDTO implements CMElement{
     private String source;
     private Date lastUpdate;
 
-    public KBInstanceDTO(String id) {
-        this.id = id;
-    }
+    public KBInstanceDTO() { }
 
     @Override
     public String getId() {

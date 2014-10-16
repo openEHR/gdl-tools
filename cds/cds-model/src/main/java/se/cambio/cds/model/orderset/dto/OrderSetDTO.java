@@ -2,16 +2,22 @@ package se.cambio.cds.model.orderset.dto;
 
 import se.cambio.openehr.model.util.CMElement;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name="cm_orderset")
 public class OrderSetDTO implements CMElement{
+    @Id
     private String id;
+    @Lob
     private String source;
     private Date lastUpdate;
 
-    public OrderSetDTO(String id) {
-        this.id = id;
-    }
+    public OrderSetDTO() {}
 
     public String getId() {
         return id;

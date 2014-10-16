@@ -9,23 +9,30 @@ import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.util.Map;
+
 public class ArchetypeObjectBundleManager {
     private ArchetypeDTO archetypeDTO = null;
     protected boolean correctlyParsed = false;
+    private Map<String, Archetype> archetypeMap;
 
-    public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO) {
+    public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO, Map<String, Archetype> archetypeMap) {
         this.archetypeDTO = archetypeDTO;
+        this.archetypeMap = archetypeMap;
+    }
+
+    public void buildArchetypeObjectBundleCustomVO() {
         Object obj = null;
         if (archetypeDTO.getAobcVO() != null){
             obj = IOUtils.getObject(archetypeDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)){
-            Logger.getLogger(ArchetypeObjectBundleManager.class).debug("Parsing archetype '"+archetypeDTO.getArchetypeId()+"'...");
+            Logger.getLogger(ArchetypeObjectBundleManager.class).debug("Parsing archetype '"+archetypeDTO.getId()+"'...");
             try{
-                generateArchetypeObjectBundleCustomVO();
+                generateArchetypeData();
                 correctlyParsed = true;
             }catch(Error e){
-                InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getArchetypeId()+"'", e));
+                InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
                 ExceptionHandler.handle(iee);
             }catch(Exception e){
                 InternalErrorException iee = new InternalErrorException(e);
@@ -37,9 +44,9 @@ public class ArchetypeObjectBundleManager {
     }
 
 
-    public void generateArchetypeObjectBundleCustomVO ()
+    private void generateArchetypeData()
             throws InternalErrorException{
-        ADLParser adlParser = new ADLParser(archetypeDTO.getArchetype());
+        ADLParser adlParser = new ADLParser(archetypeDTO.getId());
         Archetype ar = null;
         try {
             ar = adlParser.parse();
@@ -47,7 +54,8 @@ public class ArchetypeObjectBundleManager {
             throw new InternalErrorException(e);
         }
         archetypeDTO.setRMName(ar.getArchetypeId().rmEntity());
-        archetypeDTO.setAom(IOUtils.getBytes(ar));        GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar);
+        archetypeDTO.setAom(IOUtils.getBytes(ar));
+        GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, archetypeMap);
         ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleManager.generateObjectBundleCustomVO();
         archetypeDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
     }

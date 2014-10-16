@@ -4,6 +4,7 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
@@ -62,7 +63,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
                     .setIcon(OpenEHRImageUtil.DV_CODED_TEXT_ICON)
                     .createSelectableNode();
             Collection<CodedTextVO> codedTextsVO =
-                    CodedTexts.getCodedTextVOs(getIdTemplate(), getIdElement());
+                    getCodedTexts().getCodedTextVOs(getIdTemplate(), getIdElement());
             Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap =
                     new HashMap<CodedTextVO, SelectableNode<CodedTextVO>>();
             SelectableNode.SelectionMode selectionMode =
@@ -74,9 +75,9 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
         return rootNode;
     }
 
-    private static void addCodedText(SelectableNode<CodedTextVO> rootNode, CodedTextVO codedTextVO, Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap, SelectableNode.SelectionMode selectionMode){
+    private void addCodedText(SelectableNode<CodedTextVO> rootNode, CodedTextVO codedTextVO, Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap, SelectableNode.SelectionMode selectionMode){
         if (!nodeMap.containsKey(codedTextVO)){
-            String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+            String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
             String codedTextName = name+(codedTextVO.getCode()!=null?" ("+codedTextVO.getCode()+")":"");
             SelectableNode<CodedTextVO> node = new SelectableNodeBuilder<CodedTextVO>()
                     .setName(codedTextName)
@@ -107,9 +108,9 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
         if (dataValue instanceof DvCodedText){
             String selectedCode = ((DvCodedText)dataValue).getDefiningCode().getCodeString();
             selectedCodes.add(selectedCode);
-            CodedTextVO codedTextVO = CodedTexts.getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
+            CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
             if (codedTextVO!=null){
-                label = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+                label = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
             }else{
                 //Asking directly to the terminology service for a description
                 //TODO Take it out and make it a generic call
@@ -142,7 +143,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
                 if (dv instanceof DvCodedText){
                     String selectedCode = ((DvCodedText)dv).getDefiningCode().getCodeString();
                     CodedTextVO codedTextVO =
-                            CodedTexts.getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
+                            getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
                     codedTextVOs.add(codedTextVO);
                     NodeConversor.selectObject(getRootNode(), codedTextVO);
                 }
@@ -158,7 +159,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
         int i = 0;
         for (CodedTextVO codedTextVO : codedTextVOs) {
             selectedCodes.add(codedTextVO.getCode());
-            String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+            String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
             label.append(name);
             i++;
             if (i<codedTextVOs.size()){
@@ -185,14 +186,14 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
             if (_multipleSelection){
                 Collection<DataValue> dataValues = new ArrayList<DataValue>();
                 for (String selectedCode : selectedCodes) {
-                    CodedTextVO codedTextVO = CodedTexts.getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
-                    String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+                    CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
+                    String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
                     dataValues.add(new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode()));
                 }
                 return new DvList(dataValues);
             }else{
-                CodedTextVO codedTextVO = CodedTexts.getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodes.iterator().next());
-                String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+                CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodes.iterator().next());
+                String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
                 return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
             }
         }
@@ -200,6 +201,10 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
 
     public void setMultipleSelection(boolean multipleSelection){
         _multipleSelection = multipleSelection;
+    }
+
+    private CodedTexts getCodedTexts(){
+        return Archetypes.getInstance().getArchetypeObjectBundles().getCodedTexts();
     }
 
     public Collection<JComponent> getJComponents() {

@@ -13,7 +13,7 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>source/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -41,7 +41,7 @@
                 <configuration>
                     <!-- Specifies the configuration file of the assembly plugin -->
                     <descriptors>
-                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                        <descriptor>source/main/assembly/assembly.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

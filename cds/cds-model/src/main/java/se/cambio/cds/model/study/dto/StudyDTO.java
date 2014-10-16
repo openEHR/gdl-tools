@@ -17,20 +17,16 @@ public class StudyDTO implements CMElement{
     private String source;
     private Date lastUpdate;
 
-    public StudyDTO(String id, String source, Date lastUpdate) {
-        this.id = id;
-        this.source = source;
-        this.lastUpdate = lastUpdate;
-    }
+    public StudyDTO() { }
 
     @Override
     public String getId() {
-        return getId();
+        return id;
     }
 
     @Override
     public String getSource() {
-        return getSource();
+        return source;
     }
 
     @Override

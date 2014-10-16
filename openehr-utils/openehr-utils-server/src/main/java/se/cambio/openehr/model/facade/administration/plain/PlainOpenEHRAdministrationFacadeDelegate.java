@@ -1,19 +1,13 @@
 package se.cambio.openehr.model.facade.administration.plain;
 
 import org.openehr.am.archetype.Archetype;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
-import se.cambio.openehr.model.archetype.dao.GenericArchetypeDAO;
-import se.cambio.openehr.model.archetype.dao.GenericArchetypeFactory;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.openehr.model.cm.element.dao.GenericCMElementDAO;
 import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegate;
-import se.cambio.openehr.model.template.dao.GenericTemplateDAO;
-import se.cambio.openehr.model.template.dao.GenericTemplateFactory;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.terminology.dao.GenericTerminologyDAO;
-import se.cambio.openehr.model.terminology.dao.GenericTerminologyFactory;
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.model.util.CMElement;
+import se.cambio.openehr.model.util.CMElementDAOFactory;
 import se.cambio.openehr.template.generator.controller.TemplateGen;
 import se.cambio.openehr.template.generator.model.Template;
 import se.cambio.openehr.util.IOUtils;
@@ -21,137 +15,19 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdministrationFacadeDelegate{
 
     @Override
-    public Collection<ArchetypeDTO> searchAllArchetypes()
-            throws InternalErrorException {
-        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-        return dao.searchAll();
-    }
-
-    @Override
-    public Collection<TemplateDTO> searchAllTemplates()
-            throws InternalErrorException {
-        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-        return dao.searchAll();
-    }
-
-    @Override
-    public Collection<TerminologyDTO> searchAllTerminologies() throws InternalErrorException {
-        GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
-        return dao.searchAll();
-    }
-
-    @Override
-    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds)
-            throws InternalErrorException {
-        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-        return dao.searchByArchetypeIds(archetypeIds);
-    }
-
-    @Override
-    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds)
-            throws InternalErrorException {
-        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-        return dao.searchByTemplateIds(templateIds);
-    }
-
-    @Override
-    public Collection<ArchetypeDTO> searchAllArchetypesDefinitions() throws InternalErrorException {
-        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-        return dao.searchAllDefinitions();
-    }
-
-    @Override
-    public Collection<TemplateDTO> searchAllTemplatesDefinitions() throws InternalErrorException {
-        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-        return dao.searchAllDefinitions();
-    }
-
-    @Override
-    public int getArchetypesHashCode() throws InternalErrorException {
-        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-        return Archetypes.generateHashCode(dao.searchAll());
-    }
-
-    @Override
-    public int getTemplatesHashCode() throws InternalErrorException {
-        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-        return Templates.generateHashCode(dao.searchAll());
-    }
-
-    @Override
-    public int getTerminologiesHashCode() throws InternalErrorException {
-        GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
-        return Terminologies.generateHashCode(dao.searchAll());
-    }
-
-    @Override
-    public void upsertArchetype(ArchetypeDTO archetypeDTO)
-            throws InternalErrorException, ModelException {
-        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-        try{
-            dao.update(archetypeDTO);
-        }catch (InstanceNotFoundException e){
-            dao.insert(archetypeDTO);
-        }
-    }
-
-    @Override
-    public void upsertTemplate(TemplateDTO templateDTO)
-            throws InternalErrorException, ModelException {
-        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-        try{
-            dao.update(templateDTO);
-        }catch (InstanceNotFoundException e){
-            dao.insert(templateDTO);
-        }
-    }
-
-    @Override
-    public void upsertTerminology(TerminologyDTO terminologyDTO) throws InternalErrorException, ModelException {
-        GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
-        try{
-            dao.update(terminologyDTO);
-        }catch (InstanceNotFoundException e){
-            dao.insert(terminologyDTO);
-
-        }
-    }
-
-    @Override
-    public void removeArchetype(String archetypeId) throws InternalErrorException, ModelException {
-        GenericArchetypeDAO dao = GenericArchetypeFactory.getDAO();
-        dao.remove(archetypeId);
-    }
-
-    @Override
-    public void removeTemplate(String templateId) throws InternalErrorException, ModelException {
-        GenericTemplateDAO dao = GenericTemplateFactory.getDAO();
-        dao.remove(templateId);
-    }
-
-    @Override
-    public void removeTerminology(String terminologyId) throws InternalErrorException, ModelException {
-        GenericTerminologyDAO dao = GenericTerminologyFactory.getDAO();
-        dao.remove(terminologyId);
-    }
-
-    @Override
     public Template getSimpleTemplate(String templateId, String lang) throws InternalErrorException, ModelException {
-        Collection<TemplateDTO> templateDTOs = searchTemplates(Collections.singleton(templateId));
+        Collection<TemplateDTO> templateDTOs = searchCMElementsByIds(TemplateDTO.class, Collections.singleton(templateId));
         Template simpleTemplate = null;
         if (!templateDTOs.isEmpty()){
-            Collection<ArchetypeDTO> archetypeDTOs = searchAllArchetypes();
+            Collection<ArchetypeDTO> archetypeDTOs = getAllCMElements(ArchetypeDTO.class);
             Map<String, Archetype> archetypeMap = new HashMap<String, Archetype>();
             for(ArchetypeDTO archetypeDTO: archetypeDTOs){
-                archetypeMap.put(archetypeDTO.getArchetypeId(), (Archetype) IOUtils.getObject(archetypeDTO.getAom()));
+                archetypeMap.put(archetypeDTO.getId(), (Archetype) IOUtils.getObject(archetypeDTO.getAom()));
             }
             TemplateDTO templateDTO = templateDTOs.iterator().next();
             Archetype templateAOM = (Archetype) IOUtils.getObject(templateDTO.getAom());
@@ -159,6 +35,52 @@ public class PlainOpenEHRAdministrationFacadeDelegate implements OpenEHRAdminist
             simpleTemplate = templateGen.toTemplate(templateDTO.getName(), templateAOM, archetypeMap, lang);
         }
         return simpleTemplate;
+    }
+
+    @Override
+    public <E extends CMElement> Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        return dao.searchAll();
+    }
+
+    @Override
+    public <E extends CMElement> Collection<String> getAllCMElementIds(Class<E> cmElementClass) throws InternalErrorException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        return dao.searchAllIds();
+    }
+
+    @Override
+    public <E extends CMElement> Collection<E> searchCMElementsByIds(Class<E> cmElementClass, Collection<String> ids) throws InternalErrorException, InstanceNotFoundException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        return dao.searchByIds(ids);
+    }
+
+    @Override
+    public <E extends CMElement> void upsertCMElement(E cmElement) throws InternalErrorException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElement.getClass());
+        try {
+            dao.update(cmElement);
+        } catch (InstanceNotFoundException e) {
+            dao.insert(cmElement);
+        }
+    }
+
+    @Override
+    public <E extends CMElement> void removeCMElement(Class<E> cmElementClass, String id) throws InternalErrorException, InstanceNotFoundException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        dao.remove(id);
+    }
+
+    @Override
+    public <E extends CMElement> String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        return AbstractCMManager.generateChecksum(dao.searchAll());
+    }
+
+    @Override
+    public <E extends CMElement> Date getLastUpdate(Class<E> cmElementClass) throws InternalErrorException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        return dao.getLastUpdateDate();
     }
 }
 /*

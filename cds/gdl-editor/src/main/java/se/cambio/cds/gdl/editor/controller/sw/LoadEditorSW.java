@@ -11,7 +11,7 @@ import se.cambio.openehr.controller.InitialLoadingObservable.LoadingStage;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice.MessageType;

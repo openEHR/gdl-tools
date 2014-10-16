@@ -15,16 +15,11 @@ import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.*;
 import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class GenericObjectBundleManager {
     private static String SECTION_NAME = "name/value='";
@@ -38,14 +33,17 @@ public class GenericObjectBundleManager {
     private Collection<ArchetypeSlotVO> archetypeSlotVOs = null;
     private Collection<UnitVO> unitVOs = null;
     private Collection<ProportionTypeVO> proportionTypeVOs = null;
+    private final Map<String, Archetype> archetypeMap;
 
-    public GenericObjectBundleManager(Archetype ar) {
+    public GenericObjectBundleManager(Archetype ar, Map<String, Archetype> archetypeMap){
         this.ar = ar;
+        this.archetypeMap = archetypeMap;
     }
 
-    public GenericObjectBundleManager(Archetype ar, String templateId) {
+    public GenericObjectBundleManager(Archetype ar, String templateId, Map<String, Archetype> archetypeMap) {
         this.ar = ar;
         this.templateId = templateId;
+        this.archetypeMap = archetypeMap;
     }
 
     public ArchetypeObjectBundleCustomVO generateObjectBundleCustomVO(){
@@ -140,14 +138,13 @@ public class GenericObjectBundleManager {
         Archetype localAOM = getLocalAOM(ar, path);
         String text = null;
         String desc = null;
-        //Is it referencing an inner archetype?
-        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(cObject.getNodeId());
-        if (archetypeVO==null){
-            text = getText(localAOM, cObject.getNodeId(), language);
-            desc = getDescription(localAOM, cObject.getNodeId(), language);
-        }else{
-            text = archetypeVO.getName();
-            desc = archetypeVO.getDescription();
+        text = getText(localAOM, cObject.getNodeId(), language);
+        desc = getDescription(localAOM, cObject.getNodeId(), language);
+        if (text == null){
+            text = cObject.getNodeId();
+        }
+        if (desc == null){
+            desc = cObject.getNodeId();
         }
         //TODO ????
         if ("@ internal @".equals(desc) || text==null || text.startsWith("*")){
@@ -478,12 +475,13 @@ public class GenericObjectBundleManager {
         return term;
     }
 
-    public static Archetype getLocalAOM(Archetype currentAOM, String path){
+    public Archetype getLocalAOM(Archetype currentAOM, String path){
         int i = path.lastIndexOf("[");
         while(i > 0){
             String idArchetype = path.substring(i+1, path.lastIndexOf("]"));
-            if (Archetypes.getArchetypeDTO(idArchetype) != null){
-                return Archetypes.getArchetypeAOM(idArchetype);
+            Archetype archetype = archetypeMap.get(idArchetype);
+            if (archetype != null){
+                return archetype;
             }else{
                 path = path.substring(0,i);
                 i = path.lastIndexOf("[");

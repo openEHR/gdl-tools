@@ -1,6 +1,6 @@
 package se.cambio.cds.model.orderset.dao;
 
-import se.cambio.cds.model.cm.element.dao.SQLGenericCMElementDAO;
+import se.cambio.openehr.model.cm.element.dao.SQLGenericCMElementDAO;
 import se.cambio.cds.model.orderset.dto.OrderSetDTO;
 
 public class SQLOrdersetDAOSQL extends SQLGenericCMElementDAO<OrderSetDTO> {

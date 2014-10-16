@@ -1,35 +1,54 @@
 package se.cambio.openehr.model.terminology.dto;
 
-import java.io.Serializable;
+import se.cambio.openehr.model.util.CMElement;
 
-public class TerminologyDTO implements Serializable{
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import java.util.Date;
+
+@Entity
+@Table(name="cm_terminology")
+public class TerminologyDTO implements CMElement{
 
     private static final long serialVersionUID = 2303245012L;
+    @Id
+    private String id = null;
+    @Lob
+    private String source = null;
+    private Date lastUpdate;
 
-    private String terminologyId = null;
-    private byte[] src = null;
-
-    public TerminologyDTO(String terminologyId, byte[] src) {
+    public TerminologyDTO() {
         super();
-        this.terminologyId = terminologyId;
-        this.src = src;
     }
-    public String getTerminologyId() {
-        return terminologyId;
+    public String getId() {
+        return id;
     }
-    public void setTerminologyId(String terminologyId) {
-        this.terminologyId = terminologyId;
+    public void setId(String id) {
+        this.id = id;
     }
-    public byte[] getSrc() {
-        return src;
+    public String getSource() {
+        return source;
     }
-    public void setSrc(byte[] src) {
-        this.src = src;
+
+    @Override
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Override
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     /*
     public int hashCode() {
-        return (terminologyId!=null?terminologyId.hashCode():0)+(src!=null?src.hashCode():1);
+        return (id!=null?id.hashCode():0)+(source!=null?source.hashCode():1);
     }
     */
 }

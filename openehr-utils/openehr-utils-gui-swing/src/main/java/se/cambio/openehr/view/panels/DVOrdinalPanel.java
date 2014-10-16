@@ -2,7 +2,7 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
-
+import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.model.archetype.vo.OrdinalVO;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -15,8 +15,8 @@ public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
 
     public DVOrdinalPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
         super(idElement, idTemplate, allowNull, requestFocus);
-        for (OrdinalVO ordinalVO : Ordinals.getOrdinalVOs(idTemplate, idElement)) {
-            String name = Ordinals.getText(ordinalVO, UserConfigurationManager.getLanguage());
+        for (OrdinalVO ordinalVO : getOrdinals().getOrdinalVOs(idTemplate, idElement)) {
+            String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.getLanguage());
             insertOption(""+ordinalVO.getValue(), ordinalVO.getValue()+" - "+name, ordinalVO.getDescription());
         }
     }
@@ -32,9 +32,13 @@ public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
 
     public DataValue getDataValue() {
         Integer value = Integer.parseInt((String)getComboBox().getSelectedItem());
-        OrdinalVO ordinalVO = Ordinals.getOrdinalVO(getIdTemplate(), getIdElement(), value);
-        String name = Ordinals.getText(ordinalVO, UserConfigurationManager.getLanguage());
+        OrdinalVO ordinalVO = getOrdinals().getOrdinalVO(getIdTemplate(), getIdElement(), value);
+        String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.getLanguage());
         return new DvOrdinal(value, name,ordinalVO.getTerminology(), ordinalVO.getCode());
+    }
+
+    private Ordinals getOrdinals(){
+        return Archetypes.getInstance().getArchetypeObjectBundles().getOrdinals();
     }
 }
 /*

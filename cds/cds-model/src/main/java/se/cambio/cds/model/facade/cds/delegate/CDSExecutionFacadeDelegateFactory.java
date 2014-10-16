@@ -1,7 +1,8 @@
 package se.cambio.cds.model.facade.cds.delegate;
 
-import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
+
 /**
  * @author iago.corbal
  *

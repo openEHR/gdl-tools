@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
+import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 

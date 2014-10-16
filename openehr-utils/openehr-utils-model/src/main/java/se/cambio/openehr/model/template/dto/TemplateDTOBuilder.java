@@ -1,17 +1,20 @@
 package se.cambio.openehr.model.template.dto;
 
+import java.util.Date;
+
 public class TemplateDTOBuilder {
-    private String templateId;
+    private String id;
     private String arcehtypeId;
     private String name;
     private String description;
-    private String entryType;
-    private String archetype;
+    private String rmName;
+    private String source;
     private byte[] aom;
     private byte[] aobcVO;
+    private Date lastUpdate;
 
-    public TemplateDTOBuilder setTemplateId(String templateId) {
-        this.templateId = templateId;
+    public TemplateDTOBuilder setId(String id) {
+        this.id = id;
         return this;
     }
 
@@ -30,13 +33,13 @@ public class TemplateDTOBuilder {
         return this;
     }
 
-    public TemplateDTOBuilder setEntryType(String entryType) {
-        this.entryType = entryType;
+    public TemplateDTOBuilder setRmName(String rmName) {
+        this.rmName = rmName;
         return this;
     }
 
-    public TemplateDTOBuilder setArchetype(String archetype) {
-        this.archetype = archetype;
+    public TemplateDTOBuilder setSource(String source) {
+        this.source = source;
         return this;
     }
 
@@ -50,7 +53,12 @@ public class TemplateDTOBuilder {
         return this;
     }
 
+    public TemplateDTOBuilder setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+        return this;
+    }
+
     public TemplateDTO createTemplateDTO() {
-        return new TemplateDTO(templateId, arcehtypeId, name, description, entryType, archetype, aom, aobcVO);
+        return new TemplateDTO(id, arcehtypeId, name, description, rmName, source, aom, aobcVO, lastUpdate);
     }
 }

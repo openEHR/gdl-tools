@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
 import java.io.*;
 
@@ -31,7 +31,7 @@ public class LocalCM {
         if (!isLoaded() || force){
             String hostname = null;
             try{
-                hostname = OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
+                hostname = CDSConfigurationParametersManager.getParameter(CDSConfigurationParametersManager.KM_SERVER_HOST);
             } catch (MissingConfigurationParameterException e) {
             }
             if (hostname==null){
@@ -75,7 +75,7 @@ public class LocalCM {
     public static void saveLocalCM() throws InternalErrorException {
         String hostname = null;
         try{
-            hostname = OpenEHRConfigurationParametersManager.getParameter(OpenEHRConfigurationParametersManager.OPENEHR_SERVER_HOST);
+            hostname = CDSConfigurationParametersManager.getParameter(CDSConfigurationParametersManager.KM_SERVER_HOST);
         } catch (MissingConfigurationParameterException e) {
             Logger.getLogger(LocalCM.class).info("OpenEHR hostname not found using default localhost");
         }

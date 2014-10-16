@@ -1,7 +1,7 @@
 package se.cambio.openehr.model.facade.administration.delegate;
 
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
 public class OpenEHRAdministrationFacadeDelegateFactory {
     private static String DELEGATE_CLASS_ADMIN = "OpenEHRAdminFacadeDelegate/Class";
@@ -13,7 +13,7 @@ public class OpenEHRAdministrationFacadeDelegateFactory {
         Class<?> theClass = null;
         try {
             String delegateClassName =
-                    OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_ADMIN);
+                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_ADMIN);
             theClass = Class.forName(delegateClassName);
         } catch (Exception e) {
             throw new InternalErrorException(e);

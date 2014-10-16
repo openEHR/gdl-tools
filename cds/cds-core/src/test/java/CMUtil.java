@@ -1,7 +1,7 @@
 import org.junit.Test;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -14,6 +14,7 @@ public class CMUtil {
         UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, CMUtil.class.getClassLoader().getResource("terminologies").toURI().getPath());
         UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, CMUtil.class.getClassLoader().getResource("archetypes").toURI().getPath());
         UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, CMUtil.class.getClassLoader().getResource("templates").toURI().getPath());
+        UserConfigurationManager.setParameter(UserConfigurationManager.STUDIES_FOLDER_KW, CMUtil.class.getClassLoader().getResource("studies").toURI().getPath());
         Terminologies.loadTerminologies();
         Archetypes.loadArchetypes();
         Templates.loadTemplates();

@@ -1,7 +1,8 @@
 package se.cambio.openehr.model.facade.terminology.delegate;
 
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
+
 /**
  * @author iago.corbal
  *
@@ -17,7 +18,7 @@ public class TerminologyFacadeDelegateFactory {
 	Class<?> theClass = null;
 	try {
 	    String delegateClassName = 
-		    OpenEHRConfigurationParametersManager.getParameter(DELEGATE_CLASS_TERMINOLOGY);
+		    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_TERMINOLOGY);
 	    theClass = Class.forName(delegateClassName);
 	} catch (Exception e) {
 	    throw new InternalErrorException(e);

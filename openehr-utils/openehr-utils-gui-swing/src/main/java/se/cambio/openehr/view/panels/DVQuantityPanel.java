@@ -2,6 +2,7 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
+import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Units;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRNumberFormat;
@@ -73,7 +74,8 @@ public class DVQuantityPanel extends DVGenericPanel{
         if (unitsComboBox==null){
             unitsComboBox = new JComboBox();
             unitsComboBox.setPreferredSize(new Dimension(70,20));
-            for (String unit : Units.getUnits(getIdTemplate(), getIdElement())) {
+            Units units = Archetypes.getInstance().getArchetypeObjectBundles().getUnits();
+            for (String unit : units.getUnits(getIdTemplate(), getIdElement())) {
                 unitsComboBox.addItem(unit);
             }
             if (!_enableUnits){

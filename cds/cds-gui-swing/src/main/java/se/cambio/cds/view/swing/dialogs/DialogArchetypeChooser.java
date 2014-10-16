@@ -403,7 +403,7 @@ public class DialogArchetypeChooser extends JDialog{
         ArrayList<TemplateDTO> templateDTOs = Templates.getTemplates(rmName);
         Collections.sort(templateDTOs, new TemplateComparator());
         for (TemplateDTO templateDTO : templateDTOs) {
-            String templateName = templateDTO.getName() + " - " + templateDTO.getTemplateId();
+            String templateName = templateDTO.getName() + " - " + templateDTO.getId();
             nodoOrigen = new SelectableNodeBuilder<Object>()
                     .setName(templateName)
                     .setObject(templateDTO)
@@ -442,7 +442,7 @@ public class DialogArchetypeChooser extends JDialog{
         }else{
             selected = NodeConversor.getSelectedObject(getTemplateNode());
             if (selected instanceof TemplateDTO){
-                return ((TemplateDTO)selected).getTemplateId();
+                return ((TemplateDTO)selected).getId();
             }
         }
         return null;

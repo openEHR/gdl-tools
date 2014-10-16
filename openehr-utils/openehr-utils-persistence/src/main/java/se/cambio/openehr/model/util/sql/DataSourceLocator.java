@@ -1,9 +1,8 @@
 package se.cambio.openehr.model.util.sql;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -57,11 +56,7 @@ public class DataSourceLocator {
             throws InternalErrorException{
         DataSource dataSource = (DataSource) dataSources.get(name);
         if (dataSource == null) {
-            if (isStandalone()){
-                dataSource = createStandaloneDataSource(name);
-            }else{
-                dataSource = createICDataSource(name);
-            }
+            dataSource = createICDataSource(name);
             dataSources.put(name, dataSource);
         }
         return dataSource;
@@ -81,36 +76,9 @@ public class DataSourceLocator {
         return dataSource;
     }
 
-    public static DataSource createStandaloneDataSource(String name) throws InternalErrorException {
-        DataSource dataSource = dataSources.get(name);
-        if (dataSource==null){
-            /* H2 */
-            //JdbcDataSource dataSourceAux = new JdbcDataSource();
-            /* PostgreSQL */
-            BasicDataSource ds = new BasicDataSource();
-            ds.setDriverClassName("org.postgresql.Driver");
-            String standAloneURL;
-            String username;
-            String password;
-            try {
-                standAloneURL = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
-                username = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_USERNAME);
-                password = OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_PASSWORD);
-            } catch (   MissingConfigurationParameterException e) {
-                throw new InternalErrorException(e);
-            }
-            ds.setUrl(standAloneURL);
-            ds.setUsername(username);
-            ds.setPassword(password);
-            dataSource = ds;
-            dataSources.put(name, dataSource);
-        }
-        return dataSource;
-    }
-
     public static boolean isStandalone(){
         try {
-            OpenEHRConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
+            CDSConfigurationParametersManager.getParameter(STANDALONE_DS_URL);
         } catch (MissingConfigurationParameterException e) {
             return false;
         }

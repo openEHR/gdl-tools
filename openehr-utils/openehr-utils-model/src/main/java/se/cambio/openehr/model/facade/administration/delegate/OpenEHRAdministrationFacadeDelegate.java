@@ -1,56 +1,27 @@
 package se.cambio.openehr.model.facade.administration.delegate;
 
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.model.util.CMElement;
 import se.cambio.openehr.template.generator.model.Template;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.ModelException;
 
 import java.util.Collection;
+import java.util.Date;
 
 public interface OpenEHRAdministrationFacadeDelegate {
 
-    public Collection<ArchetypeDTO> searchAllArchetypes()
-	    throws InternalErrorException;
-    public Collection<TemplateDTO> searchAllTemplates()
-	    throws InternalErrorException;
-    public Collection<TerminologyDTO> searchAllTerminologies()
-            throws InternalErrorException;
-
-    public Collection<ArchetypeDTO> searchArchetypes(Collection<String> archetypeIds)
-            throws InternalErrorException;
-    public Collection<TemplateDTO> searchTemplates(Collection<String> templateIds)
-            throws InternalErrorException;
-
-    public Collection<ArchetypeDTO> searchAllArchetypesDefinitions()
-            throws InternalErrorException;
-    public Collection<TemplateDTO> searchAllTemplatesDefinitions()
-            throws InternalErrorException;
-
-    public int getArchetypesHashCode()
-            throws InternalErrorException;
-    public int getTemplatesHashCode()
-            throws InternalErrorException;
-    public int getTerminologiesHashCode()
-            throws InternalErrorException;
-
-    public void upsertArchetype(ArchetypeDTO archetypeDTO)
-	    throws InternalErrorException, ModelException;
-    public void upsertTemplate(TemplateDTO templateDTO)
-	    throws InternalErrorException, ModelException;
-    public void upsertTerminology(TerminologyDTO terminologyDTO)
-            throws InternalErrorException, ModelException;
-
-    public void removeArchetype(String archetypeId)
-            throws InternalErrorException, ModelException;
-    public void removeTemplate(String templateId)
-            throws InternalErrorException, ModelException;
-    public void removeTerminology(String terminologyId)
-            throws InternalErrorException, ModelException;
-
     public Template getSimpleTemplate(String templateId, String lang)
             throws InternalErrorException, ModelException;
+
+    //Generic
+    public <E extends CMElement>Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
+    public <E extends CMElement>Collection<String> getAllCMElementIds(Class<E> cmElementClass) throws InternalErrorException;
+    public <E extends CMElement>Collection<E> searchCMElementsByIds(Class<E> cmElementClass, Collection<String> ids) throws InternalErrorException, InstanceNotFoundException;
+    public <E extends CMElement>void upsertCMElement(E cmElement) throws InternalErrorException;
+    public <E extends CMElement>void removeCMElement(Class<E> cmElementClass, String id) throws InternalErrorException, InstanceNotFoundException;
+    public <E extends CMElement>String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException;
+    public <E extends CMElement>Date getLastUpdate(Class<E> cmElementClass) throws InternalErrorException;
 
 }
 /*

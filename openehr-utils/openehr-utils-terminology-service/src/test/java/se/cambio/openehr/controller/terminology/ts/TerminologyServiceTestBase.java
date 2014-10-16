@@ -1,11 +1,11 @@
 package se.cambio.openehr.controller.terminology.ts;
 
 import junit.framework.TestCase;
-
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
-
 import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
+import se.cambio.openehr.util.UserConfigurationManager;
+
+import java.net.URISyntaxException;
 
 public class TerminologyServiceTestBase extends TestCase {
 
@@ -14,9 +14,10 @@ public class TerminologyServiceTestBase extends TestCase {
     protected static final CodePhrase SV = new CodePhrase("ISO_639-1", "sv");
     protected static final String SCT = "SNOMED-CT";
     protected static final String ICD10 = "ICD10";
-    
-    public TerminologyServiceTestBase() {
-	ts = new TerminologyServiceImpl();
+
+    public TerminologyServiceTestBase() throws URISyntaxException {
+        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies").toURI().getPath());
+        ts = new TerminologyServiceImpl();
     }
 }
 /*

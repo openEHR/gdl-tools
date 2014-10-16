@@ -16,7 +16,7 @@ import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;

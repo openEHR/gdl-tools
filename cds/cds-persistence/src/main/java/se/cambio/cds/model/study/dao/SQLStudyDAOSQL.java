@@ -1,6 +1,6 @@
 package se.cambio.cds.model.study.dao;
 
-import se.cambio.cds.model.cm.element.dao.SQLGenericCMElementDAO;
+import se.cambio.openehr.model.cm.element.dao.SQLGenericCMElementDAO;
 import se.cambio.cds.model.study.dto.StudyDTO;
 
 public class SQLStudyDAOSQL extends SQLGenericCMElementDAO<StudyDTO> {

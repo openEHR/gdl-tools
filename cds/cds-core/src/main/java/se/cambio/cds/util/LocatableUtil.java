@@ -12,61 +12,33 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.controller.session.data.ArchetypeSlots;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.openehr.model.archetype.vo.ArchetypeSlotVO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRRMUtil;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class LocatableUtil {
     public static Locatable createLocatable(ArchetypeReference archetypeReference) throws Exception{
         Map<String, Object> extraValues = new HashMap<String, Object>();
-        if (archetypeReference.getIdTemplate()==null){
-            Collection<ArchetypeSlotVO> archetypeSlots =
-                    ArchetypeSlots.getArchetypeSlots(archetypeReference.getIdArchetype());
-            for (ArchetypeSlotVO archetypeSlotVO : archetypeSlots) {
-                Iterator<String> i = archetypeSlotVO.getIncludes().iterator();
-                Archetype archetype = null;
-                //Try to guess the archetype
-                while(i.hasNext() && archetype==null){
-                    String includeStr = i.next();
-                    includeStr = includeStr.replaceAll("\\\\","");
-                    String[] splitStr = includeStr.split("\\|");
-                    int k = 0;
-                    while (splitStr.length>k && archetype==null){
-                        String idArchetype = splitStr[k++].trim();
-                        archetype = Archetypes.getArchetypeAOM(idArchetype);
-                    }
-                }
-                if (archetype!=null){
-                    Locatable locatable =
-                            (Locatable)SkeletonGenerator.getInstance().create(archetype, null, Archetypes.getArchetypeMap(), extraValues, GenerationStrategy.MAXIMUM_EMPTY);
-                    extraValues.put(archetypeSlotVO.getPath(), locatable);
-                }
-            }
-        }
         Archetype archetype = null;
         if (archetypeReference.getIdTemplate()!=null){
-            TemplateDTO templateDTO = Templates.getTemplateDTO(archetypeReference.getIdTemplate());
+            TemplateDTO templateDTO = getTemplates().getCMElement(archetypeReference.getIdTemplate());
             archetype = (Archetype) IOUtils.getObject(templateDTO.getAom());
         }else{
-            archetype = Archetypes.getArchetypeAOM(archetypeReference.getIdArchetype());
+            Set<String> singleton = Collections.singleton(archetypeReference.getIdArchetype());
+            archetype = getArchetypes().getArchetypeAOMsById(singleton).iterator().next();
         }
         Locatable locatable =
-                (Locatable)SkeletonGenerator.getInstance().create(archetype, archetypeReference.getIdTemplate(), Archetypes.getArchetypeMap(), extraValues, GenerationStrategy.MAXIMUM_EMPTY);
+                (Locatable)SkeletonGenerator.getInstance().create(archetype, archetypeReference.getIdTemplate(), getArchetypes().getArchetypeMap(), extraValues, GenerationStrategy.MAXIMUM_EMPTY);
         HashMap<ContainerInstance, Locatable> containersMap = new HashMap<ContainerInstance, Locatable>();
         Collection<ArchetypeElementVO> archetypeElements =
-                ArchetypeElements.getArchetypeElementsVO(archetypeReference.getIdArchetype(), archetypeReference.getIdTemplate());
+                getArchetypeElements().getArchetypeElementsVO(archetypeReference.getIdArchetype(), archetypeReference.getIdTemplate());
         //TODO Hack for medication activity
         if (locatable.itemAtPath("/activities[at0001]")!=null){
             Object obj = locatable.itemAtPath("/activities[at0001]");
@@ -141,22 +113,6 @@ public class LocatableUtil {
                 //TODO Works?
                 containerLocatable = locatable;
             }
-	    /*
-
-
- 	    if (existsContainerIdInMap(containerInstance.getId(), containersMap)){
- 		containerLocatable = new Cloner().deepClone((Locatable)locatable.itemAtPath(containerPath));
- 		if (containerPath.lastIndexOf("[")>containerPath.lastIndexOf(Locatable.PATH_SEPARATOR)){
- 		    String containerPathAux = containerPath.substring(0, containerPath.lastIndexOf("["));
- 		    if (locatable.itemAtPath(containerPathAux) instanceof List){
- 			containerPath = containerPathAux;
- 		    }
- 		}
- 		locatable.addChild(containerPath, containerLocatable);
- 	    }else{
- 		containerLocatable = 
- 	    }
-	     */
             containersMap.put(containerInstance, containerLocatable);
         }
         return containerLocatable;
@@ -172,5 +128,17 @@ public class LocatableUtil {
             }
         }
         return found;
+    }
+
+    public static ArchetypeElements getArchetypeElements(){
+        return Archetypes.getInstance().getArchetypeObjectBundles().getArchetypeElements();
+    }
+
+    public static Templates getTemplates() {
+        return Templates.getInstance();
+    }
+
+    public static Archetypes getArchetypes() {
+        return Archetypes.getInstance();
     }
 }

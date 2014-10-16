@@ -1,35 +1,24 @@
 package se.cambio.openehr.view.util;
 
-import openEHR.v1.template.TEMPLATE;
-import org.openehr.am.archetype.Archetype;
-import org.openehr.am.template.Flattener;
-import org.openehr.am.template.FlatteningException;
-import org.openehr.am.template.UnknownArchetypeException;
-import se.cambio.openehr.controller.TemplateObjectBundleManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.openehr.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UnicodeBOMInputStream;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
-import se.cambio.openehr.view.dialogs.DialogLongMessageNotice.MessageType;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 
 public class ImportUtils {
 
-    public static int showImportArchetypeDialogAndAddToRepo(Window owner, File selectedFile){
+    public static int showImportArchetypeDialogAndAddToRepo(Window owner, File selectedFile) throws InternalErrorException, InstanceNotFoundException {
         JFileChooser fileChooser = getArchetypeFileChooser(selectedFile);
         int result = fileChooser.showOpenDialog(owner);
         if (result != JFileChooser.CANCEL_OPTION){
@@ -50,7 +39,7 @@ public class ImportUtils {
         return fileChooser;
     }
 
-    public static int showImportTemplateDialog(Window owner, File selectedFile){
+    public static int showImportTemplateDialog(Window owner, File selectedFile) throws InternalErrorException, InstanceNotFoundException {
         JFileChooser fileChooser = getTemplateFileChooser(selectedFile);
         int result = fileChooser.showOpenDialog(owner);
         if (result != JFileChooser.CANCEL_OPTION){
@@ -72,207 +61,33 @@ public class ImportUtils {
     }
 
     //TODO Should be on a SW
-    private static void addArchetype(final Window owner, File file){
-        String fileName = file.getName().toLowerCase();
-        if (fileName.endsWith(".adl")){
-            try{
-                ArchetypeDTO archetypeDTO = getArchetypeDTOFromFile(file);
-                Archetypes.loadArchetype(archetypeDTO);
-            }catch(final Exception e){
-                ExceptionHandler.handle(e);
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            DialogLongMessageNotice dialog =
-                                    new DialogLongMessageNotice(
-                                            owner,
-                                            OpenEHRLanguageManager.getMessage("ErrorParsingArchetypeT"),
-                                            OpenEHRLanguageManager.getMessage("ErrorParsingArchetype"),
-                                            e.getMessage(),
-                                            MessageType.ERROR
-                                    );
-                            dialog.setVisible(true);
-                        }
-                    });
-                } catch (InterruptedException e1) {
-                    ExceptionHandler.handle(e);
-                } catch (InvocationTargetException e1) {
-                    ExceptionHandler.handle(e);
-                }
-            }
-        }
+    private static void addArchetype(final Window owner, File file) throws InstanceNotFoundException, InternalErrorException {
+        ArchetypeDTO archetypeDTO = getArchetypeDTOFromFile(file);
+        Archetypes.getInstance().upsert(archetypeDTO);
     }
 
-    public static ArchetypeDTO getArchetypeDTOFromFile(File file) throws InternalErrorException{
-        InputStream fis = null;
-        try{
-            fis = new FileInputStream(file);
-            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-            ubis.skipBOM();
-            String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-            String fileName = file.getName();
-            String idArchetype = fileName.substring(0, fileName.length()-4);
-            ArchetypeDTO archetypeDTO =
-                    new ArchetypeDTO(idArchetype, idArchetype, idArchetype, null, archetypeSrc, null, null);
-            return archetypeDTO;
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        } catch (Error e) {
-            throw new InternalErrorException(new Exception(e.getMessage()));
-        } finally{
-            if (fis!=null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    ExceptionHandler.handle(e);
-                }
-            }
-        }
+    public static ArchetypeDTO getArchetypeDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
+        FileGenericCMElementDAO<ArchetypeDTO> dao =
+                new FileGenericCMElementDAO<ArchetypeDTO>(ArchetypeDTO.class, file.getParentFile(), Collections.singleton("adl"));
+        String fileName = file.getName();
+        String archetypeId = fileName.substring(0, fileName.length()-".adl".length());
+        Collection<ArchetypeDTO> archetypeDTOs = dao.searchByIds(Collections.singleton(archetypeId));
+        return archetypeDTOs.iterator().next();
     }
 
-    private static void addTemplate(final Window owner, File file){
-        String fileName = file.getName().toLowerCase();
-        InputStream fis = null;
-        if (fileName.endsWith(".oet")){
-            try{
-                fis = new FileInputStream(file.getAbsolutePath());
-                UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-                ubis.skipBOM();
-                String idTemplate = fileName.substring(0,fileName.length()-4);
-                String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-                importTemplate(owner, idTemplate, archetypeSrc);
-            }catch(final Exception e){
-                ExceptionHandler.handle(e);
-                try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            DialogLongMessageNotice dialog =
-                                    new DialogLongMessageNotice(
-                                            owner,
-                                            OpenEHRLanguageManager.getMessage("ErrorParsingTemplateT"),
-                                            OpenEHRLanguageManager.getMessage("ErrorParsingTemplate"),
-                                            e.getMessage(),
-                                            MessageType.ERROR
-                                    );
-                            dialog.setVisible(true);
-                        }
-                    });
-                } catch (InterruptedException e1) {
-                    ExceptionHandler.handle(e);
-                } catch (InvocationTargetException e1) {
-                    ExceptionHandler.handle(e1);
-                }
-            }finally{
-                if (fis!=null){
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        ExceptionHandler.handle(e);
-                    }
-                }
-            }
-        }
-    }
-
-    public static TemplateDTO importTemplate(Window owner, String idTemplate, String archetypeSrc) throws Exception{
-        TemplateDTO templateDTO = new TemplateDTOBuilder()
-                .setTemplateId(idTemplate)
-                .setArcehtypeId(idTemplate)
-                .setName(idTemplate)
-                .setDescription(idTemplate)
-                .setArchetype(archetypeSrc)
-                .createTemplateDTO();
-        TEMPLATE template = TemplateObjectBundleManager.getParsedTemplate(templateDTO.getArchetype());
-        Map<String, Archetype> archetypeMap = null;
-        boolean lookupForArchetypes = true;
-        while(lookupForArchetypes){
-            lookupForArchetypes = false;
-            archetypeMap = Archetypes.getArchetypeMap();
-            String missingArchetypeId = null;
-            try{
-                new Flattener().toFlattenedArchetype(template, archetypeMap);
-            }catch(FlatteningException e){
-                if (e instanceof UnknownArchetypeException){
-                    missingArchetypeId = ((UnknownArchetypeException)e).getArchetypeId();
-                }else{
-                    throw e;
-                }
-            }
-            if (missingArchetypeId!=null){
-                lookupForArchetypes=true;
-                int result = showImportArchetypeDialogAndAddToRepo(owner, new File(missingArchetypeId + ".adl"));
-                if (result==JFileChooser.CANCEL_OPTION){
-                    return null;
-                }
-            }
-        }
-        String idArchetype = template.getDefinition().getArchetypeId();
-        templateDTO.setArcehtypeId(idArchetype);
-        templateDTO.setName(template.getName());
-        //TODO
-        if (template.getDescription()!=null && template.getDescription().getDetails()!=null&&template.getDescription().getDetails().getPurpose()!=null){
-            templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
-        }
-        Templates.loadTemplate(templateDTO);
-        return templateDTO;
-    }
-
-    public static TemplateDTO getTemplateDTOFromFile(File file) throws InternalErrorException{
-        InputStream fis = null;
-        try{
-            fis = new FileInputStream(file);
-            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-            ubis.skipBOM();
-            String archetypeSrc = IOUtils.toString(ubis, "UTF-8");
-            String fileName = file.getName();
-            String idTemplate = fileName.substring(0,fileName.length()-4);
-            TemplateDTO templateDTO = new TemplateDTOBuilder()
-                    .setTemplateId(idTemplate)
-                    .setArcehtypeId(idTemplate)
-                    .setName(idTemplate)
-                    .setDescription(idTemplate)
-                    .setArchetype(archetypeSrc)
-                    .createTemplateDTO();
-            new TemplateObjectBundleManager(templateDTO).generateArchetypeObjectBundleCustomVO();
-            return templateDTO;
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        } finally{
-            if (fis!=null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    ExceptionHandler.handle(e);
-                }
-            }
-        }
+    private static void addTemplate(final Window owner, File file) throws InstanceNotFoundException, InternalErrorException {
+        TemplateDTO templateDTO = getTemplateDTOFromFile(file);
+        Templates.getInstance().upsert(templateDTO);
     }
 
 
-    public static TerminologyDTO getTerminologyDTOFromFile(File file) throws InternalErrorException{
-        InputStream fis = null;
-        try{
-            fis = new FileInputStream(file);
-            UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
-            ubis.skipBOM();
-            byte[] termSetSrc = IOUtils.toByteArray(ubis);
-            String fileName = file.getName();
-            String terminologyId = fileName.substring(0,fileName.length()-4);
-            TerminologyDTO terminologyDTO = new TerminologyDTO(terminologyId,termSetSrc);
-            return terminologyDTO;
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        } finally{
-            if (fis!=null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    ExceptionHandler.handle(e);
-                }
-            }
-        }
+    public static TemplateDTO getTemplateDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
+        FileGenericCMElementDAO<TemplateDTO> dao =
+                new FileGenericCMElementDAO<TemplateDTO>(TemplateDTO.class, file.getParentFile(), Collections.singleton("adl"));
+        String fileName = file.getName();
+        String templateId = fileName.substring(0, fileName.length()-".adl".length());
+        Collection<TemplateDTO> templateDTOs = dao.searchByIds(Collections.singleton(templateId));
+        return templateDTOs.iterator().next();
     }
 }
 /*
