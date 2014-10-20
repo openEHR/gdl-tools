@@ -3,13 +3,13 @@ package se.cambio.openehr.controller;
 import openEHR.v1.template.TEMPLATE;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.template.Flattener;
 import org.openehr.am.template.FlatteningException;
 import org.openehr.am.template.OETParser;
 import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.TemplateFlattener;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -57,7 +57,7 @@ public class TemplateObjectBundleManager {
             if (template.getDescription()!=null && template.getDescription().getDetails()!=null && template.getDescription().getDetails().getPurpose() != null){
                 templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
             }
-            Archetype ar = new Flattener().toFlattenedArchetype(template, archetypeMap);
+            Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
             templateDTO.setRMName(ar.getArchetypeId().rmEntity());
             templateDTO.setAom(IOUtils.getBytes(ar));
             GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, templateDTO.getId(), archetypeMap);

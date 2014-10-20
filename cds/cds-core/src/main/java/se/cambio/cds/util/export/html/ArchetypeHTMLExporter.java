@@ -10,6 +10,7 @@ import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.openehr.rm.common.resource.ResourceDescriptionItem;
 import se.cambio.cds.util.export.html.util.ArchetypeDefinitionHTMLRenderer;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -25,14 +26,14 @@ public class ArchetypeHTMLExporter extends ClinicalModelHTMLExporter<Archetype> 
     private ArchetypeDefinitionHTMLRenderer archetypeDefinitionHTMLRenderer;
     private String templateId;
 
-    public ArchetypeHTMLExporter(Archetype entity, String templateId, String lang) {
+    public ArchetypeHTMLExporter(Archetype entity, String templateId, String lang, ArchetypeManager archetypeManager) {
         super(entity, lang);
         this.templateId = templateId;
-        this.archetypeDefinitionHTMLRenderer = new ArchetypeDefinitionHTMLRenderer();
+        this.archetypeDefinitionHTMLRenderer = new ArchetypeDefinitionHTMLRenderer(archetypeManager);
     }
 
     @Override
-    public Map<String, Object> getEntityObjectsMap() throws InternalErrorException {
+    public Map<String, Object> getEntityObjectsMap() throws InternalErrorException, InstanceNotFoundException {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("archetype", getEntity());
         objectMap.put("archetype_description_item", getResourceDescriptionItem());

@@ -18,8 +18,8 @@ import se.cambio.cds.model.study.StudyDefinition;
 import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.cds.model.view.DecisionSupportViewDefinition;
 import se.cambio.cds.util.export.html.*;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class HTMLExportTest {
         TermDefinition td = new TermDefinition();
         td.getTerms().put("test", new Term());
         guide.getOntology().getTermDefinitions().put("en", td);
-        GuideHTMLExporter htmlExporter = new GuideHTMLExporter(guide, "en");
+        GuideHTMLExporter htmlExporter = new GuideHTMLExporter(guide, "en", ArchetypeManager.getInstance());
         String html = htmlExporter.convertToHTML();
         assertThat(html, containsString("testGuideHTML"));
     }
@@ -61,18 +61,18 @@ public class HTMLExportTest {
     }
 
     @Test
-    public void shouldExportArchetypeToHTML() throws InternalErrorException {
-        Archetype archetype = Archetypes.getArchetypeAOM("openEHR-EHR-OBSERVATION.body_weight.v1");
-        ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en");
+    public void shouldExportArchetypeToHTML() throws InternalErrorException, InstanceNotFoundException {
+        Archetype archetype = ArchetypeManager.getInstance().getArchetypes().getArchetypeAOMById("openEHR-EHR-OBSERVATION.body_weight.v1");
+        ArchetypeHTMLExporter htmlExporter = new ArchetypeHTMLExporter(archetype, null, "en", ArchetypeManager.getInstance());
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         String html = htmlExporter.convertToHTML();
         assertThat(html, containsString("openEHR-EHR-OBSERVATION.body_weight.v1"));
     }
 
     @Test
-    public void shouldExportTemplateToHTML() throws InternalErrorException {
-        Archetype archetype = Templates.getTemplateAOM("diagnosis_icd10");
-        TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en");
+    public void shouldExportTemplateToHTML() throws InternalErrorException, InstanceNotFoundException {
+        Archetype archetype = ArchetypeManager.getInstance().getTemplates().getTemplateAOMById("diagnosis_icd10");
+        TemplateHTMExporter htmlExporter = new TemplateHTMExporter(archetype, "diagnosis_icd10", "en", ArchetypeManager.getInstance());
         htmlExporter.setIconPath("cds/cds-gui-swing/src/main/resources/img");
         String html = htmlExporter.convertToHTML();
         assertThat(html, containsString("diagnosis_icd10"));
@@ -122,7 +122,7 @@ public class HTMLExportTest {
         KBInstance kbInstance = new KBInstance("testKBInstanceId");
         kbInstance.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
         kbInstance.getKbInstanceDefinitions().put("en", new KBInstanceDefinition());
-        KBInstanceHTMLExporter htmlExporter = new KBInstanceHTMLExporter(kbInstance, "en");
+        KBInstanceHTMLExporter htmlExporter = new KBInstanceHTMLExporter(kbInstance, "en", ArchetypeManager.getInstance());
         String html = htmlExporter.convertToHTML();
         assertThat(html, containsString("testKBInstanceId"));
     }

@@ -7,6 +7,8 @@ import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.execution.drools.DroolsRuleExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.guide.dto.GuideDTO;
@@ -14,15 +16,14 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.session.data.Terminologies;
+import se.cambio.cds.util.GuideCompilerFactory;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -58,13 +59,8 @@ public abstract class GDLTestCase extends TestCase {
         try {
             //Load KM
             UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-            Terminologies.loadTerminologies();
             UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-            Archetypes.loadArchetypes();
             UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
-            Templates.loadTemplates();
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -167,8 +163,11 @@ public abstract class GDLTestCase extends TestCase {
     public static GuideDTO parse(String guideId) throws Exception {
         InputStream is = load("guides/"+guideId+".gdl");
         String gdlStr = IOUtils.toString(is);
-        GuideDTO guideDTO = new GuideDTO(guideId, gdlStr, null, null, true, Calendar.getInstance().getTime());
-        DroolsGuideUtil.compileIfNeeded(guideDTO);
+        GuideDTO guideDTO = new GuideDTO(guideId, gdlStr, null, null, Calendar.getInstance().getTime());
+        Guide guide = new GDLParser().parse(new ByteArrayInputStream(gdlStr.getBytes()));
+        byte[] compiledGuide = GuideCompilerFactory.getDelegate().compile(guide);
+        guideDTO.setGuideObject(IOUtils.getBytes(guide));
+        guideDTO.setCompiledGuide(compiledGuide);
         return guideDTO;
     }
 

@@ -8,13 +8,13 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.*;
 
 public class Clusters {
-    private final ArchetypeObjectBundles archetypeObjectBundles;
+    private final ArchetypeManager archetypeManager;
     private  Map<String, ClusterVO> _clustersById = null;
     private Map<String, Map<String, ClusterVO>> _templateClustersByTemplateIdAndId = null;
 
 
-    public Clusters(ArchetypeObjectBundles archetypeObjectBundles){
-        this.archetypeObjectBundles = archetypeObjectBundles;
+    public Clusters(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
         init();
     }
 
@@ -47,6 +47,7 @@ public class Clusters {
     }
 
     public ClusterVO getClusterVO(String idTemplate, String idCluster){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idCluster);
         if (idTemplate!=null){
             return getClusterVOMap(idTemplate).get(idCluster);
         }else{
@@ -54,17 +55,6 @@ public class Clusters {
         }
     }
 
-    public ClusterVO getClusterVOWithCardinalityGT1(String idTemplate, String idCluster){
-        ClusterVO clusterVO = getClusterVO(idTemplate, idCluster);
-        while (clusterVO!=null){
-            if (clusterVO.getUpperCardinality()==null || clusterVO.getUpperCardinality()>1){
-                return clusterVO;
-            }else{
-                clusterVO = getClusterVO(idTemplate, clusterVO.getIdParent());
-            }
-        }
-        return null;
-    }
 
     public Collection<ClusterVO> getSections(String idTemplate){
         Collection<ClusterVO> sections = new ArrayList<ClusterVO>();
@@ -83,7 +73,7 @@ public class Clusters {
     public String getText(String idTemplate, String idElement, String lang) {
         ClusterVO clusterVO = getClusterVO(idTemplate, idElement);
         if (clusterVO!=null){
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(idTemplate, idElement, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -101,7 +91,7 @@ public class Clusters {
     public String getDescription(String idTemplate, String idElement, String lang) throws InternalErrorException {
         ClusterVO clusterVO = getClusterVO(idTemplate, idElement);
         if (clusterVO!=null){
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(idTemplate, idElement, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -113,7 +103,7 @@ public class Clusters {
     }
 
     private ArchetypeTerms getArchetypeTerms() {
-        return this.archetypeObjectBundles.getArchetypeTerms();
+        return this.archetypeManager.getArchetypeTerms();
     }
 }
 /*

@@ -12,6 +12,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
@@ -32,7 +33,7 @@ public class LocatableUtil {
             archetype = (Archetype) IOUtils.getObject(templateDTO.getAom());
         }else{
             Set<String> singleton = Collections.singleton(archetypeReference.getIdArchetype());
-            archetype = getArchetypes().getArchetypeAOMsById(singleton).iterator().next();
+            archetype = getArchetypes().getArchetypeAOMsByIds(singleton).iterator().next();
         }
         Locatable locatable =
                 (Locatable)SkeletonGenerator.getInstance().create(archetype, archetypeReference.getIdTemplate(), getArchetypes().getArchetypeMap(), extraValues, GenerationStrategy.MAXIMUM_EMPTY);
@@ -131,14 +132,14 @@ public class LocatableUtil {
     }
 
     public static ArchetypeElements getArchetypeElements(){
-        return Archetypes.getInstance().getArchetypeObjectBundles().getArchetypeElements();
+        return ArchetypeManager.getInstance().getArchetypeElements();
     }
 
     public static Templates getTemplates() {
-        return Templates.getInstance();
+        return ArchetypeManager.getInstance().getTemplates();
     }
 
     public static Archetypes getArchetypes() {
-        return Archetypes.getInstance();
+        return ArchetypeManager.getInstance().getArchetypes();
     }
 }

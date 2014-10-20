@@ -4,16 +4,16 @@ import com.toedter.calendar.JDateChooser;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
-import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.*;
@@ -78,7 +78,7 @@ public class DVSwingUtil {
         if (elementInstance.getArchetypeReference()!=null){
             idTemplate = elementInstance.getArchetypeReference().getIdTemplate();
         }
-        ArchetypeElementVO ae = ArchetypeElements.getArchetypeElement(idTemplate, elementInstance.getId());
+        ArchetypeElementVO ae = ArchetypeManager.getInstance().getArchetypeElements().getArchetypeElement(idTemplate, elementInstance.getId());
         if (ae==null){
             Logger.getLogger(DVSwingUtil.class).warn("Archetype element '"+elementInstance.getId()+"' not found.");
         }
@@ -87,7 +87,7 @@ public class DVSwingUtil {
 
     public static JLabel createLabelForElement(ArchetypeElementVO archetypeElementVO) {
         JLabel label = null;
-        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         String tooltip = name;
 
         label = new JLabel(name);
@@ -101,11 +101,11 @@ public class DVSwingUtil {
 
     public static JLabel createLabelForElement(ElementInstance elementInstance, TermDefinition termDefinition) {
         ArchetypeElementVO archetypeElement =
-                ArchetypeElements.getArchetypeElement(
+                ArchetypeManager.getInstance().getArchetypeElements().getArchetypeElement(
                         elementInstance.getArchetypeReference().getIdTemplate(),
                         elementInstance.getId());
         JLabel label = null;
-        String name = ArchetypeElements.getText(archetypeElement, UserConfigurationManager.getLanguage());
+        String name = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElement, UserConfigurationManager.getLanguage());
 
         if (elementInstance instanceof GeneratedElementInstance){
             GeneratedElementInstance elementInstancesWithGTCode = (GeneratedElementInstance) elementInstance;
@@ -140,7 +140,7 @@ public class DVSwingUtil {
 
     public static ClusterVO getSection(ArchetypeElementVO archetypeElementVO, int level){
         int sectionCount = 0;
-        for (ClusterVO clusterVO : ArchetypeElements.getClusters(archetypeElementVO)) {
+        for (ClusterVO clusterVO : ArchetypeManager.getInstance().getArchetypeElements().getClusters(archetypeElementVO)) {
             if (clusterVO.getRMType().equals(OpenEHRConst.SECTION) && sectionCount == level){
                 return clusterVO;
             }else{
@@ -190,7 +190,7 @@ public class DVSwingUtil {
         String idTemplate = elementInstance.getArchetypeReference().getIdTemplate();
         String idElement = elementInstance.getId();
         ArchetypeElementVO archetypeElement =
-                ArchetypeElements.getArchetypeElement(
+                ArchetypeManager.getInstance().getArchetypeElements().getArchetypeElement(
                         idTemplate,
                         idElement);
         String rmType = archetypeElement.getRMType();

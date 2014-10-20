@@ -2,24 +2,26 @@ package se.cambio.cds.gdl.model.readable;
 
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class ReadableGuide {
     private LinkedHashMap<String, ReadableRule> renderableRules = null;
-    private List<RuleLine> definitionRuleLines = null;
-    private List<RuleLine> preconditionRuleLines = null;
+    private RuleLineCollection definitionRuleLines = null;
+    private RuleLineCollection preconditionRuleLines = null;
     private TermDefinition _termDefinition = null;
+    private ArchetypeManager archetypeManager;
 
-
-    public ReadableGuide(TermDefinition termDefinition){
+    public ReadableGuide(TermDefinition termDefinition, ArchetypeManager archetypeManager){
         _termDefinition = termDefinition;
         renderableRules = new LinkedHashMap<String, ReadableRule>();
-        definitionRuleLines = new ArrayList<RuleLine>();
-        preconditionRuleLines = new ArrayList<RuleLine>();
+        this.archetypeManager = archetypeManager;
+    }
+
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
     }
 
     public String getLanguage(){
@@ -29,10 +31,16 @@ public class ReadableGuide {
     public LinkedHashMap<String, ReadableRule> getReadableRules() {
         return renderableRules;
     }
-    public List<RuleLine> getDefinitionRuleLines() {
+    public RuleLineCollection getDefinitionRuleLines() {
+        if (definitionRuleLines == null) {
+            definitionRuleLines = new RuleLineCollection(this);
+        }
         return definitionRuleLines;
     }
-    public List<RuleLine> getPreconditionRuleLines() {
+    public RuleLineCollection getPreconditionRuleLines() {
+        if (preconditionRuleLines == null) {
+            preconditionRuleLines = new RuleLineCollection(this);
+        }
         return preconditionRuleLines;
     }
     public TermDefinition getTermDefinition() {

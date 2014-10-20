@@ -11,6 +11,7 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +37,7 @@ public class ExportToHTMLAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         Guide guide = controller.getEntity();
-        new GuideHTMLExporter(guide, controller.getCurrentLanguageCode()).exportToHTML(
+        new GuideHTMLExporter(guide, controller.getCurrentLanguageCode(), ArchetypeManager.getInstance()).exportToHTML(
                 EditorManager.getActiveEditorWindow(), guide.getId());
     }
 }

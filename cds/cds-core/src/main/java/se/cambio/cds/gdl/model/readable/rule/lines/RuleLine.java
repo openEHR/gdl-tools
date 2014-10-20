@@ -1,8 +1,9 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
-import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.gdl.model.TermDefinition;
+import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public abstract class RuleLine {
     private boolean commented = false;
     private RuleLine parentRuleLine = null;
     private List<RuleLine> childrenRuleLines = null;
-    private TermDefinition termDefinition = null;
+    private ReadableGuide readableGuide;
 
     public RuleLine(String name, String description) {
         super();
@@ -23,6 +24,10 @@ public abstract class RuleLine {
         this.description = description;
         this.ruleLineElements = new ArrayList<RuleLineElement>();
         this.childrenRuleLines = new ArrayList<RuleLine>();
+    }
+
+    public void setReadableRule(ReadableGuide readableGuide) {
+        this.readableGuide = readableGuide;
     }
 
     public String getName() {
@@ -108,12 +113,21 @@ public abstract class RuleLine {
         this.parentRuleLine = null;
     }
 
-    public TermDefinition getTermDefinition() {
-        return termDefinition;
+    public ReadableGuide getReadableGuide() {
+        if (readableGuide==null){
+            if (parentRuleLine!=null){
+                readableGuide = parentRuleLine.getReadableGuide();
+            }
+        }
+        return readableGuide;
     }
 
-    public void setTermDefinition(TermDefinition termDefinition) {
-        this.termDefinition = termDefinition;
+    public TermDefinition getTermDefinition() {
+        return getReadableGuide().getTermDefinition();
+    }
+
+    public ArchetypeManager getArchetypeManager(){
+        return getReadableGuide().getArchetypeManager();
     }
 }
 /*

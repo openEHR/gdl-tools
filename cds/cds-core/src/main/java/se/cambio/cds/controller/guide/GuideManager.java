@@ -19,7 +19,7 @@ public class GuideManager extends SimpleGuideManager{
         super(loadGuideDTOs(guideDTOs));
         _allGuidesDTOMap = new HashMap<String, GuideDTO>();
         for (GuideDTO guideDTO: guideDTOs){
-            _allGuidesDTOMap.put(guideDTO.getIdGuide(), guideDTO);
+            _allGuidesDTOMap.put(guideDTO.getId(), guideDTO);
         }
     }
 
@@ -31,7 +31,7 @@ public class GuideManager extends SimpleGuideManager{
                 if (guideDTO.getGuideObject()!=null){
                     guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
                 }else{
-                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
+                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
                 }
                 guides.add(guide);
             } catch (Exception e) {

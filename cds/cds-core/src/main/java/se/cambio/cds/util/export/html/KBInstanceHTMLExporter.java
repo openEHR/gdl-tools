@@ -4,6 +4,8 @@ import org.openehr.rm.common.archetyped.Archetyped;
 import org.openehr.rm.common.archetyped.Locatable;
 import se.cambio.cds.model.kb.instance.KBInstance;
 import se.cambio.cds.util.export.html.util.ArchetypeDataDefinitionHTMLRenderer;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -13,13 +15,15 @@ import java.util.Map;
 public class KBInstanceHTMLExporter extends ClinicalModelHTMLExporter<KBInstance> {
 
     private ArchetypeDataDefinitionHTMLRenderer archetypeDataDefinitionHTMLRenderer;
+    private ArchetypeManager archetypeManager;
 
-    public KBInstanceHTMLExporter(KBInstance entity, String lang) {
+    public KBInstanceHTMLExporter(KBInstance entity, String lang, ArchetypeManager archetypeManager) {
         super(entity, lang);
+        this.archetypeManager = archetypeManager;
     }
 
     @Override
-    public Map<String, Object> getEntityObjectsMap() throws InternalErrorException {
+    public Map<String, Object> getEntityObjectsMap() throws InternalErrorException, InstanceNotFoundException {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("kbInstance", getEntity());
         objectMap.put("kbInstance_description", getEntity().getResourceDescription().getDetails().get(getLanguage()));
@@ -52,7 +56,7 @@ public class KBInstanceHTMLExporter extends ClinicalModelHTMLExporter<KBInstance
     }
     private ArchetypeDataDefinitionHTMLRenderer getArchetypeDataDefinitionHTMLRenderer() {
         if (archetypeDataDefinitionHTMLRenderer == null) {
-            archetypeDataDefinitionHTMLRenderer = new ArchetypeDataDefinitionHTMLRenderer();
+            archetypeDataDefinitionHTMLRenderer = new ArchetypeDataDefinitionHTMLRenderer(archetypeManager);
         }
         return archetypeDataDefinitionHTMLRenderer;
     }

@@ -9,37 +9,34 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateArchetypeEl
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateAttributeComparisonOperatorRuleLineElement;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.export.json.DVDefSerializer;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class ReadableArchetypeReferencesUtil {
 
     private static short MAX_CHAR_PREDICATE_DESC_SIZE = 50;
 
-    public static String getName(ArchetypeInstantiationRuleLine airl){
+    public static String getName(ArchetypeInstantiationRuleLine airl) throws InstanceNotFoundException, InternalErrorException {
         return getName(airl, true);
     }
-    public static String getName(ArchetypeInstantiationRuleLine airl, boolean withPredicate){
+    public static String getName(ArchetypeInstantiationRuleLine airl, boolean withPredicate) {
         if (airl!=null){
             ArchetypeReference ar = airl.getArchetypeReference();
             if (ar!=null){
-                ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-                if (archetypeVO!=null){
-                    String name = archetypeVO.getName();
-                    if (withPredicate){
-                        String predicateDesc = getShortPredicateDescription(airl);
-                        if (!predicateDesc.isEmpty()){
-                            name = name+" ("+predicateDesc+")";
-                        }
+                String name = ar.getIdArchetype();
+                if (withPredicate){
+                    String predicateDesc = getShortPredicateDescription(airl);
+                    if (!predicateDesc.isEmpty()){
+                        name = name+" ("+predicateDesc+")";
                     }
-                    return name;
                 }
+                return name;
             }
         }
         return "*UNKNOWN*";
@@ -68,7 +65,7 @@ public class ReadableArchetypeReferencesUtil {
                 if (aerlde!=null){
                     ArchetypeElementVO archetypeElementVO = aerlde.getValue();
                     if (archetypeElementVO!=null){
-                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
                         sb.append(name+"="+DVDefSerializer.getReadableValue(wpadrl.getDataValueRuleLineElement().getValue(), null));
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
@@ -86,7 +83,7 @@ public class ReadableArchetypeReferencesUtil {
                 if (aerlde!=null){
                     ArchetypeElementVO archetypeElementVO = aerlde.getValue();
                     if (archetypeElementVO!=null){
-                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
                         sb.append(wpfdrl.getFunctionRuleLineElement().getValue()+"("+name+")");
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
@@ -109,7 +106,7 @@ public class ReadableArchetypeReferencesUtil {
                         if (operator!=null){
                             opStr = operator.getSymbol();
                         }
-                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
                         sb.append(name+opStr+"null");
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
@@ -130,7 +127,7 @@ public class ReadableArchetypeReferencesUtil {
                     ArchetypeElementVO archetypeElementVO = paearle.getValue();
                     String attribute = paearle.getAttribute();
                     if (archetypeElementVO!=null && pacorl.getValue()!=null){
-                        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                        String name = airl.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
                         sb.append(name+"."+attribute+" "+pacorl.getValue().getSymbol()+" "+ere.toString());
                     }else{
                         Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+paearle.toString()+"'");
@@ -142,15 +139,11 @@ public class ReadableArchetypeReferencesUtil {
         return sb.toString();
     }
 
-    public static String getDescription(ArchetypeInstantiationRuleLine airl){
+    public static String getDescription(ArchetypeInstantiationRuleLine airl) {
         if (airl!=null){
             ArchetypeReference ar = airl.getArchetypeReference();
             if (ar!=null){
-                ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-                if (archetypeVO!=null){
-                    String name = archetypeVO.getDescription();
-                    return name;
-                }
+                return ar.getIdArchetype();
             }
         }
         return "*UNKNOWN*";
@@ -161,11 +154,10 @@ public class ReadableArchetypeReferencesUtil {
         return (predicateDesc.isEmpty()?"":"<tr><td colspan=2><b>"+OpenEHRLanguageManager.getMessage("Predicate")+": </b>"+predicateDesc+"</td></tr>");
     }
 
-    public static String getHTMLTooltip(ArchetypeInstantiationRuleLine airl){
+    public static String getHTMLTooltip(ArchetypeInstantiationRuleLine airl) {
         ArchetypeReference ar = airl.getArchetypeReference();
         if (ar!=null){
-            ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-            String archetypeImageName = OpenEHRConstUI.getIconName(archetypeVO.getRMName());
+            String archetypeImageName = OpenEHRConstUI.getIconName(Archetypes.getEntryType(ar.getIdArchetype()));
             String archetypeName = getName(airl, false);
             return "<html><table width=500>"+
                     "<tr><td><b>"+OpenEHRLanguageManager.getMessage("Archetype")+": </b>"+OpenEHRImageUtil.getImgHTMLTag(archetypeImageName)+"&nbsp;"+archetypeName+"</td></tr>"+

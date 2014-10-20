@@ -13,9 +13,9 @@ import org.openehr.rm.datatypes.text.DvText;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.util.DVUtil;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.controller.session.data.Ordinals;
-import se.cambio.openehr.controller.session.data.ProportionTypesUI;
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -103,7 +103,7 @@ public class DVDefSerializer {
             sb.append(",");
             sb.append(DVUtil.round(dvProportion.getDenominator(), dvProportion.getPrecision()));
             sb.append(",");
-            sb.append(ProportionTypesUI.getInstanceID(dvProportion.getType()));
+            sb.append(ProportionTypesConst.getInstance().getInstanceID(dvProportion.getType()));
             sb.append(",");
             sb.append(dvProportion.getPrecision());
             return getDVInstantiationWithoutQuotes(DvProportion.class.getSimpleName(), sb.toString());
@@ -262,14 +262,14 @@ public class DVDefSerializer {
         return stringWithReferences;
     }
 
-    public static String getReadableDefinition(String idTemplate, String idElement, String rmName, String dvInstantiation){
+    public static String getReadableDefinition(String idTemplate, String idElement, String rmName, String dvInstantiation, ArchetypeManager archetypeManager){
         if (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName)){
-            String codedTextName = getCodedTextNameFromDVInstantiation(idTemplate, idElement, dvInstantiation);
+            String codedTextName = getCodedTextNameFromDVInstantiation(idTemplate, idElement, dvInstantiation, archetypeManager.getCodedTexts());
             if (codedTextName!=null){
                 return codedTextName;
             }
         }else if (OpenEHRDataValues.DV_ORDINAL.equals(rmName)){
-            String ordinalName = getOrdinalNameFromDVInstantiation(idTemplate, idElement, dvInstantiation);
+            String ordinalName = getOrdinalNameFromDVInstantiation(idTemplate, idElement, dvInstantiation, archetypeManager.getOrdinals());
             if (ordinalName!=null){
                 return ordinalName;
             }
@@ -351,8 +351,8 @@ public class DVDefSerializer {
         }
     }
 
-    public static String getOrdinalNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation){
-        return Ordinals.getText(idTemplate, idParentArchetypeNode, Integer.parseInt(getValueFromDVInstantiation(dvInstantiation)), UserConfigurationManager.getLanguage());
+    public static String getOrdinalNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, Ordinals ordinals){
+        return ordinals.getText(idTemplate, idParentArchetypeNode, Integer.parseInt(getValueFromDVInstantiation(dvInstantiation)), UserConfigurationManager.getLanguage());
     }
 
     public static String getValueFromDVInstantiation(String dvInstantiation){
@@ -365,10 +365,10 @@ public class DVDefSerializer {
         }
     }
 
-    public static String getCodedTextNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation){
-        CodedTextVO codedTexTVO = CodedTexts.getCodedTextVO(idTemplate, idParentArchetypeNode, getCodeFromDVInstantiation(dvInstantiation));
+    public static String getCodedTextNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, CodedTexts codedTexts){
+        CodedTextVO codedTexTVO = codedTexts.getCodedTextVO(idTemplate, idParentArchetypeNode, getCodeFromDVInstantiation(dvInstantiation));
         if (codedTexTVO!=null){
-            String name = CodedTexts.getText(codedTexTVO, UserConfigurationManager.getLanguage());
+            String name = codedTexts.getText(codedTexTVO, UserConfigurationManager.getLanguage());
             return name;
         }else{
             return getCodeFromDVInstantiation(dvInstantiation);

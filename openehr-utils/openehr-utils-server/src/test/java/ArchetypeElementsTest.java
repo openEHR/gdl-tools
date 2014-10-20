@@ -24,11 +24,11 @@ public class ArchetypeElementsTest {
 
     @Test
     public void testArchetypeElementsLanguages(){
-        Archetypes archetypes = new Archetypes();
-        ArchetypeElements archetypeElements = archetypes.getArchetypeObjectBundles().getArchetypeElements();
-        Ordinals ordinals = archetypes.getArchetypeObjectBundles().getOrdinals();
-        CodedTexts codedTexts = archetypes.getArchetypeObjectBundles().getCodedTexts();
-        Clusters clusters = archetypes.getArchetypeObjectBundles().getClusters();
+        ArchetypeManager archetypeManager = ArchetypeManager.getInstance();
+        ArchetypeElements archetypeElements = archetypeManager.getArchetypeElements();
+        Ordinals ordinals = archetypeManager.getOrdinals();
+        CodedTexts codedTexts = archetypeManager.getCodedTexts();
+        Clusters clusters = archetypeManager.getClusters();
 
         String text = archetypeElements.getText(null,"openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0026]","sv");
         assertTrue(text.equals("Hjärtsvikt/VK-dysfunktion"));

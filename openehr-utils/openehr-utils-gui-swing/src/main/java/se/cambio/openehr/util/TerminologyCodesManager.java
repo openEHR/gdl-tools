@@ -1,4 +1,4 @@
-package se.cambio.cds.gdl.editor.controller.interfaces;
+package se.cambio.openehr.util;
 
 import java.util.Collection;
 

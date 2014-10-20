@@ -3,8 +3,11 @@ package se.cambio.openehr.controller.session.data;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +16,7 @@ import java.util.Map;
 
 public class ArchetypeElements {
 
-    private final ArchetypeObjectBundles archetypeObjectBundles;
+    private final ArchetypeManager archetypeManager;
     private Map<String, ArchetypeElementVO> _archetypeElementsById = null;
     private Map<String, Map<String, ArchetypeElementVO>> _templateElementsByTemplateIdAndId = null;
 
@@ -27,8 +30,8 @@ public class ArchetypeElements {
                     OpenEHRDataValues.DV_DATE_TIME, null, null, null, null);
 
 
-    public ArchetypeElements(ArchetypeObjectBundles archetypeObjectBundles){
-        this.archetypeObjectBundles = archetypeObjectBundles;
+    public ArchetypeElements(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
         init();
     }
 
@@ -54,6 +57,7 @@ public class ArchetypeElements {
 
     //TODO Should throw an exception when the element is not found
     public ArchetypeElementVO getArchetypeElement(String idTemplate, String idElement){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         if (idTemplate==null){
             return _archetypeElementsById.get(idElement);
         }else{
@@ -66,9 +70,10 @@ public class ArchetypeElements {
     }
 
     public String getText(String idTemplate, String idElement, String lang) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         ArchetypeElementVO archetypeElementVO = getArchetypeElement(idTemplate, idElement);
         if (archetypeElementVO!=null){
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(idTemplate, idElement, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -84,10 +89,10 @@ public class ArchetypeElements {
     }
 
     public String getDescription(String idTemplate, String idElement, String lang) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         ArchetypeElementVO archetypeElementVO = getArchetypeElement(idTemplate, idElement);
         if (archetypeElementVO!=null){
-
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(idTemplate, idElement, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -99,12 +104,19 @@ public class ArchetypeElements {
     }
 
     private ArchetypeTerms getArchetypeTerms() {
-        return this.archetypeObjectBundles.getArchetypeTerms();
+        return this.archetypeManager.getArchetypeTerms();
     }
 
     private Map<String, ArchetypeElementVO> getArchetypeElementsInTemplate(String idTemplate){
         Map<String, ArchetypeElementVO> elementsInTemplate =
                 _templateElementsByTemplateIdAndId.get(idTemplate);
+        try {
+            archetypeManager.getTemplates().getCMElement(idTemplate);
+        } catch (InstanceNotFoundException e) {
+            ExceptionHandler.handle(e);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
+        }
         if (elementsInTemplate==null){
             elementsInTemplate = new LinkedHashMap<String, ArchetypeElementVO>();
             _templateElementsByTemplateIdAndId.put(idTemplate, elementsInTemplate);
@@ -113,6 +125,8 @@ public class ArchetypeElements {
     }
 
     public Collection<ArchetypeElementVO> getArchetypeElementsVO(String idArchetype, String idTemplate){
+        archetypeManager.loadArchetypesIfNeeded(idArchetype);
+        archetypeManager.loadTemplateIfNeeded(idTemplate);
         Collection<ArchetypeElementVO> list = new ArrayList<ArchetypeElementVO>();
         if (idTemplate!=null){
             list.addAll(getArchetypeElementsInTemplate(idTemplate).values());
@@ -134,7 +148,7 @@ public class ArchetypeElements {
         for (String pathNode : pathArray) {
             if (!pathNode.isEmpty()){
                 clusterPathSB.append("/"+pathNode);
-                ClusterVO clusterVO = this.archetypeObjectBundles.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
+                ClusterVO clusterVO = this.archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
                 if (clusterVO!=null){
                     clusters.add(clusterVO);
                 }

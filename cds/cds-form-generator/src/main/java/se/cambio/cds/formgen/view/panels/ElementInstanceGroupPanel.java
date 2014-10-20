@@ -2,12 +2,12 @@ package se.cambio.cds.formgen.view.panels;
 
 import com.rits.cloning.Cloner;
 import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.view.swing.DVSwingUtil;
-import se.cambio.cds.controller.session.data.ArchetypeReferences;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.panels.DVGenericPanel;
@@ -121,7 +121,7 @@ public class ElementInstanceGroupPanel extends JPanel {
     private void generateGenericPanelWithButtons(ArchetypeReference ar){
         LinkedHashMap<JLabel, DVGenericPanel> dvGenericPanelsMap = new LinkedHashMap<JLabel, DVGenericPanel>();
         Collection<ArchetypeElementVO> archetypeElementVOs =
-                ArchetypeElements.getArchetypeElementsVO(ar.getIdArchetype(), ar.getIdTemplate());
+                ArchetypeManager.getInstance().getArchetypeElements().getArchetypeElementsVO(ar.getIdArchetype(), ar.getIdTemplate());
         for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
             ElementInstance elementInstance =
                     ar.getElementInstancesMap().get(archetypeElementVO.getId());

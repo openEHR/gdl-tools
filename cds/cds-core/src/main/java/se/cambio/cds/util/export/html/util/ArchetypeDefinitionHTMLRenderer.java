@@ -1,17 +1,26 @@
 package se.cambio.cds.util.export.html.util;
 
 import org.openehr.am.archetype.Archetype;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Collection;
 
 public class ArchetypeDefinitionHTMLRenderer {
     private String iconPath = null;
+    private ArchetypeManager archetypeManager;
 
-    public ArchetypeDefinitionHTMLRenderer() {
+    public ArchetypeDefinitionHTMLRenderer(ArchetypeManager archetypeManager) {
+        this.archetypeManager = archetypeManager;
     }
 
-    public String generateHTML(Archetype archetype, String templateId, String lang){
-        SimpleArchetypeNode rootNode = SimpleArchetypeNodeUtils.getSimpleArchetypeNode(archetype.getArchetypeId().getValue(), templateId, lang);
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
+    }
+
+    public String generateHTML(Archetype archetype, String templateId, String lang) throws InstanceNotFoundException, InternalErrorException {
+        SimpleArchetypeNode rootNode = SimpleArchetypeNodeUtils.getSimpleArchetypeNode(archetype.getArchetypeId().getValue(), templateId, lang, archetypeManager);
         StringBuffer htmlSB = new StringBuffer();
         htmlSB.append("<ul class=\"tree\">");
         htmlSB.append("<li>");

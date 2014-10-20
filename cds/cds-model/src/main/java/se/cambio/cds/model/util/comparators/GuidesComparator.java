@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class GuidesComparator implements Comparator<GuideDTO>{
 
     public int compare(GuideDTO o1, GuideDTO o2) {
-        return o1.getIdGuide().compareTo(o2.getIdGuide());
+        return o1.getId().compareTo(o2.getId());
     }
 
 }

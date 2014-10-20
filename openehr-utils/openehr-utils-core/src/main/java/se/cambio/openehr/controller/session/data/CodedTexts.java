@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CodedTexts {
-    private final ArchetypeObjectBundles archetypeObjectBundles;
+    private final ArchetypeManager archetypeManager;
     private Map<String, Map<String, CodedTextVO>> _codedTextsByParentId = null;
     private Map<String, Map<String, Map<String, CodedTextVO>>> _templateCodedTextsByTemplateIdAndId = null;
 
 
-    public CodedTexts(ArchetypeObjectBundles archetypeObjectBundles){
-        this.archetypeObjectBundles = archetypeObjectBundles;
+    public CodedTexts(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
         init();
     }
 
@@ -58,6 +58,7 @@ public class CodedTexts {
     }
 
     public CodedTextVO getCodedTextVO(String idTemplate, String idElement, String code){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         if (idTemplate==null){
             return getCodedTextMap(idElement).get(code);
         }else{
@@ -66,6 +67,7 @@ public class CodedTexts {
     }
 
     public ArrayList<CodedTextVO> getCodedTextVOs(String idTemplate, String idElement){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         ArrayList<CodedTextVO> codedTexts = null;
         if (idTemplate==null){
             codedTexts = new ArrayList<CodedTextVO>(getCodedTextMap(idElement).values());
@@ -92,7 +94,7 @@ public class CodedTexts {
         CodedTextVO codedTextVO = getCodedTextVO(idTemplate, idElement, code);
         if (codedTextVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -111,7 +113,7 @@ public class CodedTexts {
         CodedTextVO codedTextVO = getCodedTextVO(idTemplate, idElement, code);
         if (codedTextVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -123,7 +125,7 @@ public class CodedTexts {
     }
 
     private ArchetypeTerms getArchetypeTerms() {
-        return this.archetypeObjectBundles.getArchetypeTerms();
+        return this.archetypeManager.getArchetypeTerms();
     }
 }
 /*

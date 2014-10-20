@@ -4,6 +4,7 @@ import se.cambio.cds.util.misc.CDSLanguageManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.HTMLRenderer;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
@@ -66,7 +67,7 @@ public abstract class ClinicalModelHTMLExporter<E> {
         return textsMap;
     }
 
-    public Map<String, Object> getObjectsMap() throws InternalErrorException{
+    public Map<String, Object> getObjectsMap() throws InternalErrorException, InstanceNotFoundException {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.putAll(getEntityObjectsMap());
         objectMap.put("texts", getTextsHashMap());
@@ -83,10 +84,12 @@ public abstract class ClinicalModelHTMLExporter<E> {
             return htmlRenderer.proccess(getObjectsMap());
         } catch (UnsupportedEncodingException e) {
             throw new InternalErrorException(e);
+        } catch (InstanceNotFoundException e) {
+            throw new InternalErrorException(e);
         }
     }
 
-    public abstract Map<String, Object> getEntityObjectsMap() throws InternalErrorException;
+    public abstract Map<String, Object> getEntityObjectsMap() throws InternalErrorException, InstanceNotFoundException;
     public abstract Map<String, String> getEntityTextMap();
     public abstract InputStream getInputStreamTemplate();
 

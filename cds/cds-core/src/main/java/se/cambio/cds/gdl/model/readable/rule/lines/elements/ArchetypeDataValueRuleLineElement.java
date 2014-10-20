@@ -5,8 +5,6 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.util.export.json.DVDefSerializer;
-import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -27,10 +25,10 @@ public class ArchetypeDataValueRuleLineElement extends DataValueRuleLineElement 
         if (getValue()!=null){
             if (getValue() instanceof DvCodedText && _archetypeElementVO!=null){
                 CodePhrase cp = ((DvCodedText)getValue()).getDefiningCode();
-                return CodedTexts.getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), cp.getCodeString(), lang);
+                return getArchetypeManager().getCodedTexts().getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), cp.getCodeString(), lang);
             }else if (getValue() instanceof DvOrdinal && _archetypeElementVO!=null){
                 Integer value = ((DvOrdinal)getValue()).getValue();
-                return Ordinals.getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), value, lang);
+                return getArchetypeManager().getOrdinals().getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), value, lang);
             }else{
                 return DVDefSerializer.getReadableValue(getValue(), getParentRuleLine().getTermDefinition());
             }

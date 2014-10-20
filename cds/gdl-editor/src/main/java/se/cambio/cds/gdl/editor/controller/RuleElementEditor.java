@@ -17,12 +17,12 @@ import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.controller.session.data.Units;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DVDialogEditor;
 import se.cambio.openehr.view.dialogs.DialogEditorNullValue;
 import se.cambio.openehr.view.trees.SelectableNode;
@@ -33,7 +33,7 @@ import java.util.Iterator;
 
 public class RuleElementEditor {
 
-    public static void edit(RuleLineElementWithValue<?> ruleLineElementWithValue){
+    public static void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
         if (ruleLineElementWithValue instanceof ArchetypeReferenceRuleLineDefinitionElement){
             editArchetype((ArchetypeReferenceRuleLineDefinitionElement)ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof GTCodeRuleLineElement){
@@ -108,11 +108,11 @@ public class RuleElementEditor {
         }
     }
 
-    public static void editArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde){
+    public static void editArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde) throws InstanceNotFoundException, InternalErrorException {
         ArchetypeReference ar = aerlde.getArchetypeReference();
         if (ar!=null){
             SelectableNode<Object> node =
-                    NodeDefinitionConversor.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), true, true);
+                    NodeDefinitionConversor.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), true, true, aerlde.getArchetypeManager());
             DialogElementSelection dialog = new DialogElementSelection(EditorManager.getActiveEditorWindow(), node);
             dialog.setVisible(true);
             if (dialog.getAnswer()){
@@ -126,8 +126,8 @@ public class RuleElementEditor {
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
                         Term term = EditorManager.getActiveGDLEditor().getTerm(gtCode);
                         if (term.getText()==null || term.getText().isEmpty()){
-                            String name = ArchetypeElements.getText(aerlde.getValue(), UserConfigurationManager.getLanguage());
-                            String desc = ArchetypeElements.getDescription(aerlde.getValue(), UserConfigurationManager.getLanguage());
+                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), UserConfigurationManager.getLanguage());
+                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), UserConfigurationManager.getLanguage());
                             term.setText(name);
                             term.setDescription(desc);
                         }
@@ -345,7 +345,7 @@ public class RuleElementEditor {
         if (archetypeElementVO!=null){
             String attribute = getAttributeValue(arle);
             if (OpenEHRDataValues.UNITS_ATT.equals(attribute)){
-                Collection<String> units = Units.getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
+                Collection<String> units = arle.getArchetypeManager().getUnits().getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
                 String oldValue = null;
                 if (arle.getValue() instanceof StringConstant){
                     oldValue = ((StringConstant)arle.getValue()).getValue();

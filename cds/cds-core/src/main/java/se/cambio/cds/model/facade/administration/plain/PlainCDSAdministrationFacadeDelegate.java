@@ -5,8 +5,6 @@ import se.cambio.cds.controller.session.data.DecisionSupportViews;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.model.app.dto.CDSAppDTO;
 import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.guide.dao.GenericGuideDAO;
-import se.cambio.cds.model.guide.dao.GenericGuideFactory;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.kb.instance.dto.KBInstanceDTO;
 import se.cambio.cds.model.orderset.dto.OrderSetDTO;
@@ -59,7 +57,7 @@ public class PlainCDSAdministrationFacadeDelegate implements CDSAdministrationFa
         Collection<String> inactiveGuideIds = new ArrayList<String>();
         for (GuideDTO guideDTO : guideDTOs) {
             if (!guideDTO.isActive()){
-                inactiveGuideIds.add(guideDTO.getIdGuide());
+                inactiveGuideIds.add(guideDTO.getId());
             }
         }
         return inactiveGuideIds;
@@ -81,7 +79,7 @@ public class PlainCDSAdministrationFacadeDelegate implements CDSAdministrationFa
     }
 
     public void upsertGuide(GuideDTO guideDTO) throws InternalErrorException {
-        logger.info("Updating guide. ("+guideDTO.getIdGuide()+")");
+        logger.info("Updating guide. ("+guideDTO.getId()+")");
         GenericGuideDAO dao = GenericGuideFactory.getDAO();
         try{
             dao.update(guideDTO);
@@ -245,72 +243,7 @@ throw new UnsupportedOperationException();
     }
 
     private void updateServerEvents() throws InternalErrorException{
-        /* TODO Disabled for now
-        Collection<GuideDTO> guideDTOs = searchAllGuides();
-        Set<String> archetypeIds = new HashSet<String>();
-        for (GuideDTO guideDTO : guideDTOs) {
-            if (guideDTO.isActive()){
-                try{
-                    Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
-                    for (ArchetypeBinding ab : guide.getDefinition().getArchetypeBindings().values()) {
-                        if (!Domains.CDS_ID.equals(ab.getDomain())){
-                            archetypeIds.add(ab.getArchetypeId());
-                        }
-                    }
-                }catch(Throwable e){
-                    ExceptionHandler.handle(new InternalErrorException(new Exception("Problem getting archetypes from guide "+guideDTO.getIdGuide()+". message="+e.getMessage())));
-                }
-            }
-        }
-        EHRTriggerVO ehrTriggerVO = getEventVO(archetypeIds);
-        try{
-            CDSSessionManager.getEHRFacadeDelegate().upsertEHRTriggerVO(ehrTriggerVO);
-        }catch(Throwable e){
-            logger.warn("Problem updating EHR trigger. ("+e.getMessage()+")");
-            //ExceptionHandler.handle(new InternalErrorException(new Exception("Problem updating event. message="+e.getMessage())));
-        }
-        */
     }
-    /* TODO updateServerEvents
-    public static EHRTriggerVO getEventVO(Collection<String> archetypeIds){
-        EHRTriggerVO ehrTriggerVO = null;
-        if (archetypeIds.isEmpty()){
-            //Disable event triggers (empty archetype ids array)
-            ehrTriggerVO = new EHRTriggerVO("", false);
-        }else{
-            ehrTriggerVO = new EHRTriggerVO(getAqlEvent(archetypeIds), true);
-        }
-        return ehrTriggerVO;
-    }
-
-    private static String getAqlEvent(final Collection<String> archetypeIds){
-        final StringBuilder sb = new StringBuilder();
-        sb.append("SELECT\n");
-        sb.append("c/name\n");
-        sb.append("FROM\n");
-        sb.append("COMPOSITION c CONTAINS (\n");
-        boolean first = true;
-        int i = 1;
-        for (String archetypeId : archetypeIds) {
-            if (!first){
-                sb.append("OR ");
-            }else{
-                first = false;
-            }
-            sb.append(getKind(archetypeId)+" o"+(i++)+" ["+archetypeId+"]\n");
-        }
-        sb.append(")");
-        return sb.toString();
-    }
-
-    private static String getKind(final String archetypeId){
-        final int i = archetypeId.indexOf('.');
-        final int j = archetypeId.substring(0,i).lastIndexOf('-');
-        if (j+1<i){
-            return archetypeId.substring(j+1,i);
-        }
-        return "OBSERVATION";
-    }*/
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

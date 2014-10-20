@@ -9,11 +9,9 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public abstract class RuleLineElementWithValue<E> extends RuleLineElement{
 
     private E value = null;
-    private RuleLine parentRuleLine = null;
 
     public RuleLineElementWithValue(RuleLine ruleLine, String text) {
-        super(text);
-        parentRuleLine = ruleLine;
+        super(ruleLine, text);
     }
 
     public E getValue() {
@@ -28,9 +26,6 @@ public abstract class RuleLineElementWithValue<E> extends RuleLineElement{
         return toString();
     }
 
-    public RuleLine getParentRuleLine() {
-        return parentRuleLine;
-    }
 
     public String toString(){
         if (value!=null){

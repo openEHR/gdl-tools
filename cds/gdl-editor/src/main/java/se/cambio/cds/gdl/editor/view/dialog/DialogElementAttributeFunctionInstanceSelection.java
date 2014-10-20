@@ -10,6 +10,9 @@ import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLin
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
 
@@ -127,7 +130,13 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
         Collection<RuleLine> definitionRuleLines = new ArrayList<RuleLine>();
         definitionRuleLines.add(aeirl);
         SelectableNode<Object> rootNode = NodeDefinitionConversor.getSingleNodeAttributesAndFunctions();
-        NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain, _ar);
+        try {
+            NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, _onlyCDSDomain, _ar);
+        } catch (InstanceNotFoundException e) {
+            ExceptionHandler.handle(e);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
+        }
         DialogSelection dialog =
                 new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode);
         dialog.setVisible(true);

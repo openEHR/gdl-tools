@@ -2,7 +2,7 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.OpenEHRConst;
@@ -90,13 +90,6 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
         return dvTextPanel;
     }
 
-
-    public void setMultipleSelection(boolean multipleSelection){
-        if (dvHierarchyPanel!=null){
-            dvHierarchyPanel.setMultipleSelection(multipleSelection);
-        }
-    }
-
     public void setDataValue(DataValue dataValue) {
         if (dvTextPanel!=null){
             dvTextPanel.setDataValue(dataValue);
@@ -134,7 +127,7 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
     }
 
     private CodedTexts getCodedTexts(){
-        return Archetypes.getInstance().getArchetypeObjectBundles().getCodedTexts();
+        return ArchetypeManager.getInstance().getCodedTexts();
     }
 
 }

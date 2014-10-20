@@ -10,7 +10,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRu
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -77,7 +76,7 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         }else{
             throw new IllegalStateException("No data value set");
         }
-        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         return new BinaryExpression(
                 new Variable(null,name, path),
                 constantExpression,

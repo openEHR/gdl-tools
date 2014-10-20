@@ -17,17 +17,19 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
 
     @Override
     public Set<Entry<String, Archetype>> entrySet() {
-        Set<Entry<String, Archetype>> entries = new HashSet<Entry<String, Archetype>>();
+        Collection<Entry<String, Archetype>> entries = new ArrayList<Entry<String, Archetype>>();
         try {
             for (Archetype archetype : archetypes.getArchetypeAOMsInCacheById(archetypes.getAllIdsInCache())) {
-                entries.add(new SimpleEntry<String, Archetype>(archetype.getArchetypeId().getValue(), archetype));
+                ArchetypeEntry simpleEntry = new ArchetypeEntry(archetype);
+                entries.add(simpleEntry);
             }
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         } catch (InstanceNotFoundException e) {
             ExceptionHandler.handle(e);
         }
-        return entries;
+        Set<Entry<String, Archetype>> set = new HashSet<Entry<String, Archetype>>(entries);
+        return set;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
     public Archetype get(Object key) {
         try {
             try {
-                Collection<Archetype> archetypesCollection = archetypes.getArchetypeAOMsById(Collections.singleton((String)key));
+                Collection<Archetype> archetypesCollection = archetypes.getArchetypeAOMsByIds(Collections.singleton((String) key));
                 if (archetypesCollection.isEmpty()){
                     return null;
                 }
@@ -65,5 +67,29 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
             ExceptionHandler.handle(e);
         }
         return null;
+    }
+
+    private class ArchetypeEntry implements Entry<String, Archetype>{
+        private Archetype archetype;
+
+        private ArchetypeEntry(Archetype archetype){
+            this.archetype = archetype;
+        }
+
+        @Override
+        public String getKey() {
+            return archetype.getArchetypeId().getValue();
+        }
+
+        @Override
+        public Archetype getValue() {
+            return archetype;
+        }
+
+        @Override
+        public Archetype setValue(Archetype value) {
+            this.archetype = value;
+            return archetype;
+        }
     }
 }

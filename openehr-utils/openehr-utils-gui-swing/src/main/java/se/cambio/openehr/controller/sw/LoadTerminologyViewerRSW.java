@@ -1,16 +1,13 @@
-package se.cambio.cds.gdl.editor.controller.sw;
+package se.cambio.openehr.controller.sw;
 
-import org.openehr.rm.datatypes.text.CodePhrase;
-import se.cambio.cds.gdl.editor.controller.interfaces.TerminologyCodesManager;
-import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.applicationobjects.TerminologyDialogs;
-import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.WindowManager;
+import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogSelection;
+import se.cambio.openehr.view.trees.SelectableNode;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -18,29 +15,33 @@ import java.util.Collection;
  * @author iago.corbal
  *
  */
-public class LoadTerminologyViewerRSW extends CDSSwingWorker {
+public class LoadTerminologyViewerRSW extends OpenEHRUtilSwingWorker {
 
+    private final SelectableNode.SelectionMode selectionMode;
+    private final Window owner;
     private String _terminologyId = null;
     private Collection<String> _selectedCodes = null;
     private DialogSelection _dialog = null;
     private TerminologyCodesManager _terminologyCodesManager = null;
 
-    public LoadTerminologyViewerRSW(TerminologyCodesManager terminologyCodesManager, String terminologyId, Collection<String> selectedCodes) {
+    public LoadTerminologyViewerRSW(Window owner, TerminologyCodesManager terminologyCodesManager, String terminologyId, Collection<String> selectedCodes, SelectableNode.SelectionMode selectionMode) {
         super();
         _selectedCodes = selectedCodes;
         _terminologyId = terminologyId;
         _terminologyCodesManager = terminologyCodesManager;
+        this.selectionMode = selectionMode;
+        this.owner = owner;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
+                WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
             }
         });
     }
 
-    protected void executeCDSSW() throws InternalErrorException {
+    protected void executeSW() throws InternalErrorException {
         try{
-            _dialog = TerminologyDialogs.getTerminologyDialog(_terminologyId, _selectedCodes);
+            _dialog = TerminologyDialogs.getTerminologyDialog(owner, _terminologyId, selectionMode, _selectedCodes);
         }catch(Exception e){
             ExceptionHandler.handle(e);
         }
@@ -53,8 +54,8 @@ public class LoadTerminologyViewerRSW extends CDSSwingWorker {
         if (_dialog.getAnswer()){
             Collection<String> terminologyCodes = new ArrayList<String>();
             for (Object object : _dialog.getSelectedObjects()) {
-                if (object instanceof CodePhrase){
-                    terminologyCodes.add(((CodePhrase) object).getCodeString());
+                if (object instanceof DvCodedText){
+                    terminologyCodes.add(((DvCodedText) object).getCode());
                 }
             }
             _terminologyCodesManager.setSelectedTerminologyCodes(terminologyCodes);

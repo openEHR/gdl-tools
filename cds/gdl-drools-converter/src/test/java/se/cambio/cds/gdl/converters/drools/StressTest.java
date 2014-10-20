@@ -37,14 +37,9 @@ public class StressTest {
         try {
             //Load KM
             UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-            Terminologies.loadTerminologies();
             UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-            Archetypes.loadArchetypes();
             UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
-            Templates.loadTemplates();
             stressTest2();
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

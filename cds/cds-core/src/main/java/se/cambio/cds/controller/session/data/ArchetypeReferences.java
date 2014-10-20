@@ -5,14 +5,13 @@ import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.export.json.DVDefSerializer;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Clusters;
-import se.cambio.openehr.controller.session.data.Units;
+import se.cambio.openehr.controller.session.data.*;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.*;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class ArchetypeReferences {
 
@@ -22,20 +21,11 @@ public class ArchetypeReferences {
         return getName(ar, true);
     }
     public static String getName(ArchetypeReference ar, boolean withPredicate){
-        if (ar!=null){
-            ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-            if (archetypeVO != null){
-                String name = archetypeVO.getName();
-                if (withPredicate){
-                    String predicateDesc = getShortPredicateDescription(ar);
-                    if (!predicateDesc.isEmpty()){
-                        name = name+" ("+predicateDesc+")";
-                    }
-                }
-                return name;
-            }
+        if (ar!=null) {
+            return ar.getIdArchetype();
+        } else {
+            return "*UNKNOWN*";
         }
-        return "*UNKNOWN*";
     }
 
     private static String getShortPredicateDescription(ArchetypeReference ar){
@@ -54,7 +44,7 @@ public class ArchetypeReferences {
                 if (!first){
                     sb.append(", ");
                 }
-                String name = ArchetypeElements.getText(ar.getIdTemplate(), elementInstance.getId(), UserConfigurationManager.getLanguage());
+                String name = ArchetypeManager.getInstance().getArchetypeElements().getText(ar.getIdTemplate(), elementInstance.getId(), UserConfigurationManager.getLanguage());
                 if (name != null){
                     sb.append(name+"="+DVDefSerializer.getReadableValue(elementInstance.getDataValue(), null));
                     first = false;
@@ -68,19 +58,15 @@ public class ArchetypeReferences {
     }
 
     public static String getDescription(ArchetypeReference ar){
-        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-        if (archetypeVO != null){
-            String name = archetypeVO.getDescription();
-            return name;
-        }else{
+        if (ar!=null) {
+            return ar.getIdArchetype();
+        } else {
             return "*UNKNOWN*";
         }
     }
 
     public static String getHTMLTooltip(ArchetypeReference ar){
-        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(ar.getIdArchetype());
-
-        String archetypeImageName = OpenEHRConstUI.getIconName(archetypeVO.getRMName());
+        String archetypeImageName = OpenEHRConstUI.getIconName(Archetypes.getEntryType(ar.getIdArchetype()));
         String archetypeName = getName(ar, false);
         String predicateDesc = getPredicateDescription(ar);
 
@@ -98,25 +84,32 @@ public class ArchetypeReferences {
     }
 
     public static String getHTMLTooltip(ArchetypeElementVO archetypeElementVO, ArchetypeReference ar, String extraLines){
-        ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(archetypeElementVO.getIdArchetype());
+        ArchetypeDTO archetypeVO = null;
+        try {
+            archetypeVO = ArchetypeManager.getInstance().getArchetypes().getCMElement(archetypeElementVO.getIdArchetype());
+        } catch (InstanceNotFoundException e) {
+            ExceptionHandler.handle(e);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
+        }
 
         String idDomain = null;
         if (ar != null){
             idDomain = ar.getIdDomain();
         }
 
-        String archetypeImageName = OpenEHRConstUI.getIconName(archetypeVO.getRMName());
+        String archetypeImageName = OpenEHRConstUI.getIconName(Archetypes.getEntryType(ar.getIdArchetype()));
         String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
 
-        String elementName = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
-        String elementDesc = ArchetypeElements.getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String elementName = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String elementDesc = ArchetypeManager.getInstance().getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
 
         String archetypeName = ArchetypeReferences.getName(ar)+(idDomain!=null?" ("+idDomain+")":"");
         String cardinalityStr = archetypeElementVO.getLowerCardinality()+"..."+(archetypeElementVO.getUpperCardinality()==null?"*":archetypeElementVO.getUpperCardinality());
         String units = null;
         if (OpenEHRDataValues.DV_QUANTITY.equals(archetypeElementVO.getRMType())){
             StringBuffer unitsSB = new StringBuffer();
-            for (String unit : Units.getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId())) {
+            for (String unit : ArchetypeManager.getInstance().getUnits().getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId())) {
                 unitsSB.append(unit+", ");
             }
             if (unitsSB.length() > 1){
@@ -129,13 +122,18 @@ public class ArchetypeReferences {
         String[] pathArray = archetypeElementVO.getPath().split("\\/");
         StringBuffer pathSB = new StringBuffer();
         StringBuffer clusterPathSB = new StringBuffer();
-        clusterPathSB.append(archetypeVO.getArchetypeId());
+        clusterPathSB.append(archetypeVO.getId());
         for (String pathNode : pathArray) {
             if (!pathNode.isEmpty()){
                 clusterPathSB.append("/"+pathNode);
-                ClusterVO clusterVO = Clusters.getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
+                ClusterVO clusterVO = ArchetypeManager.getInstance().getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
                 if (clusterVO!=null){
-                    String name = Clusters.getText(clusterVO, UserConfigurationManager.getLanguage());
+                    String name = null;
+                    try {
+                        name = ArchetypeManager.getInstance().getClusters().getText(clusterVO, UserConfigurationManager.getLanguage());
+                    } catch (InternalErrorException e) {
+                        ExceptionHandler.handle(e);
+                    }
                     pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getRMType()))+"&nbsp;"+name+" / ");
                 }
             }

@@ -1,37 +1,9 @@
-package se.cambio.cds.model.guide.dao;
+package se.cambio.cds.model.guideline.dao;
 
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.util.exceptions.GuideNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.model.cm.element.dao.SQLGenericCMElementDAO;
 
-import java.util.Collection;
-import java.util.Date;
-
-/**
- * @author iago.corbal
- */
-public interface GenericGuideDAO {
-
-	public GuideDTO searchByGuideId(String idGuide)
-	throws InternalErrorException, GuideNotFoundException;
-	
-	public Collection<GuideDTO> searchAll()
-	throws InternalErrorException;
-
-    public Collection<GuideDTO> searchAllDefinitions()
-            throws InternalErrorException;
-
-	public GuideDTO add(GuideDTO guideDTO)
-	throws InternalErrorException;
-
-	public void update(GuideDTO guideDTO)
-	throws InternalErrorException, GuideNotFoundException;
-
-	public void remove(String idGuide)
-	throws InternalErrorException, GuideNotFoundException;
-
-    public Date getLastUpdateDate()
-            throws InternalErrorException;
+public class SQLGuideDAO extends SQLGenericCMElementDAO<GuideDTO> {
 
 }
 /*

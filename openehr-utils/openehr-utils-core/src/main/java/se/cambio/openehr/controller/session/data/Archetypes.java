@@ -1,5 +1,4 @@
 package se.cambio.openehr.controller.session.data;
-import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
@@ -11,15 +10,16 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 
 public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
-    private static Archetypes instance = null;
-    public ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
-    private ArchetypeObjectBundles archetypeObjectBundles = null;
+    public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
+    private ArchetypeManager archetypeManager = null;
 
-    public Archetypes(){
+    public Archetypes(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
     }
 
     @Override
@@ -43,25 +43,15 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         for(ArchetypeDTO archetypeDTO: archetypeDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(archetypeDTO);
             Archetype archetype = getArchetypeAOM(archetypeDTO);
-            getArchetypeObjectBundles().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
+            archetypeManager.registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
         }
     }
 
-    public ArchetypeObjectBundles getArchetypeObjectBundles() {
-        if (archetypeObjectBundles == null) {
-            archetypeObjectBundles = new ArchetypeObjectBundles(this);
-        }
-        return archetypeObjectBundles;
-    }
-
-    public ImageIcon getIcon(String idArchetype) throws InternalErrorException, InstanceNotFoundException {
-        ArchetypeDTO archetypeDTO = getCMElementInCache(idArchetype);
+    public static ImageIcon getIcon(String archetypeId) {
         ImageIcon icon = null;
-        if (archetypeDTO!=null){
-            String entryType = archetypeDTO.getRMName();
+        String entryType = getEntryType(archetypeId);
+        if (entryType!=null) {
             icon = OpenEHRConstUI.getIcon(entryType);
-        }else{
-            Logger.getLogger(Archetypes.class).warn("Archetype '"+idArchetype+"' was not found loading icon.");
         }
         if (icon!=null){
             return icon;
@@ -70,13 +60,30 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         }
     }
 
+    public static String getEntryType(final String archetypeId){
+        final int i = archetypeId.indexOf('.');
+        final int j = archetypeId.substring(0,i).lastIndexOf('-');
+        if (j+1<i){
+            return archetypeId.substring(j+1,i);
+        }
+        return null;
+    }
+
     public Map<String, Archetype> getArchetypeMap(){
         return new ArchetypeOnDemandMap(this);
     }
 
-    public Collection<Archetype> getArchetypeAOMsById(Collection<String> archetypeIds) throws InternalErrorException, InstanceNotFoundException {
+    public Archetype getArchetypeAOMById(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+        return getArchetypeAOMsByIds(Collections.singleton(archetypeId)).iterator().next();
+    }
+
+    public Collection<Archetype> getArchetypeAOMsByIds(Collection<String> archetypeIds) throws InternalErrorException, InstanceNotFoundException {
         Collection<ArchetypeDTO> archetypeDTOs = getCMElementByIds(archetypeIds);
-        return getArchetypeAOMsInCache(archetypeDTOs);
+        Collection<Archetype> archetypes = new ArrayList<Archetype>();
+        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+            archetypes.add(getArchetypeAOM(archetypeDTO));
+        }
+        return archetypes;
     }
 
     public Collection<Archetype> getArchetypeAOMsInCacheById(Collection<String> archetypeIds) throws InstanceNotFoundException, InternalErrorException {
@@ -97,15 +104,12 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         return (Archetype)IOUtils.getObject(archetypeDTO.getAom());
     }
 
-    private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO){
-        return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
+    private Archetype getArchetypeAOM(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+        return (Archetype)IOUtils.getObject(getCMElement(archetypeId).getAom());
     }
 
-    public static Archetypes getInstance(){
-        if (instance == null){
-            instance = new Archetypes();
-        }
-        return instance;
+    private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO){
+        return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
     }
 }
 /*

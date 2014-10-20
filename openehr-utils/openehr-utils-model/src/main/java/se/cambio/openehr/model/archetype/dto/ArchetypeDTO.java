@@ -15,9 +15,6 @@ public class ArchetypeDTO implements CMElement{
 
     @Id
     private java.lang.String id;
-    private java.lang.String name;
-    private java.lang.String description;
-    private java.lang.String rmName;
     @Lob
     private java.lang.String source;
     private byte[] aom;
@@ -30,39 +27,12 @@ public class ArchetypeDTO implements CMElement{
         super();
     }
 
-    public ArchetypeDTO(String id, String name, String description, String rmName, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
+    public ArchetypeDTO(String id, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.rmName = rmName;
         this.source = source;
         this.aom = aom;
         this.aobcVO = aobcVO;
         this.lastUpdate = lastUpdate;
-    }
-
-    public java.lang.String getName() {
-        return name;
-    }
-
-    public void setName(java.lang.String name) {
-        this.name = name;
-    }
-
-    public java.lang.String getDescription() {
-        return description;
-    }
-
-    public void setDescription(java.lang.String description) {
-        this.description = description;
-    }
-
-    public java.lang.String getRMName() {
-        return rmName;
-    }
-
-    public void setRMName(java.lang.String entryType) {
-        this.rmName = entryType;
     }
 
     public byte[] getAom() {

@@ -46,17 +46,15 @@ public class ArchetypeObjectBundleManager {
 
     private void generateArchetypeData()
             throws InternalErrorException{
-        ADLParser adlParser = new ADLParser(archetypeDTO.getId());
-        Archetype ar = null;
-        try {
-            ar = adlParser.parse();
+        try{
+            ADLParser adlParser = new ADLParser(archetypeDTO.getSource());
+            Archetype ar = adlParser.parse();
+            archetypeDTO.setAom(IOUtils.getBytes(ar));
+            GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, archetypeMap);
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleManager.generateObjectBundleCustomVO();
+            archetypeDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
         } catch (Exception e) {
             throw new InternalErrorException(e);
         }
-        archetypeDTO.setRMName(ar.getArchetypeId().rmEntity());
-        archetypeDTO.setAom(IOUtils.getBytes(ar));
-        GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, archetypeMap);
-        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleManager.generateObjectBundleCustomVO();
-        archetypeDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
     }
 }

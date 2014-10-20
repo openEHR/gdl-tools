@@ -1,13 +1,13 @@
 package se.cambio.openehr.model.util.comparators;
 
-import java.util.Comparator;
-
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+
+import java.util.Comparator;
 
 public class ArchetypeComparator implements Comparator<ArchetypeDTO>{
 
     public int compare(ArchetypeDTO o1, ArchetypeDTO o2) {
-	return o1.getName().compareTo(o2.getName());
+	return o1.getId().compareTo(o2.getId());
     }
 
 }

@@ -6,13 +6,11 @@ import se.cambio.cds.gdl.model.expression.ConstantExpression;
 import se.cambio.cds.gdl.model.expression.Variable;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.DataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -59,7 +57,7 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
         if (archetypeElementVO==null){
             throw new IllegalStateException("No variable set");
         }
-        String name = ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         Variable var = new Variable(
                 archetypeElementRuleLineElement.getValue().getValue(),
                 null, name);

@@ -1,10 +1,12 @@
 
 package se.cambio.cds.gdl.editor.view.util;
 
-import se.cambio.cds.gdl.editor.controller.interfaces.TerminologyCodesManager;
-import se.cambio.cds.gdl.editor.controller.sw.LoadTerminologyViewerRSW;
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.view.panels.TerminologyCodesWithButtonPanel;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable;
+import se.cambio.openehr.controller.sw.LoadTerminologyViewerRSW;
+import se.cambio.openehr.util.TerminologyCodesManager;
+import se.cambio.openehr.view.trees.SelectableNode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +92,12 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
                     selectedCodes.add(code.trim());
                 }
             }
-            new LoadTerminologyViewerRSW(getTerminologyCodesManager(), _bt.getTerminologyId(), selectedCodes).execute();
+            new LoadTerminologyViewerRSW(
+                    EditorManager.getActiveEditorWindow(),
+                    getTerminologyCodesManager(),
+                    _bt.getTerminologyId(),
+                    selectedCodes,
+                    SelectableNode.SelectionMode.MULTIPLE).execute();
         }
     }
 

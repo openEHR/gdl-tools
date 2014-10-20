@@ -1,11 +1,12 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import junit.framework.TestCase;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
 public class ConverterUtilTest extends TestCase {
 	
 	public void setUp() {
-		converter = new GDLDroolsConverter(null);
+		converter = new GDLDroolsConverter(null, ArchetypeManager.getInstance());
 	}
 	
 	public void testParseCodeWithDvText() {

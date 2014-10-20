@@ -3,9 +3,10 @@ package se.cambio.openehr.view.panels;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvProportion;
 import org.openehr.rm.datatypes.quantity.ProportionKind;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.ProportionTypesUI;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.controller.session.data.ProportionTypes;
 import se.cambio.openehr.util.OpenEHRNumberFormat;
+import se.cambio.openehr.util.ProportionTypesConst;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +96,7 @@ public class DVProportionPanel extends DVGenericPanel{
             proportionTypeComboBox = new JComboBox();
             //proportionTypeComboBox.setPreferredSize(new Dimension(60,18));
             proportionTypeComboBox.setRenderer(new ProportionTypeComboRenderer());
-            for (ProportionKind proportionKind : getProportionTypesUI().getProportionTypes(getIdTemplate(), getIdElement())) {
+            for (ProportionKind proportionKind : getProportionTypes().getProportionTypes(getIdTemplate(), getIdElement())) {
                 proportionTypeComboBox.addItem(proportionKind);
             }
             proportionTypeComboBox.addActionListener(new ActionListener() {
@@ -120,6 +121,10 @@ public class DVProportionPanel extends DVGenericPanel{
         return proportionTypeComboBox;
     }
 
+    public ProportionTypes getProportionTypes() {
+        return ArchetypeManager.getInstance().getProportionTypes();
+    }
+
     private class ProportionTypeComboRenderer extends JLabel implements ListCellRenderer {
         /**
          *
@@ -142,9 +147,9 @@ public class DVProportionPanel extends DVGenericPanel{
             }
             if (value instanceof ProportionKind){
                 ProportionKind proportionKind = (ProportionKind) value;
-                String text = getProportionTypesUI().getName(proportionKind);
+                String text = ProportionTypesConst.getInstance().getName(proportionKind);
                 setText(text);
-                setToolTipText(getProportionTypesUI().getDescription(proportionKind));
+                setToolTipText(ProportionTypesConst.getInstance().getDescription(proportionKind));
             }
             return this;
         }
@@ -211,10 +216,6 @@ public class DVProportionPanel extends DVGenericPanel{
         components.add(getDenominatorTextField());
         components.add(getProportionTypeComboBox());
         return components;
-    }
-
-    private ProportionTypesUI getProportionTypesUI(){
-        return Archetypes.getInstance().getArchetypeObjectBundles().getProportionTypesUI();
     }
 }
 /*

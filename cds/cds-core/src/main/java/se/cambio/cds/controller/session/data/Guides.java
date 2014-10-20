@@ -1,165 +1,83 @@
 package se.cambio.cds.controller.session.data;
 
-import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.ResourceDescriptionItem;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegateFactory;
+import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.model.util.comparators.GuidesComparator;
-import se.cambio.cds.util.exceptions.GuideNotFoundException;
+import se.cambio.cds.util.GuideCompiler;
+import se.cambio.cds.util.GuideCompilerFactory;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
-import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.util.Collection;
 
 
-public class Guides {
-    private static Guides _delegate = null;
-    private Map<String, GuideDTO> _guidesMap = null;
-    private Map<String, Collection<String>> _keywordsMap = null;
-    private boolean _loaded = false;
+public class Guides extends AbstractCMManager<GuideDTO>{
+    private static Guides _instance = null;
+    private static GuideCompiler guideCompiler;
 
     private Guides(){
     }
 
-    private static void init(){
-        getGuidesMap().clear();
-        getKeywordsMap().clear();
-    }
-    public static void loadGuides() throws InternalErrorException{
-        loadGuides(false);
+    @Override
+    public void registerCMElementsInCache(Collection<GuideDTO> guideDTOs){
+        super.registerCMElementsInCache(guideDTOs);
+        processGuides(guideDTOs);
     }
 
-    public static void loadGuides(boolean force) throws InternalErrorException{
-        if (!getDelegate()._loaded || force){
-            init();
-            CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
-            Collection<GuideDTO> guideDTOs = adminFD.searchAllGuides();
-            loadGuides(guideDTOs);
-            getDelegate()._loaded = true;
+    public void processGuides(Collection<GuideDTO> guideDTOs) {
+        for (GuideDTO guideDTO: guideDTOs){
+            processGuide(guideDTO);
         }
     }
 
-    public static void loadGuidesIntoCacheById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
-        CDSAdministrationFacadeDelegate adminFD = CDSAdministrationFacadeDelegateFactory.getDelegate();
-        Collection<GuideDTO> guideDTOs = adminFD.searchByGuideIds(guideIds);
-        for (GuideDTO guideDTO : guideDTOs) {
-            registerGuide(guideDTO);
-        }
-    }
-
-    public static void loadGuides(Collection<GuideDTO> guideDTOs) throws InternalErrorException{
-        for (GuideDTO guideDTO : guideDTOs) {
-            registerGuide(guideDTO);
-        }
-    }
-
-    public static void registerGuide(GuideDTO guideDTO) throws InternalErrorException{
-        try{
-            getGuidesMap().put(guideDTO.getIdGuide(), guideDTO);
-            if(guideDTO.getGuideObject()!=null){
-                try{
-                    Guide guide = (Guide)IOUtils.getObject(guideDTO.getGuideObject());
-                    if (guide!=null){
-                        ResourceDescriptionItem rdi = guide.getDescription().getDetails().get(UserConfigurationManager.getLanguage());
-                        if (rdi==null){
-                            rdi = guide.getDescription().getDetails().get(guide.getLanguage().getOriginalLanguage().getCodeString());
-                        }
-                        if (rdi!=null && rdi.getKeywords()!=null){
-                            getKeywordsMap().put(guide.getId(), rdi.getKeywords());
-                        }
-                    }else{
-                        guideDTO.setGuideObject(null);
-                    }
-                }catch(Exception e){
-                    Logger.getLogger(Guides.class).error("ERROR Registering guideline: '" + guideDTO.getIdGuide() + "'.");
-                    ExceptionHandler.handle(e);
-                }
+    private void processGuide(GuideDTO guideDTO) {
+        try {
+            if (guideDTO.getGuideObject() == null) {
+                parseGuide(guideDTO);
             }
-            Logger.getLogger(Guides.class).info("Registering guideline: '"+guideDTO.getIdGuide()+"'.");
-        }catch(Exception e){
+            if (guideDTO.getCompiledGuide() == null) {
+                compileGuide(guideDTO);
+            }
+        } catch (InternalErrorException e){
+            ExceptionHandler.handle(e);
+        }
+    }
+
+    public static void parseGuide(GuideDTO guideDTO) throws InternalErrorException {
+        try {
+            Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
+            guideDTO.setGuideObject(IOUtils.getBytes(guide));
+        } catch (Exception e) {
             throw new InternalErrorException(e);
         }
     }
 
-    public static Collection<String> getKeywords(String guideId){
-        return getKeywordsMap().get(guideId);
-    }
-
-    public static Set<String> getAllKeywords(){
-        Set<String> allKeywords = new HashSet<String>();
-        for (Collection<String> keywords : getKeywordsMap().values()) {
-            allKeywords.addAll(keywords);
-        }
-        return allKeywords;
-    }
-
-    public static GuideDTO getCachedGuideDTO(String guideId) throws GuideNotFoundException{
-        GuideDTO guideDTO = getGuidesMap().get(guideId);
-        if(guideDTO==null){
-            throw new GuideNotFoundException(guideId);
-        }
-        return guideDTO;
-    }
-
-    public static List<GuideDTO> getAllGuides(){
-        return new ArrayList<GuideDTO>(getGuidesMap().values());
-    }
-
-    public static Collection<GuideDTO> getGuideDTOsById(Collection<String> guideIds) throws InternalErrorException, GuideNotFoundException {
-        Set<String> uncachedGuideIds = new HashSet<String>();
-        for(String guideId: guideIds){
-            if (!isGuideLoaded(guideId)){
-                uncachedGuideIds.add(guideId);
+    public static void compileGuide(GuideDTO guideDTO) throws InternalErrorException {
+        try {
+            if (guideDTO.getGuideObject()==null){
+                parseGuide(guideDTO);
             }
+            Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
+            byte[] compiledGuide = getGuideCompiler().compile(guide);
+            guideDTO.setCompiledGuide(compiledGuide);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
         }
-        loadGuidesIntoCacheById(uncachedGuideIds);
-        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
-        for(String guideId: guideIds){
-            GuideDTO guideDTO = getCachedGuideDTO(guideId);
-            if (guideDTO!=null){
-                guideDTOs.add(guideDTO);
-            }else{
-                throw new GuideNotFoundException(guideId);
-            }
+    }
+
+    private static GuideCompiler getGuideCompiler() throws InternalErrorException {
+        if (guideCompiler == null) {
+            guideCompiler = GuideCompilerFactory.getDelegate();
         }
-        return guideDTOs;
+        return guideCompiler;
     }
 
-    public static boolean isGuideLoaded(String guideId){
-        return getGuidesMap().containsKey(guideId);
-    }
-
-    public static List<String> getAllGuideIdsSorted(){
-        ArrayList<String> guideIds = new ArrayList<String>(getGuidesMap().keySet());
-        Collections.sort(guideIds);
-        return guideIds;
-    }
-
-    public static Collection<String> getAllInactiveGuideIds(){
-        Collection<String> inactiveGuideIds = new ArrayList<String>();
-        for (GuideDTO guideDTO: getAllGuides()){
-            if (!guideDTO.isActive()){
-                inactiveGuideIds.add(guideDTO.getIdGuide());
-            }
-        }
-        return inactiveGuideIds;
-    }
-
-    public static Collection<Guide> getAllGuideObjects(){
-        ArrayList<Guide> guides = new ArrayList<Guide>();
-        for (GuideDTO guideDTO: getAllGuides()){
-            Guide guide = getGuide(guideDTO);
-            guides.add(guide);
-        }
-        return guides;
-    }
-
-    public static Guide getGuide(String guideId) throws GuideNotFoundException {
-        GuideDTO guideDTO = getCachedGuideDTO(guideId);
+    public Guide getGuide(String guideId) throws InternalErrorException, InstanceNotFoundException {
+        GuideDTO guideDTO = getCMElement(guideId);
         return getGuide(guideDTO);
     }
 
@@ -171,48 +89,11 @@ public class Guides {
         }
     }
 
-    public static boolean isActive(String guideId) throws GuideNotFoundException {
-        GuideDTO guideDTO = getCachedGuideDTO(guideId);
-        return guideDTO!=null && guideDTO.isActive();
-    }
-
-    private synchronized static Map<String, GuideDTO> getGuidesMap(){
-        if (getDelegate()._guidesMap==null){
-            getDelegate()._guidesMap = new HashMap<String, GuideDTO>();
+    public static Guides getInstance(){
+        if (_instance ==null){
+            _instance = new Guides();
         }
-        return getDelegate()._guidesMap;
-    }
-
-    private static Map<String, Collection<String>> getKeywordsMap(){
-        if (getDelegate()._keywordsMap==null){
-            getDelegate()._keywordsMap = new HashMap<String, Collection<String>>();
-        }
-        return getDelegate()._keywordsMap;
-    }
-
-    public static void removeGuide(String guideId) throws InternalErrorException{
-        getGuidesMap().remove(guideId);
-    }
-
-    public int hashCode(){
-        return generateHashCode(getGuidesMap().values());
-    }
-
-    public static int generateHashCode(Collection<GuideDTO> guideDTOs) {
-        List<GuideDTO> guideDTOList = new ArrayList<GuideDTO>(guideDTOs);
-        Collections.sort(guideDTOList, new GuidesComparator());
-        List<String> defs = new ArrayList<String>();
-        for (GuideDTO guideDTO: guideDTOList){
-            defs.add(guideDTO.getGuideSrc()+guideDTO.isActive());
-        }
-        return defs.hashCode();
-    }
-
-    public static Guides getDelegate(){
-        if (_delegate==null){
-            _delegate = new Guides();
-        }
-        return _delegate;
+        return _instance;
     }
 }
 /*

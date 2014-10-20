@@ -1,38 +1,41 @@
 package se.cambio.cds.model.guide.dto;
 
-import java.io.Serializable;
+import se.cambio.openehr.model.util.CMElement;
+
 import java.util.Date;
 
-public class GuideDTO implements Serializable{
+public class GuideDTO implements CMElement {
 
     private static final long serialVersionUID = 20120412L;
-    private String idGuide;
-    private String guideSrc;
+    private String id;
+    private String source;
     private byte[] guideObject;
     private byte[] compiledGuide;
-    private boolean active;
     private Date lastUpdate;
 
-    public GuideDTO(String idGuide, String guideSrc, byte[] guideObject, byte[] compiledGuide, boolean active, Date lastUpdate) {
+    public GuideDTO(){
+
+    }
+
+    public GuideDTO(String id, String source, byte[] guideObject, byte[] compiledGuide, Date lastUpdate) {
         super();
-        this.idGuide = idGuide;
-        this.guideSrc = guideSrc;
+        this.id = id;
+        this.source = source;
         this.guideObject = guideObject;
         this.compiledGuide = compiledGuide;
-        this.active = active;
         this.lastUpdate = lastUpdate;
     }
-    public String getIdGuide() {
-        return idGuide;
+    public String getId() {
+        return id;
     }
-    public void setIdGuide(String idGuide) {
-        this.idGuide = idGuide;
+    public void setId(String id) {
+        this.id = id;
     }
-    public String getGuideSrc() {
-        return guideSrc;
+    public String getSource() {
+        return source;
     }
-    public void setGuideSrc(String guideSrc) {
-        this.guideSrc = guideSrc;
+    public void setSource(String source) {
+        this.source = source;
     }
     public byte[] getGuideObject() {
         return guideObject;
@@ -46,12 +49,6 @@ public class GuideDTO implements Serializable{
     public void setCompiledGuide(byte[] compiledGuide) {
         this.compiledGuide = compiledGuide;
     }
-    public boolean isActive() {
-        return active;
-    }
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 
     public Date getLastUpdate() {
         return lastUpdate;
@@ -60,11 +57,6 @@ public class GuideDTO implements Serializable{
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-    /*
-    public int hashCode() {
-        return (guideSrc!=null?guideSrc.hashCode():0)+(guideObject!=null?guideObject.hashCode():2)+(compiledGuide!=null?compiledGuide.hashCode():3)+(active?1:0);
-    }
-    */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

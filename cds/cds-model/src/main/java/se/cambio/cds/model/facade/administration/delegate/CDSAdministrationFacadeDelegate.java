@@ -1,100 +1,10 @@
 package se.cambio.cds.model.facade.administration.delegate;
 
-import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.cds.model.guide.dto.GuideDTO;
-import se.cambio.cds.model.kb.instance.dto.KBInstanceDTO;
-import se.cambio.cds.model.orderset.dto.OrderSetDTO;
-import se.cambio.cds.model.study.dto.StudyDTO;
-import se.cambio.cds.model.view.dto.DSViewDTO;
-import se.cambio.cds.util.exceptions.GuideNotFoundException;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-
-import java.util.Collection;
-
-
 /**
  * @author iago.corbal
  *
  */
 public interface CDSAdministrationFacadeDelegate {
-
-    //Guides
-    public Collection<GuideDTO> searchAllGuides() throws InternalErrorException;
-
-    public Collection<GuideDTO> searchAllGuidesDefinitions() throws InternalErrorException;
-
-    public Collection<GuideDTO> searchByGuideIds(Collection<String> guideIds) 
-	    throws InternalErrorException, GuideNotFoundException;
-    
-    public Collection<String> searchInactiveGuideIds() throws InternalErrorException;
-
-    public int getGuidesHashCode() throws InternalErrorException;
-
-    public void setActive(String guideId, boolean active) throws InternalErrorException, GuideNotFoundException;
-    
-    public void upsertGuide(GuideDTO guideDTO) throws InternalErrorException, GuideNotFoundException;
-    
-    public void removeGuide(String guideId) throws InternalErrorException, GuideNotFoundException;
-
-    //Views
-    public Collection<DSViewDTO> searchAllDSViews() throws InternalErrorException;
-
-    //TODO input argument should be a collection
-    public DSViewDTO searchDSView(String dsViewId) throws InternalErrorException, InstanceNotFoundException;
-
-    public int getDSViewsHashCode() throws InternalErrorException;
-
-    public void upsertDSView(DSViewDTO dsViewDTO) throws InternalErrorException, InstanceNotFoundException;
-
-    public void removeDSView(String dsViewId) throws InternalErrorException, InstanceNotFoundException;
-
-
-    //Studies
-    public Collection<StudyDTO> searchAllStudies() throws InternalErrorException;
-
-    //TODO input argument should be a collection
-    public StudyDTO searchStudy(String studyId) throws InternalErrorException, InstanceNotFoundException;
-
-    public int getStudiesHashCode() throws InternalErrorException;
-
-    public void upsertStudy(StudyDTO studyDTO) throws InternalErrorException, InstanceNotFoundException;
-
-    public void removeStudy(String studyId) throws InternalErrorException, InstanceNotFoundException;
-
-    //Apps
-    public Collection<CDSAppDTO> searchAllCDSApps() throws InternalErrorException;
-
-    public Collection<CDSAppDTO> searchCDSApp(Collection<String> cdsAppId) throws InternalErrorException, InstanceNotFoundException;
-
-    public int getCDSAppHashCode() throws InternalErrorException;
-
-    public void upsertCDSApp(CDSAppDTO cdsAppDTO) throws InternalErrorException, InstanceNotFoundException;
-
-    public void removeCDSApp(String cdsAppId) throws InternalErrorException, InstanceNotFoundException;
-
-
-    //KBInstances
-    public Collection<KBInstanceDTO> searchAllKBInstances() throws InternalErrorException;
-
-    public Collection<KBInstanceDTO> searchKBInstances(Collection<String> kbInstances) throws InternalErrorException, InstanceNotFoundException;
-
-    public int getKBInstanceHashCode() throws InternalErrorException;
-
-    public void upsertKBInstance(KBInstanceDTO kbInstanceDTO) throws InternalErrorException, InstanceNotFoundException;
-
-    public void removeKBInstance(String kbInstanceId) throws InternalErrorException, InstanceNotFoundException;
-
-    //OrderSets
-    public Collection<OrderSetDTO> searchAllOrderSets() throws InternalErrorException;
-
-    public Collection<OrderSetDTO> searchOrderSets(Collection<String> kbInstances) throws InternalErrorException, InstanceNotFoundException;
-
-    public int getOrderSetHashCode() throws InternalErrorException;
-
-    public void upsertOrderSet(OrderSetDTO orderSetDTO) throws InternalErrorException, InstanceNotFoundException;
-
-    public void removeOrderSet(String orderSetId) throws InternalErrorException, InstanceNotFoundException;
 
 }
 /*

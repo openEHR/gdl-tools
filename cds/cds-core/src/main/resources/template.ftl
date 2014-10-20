@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang=${language}>
 <head><meta charset='UTF-8'>
-    <title>${id} - ${archetype.archetypeId.value}</title>
+    <title>${templateId} - ${archetype.archetypeId.value}</title>
     <style>
         body {font-family: Calibri;}
         h1 {font-size: 26px; margin:0px;}
@@ -56,7 +56,7 @@
 </head>
 <body>
 <h1>
-    ${id} - ${archetype.archetypeId.value}
+    ${templateId} - ${archetype.archetypeId.value}
 </h1>
 <h2>${texts.TemplateDefinition?upper_case}</h2>
 ${archetype_definition}

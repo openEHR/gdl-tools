@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -23,7 +22,7 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
 
     public String getDescription() {
         if (getValue()!=null){
-            String elementDesc = ArchetypeElements.getDescription(getValue(), UserConfigurationManager.getLanguage());
+            String elementDesc = getArchetypeManager().getArchetypeElements().getDescription(getValue(), UserConfigurationManager.getLanguage());
             return elementDesc;
         }else{
             return getText();
@@ -37,7 +36,7 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
 
     private String toString(String lang){
         if (getValue()!=null && getAttribute()!=null){
-            String name = ArchetypeElements.getText(getValue(), lang);
+            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), lang);
             return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
         }else{
             return getText();

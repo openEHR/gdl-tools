@@ -1,7 +1,6 @@
 package se.cambio.openehr.view.util;
 
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
@@ -63,7 +62,7 @@ public class ImportUtils {
     //TODO Should be on a SW
     private static void addArchetype(final Window owner, File file) throws InstanceNotFoundException, InternalErrorException {
         ArchetypeDTO archetypeDTO = getArchetypeDTOFromFile(file);
-        Archetypes.getInstance().upsert(archetypeDTO);
+        ArchetypeManager.getInstance().getArchetypes().upsert(archetypeDTO);
     }
 
     public static ArchetypeDTO getArchetypeDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
@@ -77,7 +76,7 @@ public class ImportUtils {
 
     private static void addTemplate(final Window owner, File file) throws InstanceNotFoundException, InternalErrorException {
         TemplateDTO templateDTO = getTemplateDTOFromFile(file);
-        Templates.getInstance().upsert(templateDTO);
+        ArchetypeManager.getInstance().getTemplates().upsert(templateDTO);
     }
 
 

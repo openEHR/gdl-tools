@@ -2,6 +2,7 @@ package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
 import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
@@ -86,6 +87,8 @@ public class LocalCM {
             File file = new File(AUTO_SAVE_FILE_CM_PREFIX+"."+hostname+".zip");
             CMImportExportManager.exportCurrentCM(file, CMImportExportManager.GenerationStrategy.DTOS);
         } catch (IOException e) {
+            throw new InternalErrorException(e);
+        } catch (InstanceNotFoundException e) {
             throw new InternalErrorException(e);
         }
     }

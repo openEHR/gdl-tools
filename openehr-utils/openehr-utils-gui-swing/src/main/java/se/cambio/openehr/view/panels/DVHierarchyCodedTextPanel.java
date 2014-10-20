@@ -4,23 +4,19 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
-import se.cambio.openehr.view.trees.SelectableNode;
-import se.cambio.openehr.view.trees.SelectableNodeBuilder;
-import se.cambio.openehr.view.util.NodeConversor;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.util.SelectCodeActionListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-public class DVHierarchyCodedTextPanel extends DVGenericPanel{
+public class DVHierarchyCodedTextPanel extends DVGenericPanel implements TerminologyCodesManager{
 
     /**
      *
@@ -28,8 +24,6 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
     private static final long serialVersionUID = 1L;
     private Collection<String> selectedCodes;
     private JButton codedTextButton = null;
-    private SelectableNode<CodedTextVO> rootNode = null;
-    private boolean _multipleSelection = false;
 
     public static String CODE_PROPERTY_CHANGE = "codeChange";
 
@@ -55,55 +49,8 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
         return codedTextButton;
     }
 
-    public SelectableNode<CodedTextVO> getRootNode(){
-        if (rootNode==null){
-            rootNode = new SelectableNodeBuilder<CodedTextVO>()
-                    .setName(OpenEHRLanguageManager.getMessage("Terms"))
-                    .setSelectionMode(SelectableNode.SelectionMode.SINGLE)
-                    .setIcon(OpenEHRImageUtil.DV_CODED_TEXT_ICON)
-                    .createSelectableNode();
-            Collection<CodedTextVO> codedTextsVO =
-                    getCodedTexts().getCodedTextVOs(getIdTemplate(), getIdElement());
-            Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap =
-                    new HashMap<CodedTextVO, SelectableNode<CodedTextVO>>();
-            SelectableNode.SelectionMode selectionMode =
-                    _multipleSelection? SelectableNode.SelectionMode.MULTIPLE : SelectableNode.SelectionMode.SINGLE;
-            for (CodedTextVO codedTextVO : codedTextsVO) {
-                addCodedText(rootNode, codedTextVO, nodeMap, selectionMode);
-            }
-        }
-        return rootNode;
-    }
-
-    private void addCodedText(SelectableNode<CodedTextVO> rootNode, CodedTextVO codedTextVO, Map<CodedTextVO, SelectableNode<CodedTextVO>> nodeMap, SelectableNode.SelectionMode selectionMode){
-        if (!nodeMap.containsKey(codedTextVO)){
-            String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
-            String codedTextName = name+(codedTextVO.getCode()!=null?" ("+codedTextVO.getCode()+")":"");
-            SelectableNode<CodedTextVO> node = new SelectableNodeBuilder<CodedTextVO>()
-                    .setName(codedTextName)
-                    .setDescription(codedTextVO.getDescription())
-                    .setSelectionMode(selectionMode)
-                    .setIcon(OpenEHRImageUtil.DV_CODED_TEXT_ICON)
-                    .createSelectableNode();
-            CodedTextVO parentCodedTextVO = codedTextVO.getParentCodedText();
-            if (parentCodedTextVO != null){
-                SelectableNode<CodedTextVO> parentNode = nodeMap.get(parentCodedTextVO);
-                if (parentNode == null){
-                    addCodedText(rootNode, parentCodedTextVO, nodeMap, selectionMode);
-                }
-                parentNode = nodeMap.get(parentCodedTextVO);
-                if (parentNode != null){
-                    parentNode.add(node);
-                }
-            }else{
-                rootNode.add(node);
-            }
-            nodeMap.put(codedTextVO, node);
-        }
-    }
-
     public void setDataValue(DataValue dataValue) {
-        String label = OpenEHRLanguageManager.getMessage("SelectTerm");
+        String label;
         selectedCodes.clear();
         if (dataValue instanceof DvCodedText){
             String selectedCode = ((DvCodedText)dataValue).getDefiningCode().getCodeString();
@@ -137,34 +84,60 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
                 label = label.substring(0,40)+"...";
             }
             getCodedTextButton().setText(label);
-        }else if (dataValue instanceof DvList){
-            Collection<CodedTextVO> codedTextVOs = new ArrayList<CodedTextVO>();
-            for (DataValue dv : ((DvList)dataValue).getDataValues()) {
-                if (dv instanceof DvCodedText){
-                    String selectedCode = ((DvCodedText)dv).getDefiningCode().getCodeString();
-                    CodedTextVO codedTextVO =
-                            getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
-                    codedTextVOs.add(codedTextVO);
-                    NodeConversor.selectObject(getRootNode(), codedTextVO);
-                }
-            }
-            addCodedTextCollection(codedTextVOs);
         }
     }
 
-    public void addCodedTextCollection(Collection<CodedTextVO> codedTextVOs){
+    public DataValue getDataValue(){
+        if (selectedCodes.isEmpty()){
+            return null;
+        }else{
+            CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodes.iterator().next());
+            String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
+            return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
+        }
+    }
+
+    private CodedTexts getCodedTexts(){
+        return ArchetypeManager.getInstance().getCodedTexts();
+    }
+
+    public Collection<JComponent> getJComponents() {
+        Collection<JComponent> components = new ArrayList<JComponent>();
+        components.add(getCodedTextButton());
+        return components;
+    }
+
+    public String getTerminologyId(){
+        Collection<CodedTextVO> codedTextVOs = getCodedTexts().getCodedTextVOs(getIdTemplate(), getIdElement());
+        return codedTextVOs.iterator().next().getTerminology();
+    }
+
+    @Override
+    public void update() {
+        //Generated
+    }
+
+    @Override
+    public void setSelectedTerminologyCodes(Collection<String> terminologyCodes) {
         StringBuffer label = new StringBuffer();
         String finalLabel = null;
         selectedCodes.clear();
-        int i = 0;
-        for (CodedTextVO codedTextVO : codedTextVOs) {
-            selectedCodes.add(codedTextVO.getCode());
-            String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
-            label.append(name);
-            i++;
-            if (i<codedTextVOs.size()){
-                label.append(", ");
+        String prefix = "";
+        String terminologyId = getTerminologyId();
+        CodePhrase langCodePhrase = OpenEHRDataValuesUI.getLanguageCodePhrase();
+        for (String code : terminologyCodes) {
+            selectedCodes.add(code);
+            CodePhrase codePhrase = new CodePhrase(terminologyId, code);
+            String name = null;
+            try {
+                name = OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveTerm(codePhrase, langCodePhrase);
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+                name = code;
             }
+            label.append(prefix);
+            label.append(name);
+            prefix = ", ";
             if (label.length()>40 && finalLabel==null){
                 finalLabel = label.toString().substring(0,40)+"...";
             }
@@ -179,38 +152,8 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel{
         getCodedTextButton().firePropertyChange(CODE_PROPERTY_CHANGE, 0, 1);
     }
 
-    public DataValue getDataValue(){
-        if (selectedCodes.isEmpty()){
-            return null;
-        }else{
-            if (_multipleSelection){
-                Collection<DataValue> dataValues = new ArrayList<DataValue>();
-                for (String selectedCode : selectedCodes) {
-                    CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
-                    String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
-                    dataValues.add(new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode()));
-                }
-                return new DvList(dataValues);
-            }else{
-                CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodes.iterator().next());
-                String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
-                return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
-            }
-        }
-    }
-
-    public void setMultipleSelection(boolean multipleSelection){
-        _multipleSelection = multipleSelection;
-    }
-
-    private CodedTexts getCodedTexts(){
-        return Archetypes.getInstance().getArchetypeObjectBundles().getCodedTexts();
-    }
-
-    public Collection<JComponent> getJComponents() {
-        Collection<JComponent> components = new ArrayList<JComponent>();
-        components.add(getCodedTextButton());
-        return components;
+    public Collection<String> getSelectedCodes() {
+        return selectedCodes;
     }
 }
 /*

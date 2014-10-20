@@ -11,33 +11,38 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 
 public class Templates extends AbstractCMManager<TemplateDTO>{
-    private static Templates instance = null;
     public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
-    private Archetypes archetypes = null;
+    private ArchetypeManager archetypeManager = null;
 
 
-    private Templates(Archetypes archetypes){
-        this.archetypes = archetypes;
+    public Templates(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
+    }
+
+    public Archetypes getArchetypes(){
+        return archetypeManager.getArchetypes();
     }
 
     @Override
     public void registerCMElementsInCache(Collection<TemplateDTO> cmElements){
+        super.registerCMElementsInCache(cmElements);
         try {
             proccessTemplates(cmElements);
             registerTemplateDTOs(cmElements);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
-        super.registerCMElementsInCache(cmElements);
     }
 
     public void proccessTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
         for (TemplateDTO templateDTO: templateDTOs){
-            new TemplateObjectBundleManager(templateDTO, archetypes.getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
+            new TemplateObjectBundleManager(templateDTO, getArchetypes().getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
         }
     }
 
@@ -45,7 +50,7 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         for(TemplateDTO templateDTO: templateDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(templateDTO);
             Archetype archetype = getTemplateAOM(templateDTO);
-            archetypes.getArchetypeObjectBundles().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
+            archetypeManager.registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
         }
     }
 
@@ -63,14 +68,25 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(templateDTO.getAobcVO());
     }
 
-    public Archetype getTemplateAOM(TemplateDTO templateDTO){
+    public Archetype getTemplateAOMById(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        return getTemplatesAOMsByIds(Collections.singleton(templateId)).iterator().next();
+    }
+
+    public Collection<Archetype> getTemplatesAOMsByIds(Collection<String> templateIds) throws InternalErrorException, InstanceNotFoundException {
+        Collection<TemplateDTO> templateDTOs = getCMElementByIds(templateIds);
+        Collection<Archetype> archetypes = new ArrayList<Archetype>();
+        for(TemplateDTO templateDTO: templateDTOs){
+            archetypes.add(getTemplateAOM(templateDTO));
+        }
+        return archetypes;
+    }
+
+    private static Archetype getTemplateAOM(TemplateDTO templateDTO){
         return (Archetype)IOUtils.getObject(templateDTO.getAom());
     }
-    public static Templates getInstance(){
-        if (instance == null){
-            instance = new Templates(Archetypes.getInstance());
-        }
-        return instance;
+
+    public Archetype getTemplateAOM(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        return (Archetype)IOUtils.getObject(getCMElement(templateId).getAom());
     }
 }
 /*

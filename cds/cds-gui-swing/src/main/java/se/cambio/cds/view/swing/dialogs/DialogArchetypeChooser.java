@@ -2,16 +2,13 @@ package se.cambio.cds.view.swing.dialogs;
 
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.util.comparators.ArchetypeComparator;
-import se.cambio.openehr.model.util.comparators.TemplateComparator;
-import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.*;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
@@ -22,8 +19,7 @@ import se.cambio.openehr.view.util.ScreenUtil;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 
 
 public class DialogArchetypeChooser extends JDialog{
@@ -180,7 +176,13 @@ public class DialogArchetypeChooser extends JDialog{
         }
 
         public void actionPerformed(ActionEvent e) {
-            ImportUtils.showImportArchetypeDialogAndAddToRepo(_dialog, null);
+            try {
+                ImportUtils.showImportArchetypeDialogAndAddToRepo(_dialog, null);
+            } catch (InternalErrorException e1) {
+                ExceptionHandler.handle(e1);
+            } catch (InstanceNotFoundException e1) {
+                ExceptionHandler.handle(e1);
+            }
             refreshArchetypeSelectionPanel();
         }
     }
@@ -218,7 +220,13 @@ public class DialogArchetypeChooser extends JDialog{
         }
 
         public void actionPerformed(ActionEvent e) {
-            ImportUtils.showImportTemplateDialog(_dialog, null);
+            try {
+                ImportUtils.showImportTemplateDialog(_dialog, null);
+            } catch (InternalErrorException e1) {
+                ExceptionHandler.handle(e1);
+            } catch (InstanceNotFoundException e1) {
+                ExceptionHandler.handle(e1);
+            }
             refreshTemplateSelectionPanel();
         }
     }
@@ -335,39 +343,37 @@ public class DialogArchetypeChooser extends JDialog{
                     .setName(OpenEHRLanguageManager.getMessage("Archetypes"))
                     .setIcon(Archetypes.ICON)
                     .createSelectableNode();
-            insertArchetypeNodes(archetypeNode, OpenEHRConst.OBSERVATION);
-            insertArchetypeNodes(archetypeNode, OpenEHRConst.ACTION);
-            insertArchetypeNodes(archetypeNode, OpenEHRConst.EVALUATION);
-            insertArchetypeNodes(archetypeNode, OpenEHRConst.INSTRUCTION);
-            //Only allow Entries
-            //insertArchetypeNodes(archetypeNode, OpenEHRConst.COMPOSITION);
-            //insertArchetypeNodes(archetypeNode, OpenEHRConst.CLUSTER);
-            //insertArchetypeNodes(archetypeNode, OpenEHRConst.ITEM_TREE);
-            //insertArchetypeNodes(archetypeNode, OpenEHRConst.ITEM_LIST);
-            //insertArchetypeNodes(archetypeNode, OpenEHRConst.ITEM_TABLE);
-            //insertArchetypeNodes(archetypeNode, OpenEHRConst.ITEM_SINGLE);
+            try {
+                Collection<String> archetypeIds = ArchetypeManager.getInstance().getArchetypes().getAllIds();
+                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.OBSERVATION);
+                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
+                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
+                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
         }
         return archetypeNode;
     }
 
-    private static void insertArchetypeNodes(SelectableNode<Object> root, String rmName) {
+    private static void insertArchetypeNodes(SelectableNode<Object> root, Collection<String> archetypeIds, String rmName) {
 
         SelectableNode<Object> entryRoot = new SelectableNodeBuilder<Object>()
                 .setName(OpenEHRConstUI.getName(rmName))
                 .setDescription(OpenEHRConstUI.getDescription(rmName))
                 .setIcon(OpenEHRConstUI.getIcon(rmName))
                 .createSelectableNode();
-        SelectableNode<Object> nodoOrigen = null;
-        ArrayList<ArchetypeDTO> archetypeVOs = Archetypes.getArchetypes(rmName);
-        Collections.sort(archetypeVOs, new ArchetypeComparator());
-        for (ArchetypeDTO archetypeVO : archetypeVOs) {
-            nodoOrigen = new SelectableNodeBuilder<Object>()
-                    .setName(archetypeVO.getName())
-                    .setDescription(archetypeVO.getDescription())
-                    .setIcon(Archetypes.getIcon(archetypeVO.getArchetypeId()))
-                    .setObject(archetypeVO)
-                    .createSelectableNode();
-            entryRoot.add(nodoOrigen);
+        for (String archetypeId : archetypeIds) {
+            String entryType = Archetypes.getEntryType(archetypeId);
+            if (entryType!=null && rmName.equals(entryType)) {
+                SelectableNode<Object> rnode = new SelectableNodeBuilder<Object>()
+                        .setName(archetypeId)
+                        .setDescription(archetypeId)
+                        .setIcon(Archetypes.getIcon(archetypeId))
+                        .setObject(archetypeId)
+                        .createSelectableNode();
+                entryRoot.add(rnode);
+            }
         }
         root.add(entryRoot);
 
@@ -385,33 +391,24 @@ public class DialogArchetypeChooser extends JDialog{
                 .setName(OpenEHRLanguageManager.getMessage("Templates"))
                 .setIcon(Templates.ICON)
                 .createSelectableNode();
-        insertTemplateNodes(templateNode, OpenEHRConst.OBSERVATION);
-        insertTemplateNodes(templateNode, OpenEHRConst.ACTION);
-        insertTemplateNodes(templateNode, OpenEHRConst.EVALUATION);
-        insertTemplateNodes(templateNode, OpenEHRConst.INSTRUCTION);
-        insertTemplateNodes(templateNode, OpenEHRConst.COMPOSITION);
+        try {
+            Collection<String> templateIds = ArchetypeManager.getInstance().getTemplates().getAllIds();
+            insertTemplateNodes(templateNode, templateIds);
+        } catch (InternalErrorException e){
+            ExceptionHandler.handle(e);
+        }
         return templateNode;
     }
 
-    private static void insertTemplateNodes(SelectableNode<Object> root, String rmName) {
-        SelectableNode<Object> entryRoot = new SelectableNodeBuilder<Object>()
-                .setName(OpenEHRConstUI.getName(rmName))
-                .setDescription(OpenEHRConstUI.getDescription(rmName))
-                .setIcon(OpenEHRConstUI.getIcon(rmName))
-                .createSelectableNode();
-        SelectableNode<Object> nodoOrigen = null;
-        ArrayList<TemplateDTO> templateDTOs = Templates.getTemplates(rmName);
-        Collections.sort(templateDTOs, new TemplateComparator());
-        for (TemplateDTO templateDTO : templateDTOs) {
-            String templateName = templateDTO.getName() + " - " + templateDTO.getId();
-            nodoOrigen = new SelectableNodeBuilder<Object>()
-                    .setName(templateName)
-                    .setObject(templateDTO)
-                    .setIcon(OpenEHRConstUI.getIcon(templateDTO.getRMName()))
+    private static void insertTemplateNodes(SelectableNode<Object> rootNode, Collection<String> templateIds) {
+        for (String templateId : templateIds) {
+            SelectableNode<String> node = new SelectableNodeBuilder<Object>()
+                    .setName(templateId)
+                    .setObject(templateId)
+                    .setIcon(Templates.ICON)
                     .createSelectableNode();
-            entryRoot.add(nodoOrigen);
+            rootNode.add(node);
         }
-        root.add(entryRoot);
     }
 
     public boolean getAnswer(){
@@ -422,13 +419,13 @@ public class DialogArchetypeChooser extends JDialog{
         Object selected = null;
         if (getArchetypeTemplateTabbedPane().getSelectedIndex() == 0){
             selected = NodeConversor.getSelectedObject(getArchetypeNode());
-            if (selected instanceof ArchetypeDTO){
-                return ((ArchetypeDTO)selected).getArchetypeId();
+            if (selected instanceof String){
+                return (String)selected;
             }
         } else {
             selected = NodeConversor.getSelectedObject(getTemplateNode());
-            if (selected instanceof TemplateDTO){
-                return ((TemplateDTO)selected).getArcehtypeId();
+            if (selected instanceof String){
+                return (String)selected;
             }
         }
         return null;

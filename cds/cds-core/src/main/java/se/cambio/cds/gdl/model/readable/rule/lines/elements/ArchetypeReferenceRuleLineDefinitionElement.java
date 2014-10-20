@@ -4,9 +4,11 @@ import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeReference> {
 
@@ -38,9 +40,16 @@ public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElement
     public String toString(){
         if (getValue()!=null){
             String idArchetype = getValue().getIdArchetype();
-            ArchetypeDTO archetypeVO = Archetypes.getArchetypeDTO(idArchetype);
+            ArchetypeDTO archetypeVO = null;
+            try {
+                archetypeVO = getArchetypeManager().getArchetypes().getCMElement(idArchetype);
+            } catch (InstanceNotFoundException e) {
+                ExceptionHandler.handle(e);
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
             if (archetypeVO!=null){
-                return archetypeVO.getName();
+                return archetypeVO.getId();
             }else{
                 Logger.getLogger(this.getClass()).error("Archetype not found! ("+idArchetype+")");
                 return null;

@@ -4,8 +4,7 @@ import se.cambio.cds.controller.session.data.DecisionSupportViews;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.view.dto.DSViewDTO;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.model.archetype.dto.ArchetypeDTOBuilder;
@@ -14,6 +13,7 @@ import se.cambio.openehr.model.template.dto.TemplateDTOBuilder;
 import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.*;
@@ -56,11 +56,11 @@ public class CMImportExportManager {
 
     public static enum GenerationStrategy {DTOS, NONE}
 
-    public static void exportCurrentCM(File file) throws IOException {
+    public static void exportCurrentCM(File file) throws IOException, InternalErrorException, InstanceNotFoundException {
         exportCurrentCM(file, GenerationStrategy.NONE);
     }
 
-    public static void exportCurrentCM(File file, GenerationStrategy generationStrategy) throws IOException {
+    public static void exportCurrentCM(File file, GenerationStrategy generationStrategy) throws IOException, InstanceNotFoundException, InternalErrorException {
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
         exportArchetypes(out, generationStrategy);
         exportTemplates(out, generationStrategy);
@@ -71,7 +71,7 @@ public class CMImportExportManager {
     }
 
     public static void exportArchetypes(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
-        for (ArchetypeDTO archetypeDTO: Archetypes.getInstance().getAllInCache()){
+        for (ArchetypeDTO archetypeDTO: ArchetypeManager.getInstance().getArchetypes().getAllInCache()){
             InputStream in = new ByteArrayInputStream(archetypeDTO.getSource().getBytes());
             // name the file inside the zip  file
             out.putNextEntry(new ZipEntry(ARCHETYPE_PREFIX + archetypeDTO.getId() + ARCHETYPE_POSTFIX));
@@ -94,7 +94,7 @@ public class CMImportExportManager {
     }
 
     public static void exportTemplates(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
-        for (TemplateDTO templateDTO: Templates.getInstance().getAllInCache()){
+        for (TemplateDTO templateDTO: ArchetypeManager.getInstance().getTemplates().getAllInCache()){
             InputStream in = new ByteArrayInputStream(templateDTO.getSource().getBytes());
             // name the file inside the zip  file
             out.putNextEntry(new ZipEntry(TEMPLATES_PREFIX + templateDTO.getId() + TEMPLATES_POSTFIX));
@@ -131,11 +131,12 @@ public class CMImportExportManager {
         }
     }
 
-    public static void exportGuidelines(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException {
-        for (GuideDTO guideDTO: Guides.getAllGuides()){
-            InputStream in = new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes());
+    public static void exportGuidelines(ZipOutputStream out, GenerationStrategy generationStrategy) throws IOException, InternalErrorException, InstanceNotFoundException {
+        Collection<String> guideIds = Guides.getInstance().getAllIds();
+        for (GuideDTO guideDTO: Guides.getInstance().getCMElementByIds(guideIds)){
+            InputStream in = new ByteArrayInputStream(guideDTO.getSource().getBytes());
             // name the file inside the zip  file
-            out.putNextEntry(new ZipEntry(GUIDELINES_PREFIX + guideDTO.getIdGuide() + GUIDELINES_POSTFIX));
+            out.putNextEntry(new ZipEntry(GUIDELINES_PREFIX + guideDTO.getId() + GUIDELINES_POSTFIX));
             // buffer size
             byte[] b = new byte[1024];
             int count;
@@ -144,7 +145,7 @@ public class CMImportExportManager {
             }
             in.close();
             if (GenerationStrategy.DTOS.equals(generationStrategy)){
-                out.putNextEntry(new ZipEntry(GUIDELINES_DTO_PREFIX + "\\" + guideDTO.getIdGuide() + DTO_POSTFIX));
+                out.putNextEntry(new ZipEntry(GUIDELINES_DTO_PREFIX + "\\" + guideDTO.getId() + DTO_POSTFIX));
                 in = new ByteArrayInputStream(IOUtils.getBytes(guideDTO));
                 while ((count = in.read(b)) > 0) {
                     out.write(b, 0, count);
@@ -198,8 +199,6 @@ public class CMImportExportManager {
                     String archetypeId = entry.getName().substring(ARCHETYPES_FOLDER_NAME.length() + 1, entry.getName().length() - ARCHETYPE_POSTFIX.length());
                     ArchetypeDTO archetypeDTO = new ArchetypeDTOBuilder()
                             .setId(archetypeId)
-                            .setName(archetypeId)
-                            .setDescription(archetypeId)
                             .setSource(src)
                             .createArchetypeDTO();
                     archetypeDTOs.add(archetypeDTO);
@@ -227,7 +226,7 @@ public class CMImportExportManager {
                 }else if (entry.getName().startsWith(GUIDELINES_FOLDER_NAME) && entry.getName().endsWith(GUIDELINES_POSTFIX)){
                     String src = IOUtils.toString(zis,"UTF-8");
                     String guideId = entry.getName().substring(GUIDELINES_FOLDER_NAME.length() + 1, entry.getName().length() - GUIDELINES_POSTFIX.length());
-                    guideSourceDTOs.add(new GuideDTO(guideId, src, null, null, false, Calendar.getInstance().getTime()));
+                    guideSourceDTOs.add(new GuideDTO(guideId, src, null, null, Calendar.getInstance().getTime()));
                 }else if (entry.getName().startsWith(ARCHETYPE_DTO_PREFIX) && entry.getName().endsWith(DTO_POSTFIX)){
                     ArchetypeDTO archetypeDTO = (ArchetypeDTO)IOUtils.getObject(IOUtils.toByteArray(zis));
                     archetypeDTOs.add(archetypeDTO);
@@ -247,22 +246,17 @@ public class CMImportExportManager {
         }
         try {
             if (useArchetypeDTOs){
-                Archetypes.getInstance().registerCMElementsInCache(archetypeDTOs);
+                ArchetypeManager.getInstance().getArchetypes().registerCMElementsInCache(archetypeDTOs);
             }else{
-                Archetypes.getInstance().registerCMElementsInCache(archetypeSourceDTOs);
+                ArchetypeManager.getInstance().getArchetypes().registerCMElementsInCache(archetypeSourceDTOs);
             }
             if (useTemplateDTOs){
-                Templates.getInstance().registerCMElementsInCache(templateDTOs);
+                ArchetypeManager.getInstance().getTemplates().registerCMElementsInCache(templateDTOs);
             }else{
-                Templates.getInstance().registerCMElementsInCache(templateSourceDTOs);
+                ArchetypeManager.getInstance().getTemplates().registerCMElementsInCache(templateSourceDTOs);
             }
             Terminologies.getInstance().registerCMElementsInCache(terminologyDTOs);
             DecisionSupportViews.getInstance().loadDSViews(DSViewDTOs);
-            if (useGuidelineDTOs){
-                Guides.loadGuides(guideDTOs);
-            }else{
-                Guides.loadGuides(guideSourceDTOs);
-            }
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }

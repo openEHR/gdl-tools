@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Ordinals {
-    private final ArchetypeObjectBundles archetypeObjectBundles;
+    private final ArchetypeManager archetypeManager;
     private Map<String, Map<Integer, OrdinalVO>> _ordinalByParentId = null;
     private Map<String, Map<String, Map<Integer, OrdinalVO>>> _templateOrdinalsByTemplateIdAndId = null;
 
-    public Ordinals(ArchetypeObjectBundles archetypeObjectBundles){
-        this.archetypeObjectBundles = archetypeObjectBundles;
+    public Ordinals(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
         init();
     }
 
@@ -38,6 +38,7 @@ public class Ordinals {
     }
 
     public OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, Integer value){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
         if (idTemplate==null){
             return getOrdinalMap(idParentArchetypeNode).get(value);
         }else{
@@ -46,6 +47,7 @@ public class Ordinals {
     }
 
     public Collection<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
         if (idTemplate==null){
             return new ArrayList<OrdinalVO>(getOrdinalMap(idParentArchetypeNode).values());
         }else{
@@ -88,7 +90,7 @@ public class Ordinals {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
         if (ordinalVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -107,7 +109,7 @@ public class Ordinals {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
         if (ordinalVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = archetypeObjectBundles.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -119,7 +121,7 @@ public class Ordinals {
     }
 
     private ArchetypeTerms getArchetypeTerms() {
-        return this.archetypeObjectBundles.getArchetypeTerms();
+        return this.archetypeManager.getArchetypeTerms();
     }
 }
 /*

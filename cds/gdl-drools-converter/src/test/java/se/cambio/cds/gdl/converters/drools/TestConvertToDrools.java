@@ -3,7 +3,7 @@ package se.cambio.cds.gdl.converters.drools;
 import junit.framework.TestCase;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.BufferedReader;
@@ -16,14 +16,13 @@ public class TestConvertToDrools extends TestCase {
 	public void setUp() throws Exception {
         String archetypesFolderPath = TestConvertToDrools.class.getClassLoader().getResource("archetypes").getPath();
         UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
-		Archetypes.loadArchetypes();
 		parser = new GDLParser();
 		guide = null;
 	}
 
 	public void testConvertBSACalculationGuide() throws Exception {
 		parse("BSA_Calculation.v2.gdl");
-		converter = new GDLDroolsConverter(guide);
+		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
 		//System.out.println(output);		
 		//System.out.println(serializer.toDADL(guide));		
@@ -32,7 +31,7 @@ public class TestConvertToDrools extends TestCase {
 	
 	public void testConvertTemperalGuide() throws Exception {
 		parse("temperal.gdl");
-		converter = new GDLDroolsConverter(guide);
+		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
 		//System.out.println(output);	
 		compile(output);

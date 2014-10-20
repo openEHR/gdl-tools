@@ -4,9 +4,6 @@ import java.util.Date;
 
 public class ArchetypeDTOBuilder {
     private String id;
-    private String name;
-    private String description;
-    private String rmName;
     private String source;
     private byte[] aom;
     private byte[] aobcVO;
@@ -14,21 +11,6 @@ public class ArchetypeDTOBuilder {
 
     public ArchetypeDTOBuilder setId(String id) {
         this.id = id;
-        return this;
-    }
-
-    public ArchetypeDTOBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public ArchetypeDTOBuilder setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public ArchetypeDTOBuilder setRmName(String rmName) {
-        this.rmName = rmName;
         return this;
     }
 
@@ -53,6 +35,6 @@ public class ArchetypeDTOBuilder {
     }
 
     public ArchetypeDTO createArchetypeDTO() {
-        return new ArchetypeDTO(id, name, description, rmName, source, aom, aobcVO, lastUpdate);
+        return new ArchetypeDTO(id, source, aom, aobcVO, lastUpdate);
     }
 }

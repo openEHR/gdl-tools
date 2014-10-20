@@ -230,7 +230,7 @@ public class SimpleGuideManager {
     public Collection<String> getGuidesKey(Collection<GuideDTO> guides){
         ArrayList<String> idGuides = new ArrayList<String>();
         for (GuideDTO guideDTO : guides) {
-            idGuides.add(guideDTO.getIdGuide());
+            idGuides.add(guideDTO.getId());
         }
         Collections.sort(idGuides);
         return idGuides;

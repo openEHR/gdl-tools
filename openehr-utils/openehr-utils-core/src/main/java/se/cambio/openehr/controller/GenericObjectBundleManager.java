@@ -343,6 +343,9 @@ public class GenericObjectBundleManager {
                 DvCodedText ct = node.getValue();
                 codedTextVO.setName(getValidCodedTextName(ct.getValue()));
                 codedTextVO.setDescription(getValidCodedTextName(ct.getValue()));
+                if (codedTextVOs.size()>15){ //No need to load the whole terminology
+                    return;
+                }
                 addCodedTextVOs(node, codedTextVO, codedTextVOs);
             } catch (Exception e){
                 ExceptionHandler.handle(e);
@@ -351,6 +354,9 @@ public class GenericObjectBundleManager {
     }
 
     private static void addCodedTextVOs(TerminologyNodeVO root, CodedTextVO rootCodedTextVO, Collection<CodedTextVO> codedTextVOs){
+        if (codedTextVOs.size()>15){ //No need to load the whole terminology
+            return;
+        }
         for (TerminologyNodeVO node : root.getChildren()) {
             DvCodedText ct = node.getValue();
             CodedTextVO codedTextVO =  new CodedTextVO(
@@ -479,11 +485,14 @@ public class GenericObjectBundleManager {
         int i = path.lastIndexOf("[");
         while(i > 0){
             String idArchetype = path.substring(i+1, path.lastIndexOf("]"));
-            Archetype archetype = archetypeMap.get(idArchetype);
-            if (archetype != null){
+            Archetype archetype = null;
+            if (idArchetype.startsWith("openEHR")) { //TODO remove dependency on openEHR archetypes
+                archetype = archetypeMap.get(idArchetype);
+            }
+            if (archetype != null) {
                 return archetype;
-            }else{
-                path = path.substring(0,i);
+            } else {
+                path = path.substring(0, i);
                 i = path.lastIndexOf("[");
             }
         };

@@ -1,7 +1,5 @@
-package se.cambio.cds.gdl.editor.view.applicationobjects;
+package se.cambio.openehr.util;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.util.NodeConversor;
@@ -21,18 +19,17 @@ public class TerminologyDialogs {
     private static TerminologyDialogs _instance = null;
     private Map<String, DialogSelection> terminologySelectableNodes = null;
 
-
     private TerminologyDialogs(){
         terminologySelectableNodes = new HashMap<String, DialogSelection>();
     }
 
-    public static DialogSelection getTerminologyDialog(String terminologyId, Collection<String> selectedCodes){
+    public static DialogSelection getTerminologyDialog(Window owner, String terminologyId, SelectableNode.SelectionMode selectionMode, Collection<String> selectedCodes){
         DialogSelection dialog = getDelegate().terminologySelectableNodes.get(terminologyId);
-        SelectableNode<?> rootNode = null;
-        if (dialog==null){
-            rootNode = NodeDefinitionConversor.getNodeAllTerminologyCodes(terminologyId, null);
+        SelectableNode<?> rootNode;
+        if (dialog==null || (owner != dialog.getOwner())){
+            rootNode = TerminologyNodeUtil.getNodeAllTerminologyCodes(terminologyId, null, selectionMode);
             dialog = new DialogSelection(
-                    EditorManager.getActiveEditorWindow(),
+                    owner,
                     terminologyId,
                     rootNode,
                     false,
@@ -45,7 +42,7 @@ public class TerminologyDialogs {
         rootNode.setAllSelected(false, true); //Force cleaning all selection
         if (selectedCodes!=null){
             for (String selectedCode: selectedCodes){
-                NodeDefinitionConversor.selectCodesWith(rootNode, selectedCode, false);
+                TerminologyNodeUtil.selectCodesWith(rootNode, selectedCode, false);
             }
         }
         dialog.setRootNode(rootNode, false);
