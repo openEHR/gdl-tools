@@ -10,7 +10,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateAttributeCo
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.export.json.DVDefSerializer;
 import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;

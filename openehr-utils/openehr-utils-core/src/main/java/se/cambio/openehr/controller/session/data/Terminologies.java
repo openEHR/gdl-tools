@@ -9,6 +9,11 @@ public class Terminologies extends AbstractCMManager<TerminologyDTO> {
     private Terminologies(){
     }
 
+    @Override
+    public Class<TerminologyDTO> getCMElementClass() {
+        return TerminologyDTO.class;
+    }
+
     public static Terminologies getInstance(){
         if (instance == null){
             instance = new Terminologies();

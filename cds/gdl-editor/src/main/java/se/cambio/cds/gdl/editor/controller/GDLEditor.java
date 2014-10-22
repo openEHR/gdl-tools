@@ -31,7 +31,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -214,7 +214,6 @@ public class GDLEditor implements EditorController<Guide>{
                             gdlGuide,
                             IOUtils.getBytes(guide),
                             compiledGuide,
-                            true,
                             Calendar.getInstance().getTime());
             FormGeneratorController formGenerator =
                     new FormGeneratorController(guideDTO, controller.getCurrentLanguageCode());
@@ -1187,12 +1186,12 @@ public class GDLEditor implements EditorController<Guide>{
                             idGuide = idGuide
                                     .substring(0, idGuide.length() - 6);
                         }
-                        GuideDTO guideDTO = new GuideDTO(idGuide,
-                                guideSource,
-                                IOUtils.getBytes(guide),
-                                compiledGuide,
-                                true,
-                                Calendar.getInstance().getTime());
+                        GuideDTO guideDTO =
+                                new GuideDTO(idGuide,
+                                        guideSource,
+                                        IOUtils.getBytes(guide),
+                                        compiledGuide,
+                                        Calendar.getInstance().getTime());
                         ObjectOutputStream output = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(
                                         guideFile)));

@@ -1,6 +1,6 @@
 package se.cambio.cds.controller.session.data;
 
-import se.cambio.cds.model.view.dto.DSViewDTO;
+import se.cambio.cm.model.view.dto.DSViewDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
 public class DecisionSupportViews extends AbstractCMManager<DSViewDTO> {
@@ -8,6 +8,11 @@ public class DecisionSupportViews extends AbstractCMManager<DSViewDTO> {
     private static DecisionSupportViews instance;
 
     private DecisionSupportViews(){
+    }
+
+    @Override
+    public Class<DSViewDTO> getCMElementClass() {
+        return DSViewDTO.class;
     }
 
     public static DecisionSupportViews getInstance() {

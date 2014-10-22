@@ -1,6 +1,6 @@
 package se.cambio.cds.controller.session.data;
 
-import se.cambio.cds.model.study.dto.StudyDTO;
+import se.cambio.cm.model.study.dto.StudyDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
 
@@ -8,6 +8,11 @@ public class Studies extends AbstractCMManager<StudyDTO> {
     private static Studies _instance = null;
 
     private Studies(){
+    }
+
+    @Override
+    public Class<StudyDTO> getCMElementClass() {
+        return StudyDTO.class;
     }
 
     public static Studies getInstance(){

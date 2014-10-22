@@ -1,7 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 import se.cambio.cds.controller.session.data.Studies;
-import se.cambio.cds.model.study.dto.StudyDTO;
+import se.cambio.cm.model.study.dto.StudyDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.net.URISyntaxException;

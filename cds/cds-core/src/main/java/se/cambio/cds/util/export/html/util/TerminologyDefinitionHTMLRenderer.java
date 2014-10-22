@@ -1,8 +1,8 @@
 package se.cambio.cds.util.export.html.util;
 
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 

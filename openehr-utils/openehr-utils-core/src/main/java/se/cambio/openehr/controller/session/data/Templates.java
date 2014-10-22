@@ -39,6 +39,11 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         }
     }
 
+    @Override
+    public Class<TemplateDTO> getCMElementClass() {
+        return TemplateDTO.class;
+    }
+
     public void proccessTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
         for (TemplateDTO templateDTO: templateDTOs){
             new TemplateObjectBundleManager(templateDTO, getArchetypes().getArchetypeMap()).buildArchetypeObjectBundleCustomVO();

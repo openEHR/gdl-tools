@@ -28,6 +28,11 @@ public class Guides extends AbstractCMManager<GuideDTO>{
         processGuides(guideDTOs);
     }
 
+    @Override
+    public Class<GuideDTO> getCMElementClass() {
+        return GuideDTO.class;
+    }
+
     public void processGuides(Collection<GuideDTO> guideDTOs) {
         for (GuideDTO guideDTO: guideDTOs){
             processGuide(guideDTO);

@@ -1,12 +1,8 @@
 package se.cambio.cds.model.facade.cds.delegate;
 
-import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.dsvdata.DSVData;
-import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.facade.execution.vo.StoringMode;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.util.exceptions.GuideNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -23,13 +19,6 @@ public interface CDSExecutionFacadeDelegate {
 
     public RuleExecutionResult execute(
             String ehrId,
-            Collection<ArchetypeReference> ehrData,
-            Calendar date,
-            ExecutionMode executionMode)
-            throws InternalErrorException, PatientNotFoundException;
-
-    public RuleExecutionResult execute(
-            String ehrId,
             Collection<String> guideIds,
             Collection<ArchetypeReference> ehrData,
             Calendar date)
@@ -39,29 +28,17 @@ public interface CDSExecutionFacadeDelegate {
             List<String> ehrIds,
             Collection<String> guideIds,
             Calendar date)
-            throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
+            throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
 
     public DSVData executeDSV(
             String dsvId,
             String ehrId,
             Collection<ArchetypeReference> ehrData,
             Calendar date)
-            throws InternalErrorException, PatientNotFoundException, GuideNotFoundException, InstanceNotFoundException;
-
-    public List<RuleExecutionResult> executeAndStore(
-            List<String> ehrIds,
-            Collection<String> guideIds,
-            Calendar date,
-            StoringMode storingMode) throws InternalErrorException, PatientNotFoundException;
-
-    public Collection<Guide> searchAllGuides()
-            throws InternalErrorException;
-
-    public Collection<Guide> searchByGuideIds(Collection<String> guideIds)
-            throws InternalErrorException, GuideNotFoundException;
+            throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
 
     public Collection<ArchetypeReference> searchEHRData(String ehrId, Calendar date, Collection<String> guideIds)
-            throws InternalErrorException, PatientNotFoundException, GuideNotFoundException;
+            throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

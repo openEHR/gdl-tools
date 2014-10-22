@@ -18,7 +18,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 import se.cambio.cds.gdl.model.readable.util.RulePriorityComparator;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRRMUtil;

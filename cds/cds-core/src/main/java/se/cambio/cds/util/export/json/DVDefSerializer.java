@@ -16,7 +16,7 @@ import se.cambio.cds.util.DVUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.controller.session.data.Ordinals;
-import se.cambio.openehr.model.archetype.vo.CodedTextVO;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 

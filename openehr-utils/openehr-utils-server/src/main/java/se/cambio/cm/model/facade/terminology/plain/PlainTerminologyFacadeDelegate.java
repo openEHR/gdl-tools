@@ -1,4 +1,4 @@
-package se.cambio.cm.terminology.plain;
+package se.cambio.cm.model.facade.terminology.plain;
 
 import java.util.Collection;
 import java.util.List;

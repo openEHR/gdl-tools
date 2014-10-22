@@ -16,7 +16,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineEl
 import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
 import se.cambio.cds.gdl.parser.ExpressionParser;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.view.dialogs.DialogEditor;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;

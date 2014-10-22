@@ -69,7 +69,6 @@
 		<module>cds-integration-model</module>
 		<module>cds-model</module>
 		<module>gdl-model</module>
-		<module>cds-persistence</module>
 		<module>gdl-parser</module>
 		<module>cds-core</module>
 		<module>cds-gui-swing</module>

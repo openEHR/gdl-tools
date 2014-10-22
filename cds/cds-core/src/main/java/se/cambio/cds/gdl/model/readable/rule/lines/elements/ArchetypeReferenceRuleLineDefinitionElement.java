@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;

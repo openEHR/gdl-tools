@@ -1,13 +1,12 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.apache.log4j.Logger;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.cm.model.util.CMElement;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.CMElementComparator;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.lang.reflect.ParameterizedType;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -210,8 +209,5 @@ public abstract class AbstractCMManager<E extends CMElement> {
         this.useCache = useCache;
     }
 
-    private Class<E> getCMElementClass() {
-        return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-
+    public abstract Class<E> getCMElementClass();
 }

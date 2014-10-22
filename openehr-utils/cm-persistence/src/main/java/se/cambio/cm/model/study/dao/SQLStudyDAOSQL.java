@@ -1,4 +1,4 @@
-package se.cambio.cm.study.dao;
+package se.cambio.cm.model.study.dao;
 
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
 import se.cambio.cm.model.study.dto.StudyDTO;

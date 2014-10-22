@@ -2,7 +2,7 @@ package se.cambio.cds.gdl.editor.view.util;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.model.archetype.vo.ClusterVO;
+import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;

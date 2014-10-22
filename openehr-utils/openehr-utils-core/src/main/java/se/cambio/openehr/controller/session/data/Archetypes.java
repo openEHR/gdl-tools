@@ -33,6 +33,11 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         }
     }
 
+    @Override
+    public Class<ArchetypeDTO> getCMElementClass() {
+        return ArchetypeDTO.class;
+    }
+
     public void proccessArchetypes(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
         for (ArchetypeDTO archetypeDTO: archetypeDTOs){
             new ArchetypeObjectBundleManager(archetypeDTO, getArchetypeMap()).buildArchetypeObjectBundleCustomVO();

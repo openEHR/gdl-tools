@@ -1,95 +1,24 @@
 package se.cambio.cds.controller.session.data;
 
-import org.apache.log4j.Logger;
-import se.cambio.cds.controller.CDSSessionManager;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.kb.instance.dto.KBInstanceDTO;
-import se.cambio.cds.model.util.comparators.KBInstanceComparator;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.cm.model.kb.instance.dto.KBInstanceDTO;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
-import java.util.*;
-
-
-public class KBInstances {
-    private static KBInstances _instance = null;
-    private Map<String, KBInstanceDTO> _kbInstancesMap = null;
+public class KBInstances extends AbstractCMManager<KBInstanceDTO>{
+    private static KBInstances instance = null;
 
     private KBInstances(){
     }
 
-    public void loadKBInstances() throws InternalErrorException{
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        Collection<KBInstanceDTO> kbInstanceDTOs = adminFD.searchAllKBInstances();
-        loadKBInstances(kbInstanceDTOs);
-    }
-
-    public void loadKBInstancesById(Collection<String> kbInstancesIds) throws InternalErrorException, InstanceNotFoundException {
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        Collection<KBInstanceDTO> kbInstanceDTOs = adminFD.searchKBInstances(kbInstancesIds);
-        for(KBInstanceDTO kbInstanceDTO: kbInstanceDTOs) {
-            registerKBInstance(kbInstanceDTO);
-        }
-    }
-
-    public void loadKBInstances(Collection<KBInstanceDTO> kbInstanceDTOs) throws InternalErrorException{
-        init();
-        for (KBInstanceDTO kbInstanceDTO : kbInstanceDTOs) {
-            registerKBInstance(kbInstanceDTO);
-        }
-    }
-
-    public void registerKBInstance(KBInstanceDTO kbInstanceDTO){
-        getKBInstancesMap().put(kbInstanceDTO.getId(), kbInstanceDTO);
-        Logger.getLogger(KBInstances.class).info("Registering kb instance: '"+kbInstanceDTO.getId()+"'.");
-    }
-
-    public KBInstanceDTO getKBInstanceDTO(String kbInstanceId){
-        return getKBInstancesMap().get(kbInstanceId);
-    }
-
-    public List<KBInstanceDTO> getAllKBInstances(){
-        return new ArrayList<KBInstanceDTO>(getKBInstancesMap().values());
-    }
-
-    public Collection<String> getAllKBInstanceIds(){
-        return new ArrayList<String>(getKBInstancesMap().keySet());
-    }
-
-    public void removeKBInstance(String kbInstanceId) throws InternalErrorException{
-        getKBInstancesMap().remove(kbInstanceId);
+    @Override
+    public Class<KBInstanceDTO> getCMElementClass() {
+        return KBInstanceDTO.class;
     }
 
     public static KBInstances getInstance(){
-        if (_instance == null){
-            _instance = new KBInstances();
+        if (instance == null){
+            instance = new KBInstances();
         }
-        return _instance;
-    }
-
-    private void init(){
-        getKBInstancesMap().clear();
-    }
-
-    private Map<String, KBInstanceDTO> getKBInstancesMap(){
-        if (getInstance()._kbInstancesMap ==null){
-            getInstance()._kbInstancesMap = new HashMap<String, KBInstanceDTO>();
-        }
-        return getInstance()._kbInstancesMap;
-    }
-
-    public int generateHashCode() {
-        return generateHashCode(getAllKBInstances());
-    }
-
-    public static int generateHashCode(Collection<KBInstanceDTO> kbInstanceDTOs){
-        List<KBInstanceDTO> kbInstanceDTOList = new ArrayList<KBInstanceDTO>(kbInstanceDTOs);
-        Collections.sort(kbInstanceDTOList, new KBInstanceComparator());
-        List<String> defs = new ArrayList<String>();
-        for(KBInstanceDTO kbInstanceDTO: kbInstanceDTOList){
-            defs.add(kbInstanceDTO.getSource());
-        }
-        return defs.hashCode();
+        return instance;
     }
 }
 /*

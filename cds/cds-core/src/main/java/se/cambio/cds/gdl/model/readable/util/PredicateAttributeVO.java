@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.model.readable.util;
 
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 
 /**
  * User: iago.corbal

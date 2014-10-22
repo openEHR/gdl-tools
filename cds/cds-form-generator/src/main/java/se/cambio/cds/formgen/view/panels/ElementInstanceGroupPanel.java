@@ -8,7 +8,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.view.swing.DVSwingUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 

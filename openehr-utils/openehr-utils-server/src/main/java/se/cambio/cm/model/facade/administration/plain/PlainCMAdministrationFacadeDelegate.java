@@ -1,4 +1,4 @@
-package se.cambio.cm.admin.plain;
+package se.cambio.cm.model.facade.administration.plain;
 
 import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
