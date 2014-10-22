@@ -1,7 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.openehr.rm.datatypes.quantity.ProportionKind;
-import se.cambio.openehr.model.archetype.vo.ProportionTypeVO;
+import se.cambio.cm.model.archetype.vo.ProportionTypeVO;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,8 +1,8 @@
 package se.cambio.openehr.controller.session.data;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;

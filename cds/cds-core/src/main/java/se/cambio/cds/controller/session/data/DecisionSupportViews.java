@@ -1,102 +1,22 @@
 package se.cambio.cds.controller.session.data;
-import org.apache.log4j.Logger;
-import se.cambio.cds.controller.CDSSessionManager;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.util.comparators.DSViewComparator;
+
 import se.cambio.cds.model.view.dto.DSViewDTO;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
-import java.util.*;
+public class DecisionSupportViews extends AbstractCMManager<DSViewDTO> {
 
-
-public class DecisionSupportViews {
-    private static DecisionSupportViews _instance = null;
-    private Map<String, DSViewDTO> _dsViewsMap = null;
-    private boolean _loaded = false;
+    private static DecisionSupportViews instance;
 
     private DecisionSupportViews(){
     }
 
-    public void loadDSViews() throws InternalErrorException {
-        loadDSViews(false);
-    }
-    public void loadDSViews(boolean force) throws InternalErrorException{
-        if (!_loaded || force) {
-            CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-            Collection<DSViewDTO> DSViewDTOs = adminFD.searchAllDSViews();
-            loadDSViews(DSViewDTOs);
-            _loaded = true;
+    public static DecisionSupportViews getInstance() {
+        if (instance == null) {
+            instance = new DecisionSupportViews();
         }
+        return instance;
     }
 
-    public void loadDSViewsById(Collection<String> dsViewIds) throws InternalErrorException, InstanceNotFoundException {
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        for (String dsViewId : dsViewIds){
-            DSViewDTO DSViewDTO = adminFD.searchDSView(dsViewId);   //TODO Load all in one call
-            registerDSView(DSViewDTO);
-        }
-    }
-
-    public void loadDSViews(Collection<DSViewDTO> dsViewDTOs) throws InternalErrorException{
-        init();
-        for (DSViewDTO dsViewDTO : dsViewDTOs) {
-            registerDSView(dsViewDTO);
-        }
-    }
-
-    public void registerDSView(DSViewDTO DSViewDTO){
-        getDSViewsMap().put(DSViewDTO.getDsViewId(), DSViewDTO);
-        Logger.getLogger(DecisionSupportViews.class).info("Registering dsv: '" + DSViewDTO.getDsViewId() + "'.");
-    }
-
-    public DSViewDTO getDSViewDTO(String dsViewId){
-        return getDSViewsMap().get(dsViewId);
-    }
-
-    public List<DSViewDTO> getAllDSViews(){
-        return new ArrayList<DSViewDTO>(getDSViewsMap().values());
-    }
-
-    public Collection<String> getAllDSViewIds(){
-        return new ArrayList<String>(getDSViewsMap().keySet());
-    }
-
-    public void removeDSView(String dsViewId) throws InternalErrorException{
-        getDSViewsMap().remove(dsViewId);
-    }
-
-    public static DecisionSupportViews getInstance(){
-        if (_instance == null){
-            _instance = new DecisionSupportViews();
-        }
-        return _instance;
-    }
-
-    private void init(){
-        getDSViewsMap().clear();
-    }
-
-    private Map<String, DSViewDTO> getDSViewsMap(){
-        if (getInstance()._dsViewsMap ==null){
-            getInstance()._dsViewsMap = new HashMap<String, DSViewDTO>();
-        }
-        return getInstance()._dsViewsMap;
-    }
-
-    public int generateHashCode() {
-        return generateHashCode(getAllDSViews());
-    }
-
-    public static int generateHashCode(Collection<DSViewDTO> dsViewDTOs) {
-        List<DSViewDTO> dsViewDTOList = new ArrayList<DSViewDTO>(dsViewDTOs);
-        Collections.sort(dsViewDTOList, new DSViewComparator());
-        List<String> defs = new ArrayList<String>();
-        for(DSViewDTO dsViewDTO : dsViewDTOList){
-            defs.add(dsViewDTO.getDSViewSrc());
-        }
-        return defs.hashCode();
-    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

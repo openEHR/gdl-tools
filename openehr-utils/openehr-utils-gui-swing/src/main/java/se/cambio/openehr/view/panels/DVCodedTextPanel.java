@@ -4,7 +4,7 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.openehr.model.archetype.vo.CodedTextVO;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.UserConfigurationManager;
 

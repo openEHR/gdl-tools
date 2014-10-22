@@ -2,7 +2,7 @@ package se.cambio.openehr.controller.session.data;
 
 import org.apache.log4j.Logger;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.util.CMElement;
+import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.util.CMElementComparator;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -158,7 +158,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         registerCMElementsInCache(Collections.singleton(cmElement));
     }
 
-    public static <E extends CMElement>String generateChecksum(Collection<E> cmElements) throws InternalErrorException {
+    public static <E extends CMElement> String generateChecksum(Collection<E> cmElements) throws InternalErrorException {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             List<E> cmElementList = getSortedCMElementList(cmElements);

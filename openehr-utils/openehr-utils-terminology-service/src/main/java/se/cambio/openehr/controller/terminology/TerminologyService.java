@@ -2,7 +2,7 @@ package se.cambio.openehr.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnknownPropertyException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
@@ -48,7 +48,7 @@ public interface TerminologyService {
 	 * @param concept
 	 * @return returns a tree representation of subclasses
 	 */
-	public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)  
+	public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
 			throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;	
 	
 	

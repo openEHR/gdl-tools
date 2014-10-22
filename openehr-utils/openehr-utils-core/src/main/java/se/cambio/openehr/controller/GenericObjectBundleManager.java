@@ -15,8 +15,8 @@ import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.archetype.vo.*;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.archetype.vo.*;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.*;
 
 import java.util.*;

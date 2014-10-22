@@ -3,8 +3,8 @@ package se.cambio.openehr.controller.terminology.plugins;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.exceptions.*;
 import se.cambio.openehr.util.misc.CSVReader;
 

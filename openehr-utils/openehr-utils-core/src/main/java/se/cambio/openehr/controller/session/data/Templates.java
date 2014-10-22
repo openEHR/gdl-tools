@@ -1,11 +1,10 @@
 package se.cambio.openehr.controller.session.data;
 import org.openehr.am.archetype.Archetype;
+import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.controller.TemplateObjectBundleManager;
-import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.openehr.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
-import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -55,13 +54,7 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
     }
 
     public ImageIcon getIcon(String idTemplate) throws InternalErrorException, InstanceNotFoundException {
-        String entryType = getCMElementInCache(idTemplate).getRMName();
-        ImageIcon icon = OpenEHRConstUI.getIcon(entryType);
-        if (icon!=null){
-            return icon;
-        }else{
-            return ICON;
-        }
+        return ICON;
     }
 
     private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(TemplateDTO templateDTO){

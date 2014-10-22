@@ -1,6 +1,6 @@
 package se.cambio.openehr.controller.session.data;
 
-import se.cambio.openehr.model.archetype.vo.UnitVO;
+import se.cambio.cm.model.archetype.vo.UnitVO;
 
 import java.util.ArrayList;
 import java.util.Collection;

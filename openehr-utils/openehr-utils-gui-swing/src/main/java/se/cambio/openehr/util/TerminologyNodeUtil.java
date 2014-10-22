@@ -2,7 +2,7 @@ package se.cambio.openehr.util;
 
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;

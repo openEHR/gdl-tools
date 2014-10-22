@@ -2,7 +2,7 @@ package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.PathUtils;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;

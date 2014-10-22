@@ -1,6 +1,6 @@
 package se.cambio.openehr.controller.session.data;
 
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
+import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 
 
 public class Terminologies extends AbstractCMManager<TerminologyDTO> {

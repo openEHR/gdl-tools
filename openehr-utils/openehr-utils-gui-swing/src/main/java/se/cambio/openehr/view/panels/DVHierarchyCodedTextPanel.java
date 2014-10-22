@@ -6,7 +6,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.openehr.model.archetype.vo.CodedTextVO;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.util.SelectCodeActionListener;

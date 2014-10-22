@@ -4,7 +4,7 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Ordinals;
-import se.cambio.openehr.model.archetype.vo.OrdinalVO;
+import se.cambio.cm.model.archetype.vo.OrdinalVO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{

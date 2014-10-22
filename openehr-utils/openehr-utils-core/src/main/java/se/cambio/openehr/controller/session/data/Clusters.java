@@ -1,7 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import se.cambio.openehr.model.archetype.vo.ClusterVO;
+import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 

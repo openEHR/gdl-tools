@@ -1,6 +1,6 @@
 package se.cambio.openehr.util;
 
-import se.cambio.openehr.model.util.CMElement;
+import se.cambio.cm.model.util.CMElement;
 
 import java.util.Comparator;
 

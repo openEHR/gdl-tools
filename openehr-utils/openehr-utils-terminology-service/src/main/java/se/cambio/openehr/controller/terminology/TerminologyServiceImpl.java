@@ -3,12 +3,12 @@ package se.cambio.openehr.controller.terminology;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.cm.model.cm.element.dao.GenericCMElementDAO;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.terminology.dto.TerminologyDTO;
+import se.cambio.cm.model.util.CMElementDAOFactory;
 import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
-import se.cambio.openehr.model.cm.element.dao.GenericCMElementDAO;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
-import se.cambio.openehr.model.util.CMElementDAOFactory;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.*;
 

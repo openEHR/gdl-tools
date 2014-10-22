@@ -1,7 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import se.cambio.openehr.model.archetype.vo.CodedTextVO;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.ArrayList;
