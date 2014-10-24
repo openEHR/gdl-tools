@@ -5,6 +5,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
@@ -34,7 +35,7 @@ import java.util.*;
 public class NodeDefinitionConversor {
 
     public static SelectableNode<Object> getElementInstancesSelectionNodes(
-            Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar) {
+            RuleLineCollection definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar) {
         SelectableNode<Object> root = new SelectableNodeBuilder<Object>()
                 .setName(GDLEditorLanguageManager.getMessage("Definitions"))
                 .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
@@ -55,9 +56,9 @@ public class NodeDefinitionConversor {
         return root;
     }
 
-    public static void addElementInstanceToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar)
+    public static void addElementInstanceToNode(RuleLineCollection ruleLineCollection, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar)
             throws InstanceNotFoundException, InternalErrorException {
-        for (RuleLine ruleLine : ruleLines) {
+        for (RuleLine ruleLine : ruleLineCollection.getRuleLines()) {
             if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
                 SelectableNode<Object> nodeAux =
                         getArchetypeElementRuleLineElementNode((ArchetypeElementInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
@@ -69,13 +70,13 @@ public class NodeDefinitionConversor {
         }
     }
 
-    public static SelectableNode<Object> getArchetypeInstancesSelectionNodes(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
+    public static SelectableNode<Object> getArchetypeInstancesSelectionNodes(RuleLineCollection definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar){
         SelectableNode<Object> root =  new SelectableNodeBuilder<Object>()
                 .setName(GDLEditorLanguageManager.getMessage("ArchetypeInstances"))
                 .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
                 .createSelectableNode();
         try {
-            for (RuleLine ruleLine : definitionRuleLines) {
+            for (RuleLine ruleLine : definitionRuleLines.getRuleLines()) {
                 if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                     SelectableNode<Object> node = getArchetypeElementRuleLineElementNode((ArchetypeInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
                     if (node!=null){
@@ -244,9 +245,9 @@ public class NodeDefinitionConversor {
                 .createSelectableNode();
     }
 
-    public static void addElementInstanceAttributesAndFunctionsToNode(Collection<RuleLine> ruleLines, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar)
+    public static void addElementInstanceAttributesAndFunctionsToNode(RuleLineCollection ruleLineCollection, SelectableNode<Object> node, boolean onlyCDSDomain, ArchetypeReference ar)
             throws InstanceNotFoundException, InternalErrorException {
-        for (RuleLine ruleLine : ruleLines) {
+        for (RuleLine ruleLine : ruleLineCollection.getRuleLines()) {
             if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
                 ArchetypeElementInstantiationRuleLine aeirl = (ArchetypeElementInstantiationRuleLine)ruleLine;
                 if (aeirl.getArchetypeElement()!=null){
@@ -309,7 +310,7 @@ public class NodeDefinitionConversor {
                 .createSelectableNode();
     }
 
-    public static SelectableNode<Object> getNodeAttributesAndFunctions(Collection<RuleLine> definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar) {
+    public static SelectableNode<Object> getNodeAttributesAndFunctions(RuleLineCollection definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar) {
         SelectableNode<Object> root = getSingleNodeAttributesAndFunctions();
         try {
             addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, root, onlyCDSDomain, ar);

@@ -43,7 +43,7 @@ public class HTMLPanel extends JPanel implements RefreshablePanel{
             editorPanel.setContentType("text/html");
             editorPanel.setEditable(false);
             try{
-                String html = new GuideHTMLExporter(_controller.getEntity(), _controller.getCurrentLanguageCode(), ArchetypeManager.getInstance()).convertToHTML();
+                String html = new GuideHTMLExporter(ArchetypeManager.getInstance()).convertToHTML(_controller.getEntity(), _controller.getCurrentLanguageCode());
                 if (html!=null){
                     editorPanel.setText(html);
                 }

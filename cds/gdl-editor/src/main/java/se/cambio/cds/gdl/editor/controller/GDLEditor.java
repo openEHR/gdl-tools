@@ -24,14 +24,15 @@ import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -376,12 +377,12 @@ public class GDLEditor implements EditorController<Guide>{
         return keywords;
     }
 
-    public List<RuleLine> getPreconditionRuleLines() {
-        return getReadableGuide().getPreconditionRuleLines().getRuleLines();
+    public RuleLineCollection getPreconditionRuleLines() {
+        return getReadableGuide().getPreconditionRuleLines();
     }
 
-    public List<RuleLine> getDefinitionRuleLines() {
-        return getReadableGuide().getDefinitionRuleLines().getRuleLines();
+    public RuleLineCollection getDefinitionRuleLines() {
+        return getReadableGuide().getDefinitionRuleLines();
     }
 
     public ReadableGuide getReadableGuide() {
@@ -391,12 +392,12 @@ public class GDLEditor implements EditorController<Guide>{
         return _readableGuide;
     }
 
-    public List<RuleLine> getConditionRuleLines() {
-        return _ruleAtEdit.getConditionRuleLines().getRuleLines();
+    public RuleLineCollection getConditionRuleLines() {
+        return _ruleAtEdit.getConditionRuleLines();
     }
 
-    public List<RuleLine> getActionsRuleLines() {
-        return _ruleAtEdit.getActionRuleLines().getRuleLines();
+    public RuleLineCollection getActionsRuleLines() {
+        return _ruleAtEdit.getActionRuleLines();
     }
 
     public void editRuleElement(RuleLineElementWithValue<?> ruleLineElementWithValue) {
@@ -552,7 +553,7 @@ public class GDLEditor implements EditorController<Guide>{
         if (termDefinition.getTerms() != null) {
             Set<String> gtCodes = new HashSet<String>();
             gtCodes.addAll(termDefinition.getTerms().keySet());
-            for (RuleLine ruleLine: getDefinitionRuleLines()){
+            for (RuleLine ruleLine: getDefinitionRuleLines().getRuleLines()){
                 if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                     gtCodes.add(((ArchetypeInstantiationRuleLine)ruleLine).getGTCode());
                 }
@@ -655,7 +656,7 @@ public class GDLEditor implements EditorController<Guide>{
     private Guide constructCurrentGuide() throws IllegalStateException {
         GuideDefinition guideDefinition = new GuideDefinition();
         // Insert definition
-        for (RuleLine ruleLine : getDefinitionRuleLines()) {
+        for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()) {
             if (!ruleLine.isCommented()) {
                 if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
                     ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) ruleLine;
@@ -663,7 +664,7 @@ public class GDLEditor implements EditorController<Guide>{
                     if (ar != null) {
                         Map<String, ElementBinding> elementMap = new HashMap<String, ElementBinding>();
                         List<ExpressionItem> predicateStatements = new ArrayList<ExpressionItem>();
-                        for (RuleLine ruleLineAux : airl.getChildrenRuleLines()) {
+                        for (RuleLine ruleLineAux : airl.getChildrenRuleLines().getRuleLines()) {
                             if (!ruleLineAux.isCommented()) {
                                 if (ruleLineAux instanceof ArchetypeElementInstantiationRuleLine) {
                                     ArchetypeElementInstantiationRuleLine aeirl = (ArchetypeElementInstantiationRuleLine) ruleLineAux;
@@ -706,7 +707,7 @@ public class GDLEditor implements EditorController<Guide>{
         }
 
         // Insert preconditions
-        List<ExpressionItem> preConditions = convertToExpressionItems(getPreconditionRuleLines());
+        List<ExpressionItem> preConditions = convertToExpressionItems(getPreconditionRuleLines().getRuleLines());
         guideDefinition.setPreConditionExpressions(preConditions);
 
         // Insert rules
@@ -1240,7 +1241,7 @@ public class GDLEditor implements EditorController<Guide>{
     */
     private Collection<String> getArchetypeBindingCodesUsed(){
         ArrayList<String> archetypeBindingCodesUsed = new ArrayList<String>();
-        for (RuleLine ruleLine : getDefinitionRuleLines()){
+        for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()){
             if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                 ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine = (ArchetypeInstantiationRuleLine) ruleLine;
                 archetypeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());

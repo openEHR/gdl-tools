@@ -3,7 +3,7 @@ package se.cambio.cm.model.orderset.dao;
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
 import se.cambio.cm.model.orderset.dto.OrderSetDTO;
 
-public class SQLOrdersetDAOSQL extends SQLGenericCMElementDAO<OrderSetDTO> {
+public class SQLOrderSetDAOSQL extends SQLGenericCMElementDAO<OrderSetDTO> {
 
 }
 /*

@@ -14,7 +14,7 @@ import java.util.*;
 
 public abstract class AbstractCMManager<E extends CMElement> {
 
-    private static long MAX_CHECK_WAITING_TIME_IN_MILLIS = 30000; //30 seg
+    private static long MAX_CHECK_WAITING_TIME_IN_MILLIS = 5000; //5 seg
     private Map<String, E> cmElementMap;
     private boolean useCache = true;
     private Date lastCheckForUpdates;

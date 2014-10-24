@@ -2,9 +2,9 @@ package se.cambio.cds.controller.session.data;
 
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.util.GuideCompiler;
 import se.cambio.cds.util.GuideCompilerFactory;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
@@ -13,13 +13,15 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class Guides extends AbstractCMManager<GuideDTO>{
+public class Guides extends AbstractCMManager<GuideDTO> {
     private static Guides _instance = null;
     private static GuideCompiler guideCompiler;
 
-    private Guides(){
+    public Guides(){
     }
 
     @Override
@@ -86,12 +88,24 @@ public class Guides extends AbstractCMManager<GuideDTO>{
         return getGuide(guideDTO);
     }
 
-    public static Guide getGuide(GuideDTO guideDTO){
+    public Guide getGuide(GuideDTO guideDTO) throws InternalErrorException {
         if (guideDTO!=null){
-            return (Guide)IOUtils.getObject(guideDTO.getGuideObject());
+            if (guideDTO.getGuideObject() == null){
+                parseGuide(guideDTO);
+            }
+            Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
+            return guide;
         }else{
             return null;
         }
+    }
+
+    public Map<String, Guide> getGuidesMap(Collection<String> guideIds) throws InstanceNotFoundException, InternalErrorException {
+        Map<String, Guide> guideMap = new HashMap<String, Guide>();
+        for(String guideId: guideIds){
+            guideMap.put(guideId, getGuide(guideId));
+        }
+        return guideMap;
     }
 
     public static Guides getInstance(){

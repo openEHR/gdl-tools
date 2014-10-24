@@ -19,7 +19,7 @@ public class ForAllOperatorRuleLine extends ExpressionRuleLine implements Condit
     
     public ExpressionItem toExpressionItem(){
 	return new UnaryExpression(
-		    convertToExpressionItem(getChildrenRuleLines(),0), 
+		    convertToExpressionItem(getChildrenRuleLines().getRuleLines(),0),
 		    OperatorKind.FOR_ALL);
     }
 }/*

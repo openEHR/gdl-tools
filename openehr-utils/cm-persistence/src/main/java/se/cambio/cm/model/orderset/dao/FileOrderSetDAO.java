@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class FileOrderSetDAO extends FileGenericCMElementDAO<OrderSetDTO> {
     public FileOrderSetDAO() {
-        super(OrderSetDTO.class, UserConfigurationManager.getStudiesFolder(), Collections.singleton("ost"));
+        super(OrderSetDTO.class, UserConfigurationManager.getOrderSetsFolder(), Collections.singleton("ost"));
     }
 }
 /*

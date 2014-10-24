@@ -2,11 +2,11 @@ package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public abstract class RuleLine {
@@ -15,7 +15,7 @@ public abstract class RuleLine {
     private ArrayList<RuleLineElement> ruleLineElements = null;
     private boolean commented = false;
     private RuleLine parentRuleLine = null;
-    private List<RuleLine> childrenRuleLines = null;
+    private RuleLineCollection childrenRuleLines = null;
     private ReadableGuide readableGuide;
 
     public RuleLine(String name, String description) {
@@ -23,10 +23,10 @@ public abstract class RuleLine {
         this.name = name;
         this.description = description;
         this.ruleLineElements = new ArrayList<RuleLineElement>();
-        this.childrenRuleLines = new ArrayList<RuleLine>();
+        this.childrenRuleLines = new RuleLineCollection(readableGuide);
     }
 
-    public void setReadableRule(ReadableGuide readableGuide) {
+    public void setReadableGuide(ReadableGuide readableGuide) {
         this.readableGuide = readableGuide;
     }
 
@@ -87,7 +87,7 @@ public abstract class RuleLine {
 
     public void setCommented(boolean commented){
         this.commented = commented;
-        for (RuleLine ruleLine : getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             ruleLine.setCommented(commented);
         }
     }
@@ -99,7 +99,7 @@ public abstract class RuleLine {
         this.parentRuleLine = parentRuleLine;
     }
 
-    public List<RuleLine> getChildrenRuleLines() {
+    public RuleLineCollection getChildrenRuleLines() {
         return childrenRuleLines;
     }
 

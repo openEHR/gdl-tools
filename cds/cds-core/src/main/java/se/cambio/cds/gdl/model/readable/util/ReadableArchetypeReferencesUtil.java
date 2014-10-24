@@ -53,7 +53,7 @@ public class ReadableArchetypeReferencesUtil {
     private static String getPredicateDescription(ArchetypeInstantiationRuleLine airl){
         StringBuffer sb = new StringBuffer();
         boolean first = true;
-        for (RuleLine ruleLine : airl.getChildrenRuleLines()) {
+        for (RuleLine ruleLine : airl.getChildrenRuleLines().getRuleLines()) {
             if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
                 WithElementPredicateAttributeDefinitionRuleLine wpadrl = (WithElementPredicateAttributeDefinitionRuleLine)ruleLine;
                 if (first){

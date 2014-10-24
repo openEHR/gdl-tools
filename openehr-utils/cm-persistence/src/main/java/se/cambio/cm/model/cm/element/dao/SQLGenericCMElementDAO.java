@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -22,12 +23,28 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
         EntityManager em = null;
         try{
             em = getEntityManagerFactory().createEntityManager();
-            return (Collection<E>)em.createQuery("SELECT e FROM "+ getCMElementClassName()+" e WHERE e.id in (:ids)").setParameter("ids", ids).getResultList();
+            Collection<E> cmElements = (Collection<E>)em.createQuery("SELECT e FROM "+ getCMElementClassName()+" e WHERE e.id in (:ids)").setParameter("ids", ids).getResultList();
+            if (cmElements.size()<ids.size()){
+                checkMissingInstance(ids, cmElements);
+            }
+            return cmElements;
         }catch(Exception e){
             throw new InternalErrorException(e);
         }finally {
             if (em!=null){
                 em.close();
+            }
+        }
+    }
+
+    private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {
+        Collection<String> foundIds = new ArrayList<String>();
+        for (CMElement cmElement: cmElements){
+            foundIds.add(cmElement.getId());
+        }
+        for(String id: ids){
+            if (!foundIds.contains(id)){
+                throw new InstanceNotFoundException(id, getCMElementClassName());
             }
         }
     }
@@ -92,6 +109,9 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
         try{
             em = getEntityManagerFactory().createEntityManager();
             E cmElement = em.find(getCMElementClass(), id);
+            if (cmElement==null){
+                throw new InstanceNotFoundException(id, getCMElementClassName());
+            }
             em.getTransaction().begin();
             em.remove(cmElement);
             em.getTransaction().commit();

@@ -12,9 +12,18 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ExportToHTMLAction extends AbstractAction {
 
@@ -37,8 +46,31 @@ public class ExportToHTMLAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         Guide guide = controller.getEntity();
-        new GuideHTMLExporter(guide, controller.getCurrentLanguageCode(), ArchetypeManager.getInstance()).exportToHTML(
-                EditorManager.getActiveEditorWindow(), guide.getId());
+        GuideHTMLExporter guideHTMLExporter = new GuideHTMLExporter(ArchetypeManager.getInstance());
+        exportToHTML(EditorManager.getActiveEditorWindow(), guide, controller.getCurrentLanguageCode(), guideHTMLExporter);
+    }
+
+    public void exportToHTML(Window owner, Guide guide, String lang,GuideHTMLExporter guideHTMLExporter){
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("HTML",new String[]{"html"});
+        fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));
+        fileChooser.setFileFilter(filter);
+        File selectedFile = new File(guide.getId()+".html");
+        fileChooser.setSelectedFile(selectedFile);
+        int result = fileChooser.showSaveDialog(owner);
+        if (result != JFileChooser.CANCEL_OPTION){
+            try{
+                selectedFile = fileChooser.getSelectedFile();
+                FileWriter fstream = new FileWriter(selectedFile);
+                BufferedWriter out = new BufferedWriter(fstream);
+                out.write(guideHTMLExporter.convertToHTML(guide, lang));
+                out.close();
+            }catch(IOException e){
+                ExceptionHandler.handle(e);
+            }catch(InternalErrorException e){
+                ExceptionHandler.handle(e);
+            }
+        }
     }
 }
 /*

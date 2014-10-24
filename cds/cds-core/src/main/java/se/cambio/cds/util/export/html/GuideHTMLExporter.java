@@ -15,25 +15,22 @@ import java.util.Map;
 
 public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
 
-    private ArchetypeManager archetypeManager;
-    public GuideHTMLExporter(Guide guide, String lang, ArchetypeManager archetypeManager) {
-        super(guide, lang);
-        this.archetypeManager = archetypeManager;
+    public GuideHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override
     public Map<String, Object> getEntityObjectsMap() throws InternalErrorException {
-        Guide guide = getEntity();
         String lang = getLanguage();
-        ReadableGuide readableGuide = GuideImporter.importGuide(guide, lang, archetypeManager);
+        ReadableGuide readableGuide = GuideImporter.importGuide(getEntity(), lang, getArchetypeManager());
         Collection<String> htmlReadableRules = getHTMLReadableRules(readableGuide, lang);
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        objectMap.put("guide", guide);
-        objectMap.put("guide_details", guide.getDescription().getDetails().get(lang));
+        objectMap.put("guide", getEntity());
+        objectMap.put("guide_details", getEntity().getDescription().getDetails().get(lang));
         objectMap.put("guide_definitions", readableGuide);
         objectMap.put("guide_preconditions", readableGuide.getPreconditionRuleLines().getRuleLines());
         objectMap.put("guide_rules", htmlReadableRules);
-        objectMap.put("guide_terms", guide.getOntology().getTermDefinitions().get(lang).getTerms());
+        objectMap.put("guide_terms", getEntity().getOntology().getTermDefinitions().get(lang).getTerms());
         return objectMap;
     }
 

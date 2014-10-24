@@ -1,6 +1,7 @@
 package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.model.app.CDSApp;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -9,8 +10,8 @@ import java.util.Map;
 
 public class CDSAppHTMLExporter extends ClinicalModelHTMLExporter<CDSApp> {
 
-    public CDSAppHTMLExporter(CDSApp entity, String lang) {
-        super(entity, lang);
+    public CDSAppHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override

@@ -10,7 +10,7 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.study.GTCodeReference;
 import se.cambio.cds.model.study.Study;
-import se.cambio.cds.util.exceptions.GuideNotFoundException;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class StudyHTMLExporter extends ClinicalModelHTMLExporter<Study> {
 
-    public StudyHTMLExporter(Study entity, String lang) {
-        super(entity, lang);
+    public StudyHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override

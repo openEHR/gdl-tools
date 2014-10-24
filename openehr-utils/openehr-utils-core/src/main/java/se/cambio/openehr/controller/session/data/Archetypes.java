@@ -40,8 +40,12 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
 
     public void proccessArchetypes(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
         for (ArchetypeDTO archetypeDTO: archetypeDTOs){
-            new ArchetypeObjectBundleManager(archetypeDTO, getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
+            processArchetype(archetypeDTO);
         }
+    }
+
+    public void processArchetype(ArchetypeDTO archetypeDTO){
+        new ArchetypeObjectBundleManager(archetypeDTO, getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
     }
 
     private void registerArchetypeDTOs(Collection<ArchetypeDTO> archetypeDTOs) {
@@ -105,12 +109,11 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         return archetypes;
     }
 
-    private static Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO){
+    public Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO){
+        if (archetypeDTO.getAom() == null){
+            processArchetype(archetypeDTO);
+        }
         return (Archetype)IOUtils.getObject(archetypeDTO.getAom());
-    }
-
-    private Archetype getArchetypeAOM(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
-        return (Archetype)IOUtils.getObject(getCMElement(archetypeId).getAom());
     }
 
     private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO){

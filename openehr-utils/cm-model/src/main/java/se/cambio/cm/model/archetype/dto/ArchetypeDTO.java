@@ -2,9 +2,9 @@ package se.cambio.cm.model.archetype.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -15,7 +15,7 @@ public class ArchetypeDTO implements CMElement{
 
     @Id
     private java.lang.String id;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private java.lang.String source;
     private byte[] aom;
     private byte[] aobcVO;

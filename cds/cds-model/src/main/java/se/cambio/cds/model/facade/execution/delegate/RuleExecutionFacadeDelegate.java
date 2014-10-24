@@ -1,8 +1,8 @@
 package se.cambio.cds.model.facade.execution.delegate;
 
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 

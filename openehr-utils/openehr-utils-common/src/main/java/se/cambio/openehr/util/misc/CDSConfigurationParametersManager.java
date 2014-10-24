@@ -22,7 +22,7 @@ public final class CDSConfigurationParametersManager {
     public static String KM_SERVER_USER_PASSWD = "KMServer/password";
 
     public static String USE_LOCAL_CM_CACHE = "CM/UseLocalCache";
-    private static String DSV_BASE_URL = "DSVServer/baseURL";
+    public static String DSV_BASE_URL = "DSVServer/baseURL";
     public static String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
 
     private static boolean usesJNDI;

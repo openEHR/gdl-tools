@@ -15,11 +15,9 @@ import java.util.Map;
 public class KBInstanceHTMLExporter extends ClinicalModelHTMLExporter<KBInstance> {
 
     private ArchetypeDataDefinitionHTMLRenderer archetypeDataDefinitionHTMLRenderer;
-    private ArchetypeManager archetypeManager;
 
-    public KBInstanceHTMLExporter(KBInstance entity, String lang, ArchetypeManager archetypeManager) {
-        super(entity, lang);
-        this.archetypeManager = archetypeManager;
+    public KBInstanceHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override
@@ -56,7 +54,7 @@ public class KBInstanceHTMLExporter extends ClinicalModelHTMLExporter<KBInstance
     }
     private ArchetypeDataDefinitionHTMLRenderer getArchetypeDataDefinitionHTMLRenderer() {
         if (archetypeDataDefinitionHTMLRenderer == null) {
-            archetypeDataDefinitionHTMLRenderer = new ArchetypeDataDefinitionHTMLRenderer(archetypeManager);
+            archetypeDataDefinitionHTMLRenderer = new ArchetypeDataDefinitionHTMLRenderer(getArchetypeManager());
         }
         return archetypeDataDefinitionHTMLRenderer;
     }

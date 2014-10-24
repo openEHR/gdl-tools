@@ -1,50 +1,25 @@
 package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.util.misc.CDSLanguageManager;
-import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.HTMLRenderer;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ClinicalModelHTMLExporter<E> {
 
+    private ArchetypeManager archetypeManager;
     private E entity;
     private String lang;
 
-    protected ClinicalModelHTMLExporter(E entity, String lang) {
-        this.entity = entity;
-        this.lang = lang;
-    }
-
-    public void exportToHTML(Window owner, String entityId){
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("HTML",new String[]{"html"});
-        fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));
-        fileChooser.setFileFilter(filter);
-        File selectedFile = new File(entityId+".html");
-        fileChooser.setSelectedFile(selectedFile);
-        int result = fileChooser.showSaveDialog(owner);
-        if (result != JFileChooser.CANCEL_OPTION){
-            try{
-                selectedFile = fileChooser.getSelectedFile();
-                FileWriter fstream = new FileWriter(selectedFile);
-                BufferedWriter out = new BufferedWriter(fstream);
-                out.write(convertToHTML());
-                out.close();
-            }catch(IOException e){
-                ExceptionHandler.handle(e);
-            }catch(InternalErrorException e){
-                ExceptionHandler.handle(e);
-            }
-        }
+    protected ClinicalModelHTMLExporter(ArchetypeManager archetypeManager) {
+        this.archetypeManager = archetypeManager;
     }
 
     private HashMap<String, String> getTextsHashMap() {
@@ -76,7 +51,9 @@ public abstract class ClinicalModelHTMLExporter<E> {
     }
 
 
-    public String convertToHTML() throws InternalErrorException {
+    public String convertToHTML(E entity, String lang) throws InternalErrorException {
+        this.entity = entity;
+        this.lang = lang;
         try {
             InputStream is = getInputStreamTemplate();
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
@@ -103,6 +80,10 @@ public abstract class ClinicalModelHTMLExporter<E> {
 
     public String getLanguage() {
         return lang;
+    }
+
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
     }
 }
 /*

@@ -1,7 +1,7 @@
 package se.cambio.cds.controller.guide;
 
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 

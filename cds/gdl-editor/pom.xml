@@ -41,7 +41,7 @@
                 <configuration>
                     <!-- Specifies the configuration file of the assembly plugin -->
                     <descriptors>
-                        <descriptor>source/main/assembly/assembly.xml</descriptor>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
@@ -174,7 +174,6 @@
             <groupId>org.openehr.utils</groupId>
             <artifactId>cm-persistence</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.sciss</groupId>

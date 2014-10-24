@@ -22,7 +22,7 @@ public interface CDSExecutionFacadeDelegate {
             Collection<String> guideIds,
             Collection<ArchetypeReference> ehrData,
             Calendar date)
-            throws InternalErrorException, PatientNotFoundException;
+            throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
 
     public List<RuleExecutionResult> execute(
             List<String> ehrIds,

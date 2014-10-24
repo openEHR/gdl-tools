@@ -54,7 +54,7 @@ public class DefinitionDependencyChecker {
                 found = true;
             }
         }
-        Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().iterator();
+        Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().getRuleLines().iterator();
         while(i2.hasNext() && !found){
             if (isBeingReferenced(ar, i2.next())){
                 found = true;
@@ -121,7 +121,7 @@ public class DefinitionDependencyChecker {
                 found = true;
             }
         }
-        Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().iterator();
+        Iterator<RuleLine> i2 = ruleLine.getChildrenRuleLines().getRuleLines().iterator();
         while(i2.hasNext() && !found){
             if (isBeingReferenced(gtCode, i2.next())){
                 found = true;

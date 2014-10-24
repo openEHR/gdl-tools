@@ -19,13 +19,11 @@ import java.io.UnsupportedEncodingException;
 public class DSViewParser {
 
     public static String DECISION_SUPPORT_VIEW_SCRIPT_ID = "decision-support-view";
-    private InputStream is;
 
-    public DSViewParser(InputStream is) {
-        this.is = is;
+    public DSViewParser() {
     }
 
-    public DecisionSupportViewBundle parseDSView(){
+    public DecisionSupportViewBundle parseDSView(InputStream is){
         try {
             InputStreamReader in = new InputStreamReader(is, "UTF-8");
             String dsvSrc = IOUtils.toString(in);

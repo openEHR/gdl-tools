@@ -37,19 +37,19 @@ public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionR
 
     public ExpressionItem toExpressionItem(){
         return new BinaryExpression(
-                convertToExpressionItem(getLeftRuleLineBranch().getChildrenRuleLines(),0),
-                convertToExpressionItem(getRightRuleLineBranch().getChildrenRuleLines(),0),
+                convertToExpressionItem(getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines(),0),
+                convertToExpressionItem(getRightRuleLineBranch().getChildrenRuleLines().getRuleLines(),0),
                 OperatorKind.OR);
     }
 
     public String toString(){
         StringBuffer sb = new StringBuffer();
         sb.append("((");
-        for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toString());
         }
         sb.append(") "+OpenEHRLanguageManager.getMessage("OrRLE")+" (");
-        for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toString());
         }
         sb.append("))");
@@ -59,11 +59,11 @@ public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionR
     public String toHTMLString(int level, String lang){
         StringBuffer sb = new StringBuffer();
         sb.append(getLevelSpace(level)+"((<br>");
-        for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
         }
         sb.append(getLevelSpace(level)+")"+getLevelSpace(level)+"<b>"+OpenEHRLanguageManager.getMessage("OrRLE")+"</b> (<br>");
-        for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
         }
         sb.append(getLevelSpace(level)+"))");

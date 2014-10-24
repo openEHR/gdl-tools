@@ -44,8 +44,8 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
                 cdsEntryRuleLineElement.getValue().getValue(),
                 null, name, CreateInstanceExpression.FUNCTION_CREATE_NAME);
         List<AssignmentExpression> assignmentExpressions = new ArrayList<AssignmentExpression>();
-        if (!getChildrenRuleLines().isEmpty()){
-            for(RuleLine childRuleLine: getChildrenRuleLines()){
+        if (!getChildrenRuleLines().getRuleLines().isEmpty()){
+            for(RuleLine childRuleLine: getChildrenRuleLines().getRuleLines()){
                 AssignmentExpressionRuleLine assignmentExpressionRuleLine = (AssignmentExpressionRuleLine)childRuleLine;
                 assignmentExpressions.add(assignmentExpressionRuleLine.toAssignmentExpression());
             }
@@ -60,7 +60,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
     public String toString(){
         StringBuffer sb = new StringBuffer();
         sb.append(super.toString());
-        for (RuleLine ruleLine : getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toString());
             sb.append("\n");
         }
@@ -70,7 +70,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
     public String toHTMLString(int level, String lang){
         StringBuffer sb = new StringBuffer();
         sb.append(toHTMLStringSingle(level, lang));
-        for (RuleLine ruleLine : getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
         }
         return sb.toString();
