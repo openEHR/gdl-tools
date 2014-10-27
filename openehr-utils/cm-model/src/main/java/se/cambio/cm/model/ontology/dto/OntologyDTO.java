@@ -2,10 +2,7 @@ package se.cambio.cm.model.ontology.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -13,7 +10,7 @@ import java.util.Date;
 public class OntologyDTO implements CMElement{
     @Id
     private String id = null;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String source = null;
     private Date lastUpdate;
 

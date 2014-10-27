@@ -2,12 +2,11 @@ package se.cambio.cds.gdl.editor;
 
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
+import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.session.data.Terminologies;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -37,6 +36,7 @@ public class GDLEditorMainTest extends TestCase {
     }
 
     public void testCompareSerializedGuides() throws Exception {
+        Archetype ar = ArchetypeManager.getInstance().getArchetypes().getArchetypeAOMById("openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1");
         UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE,"en");
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {

@@ -15,26 +15,26 @@ public class TerminologyFacadeDelegateFactory {
     }
 
     private static Class<?> getDelegateClass() throws InternalErrorException {
-	Class<?> theClass = null;
-	try {
-	    String delegateClassName = 
-		    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_TERMINOLOGY);
-	    theClass = Class.forName(delegateClassName);
-	} catch (Exception e) {
-	    throw new InternalErrorException(e);
-	}
-	return theClass;
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_TERMINOLOGY);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
+        return theClass;
     }
 
     public static TerminologyFacadeDelegate getDelegate()
-	    throws InternalErrorException {
-	try {
-	    return (TerminologyFacadeDelegate)getDelegateClass().newInstance();
-	} catch (InstantiationException e) {
-	    throw new InternalErrorException(e);
-	} catch (IllegalAccessException e) {
-	    throw new InternalErrorException(e);
-	}
+            throws InternalErrorException {
+        try {
+            return (TerminologyFacadeDelegate)getDelegateClass().newInstance();
+        } catch (InstantiationException e) {
+            throw new InternalErrorException(e);
+        } catch (IllegalAccessException e) {
+            throw new InternalErrorException(e);
+        }
     }
 }
 /*

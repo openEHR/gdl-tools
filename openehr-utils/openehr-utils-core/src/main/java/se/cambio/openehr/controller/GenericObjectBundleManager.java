@@ -485,6 +485,9 @@ public class GenericObjectBundleManager {
         int i = path.lastIndexOf("[");
         while(i > 0){
             String idArchetype = path.substring(i+1, path.lastIndexOf("]"));
+            if (idArchetype.contains(" ")){
+                idArchetype = idArchetype.split(" ")[0];
+            }
             Archetype archetype = null;
             if (idArchetype.startsWith("openEHR")) { //TODO remove dependency on openEHR archetypes
                 archetype = archetypeMap.get(idArchetype);

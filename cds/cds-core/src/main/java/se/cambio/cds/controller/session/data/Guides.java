@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.session.data;
 
+import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.util.GuideCompiler;
@@ -41,13 +42,21 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         }
     }
 
-    private void processGuide(GuideDTO guideDTO) {
+    public void processGuide(GuideDTO guideDTO) {
         try {
             if (guideDTO.getGuideObject() == null) {
+                Logger.getLogger(Guides.class).info("Parsing guideline '" + guideDTO.getId() + "'...");
+                long startTime = System.currentTimeMillis();
                 parseGuide(guideDTO);
+                long endTime = System.currentTimeMillis();
+                Logger.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
             }
             if (guideDTO.getCompiledGuide() == null) {
+                Logger.getLogger(Guides.class).info("Compiling guideline '" + guideDTO.getId() + "'...");
+                long startTime = System.currentTimeMillis();
                 compileGuide(guideDTO);
+                long endTime = System.currentTimeMillis();
+                Logger.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
             }
         } catch (InternalErrorException e){
             ExceptionHandler.handle(e);

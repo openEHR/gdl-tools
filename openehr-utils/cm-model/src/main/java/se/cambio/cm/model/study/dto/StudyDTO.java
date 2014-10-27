@@ -2,10 +2,7 @@ package se.cambio.cm.model.study.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -13,7 +10,7 @@ import java.util.Date;
 public class StudyDTO implements CMElement{
     @Id
     private String id;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String source;
     private Date lastUpdate;
 

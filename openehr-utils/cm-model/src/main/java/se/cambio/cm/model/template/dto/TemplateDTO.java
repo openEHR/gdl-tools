@@ -2,10 +2,7 @@ package se.cambio.cm.model.template.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,7 +11,7 @@ public class TemplateDTO implements CMElement{
     @Id
     private java.lang.String id;
     private java.lang.String arcehtypeId;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private java.lang.String source;
     private byte[] aom;
     private byte[] aobcVO;

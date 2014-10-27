@@ -17,7 +17,11 @@ import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
+import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.template.dto.TemplateDTO;
+import se.cambio.cm.model.util.CMElement;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -73,20 +77,29 @@ public class RuleElementEditor {
         DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS);
         dialog.setVisible(true);
         if (dialog.getAnswer()){
-            idArchetype = dialog.getSelectedArchetypeId();
-            if (idArchetype==null){
-                if (ar!=null){
-                    idArchetype = ar.getIdArchetype();
-                    idTemplate = ar.getIdTemplate();
+            try {
+                CMElement cmElement = dialog.getSelectedCMElement();
+                if (cmElement instanceof ArchetypeDTO){
+                    idArchetype = cmElement.getId();
+                } else if (cmElement instanceof TemplateDTO){
+                    idArchetype = ((TemplateDTO)cmElement).getArcehtypeId();
+                    idTemplate = cmElement.getId();
                 }
-            }else{
-                idTemplate = dialog.getSelectedTemplateId();
+                if (idArchetype==null){
+                    if (ar!=null){
+                        idArchetype = ar.getIdArchetype();
+                        idTemplate = ar.getIdTemplate();
+                    }
+                }
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            } catch (InstanceNotFoundException e) {
+                ExceptionHandler.handle(e);
             }
             if (idArchetype!=null){
                 String idDomain = dialog.getSelectedDomain();
                 ar = new ArchetypeReference(idDomain, idArchetype, idTemplate);
                 arrlde.setValue(ar);
-                //RuleLine ruleLine = arrlde.getParentRuleLine();
             }
         }
     }

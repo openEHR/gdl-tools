@@ -6,8 +6,7 @@ import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-
-import java.util.Collections;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CMElementProcessor<E extends CMElement> {
     ArchetypeManager archetypeManager;
@@ -16,13 +15,13 @@ public class CMElementProcessor<E extends CMElement> {
     public CMElementProcessor() {
     }
 
-    public void process(E cmElement) {
+    public void process(E cmElement) throws InternalErrorException {
         if (cmElement instanceof ArchetypeDTO) {
             getArchetypeManager().getArchetypes().processArchetype((ArchetypeDTO)cmElement);
         } else if (cmElement instanceof TemplateDTO) {
             getArchetypeManager().getTemplates().processTemplate((TemplateDTO) cmElement);
         } else if (cmElement instanceof GuideDTO) {
-           getGuides().processGuides(Collections.singleton((GuideDTO)cmElement));
+           getGuides().processGuide((GuideDTO)cmElement);
         }
     }
 

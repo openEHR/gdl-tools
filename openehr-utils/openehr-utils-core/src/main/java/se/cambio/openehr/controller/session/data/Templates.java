@@ -50,11 +50,11 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         }
     }
 
-    public void processTemplate(TemplateDTO templateDTO) {
+    public void processTemplate(TemplateDTO templateDTO) throws InternalErrorException {
         new TemplateObjectBundleManager(templateDTO, getArchetypes().getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
     }
 
-    private void registerTemplateDTOs(Collection<TemplateDTO> templateDTOs) {
+    private void registerTemplateDTOs(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
         for(TemplateDTO templateDTO: templateDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(templateDTO);
             Archetype archetype = getTemplateAOM(templateDTO);
@@ -83,7 +83,7 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         return archetypes;
     }
 
-    public Archetype getTemplateAOM(TemplateDTO templateDTO){
+    public Archetype getTemplateAOM(TemplateDTO templateDTO) throws InternalErrorException {
         if (templateDTO.getAom() == null){
             processTemplate(templateDTO);
         }

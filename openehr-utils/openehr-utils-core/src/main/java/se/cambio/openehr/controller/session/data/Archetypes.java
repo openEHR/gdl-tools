@@ -1,8 +1,8 @@
 package se.cambio.openehr.controller.session.data;
 import org.openehr.am.archetype.Archetype;
-import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -44,11 +44,11 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         }
     }
 
-    public void processArchetype(ArchetypeDTO archetypeDTO){
+    public void processArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException {
         new ArchetypeObjectBundleManager(archetypeDTO, getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
     }
 
-    private void registerArchetypeDTOs(Collection<ArchetypeDTO> archetypeDTOs) {
+    private void registerArchetypeDTOs(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
         for(ArchetypeDTO archetypeDTO: archetypeDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(archetypeDTO);
             Archetype archetype = getArchetypeAOM(archetypeDTO);
@@ -71,6 +71,9 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
 
     public static String getEntryType(final String archetypeId){
         final int i = archetypeId.indexOf('.');
+        if (i<0){
+            return null;
+        }
         final int j = archetypeId.substring(0,i).lastIndexOf('-');
         if (j+1<i){
             return archetypeId.substring(j+1,i);
@@ -109,7 +112,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         return archetypes;
     }
 
-    public Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO){
+    public Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO) throws InternalErrorException {
         if (archetypeDTO.getAom() == null){
             processArchetype(archetypeDTO);
         }

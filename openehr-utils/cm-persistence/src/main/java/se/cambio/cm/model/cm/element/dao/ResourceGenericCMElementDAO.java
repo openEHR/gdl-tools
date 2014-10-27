@@ -9,6 +9,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -44,6 +45,7 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
         }else{
             throw new InternalErrorException(new Exception("Resource list not found!"));
         }
+        checkMissingInstance(ids, cmElements);
         return cmElements;
     }
 
@@ -144,5 +146,25 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
             }
         }
         return null;
+    }
+
+    private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {
+        Collection<String> foundIds = new ArrayList<String>();
+        for (CMElement cmElement: cmElements){
+            foundIds.add(cmElement.getId());
+        }
+        for(String id: ids){
+            if (!foundIds.contains(id)){
+                throw new InstanceNotFoundException(id, getCMElementClassName());
+            }
+        }
+    }
+
+    private String getCMElementClassName() {
+        return getCMElementClass().getSimpleName();
+    }
+
+    private Class<E> getCMElementClass() {
+        return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

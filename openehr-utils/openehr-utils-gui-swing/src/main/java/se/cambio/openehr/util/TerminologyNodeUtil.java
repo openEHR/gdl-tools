@@ -38,17 +38,23 @@ public class TerminologyNodeUtil {
         return root;
     }
 
-    public static SelectableNode<Object> getSelectableNodeTerminologyCodes(TerminologyNodeVO node, Collection <String> selectedCodes, SelectableNode.SelectionMode selectionMode){
+    public static SelectableNode<Object> getSelectableNodeTerminologyCodes(
+            TerminologyNodeVO node,
+            Collection <String> selectedCodes,
+            SelectableNode.SelectionMode selectionMode){
         String code = node.getValue().getDefiningCode().getCodeString();
         String name = node.getValue().getValue() +" ("+code+")";
         boolean selected = selectedCodes!=null && selectedCodes.contains(code);
+        SelectableNode.SelectionPropagationMode propagationMode =
+                selectionMode.equals(SelectableNode.SelectionMode.MULTIPLE)?
+                        SelectableNode.SelectionPropagationMode.NONE:SelectableNode.SelectionPropagationMode.HIERARCHICAL;
         SelectableNode<Object> selectableNode =
                 new SelectableNodeBuilder<Object>()
                         .setName(name)
                         .setIcon(OpenEHRImageUtil.TERMSET)
                         .setObject(node.getValue())
                         .setSelectionMode(selectionMode)
-                        .setSelectionPropagationMode(SelectableNode.SelectionPropagationMode.NONE)
+                        .setSelectionPropagationMode(propagationMode)
                         .setSelected(selected)
                         .createSelectableNode();
         for (TerminologyNodeVO nodeAux : node.getChildren()) {

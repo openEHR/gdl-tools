@@ -2,10 +2,7 @@ package se.cambio.cm.model.terminology.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -15,7 +12,7 @@ public class TerminologyDTO implements CMElement{
     private static final long serialVersionUID = 2303245012L;
     @Id
     private String id = null;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String source = null;
     private Date lastUpdate;
 

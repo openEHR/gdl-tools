@@ -7,7 +7,7 @@ import org.openehr.am.template.FlatteningException;
 import org.openehr.am.template.OETParser;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
-import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.TemplateFlattener;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -26,23 +26,26 @@ public class TemplateObjectBundleManager {
         this.archetypeMap = archetypeMap;
     }
 
-    public void buildArchetypeObjectBundleCustomVO() {
+    public void buildArchetypeObjectBundleCustomVO() throws InternalErrorException {
         Object obj = null;
         if (templateDTO.getAobcVO() != null){
             obj = IOUtils.getObject(templateDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)){
-            Logger.getLogger(TemplateObjectBundleManager.class).debug("Parsing template '"+templateDTO.getId()+"'...");
+            Logger.getLogger(TemplateObjectBundleManager.class).info("Parsing template '"+templateDTO.getId()+"'...");
+            long startTime = System.currentTimeMillis();
             try{
                 generateTemplateData();
                 correctlyParsed = true;
+            }catch(InternalErrorException e){
+                throw e;
             }catch(Error e){
-                InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
-                ExceptionHandler.handle(iee);
+                new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }catch(Exception e){
-                InternalErrorException iee = new InternalErrorException(e);
-                ExceptionHandler.handle(iee);
+                new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }
+            long endTime = System.currentTimeMillis();
+            Logger.getLogger(TemplateObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
         }else{
             correctlyParsed = true;
         }

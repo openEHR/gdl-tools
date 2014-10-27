@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.ParameterizedType;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
                 foundCMElements.add(cmElement);
             }
         }
-        //TODO Instance not found exception if ids are not found
+        checkMissingInstance(ids, foundCMElements);
         return foundCMElements;
     }
 
@@ -153,6 +154,25 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         return lastModifiedDate;
     }
 
+    private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {
+        Collection<String> foundIds = new ArrayList<String>();
+        for (CMElement cmElement: cmElements){
+            foundIds.add(cmElement.getId());
+        }
+        for(String id: ids){
+            if (!foundIds.contains(id)){
+                throw new InstanceNotFoundException(id, getCMElementClassName());
+            }
+        }
+    }
+
+    private String getCMElementClassName() {
+        return getCMElementClass().getSimpleName();
+    }
+
+    private Class<E> getCMElementClass() {
+        return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

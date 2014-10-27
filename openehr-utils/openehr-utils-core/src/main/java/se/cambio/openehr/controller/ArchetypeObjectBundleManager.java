@@ -5,7 +5,6 @@ import org.openehr.am.archetype.Archetype;
 import se.acode.openehr.parser.ADLParser;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -21,23 +20,26 @@ public class ArchetypeObjectBundleManager {
         this.archetypeMap = archetypeMap;
     }
 
-    public void buildArchetypeObjectBundleCustomVO() {
+    public void buildArchetypeObjectBundleCustomVO() throws InternalErrorException {
         Object obj = null;
         if (archetypeDTO.getAobcVO() != null){
             obj = IOUtils.getObject(archetypeDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)){
-            Logger.getLogger(ArchetypeObjectBundleManager.class).debug("Parsing archetype '"+archetypeDTO.getId()+"'...");
+            Logger.getLogger(ArchetypeObjectBundleManager.class).info("Parsing archetype '" + archetypeDTO.getId() + "'...");
+            long startTime = System.currentTimeMillis();
             try{
                 generateArchetypeData();
                 correctlyParsed = true;
+            }catch(InternalErrorException e){
+                throw e;
             }catch(Error e){
-                InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
-                ExceptionHandler.handle(iee);
+                new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
             }catch(Exception e){
-                InternalErrorException iee = new InternalErrorException(e);
-                ExceptionHandler.handle(iee);
+                new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
             }
+            long endTime = System.currentTimeMillis();
+            Logger.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
         }else{
             correctlyParsed = true;
         }

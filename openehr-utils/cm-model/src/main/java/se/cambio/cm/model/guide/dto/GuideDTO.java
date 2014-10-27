@@ -2,10 +2,7 @@ package se.cambio.cm.model.guide.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -15,7 +12,7 @@ public class GuideDTO implements CMElement {
     private static final long serialVersionUID = 20120412L;
     @Id
     private String id;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String source;
     private byte[] guideObject;
     private byte[] compiledGuide;

@@ -2,7 +2,7 @@ package se.cambio.cds.view.swing.dialogs;
 
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
-import se.cambio.cm.model.template.dto.TemplateDTO;
+import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
@@ -248,7 +248,15 @@ public class DialogArchetypeChooser extends JDialog{
     class DoubleClickMouseListener extends MouseAdapter{
         public void mouseClicked(MouseEvent e) {
             if(e.getClickCount()>1){
-                if (getSelectedArchetypeId()!=null){
+                CMElement cmElement = null;
+                try {
+                    cmElement = getSelectedCMElement();
+                } catch (InternalErrorException e1) {
+                    ExceptionHandler.handle(e1);
+                } catch (InstanceNotFoundException e1) {
+                    ExceptionHandler.handle(e1);
+                }
+                if (cmElement!=null){
                     accept();
                 }
             }
@@ -415,31 +423,17 @@ public class DialogArchetypeChooser extends JDialog{
         return _answer;
     }
 
-    public String getSelectedArchetypeId() {
+    public CMElement getSelectedCMElement() throws InternalErrorException, InstanceNotFoundException {
         Object selected = null;
         if (getArchetypeTemplateTabbedPane().getSelectedIndex() == 0){
             selected = NodeConversor.getSelectedObject(getArchetypeNode());
             if (selected instanceof String){
-                return (String)selected;
+                return ArchetypeManager.getInstance().getArchetypes().getCMElement((String)selected);
             }
         } else {
             selected = NodeConversor.getSelectedObject(getTemplateNode());
             if (selected instanceof String){
-                return (String)selected;
-            }
-        }
-        return null;
-    }
-
-
-    public String getSelectedTemplateId() {
-        Object selected = null;
-        if (getArchetypeTemplateTabbedPane().getSelectedIndex() == 0){
-            return null;
-        }else{
-            selected = NodeConversor.getSelectedObject(getTemplateNode());
-            if (selected instanceof TemplateDTO){
-                return ((TemplateDTO)selected).getId();
+                return ArchetypeManager.getInstance().getTemplates().getCMElement((String)selected);
             }
         }
         return null;

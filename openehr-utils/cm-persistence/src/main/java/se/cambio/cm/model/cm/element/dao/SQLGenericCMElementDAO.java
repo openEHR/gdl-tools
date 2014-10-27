@@ -11,6 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public abstract class SQLGenericCMElementDAO<E extends CMElement> implements GenericCMElementDAO<E>{
 
@@ -127,7 +128,15 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
         EntityManager em = null;
         try{
             em = getEntityManagerFactory().createEntityManager();
-            return (Date)em.createQuery("SELECT MAX(e.lastUpdate) FROM "+ getCMElementClassName()+" e").getResultList();
+            List dates = em.createQuery("SELECT MAX(e.lastUpdate) FROM "+ getCMElementClassName()+" e").getResultList();
+            if (dates.isEmpty()){
+                return null;
+            }
+            Object dateObj = dates.iterator().next();
+            if (!(dateObj instanceof Date)){
+                 throw new InternalErrorException(new Exception("Expected date class, found '"+dateObj.getClass().getName()+"' instead."));
+            }
+            return (Date)dateObj;
         }catch(Exception e){
             throw new InternalErrorException(e);
         }finally {
@@ -136,6 +145,7 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
             }
         }
     }
+
     private String getCMElementClassName() {
         return getCMElementClass().getSimpleName();
     }

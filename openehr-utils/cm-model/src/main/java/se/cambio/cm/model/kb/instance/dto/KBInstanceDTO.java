@@ -10,7 +10,7 @@ import java.util.Date;
 public class KBInstanceDTO implements CMElement{
     @Id
     private String id;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String source;
     private Date lastUpdate;
 
