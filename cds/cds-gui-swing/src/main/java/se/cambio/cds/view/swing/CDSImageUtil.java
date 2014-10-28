@@ -117,9 +117,12 @@ public class CDSImageUtil {
     public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
     public static final ImageIcon STUDY_ICON = OpenEHRImageUtil.getIcon("study.png");
     public static final ImageIcon PIE_CHART_ICON = OpenEHRImageUtil.getIcon("chart_pie.png");
+    public static final ImageIcon ORDERSET_ICON = OpenEHRImageUtil.getIcon("orderset.png");
+    public static final ImageIcon INSTANCE_ICON = OpenEHRImageUtil.getIcon("instance.png");
+    public static final ImageIcon SCENARIO_ICON = OpenEHRImageUtil.getIcon("scenario.png");
 
 
-	/* Aggregation functions */
+    /* Aggregation functions */
 	public static final ImageIcon AF_ALL_ICON = OpenEHRImageUtil.getIcon("af_all.png");
 	public static final ImageIcon AF_DURATION_ICON = OpenEHRImageUtil.getIcon("af_duration.png");
 	public static final ImageIcon AF_LAST_ICON = OpenEHRImageUtil.getIcon("af_last.png");

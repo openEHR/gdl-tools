@@ -11,30 +11,40 @@ import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.cm.model.view.dto.DSViewDTO;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public enum CMType {
 
-    ARCHETYPE("archetypes", ArchetypeDTO.class),
-    TEMPLATE("templates", TemplateDTO.class),
-    TERMINOLOGY("terminologies", TerminologyDTO.class),
-    GUIDELINE("guidelines", GuideDTO.class),
-    VIEW("views", DSViewDTO.class),
-    STUDY("studies", StudyDTO.class),
-    INSTANCE("instances", KBInstanceDTO.class),
-    ORDERSET("ordersets", OrderSetDTO.class),
-    SCENARIO("scenarios", ScenarioDTO.class),
-    APP("apps", CDSAppDTO.class);
+    ARCHETYPE("archetypes", ArchetypeDTO.class, Collections.singleton("adl")),
+    TEMPLATE("templates", TemplateDTO.class, Collections.singleton("oet")),
+    TERMINOLOGY("terminologies", TerminologyDTO.class, Collections.singleton("csv")),
+    GUIDELINE("guidelines", GuideDTO.class, Collections.singleton("gdl")),
+    VIEW("views", DSViewDTO.class, Collections.singleton("dsv")),
+    STUDY("studies", StudyDTO.class, Collections.singleton("std")),
+    INSTANCE("instances", KBInstanceDTO.class, Collections.singleton("kbi")),
+    ORDERSET("ordersets", OrderSetDTO.class, Collections.singleton("ost")),
+    SCENARIO("scenarios", ScenarioDTO.class, Collections.singleton("scn")),
+    APP("apps", CDSAppDTO.class, Collections.singleton("app"));
 
     private final String id;
     private Class<? extends CMElement> cmElementClass;
+    private Collection<String> fileExtensions;
 
-    CMType(String id, Class<? extends CMElement> cmElementClass){
+    CMType(String id, Class<? extends CMElement> cmElementClass, Collection<String> fileExtensions){
         this.id = id;
         this.cmElementClass = cmElementClass;
+        this.fileExtensions = fileExtensions;
     }
 
     public Class<? extends CMElement> getCmElementClass() {
         return cmElementClass;
+    }
+
+    public Collection<String> getFileExtensions() {
+        return fileExtensions;
     }
 
     public String getId() {
@@ -48,6 +58,15 @@ public enum CMType {
             }
         }
         throw new InstanceNotFoundException(id, CMType.class.getName());
+    }
+
+    public static CMType getCMTypeByClass(Class<? extends CMElement> cmElementClass) throws InternalErrorException {
+        for (CMType cmType: CMType.values()){
+            if (cmType.getCmElementClass().equals(cmElementClass)){
+                return cmType;
+            }
+        }
+        throw new InternalErrorException(new InstanceNotFoundException(cmElementClass.getName(), CMElement.class.getName()));
     }
 
     public static Class<? extends CMElement> getCMElementClassById(String id) throws InstanceNotFoundException {

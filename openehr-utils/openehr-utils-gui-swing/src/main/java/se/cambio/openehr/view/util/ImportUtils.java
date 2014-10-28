@@ -67,7 +67,7 @@ public class ImportUtils {
 
     public static ArchetypeDTO getArchetypeDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
         FileGenericCMElementDAO<ArchetypeDTO> dao =
-                new FileGenericCMElementDAO<ArchetypeDTO>(ArchetypeDTO.class, file.getParentFile(), Collections.singleton("adl"));
+                new FileGenericCMElementDAO<ArchetypeDTO>(ArchetypeDTO.class, file.getParentFile());
         String fileName = file.getName();
         String archetypeId = fileName.substring(0, fileName.length()-".adl".length());
         Collection<ArchetypeDTO> archetypeDTOs = dao.searchByIds(Collections.singleton(archetypeId));
@@ -82,9 +82,9 @@ public class ImportUtils {
 
     public static TemplateDTO getTemplateDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
         FileGenericCMElementDAO<TemplateDTO> dao =
-                new FileGenericCMElementDAO<TemplateDTO>(TemplateDTO.class, file.getParentFile(), Collections.singleton("adl"));
+                new FileGenericCMElementDAO<TemplateDTO>(TemplateDTO.class, file.getParentFile());
         String fileName = file.getName();
-        String templateId = fileName.substring(0, fileName.length()-".adl".length());
+        String templateId = fileName.substring(0, fileName.length()-".oet".length());
         Collection<TemplateDTO> templateDTOs = dao.searchByIds(Collections.singleton(templateId));
         return templateDTOs.iterator().next();
     }

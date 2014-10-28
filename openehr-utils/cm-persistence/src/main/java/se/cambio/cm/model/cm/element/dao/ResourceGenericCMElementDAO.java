@@ -1,6 +1,7 @@
 package se.cambio.cm.model.cm.element.dao;
 
 import se.cambio.cm.model.util.CMElement;
+import se.cambio.cm.model.util.CMType;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.Resources;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
@@ -9,7 +10,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -20,10 +20,10 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     private Class<E> cmElementClass;
     private Collection<String> fileExtensions;
 
-    public ResourceGenericCMElementDAO(Class<E> cmElementClass, Collection<String> fileExtensions){
+    public ResourceGenericCMElementDAO(Class<E> cmElementClass){
         this.cmElementClass = cmElementClass;
-        this.fileExtensions = fileExtensions;
     }
+
     @Override
     public Collection<E> searchByIds(Collection<String> ids) throws InternalErrorException, InstanceNotFoundException {
         Collection<E> cmElements = new ArrayList<E>();
@@ -139,8 +139,8 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
         return Calendar.getInstance().getTime();
     }
 
-    private String matchingFileExtension(String fileName){
-        for(String fileExtension: fileExtensions){
+    private String matchingFileExtension(String fileName) throws InternalErrorException {
+        for(String fileExtension: getFileExtensions()){
             if (fileName.endsWith("."+fileExtension)){
                 return fileExtension;
             }
@@ -165,6 +165,13 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     }
 
     private Class<E> getCMElementClass() {
-        return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return cmElementClass;
+    }
+
+    public Collection<String> getFileExtensions() throws InternalErrorException {
+        if (fileExtensions == null) {
+            fileExtensions = CMType.getCMTypeByClass(getCMElementClass()).getFileExtensions();
+        }
+        return fileExtensions;
     }
 }

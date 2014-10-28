@@ -1,9 +1,9 @@
 package se.cambio.cm.model.kb.instance.dao;
 
-import se.cambio.cm.model.app.dto.CDSAppDTO;
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
+import se.cambio.cm.model.kb.instance.dto.KBInstanceDTO;
 
-public class SQLKBInstanceDAOSQL extends SQLGenericCMElementDAO<CDSAppDTO> {
+public class SQLKBInstanceDAOSQL extends SQLGenericCMElementDAO<KBInstanceDTO> {
 
 }
 /*

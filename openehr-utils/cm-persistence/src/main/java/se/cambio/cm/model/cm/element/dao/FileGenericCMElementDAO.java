@@ -1,6 +1,7 @@
 package se.cambio.cm.model.cm.element.dao;
 
 import se.cambio.cm.model.util.CMElement;
+import se.cambio.cm.model.util.CMType;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
@@ -12,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.ParameterizedType;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,10 +25,9 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     private File folder;
     private Collection<String> fileExtensions;
 
-    public FileGenericCMElementDAO(Class<E> cmElementClass, File folder, Collection<String> fileExtensions){
+    public FileGenericCMElementDAO(Class<E> cmElementClass, File folder) {
         this.cmElementClass = cmElementClass;
         this.folder = folder;
-        this.fileExtensions = fileExtensions;
     }
 
     @Override
@@ -102,8 +101,8 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         return cmElement;
     }
 
-    private String matchingFileExtension(String fileName){
-        for(String fileExtension: fileExtensions){
+    private String matchingFileExtension(String fileName) throws InternalErrorException {
+        for(String fileExtension: getFileExtensions()){
             if (fileName.endsWith("."+fileExtension)){
                 return fileExtension;
             }
@@ -122,7 +121,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     }
 
     private void upsert(E cmElement) throws InternalErrorException {
-        File file = new File(folder, cmElement.getId()+"."+fileExtensions.iterator().next());
+        File file = new File(folder, cmElement.getId() + "." + getFileExtensions().iterator().next());
         try {
             Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes());
         } catch (IOException e) {
@@ -131,14 +130,13 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     }
 
     @Override
-    public void remove(String id) throws InternalErrorException, InstanceNotFoundException {
-        File file = new File(folder, id+"."+fileExtensions.iterator().next());
+    public void remove(String id) throws InternalErrorException {
+        File file = new File(folder, id + "." + getFileExtensions().iterator().next());
         file.delete();
     }
 
     @Override
     public Date getLastUpdateDate() throws InternalErrorException {
-        Collection<E> cmElements = new ArrayList<E>();
         if (!folder.isDirectory()) {
             throw new FolderNotFoundException(folder.getAbsolutePath());
         }
@@ -171,7 +169,14 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     }
 
     private Class<E> getCMElementClass() {
-        return (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return cmElementClass;
+    }
+
+    public Collection<String> getFileExtensions() throws InternalErrorException {
+        if (fileExtensions == null) {
+            fileExtensions = CMType.getCMTypeByClass(getCMElementClass()).getFileExtensions();
+        }
+        return fileExtensions;
     }
 }
 /*

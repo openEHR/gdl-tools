@@ -1,13 +1,25 @@
-package se.cambio.cm.model.app.dao;
+package se.cambio.cds.controller.session.data;
 
-import se.cambio.cm.model.app.dto.CDSAppDTO;
-import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
-import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.cm.model.scenario.dto.ScenarioDTO;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
-public class FileAppDAO extends FileGenericCMElementDAO<CDSAppDTO> {
 
-    public FileAppDAO() {
-        super(CDSAppDTO.class, UserConfigurationManager.getAppsFolder());
+public class Scenarios extends AbstractCMManager<ScenarioDTO> {
+    public static Scenarios _instance = null;
+
+    public Scenarios(){
+    }
+
+    @Override
+    public Class<ScenarioDTO> getCMElementClass() {
+        return ScenarioDTO.class;
+    }
+
+    public static Scenarios getInstance(){
+        if (_instance == null){
+            _instance = new Scenarios();
+        }
+        return _instance;
     }
 }
 /*

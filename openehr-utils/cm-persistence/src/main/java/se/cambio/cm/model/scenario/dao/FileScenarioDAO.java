@@ -4,11 +4,9 @@ import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.scenario.dto.ScenarioDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.util.Collections;
-
 public class FileScenarioDAO extends FileGenericCMElementDAO<ScenarioDTO> {
     public FileScenarioDAO() {
-        super(ScenarioDTO.class, UserConfigurationManager.getScenariosFolder(), Collections.singleton("scn"));
+        super(ScenarioDTO.class, UserConfigurationManager.getScenariosFolder());
     }
 }
 /*

@@ -2,10 +2,7 @@ package se.cambio.cm.model.app.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,7 +11,7 @@ public class CDSAppDTO implements CMElement {
     private static final long serialVersionUID = 2012054542L;
     @Id
     private String id;
-    @Lob
+    @Column(columnDefinition="TEXT")
     private String source;
     private Date lastUpdate;
 
@@ -22,7 +19,7 @@ public class CDSAppDTO implements CMElement {
 
     @Override
     public String getId() {
-        return getId();
+        return id;
     }
 
     public void setId(String id) {
@@ -31,7 +28,7 @@ public class CDSAppDTO implements CMElement {
 
     @Override
     public String getSource() {
-        return getSource();
+        return source;
     }
 
     public void setSource(String source) {

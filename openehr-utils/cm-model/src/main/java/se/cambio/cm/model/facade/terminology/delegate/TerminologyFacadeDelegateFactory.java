@@ -3,10 +3,6 @@ package se.cambio.cm.model.facade.terminology.delegate;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
-/**
- * @author iago.corbal
- *
- */
 public class TerminologyFacadeDelegateFactory {
 
     private static String DELEGATE_CLASS_TERMINOLOGY = "TerminologyFacadeDelegate/Class";

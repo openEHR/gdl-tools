@@ -4,11 +4,9 @@ import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.study.dto.StudyDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.util.Collections;
-
 public class FileStudyDAO extends FileGenericCMElementDAO<StudyDTO> {
     public FileStudyDAO() {
-        super(StudyDTO.class, UserConfigurationManager.getStudiesFolder(), Collections.singleton("std"));
+        super(StudyDTO.class, UserConfigurationManager.getStudiesFolder());
     }
 }
 /*

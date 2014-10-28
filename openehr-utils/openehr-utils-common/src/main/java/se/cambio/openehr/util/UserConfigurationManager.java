@@ -38,6 +38,7 @@ public class UserConfigurationManager {
     private static File _configFile = null;
 
     private static Map<String, String> _defaultValues = new HashMap<String, String>();
+
     static{
         _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");
         _defaultValues.put(TEMPLATES_FOLDER_KW, "templates");

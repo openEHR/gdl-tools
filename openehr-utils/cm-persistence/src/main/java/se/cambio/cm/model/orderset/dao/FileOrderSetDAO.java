@@ -4,11 +4,9 @@ import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.orderset.dto.OrderSetDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.util.Collections;
-
 public class FileOrderSetDAO extends FileGenericCMElementDAO<OrderSetDTO> {
     public FileOrderSetDAO() {
-        super(OrderSetDTO.class, UserConfigurationManager.getOrderSetsFolder(), Collections.singleton("ost"));
+        super(OrderSetDTO.class, UserConfigurationManager.getOrderSetsFolder());
     }
 }
 /*
