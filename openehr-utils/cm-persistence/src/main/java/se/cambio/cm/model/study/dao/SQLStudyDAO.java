@@ -1,9 +1,9 @@
-package se.cambio.cm.model.app.dao;
+package se.cambio.cm.model.study.dao;
 
-import se.cambio.cm.model.app.dto.CDSAppDTO;
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
+import se.cambio.cm.model.study.dto.StudyDTO;
 
-public class SQLAppDAOSQL extends SQLGenericCMElementDAO<CDSAppDTO> {
+public class SQLStudyDAO extends SQLGenericCMElementDAO<StudyDTO> {
 
 }
 /*

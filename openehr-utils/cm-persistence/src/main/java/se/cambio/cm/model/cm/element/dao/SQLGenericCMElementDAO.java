@@ -21,6 +21,9 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
     @Override
     public Collection<E> searchByIds(Collection<String> ids)
             throws InternalErrorException, InstanceNotFoundException {
+        if (ids==null || ids.isEmpty()){
+            return new ArrayList<E>();
+        }
         EntityManager em = null;
         try{
             em = getEntityManagerFactory().createEntityManager();
@@ -134,7 +137,7 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
             }
             Object dateObj = dates.iterator().next();
             if (!(dateObj instanceof Date)){
-                 throw new InternalErrorException(new Exception("Expected date class, found '"+dateObj.getClass().getName()+"' instead."));
+                throw new InternalErrorException(new Exception("Expected date class, found '"+dateObj.getClass().getName()+"' instead."));
             }
             return (Date)dateObj;
         }catch(Exception e){

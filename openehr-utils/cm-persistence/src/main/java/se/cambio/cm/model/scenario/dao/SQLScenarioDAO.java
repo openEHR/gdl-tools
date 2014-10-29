@@ -1,9 +1,9 @@
-package se.cambio.cm.model.kb.instance.dao;
+package se.cambio.cm.model.scenario.dao;
 
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
-import se.cambio.cm.model.kb.instance.dto.KBInstanceDTO;
+import se.cambio.cm.model.scenario.dto.ScenarioDTO;
 
-public class SQLKBInstanceDAOSQL extends SQLGenericCMElementDAO<KBInstanceDTO> {
+public class SQLScenarioDAO extends SQLGenericCMElementDAO<ScenarioDTO> {
 
 }
 /*

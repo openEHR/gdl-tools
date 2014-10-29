@@ -1,9 +1,9 @@
-package se.cambio.cm.model.scenario.dao;
+package se.cambio.cm.model.app.dao;
 
+import se.cambio.cm.model.app.dto.CDSAppDTO;
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
-import se.cambio.cm.model.scenario.dto.ScenarioDTO;
 
-public class SQLScenarioDAOSQL extends SQLGenericCMElementDAO<ScenarioDTO> {
+public class SQLAppDAO extends SQLGenericCMElementDAO<CDSAppDTO> {
 
 }
 /*

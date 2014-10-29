@@ -1,9 +1,9 @@
-package se.cambio.cm.model.study.dao;
+package se.cambio.cm.model.orderset.dao;
 
 import se.cambio.cm.model.cm.element.dao.SQLGenericCMElementDAO;
-import se.cambio.cm.model.study.dto.StudyDTO;
+import se.cambio.cm.model.orderset.dto.OrderSetDTO;
 
-public class SQLStudyDAOSQL extends SQLGenericCMElementDAO<StudyDTO> {
+public class SQLOrderSetDAO extends SQLGenericCMElementDAO<OrderSetDTO> {
 
 }
 /*
