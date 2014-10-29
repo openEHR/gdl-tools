@@ -7,8 +7,8 @@ public class SelectableNodeBuilder<E> {
     private String name;
     private String description;
     private E object;
-    private SelectableNode.SelectionMode selectionMode;
-    private SelectableNode.SelectionPropagationMode selectionPropagationMode;
+    private SelectableNode.SelectionMode selectionMode = SelectableNode.SelectionMode.SINGLE;
+    private SelectableNode.SelectionPropagationMode selectionPropagationMode = SelectableNode.SelectionPropagationMode.HIERARCHICAL;
     private boolean selected;
     private boolean bold;
     private boolean italic;
