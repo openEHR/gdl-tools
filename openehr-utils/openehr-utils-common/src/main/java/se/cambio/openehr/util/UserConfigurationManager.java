@@ -19,7 +19,7 @@ public class UserConfigurationManager {
     public static String DOCUMENTS_FOLDER_KW = "DocumentsFolder";
     public static String VIEWS_FOLDER_KW = "ViewsFolder";
     public static String STUDIES_FOLDER_KW = "StudiesFolder";
-    public static String KB_INSTANCE_FOLDER_KW = "StudiesFolder";
+    public static String KB_INSTANCE_FOLDER_KW = "KBInstancesFolder";
 
     public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
     public static final String LANGUAGE = "Messages/Language";
