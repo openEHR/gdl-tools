@@ -18,16 +18,16 @@ import java.util.Collections;
 
 public enum CMType {
 
+    TERMINOLOGY("terminologies", TerminologyDTO.class, Collections.singleton("csv")),
     ARCHETYPE("archetypes", ArchetypeDTO.class, Collections.singleton("adl")),
     TEMPLATE("templates", TemplateDTO.class, Collections.singleton("oet")),
-    TERMINOLOGY("terminologies", TerminologyDTO.class, Collections.singleton("csv")),
     GUIDELINE("guidelines", GuideDTO.class, Collections.singleton("gdl")),
     VIEW("views", DSViewDTO.class, Collections.singleton("dsv")),
     STUDY("studies", StudyDTO.class, Collections.singleton("std")),
     INSTANCE("instances", KBInstanceDTO.class, Collections.singleton("kbi")),
     ORDERSET("ordersets", OrderSetDTO.class, Collections.singleton("ost")),
-    SCENARIO("scenarios", ScenarioDTO.class, Collections.singleton("scn")),
-    APP("apps", CDSAppDTO.class, Collections.singleton("app"));
+    APP("apps", CDSAppDTO.class, Collections.singleton("app")),
+    SCENARIO("scenarios", ScenarioDTO.class, Collections.singleton("scn"));
 
     private final String id;
     private Class<? extends CMElement> cmElementClass;

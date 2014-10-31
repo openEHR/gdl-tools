@@ -71,6 +71,12 @@ public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFaca
     }
 
     @Override
+    public <E extends CMElement> void removeAllCMElements(Class<E> cmElementClass) throws InternalErrorException {
+        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        dao.removeAll();
+    }
+
+    @Override
     public <E extends CMElement> String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException {
         GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
         return AbstractCMManager.generateChecksum(dao.searchAll());

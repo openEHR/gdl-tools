@@ -24,9 +24,9 @@ public class NodeConversor {
         SEARCH_ONLY_LEAVES, SEARCH_ONLY_PARENT, SEARCH_ALL
     }
 
-    public static void  setAllVisible(SelectableNode<?> raizNodo){
-        raizNodo.setVisible(true);
-        Enumeration<?> e = raizNodo.getAllchildren();
+    public static void  setAllVisible(SelectableNode<?> rootNode){
+        rootNode.setVisible(true);
+        Enumeration<?> e = rootNode.getAllchildren();
         while (e.hasMoreElements()){
             NodeConversor.setAllVisible((SelectableNode<?>)e.nextElement());
         }

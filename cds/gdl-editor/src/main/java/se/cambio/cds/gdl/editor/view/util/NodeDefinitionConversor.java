@@ -97,12 +97,12 @@ public class NodeDefinitionConversor {
         ArchetypeReference arAux = airl.getArchetypeReference();
         if (arAux != null){
             String idArchetype = arAux.getIdArchetype();
-            //String idTemplate = airl.getArchetypeReference().getArchetypeId();
             if ((!onlyCDSDomain || Domains.CDS_ID.equals(airl.getArchetypeReference().getIdDomain()) && (ar == null || ar.equals(airl.getArchetypeReference())))){
                 return new SelectableNodeBuilder<Object>()
                         .setName(ReadableArchetypeReferencesUtil.getName(airl))
                         .setDescription(ReadableArchetypeReferencesUtil.getHTMLTooltip(airl))
                         .setIcon(Archetypes.getIcon(idArchetype))
+                        .setObject(airl)
                         .createSelectableNode();
             }
         }

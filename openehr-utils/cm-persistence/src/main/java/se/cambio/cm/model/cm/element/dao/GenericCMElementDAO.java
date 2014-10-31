@@ -22,5 +22,7 @@ public interface GenericCMElementDAO<E extends CMElement> {
 
     public void remove(String id)  throws InternalErrorException, InstanceNotFoundException;
 
+    public void removeAll()  throws InternalErrorException;
+
     public Date getLastUpdateDate()  throws InternalErrorException;
 }

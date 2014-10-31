@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public abstract class SQLGenericCMElementDAO<E extends CMElement> implements GenericCMElementDAO<E>{
+public class SQLGenericCMElementDAO<E extends CMElement> implements GenericCMElementDAO<E>{
 
     private static String CDS_PERSISTENCE_UNIT = "cdsPU";
     private EntityManagerFactory emf;
@@ -118,6 +118,21 @@ public abstract class SQLGenericCMElementDAO<E extends CMElement> implements Gen
             }
             em.getTransaction().begin();
             em.remove(cmElement);
+            em.getTransaction().commit();
+        }finally {
+            if (em!=null){
+                em.close();
+            }
+        }
+    }
+
+    @Override
+    public void removeAll() throws InternalErrorException {
+        EntityManager em = null;
+        try{
+            em = getEntityManagerFactory().createEntityManager();
+            em.getTransaction().begin();
+            em.createNamedQuery("DELETE FROM "+ getCMElementClassName()).executeUpdate();
             em.getTransaction().commit();
         }finally {
             if (em!=null){

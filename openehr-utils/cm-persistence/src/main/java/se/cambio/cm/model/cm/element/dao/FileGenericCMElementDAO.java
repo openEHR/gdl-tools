@@ -55,7 +55,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
                 String fileName = listOfFiles[i].getName();
                 String fileExtension = matchingFileExtension(fileName);
                 if (fileExtension!=null) {
-                    String id = fileName.substring(0, fileName.length() - fileExtension.length() - 1);
+                    String id = getId(fileName, fileExtension);
                     ids.add(id);
                 }
             }
@@ -92,13 +92,17 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     public E getCMElement(String fileName, String fileExtension, InputStream fis, Date date) throws IOException, InternalErrorException {
         UnicodeBOMInputStream ubis = new UnicodeBOMInputStream(fis);
         ubis.skipBOM();
-        String id = fileName.substring(0, fileName.length() - fileExtension.length() - 1);
+        String id = getId(fileName, fileExtension);
         String src = IOUtils.toString(ubis, "UTF-8");
         E cmElement = new CMElementBuilder<E>().build(cmElementClass);
         cmElement.setId(id);
         cmElement.setSource(src);
         cmElement.setLastUpdate(date);
         return cmElement;
+    }
+
+    private String getId(String fileName, String fileExtension) {
+        return fileName.substring(0, fileName.length() - fileExtension.length() - 1);
     }
 
     private String matchingFileExtension(String fileName) throws InternalErrorException {
@@ -121,6 +125,9 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     }
 
     private void upsert(E cmElement) throws InternalErrorException {
+        if (!folder.isDirectory()) {
+            throw new FolderNotFoundException(folder.getAbsolutePath());
+        }
         File file = new File(folder, cmElement.getId() + "." + getFileExtensions().iterator().next());
         try {
             Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes());
@@ -131,8 +138,24 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
 
     @Override
     public void remove(String id) throws InternalErrorException {
+        if (!folder.isDirectory()) {
+            throw new FolderNotFoundException(folder.getAbsolutePath());
+        }
         File file = new File(folder, id + "." + getFileExtensions().iterator().next());
         file.delete();
+    }
+
+    @Override
+    public void removeAll() throws InternalErrorException {
+        File[] listOfFiles = folder.listFiles();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            File file = listOfFiles[i];
+            String matchingExtension = matchingFileExtension(file.getName());
+            if (matchingExtension != null){
+                String id = getId(file.getName(), matchingExtension);
+                remove(id);
+            }
+        }
     }
 
     @Override

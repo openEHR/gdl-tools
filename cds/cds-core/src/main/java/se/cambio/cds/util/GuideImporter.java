@@ -284,6 +284,7 @@ public class GuideImporter {
         }else{
             if (CreateInstanceExpression.FUNCTION_CREATE_NAME.equals(attribute)){
                 CreateInstanceActionRuleLine cirl = new CreateInstanceActionRuleLine();
+                ruleLines.add(cirl);
                 RuleLineCollection ruleLinesAssignmentInstance = new RuleLineCollection(cirl.getReadableGuide());
                 if (!(expressionItemAux instanceof MultipleAssignmentExpression)){
                     throw new InternalErrorException(new Exception("Unknown expression in creation statement '"+expressionItemAux.toString()+"'"));
@@ -296,7 +297,6 @@ public class GuideImporter {
                     cirl.addChildRuleLine(ruleLine);
                 }
                 cirl.setCDSEntryGTCodeRuleLineElementValue(gtCodeRuleLineElement);
-                ruleLines.add(cirl);
             }else if (OpenEHRConst.NULL_FLAVOR_ATTRIBUTE.equals(attribute)){
                 SetElementWithNullValueActionRuleLine sewnvrl = new SetElementWithNullValueActionRuleLine();
                 ruleLines.add(sewnvrl);
@@ -394,31 +394,32 @@ public class GuideImporter {
                     }
                     if (dv!=null){
                         ElementComparisonWithDVConditionRuleLine eccrl = new ElementComparisonWithDVConditionRuleLine();
+                        addRuleLine(eccrl, ruleLines, parentRuleLine);
                         eccrl.getArchetypeElementRuleLineElement().setValue(gtCodeRuleLineElement);
                         eccrl.getArchetypeDataValueRuleLineElement().setValue(dv);
                         eccrl.getArchetypeDataValueRuleLineElement().setArchetypeElementVO(archetypeElementVO);
                         eccrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
-                        addRuleLine(eccrl, ruleLines, parentRuleLine);
                     }else{
                         ElementInitializedConditionRuleLine eicrl = new ElementInitializedConditionRuleLine();
+                        addRuleLine(eicrl, ruleLines, parentRuleLine);
                         eicrl.getArchetypeElementRuleLineElement().setValue(gtCodeRuleLineElement);
                         eicrl.getExistenceOperatorRuleLineElement().setOperator(binaryExpression.getOperator());
-                        addRuleLine(eicrl, ruleLines, parentRuleLine);
                     }
                 }else if (binaryExpression.getRight() instanceof Variable){
                     Variable varRight = (Variable)binaryExpression.getRight();
                     String gtCodeAux = varRight.getCode();
                     ElementComparisonWithElementConditionRuleLine eccrl = new ElementComparisonWithElementConditionRuleLine();
+                    addRuleLine(eccrl, ruleLines, parentRuleLine);
                     eccrl.getArchetypeElementRuleLineElement().setValue(gtCodeRuleLineElement);
                     eccrl.getSecondArchetypeElementRuleLineElement().setValue(gtCodeELementMap.get(gtCodeAux).getGTCodeRuleLineElement());
                     eccrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
-                    addRuleLine(eccrl, ruleLines, parentRuleLine);
                 }else{
                     throw new InternalErrorException(new Exception("Unknown expression '"+binaryExpression.getRight().getClass().getName()+"'"));
                 }
             }else{
                 if (attribute.equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)){
                     ElementComparisonWithNullValueConditionRuleLine ecwnvc = new ElementComparisonWithNullValueConditionRuleLine();
+                    addRuleLine(ecwnvc, ruleLines, parentRuleLine);
                     ecwnvc.getArchetypeElementRuleLineElement().setValue(gtCodeRuleLineElement);
                     ConstantExpression constantExpression = (ConstantExpression)binaryExpression.getRight();
                     String dvStr = constantExpression.getValue();
@@ -427,16 +428,15 @@ public class GuideImporter {
                         ecwnvc.getNullValueRuleLineElement().setValue((DvCodedText)dv);
                     }
                     ecwnvc.getEqualityComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
-                    addRuleLine(ecwnvc, ruleLines, parentRuleLine);
                 }else{//Expression
                     ElementAttributeComparisonConditionRuleLine eaccrl = new ElementAttributeComparisonConditionRuleLine();
+                    addRuleLine(eaccrl, ruleLines, parentRuleLine);
                     eaccrl.getArchetypeElementAttributeRuleLineElement().setAttribute(attribute);
                     ArchetypeElementRuleLineElement aerle = new ArchetypeElementRuleLineElement(eaccrl);
                     aerle.setValue(gtCodeRuleLineElement);
                     eaccrl.getArchetypeElementAttributeRuleLineElement().setValue(aerle);
                     eaccrl.getExpressionRuleLineElement().setValue(binaryExpression.getRight());
                     eaccrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());
-                    addRuleLine(eaccrl, ruleLines, parentRuleLine);
                 }
             }
         }else{
@@ -467,8 +467,8 @@ public class GuideImporter {
             Map<String, GTCodeDefiner> gtCodeELementMap) throws InternalErrorException {
         if (OperatorKind.FOR_ALL.equals(unaryExpression.getOperator())){
             ForAllOperatorRuleLine forAllOperatorRuleLine = new ForAllOperatorRuleLine();
-            processExpressionItem(ruleLines, forAllOperatorRuleLine, unaryExpression.getOperand(), gtCodeELementMap);
             addRuleLine(forAllOperatorRuleLine, ruleLines, parentRuleLine);
+            processExpressionItem(ruleLines, forAllOperatorRuleLine, unaryExpression.getOperand(), gtCodeELementMap);
         }else{
             throw new InternalErrorException(new Exception("Unknown operator '"+unaryExpression.getOperator()+"'"));
         }

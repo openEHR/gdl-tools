@@ -23,11 +23,11 @@ public abstract class RuleLine {
         this.name = name;
         this.description = description;
         this.ruleLineElements = new ArrayList<RuleLineElement>();
-        this.childrenRuleLines = new RuleLineCollection(readableGuide);
     }
 
     public void setReadableGuide(ReadableGuide readableGuide) {
         this.readableGuide = readableGuide;
+        this.getChildrenRuleLines().setReadableGuide(readableGuide);
     }
 
     public String getName() {
@@ -100,11 +100,14 @@ public abstract class RuleLine {
     }
 
     public RuleLineCollection getChildrenRuleLines() {
+        if (childrenRuleLines == null) {
+            childrenRuleLines = new RuleLineCollection(readableGuide);
+        }
         return childrenRuleLines;
     }
 
     public void addChildRuleLine(RuleLine ruleLine){
-        childrenRuleLines.add(ruleLine);
+        getChildrenRuleLines().add(ruleLine);
         ruleLine.setParentRuleLine(this);
     }
 
@@ -121,6 +124,7 @@ public abstract class RuleLine {
         }
         return readableGuide;
     }
+
 
     public TermDefinition getTermDefinition() {
         return getReadableGuide().getTermDefinition();

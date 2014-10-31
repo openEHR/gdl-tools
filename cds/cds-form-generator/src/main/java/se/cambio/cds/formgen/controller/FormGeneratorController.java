@@ -9,7 +9,6 @@ import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegate;
-import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegateFactory;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -21,7 +20,6 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -176,13 +174,6 @@ public class FormGeneratorController {
             }
         }
         return _readableGuideMap;
-    }
-
-    public CDSExecutionFacadeDelegate getCDSFacadeDelegate() throws InternalErrorException{
-        if (cdsfd==null){
-            cdsfd = CDSExecutionFacadeDelegateFactory.getDelegate();
-        }
-        return cdsfd;
     }
 
     public String getLanguage(){

@@ -21,6 +21,10 @@ public class RuleLineCollection {
         return Collections.unmodifiableList(getRuleLinesI());
     }
 
+    public void setReadableGuide(ReadableGuide readableGuide) {
+        this.readableGuide = readableGuide;
+    }
+
     private List<RuleLine> getRuleLinesI() {
         if (ruleLines == null) {
             ruleLines = new ArrayList<RuleLine>();

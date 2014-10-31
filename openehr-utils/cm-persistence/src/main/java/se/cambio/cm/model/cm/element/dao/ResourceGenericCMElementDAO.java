@@ -135,6 +135,11 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     }
 
     @Override
+    public void removeAll() throws InternalErrorException {
+        throw new UnsupportedOperationException("Not allowed on resources DAO");
+    }
+
+    @Override
     public Date getLastUpdateDate() throws InternalErrorException {
         return Calendar.getInstance().getTime();
     }
