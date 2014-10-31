@@ -132,7 +132,7 @@ public class SQLGenericCMElementDAO<E extends CMElement> implements GenericCMEle
         try{
             em = getEntityManagerFactory().createEntityManager();
             em.getTransaction().begin();
-            em.createNamedQuery("DELETE FROM "+ getCMElementClassName()).executeUpdate();
+            em.createQuery("DELETE FROM "+ getCMElementClassName()+" e").executeUpdate();
             em.getTransaction().commit();
         }finally {
             if (em!=null){
