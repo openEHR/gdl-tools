@@ -10,7 +10,7 @@
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openehr-java-libs-version>1.0.10-SNAPSHOT</openehr-java-libs-version>
+        <openehr-java-libs-version>1.0.10</openehr-java-libs-version>
         <template-gen-version>0.95.3</template-gen-version>
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
@@ -64,16 +64,6 @@
                 <groupId>org.fusesource.mvnplugins</groupId>
                 <artifactId>maven-graph-plugin</artifactId>
                 <version>1.29</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <formats>
-                        <format>xml</format>
-                    </formats>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
