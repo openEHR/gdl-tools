@@ -72,19 +72,20 @@ public class CMImportExportManager {
                     Logger.getLogger(CMImportExportManager.class).warn("Skipping '"+entry.getName()+"' (invalid directory structure)");
                     continue;
                 }
-                String src = IOUtils.toString(zis, "UTF-8");
                 String id = entry.getName().substring(lastSlashIndex+1, lastDotIndex);
+                String src = IOUtils.toString(zis, "UTF-8");
                 CMElement cmElement = new CMElementBuilder().build(cmType.getCmElementClass());
                 cmElement.setId(id);
                 cmElement.setSource(src);
                 cmElement.setLastUpdate(new Date(entry.getTime()));
                 insertCMElementIntoMap(cmElementMap, cmType, cmElement);
             }
+            CMElementProcessor cmElementProcessor = new CMElementProcessor();
             for (CMType cmType: CMType.values()){
                 Collection<CMElement> cmElements = cmElementMap.get(cmType);
                 if (cmElements != null) {
                     for (CMElement cmElement : cmElements) {
-                        new CMElementProcessor().process(cmElement);
+                        cmElementProcessor.process(cmElement);
                         cmAFD.upsertCMElement(cmElement);
                     }
                 }

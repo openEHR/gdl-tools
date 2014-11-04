@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
-public class CMFileAndMamagerTest {
+public class CMFileAndManagerTest {
 
     @Before
     public void loadCM() throws URISyntaxException, InternalErrorException {

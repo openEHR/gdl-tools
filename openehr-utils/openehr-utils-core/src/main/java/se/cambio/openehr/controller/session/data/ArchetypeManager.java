@@ -206,7 +206,7 @@ public class ArchetypeManager {
         Collection<CodedTextVO> codedTextVOs = getCodedTexts().getCodedTextVOs(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
         Map<String, TemplateAttributeMap> templateAttributeMaps = new HashMap<String, TemplateAttributeMap>();
         for(CodedTextVO codedTextVO: codedTextVOs) {
-            if ("local".equals(codedTextVO.getTerminology())) {
+            if (!"local".equals(codedTextVO.getTerminology())) {
                 return null;
             }
             String attributeId = getIdentifier(codedTextVO.getName(), 0);

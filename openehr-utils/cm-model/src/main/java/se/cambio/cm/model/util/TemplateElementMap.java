@@ -1,12 +1,13 @@
 package se.cambio.cm.model.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class TemplateElementMap {
     private final String dataType;
     private final String path;
     private final String elementMapId;
-    private final Map<String, TemplateAttributeMap> attributeMaps;
+    private Map<String, TemplateAttributeMap> attributeMaps;
 
     public TemplateElementMap(String dataType, String path, String elementMapId, Map<String, TemplateAttributeMap> attributeMap) {
         this.dataType = dataType;
@@ -28,6 +29,9 @@ public class TemplateElementMap {
     }
 
     public Map<String, TemplateAttributeMap> getAttributeMaps() {
+        if (attributeMaps == null) {
+            attributeMaps = new HashMap<String, TemplateAttributeMap>();
+        }
         return attributeMaps;
     }
 }
