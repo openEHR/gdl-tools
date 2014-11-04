@@ -22,7 +22,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
      *
      */
     private static final long serialVersionUID = 1L;
-    private Collection<String> selectedCodes;
+    private Collection<DvCodedText> selectedDvCodeTexts;
     private JButton codedTextButton = null;
 
     public static String CODE_PROPERTY_CHANGE = "codeChange";
@@ -31,7 +31,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
         super(idElement, idTemplate, allowNull, requestFocus);
         this.setLayout(new BorderLayout());
         this.add(getCodedTextButton(), BorderLayout.CENTER);
-        selectedCodes = new ArrayList<String>();
+        selectedDvCodeTexts = new ArrayList<DvCodedText>();
     }
 
     protected JButton getCodedTextButton(){
@@ -51,19 +51,19 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
 
     public void setDataValue(DataValue dataValue) {
         String label;
-        selectedCodes.clear();
+        selectedDvCodeTexts.clear();
         if (dataValue instanceof DvCodedText){
-            String selectedCode = ((DvCodedText)dataValue).getDefiningCode().getCodeString();
-            selectedCodes.add(selectedCode);
-            CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCode);
+            DvCodedText selectedCodedText = (DvCodedText)dataValue;
+            selectedDvCodeTexts.add(selectedCodedText);
+            CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodedText.getCode());
             if (codedTextVO!=null){
                 label = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
             }else{
                 //Asking directly to the terminology service for a description
                 //TODO Take it out and make it a generic call
-                label = selectedCode;
+                label = selectedCodedText.getCode();
                 String terminologyId = ((DvCodedText)dataValue).getDefiningCode().getTerminologyId().getValue();
-                CodePhrase cp = new CodePhrase(terminologyId, selectedCode);
+                CodePhrase cp = new CodePhrase(terminologyId, selectedCodedText.getCode());
                 try {
                     label = OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveTerm(cp, OpenEHRDataValuesUI.getLanguageCodePhrase());
                 } catch (Exception e) {
@@ -77,7 +77,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
                     }
                 }
                 if (label==null){
-                    label = selectedCode;
+                    label = selectedCodedText.getCode();
                 }
             }
             if (label.length()>40){
@@ -88,12 +88,10 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
     }
 
     public DataValue getDataValue(){
-        if (selectedCodes.isEmpty()){
+        if (selectedDvCodeTexts.isEmpty()){
             return null;
         }else{
-            CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodes.iterator().next());
-            String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
-            return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
+            return selectedDvCodeTexts.iterator().next();
         }
     }
 
@@ -121,12 +119,11 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
     public void setSelectedTerminologyCodes(Collection<String> terminologyCodes) {
         StringBuffer label = new StringBuffer();
         String finalLabel = null;
-        selectedCodes.clear();
+        selectedDvCodeTexts.clear();
         String prefix = "";
         String terminologyId = getTerminologyId();
         CodePhrase langCodePhrase = OpenEHRDataValuesUI.getLanguageCodePhrase();
         for (String code : terminologyCodes) {
-            selectedCodes.add(code);
             CodePhrase codePhrase = new CodePhrase(terminologyId, code);
             String name = null;
             try {
@@ -135,6 +132,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
                 ExceptionHandler.handle(e);
                 name = code;
             }
+            selectedDvCodeTexts.add(new DvCodedText(name, codePhrase));
             label.append(prefix);
             label.append(name);
             prefix = ", ";
@@ -153,6 +151,10 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
     }
 
     public Collection<String> getSelectedCodes() {
+        Collection<String> selectedCodes = new ArrayList<String>();
+        for(DvCodedText dvCodedText: selectedDvCodeTexts){
+            selectedCodes.add(dvCodedText.getCode());
+        }
         return selectedCodes;
     }
 }

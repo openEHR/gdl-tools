@@ -77,9 +77,13 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
                 String fileExtension = matchingFileExtension(fileName);
                 if (fileExtension!=null) {
                     try {
-                        InputStream fis = new FileInputStream(file.getAbsolutePath());
-                        E cmElement = getCMElement(fileName, fileExtension, fis, new Date(file.lastModified()));
-                        cmElements.add(cmElement);
+                        FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+                        try {
+                            E cmElement = getCMElement(fileName, fileExtension, fis, new Date(file.lastModified()));
+                            cmElements.add(cmElement);
+                        }finally{
+                            fis.close();
+                        }
                     } catch (Exception e) {
                         ExceptionHandler.handle(e);
                     }

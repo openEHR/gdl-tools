@@ -2,14 +2,22 @@ package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
+import se.cambio.cm.model.archetype.vo.OrdinalVO;
+import se.cambio.cm.model.util.TemplateAttributeMap;
+import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.PathUtils;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ArchetypeManager {
 
@@ -176,6 +184,85 @@ public class ArchetypeManager {
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
+    }
+
+    public TemplateElementMap getTemplateElementMap(ArchetypeElementVO archetypeElementVO, Collection<String> elementMapIds) {
+        String elementMapId = getElementMapId(archetypeElementVO.getName(), elementMapIds);
+        Map<String, TemplateAttributeMap> templateAttributeMaps = getTemplateAttributeMaps(archetypeElementVO);
+        return new TemplateElementMap(archetypeElementVO.getType(), archetypeElementVO.getPath(), elementMapId, templateAttributeMaps);
+    }
+
+    private Map<String, TemplateAttributeMap> getTemplateAttributeMaps(ArchetypeElementVO archetypeElementVO) {
+        if (OpenEHRDataValues.DV_CODED_TEXT.equals(archetypeElementVO.getRMType())) {
+            return getCodedTextsAttributeMaps(archetypeElementVO);
+        }
+        if (OpenEHRDataValues.DV_ORDINAL.equals(archetypeElementVO.getRMType())) {
+            return getOrdinalsAttributeMaps(archetypeElementVO);
+        }
+        return null;
+    }
+
+    private Map<String, TemplateAttributeMap> getCodedTextsAttributeMaps(ArchetypeElementVO archetypeElementVO) {
+        Collection<CodedTextVO> codedTextVOs = getCodedTexts().getCodedTextVOs(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
+        Map<String, TemplateAttributeMap> templateAttributeMaps = new HashMap<String, TemplateAttributeMap>();
+        for(CodedTextVO codedTextVO: codedTextVOs) {
+            if ("local".equals(codedTextVO.getTerminology())) {
+                return null;
+            }
+            String attributeId = getIdentifier(codedTextVO.getName(), 0);
+            TemplateAttributeMap templateAttributeMap = getCodedTextAttributeMap(attributeId, codedTextVO);
+            templateAttributeMaps.put(attributeId, templateAttributeMap);
+        }
+        return templateAttributeMaps;
+    }
+
+    private TemplateAttributeMap getCodedTextAttributeMap(String attributeId, CodedTextVO codedTextVO) {
+        return new TemplateAttributeMap(attributeId, codedTextVO.getTerminology(), codedTextVO.getCode(), null, codedTextVO.getName());
+    }
+
+    private Map<String, TemplateAttributeMap> getOrdinalsAttributeMaps(ArchetypeElementVO archetypeElementVO) {
+        Collection<OrdinalVO> ordinalVOs = getOrdinals().getOrdinalVOs(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
+        Map<String, TemplateAttributeMap> templateAttributeMaps = new HashMap<String, TemplateAttributeMap>();
+        for(OrdinalVO ordinalVO: ordinalVOs) {
+            if ("local".equals(ordinalVO.getTerminology())) {
+                return null;
+            }
+            String attributeId = getIdentifier(ordinalVO.getName(), 0);
+            TemplateAttributeMap templateAttributeMap = getOrdinalAttributeMap(attributeId, ordinalVO);
+            templateAttributeMaps.put(attributeId, templateAttributeMap);
+        }
+        return templateAttributeMaps;
+    }
+
+    private TemplateAttributeMap getOrdinalAttributeMap(String attributeId, OrdinalVO ordinalVO) {
+        return new TemplateAttributeMap(attributeId, ordinalVO.getTerminology(), ordinalVO.getCode(), ordinalVO.getValue(), ordinalVO.getName());
+    }
+
+    public static String getElementMapId(String name, Collection<String> elementMapIds) {
+        String elementMapId;
+        int i = 0;
+        do {
+            elementMapId = getIdentifier(name, i++);
+        } while (elementMapIds.contains(elementMapId));
+        return elementMapId;
+    }
+
+    public static String getIdentifier(String str, int i) {
+        StringBuilder sb = new StringBuilder();
+        if(!Character.isJavaIdentifierStart(str.charAt(0))) {
+            sb.append("_");
+        }
+        for (char c : str.toCharArray()) {
+            if(!Character.isJavaIdentifierPart(c)) {
+                sb.append("_");
+            } else {
+                sb.append(Character.toLowerCase(c));
+            }
+        }
+        if (i>0){
+            sb.append(i);
+        }
+        return sb.toString();
     }
 
     public static ArchetypeManager getInstance(){

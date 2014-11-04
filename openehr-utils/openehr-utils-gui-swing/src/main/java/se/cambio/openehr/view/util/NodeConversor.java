@@ -99,7 +99,9 @@ public class NodeConversor {
         addSelectedNodes(rootNode, selectedNodes, searchType);
         Collection<K> selectedObjects = new ArrayList<K>();
         for (SelectableNode<K> node : selectedNodes) {
-            selectedObjects.add(node.getObject());
+            if (node.getObject() != null) {
+                selectedObjects.add(node.getObject());
+            }
         }
         return selectedObjects;
     }

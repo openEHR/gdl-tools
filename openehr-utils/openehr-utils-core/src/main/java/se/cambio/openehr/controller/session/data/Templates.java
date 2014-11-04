@@ -4,6 +4,7 @@ import org.openehr.am.archetype.Archetype;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
+import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.TemplateObjectBundleManager;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -59,7 +60,7 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         for(TemplateDTO templateDTO: templateDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(templateDTO);
             Archetype archetype = getTemplateAOM(templateDTO);
-            archetypeManager.registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
+            getArchetypeManager().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
         }
     }
 
@@ -95,51 +96,23 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         return (Archetype)IOUtils.getObject(getCMElement(templateId).getAom());
     }
 
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
+    }
+
     public TemplateMap generateTemplateMap(String templateId) throws InternalErrorException, InstanceNotFoundException {
         TemplateDTO templateDTO = getCMElement(templateId);
         String archetypeId = templateDTO.getArcehtypeId();
         Collection<ArchetypeElementVO> archetypeElementVOs =
-                archetypeManager.getArchetypeElements().getArchetypeElementsVO(archetypeId, templateId);
-        Map<String, TemplateMap.TemplateElementMap> templateElementMaps = new HashMap<String, TemplateMap.TemplateElementMap>();
+                getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, templateId);
+        Map<String, TemplateElementMap> templateElementMaps = new HashMap<String, TemplateElementMap>();
         TemplateMap templateMap = new TemplateMap(archetypeId, templateId, templateElementMaps);
         Collection<String> elementMapIds = new ArrayList<String>();
         for(ArchetypeElementVO archetypeElementVO: archetypeElementVOs){
-            TemplateMap.TemplateElementMap templateElementMap = getTemplateElementMap(archetypeElementVO, elementMapIds);
+            TemplateElementMap templateElementMap = getArchetypeManager().getTemplateElementMap(archetypeElementVO, elementMapIds);
             templateElementMaps.put(templateElementMap.getElementMapId(), templateElementMap);
         }
         return templateMap;
-    }
-
-    public TemplateMap.TemplateElementMap getTemplateElementMap(ArchetypeElementVO archetypeElementVO, Collection<String> elementMapIds) {
-        String elementMapId = getElementMapId(archetypeElementVO.getName(), elementMapIds);
-        return new TemplateMap.TemplateElementMap(archetypeElementVO.getType(), archetypeElementVO.getPath(), elementMapId);
-    }
-
-    public String getElementMapId(String name, Collection<String> elementMapIds) {
-        String elementMapId;
-        int i = 0;
-        do {
-            elementMapId = getIdentifier(name, i++);
-        } while (elementMapIds.contains(elementMapId));
-        return elementMapId;
-    }
-
-    public static String getIdentifier(String str, int i) {
-            StringBuilder sb = new StringBuilder();
-            if(!Character.isJavaIdentifierStart(str.charAt(0))) {
-                sb.append("_");
-            }
-            for (char c : str.toCharArray()) {
-                if(!Character.isJavaIdentifierPart(c)) {
-                    sb.append("_");
-                } else {
-                    sb.append(Character.toLowerCase(c));
-                }
-            }
-            if (i>0){
-                sb.append(i);
-            }
-            return sb.toString();
     }
 }
 /*

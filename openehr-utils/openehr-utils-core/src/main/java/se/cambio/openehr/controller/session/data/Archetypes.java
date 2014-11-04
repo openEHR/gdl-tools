@@ -1,17 +1,17 @@
 package se.cambio.openehr.controller.session.data;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.util.TemplateElementMap;
+import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 
 public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
@@ -52,7 +52,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         for(ArchetypeDTO archetypeDTO: archetypeDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(archetypeDTO);
             Archetype archetype = getArchetypeAOM(archetypeDTO);
-            archetypeManager.registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
+            getArchetypeManager().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
         }
     }
 
@@ -122,6 +122,25 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
     private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO){
         return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
     }
+
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
+    }
+
+    public TemplateMap generateTemplateMap(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+        Collection<ArchetypeElementVO> archetypeElementVOs =
+                getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, null);
+        Map<String, TemplateElementMap> templateElementMaps = new HashMap<String, TemplateElementMap>();
+        TemplateMap templateMap = new TemplateMap(archetypeId, null, templateElementMaps);
+        Collection<String> elementMapIds = new ArrayList<String>();
+        for(ArchetypeElementVO archetypeElementVO: archetypeElementVOs){
+            TemplateElementMap templateElementMap = getArchetypeManager().getTemplateElementMap(archetypeElementVO, elementMapIds);
+            templateElementMaps.put(templateElementMap.getElementMapId(), templateElementMap);
+        }
+        return templateMap;
+    }
+
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

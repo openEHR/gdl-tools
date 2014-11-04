@@ -101,7 +101,7 @@ public class CodedTexts {
                 return codedTextVO.getName();
             }
         }else{
-            return "*UNKNOWN*";
+            return null;
         }
     }
 
@@ -120,7 +120,7 @@ public class CodedTexts {
                 return codedTextVO.getDescription();
             }
         }else{
-            return "*UNKNOWN*";
+            return null;
         }
     }
 
