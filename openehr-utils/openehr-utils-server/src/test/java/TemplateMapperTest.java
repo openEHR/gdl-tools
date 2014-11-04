@@ -25,10 +25,22 @@ public class TemplateMapperTest {
     public void shouldMapTemplate() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = ArchetypeManager.getInstance().getTemplates().generateTemplateMap("medication_atc_indicator");
         assertEquals(templateMap.getElementMaps().size(), 37);
+    }
 
-        templateMap = ArchetypeManager.getInstance().getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.basic_demographic.v1");
+    @Test
+    public void shouldMapCodedTextAttributes() throws InternalErrorException, InstanceNotFoundException {
+        TemplateMap templateMap = ArchetypeManager.getInstance().getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.basic_demographic.v1");
         assertEquals(templateMap.getElementMaps().size(), 8);
         TemplateElementMap templateElementMap = templateMap.getElementMaps().get("gender");
+        assertNotNull(templateElementMap);
+        assertEquals(templateElementMap.getAttributeMaps().size(), 2);
+    }
+
+    @Test
+    public void shouldMapOrdinalAttributes() throws InternalErrorException, InstanceNotFoundException {
+        TemplateMap templateMap = ArchetypeManager.getInstance().getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.chadsvas_score.v1");
+        assertEquals(templateMap.getElementMaps().size(), 10);
+        TemplateElementMap templateElementMap = templateMap.getElementMaps().get("diabetes");
         assertNotNull(templateElementMap);
         assertEquals(templateElementMap.getAttributeMaps().size(), 2);
     }

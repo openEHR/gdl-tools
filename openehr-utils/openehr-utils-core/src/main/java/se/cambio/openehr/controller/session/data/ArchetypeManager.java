@@ -224,7 +224,7 @@ public class ArchetypeManager {
         Collection<OrdinalVO> ordinalVOs = getOrdinals().getOrdinalVOs(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
         Map<String, TemplateAttributeMap> templateAttributeMaps = new HashMap<String, TemplateAttributeMap>();
         for(OrdinalVO ordinalVO: ordinalVOs) {
-            if ("local".equals(ordinalVO.getTerminology())) {
+            if (!"local".equals(ordinalVO.getTerminology())) {
                 return null;
             }
             String attributeId = getIdentifier(ordinalVO.getName(), 0);
