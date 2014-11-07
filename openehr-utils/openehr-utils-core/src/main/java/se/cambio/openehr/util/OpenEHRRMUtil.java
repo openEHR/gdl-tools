@@ -29,8 +29,11 @@ public class OpenEHRRMUtil {
         rmPaths.add(ISM_TRANSITION_PATH);
         rmPaths.add(TEMPLATE_ID_PATH);
     }
+    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType) {
+        return getRMElements(idArchetype, idTemplate, entryType, "");
+    }
 
-    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType){
+    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, String parentPath){
         Collection<ArchetypeElementVO> rmArchetypeElements = new ArrayList<ArchetypeElementVO>();
         if (OpenEHRConst.OBSERVATION.equals(entryType)){
 	    /*Origin (Use EventTime instead)
@@ -47,7 +50,7 @@ public class OpenEHRRMUtil {
                             OpenEHRLanguageManager.getMessage("EventTime"),
                             OpenEHRLanguageManager.getMessage("EventTimeDesc"),
                             OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, EVENT_TIME_PATH));
+                            idArchetype, idTemplate, parentPath + EVENT_TIME_PATH));
         }else if (OpenEHRConst.INSTRUCTION.equals(entryType)){
             //Expiry Time
             rmArchetypeElements.add(
@@ -55,14 +58,14 @@ public class OpenEHRRMUtil {
                             OpenEHRLanguageManager.getMessage("ExpireTime"),
                             OpenEHRLanguageManager.getMessage("ExpireTimeDesc"),
                             OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, EXPIRY_TIME_PATH));
+                            idArchetype, idTemplate, parentPath + EXPIRY_TIME_PATH));
             //Narrative Description
             rmArchetypeElements.add(
                     new ArchetypeElementVO(
                             OpenEHRLanguageManager.getMessage("NarrativeDescription"),
                             OpenEHRLanguageManager.getMessage("NarrativeDescriptionDesc"),
                             OpenEHRDataValues.DV_TEXT, null,
-                            idArchetype, idTemplate,NARRATIVE_PATH));
+                            idArchetype, idTemplate, parentPath + NARRATIVE_PATH));
         }else if (OpenEHRConst.ACTION.equals(entryType)){
             //Date and time Action step performed
             rmArchetypeElements.add(
@@ -70,24 +73,26 @@ public class OpenEHRRMUtil {
                             OpenEHRLanguageManager.getMessage("DateTimeActionPerformed"),
                             OpenEHRLanguageManager.getMessage("DateTimeActionPerformedDesc"),
                             OpenEHRDataValues.DV_DATE_TIME, null,
-                            idArchetype, idTemplate, TIME_PATH));
+                            idArchetype, idTemplate, parentPath + TIME_PATH));
             //Current Action State
             rmArchetypeElements.add(
                     new ArchetypeElementVO(
                             OpenEHRLanguageManager.getMessage("CurrentActionState"),
                             OpenEHRLanguageManager.getMessage("CurrentActionStateDesc"),
                             OpenEHRDataValues.DV_CODED_TEXT, null,
-                            idArchetype, idTemplate, ISM_TRANSITION_PATH));
+                            idArchetype, idTemplate, parentPath + ISM_TRANSITION_PATH));
         }else if (OpenEHRConst.EVALUATION.equals(entryType)){
 
         }
-        //Template Id
-        rmArchetypeElements.add(
-                new ArchetypeElementVO(
-                        OpenEHRLanguageManager.getMessage("TemplateId"),
-                        OpenEHRLanguageManager.getMessage("TemplateIdDesc"),
-                        OpenEHRDataValues.DV_TEXT, null,
-                        idArchetype, idTemplate, TEMPLATE_ID_PATH));
+        if (parentPath.isEmpty()) { //TODO Check if this assumption is correct
+            //Template Id
+            rmArchetypeElements.add(
+                    new ArchetypeElementVO(
+                            OpenEHRLanguageManager.getMessage("TemplateId"),
+                            OpenEHRLanguageManager.getMessage("TemplateIdDesc"),
+                            OpenEHRDataValues.DV_TEXT, null,
+                            idArchetype, idTemplate, TEMPLATE_ID_PATH));
+        }
         return rmArchetypeElements;
     }
 

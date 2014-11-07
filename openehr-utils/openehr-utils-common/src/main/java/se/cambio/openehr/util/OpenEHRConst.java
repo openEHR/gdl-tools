@@ -46,6 +46,7 @@ public class OpenEHRConst {
     public static String CURRENT_DATE_TIME_ID = "currentDateTime";
 
     public static final Collection<String> PARSABLE_OPENEHR_RM_NAMES = new ArrayList<String>();
+    public static final Collection<String> ENTRY_RM_NAMES = new ArrayList<String>();
     static {
         PARSABLE_OPENEHR_RM_NAMES.add(ELEMENT);
         PARSABLE_OPENEHR_RM_NAMES.add(CLUSTER);
@@ -74,6 +75,15 @@ public class OpenEHRConst {
         PARSABLE_OPENEHR_RM_NAMES.add(EVALUATION);
         PARSABLE_OPENEHR_RM_NAMES.add(INSTRUCTION);
         PARSABLE_OPENEHR_RM_NAMES.add(ACTION);
+
+        ENTRY_RM_NAMES.add(OBSERVATION);
+        ENTRY_RM_NAMES.add(EVALUATION);
+        ENTRY_RM_NAMES.add(INSTRUCTION);
+        ENTRY_RM_NAMES.add(ACTION);
+    }
+
+    public static boolean isEntry(String rmName){
+        return ENTRY_RM_NAMES.contains(rmName);
     }
 
 }

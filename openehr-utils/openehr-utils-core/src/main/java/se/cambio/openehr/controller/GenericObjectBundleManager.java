@@ -81,6 +81,11 @@ public class GenericObjectBundleManager {
         String rmEntry = ar.getArchetypeId().rmEntity();
         proccessCObject(ar.getDefinition());
         Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, templateId, rmEntry);
+        for (ClusterVO clusterVO: clusterVOs){
+            if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")){
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, templateId, clusterVO.getRMType(), clusterVO.getPath()));
+            }
+        }
         archetypeElementVOs.addAll(rmArchetypeElements);
     }
 
