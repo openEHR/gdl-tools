@@ -65,13 +65,22 @@ public class NodeConversor {
         }
     }
 
-    public static Object getSelectedObject(SelectableNode<?> nodoRaiz){
-        SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, false);
+    /*
+     * @deprecated use {@link #getSelectedElement()} instead
+     */
+    @Deprecated
+    public static Object getSelectedObject(SelectableNode<?> rootNode){
+        SelectableNode<?> selectedNode = getSelectedNode(rootNode, false);
         return selectedNode!=null?selectedNode.getObject():null;
     }
 
-    public static Object getSelectedObject(SelectableNode<?> nodoRaiz, boolean allowParent){
-        SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, allowParent);
+    public static <E> E getSelectedElement(SelectableNode<E> rootNode){
+        SelectableNode<E> selectedNode = getSelectedNode(rootNode, false);
+        return selectedNode!=null?selectedNode.getObject():null;
+    }
+    
+    public static Object getSelectedObject(SelectableNode<?> rootNode, boolean allowParent){
+        SelectableNode<?> selectedNode = getSelectedNode(rootNode, allowParent);
         return selectedNode!=null?selectedNode.getObject():null;
     }
 
@@ -106,8 +115,8 @@ public class NodeConversor {
         return selectedObjects;
     }
 
-    public static <K>void addSelectedNodes(SelectableNode<K> nodoRaiz, Collection<SelectableNode<K>> selectedNodes, SearchType searchType){
-        Enumeration<?> e = nodoRaiz.getAllchildren();
+    public static <K>void addSelectedNodes(SelectableNode<K> rootNode, Collection<SelectableNode<K>> selectedNodes, SearchType searchType){
+        Enumeration<?> e = rootNode.getAllchildren();
         while (e.hasMoreElements()){
             SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
             if (node.isSelected()){

@@ -2,16 +2,12 @@ package se.cambio.cm.model.template.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="cm_template")
 public class TemplateDTO implements CMElement{
-    @Id
     private java.lang.String id;
     private java.lang.String arcehtypeId;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private java.lang.String source;
     private byte[] aom;
     private byte[] aobcVO;
@@ -22,8 +18,9 @@ public class TemplateDTO implements CMElement{
     public TemplateDTO() {
     }
 
-    public TemplateDTO(String id, String arcehtypeId, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
+    public TemplateDTO(String id, String format, String arcehtypeId, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
         this.id = id;
+        this.format = format;
         this.arcehtypeId = arcehtypeId;
         this.source = source;
         this.aom = aom;
@@ -61,6 +58,11 @@ public class TemplateDTO implements CMElement{
     }
 
     @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
     public String getSource() {
         return source;
     }
@@ -73,6 +75,11 @@ public class TemplateDTO implements CMElement{
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     @Override

@@ -3,10 +3,6 @@ package se.cambio.cds.model.facade.ehr.delegate;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
-/**
- * @author iago.corbal
- *
- */
 public class EHRFacadeDelegateFactory {
 
     private static String DELEGATE_CLASS_PATIENT_DATA = "EHRFacadeDelegate/Class";
@@ -15,26 +11,26 @@ public class EHRFacadeDelegateFactory {
     }
 
     private static Class<?> getDelegateClass() throws InternalErrorException {
-	Class<?> theClass = null;
-	try {
-	    String delegateClassName = 
-		    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_PATIENT_DATA);
-	    theClass = Class.forName(delegateClassName);
-	} catch (Exception e) {
-	    new InternalErrorException(e);
-	}
-	return theClass;
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_PATIENT_DATA);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            new InternalErrorException(e);
+        }
+        return theClass;
     }
 
     public static EHRFacadeDelegate getDelegate()
-	    throws InternalErrorException {
-	try {
-	    return (EHRFacadeDelegate)getDelegateClass().newInstance();
-	} catch (InstantiationException e) {
-	    throw new InternalErrorException(e);
-	} catch (IllegalAccessException e) {
-	    throw new InternalErrorException(e);
-	}
+            throws InternalErrorException {
+        try {
+            return (EHRFacadeDelegate)getDelegateClass().newInstance();
+        } catch (InstantiationException e) {
+            throw new InternalErrorException(e);
+        } catch (IllegalAccessException e) {
+            throw new InternalErrorException(e);
+        }
     }
 }
 /*

@@ -17,11 +17,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-/**
- * User: Iago.Corbal
- * Date: 2013-10-28
- * Time: 17:28
- */
 public class CMImportExportManager {
 
     public CMImportExportManager() {
@@ -39,7 +34,7 @@ public class CMImportExportManager {
         CMAdministrationFacadeDelegate cmAFD = OpenEHRSessionManager.getAdministrationFacadeDelegate();
         Collection<? extends CMElement> cmElements = cmAFD.getAllCMElements(cmType.getCmElementClass());
         for (CMElement cmElement: cmElements){
-            out.putNextEntry(new ZipEntry(cmType.getId() + "\\" + cmElement.getId() + "." + cmType.getFileExtensions().iterator().next()));
+            out.putNextEntry(new ZipEntry(cmType.getId() + "\\" + cmElement.getId() + "." + cmElement.getFormat()));
             IOUtils.write(cmElement.getSource(), out, "UTF-8");
         }
     }
@@ -74,10 +69,13 @@ public class CMImportExportManager {
                 }
                 String id = entry.getName().substring(lastSlashIndex+1, lastDotIndex);
                 String src = IOUtils.toString(zis, "UTF-8");
-                CMElement cmElement = new CMElementBuilder().build(cmType.getCmElementClass());
-                cmElement.setId(id);
-                cmElement.setSource(src);
-                cmElement.setLastUpdate(new Date(entry.getTime()));
+                CMElement cmElement =
+                        new CMElementBuilder()
+                                .setId(id)
+                                .setFormat(extension)
+                                .setSource(src)
+                                .setLastUpdate(new Date(entry.getTime()))
+                                .createCMElement(cmType.getCmElementClass());
                 insertCMElementIntoMap(cmElementMap, cmType, cmElement);
             }
             CMElementProcessor cmElementProcessor = new CMElementProcessor();

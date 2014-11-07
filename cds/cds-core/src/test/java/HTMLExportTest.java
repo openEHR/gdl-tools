@@ -7,8 +7,6 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.app.CDSApp;
 import se.cambio.cds.model.app.CDSAppDefinition;
-import se.cambio.cds.model.kb.instance.KBInstance;
-import se.cambio.cds.model.kb.instance.KBInstanceDefinition;
 import se.cambio.cds.model.orderset.OrderSet;
 import se.cambio.cds.model.orderset.OrderSetDefinition;
 import se.cambio.cds.model.scenario.Scenario;
@@ -17,9 +15,7 @@ import se.cambio.cds.model.study.Study;
 import se.cambio.cds.model.study.StudyDefinition;
 import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.cds.model.view.DecisionSupportViewDefinition;
-import se.cambio.cds.util.export.CMElementUtil;
 import se.cambio.cds.util.export.html.*;
-import se.cambio.cm.model.kb.instance.dto.KBInstanceDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -118,18 +114,6 @@ public class HTMLExportTest {
         ScenarioHTMLExporter htmlExporter = new ScenarioHTMLExporter(ArchetypeManager.getInstance());
         String html = htmlExporter.convertToHTML(scenario, "en");
         assertThat(html, containsString("testScenarioId"));
-    }
-
-    @Test
-    public void shouldExportInstanceToHTML() throws IOException, InternalErrorException {
-        KBInstance kbInstance = new KBInstance("testKBInstanceId");
-        kbInstance.getResourceDescription().getDetails().put("en", new ResourceDescriptionItem());
-        kbInstance.getKbInstanceDefinitions().put("en", new KBInstanceDefinition());
-        KBInstanceHTMLExporter htmlExporter = new KBInstanceHTMLExporter(ArchetypeManager.getInstance());
-        KBInstanceDTO kbInstanceDTO = new KBInstanceDTO();
-        CMElementUtil.fill(kbInstanceDTO, kbInstance);
-        String html = htmlExporter.convertToHTML(kbInstance, "en");
-        assertThat(html, containsString("testKBInstanceId"));
     }
 
     @Test

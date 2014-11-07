@@ -22,10 +22,6 @@ public class SimpleArchetypeNode {
         return elementId;
     }
 
-    public void setElementId(String elementId) {
-        this.elementId = elementId;
-    }
-
     public String getName() {
         return name;
     }
@@ -38,23 +34,11 @@ public class SimpleArchetypeNode {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getIconFileName() {
         return iconFileName;
     }
 
-    public void setIconFileName(String iconFileName) {
-        this.iconFileName = iconFileName;
-    }
-
     public Collection<SimpleArchetypeNode> getChildren() {
         return children;
-    }
-
-    public void setChildren(Collection<SimpleArchetypeNode> children) {
-        this.children = children;
     }
 }

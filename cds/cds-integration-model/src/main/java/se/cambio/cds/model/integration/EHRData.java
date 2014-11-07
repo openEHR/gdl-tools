@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-04-03
- * Time: 08:54
- */
 public class EHRData implements Serializable{
     private static final long serialVersionUID = 20140404L;
     private String ehrId;

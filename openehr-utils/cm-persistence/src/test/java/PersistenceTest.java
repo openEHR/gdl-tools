@@ -15,10 +15,14 @@ import static org.junit.Assert.assertEquals;
 public class PersistenceTest {
 
     @Test
-    public void shouldAllowRounTripForAllCMElements() throws InternalErrorException, InstanceNotFoundException {
-        ArchetypeDTO archetypeDTO = new ArchetypeDTOBuilder().createArchetypeDTO();
-        archetypeDTO.setId("testOrderSetId");
-        archetypeDTO.setSource("testSrc");
+    public void shouldAllowRoundTripForAllCMElements() throws InternalErrorException, InstanceNotFoundException {
+        ArchetypeDTO archetypeDTO =
+                new ArchetypeDTOBuilder()
+                        .setId("testOrderSetId")
+                        .setFormat("adl")
+                        .setSource("testSrc")
+                        .setLastUpdate(Calendar.getInstance().getTime())
+                        .createArchetypeDTO();
         archetypeDTO.setLastUpdate(Calendar.getInstance().getTime());
         GenericCMElementDAO<ArchetypeDTO> dao = CMElementDAOFactory.getInstance().getDAO(ArchetypeDTO.class);
         dao.insert(archetypeDTO);

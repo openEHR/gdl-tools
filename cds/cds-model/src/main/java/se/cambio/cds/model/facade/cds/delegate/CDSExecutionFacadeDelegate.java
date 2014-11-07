@@ -11,10 +11,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author iago.corbal
- *
- */
 public interface CDSExecutionFacadeDelegate {
 
     public RuleExecutionResult execute(
@@ -39,7 +35,9 @@ public interface CDSExecutionFacadeDelegate {
 
     public Collection<ArchetypeReference> searchEHRData(String ehrId, Calendar date, Collection<String> guideIds)
             throws InternalErrorException, PatientNotFoundException, InstanceNotFoundException;
-}/*
+}
+
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

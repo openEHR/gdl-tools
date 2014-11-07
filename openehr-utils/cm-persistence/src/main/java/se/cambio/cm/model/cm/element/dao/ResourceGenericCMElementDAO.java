@@ -76,10 +76,12 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
         String fileExtension = matchingFileExtension(resourceFileName);
         String id = resourceFileName.substring(resourceFileName.lastIndexOf("/") + 1, resourceFileName.length() - fileExtension.length() - 1);
         String source = IOUtils.toString(ubis, "UTF-8");
-        E cmElement = new CMElementBuilder<E>().build(cmElementClass);
-        cmElement.setId(id);
-        cmElement.setSource(source);
-        cmElement.setLastUpdate(Calendar.getInstance().getTime());
+        E cmElement = (E)new CMElementBuilder<E>()
+                .setId(id)
+                .setFormat(fileExtension)
+                .setSource(source)
+                .setLastUpdate(Calendar.getInstance().getTime())
+                .createCMElement(cmElementClass);
         return cmElement;
     }
 

@@ -1,8 +1,6 @@
 package se.cambio.cds.util.export;
 
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.serialize.ADLSerializer;
-import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.app.CDSApp;
@@ -22,91 +20,53 @@ import se.cambio.cm.model.scenario.dto.ScenarioDTO;
 import se.cambio.cm.model.study.dto.StudyDTO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
-import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.view.dto.DSViewDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
 
 public class CMElementUtil {
 
-    public static Object convert(CMElement cmElement, ArchetypeManager archetypeManager) throws InternalErrorException {
-        if (cmElement instanceof ArchetypeDTO) {
-            return archetypeManager.getArchetypes().getArchetypeAOM((ArchetypeDTO) cmElement);
-        } else if (cmElement instanceof TemplateDTO) {
-            return archetypeManager.getTemplates().getTemplateAOM((TemplateDTO) cmElement);
-        } else if (cmElement instanceof GuideDTO) {
-            return Guides.getInstance().getGuide((GuideDTO) cmElement);
-        } else if (cmElement instanceof TerminologyDTO) {
-            return cmElement.getSource();
-        } else if (cmElement instanceof StudyDTO) {
-            return JSONSerialization.parse(Study.class, cmElement.getSource());
-        } else if (cmElement instanceof DSViewDTO) {
-            InputStream is = new ByteArrayInputStream(cmElement.getSource().getBytes());
-            return new DSViewParser().parseDSView(is);
-        } else if (cmElement instanceof KBInstanceDTO) {
-            return JSONSerialization.parse(KBInstance.class, cmElement.getSource());
-        } else if (cmElement instanceof OrderSetDTO) {
-            return JSONSerialization.parse(OrderSet.class, cmElement.getSource());
-        } else if (cmElement instanceof CDSAppDTO) {
-            return JSONSerialization.parse(CDSApp.class, cmElement.getSource());
-        } else if (cmElement instanceof ScenarioDTO) {
-            return JSONSerialization.parse(Scenario.class, cmElement.getSource());
-        } else {
-            throw new InternalErrorException(new UnsupportedOperationException("Cannot parse cm element '" + cmElement.getClass().getName() + "'"));
-        }
+    public static Archetype convert(ArchetypeDTO archetypeDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return archetypeManager.getArchetypes().getArchetypeAOM(archetypeDTO);
     }
 
-    public static void fill(CMElement cmElement, Object object) throws InternalErrorException {
-        if (object instanceof Archetype) {
-            try {
-                Archetype archetype = (Archetype) object;
-                String archetypeSrc = new ADLSerializer().output(archetype);
-                cmElement.setId(archetype.getArchetypeId().getValue());
-                cmElement.setSource(archetypeSrc);
-            } catch (IOException e) {
-                throw new InternalErrorException(e);
-            }
-        } else if (object instanceof Guide) {
-            Guide guide = (Guide) object;
-            try {
-                String source = GuideUtil.serializeGuide(guide);
-                cmElement.setId(guide.getId());
-                cmElement.setSource(source);
-            } catch (Exception e) {
-                throw new InternalErrorException(e);
-            }
-        } else if (object instanceof Study) {
-            Study study = (Study) object;
-            cmElement.setId(study.getStudyId());
-            cmElement.setSource(JSONSerialization.serialize(Study.class, study));
-        } else if (object instanceof DecisionSupportViewBundle) {
-            DecisionSupportViewBundle decisionSupportViewBundle = (DecisionSupportViewBundle) object;
-            cmElement.setId(decisionSupportViewBundle.getDecisionSupportView().getDsViewId());
-            cmElement.setSource(decisionSupportViewBundle.getDsvSrc());
-        } else if (object instanceof KBInstance) {
-            KBInstance kbInstance = (KBInstance) object;
-            cmElement.setId(kbInstance.getKbiId());
-            cmElement.setSource(JSONSerialization.serialize(KBInstance.class, kbInstance));
-        } else if (object instanceof OrderSet) {
-            OrderSet orderSet = (OrderSet) object;
-            cmElement.setId(orderSet.getOrderSetId());
-            cmElement.setSource(JSONSerialization.serialize(OrderSet.class, orderSet));
-        } else if (object instanceof CDSApp) {
-            CDSApp cdsApp = (CDSApp) object;
-            cmElement.setId(cdsApp.getCdsAppId());
-            cmElement.setSource(JSONSerialization.serialize(CDSApp.class, cdsApp));
-        } else if (object instanceof Scenario) {
-            Scenario scenario = (Scenario) object;
-            cmElement.setId(scenario.getScenarioId());
-            cmElement.setSource(JSONSerialization.serialize(Scenario.class, scenario));
-        } else {
-            throw new InternalErrorException(new UnsupportedOperationException("Cannot parse cm element '" + object.getClass().getName() + "'"));
-        }
-        cmElement.setLastUpdate(Calendar.getInstance().getTime());
+    public static Archetype convert(TemplateDTO templateDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return archetypeManager.getTemplates().getTemplateAOM(templateDTO);
+    }
+
+    public static Guide convert(GuideDTO guideDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return Guides.getInstance().getGuide(guideDTO);
+    }
+
+    public static String convert(TerminologyDTO terminologyDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return terminologyDTO.getSource();
+    }
+
+    public static Study convert(StudyDTO studyDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return JSONSerialization.parse(Study.class, studyDTO.getSource());
+    }
+
+    public static DecisionSupportViewBundle convert(DSViewDTO dsViewDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        InputStream is = new ByteArrayInputStream(dsViewDTO.getSource().getBytes());
+        return new DSViewParser().parseDSView(is);
+    }
+
+    public static KBInstance convert(KBInstanceDTO kbInstanceDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return JSONSerialization.parse(KBInstance.class, kbInstanceDTO.getSource());
+    }
+
+    public static OrderSet convert(OrderSetDTO orderSetDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return JSONSerialization.parse(OrderSet.class, orderSetDTO.getSource());
+    }
+
+    public static CDSApp convert(CDSAppDTO cdsAppDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return JSONSerialization.parse(CDSApp.class, cdsAppDTO.getSource());
+    }
+
+    public static Scenario convert(ScenarioDTO scenarioDTO, ArchetypeManager archetypeManager) throws InternalErrorException {
+        return JSONSerialization.parse(Scenario.class, scenarioDTO.getSource());
     }
 }

@@ -21,7 +21,6 @@ import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.CMElement;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -77,24 +76,18 @@ public class RuleElementEditor {
         DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS);
         dialog.setVisible(true);
         if (dialog.getAnswer()){
-            try {
-                CMElement cmElement = dialog.getSelectedCMElement();
-                if (cmElement instanceof ArchetypeDTO){
-                    idArchetype = cmElement.getId();
-                } else if (cmElement instanceof TemplateDTO){
-                    idArchetype = ((TemplateDTO)cmElement).getArcehtypeId();
-                    idTemplate = cmElement.getId();
+            CMElement cmElement = dialog.getSelectedCMElement();
+            if (cmElement instanceof ArchetypeDTO){
+                idArchetype = cmElement.getId();
+            } else if (cmElement instanceof TemplateDTO){
+                idArchetype = ((TemplateDTO)cmElement).getArcehtypeId();
+                idTemplate = cmElement.getId();
+            }
+            if (idArchetype==null){
+                if (ar!=null){
+                    idArchetype = ar.getIdArchetype();
+                    idTemplate = ar.getIdTemplate();
                 }
-                if (idArchetype==null){
-                    if (ar!=null){
-                        idArchetype = ar.getIdArchetype();
-                        idTemplate = ar.getIdTemplate();
-                    }
-                }
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            } catch (InstanceNotFoundException e) {
-                ExceptionHandler.handle(e);
             }
             if (idArchetype!=null){
                 String idDomain = dialog.getSelectedDomain();

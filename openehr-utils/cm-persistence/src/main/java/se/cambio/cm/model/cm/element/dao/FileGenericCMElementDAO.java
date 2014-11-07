@@ -98,11 +98,12 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         ubis.skipBOM();
         String id = getId(fileName, fileExtension);
         String src = IOUtils.toString(ubis, "UTF-8");
-        E cmElement = new CMElementBuilder<E>().build(cmElementClass);
-        cmElement.setId(id);
-        cmElement.setSource(src);
-        cmElement.setLastUpdate(date);
-        return cmElement;
+        return (E)new CMElementBuilder<E>()
+                        .setId(id)
+                        .setFormat(fileExtension)
+                        .setSource(src)
+                        .setLastUpdate(date)
+                        .createCMElement(cmElementClass);
     }
 
     private String getId(String fileName, String fileExtension) {
@@ -132,7 +133,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         if (!folder.isDirectory()) {
             throw new FolderNotFoundException(folder.getAbsolutePath());
         }
-        File file = new File(folder, cmElement.getId() + "." + getFileExtensions().iterator().next());
+        File file = new File(folder, cmElement.getId() + "." + cmElement.getFormat());
         try {
             Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes());
         } catch (IOException e) {

@@ -44,14 +44,14 @@ public class Guides extends AbstractCMManager<GuideDTO> {
 
     public void processGuide(GuideDTO guideDTO) {
         try {
-            if (guideDTO.getGuideObject() == null) {
+            if (!hasGuideObject(guideDTO)) {
                 Logger.getLogger(Guides.class).info("Parsing guideline '" + guideDTO.getId() + "'...");
                 long startTime = System.currentTimeMillis();
                 parseGuide(guideDTO);
                 long endTime = System.currentTimeMillis();
                 Logger.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
             }
-            if (guideDTO.getCompiledGuide() == null) {
+            if (!isCompiled(guideDTO)) {
                 Logger.getLogger(Guides.class).info("Compiling guideline '" + guideDTO.getId() + "'...");
                 long startTime = System.currentTimeMillis();
                 compileGuide(guideDTO);
@@ -74,7 +74,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
 
     public static void compileGuide(GuideDTO guideDTO) throws InternalErrorException {
         try {
-            if (guideDTO.getGuideObject()==null){
+            if (!hasGuideObject(guideDTO)){
                 parseGuide(guideDTO);
             }
             Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
@@ -98,8 +98,8 @@ public class Guides extends AbstractCMManager<GuideDTO> {
     }
 
     public Guide getGuide(GuideDTO guideDTO) throws InternalErrorException {
-        if (guideDTO!=null){
-            if (guideDTO.getGuideObject() == null){
+        if (guideDTO != null){
+            if (!hasGuideObject(guideDTO)){
                 parseGuide(guideDTO);
             }
             Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
@@ -115,6 +115,14 @@ public class Guides extends AbstractCMManager<GuideDTO> {
             guideMap.put(guideId, getGuide(guideId));
         }
         return guideMap;
+    }
+
+    public static boolean hasGuideObject(GuideDTO guideDTO){
+        return guideDTO.getGuideObject() != null;
+    }
+
+    public static boolean isCompiled(GuideDTO guideDTO){
+        return guideDTO.getCompiledGuide() != null;
     }
 
     public static Guides getInstance(){

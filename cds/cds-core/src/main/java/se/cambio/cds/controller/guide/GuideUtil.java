@@ -15,10 +15,7 @@ import se.cambio.cds.gdl.model.Rule;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.parser.DADLSerializer;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.RuleReference;
+import se.cambio.cds.model.facade.execution.vo.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
@@ -124,13 +121,12 @@ public class GuideUtil {
     }
 
     private static ElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv) {
-        return new PredicateGeneratedElementInstance(
-                idElement,
-                dv,
-                ar,
-                null,
-                null,
-                op);
+        return new PredicateGeneratedElementInstanceBuilder()
+                .setId(idElement)
+                .setDataValue(dv)
+                .setArchetypeReference(ar)
+                .setOperatorKind(op)
+                .createPredicateGeneratedElementInstance();
     }
 
 

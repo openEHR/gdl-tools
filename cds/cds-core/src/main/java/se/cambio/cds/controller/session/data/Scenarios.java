@@ -5,7 +5,7 @@ import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
 
 public class Scenarios extends AbstractCMManager<ScenarioDTO> {
-    public static Scenarios _instance = null;
+    private static Scenarios _instance = null;
 
     public Scenarios(){
     }

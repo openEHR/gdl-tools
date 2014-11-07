@@ -32,6 +32,8 @@ import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
+import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
@@ -192,7 +194,11 @@ public class GDLEditor implements EditorController<Guide>{
                         protected void done() {
                             getController().compilationFinished(getErrorMsg());
                             if (getErrorMsg()==null){
-                                generateDialogForm(getCompiledGuide(), getGuide());
+                                try {
+                                    generateDialogForm(getCompiledGuide(), getGuide());
+                                } catch (InternalErrorException e) {
+                                    ExceptionHandler.handle(e);
+                                }
                             }
                         }
                     };
@@ -205,17 +211,19 @@ public class GDLEditor implements EditorController<Guide>{
 
     }
 
-    private void generateDialogForm(byte[] compiledGuide, Guide guide){
+    private void generateDialogForm(byte[] compiledGuide, Guide guide) throws InternalErrorException {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         String gdlGuide = controller.getSerializedEntity();
         if (compiledGuide!=null && gdlGuide!=null){
             GuideDTO guideDTO =
-                    new GuideDTO(
-                            controller.getEntityId(),
-                            gdlGuide,
-                            IOUtils.getBytes(guide),
-                            compiledGuide,
-                            Calendar.getInstance().getTime());
+                    new GuideDTOBuilder()
+                            .setId(controller.getEntityId())
+                            .setFormat(CMTypeFormat.GDL_FORMAT.getFormat())
+                            .setSource(gdlGuide)
+                            .setGuideObject(IOUtils.getBytes(guide))
+                            .setCompiledGuide(compiledGuide)
+                            .setLastUpdate(Calendar.getInstance().getTime())
+                            .createGuideDTO();
             FormGeneratorController formGenerator =
                     new FormGeneratorController(guideDTO, controller.getCurrentLanguageCode());
             Date date = UserConfigurationManager.getCustomDate();
@@ -1188,11 +1196,7 @@ public class GDLEditor implements EditorController<Guide>{
                                     .substring(0, idGuide.length() - 6);
                         }
                         GuideDTO guideDTO =
-                                new GuideDTO(idGuide,
-                                        guideSource,
-                                        IOUtils.getBytes(guide),
-                                        compiledGuide,
-                                        Calendar.getInstance().getTime());
+                                new GuideDTOBuilder().setId(idGuide).setFormat(guideSource).setSource(CMTypeFormat.GDL_FORMAT.getFormat()).setGuideObject(IOUtils.getBytes(guide)).setCompiledGuide(compiledGuide).setLastUpdate(Calendar.getInstance().getTime()).createGuideDTO();
                         ObjectOutputStream output = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(
                                         guideFile)));

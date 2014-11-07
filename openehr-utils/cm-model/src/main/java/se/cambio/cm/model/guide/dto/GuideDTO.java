@@ -2,17 +2,13 @@ package se.cambio.cm.model.guide.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="cm_guideline")
 public class GuideDTO implements CMElement {
 
     private static final long serialVersionUID = 20120412L;
-    @Id
     private String id;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private String source;
     private byte[] guideObject;
     private byte[] compiledGuide;
@@ -22,20 +18,33 @@ public class GuideDTO implements CMElement {
 
     }
 
-    public GuideDTO(String id, String source, byte[] guideObject, byte[] compiledGuide, Date lastUpdate) {
+    public GuideDTO(String id, String format, String source, byte[] guideObject, byte[] compiledGuide, Date lastUpdate) {
         super();
         this.id = id;
+        this.format = format;
         this.source = source;
         this.guideObject = guideObject;
         this.compiledGuide = compiledGuide;
         this.lastUpdate = lastUpdate;
     }
+
     public String getId() {
         return id;
     }
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
     public String getSource() {
         return source;
     }

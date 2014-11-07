@@ -2,15 +2,11 @@ package se.cambio.cm.model.scenario.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="cm_scenario")
 public class ScenarioDTO implements CMElement {
-    @Id
     private String id;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private String source;
     private Date lastUpdate;
 
@@ -19,6 +15,11 @@ public class ScenarioDTO implements CMElement {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getFormat() {
+        return format;
     }
 
     @Override
@@ -34,6 +35,11 @@ public class ScenarioDTO implements CMElement {
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     @Override

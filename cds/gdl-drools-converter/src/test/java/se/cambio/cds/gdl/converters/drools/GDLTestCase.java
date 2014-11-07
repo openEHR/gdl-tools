@@ -1,7 +1,7 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import junit.framework.TestCase;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
@@ -17,6 +17,8 @@ import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.GuideCompilerFactory;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
+import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -30,12 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-07-09
- * Time: 12:37
- */
-public abstract class GDLTestCase extends TestCase {
+public abstract class GDLTestCase {
 
     public static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
     public static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
@@ -55,15 +52,12 @@ public abstract class GDLTestCase extends TestCase {
     public static String CONTACT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.contact.v1";
     public static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
 
-    public GDLTestCase(){
-        try {
-            //Load KM
-            UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-            UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-            UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void initializeCM() throws URISyntaxException {
+        //Load KM
+        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
+        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
     }
 
     public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code){
@@ -161,9 +155,10 @@ public abstract class GDLTestCase extends TestCase {
 
 
     public static GuideDTO parse(String guideId) throws Exception {
-        InputStream is = load("guides/"+guideId+".gdl");
+        String gdlFormat = CMTypeFormat.GDL_FORMAT.getFormat();
+        InputStream is = load("guides/"+guideId+"."+gdlFormat);
         String gdlStr = IOUtils.toString(is);
-        GuideDTO guideDTO = new GuideDTO(guideId, gdlStr, null, null, Calendar.getInstance().getTime());
+        GuideDTO guideDTO = new GuideDTOBuilder().setId(guideId).setFormat(gdlFormat).setSource(gdlStr).setGuideObject(null).setCompiledGuide(null).setLastUpdate(Calendar.getInstance().getTime()).createGuideDTO();
         Guide guide = new GDLParser().parse(new ByteArrayInputStream(gdlStr.getBytes()));
         byte[] compiledGuide = GuideCompilerFactory.getDelegate().compile(guide);
         guideDTO.setGuideObject(IOUtils.getBytes(guide));

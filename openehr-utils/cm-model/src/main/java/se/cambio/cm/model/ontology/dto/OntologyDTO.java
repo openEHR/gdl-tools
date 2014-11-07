@@ -2,15 +2,11 @@ package se.cambio.cm.model.ontology.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="cm_ontology")
 public class OntologyDTO implements CMElement{
-    @Id
     private String id = null;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private String source = null;
     private Date lastUpdate;
 
@@ -20,6 +16,11 @@ public class OntologyDTO implements CMElement{
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String getFormat() {
+        return format;
     }
 
     @Override
@@ -35,6 +36,11 @@ public class OntologyDTO implements CMElement{
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     @Override

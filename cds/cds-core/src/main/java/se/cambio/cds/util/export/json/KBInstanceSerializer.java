@@ -7,10 +7,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.openehr.am.parser.ContentObject;
 import org.openehr.am.parser.DADLParser;
-import org.openehr.am.parser.ParseException;
-import org.openehr.build.RMObjectBuildingException;
 import org.openehr.rm.binding.DADLBinding;
-import org.openehr.rm.binding.DADLBindingException;
 import org.openehr.rm.common.archetyped.Locatable;
 import se.cambio.cds.model.kb.instance.KBInstance;
 import se.cambio.cds.util.export.json.util.KBInstanceWithSource;
@@ -51,11 +48,7 @@ public class KBInstanceSerializer implements JSONSerializer<KBInstance> {
                 Locatable locatable = (Locatable) new DADLBinding().bind(contentObject);
                 kbInstance.setLocatable(locatable);
             }
-        } catch (ParseException e) {
-            throw new InternalErrorException(e);
-        } catch (RMObjectBuildingException e) {
-            throw new InternalErrorException(e);
-        } catch (DADLBindingException e) {
+        } catch (Exception e) {
             throw new InternalErrorException(e);
         }
         return kbInstance;

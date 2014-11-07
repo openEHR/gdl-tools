@@ -20,6 +20,7 @@ public class ArchetypeReferences {
     public static String getName(ArchetypeReference ar){
         return getName(ar, true);
     }
+
     public static String getName(ArchetypeReference ar, boolean withPredicate){
         if (ar!=null) {
             return ar.getIdArchetype();

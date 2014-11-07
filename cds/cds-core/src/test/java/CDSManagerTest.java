@@ -4,6 +4,7 @@ import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
@@ -43,19 +44,39 @@ public class CDSManagerTest {
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
 
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.INEQUAL);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.INEQUAL)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
 
         gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.INEQUAL);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.INEQUAL)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
 
         gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.INEQUAL);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.INEQUAL)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
 
         gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, OperatorKind.EQUALITY);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.EQUALITY)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
 
         Collection<ArchetypeReference> ars = CDSManager.getEHRArchetypeReferencesWithEventTimeElements(geic);

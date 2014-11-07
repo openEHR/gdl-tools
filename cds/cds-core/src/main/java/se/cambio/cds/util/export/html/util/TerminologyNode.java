@@ -3,11 +3,6 @@ package se.cambio.cds.util.export.html.util;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-17
- * Time: 16:13
- */
 public class TerminologyNode {
     private String name;
     private Collection<TerminologyNode> children;

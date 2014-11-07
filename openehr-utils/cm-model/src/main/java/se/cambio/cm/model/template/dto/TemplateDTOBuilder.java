@@ -1,9 +1,12 @@
 package se.cambio.cm.model.template.dto;
 
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+
 import java.util.Date;
 
 public class TemplateDTOBuilder {
     private String id;
+    private String format;
     private String arcehtypeId;
     private String source;
     private byte[] aom;
@@ -12,6 +15,11 @@ public class TemplateDTOBuilder {
 
     public TemplateDTOBuilder setId(String id) {
         this.id = id;
+        return this;
+    }
+
+    public TemplateDTOBuilder setFormat(String format) {
+        this.format = format;
         return this;
     }
 
@@ -40,7 +48,23 @@ public class TemplateDTOBuilder {
         return this;
     }
 
-    public TemplateDTO createTemplateDTO() {
-        return new TemplateDTO(id, arcehtypeId, source, aom, aobcVO, lastUpdate);
+    public TemplateDTO createTemplateDTO() throws InternalErrorException {
+        checkMissingAttributes();
+        return new TemplateDTO(id, format, arcehtypeId, source, aom, aobcVO, lastUpdate);
+    }
+
+    private void checkMissingAttributes() throws InternalErrorException {
+        if (id == null){
+            throw new InternalErrorException(new Exception("No id specified for cmElement"));
+        }
+        if (format == null){
+            throw new InternalErrorException(new Exception("No format specified for cmElement"));
+        }
+        if (source == null){
+            throw new InternalErrorException(new Exception("No source specified for cmElement"));
+        }
+        if (lastUpdate == null){
+            throw new InternalErrorException(new Exception("No lastUpdate specified for cmElement"));
+        }
     }
 }

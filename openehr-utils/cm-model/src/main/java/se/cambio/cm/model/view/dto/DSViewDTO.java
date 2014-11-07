@@ -2,17 +2,13 @@ package se.cambio.cm.model.view.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="cm_dsview")
 public class DSViewDTO implements CMElement{
 
     private static final long serialVersionUID = 20120412L;
-    @Id
     private String id;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private String source;
     private Date lastUpdate;
 
@@ -26,26 +22,42 @@ public class DSViewDTO implements CMElement{
         this.source = source;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    @Override
     public String getSource() {
         return source;
     }
 
+    @Override
     public void setSource(String source) {
         this.source = source;
     }
 
+    @Override
     public Date getLastUpdate() {
         return lastUpdate;
     }
 
+    @Override
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }

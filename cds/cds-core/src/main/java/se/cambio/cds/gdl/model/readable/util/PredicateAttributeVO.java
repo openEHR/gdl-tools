@@ -2,11 +2,6 @@ package se.cambio.cds.gdl.model.readable.util;
 
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 
-/**
- * User: iago.corbal
- * Date: 2013-12-11
- * Time: 10:45
- */
 public class PredicateAttributeVO {
     private ArchetypeElementVO archetypeElementVO;
     private String attribute;

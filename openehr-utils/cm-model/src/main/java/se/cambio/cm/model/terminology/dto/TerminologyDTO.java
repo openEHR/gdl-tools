@@ -2,29 +2,41 @@ package se.cambio.cm.model.terminology.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name="cm_terminology")
 public class TerminologyDTO implements CMElement{
 
     private static final long serialVersionUID = 2303245012L;
-    @Id
     private String id = null;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private String source = null;
     private Date lastUpdate;
 
     public TerminologyDTO() {
         super();
     }
+
+    @Override
     public String getId() {
         return id;
     }
+
+    @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    @Override
     public String getSource() {
         return source;
     }
@@ -34,6 +46,7 @@ public class TerminologyDTO implements CMElement{
         return lastUpdate;
     }
 
+    @Override
     public void setSource(String source) {
         this.source = source;
     }
@@ -42,12 +55,6 @@ public class TerminologyDTO implements CMElement{
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
-    /*
-    public int hashCode() {
-        return (id!=null?id.hashCode():0)+(source!=null?source.hashCode():1);
-    }
-    */
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

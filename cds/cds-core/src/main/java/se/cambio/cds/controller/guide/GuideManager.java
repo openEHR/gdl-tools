@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.guide;
 
+import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -28,7 +29,7 @@ public class GuideManager extends SimpleGuideManager{
         for (GuideDTO guideDTO : guidesDTO) {
             try {
                 Guide guide = null;
-                if (guideDTO.getGuideObject()!=null){
+                if (Guides.hasGuideObject(guideDTO)){
                     guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
                 }else{
                     guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes()));

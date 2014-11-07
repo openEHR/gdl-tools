@@ -18,16 +18,16 @@ import java.util.Collections;
 
 public enum CMType {
 
-    TERMINOLOGY("terminologies", TerminologyDTO.class, Collections.singleton("csv")),
-    ARCHETYPE("archetypes", ArchetypeDTO.class, Collections.singleton("adl")),
-    TEMPLATE("templates", TemplateDTO.class, Collections.singleton("oet")),
-    GUIDELINE("guidelines", GuideDTO.class, Collections.singleton("gdl")),
-    VIEW("views", DSViewDTO.class, Collections.singleton("dsv")),
-    STUDY("studies", StudyDTO.class, Collections.singleton("std")),
-    INSTANCE("instances", KBInstanceDTO.class, Collections.singleton("kbi")),
-    ORDERSET("ordersets", OrderSetDTO.class, Collections.singleton("ost")),
-    APP("apps", CDSAppDTO.class, Collections.singleton("app")),
-    SCENARIO("scenarios", ScenarioDTO.class, Collections.singleton("scn"));
+    TERMINOLOGY("terminologies", TerminologyDTO.class, Collections.singleton(CMTypeFormat.CSV_FORMAT.getFormat())),
+    ARCHETYPE("archetypes", ArchetypeDTO.class, Collections.singleton(CMTypeFormat.ADL_FORMAT.getFormat())),
+    TEMPLATE("templates", TemplateDTO.class, Collections.singleton(CMTypeFormat.OET_FORMAT.getFormat())),
+    GUIDELINE("guidelines", GuideDTO.class, Collections.singleton(CMTypeFormat.GDL_FORMAT.getFormat())),
+    VIEW("views", DSViewDTO.class, Collections.singleton(CMTypeFormat.DSV_FORMAT.getFormat())),
+    STUDY("studies", StudyDTO.class, Collections.singleton(CMTypeFormat.STD_FORMAT.getFormat())),
+    INSTANCE("instances", KBInstanceDTO.class, Collections.singleton(CMTypeFormat.KBI_FORMAT.getFormat())),
+    ORDERSET("ordersets", OrderSetDTO.class, Collections.singleton(CMTypeFormat.OST_FORMAT.getFormat())),
+    APP("apps", CDSAppDTO.class, Collections.singleton(CMTypeFormat.APP_FORMAT.getFormat())),
+    SCENARIO("scenarios", ScenarioDTO.class, Collections.singleton(CMTypeFormat.SCN_FORMAT.getFormat()));
 
     private final String id;
     private Class<? extends CMElement> cmElementClass;

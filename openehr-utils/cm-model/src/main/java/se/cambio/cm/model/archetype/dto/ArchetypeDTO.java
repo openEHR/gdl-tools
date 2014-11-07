@@ -2,20 +2,13 @@ package se.cambio.cm.model.archetype.dto;
 
 import se.cambio.cm.model.util.CMElement;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 
-@Entity
-@Table(name="cm_archetype")
 public class ArchetypeDTO implements CMElement{
 
-    @Id
     private java.lang.String id;
-    @Column(columnDefinition="TEXT")
+    private String format;
     private java.lang.String source;
     private byte[] aom;
     private byte[] aobcVO;
@@ -27,8 +20,9 @@ public class ArchetypeDTO implements CMElement{
         super();
     }
 
-    public ArchetypeDTO(String id, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
+    public ArchetypeDTO(String id, String format, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
         this.id = id;
+        this.format = format;
         this.source = source;
         this.aom = aom;
         this.aobcVO = aobcVO;
@@ -57,6 +51,11 @@ public class ArchetypeDTO implements CMElement{
     }
 
     @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
     public String getSource() {
         return source;
     }
@@ -69,6 +68,11 @@ public class ArchetypeDTO implements CMElement{
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     @Override

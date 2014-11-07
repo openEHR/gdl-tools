@@ -10,7 +10,6 @@ import org.jsoup.select.Elements;
 import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.cds.model.view.DecisionSupportViewBundle;
 import se.cambio.cds.util.export.json.JSONSerialization;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class DSViewSerializer {
         this.decisionSupportViewBundle = decisionSupportViewBundle;
     }
 
-    public String serialize(){
+    public String serialize() throws InternalErrorException {
         Document doc = Jsoup.parse(decisionSupportViewBundle.getDsvSrc());
         doc.outputSettings().prettyPrint(false);
         Map<Character, String> escapeMapOrig = new HashMap<Character, String>(doc.outputSettings().escapeMode().getMap());
@@ -48,12 +47,7 @@ public class DSViewSerializer {
         return html;
     }
 
-    private String serializeDSView(DecisionSupportView decisionSupportView){
-        try {
-            return JSONSerialization.serialize(DecisionSupportView.class, decisionSupportView);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-            return null;
-        }
+    private String serializeDSView(DecisionSupportView decisionSupportView) throws InternalErrorException {
+        return JSONSerialization.serialize(DecisionSupportView.class, decisionSupportView);
     }
 }

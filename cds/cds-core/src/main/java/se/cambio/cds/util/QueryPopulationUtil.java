@@ -1,6 +1,5 @@
 package se.cambio.cds.util;
 
-import org.openehr.rm.datatypes.quantity.DvQuantity;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -8,13 +7,14 @@ import se.cambio.openehr.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-05-28
- * Time: 16:26
- */
+
 public class QueryPopulationUtil {
 
     private static int EHR_QUERY_PAGINATION_NUMBER = 50;

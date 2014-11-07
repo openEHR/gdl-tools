@@ -1,51 +1,50 @@
-package se.cambio.cm.model.archetype.dto;
+package se.cambio.cm.model.guide.dto;
 
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Date;
 
-public class ArchetypeDTOBuilder {
+public class GuideDTOBuilder {
     private String id;
     private String format;
     private String source;
-    private byte[] aom;
-    private byte[] aobcVO;
+    private byte[] guideObject;
+    private byte[] compiledGuide;
     private Date lastUpdate;
 
-    public ArchetypeDTOBuilder setId(String id) {
+    public GuideDTOBuilder setId(String id) {
         this.id = id;
         return this;
     }
 
-    public ArchetypeDTOBuilder setFormat(String format) {
+    public GuideDTOBuilder setFormat(String format) {
         this.format = format;
         return this;
     }
 
-
-    public ArchetypeDTOBuilder setSource(String source) {
+    public GuideDTOBuilder setSource(String source) {
         this.source = source;
         return this;
     }
 
-    public ArchetypeDTOBuilder setAom(byte[] aom) {
-        this.aom = aom;
+    public GuideDTOBuilder setGuideObject(byte[] guideObject) {
+        this.guideObject = guideObject;
         return this;
     }
 
-    public ArchetypeDTOBuilder setAobcVO(byte[] aobcVO) {
-        this.aobcVO = aobcVO;
+    public GuideDTOBuilder setCompiledGuide(byte[] compiledGuide) {
+        this.compiledGuide = compiledGuide;
         return this;
     }
 
-    public ArchetypeDTOBuilder setLastUpdate(Date lastUpdate) {
+    public GuideDTOBuilder setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
         return this;
     }
 
-    public ArchetypeDTO createArchetypeDTO() throws InternalErrorException {
+    public GuideDTO createGuideDTO() throws InternalErrorException {
         checkMissingAttributes();
-        return new ArchetypeDTO(id, format, source, aom, aobcVO, lastUpdate);
+        return new GuideDTO(id, format, source, guideObject, compiledGuide, lastUpdate);
     }
 
     private void checkMissingAttributes() throws InternalErrorException {

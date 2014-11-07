@@ -41,7 +41,14 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
 
     public PredicateGeneratedElementInstance clone(){
         PredicateGeneratedElementInstance predicateGeneratedElementInstance =
-                new PredicateGeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour(), getOperatorKind());
+                new PredicateGeneratedElementInstanceBuilder()
+                        .setId(getId())
+                        .setDataValue(getDataValue())
+                        .setArchetypeReference(getArchetypeReference().clone())
+                        .setContainerInstance(getContainerInstance())
+                        .setNullFlavour(getNullFlavour())
+                        .setOperatorKind(getOperatorKind())
+                        .createPredicateGeneratedElementInstance();
         predicateGeneratedElementInstance.setRuleReferences(getRuleReferences());
         return predicateGeneratedElementInstance;
     }

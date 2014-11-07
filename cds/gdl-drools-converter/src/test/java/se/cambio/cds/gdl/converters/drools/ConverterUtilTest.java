@@ -1,30 +1,38 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
-public class ConverterUtilTest extends TestCase {
-	
+import static org.junit.Assert.assertEquals;
+
+public class ConverterUtilTest {
+
+    @Before
 	public void setUp() {
 		converter = new GDLDroolsConverter(null, ArchetypeManager.getInstance());
 	}
-	
-	public void testParseCodeWithDvText() {
+
+    @Test
+	public void shouldParseCodeWithDvText() {
 		String code = converter.parseCode("new DvText(\"local::gt0100\")");
 		assertEquals("gt0100", code);
 	}
-	
-	public void testParseCodeWithDvTextPlusLabel() {
+
+    @Test
+	public void shouldParseCodeWithDvTextPlusLabel() {
 		String code = converter.parseCode("new DvText(\"local::gt0100|Hypertension|\")");
 		assertEquals("gt0100", code);
 	}
-	
-	public void testParseCodeWithDvTextAndQuotation() {
+
+    @Test
+    public void shouldParseCodeWithDvTextAndQuotation() {
 		String code = converter.parseCode("new DvText(\"'local::gt0100'\")");
 		assertEquals("gt0100", code);
 	}
-	
-	public void testParseCodeWithDvCodedText() {
+
+    @Test
+    public void shouldParseCodeWithDvCodedText() {
 		String code = converter.parseCode(" new DvCodedText(\"Dubois and Dubois\",\"local\",\"gt0008\")");
 		assertEquals("gt0008", code);
 	}

@@ -4,7 +4,7 @@ import se.cambio.cm.model.kb.instance.dto.KBInstanceDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
 public class KBInstances extends AbstractCMManager<KBInstanceDTO>{
-    public static KBInstances instance = null;
+    private static KBInstances instance = null;
 
     private KBInstances(){
     }

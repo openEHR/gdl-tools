@@ -5,7 +5,7 @@ import se.cambio.cm.model.orderset.dto.OrderSetDTO;
 
 
 public class OrderSets extends AbstractCMManager<OrderSetDTO> {
-    public static OrderSets _instance = null;
+    private static OrderSets _instance = null;
 
     public OrderSets(){
     }

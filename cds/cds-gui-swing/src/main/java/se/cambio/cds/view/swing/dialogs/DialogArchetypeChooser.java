@@ -23,9 +23,7 @@ import java.util.Collection;
 
 
 public class DialogArchetypeChooser extends JDialog{
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 1L;
     private JButton acceptButton;
     private JButton cancelButton;
@@ -36,8 +34,8 @@ public class DialogArchetypeChooser extends JDialog{
     private CancelChangesAction cancelChangesAction;
     private SelectionPanel archetypeSelectionPanel;
     private SelectionPanel templateSelectionPanel;
-    private SelectableNode<Object> archetypeNode = null;
-    private SelectableNode<Object> templateNode = null;
+    private SelectableNode<String> archetypeNode = null;
+    private SelectableNode<String> templateNode = null;
     private JComboBox domainComboBox;
     private JTabbedPane tabbedPane;
     private JCheckBox lastCB;
@@ -248,14 +246,7 @@ public class DialogArchetypeChooser extends JDialog{
     class DoubleClickMouseListener extends MouseAdapter{
         public void mouseClicked(MouseEvent e) {
             if(e.getClickCount()>1){
-                CMElement cmElement = null;
-                try {
-                    cmElement = getSelectedCMElement();
-                } catch (InternalErrorException e1) {
-                    ExceptionHandler.handle(e1);
-                } catch (InstanceNotFoundException e1) {
-                    ExceptionHandler.handle(e1);
-                }
+                CMElement cmElement = getSelectedCMElement();
                 if (cmElement!=null){
                     accept();
                 }
@@ -345,9 +336,9 @@ public class DialogArchetypeChooser extends JDialog{
         }
     }
 
-    public SelectableNode<Object> getArchetypeNode() {
+    public SelectableNode<String> getArchetypeNode() {
         if(archetypeNode==null){
-            archetypeNode = new SelectableNodeBuilder<Object>()
+            archetypeNode = new SelectableNodeBuilder<String>()
                     .setName(OpenEHRLanguageManager.getMessage("Archetypes"))
                     .setIcon(Archetypes.ICON)
                     .createSelectableNode();
@@ -364,7 +355,7 @@ public class DialogArchetypeChooser extends JDialog{
         return archetypeNode;
     }
 
-    private static void insertArchetypeNodes(SelectableNode<Object> root, Collection<String> archetypeIds, String rmName) {
+    private static void insertArchetypeNodes(SelectableNode<String> root, Collection<String> archetypeIds, String rmName) {
 
         SelectableNode<Object> entryRoot = new SelectableNodeBuilder<Object>()
                 .setName(OpenEHRConstUI.getName(rmName))
@@ -374,7 +365,7 @@ public class DialogArchetypeChooser extends JDialog{
         for (String archetypeId : archetypeIds) {
             String entryType = Archetypes.getEntryType(archetypeId);
             if (entryType!=null && rmName.equals(entryType)) {
-                SelectableNode<Object> rnode = new SelectableNodeBuilder<Object>()
+                SelectableNode<String> rnode = new SelectableNodeBuilder<String>()
                         .setName(archetypeId)
                         .setDescription(archetypeId)
                         .setIcon(Archetypes.getIcon(archetypeId))
@@ -387,15 +378,15 @@ public class DialogArchetypeChooser extends JDialog{
 
     }
 
-    public SelectableNode<Object> getTemplateNode() {
+    public SelectableNode<String> getTemplateNode() {
         if (templateNode==null){
             templateNode = generateTemplateNode();
         }
         return templateNode;
     }
 
-    public static SelectableNode<Object> generateTemplateNode() {
-        SelectableNode templateNode = new SelectableNodeBuilder<Object>()
+    public static SelectableNode<String> generateTemplateNode() {
+        SelectableNode templateNode = new SelectableNodeBuilder<String>()
                 .setName(OpenEHRLanguageManager.getMessage("Templates"))
                 .setIcon(Templates.ICON)
                 .createSelectableNode();
@@ -408,9 +399,9 @@ public class DialogArchetypeChooser extends JDialog{
         return templateNode;
     }
 
-    private static void insertTemplateNodes(SelectableNode<Object> rootNode, Collection<String> templateIds) {
+    private static void insertTemplateNodes(SelectableNode<String> rootNode, Collection<String> templateIds) {
         for (String templateId : templateIds) {
-            SelectableNode<String> node = new SelectableNodeBuilder<Object>()
+            SelectableNode<String> node = new SelectableNodeBuilder<String>()
                     .setName(templateId)
                     .setObject(templateId)
                     .setIcon(Templates.ICON)
@@ -423,20 +414,38 @@ public class DialogArchetypeChooser extends JDialog{
         return _answer;
     }
 
-    public CMElement getSelectedCMElement() throws InternalErrorException, InstanceNotFoundException {
-        Object selected = null;
-        if (getArchetypeTemplateTabbedPane().getSelectedIndex() == 0){
-            selected = NodeConversor.getSelectedObject(getArchetypeNode());
-            if (selected instanceof String){
-                return ArchetypeManager.getInstance().getArchetypes().getCMElement((String)selected);
+
+    public CMElement getSelectedCMElement() {
+        boolean isArchetypeTabSelected = getArchetypeTemplateTabbedPane().getSelectedIndex() == 0;
+        try {
+            String id = getSelectedId(isArchetypeTabSelected);
+            if (id == null){
+                return null;
+            } else {
+                return getCmElement(id, isArchetypeTabSelected);
             }
-        } else {
-            selected = NodeConversor.getSelectedObject(getTemplateNode());
-            if (selected instanceof String){
-                return ArchetypeManager.getInstance().getTemplates().getCMElement((String)selected);
-            }
+        } catch (InternalErrorException e1) {
+            ExceptionHandler.handle(e1);
+        } catch (InstanceNotFoundException e1) {
+            ExceptionHandler.handle(e1);
         }
         return null;
+    }
+
+    private CMElement getCmElement(String id, boolean isArchetypeTabSelected) throws InstanceNotFoundException, InternalErrorException {
+        if (isArchetypeTabSelected) {
+            return ArchetypeManager.getInstance().getArchetypes().getCMElement(id);
+        } else {
+            return ArchetypeManager.getInstance().getTemplates().getCMElement(id);
+        }
+    }
+
+    private String getSelectedId(boolean isArchetypeTabSelected) {
+        if (isArchetypeTabSelected) {
+            return NodeConversor.getSelectedElement(getArchetypeNode());
+        } else {
+            return NodeConversor.getSelectedElement(getTemplateNode());
+        }
     }
 
     public String getSelectedDomain() {

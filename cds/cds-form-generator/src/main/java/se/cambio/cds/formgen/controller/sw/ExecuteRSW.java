@@ -18,10 +18,6 @@ import javax.swing.*;
 import java.io.File;
 import java.util.*;
 
-/**
- * @author iago.corbal
- *
- */
 public class ExecuteRSW extends SwingWorker<Object, Object> {
 
     //private long _executionTime = 0;

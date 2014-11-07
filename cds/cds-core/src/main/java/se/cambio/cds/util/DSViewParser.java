@@ -6,7 +6,6 @@ import org.jsoup.select.Elements;
 import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.cds.model.view.DecisionSupportViewBundle;
 import se.cambio.cds.util.export.json.JSONSerialization;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -23,7 +22,7 @@ public class DSViewParser {
     public DSViewParser() {
     }
 
-    public DecisionSupportViewBundle parseDSView(InputStream is){
+    public DecisionSupportViewBundle parseDSView(InputStream is) throws InternalErrorException {
         try {
             InputStreamReader in = new InputStreamReader(is, "UTF-8");
             String dsvSrc = IOUtils.toString(in);
@@ -36,11 +35,9 @@ public class DSViewParser {
             }
             return new DecisionSupportViewBundle(decisionSuportView, dsvSrc);
         } catch (UnsupportedEncodingException e) {
-            ExceptionHandler.handle(e);
-            return null;
+            throw new InternalErrorException(e);
         } catch (IOException e) {
-            ExceptionHandler.handle(e);
-            return null;
+            throw new InternalErrorException(e);
         }
     }
 
@@ -54,12 +51,7 @@ public class DSViewParser {
         }
     }
 
-    private DecisionSupportView parseDSView(final String src){
-        try {
-            return JSONSerialization.parse(DecisionSupportView.class, src);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-            return null;
-        }
+    private DecisionSupportView parseDSView(final String src) throws InternalErrorException {
+        return JSONSerialization.parse(DecisionSupportView.class, src);
     }
 }

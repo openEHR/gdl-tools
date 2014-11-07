@@ -1,18 +1,20 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
+import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineDefinitionElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExistenceOperatorRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.PredicateRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 
-public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine{
+public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine{
 
     private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
     private ExistenceOperatorRuleLineElement existenceOperatorRuleLineElement = null;
@@ -70,6 +72,27 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
         }
     }
 
+    @Override
+    public String getPredicateDescription() {
+        StringBuffer sb = new StringBuffer();
+        ArchetypeElementRuleLineDefinitionElement aerlde = getArchetypeElementRuleLineDefinitionElement();
+        if (aerlde!=null){
+            ArchetypeElementVO archetypeElementVO = aerlde.getValue();
+            if (archetypeElementVO!=null){
+                OperatorKind operator = getExistenceOperatorRuleLineElement().getOperator();
+                String opStr = "??";
+                if (operator!=null){
+                    opStr = operator.getSymbol();
+                }
+                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                sb.append(name+opStr+"null");
+            }else{
+                Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                sb.append("*UNKNOWN PREDICATE*");
+            }
+        }
+        return sb.toString();
+    }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

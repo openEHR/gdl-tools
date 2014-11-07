@@ -11,11 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-15
- * Time: 10:59
- */
 public class TerminologyDefinitionHTMLRenderer {
     private String terminologyId;
     private String lang;

@@ -3,10 +3,6 @@ package se.cambio.cds.model.facade.cds.delegate;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
-/**
- * @author iago.corbal
- *
- */
 public class CDSExecutionFacadeDelegateFactory {
 
     private static String DELEGATE_CLASS_CDS = "CDSExecutionFacadeDelegate/Class";
