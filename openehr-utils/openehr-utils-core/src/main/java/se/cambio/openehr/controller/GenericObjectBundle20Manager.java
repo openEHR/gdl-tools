@@ -25,14 +25,14 @@ public class GenericObjectBundle20Manager {
     private final ArchetypeManager archetypeManager;
     private String language = null;
     private FlatArchetype ar = null;
-    private Collection<ArchetypeElementVO> archetypeElementVOs = new ArrayList<ArchetypeElementVO>();
-    private Collection<ClusterVO> clusterVOs = new ArrayList<ClusterVO>();
-    private Collection<CodedTextVO> codedTextVOs = null;
-    private Collection<OrdinalVO> ordinalVOs = null;
-    private Collection<UnitVO> unitVOs = null;
-    private Collection<ProportionTypeVO> proportionTypeVOs = null;
+    private Collection<ArchetypeElementVO> archetypeElementVOs;
+    private Collection<ClusterVO> clusterVOs;
+    private Collection<CodedTextVO> codedTextVOs;
+    private Collection<OrdinalVO> ordinalVOs;
+    private Collection<UnitVO> unitVOs;
+    private Collection<ProportionTypeVO> proportionTypeVOs;
     private Map<String, Map<String, String>> termDefinitionsArchetypeTermMap;
-    Logger logger = Logger.getLogger(GenericObjectBundle20Manager.class);
+    private Logger logger = Logger.getLogger(GenericObjectBundle20Manager.class);
 
     public GenericObjectBundle20Manager(FlatArchetype ar, ArchetypeManager archetypeManager){
         this.ar = ar;
@@ -71,6 +71,8 @@ public class GenericObjectBundle20Manager {
     }
 
     private void init() {
+        archetypeElementVOs = new ArrayList<ArchetypeElementVO>();
+        clusterVOs = new ArrayList<ClusterVO>();
         codedTextVOs = new ArrayList<CodedTextVO>();
         ordinalVOs = new ArrayList<OrdinalVO>();
         unitVOs = new ArrayList<UnitVO>();
@@ -125,38 +127,76 @@ public class GenericObjectBundle20Manager {
         try {
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO =
                     archetypeManager.getArchetypes().getArchetypeAOBCVOById(usedArchetypeId);
-            for(ArchetypeElementVO archetypeElementVO: archetypeObjectBundleCustomVO.getArchetypeElementVOs()){
-                ArchetypeElementVO archetypeElementVO1 = archetypeElementVO.clone();
-                archetypeElementVO1.setIdTemplate(getArchetypeId());
-                archetypeElementVO1.setPath(currentPath + archetypeElementVO.getPath());
-            }
-            for(ClusterVO clusterVO: archetypeObjectBundleCustomVO.getClusterVOs()){
-                ClusterVO clusterVO1 = clusterVO.clone();
-                clusterVO1.setIdTemplate(getArchetypeId());
-                clusterVO1.setPath(currentPath + clusterVO.getPath());
-            }
-            for(CodedTextVO codedTextVO: archetypeObjectBundleCustomVO.getCodedTextVOs()){
-                CodedTextVO codedTextVO1 = codedTextVO.clone();
-                codedTextVO1.setIdTemplate(getArchetypeId());
-                codedTextVO1.setPath(currentPath + codedTextVO.getPath());
-            }
-            for(OrdinalVO ordinalVO: archetypeObjectBundleCustomVO.getOrdinalVOs()){
-                OrdinalVO ordinalVO1 = ordinalVO.clone();
-                ordinalVO1.setIdTemplate(getArchetypeId());
-                ordinalVO1.setPath(currentPath + ordinalVO.getPath());
-            }
-            for(UnitVO unitVO: archetypeObjectBundleCustomVO.getUnitVOs()){
-                UnitVO unitVO1 = unitVO.clone();
-                unitVO1.setIdTemplate(getArchetypeId());
-            }
-            for(ProportionTypeVO proportionTypeVO: archetypeObjectBundleCustomVO.getProportionTypes()){
-                ProportionTypeVO proportionTypeVO1 = proportionTypeVO.clone();
-                proportionTypeVO1.setIdTemplate(getArchetypeId());
-            }
+            processReferencedArcehtypeElements(currentPath, archetypeObjectBundleCustomVO);
+            processReferencedClusters(currentPath, archetypeObjectBundleCustomVO);
+            processReferencedCodedTexts(currentPath, archetypeObjectBundleCustomVO);
+            processReferencedOrdinals(currentPath, archetypeObjectBundleCustomVO);
+            processReferencedUnits(archetypeObjectBundleCustomVO);
+            processReferencedProportionTypes(archetypeObjectBundleCustomVO);
         } catch (InternalErrorException e) {
             throw new ArchetypeProcessingException(e.getMessage());
         } catch (InstanceNotFoundException e) {
             throw new ArchetypeProcessingException(e.getMessage());
+        }
+    }
+
+    private void processReferencedProportionTypes(ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        for(ProportionTypeVO proportionTypeVO: archetypeObjectBundleCustomVO.getProportionTypes()){
+            ProportionTypeVO proportionTypeVO1 = proportionTypeVO.clone();
+            String elementId = proportionTypeVO1.getIdElement();
+            int indexOfFirstSlash = elementId.indexOf("/");
+            String elementPath = elementId.substring(indexOfFirstSlash, elementId.length());
+            elementId = getArchetypeId() + elementPath;
+            proportionTypeVO1.setIdElement(elementId);
+            proportionTypeVOs.add(proportionTypeVO1);
+        }
+    }
+
+    private void processReferencedUnits(ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        for(UnitVO unitVO: archetypeObjectBundleCustomVO.getUnitVOs()){
+            UnitVO unitVO1 = unitVO.clone();
+            String elementId = unitVO.getIdElement();
+            int indexOfFirstSlash = elementId.indexOf("/");
+            String elementPath = elementId.substring(indexOfFirstSlash, elementId.length());
+            elementId = getArchetypeId() + elementPath;
+            unitVO1.setIdElement(elementId);
+            unitVOs.add(unitVO1);
+        }
+    }
+
+    private void processReferencedOrdinals(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        for(OrdinalVO ordinalVO: archetypeObjectBundleCustomVO.getOrdinalVOs()){
+            OrdinalVO ordinalVO1 = ordinalVO.clone();
+            ordinalVO1.setIdArchetype(getArchetypeId());
+            ordinalVO1.setPath(currentPath + ordinalVO.getPath());
+            ordinalVOs.add(ordinalVO1);
+        }
+    }
+
+    private void processReferencedCodedTexts(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        for(CodedTextVO codedTextVO: archetypeObjectBundleCustomVO.getCodedTextVOs()){
+            CodedTextVO codedTextVO1 = codedTextVO.clone();
+            codedTextVO1.setIdArchetype(getArchetypeId());
+            codedTextVO1.setPath(currentPath + codedTextVO.getPath());
+            codedTextVOs.add(codedTextVO1);
+        }
+    }
+
+    private void processReferencedClusters(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        for(ClusterVO clusterVO: archetypeObjectBundleCustomVO.getClusterVOs()){
+            ClusterVO clusterVO1 = clusterVO.clone();
+            clusterVO1.setIdArchetype(getArchetypeId());
+            clusterVO1.setPath(currentPath + clusterVO.getPath());
+            clusterVOs.add(clusterVO1);
+        }
+    }
+
+    private void processReferencedArcehtypeElements(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        for(ArchetypeElementVO archetypeElementVO: archetypeObjectBundleCustomVO.getArchetypeElementVOs()){
+            ArchetypeElementVO archetypeElementVO1 = archetypeElementVO.clone();
+            archetypeElementVO1.setIdArchetype(getArchetypeId());
+            archetypeElementVO1.setPath(currentPath + archetypeElementVO.getPath());
+            archetypeElementVOs.add(archetypeElementVO1);
         }
     }
 

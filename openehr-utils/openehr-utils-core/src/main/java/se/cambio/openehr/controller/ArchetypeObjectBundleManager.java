@@ -79,7 +79,7 @@ public class ArchetypeObjectBundleManager {
             FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
             byte[] flatArchetypeBytes = IOUtils.getBytes(flatArchetype);
             archetypeDTO.setAom(flatArchetypeBytes);
-            GenericObjectBundle20Manager genericObjectBundle20Manager = new GenericObjectBundle20Manager(flatArchetype, null);
+            GenericObjectBundle20Manager genericObjectBundle20Manager = new GenericObjectBundle20Manager(flatArchetype, archetypeManager);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundle20Manager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
         } catch (Exception e) {

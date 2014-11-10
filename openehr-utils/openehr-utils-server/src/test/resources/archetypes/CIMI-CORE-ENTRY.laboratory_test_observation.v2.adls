@@ -21,9 +21,6 @@ definition
 			use_archetype CLUSTER [CIMI-CORE-CLUSTER.laboratory_test_observable.v1] -- Test observable
 			CLUSTER[at0.0.1] occurrences matches {0..1} matches { -- Test results
 			item matches {
-				use_archetype CLUSTER [CIMI-CORE-CLUSTER.laboratory_test_result_item.v1] -- Result item
-				use_archetype CLUSTER [CIMI-CORE-CLUSTER.laboratory_test_result_group.v1] -- Result subgroup
-				use_archetype CLUSTER [CIMI-CORE-CLUSTER.specimen.v3] -- Specimen
 				ELEMENT[at0.0.2] occurrences matches {0..*} matches { -- Diagnosis
 					value matches {
 						TEXT matches {*}

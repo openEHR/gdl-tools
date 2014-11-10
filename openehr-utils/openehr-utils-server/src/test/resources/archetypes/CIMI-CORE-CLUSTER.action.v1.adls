@@ -1,0 +1,162 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.action.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000] matches { -- Action
+		item matches {
+			ELEMENT[at0001] occurrences matches {1} matches { -- Action type
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+			ELEMENT[at0002] occurrences matches {0..*} matches { -- Identifier
+				value matches {
+					IDENTIFIER matches {*}
+				}
+			}
+			ELEMENT[at0003] occurrences matches {0..1} matches { -- Datetime
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+			ELEMENT[at0004] occurrences matches {0..1} matches { -- Datetime range
+				value matches {
+					INTERVAL_VALUE<DATE_TIME> matches {*}
+				}
+			}
+			ELEMENT[at0005] occurrences matches {0..1} matches { -- Duration
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0006] occurrences matches {0..1} matches { -- Timing offset
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0007] occurrences matches {0..1} matches { -- Timing offset origin
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+			ITEM[at0008] occurrences matches {0..*} -- Timing
+			ITEM[at0009] occurrences matches {0..*} -- Reason
+			ITEM[at0010] occurrences matches {0..*} -- Method
+			ELEMENT[at0011] occurrences matches {0..1} matches { -- Status
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+		}
+		participation matches {
+			PARTICIPATION[at0012] occurrences matches {0..*} -- Location
+		}
+		link matches {
+			LINK[at0014] occurrences matches {0..1} -- Associated activity
+			LINK[at0015] occurrences matches {0..*} -- Previous action
+			LINK[at0016] occurrences matches {0..*} -- Subsequent action
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000"] = <
+				text = <"Action">
+				description = <"Action">
+			>
+			["at0001"] = <
+				text = <"Action type">
+				description = <"Action type">
+			>
+			["at0002"] = <
+				text = <"Identifier">
+				description = <"Identifier">
+			>
+			["at0003"] = <
+				text = <"Datetime">
+				description = <"Datetime">
+			>
+			["at0004"] = <
+				text = <"Datetime range">
+				description = <"Datetime range">
+			>
+			["at0005"] = <
+				text = <"Duration">
+				description = <"Duration">
+			>
+			["at0006"] = <
+				text = <"Timing offset">
+				description = <"Timing offset">
+			>
+			["at0007"] = <
+				text = <"Timing offset origin">
+				description = <"Timing offset origin">
+			>
+			["at0008"] = <
+				text = <"Timing">
+				description = <"Timing">
+			>
+			["at0009"] = <
+				text = <"Reason">
+				description = <"Reason">
+			>
+			["at0010"] = <
+				text = <"Method">
+				description = <"Method">
+			>
+			["at0011"] = <
+				text = <"Status">
+				description = <"Status">
+			>
+			["at0012"] = <
+				text = <"Location">
+				description = <"Location">
+			>
+			["at0014"] = <
+				text = <"Associated activity">
+				description = <"Associated activity">
+			>
+			["at0015"] = <
+				text = <"Previous action">
+				description = <"Previous action">
+			>
+			["at0016"] = <
+				text = <"Subsequent action">
+				description = <"Subsequent action">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0000"] = <[SNOMED-CT::129264002]>
+				["at0001"] = <[SNOMED-CT::129264002]>
+				["at0002"] = <[SNOMED-CT::129264002]>
+				["at0003"] = <[SNOMED-CT::364713004]>
+				["at0004"] = <[SNOMED-CT::364713004]>
+				["at0005"] = <[SNOMED-CT::364713004]>
+				["at0006"] = <[SNOMED-CT::364713004]>
+				["at0007"] = <[SNOMED-CT::364713004]>
+				["at0008"] = <[SNOMED-CT::364713004]>
+				["at0009"] = <[SNOMED-CT::138875005]>
+				["at0010"] = <[SNOMED-CT::272394005]>
+				["at0011"] = <[SNOMED-CT::288532009]>
+				["at0012"] = <[SNOMED-CT::308916002]>
+				["at0014"] = <[SNOMED-CT::71388002]>
+				["at0015"] = <[SNOMED-CT::71388002]>
+				["at0016"] = <[SNOMED-CT::71388002]>
+			>
+		>
+	>

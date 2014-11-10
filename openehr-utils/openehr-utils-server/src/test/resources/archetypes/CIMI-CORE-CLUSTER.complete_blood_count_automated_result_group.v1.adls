@@ -20,11 +20,7 @@ definition
 					TEXT matches {*}
 				}
 			}
-			use_archetype CLUSTER [CIMI-CORE-CLUSTER.leukocytes_in_blood_automated.v1] -- Leukocytes in blood by automated count
-			use_archetype CLUSTER [CIMI-CORE-CLUSTER.erythrocytes_in_blood_automated.v1] -- Erythrocytes in blood by automated count
 			use_archetype CLUSTER [CIMI-CORE-CLUSTER.hemoglobin_in_blood.v1] -- Hemoglobin in blood
-			use_archetype CLUSTER [CIMI-CORE-CLUSTER.hematocrit_of_blood_automated.v1] -- Hematocrit of blood by automated count
-			use_archetype CLUSTER [CIMI-CORE-CLUSTER.erythrocyte_mean_corpuscular_volume_automated.v1] -- Erythrocyte mean corpuscular volume by automated count
 		}
 	}
 
