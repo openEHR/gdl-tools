@@ -1,0 +1,115 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.interpret_action.v1
+
+specialize
+	CIMI-CORE-CLUSTER.action.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000.1] matches { -- Interpret Action
+		/item matches {
+			ELEMENT[at0.1] occurrences matches {1} matches { -- Action type
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+			ELEMENT[at0.2] occurrences matches {0..1} matches { -- Interpretation datetime
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+			ELEMENT[at0.3] occurrences matches {0..1} matches { -- Interpretation datetime range
+				value matches {
+					INTERVAL_VALUE<DATE_TIME> matches {*}
+				}
+			}
+			ELEMENT[at0.4] occurrences matches {0..1} matches { -- Interpretation duration
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0.5] occurrences matches {0..1} matches { -- Interpretation timing offset
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0.6] occurrences matches {0..1} matches { -- Interpretation timing offset origin
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+		}
+		participation matches {
+			PARTICIPATION[at0.7] occurrences matches {0..*} -- Interpreter
+			PARTICIPATION[at0.8] occurrences matches {0..1} -- Locationof subject
+			PARTICIPATION[at0.9] occurrences matches {0..1} -- Locationof interpreter
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1"] = <
+				text = <"Interpret Action">
+				description = <"Interpret Action">
+			>
+			["at0.1"] = <
+				text = <"Action type">
+				description = <"Action type">
+			>
+			["at0.2"] = <
+				text = <"Interpretation datetime">
+				description = <"Interpretation datetime">
+			>
+			["at0.3"] = <
+				text = <"Interpretation datetime range">
+				description = <"Interpretation datetime range">
+			>
+			["at0.4"] = <
+				text = <"Interpretation duration">
+				description = <"Interpretation duration">
+			>
+			["at0.5"] = <
+				text = <"Interpretation timing offset">
+				description = <"Interpretation timing offset">
+			>
+			["at0.6"] = <
+				text = <"Interpretation timing offset origin">
+				description = <"Interpretation timing offset origin">
+			>
+			["at0.7"] = <
+				text = <"Interpreter">
+				description = <"Interpreter">
+			>
+			["at0.8"] = <
+				text = <"Locationof subject">
+				description = <"Locationof subject">
+			>
+			["at0.9"] = <
+				text = <"Locationof interpreter">
+				description = <"Locationof interpreter">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0.1"] = <[SNOMED-CT::129264002]>
+				["at0.2"] = <[SNOMED-CT::364713004]>
+				["at0.3"] = <[SNOMED-CT::364713004]>
+				["at0.4"] = <[SNOMED-CT::48176007]>
+				["at0.5"] = <[SNOMED-CT::308916002]>
+				["at0.6"] = <[SNOMED-CT::308916002]>
+			>
+		>
+	>

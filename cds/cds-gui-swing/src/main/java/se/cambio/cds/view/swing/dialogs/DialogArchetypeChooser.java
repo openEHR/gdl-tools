@@ -348,6 +348,7 @@ public class DialogArchetypeChooser extends JDialog{
                 insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
                 insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
                 insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
+                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ENTRY);
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
             }

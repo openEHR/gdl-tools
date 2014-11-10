@@ -222,6 +222,7 @@ public class GenericObjectBundle20Manager {
         String description = termMap.get("description");
         CObject elementDefinitionCObject = getElementDefinitionCObject(cComplexObject, currentPath, "value");
         String rmType = elementDefinitionCObject.getRmTypeName();
+        rmType = translateCIMIRM(rmType);
         ArchetypeElementVO archetypeElementVO =
                 new ArchetypeElementVOBuilder()
                         .setName(text)
@@ -382,7 +383,8 @@ public class GenericObjectBundle20Manager {
                 return cAttribute.getChildren().iterator().next();
             }
         }
-        throw new ArchetypeProcessingException("Could not find rmName for element at '" + path + "'");
+        return null;
+        //throw new ArchetypeProcessingException("Could not find rmName for element at '" + path + "'");
     }
 
     private void processAttribute(CAttribute cAttribute, String path) throws ArchetypeProcessingException {
@@ -405,7 +407,32 @@ public class GenericObjectBundle20Manager {
                 (cComplexObject.getOccurrences().getUpper() <= 0);
     }
 
-    private static String getValidCodedTextName(String string){
-        return string.replaceAll("\\(", "[").replaceAll("\\)", "\\]");
+    private String translateCIMIRM(String rmName){
+        if ("TEXT".equals(rmName)){
+            return OpenEHRDataValues.DV_TEXT;
+        } else if ("CODED_TEXT".equals(rmName)){
+            return OpenEHRDataValues.DV_CODED_TEXT;
+        } else if ("ORDINAL".equals(rmName)){
+            return OpenEHRDataValues.DV_ORDINAL;
+        } else if ("QUANTITY".equals(rmName)){
+            return OpenEHRDataValues.DV_QUANTITY;
+        } else if ("BOOLEAN".equals(rmName)){
+            return OpenEHRDataValues.DV_BOOLEAN;
+        } else if ("COUNT".equals(rmName)){
+            return OpenEHRDataValues.DV_COUNT;
+        } else if ("DURATION".equals(rmName)){
+            return OpenEHRDataValues.DV_DURATION;
+        } else if ("DATE_TIME".equals(rmName)){
+            return OpenEHRDataValues.DV_DATE_TIME;
+        } else if ("DATE".equals(rmName)){
+            return OpenEHRDataValues.DV_DATE;
+        } else if ("TIME".equals(rmName)){
+            return OpenEHRDataValues.DV_TIME;
+        } else if ("PROPORTION".equals(rmName)){
+            return OpenEHRDataValues.DV_PROPORTION;
+        } else {
+            return rmName;
+        }
+
     }
 }
