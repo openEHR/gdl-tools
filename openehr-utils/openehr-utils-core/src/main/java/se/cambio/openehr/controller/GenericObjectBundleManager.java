@@ -2,8 +2,11 @@ package se.cambio.openehr.controller;
 
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.archetype.assertion.Assertion;
-import org.openehr.am.archetype.constraintmodel.*;
+import org.openehr.am.archetype.constraintmodel.ArchetypeSlot;
+import org.openehr.am.archetype.constraintmodel.CAttribute;
+import org.openehr.am.archetype.constraintmodel.CComplexObject;
+import org.openehr.am.archetype.constraintmodel.CObject;
+import org.openehr.am.archetype.constraintmodel.CPrimitiveObject;
 import org.openehr.am.archetype.constraintmodel.primitive.CInteger;
 import org.openehr.am.archetype.constraintmodel.primitive.CPrimitive;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
@@ -14,25 +17,33 @@ import org.openehr.am.openehrprofile.datatypes.quantity.Ordinal;
 import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.util.*;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRDataValuesUI;
+import se.cambio.openehr.util.OpenEHRRMUtil;
+import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class GenericObjectBundleManager {
     private static String SECTION_NAME = "name/value='";
     protected String templateId = null;
     private String language = null;
     private Archetype ar = null;
-    private Collection<ArchetypeElementVO> archetypeElementVOs = new ArrayList<ArchetypeElementVO>();
-    private Collection<ClusterVO> clusterVOs = new ArrayList<ClusterVO>();
-    private Collection<CodedTextVO> codedTextVOs = null;
-    private Collection<OrdinalVO> ordinalVOs = null;
-    private Collection<ArchetypeSlotVO> archetypeSlotVOs = null;
-    private Collection<UnitVO> unitVOs = null;
-    private Collection<ProportionTypeVO> proportionTypeVOs = null;
+    private Collection<ArchetypeElementVO> archetypeElementVOs;
+    private Collection<ClusterVO> clusterVOs;
+    private Collection<CodedTextVO> codedTextVOs;
+    private Collection<OrdinalVO> ordinalVOs;
+    private Collection<UnitVO> unitVOs;
+    private Collection<ProportionTypeVO> proportionTypeVOs;
     private final Map<String, Archetype> archetypeMap;
 
     public GenericObjectBundleManager(Archetype ar, Map<String, Archetype> archetypeMap){
@@ -53,7 +64,6 @@ public class GenericObjectBundleManager {
         return new ArchetypeObjectBundleCustomVO(
                 archetypeElementVOs,
                 clusterVOs,
-                archetypeSlotVOs,
                 codedTextVOs,
                 ordinalVOs,
                 unitVOs,
@@ -69,9 +79,10 @@ public class GenericObjectBundleManager {
     }
 
     private void init() {
+        archetypeElementVOs = new ArrayList<ArchetypeElementVO>();
+        clusterVOs = new ArrayList<ClusterVO>();
         codedTextVOs = new ArrayList<CodedTextVO>();
         ordinalVOs = new ArrayList<OrdinalVO>();
-        archetypeSlotVOs = new ArrayList<ArchetypeSlotVO>();
         unitVOs = new ArrayList<UnitVO>();
         proportionTypeVOs = new ArrayList<ProportionTypeVO>();
     }
@@ -98,43 +109,8 @@ public class GenericObjectBundleManager {
         if (cObject instanceof CComplexObject){
             processComplexObject(cObject, path, archetypeId);
         }else if (cObject instanceof ArchetypeSlot){
-            proccessArchetypeSlot(cObject, path, archetypeId);
+            //Skip
         }
-    }
-
-    private void proccessArchetypeSlot(CObject cObject, String path, String archetypeId) {
-        ArchetypeSlot archetypeSlot = (ArchetypeSlot) cObject;
-        String text = getText(ar, cObject.getNodeId(), language);
-        if (text == null){
-            text= OpenEHRLanguageManager.getMessage("UnnamedSlot");
-        }
-        String desc = getDescription(ar, cObject.getNodeId(), language);
-        if (desc == null){
-            desc=OpenEHRLanguageManager.getMessage("UnnamedSlot");
-        }
-        Collection<String> includes = new ArrayList<String>();
-        if (archetypeSlot.getIncludes() != null){
-            for (Assertion assertion : archetypeSlot.getIncludes()) {
-                String exp = assertion.getStringExpression();
-                int indexS= exp.indexOf("{");
-                int indexE= exp.indexOf("}");
-                exp = exp.substring(indexS+2, indexE-1);
-                includes.add(exp);
-            }
-        }
-        Collection<String> excludes = new ArrayList<String>();
-        if (archetypeSlot.getExcludes() != null){
-            for (Assertion assertion : archetypeSlot.getExcludes()) {
-                String exp = assertion.getStringExpression();
-                int indexS= exp.indexOf("{");
-                int indexE= exp.indexOf("}");
-                exp = exp.substring(indexS+2, indexE-1);
-                excludes.add(exp);
-            }
-        }
-        ArchetypeSlotVO archetypeSlotVO =
-                new ArchetypeSlotVO(text, desc, cObject.getRmTypeName(), getIdParentCluster(path, clusterVOs), archetypeId, templateId, path, includes, excludes);
-        archetypeSlotVOs.add(archetypeSlotVO);
     }
 
     private void processComplexObject(CObject cObject, String path, String archetypeId) {
@@ -226,14 +202,29 @@ public class GenericObjectBundleManager {
                 text = auxText;
             }
         }
-        ClusterVO clusterVO = new ClusterVO(text, desc, type, getIdParentCluster(path, clusterVOs), archetypeId, templateId, path);
+        ClusterVO clusterVO =
+                new ClusterVOBuilder()
+                        .setName(text)
+                        .setDescription(desc)
+                        .setType(type)
+                        .setIdArchetype(archetypeId)
+                        .setIdTemplate(templateId)
+                        .setPath(path)
+                        .createClusterVO();
         setCardinalities(clusterVO, cObject);
         clusterVOs.add(clusterVO);
     }
 
     private void processDataValue(CObject cObject, String path, String archetypeId, Archetype localAOM, String text, String desc, String type, CObject childCObject) {
         ArchetypeElementVO archetypeElementVO =
-                new ArchetypeElementVO(text, desc, type, getIdParentCluster(path, clusterVOs), archetypeId, templateId, path);
+                new ArchetypeElementVOBuilder()
+                        .setName(text)
+                        .setDescription(desc)
+                        .setType(type)
+                        .setIdArchetype(archetypeId)
+                        .setIdTemplate(templateId)
+                        .setPath(path)
+                        .createArchetypeElementVO();
         setCardinalities(archetypeElementVO, cObject);
         archetypeElementVOs.add(archetypeElementVO);
         if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)){
@@ -292,6 +283,7 @@ public class GenericObjectBundleManager {
         if (childCObject instanceof CComplexObject){
             List<CAttribute> atts = ((CComplexObject)childCObject).getAttributes();
             if (atts != null){
+                int i = 0;
                 Iterator<CAttribute> atIt = atts.iterator();
                 while (atIt.hasNext() && !codedListFound){
                     CAttribute att2 = atIt.next();
@@ -306,17 +298,17 @@ public class GenericObjectBundleManager {
                                 for (String codedStr : cCodePhrase.getCodeList()) {
                                     String text = codedStr;
                                     String desc = codedStr;
-                                    CodedTextVO codedText = new CodedTextVO(
-                                            text,
-                                            desc,
-                                            cCodePhrase.getRmTypeName(),
-                                            idElement,
-                                            archetypdId,
-                                            templateId,
-                                            path,
-                                            cCodePhrase.getTerminologyId().getValue(),
-                                            codedStr,
-                                            null);
+                                    CodedTextVO codedText =
+                                            new CodedTextVOBuilder()
+                                                    .setName(text)
+                                                    .setDescription(desc)
+                                                    .setType(cCodePhrase.getRmTypeName())
+                                                    .setIdArchetype(archetypdId)
+                                                    .setIdTemplate(templateId)
+                                                    .setPath(path)
+                                                    .setTerminology(cCodePhrase.getTerminologyId().getValue())
+                                                    .setCode(codedStr)
+                                                    .createCodedTextVO();
                                     if (cCodePhrase.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)){
                                         codedText.setName(getText(ar, codedStr, language));
                                         codedText.setDescription(getDescription(ar, codedStr, language));
@@ -324,6 +316,9 @@ public class GenericObjectBundleManager {
                                         addSubclassCodedTexts(codedText, codedTextVOs);
                                     }
                                     codedTextVOs.add(codedText);
+                                    if (i++>15){ //No need to load the whole terminology
+                                        return;
+                                    }
                                 };
                                 codedListFound = true;
                             }
@@ -364,13 +359,17 @@ public class GenericObjectBundleManager {
         }
         for (TerminologyNodeVO node : root.getChildren()) {
             DvCodedText ct = node.getValue();
-            CodedTextVO codedTextVO =  new CodedTextVO(
-                    getValidCodedTextName(ct.getValue()),
-                    getValidCodedTextName(ct.getValue()),
-                    OpenEHRDataValues.DV_CODED_TEXT,
-                    rootCodedTextVO.getIdParent(), rootCodedTextVO.getIdArchetype(), rootCodedTextVO.getIdTemplate(), rootCodedTextVO.getPath(),
-                    ct.getDefiningCode().getTerminologyId().getValue(),
-                    ct.getDefiningCode().getCodeString(), rootCodedTextVO);
+            CodedTextVO codedTextVO =
+                    new CodedTextVOBuilder()
+                            .setName(getValidCodedTextName(ct.getValue()))
+                            .setDescription(getValidCodedTextName(ct.getValue()))
+                            .setType(OpenEHRDataValues.DV_CODED_TEXT)
+                            .setIdArchetype(rootCodedTextVO.getIdArchetype())
+                            .setIdTemplate(rootCodedTextVO.getIdTemplate())
+                            .setPath(rootCodedTextVO.getPath())
+                            .setTerminology(ct.getDefiningCode().getTerminologyId().getValue())
+                            .setCode(ct.getDefiningCode().getCodeString())
+                            .createCodedTextVO();
             codedTextVOs.add(codedTextVO);
             addCodedTextVOs(node, codedTextVO, codedTextVOs);
         }
@@ -405,17 +404,17 @@ public class GenericObjectBundleManager {
                         //TODO TERMINOLOGY SERVICE
                     }
                     ordinalVOs.add(
-                            new OrdinalVO(
-                                    text,
-                                    desc,
-                                    cDvOrdinal.getRmTypeName(),
-                                    idElement,
-                                    archetypdId,
-                                    templateId,
-                                    path,
-                                    ordinal.getValue(),
-                                    ordinal.getSymbol().getTerminologyId().getValue(),
-                                    ordinal.getSymbol().getCodeString()));
+                            new OrdinalVOBuilder()
+                                    .setName(text)
+                                    .setDescription(desc)
+                                    .setType(cDvOrdinal.getRmTypeName())
+                                    .setIdArchetype(archetypdId)
+                                    .setIdTemplate(templateId)
+                                    .setPath(path)
+                                    .setValue(ordinal.getValue())
+                                    .setTerminology(ordinal.getSymbol().getTerminologyId().getValue())
+                                    .setCode(ordinal.getSymbol().getCodeString())
+                                    .createOrdinalVO());
                 };
             }
         }

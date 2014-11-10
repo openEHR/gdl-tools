@@ -1,0 +1,188 @@
+﻿archetype (adl_version=1.5; generated)
+	openEHR-EHR-EVALUATION.alert-zn.v1
+
+specialize
+	openEHR-EHR-EVALUATION.alert.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["de"] = <
+			language = <[ISO_639-1::de]>
+			author = <
+				["organisation"] = <"University of Heidelberg, Central Queensland University">
+				["name"] = <"Jasmin Buck, Sebastian Garde">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"Sam Heard">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"sam.heard@oceaninformatics.biz">
+		["date"] = <"23/04/2006">
+	>
+	details = <
+		["de"] = <
+			language = <[ISO_639-1::de]>
+			purpose = <"Zur Dokumentation beliebiger Warnungen in der Patientenakte">
+			use = <"">
+			keywords = <"notabene", "Warnung">
+			misuse = <"">
+			copyright = <"copyright (c) 2010 openEHR Foundation">
+		>
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"For recording alerts of any kind in the health record">
+			use = <"">
+			keywords = <"nota bene", "warning">
+			misuse = <"">
+			copyright = <"copyright (c) 2010 openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+	other_contributors = <"NEHTA data groups (Australia)", "Ian McNicoll, Ocean Informatics, UK">
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"C41904897E22BE6D662C1203CD5086DC">
+	>
+
+definition
+	EVALUATION[at0000.1] matches {	-- Alert
+		/data[at0001]/items cardinality matches {1..*; unordered} matches {
+			ELEMENT[at0003] matches {
+				value matches {
+					DV_CODED_TEXT matches {
+						defining_code matches {
+							[local::
+							at0.15, 	-- Falls
+							at0.16, 	-- Skin breakdown
+							at0.17, 	-- Seizures
+							at0.18, 	-- Communicable disease
+							at0.19, 	-- Aspiration
+							at0.20, 	-- Hypo-hyperglycaemia
+							at0.21, 	-- Harm to self
+							at0.22]	-- Harm to others
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["de"] = <
+			["at0.15"] = <
+				text = <"*Falls(en)">
+				description = <"*The patient is at-risk of falls.(en)">
+			>
+			["at0.16"] = <
+				text = <"*Skin breakdown(en)">
+				description = <"*The patient is at-risk of skin breakdown.(en)">
+			>
+			["at0.17"] = <
+				text = <"*Seizures(en)">
+				description = <"*The patient is at-risk of seizures.(en)">
+			>
+			["at0.18"] = <
+				text = <"*Communicable disease(en)">
+				description = <"*The patient is at-risk of communicable disease(en)">
+			>
+			["at0.19"] = <
+				text = <"*Aspiration(en)">
+				description = <"*The patient is at-risk of aspiration.(en)">
+			>
+			["at0.20"] = <
+				text = <"*Hypo-hyperglycaemia(en)">
+				description = <"*The patient is at risk of hypoglycaemia or hyperglycaemia.(en)">
+			>
+			["at0.21"] = <
+				text = <"*Harm to self(en)">
+				description = <"*The patient is at risk of self-harm.(en)">
+			>
+			["at0.22"] = <
+				text = <"*Harm to others(en)">
+				description = <"*The patient represents a risk to others.(en)">
+			>
+			["at0000.1"] = <
+				text = <"*Alert!(en)">
+				description = <"*Information pertaining to a subject of care that may need special consideration by a healthcare provider before making a decision about his/her actions in order to avert an unfavourable healthcare event, or relate to the safety of subject or providers, or pertain to special circumstances relevant to the delivery of care!(en)">
+			>
+		>
+		["sl"] = <
+			["at0.15"] = <
+				text = <"*Falls(en)">
+				description = <"*The patient is at-risk of falls.(en)">
+			>
+			["at0.16"] = <
+				text = <"*Skin breakdown(en)">
+				description = <"*The patient is at-risk of skin breakdown.(en)">
+			>
+			["at0.17"] = <
+				text = <"*Seizures(en)">
+				description = <"*The patient is at-risk of seizures.(en)">
+			>
+			["at0.18"] = <
+				text = <"*Communicable disease(en)">
+				description = <"*The patient is at-risk of communicable disease(en)">
+			>
+			["at0.19"] = <
+				text = <"*Aspiration(en)">
+				description = <"*The patient is at-risk of aspiration.(en)">
+			>
+			["at0.20"] = <
+				text = <"*Hypo-hyperglycaemia(en)">
+				description = <"*The patient is at risk of hypoglycaemia or hyperglycaemia.(en)">
+			>
+			["at0.21"] = <
+				text = <"*Harm to self(en)">
+				description = <"*The patient is at risk of self-harm.(en)">
+			>
+			["at0.22"] = <
+				text = <"*Harm to others(en)">
+				description = <"*The patient represents a risk to others.(en)">
+			>
+			["at0000.1"] = <
+				text = <"*Alert(en)">
+				description = <"*Information pertaining to a subject of care that may need special consideration by a healthcare provider before making a decision about his/her actions in order to avert an unfavourable healthcare event, or relate to the safety of subject or providers, or pertain to special circumstances relevant to the delivery of care. Specialised  for ISPEK nursing alerts.(en)">
+			>
+		>
+		["en"] = <
+			["at0.15"] = <
+				text = <"Falls">
+				description = <"The patient is at-risk of falls.">
+			>
+			["at0.16"] = <
+				text = <"Skin breakdown">
+				description = <"The patient is at-risk of skin breakdown.">
+			>
+			["at0.17"] = <
+				text = <"Seizures">
+				description = <"The patient is at-risk of seizures.">
+			>
+			["at0.18"] = <
+				text = <"Communicable disease">
+				description = <"The patient is at-risk of communicable disease">
+			>
+			["at0.19"] = <
+				text = <"Aspiration">
+				description = <"The patient is at-risk of aspiration.">
+			>
+			["at0.20"] = <
+				text = <"Hypo-hyperglycaemia">
+				description = <"The patient is at risk of hypoglycaemia or hyperglycaemia.">
+			>
+			["at0.21"] = <
+				text = <"Harm to self">
+				description = <"The patient is at risk of self-harm.">
+			>
+			["at0.22"] = <
+				text = <"Harm to others">
+				description = <"The patient represents a risk to others.">
+			>
+			["at0000.1"] = <
+				text = <"Alert">
+				description = <"Information pertaining to a subject of care that may need special consideration by a healthcare provider before making a decision about his/her actions in order to avert an unfavourable healthcare event, or relate to the safety of subject or providers, or pertain to special circumstances relevant to the delivery of care. Specialised  for ISPEK nursing alerts.">
+			>
+		>
+	>

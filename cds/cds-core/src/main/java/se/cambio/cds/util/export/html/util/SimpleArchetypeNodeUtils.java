@@ -36,7 +36,7 @@ public class SimpleArchetypeNodeUtils {
             SimpleArchetypeNode clusterNode =
                     getClusterNode(
                             idTemplate,
-                            archetypeElementVO.getIdParent(),
+                            archetypeElementVO.getParentId(),
                             rmNode, clusters, lang, archetypeManager.getClusters());
             SimpleArchetypeNode nodoOrigen = createElementNode(archetypeElementVO, lang, archetypeManager.getArchetypeElements());
             clusterNode.getChildren().add(nodoOrigen);
@@ -60,7 +60,7 @@ public class SimpleArchetypeNodeUtils {
             SimpleArchetypeNode clusterNode =
                     getClusterNode(
                             idTemplate,
-                            archetypeElementVO.getIdParent(),
+                            archetypeElementVO.getParentId(),
                             rmNode, clusters, lang, archetypeManager.getClusters());
             SimpleArchetypeNode node = createElementNode(archetypeElementVO, locatable, lang, archetypeManager.getArchetypeElements());
             clusterNode.getChildren().add(node);
@@ -131,7 +131,7 @@ public class SimpleArchetypeNodeUtils {
             SimpleArchetypeNode clusterNode = clusterList.get(idCluster);
             if(clusterNode == null){
                 SimpleArchetypeNode parentNode =
-                        getClusterNode(idTemplate, clusterVO.getIdParent(),
+                        getClusterNode(idTemplate, clusterVO.getParentId(),
                                 rootNode, clusterList, lang, clusters);
                 clusterNode = createClusterNode(clusterVO, lang, clusters);
                 clusterList.put(idCluster, clusterNode);

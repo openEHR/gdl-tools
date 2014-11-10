@@ -8,41 +8,48 @@ public class PathableVO implements Serializable{
     private java.lang.String name;
     private java.lang.String description;
     private java.lang.String type;
-    private java.lang.String idParent;
     private java.lang.String idArchetype;
     private java.lang.String idTemplate;
     private java.lang.String path;
     private java.lang.Integer lowerCardinality;
     private java.lang.Integer upperCardinality;
-    
+
 
     public PathableVO(String name, String description, String type,
-	    String idParentCluster, String idArchetype, String idTemplate, String path) {
-	super();
-	this.name = name;
-	this.description = description;
-	this.type = type;
-	this.idParent = idParentCluster;
-	this.idArchetype = idArchetype;
-	this.idTemplate = idTemplate;
-	this.path = path;
+                      String idArchetype, String idTemplate, String path) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.idArchetype = idArchetype;
+        this.idTemplate = idTemplate;
+        this.path = path;
     }
 
     public java.lang.String getId() {
-	return idArchetype+path;
+        return idArchetype+path;
+    }
+
+    public java.lang.String getParentId() {
+        int indexOfLastSlash = path.lastIndexOf("/");
+        String parentPath = path.substring(0, indexOfLastSlash);
+        if (parentPath.isEmpty()) {
+            return null;
+        }
+        return idArchetype + parentPath;
     }
 
     public java.lang.String getName() {
-	return name;
+        return name;
     }
     public void setName(java.lang.String name) {
-	this.name = name;
+        this.name = name;
     }
     public java.lang.String getDescription() {
-	return description;
+        return description;
     }
     public void setDescription(java.lang.String description) {
-	this.description = description;
+        this.description = description;
     }
     public java.lang.String getRMType() {
         return type;
@@ -50,17 +57,11 @@ public class PathableVO implements Serializable{
     public void setType(java.lang.String type) {
         this.type = type;
     }
-    public java.lang.String getIdParent() {
-	return idParent;
-    }
-    public void setIdParent(java.lang.String idParentCluster) {
-	this.idParent = idParentCluster;
-    }
     public java.lang.String getIdArchetype() {
-	return idArchetype;
+        return idArchetype;
     }
     public void setIdArchetype(java.lang.String idArchetype) {
-	this.idArchetype = idArchetype;
+        this.idArchetype = idArchetype;
     }
     public java.lang.String getIdTemplate() {
         return idTemplate;
@@ -69,10 +70,10 @@ public class PathableVO implements Serializable{
         this.idTemplate = idTemplate;
     }
     public java.lang.String getPath() {
-	return path;
+        return path;
     }
     public void setPath(java.lang.String path) {
-	this.path = path;
+        this.path = path;
     }
     public java.lang.Integer getLowerCardinality() {
         return lowerCardinality;

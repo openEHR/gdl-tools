@@ -1,0 +1,71 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-ENTRY.laboratory_test_observation.v2
+
+specialize
+	CIMI-CORE-ENTRY.observation.v4
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	ENTRY[at0000.1.1] matches { -- Laboratory Test Observation
+		/data matches {
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.laboratory_test_observable.v1] -- Test observable
+			CLUSTER[at0.0.1] occurrences matches {0..1} matches { -- Test results
+			item matches {
+				use_archetype CLUSTER [CIMI-CORE-CLUSTER.laboratory_test_result_item.v1] -- Result item
+				use_archetype CLUSTER [CIMI-CORE-CLUSTER.laboratory_test_result_group.v1] -- Result subgroup
+				use_archetype CLUSTER [CIMI-CORE-CLUSTER.specimen.v3] -- Specimen
+				ELEMENT[at0.0.2] occurrences matches {0..*} matches { -- Diagnosis
+					value matches {
+						TEXT matches {*}
+					}
+				}
+				ELEMENT[at0.0.3] occurrences matches {0..*} matches { -- Conclusions
+					value matches {
+						TEXT matches {*}
+					}
+				}
+			}}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1.1"] = <
+				text = <"Laboratory Test Observation">
+				description = <"Laboratory Test Observation">
+			>
+			["at0.0.1"] = <
+				text = <"Test results REF<CIMI-CORE-CLUSTER.laboratory_test_result_group>">
+				description = <"Test results REF<CIMI-CORE-CLUSTER.laboratory_test_result_group>">
+			>
+			["at0.0.2"] = <
+				text = <"Diagnosis">
+				description = <"Diagnosis">
+			>
+			["at0.0.3"] = <
+				text = <"Conclusions">
+				description = <"Conclusions">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0000.1.1"] = <[SNOMED-CT::364712009]>
+				["at0.0.1"] = <[SNOMED-CT::441742003]>
+				["at0.0.2"] = <[SNOMED-CT::123038009]>
+				["at0.0.3"] = <[SNOMED-CT::123038009]>
+			>
+		>
+	>

@@ -2,6 +2,7 @@ package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
@@ -24,10 +25,11 @@ public class ArchetypeElements {
 
     //Add current time
     public static ArchetypeElementVO CURRENT_DATE_TIME =
-            new ArchetypeElementVO(
-                    OpenEHRLanguageManager.getMessage("CurrentDateTime"),
-                    OpenEHRLanguageManager.getMessage("CurrentDateTime"),
-                    OpenEHRDataValues.DV_DATE_TIME, null, null, null, null);
+            new ArchetypeElementVOBuilder()
+                    .setName(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
+                    .setDescription(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
+                    .setType(OpenEHRDataValues.DV_DATE_TIME)
+                    .createArchetypeElementVO();
 
 
     public ArchetypeElements(ArchetypeManager archetypeManager){

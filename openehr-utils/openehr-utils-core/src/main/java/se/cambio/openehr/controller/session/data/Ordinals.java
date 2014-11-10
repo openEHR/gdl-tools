@@ -31,9 +31,9 @@ public class Ordinals {
 
     public void registerOrdinal(OrdinalVO ordinalVO){
         if (ordinalVO.getIdTemplate()==null){
-            getOrdinalMap(ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
+            getOrdinalMap(ordinalVO.getId()).put(ordinalVO.getValue(), ordinalVO);
         }else{
-            getOrdinalTemplateMap(ordinalVO.getIdTemplate(),ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
+            getOrdinalTemplateMap(ordinalVO.getIdTemplate(),ordinalVO.getId()).put(ordinalVO.getValue(), ordinalVO);
         }
     }
 
@@ -83,7 +83,7 @@ public class Ordinals {
     }
 
     public String getText(OrdinalVO ordinalVO, String lang) {
-        return getText(ordinalVO.getIdTemplate(), ordinalVO.getIdParent(), ordinalVO.getValue(), lang);
+        return getText(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getValue(), lang);
     }
 
     public String getText(String idTemplate, String idElement, Integer value, String lang) {
@@ -102,7 +102,7 @@ public class Ordinals {
     }
 
     public String getDescription(OrdinalVO ordinalVO, String lang)  {
-        return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getIdParent(), ordinalVO.getValue(), lang);
+        return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getValue(), lang);
     }
 
     public String getDescription(String idTemplate, String idElement, Integer value, String lang) {

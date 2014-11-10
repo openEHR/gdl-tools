@@ -11,10 +11,21 @@ public class ArchetypeElementVO extends PathableVO {
 
 	public ArchetypeElementVO(
 		String name, String description, String type,
-		String idParentCluster, 
 		String idArchetype, String idTemplate, String path) {
-	    super(name, description, type, idParentCluster, idArchetype, idTemplate, path);
+	    super(name, description, type,  idArchetype, idTemplate, path);
 	}
+
+    @Override
+    public ArchetypeElementVO clone(){
+        return new ArchetypeElementVOBuilder()
+                .setName(getName())
+                .setDescription(getDescription())
+                .setType(getType())
+                .setIdArchetype(getIdArchetype())
+                .setIdTemplate(getIdTemplate())
+                .setPath(getPath())
+                .createArchetypeElementVO();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

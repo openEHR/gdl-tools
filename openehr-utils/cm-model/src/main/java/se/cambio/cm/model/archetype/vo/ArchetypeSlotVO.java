@@ -10,15 +10,15 @@ public class ArchetypeSlotVO extends PathableVO {
 
     private Collection<String> includes;
     private Collection<String> exludes;
-   
-    public ArchetypeSlotVO(String name, String description, String type, String idParentCluster,
-	    String idArchetype, String idTemplate, String path, Collection<String> includes,
-	    Collection<String> exludes) {
-	super(name, description, type, idParentCluster, idArchetype, idTemplate, path);
-	this.includes = includes;
-	this.exludes = exludes;
+
+    public ArchetypeSlotVO(String name, String description, String type,
+                           String idArchetype, String idTemplate, String path, Collection<String> includes,
+                           Collection<String> exludes) {
+        super(name, description, type, idArchetype, idTemplate, path);
+        this.includes = includes;
+        this.exludes = exludes;
     }
-    
+
     public Collection<String> getIncludes() {
         return includes;
     }

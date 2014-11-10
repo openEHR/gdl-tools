@@ -4,19 +4,19 @@ package se.cambio.cm.model.archetype.vo;
 public class OrdinalVO extends PathableVO {
 
     private static final long serialVersionUID = 20120412L;
-    
+
     private Integer value = null;
     private String terminology = null;
     private String code = null;
 
-    public OrdinalVO(String name, String description, String type, String idParentCluster,
-	    String idArchetype, String idTemplate, String path, Integer value, String terminology, String code) {
-	super(name, description, type, idParentCluster, idArchetype, idTemplate, path);
-	this.value = value;
-	this.terminology = terminology;
-	this.code = code;
+    public OrdinalVO(String name, String description, String type,
+                     String idArchetype, String idTemplate, String path, Integer value, String terminology, String code) {
+        super(name, description, type, idArchetype, idTemplate, path);
+        this.value = value;
+        this.terminology = terminology;
+        this.code = code;
     }
-    
+
     public Integer getValue() {
         return value;
     }
@@ -24,16 +24,31 @@ public class OrdinalVO extends PathableVO {
         this.value = value;
     }
     public String getCode() {
-	return code;
+        return code;
     }
     public void setCode(String code) {
-	this.code = code;
+        this.code = code;
     }
     public String getTerminology() {
         return terminology;
     }
     public void setTerminology(String terminology) {
         this.terminology = terminology;
+    }
+
+    @Override
+    public OrdinalVO clone(){
+        return new OrdinalVOBuilder()
+                .setName(getName())
+                .setDescription(getDescription())
+                .setType(getType())
+                .setIdArchetype(getIdArchetype())
+                .setIdTemplate(getIdTemplate())
+                .setPath(getPath())
+                .setValue(getValue())
+                .setCode(getCode())
+                .setTerminology(getTerminology())
+                .createOrdinalVO();
     }
 }
 /*

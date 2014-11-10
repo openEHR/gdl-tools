@@ -38,13 +38,15 @@ public class ArchetypeManager {
     public void registerArchetypeObjectBundle(
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO,
             Archetype archetype){
-        getArchetypeElements().loadArchetypeElements(archetypeObjectBundleCustomVO.getElementVOs());
+        getArchetypeElements().loadArchetypeElements(archetypeObjectBundleCustomVO.getArchetypeElementVOs());
         getClusters().loadClusters(archetypeObjectBundleCustomVO.getClusterVOs());
         getCodedTexts().loadCodedTexts(archetypeObjectBundleCustomVO.getCodedTextVOs());
         getOrdinals().loadOrdinals(archetypeObjectBundleCustomVO.getOrdinalVOs());
         getUnits().loadUnits(archetypeObjectBundleCustomVO.getUnitVOs());
         getProportionTypes().loadProportionTypes(archetypeObjectBundleCustomVO.getProportionTypes());
-        getArchetypeTerms().loadArchetype(archetype);
+        if (archetype != null) {
+            getArchetypeTerms().loadArchetype(archetype);
+        }
     }
 
     public Archetypes getArchetypes() {
