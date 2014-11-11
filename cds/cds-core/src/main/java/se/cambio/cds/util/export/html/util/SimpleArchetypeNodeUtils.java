@@ -125,7 +125,6 @@ public class SimpleArchetypeNodeUtils {
         if (idCluster!=null && !idCluster.endsWith("/")){
             ClusterVO clusterVO = clusters.getClusterVO(idTemplate, idCluster);
             if (clusterVO == null){
-                ExceptionHandler.handle(new Exception("Cluster id '" + idCluster + "' not found"));
                 return rootNode;
             }
             SimpleArchetypeNode clusterNode = clusterList.get(idCluster);

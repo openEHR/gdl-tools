@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-07-14
- * Time: 15:25
- */
 public class OpenEHRRMUtil {
     public static String EVENT_TIME_PATH = "/data/events/time";
     public static String EXPIRY_TIME_PATH = "/expiry_time";
@@ -21,7 +16,7 @@ public class OpenEHRRMUtil {
     public static String TEMPLATE_ID_PATH = "/archetype_details/template_id";
 
     private static Collection<String> rmPaths;
-    static{
+    static {
         rmPaths = new ArrayList<String>();
         rmPaths.add(EVENT_TIME_PATH);
         rmPaths.add(EXPIRY_TIME_PATH);
@@ -34,17 +29,9 @@ public class OpenEHRRMUtil {
         return getRMElements(idArchetype, idTemplate, entryType, "");
     }
 
-    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, String parentPath){
+    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, String parentPath) {
         Collection<ArchetypeElementVO> rmArchetypeElements = new ArrayList<ArchetypeElementVO>();
-        if (OpenEHRConst.OBSERVATION.equals(entryType)){
-	    /*Origin (Use EventTime instead)
-	    archetypeElementVOs.add(
-		    new ArchetypeElementVO(
-			    LanguageManager.getMessage("Origin"),
-			    LanguageManager.getMessage("OriginDesc"),
-			    OpenEHRDataValues.DV_DATE_TIME, null,
-			    idArchetype, "/time"));
-	     */
+        if (OpenEHRConst.OBSERVATION.equals(entryType)) {
             //EventTime
             rmArchetypeElements.add(
                     new ArchetypeElementVOBuilder()
@@ -94,8 +81,6 @@ public class OpenEHRRMUtil {
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + ISM_TRANSITION_PATH)
                             .createArchetypeElementVO());
-        }else if (OpenEHRConst.EVALUATION.equals(entryType)){
-
         }
         if (parentPath.isEmpty()) { //TODO Check if this assumption is correct
             //Template Id
@@ -116,7 +101,7 @@ public class OpenEHRRMUtil {
         return rmPaths;
     }
 
-    public static boolean isRMPath(String path){
+    public static boolean isRMPath(String path) {
         Iterator<String> i = rmPaths.iterator();
         while(i.hasNext()){
             if (path.endsWith(i.next())){
