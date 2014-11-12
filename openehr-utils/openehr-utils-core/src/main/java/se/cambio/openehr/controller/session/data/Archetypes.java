@@ -63,7 +63,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         for(ArchetypeDTO archetypeDTO: archetypeDTOs){
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(archetypeDTO);
             Archetype archetype = null;
-            if (archetypeDTO.getFormat().equals(CMTypeFormat.ADL_FORMAT.getFormat())) {   //TODO Add support for ADLS format
+            if (CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {   //TODO Add support for ADLS format
                 archetype = getArchetypeAOM(archetypeDTO);
             }
             getArchetypeManager().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
@@ -127,7 +127,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
     }
 
     public Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO) throws InternalErrorException {
-        if (!archetypeDTO.getFormat().equals(CMTypeFormat.ADL_FORMAT.getFormat())){
+        if (!CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())){
             throw new InternalErrorException(new Exception("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'"));
         }
         if (archetypeDTO.getAom() == null){
@@ -146,7 +146,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
 
 
     public FlatArchetype getArchetypeAOM2(ArchetypeDTO archetypeDTO) throws InternalErrorException {
-        if (!archetypeDTO.getFormat().equals(CMTypeFormat.ADLS_FORMAT.getFormat())){
+        if (!CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())){
             throw new InternalErrorException(new Exception("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'"));
         }
         if (archetypeDTO.getAom() == null){

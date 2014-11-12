@@ -1107,10 +1107,7 @@ public class GDLEditor implements EditorController<Guide>{
             Guide guide = constructCurrentGuide();
             serializedGuide = GuideUtil.serializeGuide(guide);
         } catch (Exception e) {
-            // Guide has errors, so it will trigger as modified (serializedGuide
-            // = null)
-            // If user decides to save the guide, errors will be displayed (if
-            // not, ignored)
+            ExceptionHandler.handle(e);
         }
         if (_originalGuide != null && !_originalGuide.equals(serializedGuide)) {
             return true;
@@ -1146,15 +1143,6 @@ public class GDLEditor implements EditorController<Guide>{
         Collection<String> gtCodes = new ArrayList<String>();
         gtCodes.add(getConceptGTCode());
         gtCodes.addAll(getRenderableRules().keySet());
-        /* TODO Allow reuse of archetype element codes
-        for (RuleLine ruleLine : getDefinitionRuleLines()) {
-            for (RuleLine ruleLineAux : ruleLine.getChildrenRuleLines()) {
-                if (ruleLineAux instanceof ArchetypeElementInstantiationRuleLine) {
-                    gtCodes.add(((ArchetypeElementInstantiationRuleLine) ruleLineAux)
-                            .getGTCode());
-                }
-            }
-        }*/
         return gtCodes;
     }
 

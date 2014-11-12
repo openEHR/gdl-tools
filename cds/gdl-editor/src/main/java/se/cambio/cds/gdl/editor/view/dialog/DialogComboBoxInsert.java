@@ -34,7 +34,7 @@ public class DialogComboBoxInsert extends DialogEditor {
             getComboBox().addItem(option);
         }
         if (oldValue!=null){
-            comboBox.setSelectedItem(oldValue);
+            getComboBox().setSelectedItem(oldValue);
         }
         initialize();
     }

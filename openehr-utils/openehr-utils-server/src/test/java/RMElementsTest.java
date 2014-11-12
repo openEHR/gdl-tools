@@ -48,7 +48,7 @@ public class RMElementsTest {
         //archetypeManager.getArchetypeElements().getArchetypeElementsVO("openEHR-EHR-OBSERVATION.quantity_tuple.v1", null);
         //archetypeManager.getArchetypeElements().getArchetypeElementsVO("openEHR-EHR-EVALUATION.alert.v1", null);
         //archetypeManager.getArchetypeElements().getArchetypeElementsVO("openEHR-EHR-OBSERVATION.ordinal.v1", null);
-        archetypeManager.getArchetypeElements().getArchetypeElementsVO("CIMI-CORE-ENTRY.complete_blood_count.v1", null);
+        archetypeManager.getArchetypeElements().getArchetypeElementsVO("CIMI-CORE-INDIVISIBLE_ENTRY.body_height.v1", null);
 
 
         assertNotNull(archetypeElementVOs);

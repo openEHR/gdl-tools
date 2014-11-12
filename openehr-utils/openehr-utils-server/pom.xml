@@ -10,8 +10,6 @@
 	<organization>
 		<name>OpenEHR</name>
 	</organization>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>org.openehr.utils</groupId>

@@ -1,9 +1,9 @@
 package se.cambio.openehr.controller;
 
-import com.marand.thinkehr.adl.flattener.ArchetypeFlattener;
-import com.marand.thinkehr.adl.parser.AdlDeserializer;
-import com.marand.thinkehr.adl.rm.ThinkEhrRmModel;
 import org.apache.log4j.Logger;
+import org.openehr.adl.flattener.ArchetypeFlattener;
+import org.openehr.adl.parser.AdlDeserializer;
+import org.openehr.adl.rm.OpenEhrRmModel;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.jaxb.am.DifferentialArchetype;
 import org.openehr.jaxb.am.FlatArchetype;
@@ -74,7 +74,7 @@ public class ArchetypeObjectBundleManager {
     private void generateArchetype20Data()
             throws InternalErrorException{
         try{
-            AdlDeserializer adlDeserializer = new AdlDeserializer(new ThinkEhrRmModel());
+            AdlDeserializer adlDeserializer = new AdlDeserializer(new OpenEhrRmModel());
             DifferentialArchetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
             FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
             byte[] flatArchetypeBytes = IOUtils.getBytes(flatArchetype);
@@ -88,7 +88,7 @@ public class ArchetypeObjectBundleManager {
     }
 
     protected FlatArchetype parseAndFlattenArchetype(DifferentialArchetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {
-        ArchetypeFlattener flattener = new ArchetypeFlattener(new ThinkEhrRmModel());
+        ArchetypeFlattener flattener = new ArchetypeFlattener(new OpenEhrRmModel());
         FlatArchetype parent;
         ArchetypeId parentArchetypeId = differentialArchetype.getParentArchetypeId();
         if (parentArchetypeId != null) {
