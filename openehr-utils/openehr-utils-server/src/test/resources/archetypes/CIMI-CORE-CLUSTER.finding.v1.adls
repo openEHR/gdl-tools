@@ -1,0 +1,106 @@
+archetype (adl_version=1.5.1; generated)
+	CIMI-CORE-CLUSTER.finding.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"???">
+		>
+	>
+	lifecycle_state = <"unmanaged">
+
+definition
+	CLUSTER[id1] matches {	-- Finding
+		item matches {
+			ELEMENT[id2] occurrences matches {0..*} matches {	-- Identifier
+				value matches {
+					IDENTIFIER[id9] 
+				}
+			}
+			ELEMENT[id3] occurrences matches {0..1} matches {	-- Name
+				value matches {
+					TEXT[id10] 
+				}
+			}
+			ITEM[id4] occurrences matches {0..*} 	-- Finding
+			ELEMENT[id5] occurrences matches {0..1} matches {	-- Status
+				value matches {
+					CODED_TEXT[id11] 
+				}
+			}
+			ELEMENT[id6] occurrences matches {0..1} matches {	-- Interpretation category
+				value matches {
+					CODED_TEXT[id12] 
+				}
+			}
+			ELEMENT[id7] occurrences matches {0..1} matches {	-- Sequence
+				value matches {
+					COUNT[id13] 
+				}
+			}
+			ELEMENT[id8] occurrences matches {0..*} matches {	-- Comment
+				value matches {
+					TEXT[id14] 
+				}
+			}
+			use_archetype CLUSTER[CIMI-CORE-CLUSTER.observe_action.v1] 
+			use_archetype CLUSTER[CIMI-CORE-CLUSTER.interpret_action.v1] 
+			use_archetype CLUSTER[CIMI-CORE-CLUSTER.approve_action.v1] 
+			use_archetype CLUSTER[CIMI-CORE-CLUSTER.report_action.v1] 
+			use_archetype CLUSTER[CIMI-CORE-CLUSTER.cancel_action.v1] 
+		}
+	}
+
+terminology
+	term_definitions = <
+		["en"] = <
+			["id1"] = <
+				text = <"Finding">
+				description = <"Finding">
+			>
+			["id2"] = <
+				text = <"Identifier">
+				description = <"Identifier">
+			>
+			["id3"] = <
+				text = <"Name">
+				description = <"Name">
+			>
+			["id4"] = <
+				text = <"Finding">
+				description = <"Finding">
+			>
+			["id5"] = <
+				text = <"Status">
+				description = <"Status">
+			>
+			["id6"] = <
+				text = <"Interpretation category">
+				description = <"Interpretation category">
+			>
+			["id7"] = <
+				text = <"Sequence">
+				description = <"Sequence">
+			>
+			["id8"] = <
+				text = <"Comment">
+				description = <"Comment">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			["id1"] = <http://snomedct.info/id/404684003>
+			["id2"] = <http://snomedct.info/id/423901009>
+			["id3"] = <http://snomedct.info/id/363787002>
+			["id4"] = <http://snomedct.info/id/404684003>
+			["id5"] = <http://snomedct.info/id/138875005>
+			["id6"] = <http://snomedct.info/id/442499005>
+			["id7"] = <http://snomedct.info/id/138875005>
+			["id8"] = <http://snomedct.info/id/138875005>
+		>
+	>

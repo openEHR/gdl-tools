@@ -365,7 +365,7 @@ public class DialogArchetypeChooser extends JDialog{
                 .createSelectableNode();
         for (String archetypeId : archetypeIds) {
             String entryType = Archetypes.getEntryType(archetypeId);
-            if (entryType!=null && entryType.endsWith(rmName)) {
+            if (entryType!=null && entryType.equals(rmName)) {
                 SelectableNode<String> rnode = new SelectableNodeBuilder<String>()
                         .setName(archetypeId)
                         .setDescription(archetypeId)

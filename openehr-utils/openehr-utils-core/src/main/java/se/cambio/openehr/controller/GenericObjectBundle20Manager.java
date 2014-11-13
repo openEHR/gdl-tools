@@ -251,44 +251,69 @@ public class GenericObjectBundle20Manager {
         if (OpenEHRDataValues.DV_QUANTITY.equals(rmType)) {
             loadUnits(elementDefinitionCObject, currentPath);
         } else  if (elementDefinitionCObject instanceof CTerminologyCode) {
-            processIndirectCTerminologyCode(currentPath, (CTerminologyCode) elementDefinitionCObject);
+            processCTerminologyCode((CTerminologyCode) elementDefinitionCObject, currentPath);
         } else  if (OpenEHRDataValues.DV_CODED_TEXT.equals(rmType)) {
             processCodedTexts(elementDefinitionCObject, currentPath);
         } else  if (OpenEHRDataValues.DV_ORDINAL.equals(rmType)) {
             processOrdinals(elementDefinitionCObject, currentPath);
+        } else  if (OpenEHRDataValues.DV_PROPORTION.equals(rmType)) {
+            processProprotion(elementDefinitionCObject, currentPath);
         }
     }
 
-    private void processIndirectCTerminologyCode(String currentPath, CTerminologyCode cTerminologyCode) throws ArchetypeProcessingException {
+    private void processCTerminologyCode(CTerminologyCode cTerminologyCode, String currentPath) throws ArchetypeProcessingException {
         List<String> acCodes = cTerminologyCode.getCodeList();
         for (String acCode: acCodes) {
             List<String> members = getValueSetsMap().get(acCode);
             if (members == null) {
-                throw new ArchetypeProcessingException("Members could not be found for code '" + acCode + "'");
+                logger.warn("No members could be found for code '" + acCode + "'");
+                return;
             }
             for (String memberCode : members) {
                 processCodedTextItem("local", currentPath, memberCode);
             }
-            processDirectCTerminologyCode(cTerminologyCode, currentPath);
         }
     }
 
     private void processCodedTexts(CObject cObject, String currentPath) throws ArchetypeProcessingException {
         if (cObject instanceof CComplexObject){
-            CObject cObjectDefinedCode = getElementDefinitionCObject((CComplexObject)cObject, currentPath, "defining_code");
+            CComplexObject cComplexObject = (CComplexObject) cObject;
+            CObject cObjectDefinedCode = getElementDefinitionCObject(cComplexObject, currentPath, "defining_code");
             if (cObjectDefinedCode instanceof CTerminologyCode) {
                 CTerminologyCode cTerminologyCode = (CTerminologyCode) cObjectDefinedCode;
-                processDirectCTerminologyCode(cTerminologyCode, currentPath);
+                processCTerminologyCode(cTerminologyCode, currentPath);
+            } else {
+                processCodedTextsWithoutDefiningCode(cComplexObject, currentPath);
             }
         }
     }
 
-    private void processDirectCTerminologyCode(CTerminologyCode cTerminologyCode, String currentPath) throws ArchetypeProcessingException {
-        for (String code: cTerminologyCode.getCodeList()) {
-            String terminologyId = cTerminologyCode.getTerminologyId();
-            processCodedTextItem(terminologyId, currentPath, code);
+    private void processCodedTextsWithoutDefiningCode(CComplexObject cComplexObject, String currentPath) throws ArchetypeProcessingException {
+        Map<String, List<String>> terminologyCodesMap = getTerminologyCodesMap(cComplexObject, currentPath);
+        for(Map.Entry<String, List<String>> entrySet: terminologyCodesMap.entrySet()){
+            for(String code: entrySet.getValue()) {
+                processCodedTextItem(entrySet.getKey(), currentPath, code);
+            }
         }
     }
+
+    private Map<String, List<String>> getTerminologyCodesMap(CComplexObject cComplexObject, String currentPath) throws ArchetypeProcessingException {
+        Map<String, List<String>> terminologyCodesMap = new HashMap<String, List<String>>();
+        CObject terminologyIdCObject = getElementDefinitionCObject(cComplexObject, currentPath, "terminology_id");
+        CObject termIdCObject = getElementDefinitionCObject(cComplexObject, currentPath, "term_id");
+        if (terminologyIdCObject instanceof CComplexObject &&
+                termIdCObject instanceof CString) {
+            CObject terminologyIdCString = getElementDefinitionCObject((CComplexObject) terminologyIdCObject, currentPath, "value");
+            String terminologyId = null;
+            if (terminologyIdCString instanceof CString) {
+                terminologyId = ((CString) terminologyIdCString).getDefaultValue();
+            }
+            List<String> codes = ((CString) termIdCObject).getList();
+            terminologyCodesMap.put(terminologyId, codes);
+        }
+        return terminologyCodesMap;
+    }
+
 
     private void processCodedTextItem(String terminologyId, String currentPath, String code) throws ArchetypeProcessingException {
         Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(code);
@@ -338,11 +363,16 @@ public class GenericObjectBundle20Manager {
     }
 
     private void processClusters(CObject cObject, String path) throws ArchetypeProcessingException {
-        Map<String, String> referenceTerm = getTermDefinitionsArchetypeTermMap().get(cObject.getNodeId());
+        String nodeId = cObject.getNodeId();
+        Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(nodeId);
+        if (termMap == null) {
+            logger.warn("Archetype term not found for atCode '" + nodeId + "'");
+            return;
+        }
         ClusterVO clusterVO =
                 new ClusterVOBuilder()
-                        .setName(referenceTerm.get("text"))
-                        .setDescription(referenceTerm.get("description"))
+                        .setName(termMap.get("text"))
+                        .setDescription(termMap.get("description"))
                         .setType(cObject.getRmTypeName())
                         .setIdArchetype(getArchetypeId())
                         .setPath(path)
@@ -363,26 +393,41 @@ public class GenericObjectBundle20Manager {
             for(CAttributeTuple cAttributeTuple: attributeTuples) {
                 processUnits(path, cAttributeTuple);
             }
-            for(CAttribute cAttribute: cComplexObject.getAttributes()) {
-                if (cAttribute.getRmAttributeName().equals("units")) {
-                    for(CObject cObject1: cAttribute.getChildren()) {
-                        if (cObject1 instanceof CTerminologyCode) {
-                            List<String> codes = ((CTerminologyCode) cObject1).getCodeList();
-                            List<String> units = new ArrayList<String>();
-                            for(String code: codes){
-                                Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(code);
-                                if (termMap == null){
-                                    throw new ArchetypeProcessingException("Unknown identifier '" + code + "'");
-                                }
-                                units.add(termMap.get("text"));
-                            }
-                            String elementId = getArchetypeId() + path;
-                            processUnits(elementId, units);
-                        }
+            CObject elementDefinitionCObject = getElementDefinitionCObject(cComplexObject, path, "units");
+            if (elementDefinitionCObject instanceof CTerminologyCode) {
+                List<String> codes = ((CTerminologyCode) elementDefinitionCObject).getCodeList();
+                List<String> units = new ArrayList<String>();
+                for(String code: codes){
+                    Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(code);
+                    if (termMap == null){
+                        throw new ArchetypeProcessingException("Unknown identifier '" + code + "'");
                     }
+                    units.add(termMap.get("text"));
                 }
+                String elementId = getArchetypeId() + path;
+                processUnits(elementId, units);
+            } else if (elementDefinitionCObject instanceof CComplexObject) {
+                processUnitsWithoutCTerminologyCode((CComplexObject)elementDefinitionCObject, path);
             }
         }
+    }
+
+    private void processUnitsWithoutCTerminologyCode(CComplexObject cComplexObject, String path) throws ArchetypeProcessingException {
+        Map<String, List<String>> terminologyCodesMap = getTerminologyCodesMap(cComplexObject, path);
+        String elementId = getArchetypeId() + path;
+        for(Map.Entry<String, List<String>> entrySet: terminologyCodesMap.entrySet()){
+            List<String> units = new ArrayList<String>();
+            for (String code: entrySet.getValue()) {
+                Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(code);
+                if (termMap == null){
+                    logger.warn("Archetype term not found for atCode '" + code + "'");
+                    continue;
+                }
+                units.add(termMap.get("text"));
+            }
+            processUnits(elementId, units);
+        }
+
     }
 
     private void processUnits(String path, CAttributeTuple cAttributeTuple) throws ArchetypeProcessingException {
@@ -398,6 +443,16 @@ public class GenericObjectBundle20Manager {
         }
     }
 
+    private void processProprotion(CObject cObject, String currentPath) throws ArchetypeProcessingException {
+        if (cObject instanceof CComplexObject) {
+            CObject elementDefinitionCObject = getElementDefinitionCObject((CComplexObject)cObject, currentPath, "type");
+            List<Integer> proportionTypes = getCIntegers(elementDefinitionCObject);
+            for (Integer proportionType: proportionTypes) {
+                proportionTypeVOs.add(new ProportionTypeVO(null, getArchetypeId() + currentPath, proportionType));
+            }
+        }
+    }
+
     private List<String> getUnitsCStrings(CAttributeTuple cAttributeTuple) throws ArchetypeProcessingException {
         int unitsIndex = getAttributeIndex(cAttributeTuple, "units");
         List<CObject> cObjects = getCObjectsFromTuple(cAttributeTuple, unitsIndex);
@@ -410,9 +465,18 @@ public class GenericObjectBundle20Manager {
             if (!(cObject instanceof CString)) {
                 throw new ArchetypeProcessingException("Expecting C_STRING but found '" + cObject.getRmTypeName() + "'");
             }
-            cStrings.add(((CString)cObject).getDefaultValue());
+            cStrings.addAll(((CString)cObject).getList());
         }
         return cStrings;
+    }
+
+    private List<Integer> getCIntegers(CObject cObject) throws ArchetypeProcessingException {
+        List<Integer> cIntegers = new ArrayList<Integer>();
+        if (!(cObject instanceof CInteger)) {
+            throw new ArchetypeProcessingException("Expecting C_INTEGER but found '" + cObject.getRmTypeName() + "'");
+        }
+        cIntegers.addAll(((CInteger) cObject).getList());
+        return cIntegers;
     }
 
     private List<CObject> getCObjectsFromTuple(CAttributeTuple cAttributeTuple, int index) {
@@ -444,7 +508,6 @@ public class GenericObjectBundle20Manager {
             }
         }
         return null;
-        //throw new ArchetypeProcessingException("Could not find rmName for element at '" + path + "'");
     }
 
     private void processAttribute(CAttribute cAttribute, String path) throws ArchetypeProcessingException {
@@ -505,6 +568,8 @@ public class GenericObjectBundle20Manager {
             return OpenEHRDataValues.DV_TIME;
         } else if ("PROPORTION".equals(rmName)){
             return OpenEHRDataValues.DV_PROPORTION;
+        } else if ("IDENTIFIER".equals(rmName)){
+            return OpenEHRDataValues.DV_IDENTIFIER;
         } else {
             return rmName;
         }

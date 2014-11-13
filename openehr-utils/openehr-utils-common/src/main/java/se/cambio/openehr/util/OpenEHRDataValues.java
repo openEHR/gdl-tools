@@ -20,6 +20,8 @@ public class OpenEHRDataValues {
     public final static String DV_PROPORTION = "DV_PROPORTION";
     public final static String DV_QUANTITY = "DV_QUANTITY";
     public final static String DV_URI = "DV_URI";
+    public final static String DV_STATE = "DV_STATE";
+    public final static String DV_IDENTIFIER = "DV_IDENTIFIER";
 
     //Functions
     public static final String FUNCTION_COUNT = "count";

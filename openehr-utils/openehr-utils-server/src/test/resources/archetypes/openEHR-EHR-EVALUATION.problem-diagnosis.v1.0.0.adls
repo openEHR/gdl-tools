@@ -1,0 +1,108 @@
+archetype (adl_version=1.5.1)
+	openEHR-EHR-EVALUATION.problem-diagnosis.v1.0.0
+
+specialize
+	openEHR-EHR-EVALUATION.problem.v1.0.0
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	original_author = <
+		["name"] = <"Sam Heard">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"sam.heard@oceaninformatics.com">
+		["date"] = <"23/04/2006">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"For recording medical diagnoses. Requires coded entry of diagnosis. ">
+			use = <"Used for recording any diagnosis, present or past - so is used for recording past history as well as current diagnoses. Used with changed 'Subject of care' for recording diagnoses in relatives and so for family history.">
+			keywords = <"past", "history", "family", "history", "condition">
+			misuse = <"Use 'openEHR-EHR-EVALUATION.problem-diagnosis-histological' for histological diagnoses.">
+			copyright = <"copyright (c) 2010 openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"unmanaged">
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"CD3BA80C6AD89B3B8A8C7DC3125D9AF8">
+		["references"] = <"">
+	>
+
+definition
+	EVALUATION[id1.1] matches {	-- Diagnosis
+		/data[id2]/items[id3]/value matches {
+			DV_CODED_TEXT[id40.1] matches {
+				defining_code matches {[ac0.1]}		-- Any term that 'is_a' diagnosis
+			}
+		}
+		/data[id2]/items matches {
+			before [id4]
+			ELEMENT[id0.32] occurrences matches {0..1} matches {	-- Status
+				value matches {
+					DV_CODED_TEXT[id0.37] matches {
+						defining_code matches {[ac0.2]}		-- Status (synthesised)
+					}
+				}
+			}
+			after [id32]
+			CLUSTER[id0.35] occurrences matches {0..1} matches {	-- Diagnostic criteria
+				items matches {
+					ELEMENT[id0.36] occurrences matches {0..*} matches {	-- Criterion
+						value matches {
+							DV_TEXT[id0.38] 
+						}
+					}
+				}
+			}
+		}
+	}
+
+terminology
+	term_definitions = <
+		["en"] = <
+			["id0.32"] = <
+				text = <"Status">
+				description = <"The status of the diagnosis">
+			>
+			["at0.33"] = <
+				text = <"provisional">
+				description = <"provisional diagnosis considered likely and a basis for proceeding with management">
+			>
+			["at0.34"] = <
+				text = <"working">
+				description = <"working diagnosis considered very likely but not yet confirmed">
+			>
+			["id0.35"] = <
+				text = <"Diagnostic criteria">
+				description = <"The criteria on which the diagnosis is based">
+			>
+			["id0.36"] = <
+				text = <"Criterion">
+				description = <"A basis for the diagnosis">
+			>
+			["id1.1"] = <
+				text = <"Diagnosis">
+				description = <"A diagnosis defined by a clinician which is coded in an accepted terminology and may include the stage of the condition and the diagnostic criteria">
+			>
+			["id3.1"] = <
+				text = <"Diagnosis">
+				description = <"The index diagnosis">
+			>
+			["ac0.1"] = <
+				text = <"Any term that 'is_a' diagnosis">
+				description = <"Any term that is a diagnosis in an accepted terminology">
+			>
+			["ac0.2"] = <
+				text = <"Status (synthesised)">
+				description = <"The status of the diagnosis (synthesised)">
+			>
+		>
+	>
+	value_sets = <
+		["ac0.2"] = <
+			id = <"ac0.2">
+			members = <"at0.33", "at0.34">
+		>
+	>
