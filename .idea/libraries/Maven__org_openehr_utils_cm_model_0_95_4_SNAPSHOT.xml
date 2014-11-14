@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.openehr.utils:cm-model:0.95.4-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/openehr-utils/cm-model/pom.xml!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/openehr-utils/cm-model/cm-model-0.95.4-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/openehr-utils/cm-model/cm-model-0.95.4-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
