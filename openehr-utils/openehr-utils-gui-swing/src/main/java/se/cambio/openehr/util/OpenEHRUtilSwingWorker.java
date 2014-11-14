@@ -8,12 +8,12 @@ public abstract class OpenEHRUtilSwingWorker extends SwingWorker<Object, Object>
 
     @Override
     protected final Object doInBackground() throws Exception {
-	try{
-	    executeSW();
-	}catch(InternalErrorException e){
-	    ExceptionHandler.handle(e);
-	}
-	return null;
+        try{
+            executeSW();
+        }catch(InternalErrorException e){
+            ExceptionHandler.handle(e);
+        }
+        return null;
     }
 
     protected abstract void executeSW() throws InternalErrorException;

@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ActionRuleLinesPanel extends RuleLinesPanel{
     }
 
     @Override
-    protected List<RuleLine> getRuleLines() {
+    protected RuleLineCollection getRuleLines() {
         return getController().getActionsRuleLines();
     }
 }

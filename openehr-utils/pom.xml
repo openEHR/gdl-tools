@@ -59,8 +59,8 @@
 	</build>
 	<modules>
 		<module>openehr-utils-common</module>
-		<module>openehr-utils-model</module>
-		<module>openehr-utils-persistence</module>
+		<module>cm-model</module>
+		<module>cm-persistence</module>
 		<module>openehr-utils-core</module>
 		<module>openehr-utils-terminology-service</module>
 		<module>openehr-utils-server</module>

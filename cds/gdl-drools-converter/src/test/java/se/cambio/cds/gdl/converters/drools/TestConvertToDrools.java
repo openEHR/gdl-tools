@@ -1,50 +1,59 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
-public class TestConvertToDrools extends TestCase {
 
+public class TestConvertToDrools {
+
+    @Before
 	public void setUp() throws Exception {
         String archetypesFolderPath = TestConvertToDrools.class.getClassLoader().getResource("archetypes").getPath();
         UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
-		Archetypes.loadArchetypes();
 		parser = new GDLParser();
 		guide = null;
 	}
 
+    @Test
 	public void testConvertBSACalculationGuide() throws Exception {
 		parse("BSA_Calculation.v2.gdl");
-		converter = new GDLDroolsConverter(guide);
+		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
 		//System.out.println(output);		
 		//System.out.println(serializer.toDADL(guide));		
 		compile(output);
 	}
-	
-	public void testConvertTemperalGuide() throws Exception {
+
+    @Test
+	public void shouldConvertTemperalGuide() throws Exception {
 		parse("temperal.gdl");
-		converter = new GDLDroolsConverter(guide);
+		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
 		//System.out.println(output);	
 		compile(output);
 	}
-	
-	public void testTermBindingsExist() throws Exception {
+
+    @Test
+    public void shouldTermBindingsExist() throws Exception {
 		parse("CHADVAS_Score_ICD10_bindings.v1.gdl");
 		assertNotNull(guide.getOntology().getTermBindings());
 		assertEquals(1, guide.getOntology().getTermBindings().size());
 	}
-	
-	public void testCompileTemperalGuide() throws Exception {
+
+    @Test
+    public void shouldCompileTemperalGuide() throws Exception {
 		String guide = readFile("temperal.drools");
 		//System.out.println(guide);
 		compile(guide);

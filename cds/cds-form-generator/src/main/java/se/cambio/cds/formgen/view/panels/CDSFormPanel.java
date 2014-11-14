@@ -194,7 +194,10 @@ public class CDSFormPanel extends JPanel{
                     readableGuide =
                             _formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
                 }
-                String ruleName = readableGuide.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
+                String ruleName = "*UNKNOWN*";
+                if (readableGuide != null) {
+                    ruleName = readableGuide.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
+                }
                 sb.append("&nbsp;&nbsp;"+ruleName+"<br>");
             }
             sb.append("</HTML>");

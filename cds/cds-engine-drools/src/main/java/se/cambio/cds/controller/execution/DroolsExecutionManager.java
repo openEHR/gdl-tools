@@ -9,13 +9,13 @@ import org.drools.KnowledgeBaseFactory;
 import org.drools.definition.KnowledgePackage;
 import org.drools.runtime.StatelessKnowledgeSession;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
-import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.io.ByteArrayInputStream;
@@ -49,7 +49,7 @@ public class DroolsExecutionManager {
         }
         Collection<String> guideIds = new ArrayList<String>();
         for(GuideDTO guideDTO: guideDTOs){
-            guideIds.add(guideDTO.getIdGuide());
+            guideIds.add(guideDTO.getId());
         }
         executeGuides(guideIds, kb, date, workingMemoryObjects, executionLogger);
     }
@@ -131,7 +131,7 @@ public class DroolsExecutionManager {
     private static String getGuideIdsId(Collection<GuideDTO> guideDTOs) {
         List<String> guideIdsIdList = new ArrayList<String>();
         for (GuideDTO guideDTO : guideDTOs) {
-            guideIdsIdList.add(guideDTO.getIdGuide());
+            guideIdsIdList.add(guideDTO.getId());
         }
         Collections.sort(guideIdsIdList);
         StringBuffer guideIdsIdSB = new StringBuffer();
@@ -145,7 +145,7 @@ public class DroolsExecutionManager {
         ArrayList<KnowledgePackage> knowledgePackages = new ArrayList<KnowledgePackage>();
         for (GuideDTO guideDTO : guideDTOs) {
             if (guideDTO.getCompiledGuide()==null){
-                Logger.getLogger(DroolsExecutionManager.class).warn("Guide '" + guideDTO.getIdGuide() + "' is not compiled.");
+                Logger.getLogger(DroolsExecutionManager.class).warn("Guide '" + guideDTO.getId() + "' is not compiled.");
             };
             KnowledgePackage knowledgePackage =
                     DroolsExecutionManager.getKnowledgePackage(guideDTO.getCompiledGuide());
@@ -180,7 +180,7 @@ public class DroolsExecutionManager {
     private static String getGuideString(Collection<GuideDTO> guides){
         StringBuffer guidesStr = new StringBuffer();
         for (GuideDTO guideDTO : guides) {
-            guidesStr.append(guideDTO.getGuideSrc());
+            guidesStr.append(guideDTO.getSource());
         }
         return guidesStr.toString();
     }

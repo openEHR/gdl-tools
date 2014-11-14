@@ -8,14 +8,11 @@ import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.execution.drools.DroolsRuleExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -37,14 +34,9 @@ public class StressTest {
         try {
             //Load KM
             UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-            Terminologies.loadTerminologies();
             UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-            Archetypes.loadArchetypes();
             UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
-            Templates.loadTemplates();
             stressTest2();
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

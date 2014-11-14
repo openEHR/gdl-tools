@@ -1,8 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import se.cambio.openehr.model.archetype.vo.OrdinalVO;
-import se.cambio.openehr.util.PathUtils;
+import se.cambio.cm.model.archetype.vo.OrdinalVO;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,11 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Ordinals {
-    private static Ordinals _instance = null;
+    private final ArchetypeManager archetypeManager;
     private Map<String, Map<Integer, OrdinalVO>> _ordinalByParentId = null;
     private Map<String, Map<String, Map<Integer, OrdinalVO>>> _templateOrdinalsByTemplateIdAndId = null;
 
-    private Ordinals(){
+    public Ordinals(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
         init();
     }
 
@@ -23,13 +23,13 @@ public class Ordinals {
         _templateOrdinalsByTemplateIdAndId = new HashMap<String, Map<String,Map<Integer,OrdinalVO>>>();
     }
 
-    public static void loadOrdinals(Collection<OrdinalVO> ordinalVOs){
+    public void loadOrdinals(Collection<OrdinalVO> ordinalVOs){
         for (OrdinalVO ordinalVO : ordinalVOs) {
             registerOrdinal(ordinalVO);
         }
     }
 
-    public static void registerOrdinal(OrdinalVO ordinalVO){
+    public void registerOrdinal(OrdinalVO ordinalVO){
         if (ordinalVO.getIdTemplate()==null){
             getOrdinalMap(ordinalVO.getIdParent()).put(ordinalVO.getValue(), ordinalVO);
         }else{
@@ -37,7 +37,8 @@ public class Ordinals {
         }
     }
 
-    public static OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, Integer value){
+    public OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, Integer value){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
         if (idTemplate==null){
             return getOrdinalMap(idParentArchetypeNode).get(value);
         }else{
@@ -45,7 +46,8 @@ public class Ordinals {
         }
     }
 
-    public static Collection<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode){
+    public Collection<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
         if (idTemplate==null){
             return new ArrayList<OrdinalVO>(getOrdinalMap(idParentArchetypeNode).values());
         }else{
@@ -53,16 +55,16 @@ public class Ordinals {
         }
     }
 
-    private static Map<String, Map<Integer, OrdinalVO>> getOrdinalTemplateMap(String idTemplate){
-        Map<String, Map<Integer,OrdinalVO>> map = getDelegate()._templateOrdinalsByTemplateIdAndId.get(idTemplate);
+    private Map<String, Map<Integer, OrdinalVO>> getOrdinalTemplateMap(String idTemplate){
+        Map<String, Map<Integer,OrdinalVO>> map = _templateOrdinalsByTemplateIdAndId.get(idTemplate);
         if (map==null){
             map = new HashMap<String, Map<Integer,OrdinalVO>>();
-            getDelegate()._templateOrdinalsByTemplateIdAndId.put(idTemplate, map);
+            _templateOrdinalsByTemplateIdAndId.put(idTemplate, map);
         }
         return map;
     }
 
-    public static Map<Integer, OrdinalVO> getOrdinalTemplateMap(String idTemplate, String idParentArchetypeNode){
+    public Map<Integer, OrdinalVO> getOrdinalTemplateMap(String idTemplate, String idParentArchetypeNode){
         Map<Integer,OrdinalVO> map = getOrdinalTemplateMap(idTemplate).get(idParentArchetypeNode);
         if (map==null){
             map = new HashMap<Integer,OrdinalVO>();
@@ -71,43 +73,24 @@ public class Ordinals {
         return map;
     }
 
-    private static Map<Integer, OrdinalVO> getOrdinalMap(String idParentArchetypeNode){
-        Map<Integer, OrdinalVO> map = getDelegate()._ordinalByParentId.get(idParentArchetypeNode);
+    private Map<Integer, OrdinalVO> getOrdinalMap(String idParentArchetypeNode){
+        Map<Integer, OrdinalVO> map = _ordinalByParentId.get(idParentArchetypeNode);
         if (map==null){
             map = new HashMap<Integer, OrdinalVO>();
-            getDelegate()._ordinalByParentId.put(idParentArchetypeNode, map);
+            _ordinalByParentId.put(idParentArchetypeNode, map);
         }
         return map;
     }
 
-    /*
-    public static String getName(String idTemplate, String idElement, DvOrdinal dvOrdinal){
-        OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
-        if (ordinalVO!=null){
-            return ordinalVO.getName();
-        }else{
-            return dvOrdinal.getSymbolValue();
-        }
-    }
-
-    public static String getDescription(String idTemplate, String idElement, DvOrdinal dvOrdinal){
-        OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, dvOrdinal.getValue());
-        if (ordinalVO!=null){
-            return ordinalVO.getDescription();
-        }else{
-            return dvOrdinal.getSymbolValue();
-        }
-    }*/
-
-    public static String getText(OrdinalVO ordinalVO, String lang){
+    public String getText(OrdinalVO ordinalVO, String lang) {
         return getText(ordinalVO.getIdTemplate(), ordinalVO.getIdParent(), ordinalVO.getValue(), lang);
     }
 
-    public static String getText(String idTemplate, String idElement, Integer value, String lang){
+    public String getText(String idTemplate, String idElement, Integer value, String lang) {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
         if (ordinalVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -118,15 +101,15 @@ public class Ordinals {
         }
     }
 
-    public static String getDescription(OrdinalVO ordinalVO, String lang){
+    public String getDescription(OrdinalVO ordinalVO, String lang)  {
         return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getIdParent(), ordinalVO.getValue(), lang);
     }
 
-    public static String getDescription(String idTemplate, String idElement, Integer value, String lang){
+    public String getDescription(String idTemplate, String idElement, Integer value, String lang) {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, value);
         if (ordinalVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -137,27 +120,8 @@ public class Ordinals {
         }
     }
 
-    private static ArchetypeTerm getArchetypeTerm(String archetypeId, String idTemplate, String idElement, String atCode, String lang){
-        ArchetypeTerm archetypeTem = null;
-        if (idTemplate==null){
-            archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
-        }else{
-            archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, Archetypes.getAOMMap().keySet());
-            if (archetypeId==null){
-                archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
-            }else{
-                archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
-            }
-        }
-        return archetypeTem;
-    }
-
-
-    public static Ordinals getDelegate(){
-        if (_instance == null){
-            _instance = new Ordinals();
-        }
-        return _instance;
+    private ArchetypeTerms getArchetypeTerms() {
+        return this.archetypeManager.getArchetypeTerms();
     }
 }
 /*

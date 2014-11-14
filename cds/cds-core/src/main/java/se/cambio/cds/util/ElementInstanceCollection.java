@@ -5,10 +5,7 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.RuleReference;
+import se.cambio.cds.model.facade.execution.vo.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 
@@ -57,11 +54,13 @@ public class ElementInstanceCollection {
                         dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
                         //Might be null i.e. max(date/time) or path!=null
                     }
-                    PredicateGeneratedElementInstance pgei = new PredicateGeneratedElementInstance(
-                            predicateOriginalEI.getId(),
-                            dv, arAux,
-                            null, null,
-                            predicateOriginalEI.getOperatorKind());
+                    PredicateGeneratedElementInstance pgei =
+                            new PredicateGeneratedElementInstanceBuilder()
+                                    .setId(predicateOriginalEI.getId())
+                                    .setDataValue(dv)
+                                    .setArchetypeReference(arAux)
+                                    .setOperatorKind(predicateOriginalEI.getOperatorKind())
+                                    .createPredicateGeneratedElementInstance();
                     pgei.setRuleReferences(predicateOriginalEI.getRuleReferences());
                     //Should not allow value changes for generated elements in the future
                 }else{

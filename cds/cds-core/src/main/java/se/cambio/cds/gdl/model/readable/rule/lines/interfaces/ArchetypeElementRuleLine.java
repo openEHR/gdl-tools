@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
 
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 
 
 public interface ArchetypeElementRuleLine extends ArchetypeReferenceRuleLine{

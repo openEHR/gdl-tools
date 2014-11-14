@@ -1,8 +1,8 @@
 package se.cambio.cds.util.export.html.util;
 
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -11,11 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-15
- * Time: 10:59
- */
 public class TerminologyDefinitionHTMLRenderer {
     private String terminologyId;
     private String lang;

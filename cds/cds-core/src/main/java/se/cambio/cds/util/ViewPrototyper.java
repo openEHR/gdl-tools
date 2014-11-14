@@ -5,11 +5,6 @@ import se.cambio.cds.gdl.model.ResourceDescriptionItem;
 import se.cambio.cds.model.view.DecisionSupportView;
 import se.cambio.cds.model.view.DecisionSupportViewDefinition;
 
-/**
- * User: iago.corbal
- * Date: 2014-09-19
- * Time: 16:02
- */
 public class ViewPrototyper {
     private static String LANGUAGE_TERMINOLOGY = "ISO_639-1";
 

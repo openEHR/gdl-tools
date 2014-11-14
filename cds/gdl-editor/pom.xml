@@ -171,10 +171,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
-            <artifactId>cds-persistence</artifactId>
+            <groupId>org.openehr.utils</groupId>
+            <artifactId>cm-persistence</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.sciss</groupId>

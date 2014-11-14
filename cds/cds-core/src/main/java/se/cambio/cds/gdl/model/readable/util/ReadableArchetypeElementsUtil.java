@@ -7,9 +7,9 @@ import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLin
 public class ReadableArchetypeElementsUtil {
 
     public static String getHTMLTooltip(ArchetypeElementInstantiationRuleLine aeirl){
-	ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)aeirl.getParentRuleLine();
-	String extraLines = ReadableArchetypeReferencesUtil.getHTMLPredicate(airl);
-	return ArchetypeReferences.getHTMLTooltip(aeirl.getArchetypeElement(), aeirl.getArchetypeReference(), extraLines);
+        ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)aeirl.getParentRuleLine();
+        String extraLines = ReadableArchetypeReferencesUtil.getHTMLPredicate(airl);
+        return ArchetypeReferences.getHTMLTooltip(aeirl.getArchetypeElement(), aeirl.getArchetypeReference(), extraLines);
     }
 }
 /*

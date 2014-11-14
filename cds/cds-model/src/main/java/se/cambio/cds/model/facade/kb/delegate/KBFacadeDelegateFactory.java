@@ -1,11 +1,8 @@
 package se.cambio.cds.model.facade.kb.delegate;
 
-import se.cambio.cds.util.misc.CDSConfigurationParametersManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-/**
- * @author iago.corbal
- *
- */
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
+
 public class KBFacadeDelegateFactory {
 
     private static String DELEGATE_CLASS_KNOWLEDGE_BASE = "KBFacadeDelegate/Class";
@@ -14,26 +11,26 @@ public class KBFacadeDelegateFactory {
     }
 
     private static Class<?> getDelegateClass() throws InternalErrorException {
-	Class<?> theClass = null;
-	try {
-	    String delegateClassName = 
-		    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_KNOWLEDGE_BASE);
-	    theClass = Class.forName(delegateClassName);
-	} catch (Exception e) {
-	    new InternalErrorException(e);
-	}
-	return theClass;
+        Class<?> theClass = null;
+        try {
+            String delegateClassName =
+                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_KNOWLEDGE_BASE);
+            theClass = Class.forName(delegateClassName);
+        } catch (Exception e) {
+            new InternalErrorException(e);
+        }
+        return theClass;
     }
 
     public static KBFacadeDelegate getDelegate()
-	    throws InternalErrorException {
-	try {
-	    return (KBFacadeDelegate)getDelegateClass().newInstance();
-	} catch (InstantiationException e) {
-	    throw new InternalErrorException(e);
-	} catch (IllegalAccessException e) {
-	    throw new InternalErrorException(e);
-	}
+            throws InternalErrorException {
+        try {
+            return (KBFacadeDelegate)getDelegateClass().newInstance();
+        } catch (InstantiationException e) {
+            throw new InternalErrorException(e);
+        } catch (IllegalAccessException e) {
+            throw new InternalErrorException(e);
+        }
     }
 }
 /*

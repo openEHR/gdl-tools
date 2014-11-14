@@ -7,7 +7,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRu
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 

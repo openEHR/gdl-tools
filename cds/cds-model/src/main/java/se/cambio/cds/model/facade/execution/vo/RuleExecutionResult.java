@@ -33,6 +33,11 @@ public class RuleExecutionResult implements Serializable{
     public String getEhrId() {
         return ehrId;
     }
+
+    public void setEhrId(String ehrId) {
+        this.ehrId = ehrId;
+    }
+
     public Collection<ArchetypeReference> getArchetypeReferences() {
         return ars;
     }

@@ -65,9 +65,7 @@
         <tr valign='top'><td class="details-label">${texts.Purpose}:</td><td align='left'>${archetype_description_item.purpose?if_exists?replace("\n", "<br>")}</td></tr>
         <tr valign='top'><td class="details-label">${texts.Use}:</td><td align='left'>${archetype_description_item.use?if_exists?replace("\n", "<br>")}</td></tr>
         <tr valign='top'><td class="details-label">${texts.Misuse}:</td><td align='left'>${archetype_description_item.misuse?if_exists?replace("\n", "<br>")}</td></tr>
-        <#if archetype.description.otherDetails??>
-            <tr valign='top'><td class="details-label">${texts.References}:</td><td align='left'>${archetype.description.otherDetails.references?if_exists?replace("\n", "<br>")}</td></tr>
-        </#if>
+        <tr valign='top'><td class="details-label">${texts.References}:</td><td align='left'>${archetype.description.otherDetails.references?if_exists?replace("\n", "<br>")}</td></tr>
 </table>
 <h2>${texts.AuthorDetails?upper_case}</h2>
 <table>

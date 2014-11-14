@@ -1,10 +1,12 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.TermDefinition;
+import se.cambio.cds.gdl.model.readable.ReadableGuide;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public abstract class RuleLine {
@@ -13,15 +15,19 @@ public abstract class RuleLine {
     private ArrayList<RuleLineElement> ruleLineElements = null;
     private boolean commented = false;
     private RuleLine parentRuleLine = null;
-    private List<RuleLine> childrenRuleLines = null;
-    private TermDefinition termDefinition = null;
+    private RuleLineCollection childrenRuleLines = null;
+    private ReadableGuide readableGuide;
 
     public RuleLine(String name, String description) {
         super();
         this.name = name;
         this.description = description;
         this.ruleLineElements = new ArrayList<RuleLineElement>();
-        this.childrenRuleLines = new ArrayList<RuleLine>();
+    }
+
+    public void setReadableGuide(ReadableGuide readableGuide) {
+        this.readableGuide = readableGuide;
+        this.getChildrenRuleLines().setReadableGuide(readableGuide);
     }
 
     public String getName() {
@@ -81,7 +87,7 @@ public abstract class RuleLine {
 
     public void setCommented(boolean commented){
         this.commented = commented;
-        for (RuleLine ruleLine : getChildrenRuleLines()) {
+        for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             ruleLine.setCommented(commented);
         }
     }
@@ -93,12 +99,15 @@ public abstract class RuleLine {
         this.parentRuleLine = parentRuleLine;
     }
 
-    public List<RuleLine> getChildrenRuleLines() {
+    public RuleLineCollection getChildrenRuleLines() {
+        if (childrenRuleLines == null) {
+            childrenRuleLines = new RuleLineCollection(readableGuide);
+        }
         return childrenRuleLines;
     }
 
     public void addChildRuleLine(RuleLine ruleLine){
-        childrenRuleLines.add(ruleLine);
+        getChildrenRuleLines().add(ruleLine);
         ruleLine.setParentRuleLine(this);
     }
 
@@ -107,12 +116,22 @@ public abstract class RuleLine {
         this.parentRuleLine = null;
     }
 
-    public TermDefinition getTermDefinition() {
-        return termDefinition;
+    public ReadableGuide getReadableGuide() {
+        if (readableGuide==null){
+            if (parentRuleLine!=null){
+                readableGuide = parentRuleLine.getReadableGuide();
+            }
+        }
+        return readableGuide;
     }
 
-    public void setTermDefinition(TermDefinition termDefinition) {
-        this.termDefinition = termDefinition;
+
+    public TermDefinition getTermDefinition() {
+        return getReadableGuide().getTermDefinition();
+    }
+
+    public ArchetypeManager getArchetypeManager(){
+        return getReadableGuide().getArchetypeManager();
     }
 }
 /*

@@ -1,9 +1,9 @@
 package se.cambio.cds.util;
 
-import javax.swing.SwingWorker;
-
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+
+import javax.swing.*;
 
 public abstract class CDSSwingWorker extends SwingWorker<Object, Object>{
 

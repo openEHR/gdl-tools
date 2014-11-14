@@ -24,19 +24,21 @@ import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
+import se.cambio.cm.model.util.CMTypeFormat;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice.MessageType;
@@ -192,7 +194,11 @@ public class GDLEditor implements EditorController<Guide>{
                         protected void done() {
                             getController().compilationFinished(getErrorMsg());
                             if (getErrorMsg()==null){
-                                generateDialogForm(getCompiledGuide(), getGuide());
+                                try {
+                                    generateDialogForm(getCompiledGuide(), getGuide());
+                                } catch (InternalErrorException e) {
+                                    ExceptionHandler.handle(e);
+                                }
                             }
                         }
                     };
@@ -205,18 +211,19 @@ public class GDLEditor implements EditorController<Guide>{
 
     }
 
-    private void generateDialogForm(byte[] compiledGuide, Guide guide){
+    private void generateDialogForm(byte[] compiledGuide, Guide guide) throws InternalErrorException {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         String gdlGuide = controller.getSerializedEntity();
         if (compiledGuide!=null && gdlGuide!=null){
             GuideDTO guideDTO =
-                    new GuideDTO(
-                            controller.getEntityId(),
-                            gdlGuide,
-                            IOUtils.getBytes(guide),
-                            compiledGuide,
-                            true,
-                            Calendar.getInstance().getTime());
+                    new GuideDTOBuilder()
+                            .setId(controller.getEntityId())
+                            .setFormat(CMTypeFormat.GDL_FORMAT.getFormat())
+                            .setSource(gdlGuide)
+                            .setGuideObject(IOUtils.getBytes(guide))
+                            .setCompiledGuide(compiledGuide)
+                            .setLastUpdate(Calendar.getInstance().getTime())
+                            .createGuideDTO();
             FormGeneratorController formGenerator =
                     new FormGeneratorController(guideDTO, controller.getCurrentLanguageCode());
             Date date = UserConfigurationManager.getCustomDate();
@@ -254,7 +261,7 @@ public class GDLEditor implements EditorController<Guide>{
                 GDLEditorLanguageManager.getMessage("RuleName"), "");
         if (dialog.getAnswer()) {
             _ruleAtEdit = new ReadableRule(getCurrentTermDefinition(),
-                    createNextGTCode());
+                    createNextGTCode(), _readableGuide);
             setGTName(_ruleAtEdit.getGTCode(), dialog.getValue());
             getRenderableRules().put(_ruleAtEdit.getGTCode(), _ruleAtEdit);
         }
@@ -378,32 +385,37 @@ public class GDLEditor implements EditorController<Guide>{
         return keywords;
     }
 
-    public List<RuleLine> getPreconditionRuleLines() {
+    public RuleLineCollection getPreconditionRuleLines() {
         return getReadableGuide().getPreconditionRuleLines();
     }
 
-    public List<RuleLine> getDefinitionRuleLines() {
+    public RuleLineCollection getDefinitionRuleLines() {
         return getReadableGuide().getDefinitionRuleLines();
     }
 
     public ReadableGuide getReadableGuide() {
         if (_readableGuide == null) {
-            _readableGuide = new ReadableGuide(getCurrentTermDefinition());
+            _readableGuide = new ReadableGuide(getCurrentTermDefinition(), ArchetypeManager.getInstance());
         }
         return _readableGuide;
     }
 
-    public List<RuleLine> getConditionRuleLines() {
+    public RuleLineCollection getConditionRuleLines() {
         return _ruleAtEdit.getConditionRuleLines();
     }
 
-    public List<RuleLine> getActionsRuleLines() {
+    public RuleLineCollection getActionsRuleLines() {
         return _ruleAtEdit.getActionRuleLines();
     }
 
-    public void editRuleElement(
-            RuleLineElementWithValue<?> ruleLineElementWithValue) {
-        RuleElementEditor.edit(ruleLineElementWithValue);
+    public void editRuleElement(RuleLineElementWithValue<?> ruleLineElementWithValue) {
+        try {
+            RuleElementEditor.edit(ruleLineElementWithValue);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
+        } catch (InstanceNotFoundException e) {
+            ExceptionHandler.handle(e);
+        }
     }
 
     public void runIfOKToExit(final Runnable pendingRunnable) {
@@ -549,7 +561,7 @@ public class GDLEditor implements EditorController<Guide>{
         if (termDefinition.getTerms() != null) {
             Set<String> gtCodes = new HashSet<String>();
             gtCodes.addAll(termDefinition.getTerms().keySet());
-            for (RuleLine ruleLine: getDefinitionRuleLines()){
+            for (RuleLine ruleLine: getDefinitionRuleLines().getRuleLines()){
                 if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                     gtCodes.add(((ArchetypeInstantiationRuleLine)ruleLine).getGTCode());
                 }
@@ -652,7 +664,7 @@ public class GDLEditor implements EditorController<Guide>{
     private Guide constructCurrentGuide() throws IllegalStateException {
         GuideDefinition guideDefinition = new GuideDefinition();
         // Insert definition
-        for (RuleLine ruleLine : getDefinitionRuleLines()) {
+        for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()) {
             if (!ruleLine.isCommented()) {
                 if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
                     ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) ruleLine;
@@ -660,7 +672,7 @@ public class GDLEditor implements EditorController<Guide>{
                     if (ar != null) {
                         Map<String, ElementBinding> elementMap = new HashMap<String, ElementBinding>();
                         List<ExpressionItem> predicateStatements = new ArrayList<ExpressionItem>();
-                        for (RuleLine ruleLineAux : airl.getChildrenRuleLines()) {
+                        for (RuleLine ruleLineAux : airl.getChildrenRuleLines().getRuleLines()) {
                             if (!ruleLineAux.isCommented()) {
                                 if (ruleLineAux instanceof ArchetypeElementInstantiationRuleLine) {
                                     ArchetypeElementInstantiationRuleLine aeirl = (ArchetypeElementInstantiationRuleLine) ruleLineAux;
@@ -703,7 +715,7 @@ public class GDLEditor implements EditorController<Guide>{
         }
 
         // Insert preconditions
-        List<ExpressionItem> preConditions = convertToExpressionItems(getPreconditionRuleLines());
+        List<ExpressionItem> preConditions = convertToExpressionItems(getPreconditionRuleLines().getRuleLines());
         guideDefinition.setPreConditionExpressions(preConditions);
 
         // Insert rules
@@ -714,10 +726,8 @@ public class GDLEditor implements EditorController<Guide>{
                 Rule rule = new Rule();
                 rule.setId(gtCode);
                 guideDefinition.getRules().put(gtCode, rule);
-                rule.setWhenStatements(convertToExpressionItems(renderableRule
-                        .getConditionRuleLines()));
-                rule.setThenStatements(convertToAssigmentExpressionItems(renderableRule
-                        .getActionRuleLines()));
+                rule.setWhenStatements(convertToExpressionItems(renderableRule.getConditionRuleLines().getRuleLines()));
+                rule.setThenStatements(convertToAssigmentExpressionItems(renderableRule.getActionRuleLines().getRuleLines()));
                 rule.setPriority(priority--);
             }
         }
@@ -884,10 +894,6 @@ public class GDLEditor implements EditorController<Guide>{
             _currentGuideLanguageCode = language;
             getResourceDescriptionItem(language);
 
-            //Update definitions
-            GuideImporter.updateTermDefinitions(_readableGuide, termDefinition);
-            //GDLEditor editor = new GDLEditor(guide, language);
-            //EditorManager.initController(this);
             EditorManager.getMainMenuBar().refreshLanguageMenu();
             refreshCurrentTab();
         }
@@ -1012,6 +1018,8 @@ public class GDLEditor implements EditorController<Guide>{
             checkGuideArchetypesAndTemplates(guide);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
+        } catch (InstanceNotFoundException e) {
+            ExceptionHandler.handle(e);
         }
         initGuideVars();
         if (guide.getId()!=null){
@@ -1041,7 +1049,7 @@ public class GDLEditor implements EditorController<Guide>{
         _guideOntology.setTermBindings(_termBindings);
         generateGTCodesForArchetypeBindings(guide);
         try {
-            _readableGuide = GuideImporter.importGuide(guide, getCurrentLanguageCode());
+            _readableGuide = GuideImporter.importGuide(guide, getCurrentLanguageCode(), ArchetypeManager.getInstance());
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
@@ -1187,12 +1195,8 @@ public class GDLEditor implements EditorController<Guide>{
                             idGuide = idGuide
                                     .substring(0, idGuide.length() - 6);
                         }
-                        GuideDTO guideDTO = new GuideDTO(idGuide,
-                                guideSource,
-                                IOUtils.getBytes(guide),
-                                compiledGuide,
-                                true,
-                                Calendar.getInstance().getTime());
+                        GuideDTO guideDTO =
+                                new GuideDTOBuilder().setId(idGuide).setFormat(guideSource).setSource(CMTypeFormat.GDL_FORMAT.getFormat()).setGuideObject(IOUtils.getBytes(guide)).setCompiledGuide(compiledGuide).setLastUpdate(Calendar.getInstance().getTime()).createGuideDTO();
                         ObjectOutputStream output = new ObjectOutputStream(
                                 new BufferedOutputStream(new FileOutputStream(
                                         guideFile)));
@@ -1215,7 +1219,6 @@ public class GDLEditor implements EditorController<Guide>{
             boolean showOnlyCDS) {
         ArchetypeInstantiationRuleLine airl = new ArchetypeInstantiationRuleLine();
         airl.setGTCode(createNextGTCode(false));
-        airl.setTermDefinition(getCurrentTermDefinition());
         RuleElementEditor.editArchetype(
                 airl.getArchetypeReferenceRuleLineDefinitionElement(),
                 showOnlyCDS);
@@ -1242,7 +1245,7 @@ public class GDLEditor implements EditorController<Guide>{
     */
     private Collection<String> getArchetypeBindingCodesUsed(){
         ArrayList<String> archetypeBindingCodesUsed = new ArrayList<String>();
-        for (RuleLine ruleLine : getDefinitionRuleLines()){
+        for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()){
             if (ruleLine instanceof ArchetypeInstantiationRuleLine){
                 ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine = (ArchetypeInstantiationRuleLine) ruleLine;
                 archetypeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());
@@ -1255,7 +1258,6 @@ public class GDLEditor implements EditorController<Guide>{
             ArchetypeInstantiationRuleLine airl) {
         ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(airl);
         aeirl.getGTCodeRuleLineElement().setValue(createNextGTCode());
-        aeirl.setTermDefinition(getCurrentTermDefinition());
         editRuleElement(aeirl.getArchetypeElementRuleLineDefinitionElement());
         if (aeirl.getArchetypeElementRuleLineDefinitionElement().getValue() != null) {
             return aeirl;
@@ -1287,7 +1289,7 @@ public class GDLEditor implements EditorController<Guide>{
     }
 
     private void checkGuideArchetypesAndTemplates(Guide guide)
-            throws InternalErrorException {
+            throws InternalErrorException, InstanceNotFoundException {
         if (guide == null || guide.getDefinition() == null
                 || guide.getDefinition().getArchetypeBindings() == null) {
             return;
@@ -1296,8 +1298,9 @@ public class GDLEditor implements EditorController<Guide>{
             String archetypeId = archetypeBinding.getArchetypeId();
             String templateId = archetypeBinding.getTemplateId();
             if (templateId == null) {
-                ArchetypeDTO archetypeDTO = Archetypes.getArchetypeDTO(archetypeId);
-                if (archetypeDTO == null) {
+                try {
+                    ArchetypeManager.getInstance().getArchetypes().getCMElement(archetypeId);
+                } catch (InstanceNotFoundException e) {
                     int result = ImportUtils.showImportArchetypeDialogAndAddToRepo(
                             EditorManager.getActiveEditorWindow(), new File(archetypeId + ".adl"));
                     if (result == JFileChooser.CANCEL_OPTION) {
@@ -1305,7 +1308,9 @@ public class GDLEditor implements EditorController<Guide>{
                     }
                 }
             } else {
-                if (Templates.getTemplateDTO(templateId) == null) {
+                try {
+                    ArchetypeManager.getInstance().getTemplates().getCMElement(templateId);
+                } catch (InstanceNotFoundException e) {
                     int result = ImportUtils.showImportTemplateDialog(
                             EditorManager.getActiveEditorWindow(), new File(templateId + ".oet"));
                     if (result == JFileChooser.CANCEL_OPTION) {
@@ -1315,6 +1320,7 @@ public class GDLEditor implements EditorController<Guide>{
             }
         }
     }
+
     public static boolean checkParsedGuide(String guideSrc, Guide guide){
         String guideSrcAux = GDLEditor.serializeGuide(guide);
         if (guide!=null){

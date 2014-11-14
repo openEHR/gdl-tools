@@ -1,63 +1,18 @@
 package se.cambio.cds.controller.session.data;
 
-import org.apache.log4j.Logger;
-import se.cambio.cds.controller.CDSSessionManager;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.study.dto.StudyDTO;
-import se.cambio.cds.model.util.comparators.StudyComparator;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-
-import java.util.*;
+import se.cambio.cm.model.study.dto.StudyDTO;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
 
-public class Studies {
+public class Studies extends AbstractCMManager<StudyDTO> {
     private static Studies _instance = null;
-    private Map<String, StudyDTO> _studiesMap = null;
 
     private Studies(){
     }
 
-    public void loadStudies() throws InternalErrorException{
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        Collection<StudyDTO> studyDTOs = adminFD.searchAllStudies();
-        loadStudies(studyDTOs);
-    }
-
-    public void loadStudiesById(Collection<String> studyIds) throws InternalErrorException, InstanceNotFoundException {
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        for (String studyId : studyIds){
-            StudyDTO studyDTO = adminFD.searchStudy(studyId);   //TODO Load all in one call
-            registerStudy(studyDTO);
-        }
-    }
-
-    public void loadStudies(Collection<StudyDTO> studyDTOs) throws InternalErrorException{
-        init();
-        for (StudyDTO studyDTO : studyDTOs) {
-            registerStudy(studyDTO);
-        }
-    }
-
-    public void registerStudy(StudyDTO studyDTO){
-        getStudiesMap().put(studyDTO.getStudyId(), studyDTO);
-        Logger.getLogger(Studies.class).info("Registering study: '"+studyDTO.getStudyId()+"'.");
-    }
-
-    public StudyDTO getStudyDTO(String idStudy){
-        return getStudiesMap().get(idStudy);
-    }
-
-    public List<StudyDTO> getAllStudies(){
-        return new ArrayList<StudyDTO>(getStudiesMap().values());
-    }
-
-    public Collection<String> getAllStudyIds(){
-        return new ArrayList<String>(getStudiesMap().keySet());
-    }
-
-    public void removeStudy(String studyId) throws InternalErrorException{
-        getStudiesMap().remove(studyId);
+    @Override
+    public Class<StudyDTO> getCMElementClass() {
+        return StudyDTO.class;
     }
 
     public static Studies getInstance(){
@@ -65,31 +20,6 @@ public class Studies {
             _instance = new Studies();
         }
         return _instance;
-    }
-
-    private void init(){
-        getStudiesMap().clear();
-    }
-
-    private Map<String, StudyDTO> getStudiesMap(){
-        if (getInstance()._studiesMap ==null){
-            getInstance()._studiesMap = new HashMap<String, StudyDTO>();
-        }
-        return getInstance()._studiesMap;
-    }
-
-    public int generateHashCode() {
-        return generateHashCode(getAllStudies());
-    }
-
-    public static int generateHashCode(Collection<StudyDTO> studyDTOs){
-        List<StudyDTO> studyDTOsList = new ArrayList<StudyDTO>(studyDTOs);
-        Collections.sort(studyDTOsList, new StudyComparator());
-        List<String> defs = new ArrayList<String>();
-        for(StudyDTO studyDTO: studyDTOsList){
-            defs.add(studyDTO.getStudySrc());
-        }
-        return defs.hashCode();
     }
 }
 /*

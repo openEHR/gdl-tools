@@ -29,11 +29,8 @@ public final class GDLEditorConfigurationParametersManager {
 	 */
         parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
         try {
-	    /* Read property file (if exists).*/
-            Class<GDLEditorConfigurationParametersManager> configurationParametersManagerClass =
-                    GDLEditorConfigurationParametersManager.class;
-            ClassLoader classLoader =
-                    configurationParametersManagerClass.getClassLoader();
+	        /* Read property file (if exists).*/
+            ClassLoader classLoader = GDLEditorConfigurationParametersManager.class.getClassLoader();
             File configFile = getConfigFile();
             InputStream inputStream = null;
             if (configFile!=null){

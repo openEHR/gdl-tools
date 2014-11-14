@@ -11,11 +11,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-05-28
- * Time: 15:06
- */
 public class EHRDataFilterUtil {
 
     public static Set<ArchetypeReference> filterEHRData(String ehrId, DateTime ehrDate, Collection<ArchetypeReference> queryARs, Collection<ElementInstance> elementInstances){

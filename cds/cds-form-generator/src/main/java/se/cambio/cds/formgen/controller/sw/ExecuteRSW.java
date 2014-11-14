@@ -8,20 +8,16 @@ import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegate
 import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegateFactory;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
 
-/**
- * @author iago.corbal
- *
- */
 public class ExecuteRSW extends SwingWorker<Object, Object> {
 
     //private long _executionTime = 0;

@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
+import org.junit.Test;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
@@ -22,18 +23,16 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-07-09
- * Time: 12:37
- */
-public class BasicGDLTest extends GDLTestCase {
+import static org.junit.Assert.*;
+
+public class BasicGDLTest extends GDLTestCase{
 
     public BasicGDLTest(){
         super();
     }
 
-    public void testCount(){
+    @Test
+    public void shouldCountMedications(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
         ars.add(generateOngoingMedicationArchetypeReference("N02AX02"));
@@ -49,7 +48,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(2, ((DvCount)ei.getDataValue()).getMagnitude().intValue());
     }
 
-    public void testNotExists(){
+    @Test
+    public void shouldFindThatElementDoesNotExist(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singleton("not_exists_test.v1"), elementInstances);
@@ -58,7 +58,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1","gt0039")));
     }
 
-    public void testOrPredicates(){
+    @Test
+    public void shouldAllowToDefineOrsWithPredicates(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singleton("test_or_predicates.v1"), elementInstances);
@@ -69,7 +70,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0014")));
     }
 
-    public void testCreationAndOrder(){
+    @Test
+    public void shouldCreateSeveralElements(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         Collection<String> guideIds = new ArrayList<String>();
@@ -83,7 +85,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("test_creation_and_order_1","gt0002")));
     }
 
-    public void testCDSCount(){
+    @Test
+    public void shouldCountCDSElements(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
         ars.add(generateOngoingMedicationArchetypeReference("A10BX02"));
@@ -103,7 +106,8 @@ public class BasicGDLTest extends GDLTestCase {
     }
 
 
-    public void testMissingElements(){
+    @Test
+    public void shouldFindMissingElements(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -128,7 +132,8 @@ public class BasicGDLTest extends GDLTestCase {
         }
     }
 
-    public void testMedDefinitionWithPredicates(){
+    @Test
+    public void shouldAllowToDefinePredicates(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -195,7 +200,8 @@ public class BasicGDLTest extends GDLTestCase {
         }
     }
 
-    public void testMultipleResults(){
+    @Test
+    public void shouldAllowMultpleResults(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -222,7 +228,8 @@ public class BasicGDLTest extends GDLTestCase {
     }
 
 
-    public void testCDSInitialization(){
+    @Test
+    public void shouldAllowCDSInitiallization(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
         Collection<String> guideIds = new ArrayList<String>();
@@ -232,7 +239,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(1, rer.getArchetypeReferences().size());
     }
 
-    public void testDateOperation(){
+    @Test
+    public void shouldTestDateOperations(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
         Collection<String> guideIds = new ArrayList<String>();
@@ -250,17 +258,18 @@ public class BasicGDLTest extends GDLTestCase {
     }
 
     /* TODO Disabled until we are able to implement the functionality
+    @Test
     public void testPredicateAsDefaultCDSValues(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
         Collection<String> guideIds = new ArrayList<String>();
-        guideIds.add("test_predicates_as_default_value.v1");
-        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+
         assertEquals(5, rer.getFiredRules().size());
     }
     */
 
-    public void testCDSLinking(){
+    @Test
+    public void shouldPerformCDSLinking(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Calendar birthdate = Calendar.getInstance();
         birthdate.add(Calendar.YEAR, -75);

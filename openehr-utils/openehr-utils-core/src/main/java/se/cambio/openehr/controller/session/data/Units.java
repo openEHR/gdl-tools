@@ -1,18 +1,17 @@
 package se.cambio.openehr.controller.session.data;
 
+import se.cambio.cm.model.archetype.vo.UnitVO;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import se.cambio.openehr.model.archetype.vo.UnitVO;
-
 public class Units {
-    private static Units _instance = null;
     private Map<String, Collection<String>> _unitsByIdElement = null;
     private Map<String, Map<String, Collection<String>>> _templateUnitsByTemplateIdAndId = null;
 
-    private Units(){
+    public Units(){
         init();
     }
 
@@ -21,13 +20,13 @@ public class Units {
         _templateUnitsByTemplateIdAndId = new HashMap<String, Map<String,Collection<String>>>();
     }
 
-    public static void loadUnits(Collection<UnitVO> unitVOs){
+    public void loadUnits(Collection<UnitVO> unitVOs){
         for (UnitVO unitVO : unitVOs) {
             registerUnit(unitVO);
         }
     }
 
-    public static void registerUnit(UnitVO unitVO){
+    public void registerUnit(UnitVO unitVO){
         if (unitVO.getIdTemplate()==null){
             getUnits(unitVO.getIdElement()).add(unitVO.getUnit());
         }else{
@@ -35,16 +34,16 @@ public class Units {
         }
     }
 
-    private static Map<String, Collection<String>> getUnitsInTemplate(String idTemplate){
-        Map<String, Collection<String>> map = getDelegate()._templateUnitsByTemplateIdAndId.get(idTemplate);
+    private Map<String, Collection<String>> getUnitsInTemplate(String idTemplate){
+        Map<String, Collection<String>> map = _templateUnitsByTemplateIdAndId.get(idTemplate);
         if (map==null){
             map = new HashMap<String, Collection<String>>();
-            getDelegate()._templateUnitsByTemplateIdAndId.put(idTemplate, map);
+            _templateUnitsByTemplateIdAndId.put(idTemplate, map);
         }
         return map;
     }
 
-    public static Collection<String> getUnits(String idTemplate, String idElement){
+    public Collection<String> getUnits(String idTemplate, String idElement){
         if (idTemplate==null){
             return getUnits(idElement);
         }else{
@@ -57,20 +56,13 @@ public class Units {
         }
     }
 
-    private static Collection<String> getUnits(String idElement){
-        Collection<String> units = getDelegate()._unitsByIdElement.get(idElement);
+    private Collection<String> getUnits(String idElement){
+        Collection<String> units = _unitsByIdElement.get(idElement);
         if (units==null){
             units = new ArrayList<String>();
-            getDelegate()._unitsByIdElement.put(idElement, units);
+            _unitsByIdElement.put(idElement, units);
         }
         return units;
-    }
-
-    public static Units getDelegate(){
-        if (_instance == null){
-            _instance = new Units();
-        }
-        return _instance;
     }
 }
 /*

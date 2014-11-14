@@ -1,20 +1,25 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
+import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+
 public abstract class RuleLineElement {
     private String text = null;
     private String description = null;
+    private RuleLine parentRuleLine = null;
 
-    public RuleLineElement(String text) {
-	this.text = text;
-	this.description = text;
+    public RuleLineElement(RuleLine ruleLine, String text) {
+        this.text = text;
+        this.description = text;
+        this.parentRuleLine = ruleLine;
     }
 
     public String getText() {
         return text;
     }
-    
+
     public String toString(){
-	return text;
+        return text;
     }
 
     public String getDescription() {
@@ -24,8 +29,16 @@ public abstract class RuleLineElement {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public abstract String toHTMLString(String lang);
+
+    public RuleLine getParentRuleLine() {
+        return parentRuleLine;
+    }
+
+    public ArchetypeManager getArchetypeManager(){
+        return parentRuleLine.getReadableGuide().getArchetypeManager();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

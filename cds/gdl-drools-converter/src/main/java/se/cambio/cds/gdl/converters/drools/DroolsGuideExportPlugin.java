@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.converters.drools;
 import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.exceptions.GuideCompilationException;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class DroolsGuideExportPlugin implements GuideExportPlugin {
@@ -27,7 +28,7 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin {
 
     public static String getDroolsGuide(Guide guide) throws InternalErrorException {
         try{
-            return new GDLDroolsConverter(guide).convertToDrools();
+            return new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
         }catch (InternalErrorException e) {
             throw new GuideCompilationException(guide.getId(), e);
         }catch (Throwable th) {

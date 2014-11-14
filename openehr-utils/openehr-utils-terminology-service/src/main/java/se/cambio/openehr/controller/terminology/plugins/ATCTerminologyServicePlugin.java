@@ -2,7 +2,7 @@ package se.cambio.openehr.controller.terminology.plugins;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;

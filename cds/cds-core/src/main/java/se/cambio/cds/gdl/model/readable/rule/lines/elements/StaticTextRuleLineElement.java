@@ -4,7 +4,7 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 public class StaticTextRuleLineElement extends RuleLineElement {
 
     public StaticTextRuleLineElement(String text) {
-        super(text);
+        super(null, text);
     }
 
     @Override

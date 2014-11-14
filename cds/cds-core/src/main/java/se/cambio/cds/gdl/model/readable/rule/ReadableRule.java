@@ -2,38 +2,46 @@ package se.cambio.cds.gdl.model.readable.rule;
 
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
+import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ReadableRule {
 
+    private final ReadableGuide readableGuide;
     private TermDefinition _termDefinition = null;
     private String gtCode = null;
-    private List<RuleLine> _conditionRuleLines = null;
-    private List<RuleLine> _actionRuleLines = null;
+    private RuleLineCollection _conditionRuleLines = null;
+    private RuleLineCollection _actionRuleLines = null;
     private boolean commented = false;
 
-    public ReadableRule(TermDefinition termDefinition, String gtCode){
+    public ReadableRule(TermDefinition termDefinition, String gtCode, ReadableGuide readableGuide){
         this.gtCode = gtCode;
-        _conditionRuleLines = new ArrayList<RuleLine>();
-        _actionRuleLines = new ArrayList<RuleLine>();
         _termDefinition = termDefinition;
+        this.readableGuide = readableGuide;
+    }
+
+    public ReadableGuide getReadableGuide() {
+        return readableGuide;
     }
 
     public String getGTCode() {
         return gtCode;
     }
 
-    public List<RuleLine> getConditionRuleLines() {
+    public RuleLineCollection getConditionRuleLines() {
+        if (_conditionRuleLines == null) {
+            _conditionRuleLines = new RuleLineCollection(getReadableGuide());
+        }
         return _conditionRuleLines;
     }
 
-    public List<RuleLine> getActionRuleLines() {
+    public RuleLineCollection getActionRuleLines() {
+        if (_actionRuleLines == null) {
+            _actionRuleLines = new RuleLineCollection(getReadableGuide());
+        }
         return _actionRuleLines;
     }
 
@@ -67,15 +75,16 @@ public class ReadableRule {
         StringBuffer sb = new StringBuffer();
         sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Rule")+"</font><font> "+getName(gtCode)+"</font></b><br>");
         sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("When")+"</font></b><br>");
-        for (RuleLine ruleLine : getConditionRuleLines()) {
+        for (RuleLine ruleLine : getConditionRuleLines().getRuleLines()) {
             sb.append(ruleLine.toHTMLString(1, lang)+"<br>");
         }
         sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Then")+"</font></b><br>");
-        for (RuleLine ruleLine : getActionRuleLines()) {
+        for (RuleLine ruleLine : getActionRuleLines().getRuleLines()) {
             sb.append(ruleLine.toHTMLString(1, lang)+"<br>");
         }
         return sb.toString();
     }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

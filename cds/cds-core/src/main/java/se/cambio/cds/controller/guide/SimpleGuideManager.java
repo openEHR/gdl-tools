@@ -3,12 +3,12 @@ package se.cambio.cds.controller.guide;
 import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -230,7 +230,7 @@ public class SimpleGuideManager {
     public Collection<String> getGuidesKey(Collection<GuideDTO> guides){
         ArrayList<String> idGuides = new ArrayList<String>();
         for (GuideDTO guideDTO : guides) {
-            idGuides.add(guideDTO.getIdGuide());
+            idGuides.add(guideDTO.getId());
         }
         Collections.sort(idGuides);
         return idGuides;

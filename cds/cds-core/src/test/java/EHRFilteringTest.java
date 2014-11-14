@@ -4,7 +4,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
@@ -61,11 +61,12 @@ public class EHRFilteringTest {
     public void shouldFilterUsingOnePredicate(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance(
-                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
-                null, gar, null,
-                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO,
-                OperatorKind.MIN);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.MIN)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =
@@ -78,16 +79,18 @@ public class EHRFilteringTest {
     public void shouldNotFilterMultiplePredicatesWithSameAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance(
-                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]",
-                new DvCodedText("Inpatient", "local", "at0007"),
-                gar, null, null,
-                OperatorKind.EQUALITY);
-        new PredicateGeneratedElementInstance(
-                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
-                null, gar, null,
-                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO,
-                OperatorKind.MIN);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]")
+                .setDataValue(new DvCodedText("Inpatient", "local", "at0007"))
+                .setArchetypeReference(gar)
+                .setOperatorKind(OperatorKind.EQUALITY)
+                .createPredicateGeneratedElementInstance();
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.MIN)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =
@@ -99,18 +102,20 @@ public class EHRFilteringTest {
     public void shouldNotFilterMultiplePredicatesWithDifferentAR(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance(
-                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]",
-                new DvCodedText("Inpatient", "local", "at0007"),
-                gar, null, null,
-                OperatorKind.EQUALITY);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]")
+                .setDataValue(new DvCodedText("Inpatient", "local", "at0007"))
+                .setArchetypeReference(gar)
+                .setOperatorKind(OperatorKind.EQUALITY)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
         gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        new PredicateGeneratedElementInstance(
-                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
-                null, gar, null,
-                OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO,
-                OperatorKind.MIN);
+        new PredicateGeneratedElementInstanceBuilder()
+                .setId("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]")
+                .setArchetypeReference(gar)
+                .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                .setOperatorKind(OperatorKind.MIN)
+                .createPredicateGeneratedElementInstance();
         geic.add(gar);
         Collection<ElementInstance> elementInstances = generateElementInstances();
         Set<ArchetypeReference> archetypeReferenceSet =

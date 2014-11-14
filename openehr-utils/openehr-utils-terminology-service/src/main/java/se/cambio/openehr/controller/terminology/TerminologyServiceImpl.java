@@ -3,11 +3,12 @@ package se.cambio.openehr.controller.terminology;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.cm.model.cm.element.dao.GenericCMElementDAO;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.terminology.dto.TerminologyDTO;
+import se.cambio.cm.model.util.CMElementDAOFactory;
 import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.*;
 
@@ -18,11 +19,6 @@ import java.util.*;
 public class TerminologyServiceImpl implements TerminologyService {
 
     private Map<String, TerminologyService> terminologyPlugins;
-    /*TODO Ontology support:
-    private Map<String, OWLOntology> ontologies;
-    private Map<String, OWLDataFactory> dataFactories;
-    private Map<String, OWLReasoner> reasoners;
-     */
     private Set<String> _supportedTerminologies = null;
     private static TerminologyServiceImpl soleInstance;
     private static Logger log = Logger.getLogger(TerminologyServiceImpl.class);
@@ -31,87 +27,42 @@ public class TerminologyServiceImpl implements TerminologyService {
         init();
     }
 
+
     public void init(){
         _supportedTerminologies = new HashSet<String>();
-        //TODO Remove initialLoadingObservable
-        //InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.ONTOLOGIES);
-	/*TODO  Ontology support: Load ontologies
-	this.dataFactories = new HashMap<String, OWLDataFactory>();
-	this.reasoners = new HashMap<String, OWLReasoner>();
-	this.ontologies = new HashMap<String, OWLOntology>();
-
-	OWLDataFactory dataFactory = null;
-	OWLOntology ontology = null;
-	OWLReasoner reasoner = null;
-
-	try{
-	    //Load ontologies
-	    GenericOntologyDAO ontologyDAO = GenericOntologyFactory.getDAO();
-	    Collection<OntologyDTO> ontologyDTOs = ontologyDAO.searchAll();
-
-	    int total = ontologyDTOs.size()+1;
-	    int count = 1;
-	    InitialLoadingObservable.setCurrentProgress((double)count++/total);
-	    for (OntologyDTO ontologyDTO : ontologyDTOs) {
-		try{
-		    log.debug("Loading ontology: " + ontologyDTO.getTerminologyId());
-		    InputStream input = new ByteArrayInputStream(ontologyDTO.getSrc());
-		    OWLOntologyManager manager = 
-			    OWLManager.createOWLOntologyManager();
-		    dataFactory = manager.getOWLDataFactory();
-		    ontology = manager.loadOntologyFromOntologyDocument(input);
-		    OWLReasonerConfiguration config = new SimpleConfiguration();
-		    ReasonerFactory risfactory = new ReasonerFactory();
-		    reasoner = risfactory.createReasoner(ontology, config);
-		    log.debug("Reasoner initialized: " + ontologyDTO.getTerminologyId());
-		    this.dataFactories.put(ontologyDTO.getTerminologyId(), dataFactory);
-		    this.ontologies.put(ontologyDTO.getTerminologyId(), ontology);
-		    this.reasoners.put(ontologyDTO.getTerminologyId(), reasoner);
-		    _supportedTerminologies.add(ontologyDTO.getTerminologyId());
-		    InitialLoadingObservable.setCurrentProgress((double)count++/total);
-		} catch (Exception e) {
-		    InternalErrorException iee = new InternalErrorException(new Exception("failed to load ontology '"+ontologyDTO.getTerminologyId()+"'", e));
-		    ExceptionHandler.handle(iee);
-		    InitialLoadingObservable.addLoadingException(iee);
-		}
-	    }
-
-	}catch(InternalErrorException e){
-	    ExceptionHandler.handle(e);
-	}
-	 */
         try {
-            Terminologies.loadTerminologies();
+            _supportedTerminologies.addAll(getDAO().searchAllIds());
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
+    }
 
-        for (TerminologyDTO terminologyDTO : Terminologies.getAllTerminologies()) {
-            try{
-                log.debug("Loading terminology : " + terminologyDTO.getTerminologyId());
-                InputStream input = new ByteArrayInputStream(terminologyDTO.getSrc());
-                String clazz = TerminologyServiceConfiguration.getPluginSourceClass(terminologyDTO.getTerminologyId());
-                TerminologyServicePlugin terminologyServicePlugin = null;
-                if(clazz != null) {
-                    try {
-                        terminologyServicePlugin = (TerminologyServicePlugin)Class.forName(clazz).newInstance();
-                    } catch (Exception e) {
-                        Logger.getLogger(TerminologyServiceImpl.class).error("ERROR instantiating class '"+clazz+"'");
-                    }
-                } else {
-                    terminologyServicePlugin =
-                            new CSVTerminologyServicePlugin(terminologyDTO.getTerminologyId());
+    private TerminologyServicePlugin loadTeminology(TerminologyDTO terminologyDTO){
+        try{
+            log.debug("Loading terminology : " + terminologyDTO.getId());
+            InputStream input = new ByteArrayInputStream(terminologyDTO.getSource().getBytes());
+            String clazz = TerminologyServiceConfiguration.getInstance().getPluginSourceClass(terminologyDTO.getId());
+            TerminologyServicePlugin terminologyServicePlugin = null;
+            if(clazz != null) {
+                try {
+                    terminologyServicePlugin = (TerminologyServicePlugin)Class.forName(clazz).newInstance();
+                } catch (Exception e) {
+                    Logger.getLogger(TerminologyServiceImpl.class).error("ERROR instantiating class '"+clazz+"'");
                 }
-                if (terminologyServicePlugin!=null){
-                    terminologyServicePlugin.init(input);
-                    this.registerTerminologyServicePlugin(terminologyServicePlugin);
-                    _supportedTerminologies.add(terminologyDTO.getTerminologyId());
-                }
-            } catch (Exception e) {
-                InternalErrorException iee = new InternalErrorException(new Exception("failed to load terminology '"+terminologyDTO.getTerminologyId()+"'", e));
-                ExceptionHandler.handle(iee);
+            } else {
+                terminologyServicePlugin =
+                        new CSVTerminologyServicePlugin(terminologyDTO.getId());
             }
+            if (terminologyServicePlugin!=null){
+                terminologyServicePlugin.init(input);
+                this.registerTerminologyServicePlugin(terminologyServicePlugin);
+            }
+            return terminologyServicePlugin;
+        } catch (Exception e) {
+            InternalErrorException iee = new InternalErrorException(new Exception("failed to load terminology '"+terminologyDTO.getId()+"'", e));
+            ExceptionHandler.handle(iee);
         }
+        return null;
     }
 
     public static TerminologyServiceImpl getInstance(){
@@ -133,9 +84,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         String terminologyId = a.getTerminologyId().getValue();
         boolean ret = false;
         if (isOntology(terminologyId)) {
-	    /*TODO Ontology support:
-	    ret = checkSubclassOf(a, b);
-	     */
+	        //TODO Ontology support
         } else {
             ret = getTerminologyServicePlugin(terminologyId).isSubclassOf(a, b);
         }
@@ -185,7 +134,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     private boolean checkSubclassOf(CodePhrase a, CodePhrase b)
 	    throws UnsupportedTerminologyException, InvalidCodeException {
 	// TODO: fix support for other terminologies/ontologies using mappings
-	String terminology = a.getTerminologyId().getValue();
+	String terminology = a.getId().getValue();
 	OWLDataFactory dataFactory = dataFactories.get(terminology);
 	OWLReasoner reasoner = reasoners.get(terminology);
 
@@ -225,7 +174,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         String terminologyId = concept.getTerminologyId().getValue();
         if (isOntology(terminologyId)) {
 	    /*TODO Ontology support:
-	    String terminology = concept.getTerminologyId().getValue();
+	    String terminology = concept.getId().getValue();
 	    OWLDataFactory dataFactory = dataFactories.get(terminology);
 	    checkLanguageSupported(language);
 	    String url = configuration.terminologyURL(terminology);
@@ -377,7 +326,19 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     private TerminologyService getTerminologyServicePlugin(String terminologyId) {
-        return getTerminologyServicePluginMap().get(terminologyId);
+        TerminologyService terminologyService = getTerminologyServicePluginMap().get(terminologyId);
+        if (terminologyService == null && isSupported(terminologyId)){
+            try {
+                Collection<TerminologyDTO> terminologyDTOs = getDAO().searchByIds(Collections.singleton(terminologyId));
+                TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
+                terminologyService = loadTeminology(terminologyDTO);
+            } catch (InstanceNotFoundException e) {
+                ExceptionHandler.handle(e);
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
+        }
+        return terminologyService;
     }
 
     public void registerTerminologyServicePlugin(
@@ -393,8 +354,16 @@ public class TerminologyServiceImpl implements TerminologyService {
         return terminologyPlugins;
     }
 
+    private boolean isSupported(String terminologyId){
+        return getSupportedTerminologies().contains(terminologyId);
+    }
+
     public Collection<String> getSupportedTerminologies() {
         return Collections.unmodifiableCollection(_supportedTerminologies);
+    }
+
+    public GenericCMElementDAO<TerminologyDTO> getDAO() throws InternalErrorException {
+        return CMElementDAOFactory.getInstance().getDAO(TerminologyDTO.class);
     }
 }
 /*

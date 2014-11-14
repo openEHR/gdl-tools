@@ -5,7 +5,8 @@ package se.cambio.openehr.view.dialogs;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -42,7 +43,7 @@ public class DVDialogEditor  extends JDialog {
     private JTextPane jTextPane;
 
     public DVDialogEditor(Window owner, ArchetypeElementVO archetypeElementVO, boolean allowNull, boolean enableUnits){
-        super(owner, ArchetypeElements.getText(archetypeElementVO, UserConfigurationManager.getLanguage()), ModalityType.APPLICATION_MODAL);
+        super(owner, getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage()), ModalityType.APPLICATION_MODAL);
         _archetypeElementVO = archetypeElementVO;
         _allowNull = allowNull;
         _enableUnits = enableUnits;
@@ -66,7 +67,7 @@ public class DVDialogEditor  extends JDialog {
         if (mainPanel==null){
             mainPanel = new JPanel(new BorderLayout());
             JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            String name = ArchetypeElements.getText(_archetypeElementVO, UserConfigurationManager.getLanguage());
+            String name = getArchetypeElements().getText(_archetypeElementVO, UserConfigurationManager.getLanguage());
             JLabel label = new JLabel(name+":");
             label.setIcon(OpenEHRDataValuesUI.getIcon(_archetypeElementVO.getRMType()));
             panelAux1.add(label);
@@ -231,6 +232,10 @@ public class DVDialogEditor  extends JDialog {
 
     protected boolean acceptDialog(){
         return true;
+    }
+
+    public static ArchetypeElements getArchetypeElements(){
+        return ArchetypeManager.getInstance().getArchetypeElements();
     }
 }
 /*
