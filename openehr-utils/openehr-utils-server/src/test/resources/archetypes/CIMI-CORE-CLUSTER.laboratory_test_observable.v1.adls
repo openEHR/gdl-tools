@@ -1,0 +1,69 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.laboratory_test_observable.v1
+
+specialize
+	CIMI-CORE-CLUSTER.observable.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000.1] matches { -- Laboratory Test Observable
+		item matches {
+			ELEMENT[at0.1] occurrences matches {1} matches { -- Test name
+				value matches {
+					TEXT matches {*}
+				}
+			}
+			ELEMENT[at0.2] occurrences matches {0..1} matches { -- Diagnostic service**
+				value matches {
+					TEXT matches {*}
+				}
+			}
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.specimen.v3] -- Specimen
+			ELEMENT[at0.3] occurrences matches {0..1} matches { -- Poct indicator
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1"] = <
+				text = <"Laboratory Test Observable">
+				description = <"Laboratory Test Observable">
+			>
+			["at0.1"] = <
+				text = <"Test name">
+				description = <"Test name">
+			>
+			["at0.2"] = <
+				text = <"Diagnostic service**">
+				description = <"Diagnostic service**">
+			>
+			["at0.3"] = <
+				text = <"Poct indicator">
+				description = <"Poct indicator">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0.1"] = <[SNOMED-CT::364712009]>
+				["at0.2"] = <[SNOMED-CT::364712009]>
+				["at0.3"] = <[SNOMED-CT::364712009]>
+			>
+		>
+	>

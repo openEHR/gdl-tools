@@ -1,0 +1,51 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-ENTRY.clinical_entry.v2
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	ENTRY[at0000] matches { -- Clinical Entry
+		participation matches {
+			PARTICIPATION[at0001] occurrences matches {0..1} -- Subject of care
+			PARTICIPATION[at0002] occurrences matches {0..1} -- Information subject
+		}
+		data matches {
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.action.v1] -- Action
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000"] = <
+				text = <"Clinical Entry">
+				description = <"Clinical Entry">
+			>
+			["at0001"] = <
+				text = <"Subject of care">
+				description = <"Subject of care">
+			>
+			["at0002"] = <
+				text = <"Information subject">
+				description = <"Information subject">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0000"] = <[SNOMED-CT::404684003]>
+				["at0001"] = <[SNOMED-CT::125676002]>
+				["at0002"] = <[SNOMED-CT::125676002]>
+			>
+		>
+	>

@@ -1,0 +1,55 @@
+﻿archetype (adl_version=1.5)
+	CIMI-CORE-ENTRY.clinical_entry.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	original_author = <
+		["name"] = <"Thomas Beale">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"thomas.beale@oceaninformatics.com">
+		["date"] = <"10/04/2012">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Pattern archetype for draft CIMI 'clinical entry' type">
+			keywords = <"Entry", ...>
+			copyright = <"© 2012 openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"Draft">
+	other_details = <
+		["model_level"] = <"reference">
+	>
+
+definition
+	ENTRY[at0000] matches {
+		participation matches {
+			PARTICIPATION [at0001] occurrences matches {1} matches {*}
+			PARTICIPATION [at0002] occurrences matches {0..1} matches {*}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000"] = <
+				text = <"CLINICAL_ENTRY">
+				description = <"Clinical Entry CIMI reference type">
+			>
+			["at0001"] = <
+				text = <"information subject">
+				description = <"Subject of information in this Entry - a subject of care (person, family etc)">
+			>
+			["at0002"] = <
+				text = <"information provider">
+				description = <"Provider of information in this Entry; usually the subject or physician">
+			>
+			["at0003"] = <
+				text = <"location">
+				description = <"Location at which the events recorded in this Entry occurred">
+			>
+		>
+	>

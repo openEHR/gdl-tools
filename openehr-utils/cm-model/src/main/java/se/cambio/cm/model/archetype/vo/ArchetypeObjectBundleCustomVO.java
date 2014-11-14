@@ -8,58 +8,38 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
     private static final long serialVersionUID = 25042012L;
     private Collection<ArchetypeElementVO> archetypeElementVOs = null;
     private Collection<ClusterVO> clusterVOs = null;
-    private Collection<ArchetypeSlotVO> archetypeSlotVOs = null;
     private Collection<CodedTextVO> codedTextVOs = null;
     private Collection<OrdinalVO> ordinalVOs = null;
     private Collection<UnitVO> unitVOs = null;
     private Collection<ProportionTypeVO> proportionTypeVOs = null;
 
     public ArchetypeObjectBundleCustomVO(
-	    Collection<ArchetypeElementVO> archetypeElementVOs,
-	    Collection<ClusterVO> clusterVOs,
-	    Collection<ArchetypeSlotVO> archetypeSlotVOs,
-	    Collection<CodedTextVO> codedTextVOs,
-	    Collection<OrdinalVO> ordinalVOs,
-	    Collection<UnitVO> unitVOs,
-	    Collection<ProportionTypeVO> proportionTypeVOs) {
-	super();
-	this.archetypeElementVOs = archetypeElementVOs;
-	this.clusterVOs = clusterVOs;
-	this.archetypeSlotVOs = archetypeSlotVOs;
-	this.codedTextVOs = codedTextVOs;
-	this.ordinalVOs = ordinalVOs;
-	this.unitVOs = unitVOs;
-	this.proportionTypeVOs = proportionTypeVOs;
-    }
-    public Collection<ArchetypeElementVO> getElementVOs() {
-        return archetypeElementVOs;
-    }
-    public void setElementVOs(Collection<ArchetypeElementVO> archetypeElementVOs) {
+            Collection<ArchetypeElementVO> archetypeElementVOs,
+            Collection<ClusterVO> clusterVOs,
+            Collection<CodedTextVO> codedTextVOs,
+            Collection<OrdinalVO> ordinalVOs,
+            Collection<UnitVO> unitVOs,
+            Collection<ProportionTypeVO> proportionTypeVOs) {
+        super();
         this.archetypeElementVOs = archetypeElementVOs;
+        this.clusterVOs = clusterVOs;
+        this.codedTextVOs = codedTextVOs;
+        this.ordinalVOs = ordinalVOs;
+        this.unitVOs = unitVOs;
+        this.proportionTypeVOs = proportionTypeVOs;
+    }
+
+    public Collection<ArchetypeElementVO> getArchetypeElementVOs() {
+        return archetypeElementVOs;
     }
     public Collection<ClusterVO> getClusterVOs() {
         return clusterVOs;
     }
-    public void setClusterVOs(Collection<ClusterVO> clusterVOs) {
-        this.clusterVOs = clusterVOs;
-    }
-    public Collection<ArchetypeSlotVO> getSlotVOs() {
-        return archetypeSlotVOs;
-    }
-    public void setSlotVOs(Collection<ArchetypeSlotVO> archetypeSlotVOs) {
-        this.archetypeSlotVOs = archetypeSlotVOs;
-    }
     public Collection<CodedTextVO> getCodedTextVOs() {
         return codedTextVOs;
     }
-    public void setCodedTextVOs(Collection<CodedTextVO> codedTextVOs) {
-        this.codedTextVOs = codedTextVOs;
-    }
     public Collection<OrdinalVO> getOrdinalVOs() {
         return ordinalVOs;
-    }
-    public void setOrdinalVOs(Collection<OrdinalVO> ordinalVOs) {
-        this.ordinalVOs = ordinalVOs;
     }
     public Collection<UnitVO> getUnitVOs() {
         return unitVOs;
@@ -70,10 +50,6 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
     public Collection<ProportionTypeVO> getProportionTypes() {
         return proportionTypeVOs;
     }
-    public void setProportionTypeVOs(Collection<ProportionTypeVO> proportionTypeVOs) {
-        this.proportionTypeVOs = proportionTypeVOs;
-    }
-    
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

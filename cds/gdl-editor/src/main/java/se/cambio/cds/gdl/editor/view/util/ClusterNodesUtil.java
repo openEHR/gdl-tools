@@ -29,18 +29,17 @@ public class ClusterNodesUtil {
                         !OpenEHRConst.SECTION.equals(clusterVO.getRMType()) &&
                         !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))){
                     //Skip node
-                    return getClusterNode(idTemplate, clusterVO.getIdParent(),
+                    return getClusterNode(idTemplate, clusterVO.getParentId(),
                             rootNode, clusters, singleSelection, simplifiedTree, archetypeManager);
                 }
             }else{
-                ExceptionHandler.handle(new Exception("Cluster id '" + idCluster + "' not found"));
                 return rootNode;
             }
             SelectableNode<Object> clusterNode = clusters.get(idCluster);
             if(clusterNode==null){
 
                 SelectableNode<Object> parentNode =
-                        getClusterNode(idTemplate, clusterVO.getIdParent(),
+                        getClusterNode(idTemplate, clusterVO.getParentId(),
                                 rootNode, clusters, singleSelection, simplifiedTree, archetypeManager);
                 clusterNode = createClusterNode(clusterVO, null, singleSelection, archetypeManager);
                 clusters.put(idCluster, clusterNode);

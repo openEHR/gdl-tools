@@ -1,0 +1,78 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.observable.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000] matches { -- Observable
+		item matches {
+			ELEMENT[at0001] occurrences matches {1} matches { -- Name
+				value matches {
+					TEXT matches {*}
+				}
+			}
+			ITEM[at0002] occurrences matches {0..*} -- Reason
+			ITEM[at0003] occurrences matches {0..*} -- Method
+			ELEMENT[at0004] occurrences matches {0..1} matches { -- Status
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+			ELEMENT[at0005] occurrences matches {0..1} matches { -- Priority
+				value matches {
+					TEXT matches {*}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000"] = <
+				text = <"Observable">
+				description = <"Observable">
+			>
+			["at0001"] = <
+				text = <"Name">
+				description = <"Name">
+			>
+			["at0002"] = <
+				text = <"Reason">
+				description = <"Reason">
+			>
+			["at0003"] = <
+				text = <"Method">
+				description = <"Method">
+			>
+			["at0004"] = <
+				text = <"Status">
+				description = <"Status">
+			>
+			["at0005"] = <
+				text = <"Priority">
+				description = <"Priority">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0000"] = <[SNOMED-CT::363787002]>
+				["at0001"] = <[SNOMED-CT::363787002]>
+				["at0002"] = <[SNOMED-CT::138875005]>
+				["at0003"] = <[SNOMED-CT::138875005]>
+				["at0004"] = <[SNOMED-CT::288532009]>
+				["at0005"] = <[SNOMED-CT::272125009]>
+			>
+		>
+	>

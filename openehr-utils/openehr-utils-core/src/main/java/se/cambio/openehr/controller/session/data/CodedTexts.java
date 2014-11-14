@@ -32,9 +32,9 @@ public class CodedTexts {
 
     public void registerCodedText(CodedTextVO codedTextVO){
         if (codedTextVO.getIdTemplate()==null){
-            getCodedTextMap(codedTextVO.getIdParent()).put(codedTextVO.getCode(), codedTextVO);
+            getCodedTextMap(codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
         }else{
-            getCodedTextTemplateMap(codedTextVO.getIdTemplate(),codedTextVO.getIdParent()).put(codedTextVO.getCode(), codedTextVO);
+            getCodedTextTemplateMap(codedTextVO.getIdTemplate(),codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
         }
     }
 
@@ -87,7 +87,7 @@ public class CodedTexts {
     }
 
     public String getText(CodedTextVO codedTextVO, String lang) {
-        return getText(codedTextVO.getIdTemplate(), codedTextVO.getIdParent(), codedTextVO.getCode(), lang);
+        return getText(codedTextVO.getIdTemplate(), codedTextVO.getId(), codedTextVO.getCode(), lang);
     }
 
     public String getText(String idTemplate, String idElement, String code, String lang) {
@@ -106,7 +106,7 @@ public class CodedTexts {
     }
 
     public String getDescription(CodedTextVO codedTextVO, String lang) throws InternalErrorException {
-        return getDescription(codedTextVO.getIdTemplate(), codedTextVO.getIdParent(), codedTextVO.getCode(), lang);
+        return getDescription(codedTextVO.getIdTemplate(), codedTextVO.getId(), codedTextVO.getCode(), lang);
     }
 
     public String getDescription(String idTemplate, String idElement, String code, String lang) throws InternalErrorException {

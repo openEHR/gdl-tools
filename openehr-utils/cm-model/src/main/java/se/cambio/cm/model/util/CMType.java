@@ -13,13 +13,14 @@ import se.cambio.cm.model.view.dto.DSViewDTO;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 public enum CMType {
 
     TERMINOLOGY("terminologies", TerminologyDTO.class, Collections.singleton(CMTypeFormat.CSV_FORMAT.getFormat())),
-    ARCHETYPE("archetypes", ArchetypeDTO.class, Collections.singleton(CMTypeFormat.ADL_FORMAT.getFormat())),
+    ARCHETYPE("archetypes", ArchetypeDTO.class, Arrays.asList(CMTypeFormat.ADL_FORMAT.getFormat(), CMTypeFormat.ADLS_FORMAT.getFormat())),
     TEMPLATE("templates", TemplateDTO.class, Collections.singleton(CMTypeFormat.OET_FORMAT.getFormat())),
     GUIDELINE("guidelines", GuideDTO.class, Collections.singleton(CMTypeFormat.GDL_FORMAT.getFormat())),
     VIEW("views", DSViewDTO.class, Collections.singleton(CMTypeFormat.DSV_FORMAT.getFormat())),

@@ -28,6 +28,7 @@ public class OpenEHRConst {
     public final static String EVALUATION = "EVALUATION";
     public final static String INSTRUCTION = "INSTRUCTION";
     public final static String ACTION = "ACTION";
+    public final static String ENTRY = "ENTRY";
 
     public final static String ITEMS = "items";
     public final static String DATA = "data";

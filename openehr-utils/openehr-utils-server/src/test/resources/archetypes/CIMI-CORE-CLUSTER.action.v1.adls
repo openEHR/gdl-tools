@@ -1,0 +1,161 @@
+archetype (adl_version=1.5.1; generated)
+	CIMI-CORE-CLUSTER.action.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"???">
+		>
+	>
+	lifecycle_state = <"unmanaged">
+
+definition
+	CLUSTER[id1] matches {	-- Action
+		item matches {
+			ELEMENT[id2] occurrences matches {1} matches {	-- Action type
+				value matches {
+					CODED_TEXT[id18] 
+				}
+			}
+			ELEMENT[id3] occurrences matches {0..*} matches {	-- Identifier
+				value matches {
+					IDENTIFIER[id19] 
+				}
+			}
+			ELEMENT[id4] occurrences matches {0..1} matches {	-- Datetime
+				value matches {
+					DATE_TIME[id20] 
+				}
+			}
+			ELEMENT[id5] occurrences matches {0..1} matches {	-- Datetime range
+				value matches {
+					INTERVAL_VALUE<DATE_TIME>[id21] 
+				}
+			}
+			ELEMENT[id6] occurrences matches {0..1} matches {	-- Duration
+				value matches {
+					DURATION[id22] 
+				}
+			}
+			ELEMENT[id7] occurrences matches {0..1} matches {	-- Timing offset
+				value matches {
+					DURATION[id23] 
+				}
+			}
+			ELEMENT[id8] occurrences matches {0..1} matches {	-- Timing offset origin
+				value matches {
+					DATE_TIME[id24] 
+				}
+			}
+			ITEM[id9] occurrences matches {0..*} 	-- Timing
+			ITEM[id10] occurrences matches {0..*} 	-- Reason
+			ITEM[id11] occurrences matches {0..*} 	-- Method
+			ELEMENT[id12] occurrences matches {0..1} matches {	-- Status
+				value matches {
+					CODED_TEXT[id25] 
+				}
+			}
+		}
+		participation matches {
+			PARTICIPATION[id13] occurrences matches {0..*} 	-- Location
+		}
+		link matches {
+			LINK[id15] occurrences matches {0..1} 	-- Associated activity
+			LINK[id16] occurrences matches {0..*} 	-- Previous action
+			LINK[id17] occurrences matches {0..*} 	-- Subsequent action
+		}
+	}
+
+terminology
+	term_definitions = <
+		["en"] = <
+			["id1"] = <
+				text = <"Action">
+				description = <"Action">
+			>
+			["id2"] = <
+				text = <"Action type">
+				description = <"Action type">
+			>
+			["id3"] = <
+				text = <"Identifier">
+				description = <"Identifier">
+			>
+			["id4"] = <
+				text = <"Datetime">
+				description = <"Datetime">
+			>
+			["id5"] = <
+				text = <"Datetime range">
+				description = <"Datetime range">
+			>
+			["id6"] = <
+				text = <"Duration">
+				description = <"Duration">
+			>
+			["id7"] = <
+				text = <"Timing offset">
+				description = <"Timing offset">
+			>
+			["id8"] = <
+				text = <"Timing offset origin">
+				description = <"Timing offset origin">
+			>
+			["id9"] = <
+				text = <"Timing">
+				description = <"Timing">
+			>
+			["id10"] = <
+				text = <"Reason">
+				description = <"Reason">
+			>
+			["id11"] = <
+				text = <"Method">
+				description = <"Method">
+			>
+			["id12"] = <
+				text = <"Status">
+				description = <"Status">
+			>
+			["id13"] = <
+				text = <"Location">
+				description = <"Location">
+			>
+			["id15"] = <
+				text = <"Associated activity">
+				description = <"Associated activity">
+			>
+			["id16"] = <
+				text = <"Previous action">
+				description = <"Previous action">
+			>
+			["id17"] = <
+				text = <"Subsequent action">
+				description = <"Subsequent action">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			["id1"] = <http://snomedct.info/id/129264002>
+			["id2"] = <http://snomedct.info/id/129264002>
+			["id3"] = <http://snomedct.info/id/129264002>
+			["id4"] = <http://snomedct.info/id/364713004>
+			["id5"] = <http://snomedct.info/id/364713004>
+			["id6"] = <http://snomedct.info/id/364713004>
+			["id7"] = <http://snomedct.info/id/364713004>
+			["id8"] = <http://snomedct.info/id/364713004>
+			["id9"] = <http://snomedct.info/id/364713004>
+			["id10"] = <http://snomedct.info/id/138875005>
+			["id11"] = <http://snomedct.info/id/272394005>
+			["id12"] = <http://snomedct.info/id/288532009>
+			["id13"] = <http://snomedct.info/id/308916002>
+			["id15"] = <http://snomedct.info/id/71388002>
+			["id16"] = <http://snomedct.info/id/71388002>
+			["id17"] = <http://snomedct.info/id/71388002>
+		>
+	>

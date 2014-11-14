@@ -10,8 +10,6 @@
 	<organization>
 		<name>OpenEHR</name>
 	</organization>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>org.openehr.utils</groupId>
@@ -32,12 +30,6 @@
             <groupId>se.cambio.cds</groupId>
             <artifactId>template-gen-core</artifactId>
             <version>${template-gen-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.2-1002-jdbc4</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

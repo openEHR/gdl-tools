@@ -66,7 +66,11 @@ public class ExpressionUtil {
                 }
             }
         } else if (expressionItem instanceof StringConstant) {
-            sb.append(expressionItem.toString());
+            String stringValue = expressionItem.toString();
+            if (stringValue.startsWith("'") && stringValue.endsWith("'") && stringValue.length() > 1){
+                stringValue = "\"" + stringValue.substring(1, stringValue.length()-1) + "\"";
+            }
+            sb.append(stringValue);
         } else if (expressionItem instanceof ConstantExpression) {
             sb.append(formatConstantValue((ConstantExpression) expressionItem));
         } else {

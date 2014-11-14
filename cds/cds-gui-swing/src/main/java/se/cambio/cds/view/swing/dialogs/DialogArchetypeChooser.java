@@ -348,6 +348,7 @@ public class DialogArchetypeChooser extends JDialog{
                 insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
                 insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
                 insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
+                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ENTRY);
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
             }
@@ -364,7 +365,7 @@ public class DialogArchetypeChooser extends JDialog{
                 .createSelectableNode();
         for (String archetypeId : archetypeIds) {
             String entryType = Archetypes.getEntryType(archetypeId);
-            if (entryType!=null && rmName.equals(entryType)) {
+            if (entryType!=null && entryType.equals(rmName)) {
                 SelectableNode<String> rnode = new SelectableNodeBuilder<String>()
                         .setName(archetypeId)
                         .setDescription(archetypeId)

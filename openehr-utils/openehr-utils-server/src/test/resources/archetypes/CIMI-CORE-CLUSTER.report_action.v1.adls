@@ -1,0 +1,119 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.report_action.v1
+
+specialize
+	CIMI-CORE-CLUSTER.action.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000.1] matches { -- Report Action
+		/item matches {
+			ELEMENT[at0.1] occurrences matches {1} matches { -- Action type
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+			ELEMENT[at0.2] occurrences matches {0..1} matches { -- Report datetime
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+			ELEMENT[at0.3] occurrences matches {0..1} matches { -- Report datetime range
+				value matches {
+					INTERVAL_VALUE<DATE_TIME> matches {*}
+				}
+			}
+			ELEMENT[at0.4] occurrences matches {0..1} matches { -- Report duration
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0.5] occurrences matches {0..1} matches { -- Report timing offset
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0.6] occurrences matches {0..1} matches { -- Report timing offset origin
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+		}
+		participation matches {
+			PARTICIPATION[at0.7] occurrences matches {0..*} -- Reporter
+			PARTICIPATION[at0.8] occurrences matches {0..1} -- Locationof subject
+			PARTICIPATION[at0.9] occurrences matches {0..1} -- Locationof reporter
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1"] = <
+				text = <"Report Action">
+				description = <"Report Action">
+			>
+			["at0.1"] = <
+				text = <"Action type">
+				description = <"Action type">
+			>
+			["at0.2"] = <
+				text = <"Report datetime">
+				description = <"Report datetime">
+			>
+			["at0.3"] = <
+				text = <"Report datetime range">
+				description = <"Report datetime range">
+			>
+			["at0.4"] = <
+				text = <"Report duration">
+				description = <"Report duration">
+			>
+			["at0.5"] = <
+				text = <"Report timing offset">
+				description = <"Report timing offset">
+			>
+			["at0.6"] = <
+				text = <"Report timing offset origin">
+				description = <"Report timing offset origin">
+			>
+			["at0.7"] = <
+				text = <"Reporter">
+				description = <"Reporter">
+			>
+			["at0.8"] = <
+				text = <"Locationof subject">
+				description = <"Locationof subject">
+			>
+			["at0.9"] = <
+				text = <"Locationof reporter">
+				description = <"Locationof reporter">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0000.1"] = <[SNOMED-CT::308561006]>
+				["at0.1"] = <[SNOMED-CT::308561006]>
+				["at0.2"] = <[SNOMED-CT::399651003]>
+				["at0.3"] = <[SNOMED-CT::399651003]>
+				["at0.4"] = <[SNOMED-CT::364713004]>
+				["at0.5"] = <[SNOMED-CT::364713004]>
+				["at0.6"] = <[SNOMED-CT::364713004]>
+				["at0.7"] = <[SNOMED-CT::48176007]>
+				["at0.8"] = <[SNOMED-CT::308916002]>
+				["at0.9"] = <[SNOMED-CT::308916002]>
+			>
+		>
+	>

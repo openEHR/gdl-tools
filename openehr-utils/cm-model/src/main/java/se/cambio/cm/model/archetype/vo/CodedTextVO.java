@@ -5,23 +5,22 @@ package se.cambio.cm.model.archetype.vo;
 public class CodedTextVO extends PathableVO {
 
     private static final long serialVersionUID = 20120412L;
-    
+
     private String terminology = null;
     private String code = null;
-    private CodedTextVO parentCodedText = null;
 
-    public CodedTextVO(String name, String description, String type, String idParentCluster,
-	    String idArchetype, String idTemplate, String path, String terminology, String code, CodedTextVO parentCodedText) {
-	super(name, description, type, idParentCluster, idArchetype, idTemplate, path);
-	this.terminology = terminology;
-	this.code = code;
-	this.parentCodedText = parentCodedText;
+    public CodedTextVO(String name, String description, String type,
+                       String idArchetype, String idTemplate, String path, String terminology, String code) {
+        super(name, description, type, idArchetype, idTemplate, path);
+        this.terminology = terminology;
+        this.code = code;
     }
+
     public String getCode() {
-	return code;
+        return code;
     }
     public void setCode(String code) {
-	this.code = code;
+        this.code = code;
     }
     public String getTerminology() {
         return terminology;
@@ -29,11 +28,19 @@ public class CodedTextVO extends PathableVO {
     public void setTerminology(String terminology) {
         this.terminology = terminology;
     }
-    public CodedTextVO getParentCodedText() {
-        return parentCodedText;
-    }
-    public void setParentCodedText(CodedTextVO parentCodedText) {
-        this.parentCodedText = parentCodedText;
+
+    @Override
+    public CodedTextVO clone(){
+        return new CodedTextVOBuilder()
+                .setName(getName())
+                .setDescription(getDescription())
+                .setType(getType())
+                .setIdArchetype(getIdArchetype())
+                .setIdTemplate(getIdTemplate())
+                .setPath(getPath())
+                .setCode(getCode())
+                .setTerminology(getTerminology())
+                .createCodedTextVO();
     }
 }
 /*

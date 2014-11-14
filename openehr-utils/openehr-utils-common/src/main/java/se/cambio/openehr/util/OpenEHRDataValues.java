@@ -6,7 +6,7 @@ package se.cambio.openehr.util;
  *
  */
 public class OpenEHRDataValues {
-    
+
     //DATA VALUES
     public final static String DV_TEXT = "DV_TEXT";
     public final static String DV_CODED_TEXT = "DV_CODED_TEXT";
@@ -20,10 +20,12 @@ public class OpenEHRDataValues {
     public final static String DV_PROPORTION = "DV_PROPORTION";
     public final static String DV_QUANTITY = "DV_QUANTITY";
     public final static String DV_URI = "DV_URI";
-    
+    public final static String DV_STATE = "DV_STATE";
+    public final static String DV_IDENTIFIER = "DV_IDENTIFIER";
+
     //Functions
     public static final String FUNCTION_COUNT = "count";
-    
+
     //Attributes
     public static final String VALUE_ATT = "value";
     public static final String SYMBOL_VALUE_ATT = "symbolValue";
@@ -37,7 +39,7 @@ public class OpenEHRDataValues {
     public static final String CODE_ATT = "code";
     public static final String DEFINING_CODE_ATT = "defining_code";
     public static final String MAPPINGS_ATT = "mappings";
-    
+
     public static final String YEAR_ATT = "year";
     public static final String MONTH_ATT = "month";
     public static final String DAY_ATT = "day";

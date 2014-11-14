@@ -8,12 +8,14 @@ public class ProportionTypeVO implements Serializable{
     private String idTemplate = null;
     private String idElement = null;
     private Integer type = null;
+
     public ProportionTypeVO(String idTemplate, String idElement, Integer type) {
-	super();
-	this.idTemplate = idTemplate;
-	this.idElement = idElement;
-	this.type = type;
+        super();
+        this.idTemplate = idTemplate;
+        this.idElement = idElement;
+        this.type = type;
     }
+
     public String getIdTemplate() {
         return idTemplate;
     }
@@ -31,6 +33,11 @@ public class ProportionTypeVO implements Serializable{
     }
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    @Override
+    public ProportionTypeVO clone(){
+        return new ProportionTypeVO(idTemplate, idElement, type);
     }
 }
 /*

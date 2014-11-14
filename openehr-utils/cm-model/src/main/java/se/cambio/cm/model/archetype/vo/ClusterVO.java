@@ -4,10 +4,22 @@ package se.cambio.cm.model.archetype.vo;
 public class ClusterVO  extends PathableVO {
 
     private static final long serialVersionUID = 25042012L;
-    
-    public ClusterVO(String name, String description,  String type, String idParentCluster,
-	    String idArchetype, String idTemplate, String path) {
-	super(name, description, type, idParentCluster, idArchetype, idTemplate, path);
+
+    public ClusterVO(String name, String description,  String type,
+                     String idArchetype, String idTemplate, String path) {
+        super(name, description, type, idArchetype, idTemplate, path);
+    }
+
+    @Override
+    public ClusterVO clone(){
+        return new ClusterVOBuilder()
+                .setName(getName())
+                .setDescription(getDescription())
+                .setType(getType())
+                .setIdArchetype(getIdArchetype())
+                .setIdTemplate(getIdTemplate())
+                .setPath(getPath())
+                .createClusterVO();
     }
 }
 /*

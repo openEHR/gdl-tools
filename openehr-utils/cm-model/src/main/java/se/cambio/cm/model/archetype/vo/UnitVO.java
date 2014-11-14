@@ -8,13 +8,14 @@ public class UnitVO  implements Serializable{
     private String idTemplate = null;
     private String idElement = null;
     private String unit = null;
+
     public UnitVO(String idTemplate, String idElement, String unit) {
-	super();
-	this.idTemplate = idTemplate;
-	this.idElement = idElement;
-	this.unit = unit;
+        super();
+        this.idTemplate = idTemplate;
+        this.idElement = idElement;
+        this.unit = unit;
     }
-    
+
     public String getIdTemplate() {
         return idTemplate;
     }
@@ -33,9 +34,11 @@ public class UnitVO  implements Serializable{
     public void setUnit(String unit) {
         this.unit = unit;
     }
-    
-    
-    
+
+    @Override
+    public UnitVO clone(){
+        return new UnitVO(idTemplate, idElement, unit);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

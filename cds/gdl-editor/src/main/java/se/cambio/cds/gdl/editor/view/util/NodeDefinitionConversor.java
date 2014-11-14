@@ -218,7 +218,7 @@ public class NodeDefinitionConversor {
             SelectableNode<Object> clusterNode =
                     ClusterNodesUtil.getClusterNode(
                             idTemplate,
-                            archetypeElementVO.getIdParent(),
+                            archetypeElementVO.getParentId(),
                             rmNode, clusters,
                             singleSelection,
                             simplifiedTree,
