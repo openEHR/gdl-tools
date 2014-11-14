@@ -104,6 +104,7 @@ public class DialogSplash extends JDialog implements Observer{
             jProgressBar = new JProgressBar();
             jProgressBar.setName("jProgressBar");
             jProgressBar.setPreferredSize(new java.awt.Dimension(300,20));
+            jProgressBar.setVisible(false);
         }
         return jProgressBar;
     }

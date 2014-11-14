@@ -7,41 +7,22 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.controller.InitialLoadingObservable;
-import se.cambio.openehr.controller.InitialLoadingObservable.LoadingStage;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.controller.terminology.session.data.Terminologies;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice.MessageType;
 
 import java.util.Collection;
 
-public class LoadEditorSW extends CDSSwingWorker{
+public class LoadEditorSW extends CDSSwingWorker {
 
     private DialogSplash _dialog = null;
 
     public LoadEditorSW(DialogSplash dialog){
         _dialog = dialog;
-        InitialLoadingObservable.getDelegate().addObserver(_dialog);
     }
 
     @Override
     protected void executeCDSSW() throws InternalErrorException {
-        InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.ONTOLOGIES);
-        //TODO Load ontologies
-        InitialLoadingObservable.setCurrentLoadingStageFinished();
-        InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.TERMINOLOGIES);
-        Terminologies.loadTerminologies();
-        OpenEHRSessionManager.getTerminologyFacadeDelegate(); //TODO Init terminology
-        InitialLoadingObservable.setCurrentLoadingStageFinished();
-        InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.ARCHETYPES);
-        Archetypes.loadArchetypes();
-        InitialLoadingObservable.setCurrentLoadingStageFinished();
-        InitialLoadingObservable.setCurrentLoadingStage(LoadingStage.TEMPLATES);
-        Templates.loadTemplates();
-        InitialLoadingObservable.setCurrentLoadingStageFinished();
     }
 
     protected void done() {

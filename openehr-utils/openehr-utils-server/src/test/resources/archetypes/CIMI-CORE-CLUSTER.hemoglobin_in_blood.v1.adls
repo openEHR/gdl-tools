@@ -1,0 +1,55 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.hemoglobin_in_blood.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000] matches { -- Hemoglobin in blood
+		item matches {
+			ELEMENT[at0003] occurrences matches {1} matches { -- Name
+				value matches {
+					TEXT matches {*}
+				}
+			}
+			ELEMENT[at0004] occurrences matches {1} matches { -- Result value
+				value matches {
+					QUANTITY matches {*}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000"] = <
+				text = <"Hemoglobin in blood">
+				description = <"Hemoglobin in blood">
+			>
+			["at0003"] = <
+				text = <"Name">
+				description = <"Name">
+			>
+			["at0004"] = <
+				text = <"Result value">
+				description = <"Result value">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0003"] = <[SNOMED-CT::138875005]>
+				["at0004"] = <[SNOMED-CT::138875005]>
+			>
+		>
+	>

@@ -20,6 +20,9 @@ public class UserConfigurationManager {
     public static String VIEWS_FOLDER_KW = "ViewsFolder";
     public static String STUDIES_FOLDER_KW = "StudiesFolder";
     public static String KB_INSTANCE_FOLDER_KW = "KBInstancesFolder";
+    public static String ORDERSET_FOLDER_KW = "OrderSetsFolder";
+    public static String SCENARIOS_FOLDER_KW = "ScenariosFolder";
+    public static String APP_FOLDER_KW = "AppsFolder";
 
     public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
     public static final String LANGUAGE = "Messages/Language";
@@ -35,6 +38,7 @@ public class UserConfigurationManager {
     private static File _configFile = null;
 
     private static Map<String, String> _defaultValues = new HashMap<String, String>();
+
     static{
         _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");
         _defaultValues.put(TEMPLATES_FOLDER_KW, "templates");
@@ -44,6 +48,9 @@ public class UserConfigurationManager {
         _defaultValues.put(VIEWS_FOLDER_KW, "views");
         _defaultValues.put(STUDIES_FOLDER_KW, "studies");
         _defaultValues.put(KB_INSTANCE_FOLDER_KW, "instances");
+        _defaultValues.put(ORDERSET_FOLDER_KW, "ordersets");
+        _defaultValues.put(APP_FOLDER_KW, "apps");
+        _defaultValues.put(SCENARIOS_FOLDER_KW, "scenarios");
         _defaultValues.put(DOCUMENTS_FOLDER_KW, "docs");
         _defaultValues.put(CURRENT_DATE_TIME_KW, null);
         _defaultValues.put(LANGUAGE, DEFAULT_LANGUAGE);
@@ -212,6 +219,21 @@ public class UserConfigurationManager {
 
     public static File getKBInstancesFolder(){
         String folderStr = getParameterWithDefault(KB_INSTANCE_FOLDER_KW);
+        return new File(folderStr);
+    }
+
+    public static File getOrderSetsFolder(){
+        String folderStr = getParameterWithDefault(ORDERSET_FOLDER_KW);
+        return new File(folderStr);
+    }
+
+    public static File getScenariosFolder(){
+        String folderStr = getParameterWithDefault(SCENARIOS_FOLDER_KW);
+        return new File(folderStr);
+    }
+
+    public static File getAppsFolder(){
+        String folderStr = getParameterWithDefault(APP_FOLDER_KW);
         return new File(folderStr);
     }
 

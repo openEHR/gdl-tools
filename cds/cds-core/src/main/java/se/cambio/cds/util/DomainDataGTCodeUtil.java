@@ -34,32 +34,51 @@ public class DomainDataGTCodeUtil {
         for (List<LinkedHashMap<String, EIValue>> ardvCollection : domainData.getArdvMap().values()){
             for(Map<String, EIValue> eiMap: ardvCollection){
                 ArchetypeReference ar = i.next();
-                Iterator<ArchetypeReference> arsI = geic.getArchetypeReferences(ar).iterator();
-                boolean fullMatch = false;
-                while(arsI.hasNext()){
-                    ArchetypeReference arAux = arsI.next();
-                    if (arAux instanceof GeneratedArchetypeReference){
-                        GeneratedArchetypeReference gar = (GeneratedArchetypeReference)arAux;
-                        if (ElementInstanceCollectionUtil.matches(gar, ar, guideMap, date)){
-                            fullMatch = true;
-                            for (String elementId: eiMap.keySet()){
-                                EIValue eiValue = eiMap.get(elementId);
-                                ElementInstance elementInstance = gar.getElementInstancesMap().get(elementId);
-                                if (elementInstance instanceof GeneratedElementInstance){
-                                    GeneratedElementInstance gei = (GeneratedElementInstance) elementInstance;
-                                    eiValue.getRuleReferences().addAll(gei.getRuleReferences());
-                                }else{
-                                    fullMatch = false;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!fullMatch){
-                    Logger.getLogger(DomainDataGTCodeUtil.class).warn("No GT codes found for Archetype Reference '"+ar.getIdArchetype()+"'.");
+                insertGTCodeForArchetypeReference(guideMap, date, geic, eiMap, ar);
+            }
+        }
+    }
+
+    private static void insertGTCodeForArchetypeReference(Map<String, Guide> guideMap, Calendar date, GeneratedElementInstanceCollection geic, Map<String, EIValue> eiMap, ArchetypeReference ar) {
+        Iterator<ArchetypeReference> arsI = geic.getArchetypeReferences(ar).iterator();
+        boolean fullMatchFound = false;
+        while(arsI.hasNext()){
+            ArchetypeReference arAux = arsI.next();
+            boolean fullMatch = isFullMatch(guideMap, date, eiMap, ar, arAux);
+            if (fullMatch){
+                fullMatchFound = true;
+            }
+        }
+        if (!fullMatchFound){
+            Logger.getLogger(DomainDataGTCodeUtil.class).warn("No GT codes found for Archetype Reference '"+ar.getIdArchetype()+"'.");
+        }
+    }
+
+    private static boolean isFullMatch(Map<String, Guide> guideMap, Calendar date, Map<String, EIValue> eiMap, ArchetypeReference ar, ArchetypeReference arAux) {
+        if (arAux instanceof GeneratedArchetypeReference){
+            GeneratedArchetypeReference gar = (GeneratedArchetypeReference)arAux;
+            return isFullMatch(guideMap, date, eiMap, ar, gar);
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean isFullMatch(Map<String, Guide> guideMap, Calendar date, Map<String, EIValue> eiMap, ArchetypeReference ar, GeneratedArchetypeReference gar) {
+        boolean fullMatch = false;
+        if (ElementInstanceCollectionUtil.matches(gar, ar, guideMap, date)){
+            fullMatch = true;
+            for (String elementId: eiMap.keySet()){
+                EIValue eiValue = eiMap.get(elementId);
+                ElementInstance elementInstance = gar.getElementInstancesMap().get(elementId);
+                if (elementInstance instanceof GeneratedElementInstance){
+                    GeneratedElementInstance gei = (GeneratedElementInstance) elementInstance;
+                    eiValue.getRuleReferences().addAll(gei.getRuleReferences());
+                }else{
+                    fullMatch = false;
                 }
             }
         }
+        return fullMatch;
     }
 
     public static void cleanGTCodes(DomainData domainData){

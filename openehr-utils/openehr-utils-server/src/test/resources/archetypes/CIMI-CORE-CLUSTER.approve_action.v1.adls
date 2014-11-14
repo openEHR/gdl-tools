@@ -1,0 +1,114 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-CLUSTER.approve_action.v1
+
+specialize
+	CIMI-CORE-CLUSTER.action.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	CLUSTER[at0000.1] matches { -- Approve Action
+		/item matches {
+			ELEMENT[at0.1] occurrences matches {1} matches { -- Action type
+				value matches {
+					CODED_TEXT matches {*}
+				}
+			}
+			ELEMENT[at0.2] occurrences matches {0..1} matches { -- Approval datetime
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+			ELEMENT[at0.3] occurrences matches {0..1} matches { -- Approval datetime range
+				value matches {
+					INTERVAL_VALUE<DATE_TIME> matches {*}
+				}
+			}
+			ELEMENT[at0.4] occurrences matches {0..1} matches { -- Approval duration
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0.5] occurrences matches {0..1} matches { -- Approval timing offset
+				value matches {
+					DURATION matches {*}
+				}
+			}
+			ELEMENT[at0.6] occurrences matches {0..1} matches { -- Approval timing offset origin
+				value matches {
+					DATE_TIME matches {*}
+				}
+			}
+		}
+		participation matches {
+			PARTICIPATION[at0.7] occurrences matches {0..*} -- Approver
+			PARTICIPATION[at0.8] occurrences matches {0..1} -- Locationof subject
+			PARTICIPATION[at0.9] occurrences matches {0..1} -- Locationof approver
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1"] = <
+				text = <"Approve Action">
+				description = <"Approve Action">
+			>
+			["at0.1"] = <
+				text = <"Action type">
+				description = <"Action type">
+			>
+			["at0.2"] = <
+				text = <"Approval datetime">
+				description = <"Approval datetime">
+			>
+			["at0.3"] = <
+				text = <"Approval datetime range">
+				description = <"Approval datetime range">
+			>
+			["at0.4"] = <
+				text = <"Approval duration">
+				description = <"Approval duration">
+			>
+			["at0.5"] = <
+				text = <"Approval timing offset">
+				description = <"Approval timing offset">
+			>
+			["at0.6"] = <
+				text = <"Approval timing offset origin">
+				description = <"Approval timing offset origin">
+			>
+			["at0.7"] = <
+				text = <"Approver">
+				description = <"Approver">
+			>
+			["at0.8"] = <
+				text = <"Locationof subject">
+				description = <"Locationof subject">
+			>
+			["at0.9"] = <
+				text = <"Locationof approver">
+				description = <"Locationof approver">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0.1"] = <[SNOMED-CT::364713004]>
+				["at0.2"] = <[SNOMED-CT::364713004]>
+				["at0.3"] = <[SNOMED-CT::48176007]>
+				["at0.4"] = <[SNOMED-CT::308916002]>
+				["at0.5"] = <[SNOMED-CT::308916002]>
+			>
+		>
+	>

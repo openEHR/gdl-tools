@@ -2,8 +2,9 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.openehr.model.archetype.vo.CodedTextVO;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.UserConfigurationManager;
 
@@ -28,14 +29,14 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
         this.setBackground(null);
         this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         Collection<CodedTextVO> codedTextsVO =
-                CodedTexts.getCodedTextVOs(idTemplate, idElement);
+                getCodedTexts().getCodedTextVOs(idTemplate, idElement);
         if (!codedTextsVO.isEmpty()){
             if (OpenEHRConst.LOCAL.equals(codedTextsVO.iterator().next().getTerminology())){
                 this.add(getDVComboBoxPanel(), BorderLayout.CENTER);
                 for (CodedTextVO codedTextVO : codedTextsVO) {
                     getDVComboBoxPanel().insertOption(
                             codedTextVO.getCode(),
-                            CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage()),
+                            getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage()),
                             codedTextVO.getDescription());
                 }
             }else{
@@ -63,8 +64,8 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                 public DataValue getDataValue() {
                     String code = (String)getComboBox().getSelectedItem();
                     if (!code.trim().isEmpty()){
-                        CodedTextVO codedTextVO = CodedTexts.getCodedTextVO(getIdTemplate(), getIdElement(), code);
-                        String name = CodedTexts.getText(codedTextVO, UserConfigurationManager.getLanguage());
+                        CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), code);
+                        String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
                         return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
                     }else{
                         return null;
@@ -87,13 +88,6 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
             dvTextPanel = new DVTextPanel(getIdElement(), getIdTemplate(), isAllowsNull(), isRequestFocus());
         }
         return dvTextPanel;
-    }
-
-
-    public void setMultipleSelection(boolean multipleSelection){
-        if (dvHierarchyPanel!=null){
-            dvHierarchyPanel.setMultipleSelection(multipleSelection);
-        }
     }
 
     public void setDataValue(DataValue dataValue) {
@@ -131,6 +125,11 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
         }
         return components;
     }
+
+    private CodedTexts getCodedTexts(){
+        return ArchetypeManager.getInstance().getCodedTexts();
+    }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

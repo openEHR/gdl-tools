@@ -1,0 +1,149 @@
+archetype (adl_version=1.5.1)
+	CIMI-CORE-INDIVISIBLE_ENTRY.body_height.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	original_author = <
+		["name"] = <"Thomas Beale">
+		["organisation"] = <"CIMI">
+		["email"] = <"thomas.beale@oceaninformatics.com">
+		["date"] = <"10/02/2014">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Typical 'atomic' Entry - body height">
+			copyright = <"© 2014 CIMI">
+		>
+	>
+	lifecycle_state = <"unmanaged">
+
+definition
+	INDIVISIBLE_ENTRY[id1] matches {	-- BodyHeight
+		data matches {
+			ELEMENT[id2] occurrences matches {1} matches {	-- BodyHeight
+				value matches {
+					QUANTITY[id16] matches {
+						value matches {|0.1..2.5|}
+						units matches {[at1]}
+					}
+				}
+			}
+			ELEMENT[id3] occurrences matches {0..1} matches {	-- BodyHeightValueOrigin
+				value matches {[ac1]}		-- BodyHeightValueOrigin
+			}
+			ELEMENT[id7] occurrences matches {0..1} matches {	-- MeasuringDevice
+				value matches {[ac2]}		-- MeasuringDevice
+			}
+			ELEMENT[id12] occurrences matches {0..1} matches {	-- BodyPosition
+				value matches {[ac3]}		-- BodyPosition
+			}
+			ELEMENT[id15] occurrences matches {0..*} matches {	-- Confounding
+				value matches {
+					PLAIN_TEXT[id17] 
+				}
+			}
+		}
+	}
+
+terminology
+	term_definitions = <
+		["en"] = <
+			["id1"] = <
+				text = <"BodyHeight">
+				description = <"The length (or height) of the patien'ts body.">
+			>
+			["id2"] = <
+				text = <"BodyHeight">
+				description = <"The body height of a patient.">
+			>
+			["id3"] = <
+				text = <"BodyHeightValueOrigin">
+				description = <"-">
+			>
+			["at1"] = <
+				text = <"m">
+				description = <"metres">
+			>
+			["at4"] = <
+				text = <"Estimated">
+			>
+			["at5"] = <
+				text = <"Measured">
+			>
+			["at6"] = <
+				text = <"Stated">
+			>
+			["id7"] = <
+				text = <"MeasuringDevice">
+				description = <"Device used to measure body height.">
+			>
+			["at8"] = <
+				text = <"Other">
+				description = <"An other device to measure body height has been used than a ruler or a tape measurer.">
+			>
+			["at9"] = <
+				text = <"Ruler">
+				description = <"A ruler used to measure body height.">
+			>
+			["at10"] = <
+				text = <"Stadiometer">
+			>
+			["at11"] = <
+				text = <"TapeMeasurer">
+				description = <"A tape used to measure body height.">
+			>
+			["id12"] = <
+				text = <"BodyPosition">
+				description = <"The position of the body during the measurement.">
+			>
+			["at13"] = <
+				text = <"Suspine">
+				description = <"The position of the body lying on the back">
+			>
+			["at14"] = <
+				text = <"Standing">
+				description = <"The position of the body standing upright">
+			>
+			["id15"] = <
+				text = <"Confounding">
+				description = <"A factor of confusion wich is of influence of the body height. E.g. amputation.">
+			>
+			["ac1"] = <
+				text = <"BodyHeightValueOrigin">
+				description = <"-">
+			>
+			["ac2"] = <
+				text = <"MeasuringDevice">
+				description = <"Device used to measure body height.">
+			>
+			["ac3"] = <
+				text = <"BodyPosition">
+				description = <"The position of the body during the measurement.">
+			>
+		>
+	>
+	term_bindings = <
+		["snomedct"] = <
+			["id2"] = <http://snomedct.info/id/248334005>
+			["id3"] = <http://snomedct.info/id/255395001>
+			["at6"] = <http://snomedct.info/id/278412004>
+			["at1"] = <http://snomedct.info/id/123454321>
+		>
+	>
+	value_sets = <
+		["ac1"] = <
+			id = <"ac1">
+			members = <"at4", "at5", "at6">
+		>
+		["ac2"] = <
+			id = <"ac2">
+			members = <"at8", "at9", "at10", "at11">
+		>
+		["ac3"] = <
+			id = <"ac3">
+			members = <"at13", "at14">
+		>
+	>

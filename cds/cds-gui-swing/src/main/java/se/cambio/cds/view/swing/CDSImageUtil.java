@@ -84,7 +84,6 @@ public class CDSImageUtil {
 	
 	public static final ImageIcon CALENDAR_ICON = OpenEHRImageUtil.getIcon("calendar.png");
 	public static final ImageIcon STOP_ICON = OpenEHRImageUtil.getIcon("stop.png");
-	public static final ImageIcon LIGHTNING_ICON = OpenEHRImageUtil.getIcon("lightning.png");
 	public static final ImageIcon RULE_ICON = OpenEHRImageUtil.getIcon("rule.png");
 	public static final ImageIcon TEST_ICON = OpenEHRImageUtil.getIcon("tick.png");
 	public static final ImageIcon REPO_MIN_ICON = OpenEHRImageUtil.getIcon("repo_mini.png");
@@ -108,18 +107,23 @@ public class CDSImageUtil {
     public static final ImageIcon ERROR_ICON = OpenEHRImageUtil.getIcon("error.png");
     public static final ImageIcon CONNECT_ICON = OpenEHRImageUtil.getIcon("connect.png");
 
-	public static final ImageIcon SEARCH_ICON = OpenEHRImageUtil.getIcon("magnifier.png");
+    public static final ImageIcon EXPORT_ICON = OpenEHRImageUtil.getIcon("page_white_go.png");
+    public static final ImageIcon SEARCH_ICON = OpenEHRImageUtil.getIcon("magnifier.png");
 	public static final ImageIcon ADD_ICON = OpenEHRImageUtil.getIcon("add.png");
 	public static final ImageIcon DELETE_ICON = OpenEHRImageUtil.getIcon("delete.png");
 	public static final ImageIcon FOLDER_OBJECT_ICON = OpenEHRImageUtil.getIcon("folder_object.png");
 	public static final ImageIcon FOLDER_ICON = OpenEHRImageUtil.getIcon("folder.png");
-	public static final ImageIcon SOURCE_ICON = OpenEHRImageUtil.getIcon("source.gif");
+	public static final ImageIcon SOURCE_ICON = OpenEHRImageUtil.getIcon("source.png");
     public static final ImageIcon OVERVIEW_ICON = OpenEHRImageUtil.getIcon("layout_content.png");
     public static final ImageIcon STUDY_ICON = OpenEHRImageUtil.getIcon("study.png");
     public static final ImageIcon PIE_CHART_ICON = OpenEHRImageUtil.getIcon("chart_pie.png");
+    public static final ImageIcon ORDERSET_ICON = OpenEHRImageUtil.getIcon("orderset.png");
+    public static final ImageIcon INSTANCE_ICON = OpenEHRImageUtil.getIcon("instance.png");
+    public static final ImageIcon SCENARIO_ICON = OpenEHRImageUtil.getIcon("scenario.png");
+    public static final ImageIcon ACTION_ICON = OpenEHRImageUtil.getIcon("lightning.png");
 
 
-	/* Aggregation functions */
+    /* Aggregation functions */
 	public static final ImageIcon AF_ALL_ICON = OpenEHRImageUtil.getIcon("af_all.png");
 	public static final ImageIcon AF_DURATION_ICON = OpenEHRImageUtil.getIcon("af_duration.png");
 	public static final ImageIcon AF_LAST_ICON = OpenEHRImageUtil.getIcon("af_last.png");

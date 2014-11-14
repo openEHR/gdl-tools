@@ -1,14 +1,11 @@
 package se.cambio.openehr.view.util;
 
-import se.cambio.openehr.model.archetype.vo.CodedTextVO;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.view.dialogs.DialogSelection;
+import se.cambio.openehr.controller.sw.LoadTerminologyViewerRSW;
 import se.cambio.openehr.view.panels.DVHierarchyCodedTextPanel;
-import se.cambio.openehr.view.util.NodeConversor.SearchType;
+import se.cambio.openehr.view.trees.SelectableNode;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 public class SelectCodeActionListener implements ActionListener {
 
@@ -18,16 +15,11 @@ public class SelectCodeActionListener implements ActionListener {
     public SelectCodeActionListener(DVHierarchyCodedTextPanel panel){
         _panel = panel;
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (_enable){
-            DialogSelection dialog =
-                    new DialogSelection(null, OpenEHRLanguageManager.getMessage("SelectTerm"), _panel.getRootNode());
-            dialog.setVisible(true);
-            if (dialog.getAnswer()){
-                Collection<CodedTextVO> codedTextVOs = NodeConversor.getSelectedObjects(_panel.getRootNode(), SearchType.SEARCH_ONLY_PARENT);
-                _panel.addCodedTextCollection(codedTextVOs);
-            }
+            new LoadTerminologyViewerRSW(null, _panel, _panel.getTerminologyId(), null, SelectableNode.SelectionMode.SINGLE).execute();
         }
     }
 

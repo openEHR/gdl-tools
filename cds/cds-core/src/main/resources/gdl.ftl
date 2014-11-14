@@ -47,9 +47,9 @@
     </i></#list>
     <br>
 </#if>
-<#if guide_definitions.preconditionRuleLines?? && guide_definitions.preconditionRuleLines?has_content>
+<#if guide_definitions.preconditions?has_content>
     <h2>${texts.Preconditions?upper_case}</h2>
-        <#list guide_definitions.preconditionRuleLines as preconditionRuleLine>
+        <#list preconditions as preconditionRuleLine>
         <div class="bg-block">
             ${preconditionRuleLine}
         </div>
@@ -58,9 +58,9 @@
 </#if>
 <#if guide_rules?? && guide_rules?has_content>
     <h2>${texts.RuleList?upper_case}</h2>
-    <#list guide_rules as rule>
+    <#list guide_rules as readableGuide>
         <div class="bg-block">
-            ${rule}
+            ${readableGuide}
         </div>
     </#list>
 </#if>

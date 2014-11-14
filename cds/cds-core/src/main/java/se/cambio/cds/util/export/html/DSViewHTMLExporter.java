@@ -1,6 +1,7 @@
 package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.model.view.DecisionSupportView;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -9,8 +10,8 @@ import java.util.Map;
 
 public class DSViewHTMLExporter extends ClinicalModelHTMLExporter<DecisionSupportView> {
 
-    public DSViewHTMLExporter(DecisionSupportView entity, String lang) {
-        super(entity, lang);
+    public DSViewHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override

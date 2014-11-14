@@ -1,12 +1,13 @@
 package se.cambio.cds.gdl.editor.view.util;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.openehr.controller.session.data.Clusters;
-import se.cambio.openehr.model.archetype.vo.ClusterVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 
@@ -19,28 +20,28 @@ public class ClusterNodesUtil {
             SelectableNode<Object> rootNode,
             Map<Object, SelectableNode<Object>> clusters,
             boolean singleSelection,
-            boolean simplifiedTree){
+            boolean simplifiedTree,
+            ArchetypeManager archetypeManager) throws InternalErrorException {
         if (idCluster!=null && !idCluster.endsWith("/")){
-            ClusterVO clusterVO = Clusters.getClusterVO(idTemplate, idCluster);
+            ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(idTemplate, idCluster);
             if (clusterVO!=null){
                 if ((simplifiedTree &&
                         !OpenEHRConst.SECTION.equals(clusterVO.getRMType()) &&
                         !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))){
                     //Skip node
-                    return getClusterNode(idTemplate, clusterVO.getIdParent(),
-                            rootNode, clusters, singleSelection, simplifiedTree);
+                    return getClusterNode(idTemplate, clusterVO.getParentId(),
+                            rootNode, clusters, singleSelection, simplifiedTree, archetypeManager);
                 }
             }else{
-                ExceptionHandler.handle(new Exception("Cluster id '" + idCluster + "' not found"));
                 return rootNode;
             }
             SelectableNode<Object> clusterNode = clusters.get(idCluster);
             if(clusterNode==null){
 
                 SelectableNode<Object> parentNode =
-                        getClusterNode(idTemplate, clusterVO.getIdParent(),
-                                rootNode, clusters, singleSelection, simplifiedTree);
-                clusterNode = createClusterNode(clusterVO, null, singleSelection);
+                        getClusterNode(idTemplate, clusterVO.getParentId(),
+                                rootNode, clusters, singleSelection, simplifiedTree, archetypeManager);
+                clusterNode = createClusterNode(clusterVO, null, singleSelection, archetypeManager);
                 clusters.put(idCluster, clusterNode);
                 parentNode.add(clusterNode);
 
@@ -86,11 +87,11 @@ public class ClusterNodesUtil {
         }
     }
 
-    public static SelectableNode<Object> createClusterNode(ClusterVO clusterVO, Object object, boolean singleSelection){
+    public static SelectableNode<Object> createClusterNode(ClusterVO clusterVO, Object object, boolean singleSelection, ArchetypeManager archetypeMamager) throws InternalErrorException {
         String upperNumOcurrences =
                 (clusterVO.getUpperCardinality()==null?" [*]":clusterVO.getUpperCardinality()>1?" ["+clusterVO.getUpperCardinality()+"]":"");
-        String name = Clusters.getText(clusterVO, UserConfigurationManager.getLanguage());
-        String desc = Clusters.getDescription(clusterVO, UserConfigurationManager.getLanguage());
+        String name = archetypeMamager.getClusters().getText(clusterVO, UserConfigurationManager.getLanguage());
+        String desc = archetypeMamager.getClusters().getDescription(clusterVO, UserConfigurationManager.getLanguage());
         SelectableNode.SelectionMode selectionMode = singleSelection? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
         return new SelectableNodeBuilder<Object>()
                 .setName(name+upperNumOcurrences)

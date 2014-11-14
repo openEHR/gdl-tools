@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-04-03
- * Time: 08:54
- */
 public class EHRDataInstance implements Serializable {
     private static final long serialVersionUID = 20140404L;
     private String templateId;

@@ -3,59 +3,62 @@ package se.cambio.openehr.controller;
 import openEHR.v1.template.TEMPLATE;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.template.Flattener;
 import org.openehr.am.template.FlatteningException;
 import org.openehr.am.template.OETParser;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.template.dto.TemplateDTO;
+import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.util.TemplateFlattener;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
+import java.util.Map;
 
 public class TemplateObjectBundleManager {
 
     private TemplateDTO templateDTO = null;
+    private final Map<String, Archetype> archetypeMap;
     protected boolean correctlyParsed = false;
 
-    public TemplateObjectBundleManager(TemplateDTO templateDTO) {
+    public TemplateObjectBundleManager(TemplateDTO templateDTO, Map<String, Archetype> archetypeMap) {
         this.templateDTO = templateDTO;
+        this.archetypeMap = archetypeMap;
+    }
+
+    public void buildArchetypeObjectBundleCustomVO() throws InternalErrorException {
         Object obj = null;
         if (templateDTO.getAobcVO() != null){
             obj = IOUtils.getObject(templateDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)){
-            Logger.getLogger(TemplateObjectBundleManager.class).debug("Parsing template '"+templateDTO.getTemplateId()+"'...");
+            Logger.getLogger(TemplateObjectBundleManager.class).info("Parsing template '"+templateDTO.getId()+"'...");
+            long startTime = System.currentTimeMillis();
             try{
-                generateArchetypeObjectBundleCustomVO();
+                generateTemplateData();
                 correctlyParsed = true;
+            }catch(InternalErrorException e){
+                throw e;
             }catch(Error e){
-                InternalErrorException iee = new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getTemplateId()+"'", e));
-                ExceptionHandler.handle(iee);
+                new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }catch(Exception e){
-                InternalErrorException iee = new InternalErrorException(e);
-                ExceptionHandler.handle(iee);
+                new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }
+            long endTime = System.currentTimeMillis();
+            Logger.getLogger(TemplateObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
         }else{
             correctlyParsed = true;
         }
     }
 
-    public void generateArchetypeObjectBundleCustomVO ()
+    private void generateTemplateData()
             throws InternalErrorException {
         try {
-            TEMPLATE template = getParsedTemplate(templateDTO.getArchetype());
+            TEMPLATE template = getParsedTemplate(templateDTO.getSource());
             templateDTO.setArcehtypeId(template.getDefinition().getArchetypeId());
-            templateDTO.setName(template.getName());
-            if (template.getDescription()!=null && template.getDescription().getDetails()!=null && template.getDescription().getDetails().getPurpose() != null){
-                templateDTO.setDescription(template.getDescription().getDetails().getPurpose());
-            }
-            Archetype ar = new Flattener().toFlattenedArchetype(template, Archetypes.getArchetypeMap());
-            templateDTO.setRMName(ar.getArchetypeId().rmEntity());
+            Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
             templateDTO.setAom(IOUtils.getBytes(ar));
-            GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, templateDTO.getTemplateId());
+            GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, templateDTO.getId(), archetypeMap);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleManager.generateObjectBundleCustomVO();
             templateDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
         } catch (FlatteningException e) {

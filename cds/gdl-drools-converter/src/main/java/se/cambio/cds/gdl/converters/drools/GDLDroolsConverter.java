@@ -11,7 +11,8 @@ import se.cambio.cds.util.export.json.DVDefSerializer;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -20,11 +21,9 @@ import java.util.*;
 
 public class GDLDroolsConverter {
 
-    public GDLDroolsConverter(Guide guide) {
-        this.guide = guide;
-    }
 
     private static Logger log = Logger.getLogger(GDLDroolsConverter.class);
+    private final ArchetypeManager archetypeManager;
     private Guide guide;
 
     // Drools keywords
@@ -41,6 +40,13 @@ public class GDLDroolsConverter {
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToElementId = new HashMap<String, String>();
     private int creationIndex = 0;
+
+    public GDLDroolsConverter(Guide guide, ArchetypeManager archetypeManager) {
+        this.guide = guide;
+        this.archetypeManager = archetypeManager;
+    }
+
+
     public String convertToDrools() throws InternalErrorException{
         StringBuffer sb = new StringBuffer();
         sb.append(getGuideHeader());
@@ -151,7 +157,7 @@ public class GDLDroolsConverter {
                 archetypeBindingMVELSB.append("idArchetype==\""+archetypeId+"\"");
                 /*
                 if ((Domains.CDS_ID.equals(archetypeBinding.getDomain()))&&
-                        archetypeBinding.getTemplateId()!=null){
+                        archetypeBinding.getId()!=null){
                     archetypeBindingMVELSB.append(", idTemplate==\""+templateId+"\"");
                 }
                 */
@@ -180,7 +186,7 @@ public class GDLDroolsConverter {
                                             + "\", archetypeReference==$"
                                             + arID+arCount + ")\n");
                                     ArchetypeElementVO archetypeElement =
-                                            ArchetypeElements.getArchetypeElement(
+                                            archetypeManager.getArchetypeElements().getArchetypeElement(
                                                     archetypeBinding.getTemplateId(),
                                                     idElement);
                                     if (archetypeElement==null){
@@ -216,10 +222,9 @@ public class GDLDroolsConverter {
                                                     + "dataValue!=null, "
                                                     + "archetypeReference==$"
                                                     + arID+arCount + ")\n");
-                                    ArchetypeElementVO archetypeElement = ArchetypeElements
-                                            .getArchetypeElement(
-                                                    archetypeBinding.getTemplateId(),
-                                                    idElement);
+                                    ArchetypeElementVO archetypeElement = archetypeManager.getArchetypeElements().getArchetypeElement(
+                                            archetypeBinding.getTemplateId(),
+                                            idElement);
                                     if (archetypeElement!=null){
                                         String rmName = archetypeElement.getRMType();
                                         String aritmeticExpStr = //We cast it to long because all elements from CurrentTime fit into this class, but we must make it more generic (TODO)
@@ -257,10 +262,9 @@ public class GDLDroolsConverter {
                                             + "predicate || dataValue instanceof Comparable, "
                                             + "$predDV"+ predicateCount+":dataValue"
                                             + ")\n");
-                            ArchetypeElementVO archetypeElement = ArchetypeElements
-                                    .getArchetypeElement(
-                                            archetypeBinding.getTemplateId(),
-                                            idElement);
+                            ArchetypeElementVO archetypeElement = archetypeManager.getArchetypeElements().getArchetypeElement(
+                                    archetypeBinding.getTemplateId(),
+                                    idElement);
                             OperatorKind op = unaryExpression.getOperator();
                             String opStr = null;
                             if (OperatorKind.MAX.equals(op)){
@@ -304,7 +308,7 @@ public class GDLDroolsConverter {
                         String idElement = archetypeBinding.getArchetypeId()
                                 + element.getPath();
 
-                        ArchetypeElementVO value =  ArchetypeElements.getArchetypeElement(
+                        ArchetypeElementVO value =  archetypeManager.getArchetypeElements().getArchetypeElement(
                                 archetypeBinding.getTemplateId(), idElement);
 
                         elementMap.put(element.getId(), value);
@@ -336,10 +340,9 @@ public class GDLDroolsConverter {
                     sb.append(":ElementInstance(id==\"");
                     sb.append(idElement);
                     sb.append("\", archetypeReference==$archetypeReferencePredicate"+predicateCount+") and \n");
-                    ArchetypeElementVO archetypeElement = ArchetypeElements
-                            .getArchetypeElement(
-                                    archetypeBinding.getTemplateId(),
-                                    idElement);
+                    ArchetypeElementVO archetypeElement = archetypeManager.getArchetypeElements().getArchetypeElement(
+                            archetypeBinding.getTemplateId(),
+                            idElement);
                     if (archetypeElement!=null){
                         String rmType = archetypeElement.getRMType();
                         String dvStr = "null";

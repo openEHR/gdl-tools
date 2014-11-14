@@ -1,209 +1,118 @@
 package se.cambio.openehr.controller.session.data;
-import org.apache.log4j.Logger;
+
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.archetype.ontology.ArchetypeOntology;
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import org.openehr.am.archetype.ontology.OntologyDefinitions;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
+import se.cambio.cm.model.template.dto.TemplateDTO;
+import se.cambio.cm.model.util.TemplateElementMap;
+import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.TemplateObjectBundleManager;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.openehr.model.template.dto.TemplateDTO;
-import se.cambio.openehr.model.util.comparators.TemplateComparator;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
-import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.util.*;
 
 
-public class Templates {
-    private static Templates _instance = null;
-    private Map<String, TemplateDTO> _templatessById = null;
+public class Templates extends AbstractCMManager<TemplateDTO>{
     public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
-    private boolean _loaded = false;
-    private HashMap<String, Map<String, Map<String, ArchetypeTerm>>> _archetypeTermsMap;
+    private ArchetypeManager archetypeManager = null;
 
-    private Templates(){
+
+    public Templates(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
     }
 
-    public static void loadTemplates() throws InternalErrorException{
-        loadTemplates(false);
+    public Archetypes getArchetypes(){
+        return archetypeManager.getArchetypes();
     }
 
-    public static void loadTemplates(boolean force) throws InternalErrorException{
-        Collection<TemplateDTO> templateDTOs =
-                OpenEHRSessionManager.getAdministrationFacadeDelegate().searchAllTemplates();
-        loadTemplates(templateDTOs, force);
-    }
-
-    public static void loadTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException{
-        loadTemplates(templateDTOs, false);
-    }
-
-    public static void loadTemplates(Collection<TemplateDTO> templateDTOs, boolean force) throws InternalErrorException{
-        if (!getDelegate()._loaded || force){
-            init();
-            for (TemplateDTO templateDTO: templateDTOs){
-                loadTemplate(templateDTO);
-            }
-            loadTemplateObjectBundles(templateDTOs);
-            getDelegate()._loaded = true;
+    @Override
+    public void registerCMElementsInCache(Collection<TemplateDTO> cmElements){
+        super.registerCMElementsInCache(cmElements);
+        try {
+            proccessTemplates(cmElements);
+            registerTemplateDTOs(cmElements);
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
         }
     }
 
-    public static void loadTemplate(TemplateDTO templateDTO) throws InternalErrorException{
-        new TemplateObjectBundleManager(templateDTO).generateArchetypeObjectBundleCustomVO();
-        registerTemplate(templateDTO);
+    @Override
+    public Class<TemplateDTO> getCMElementClass() {
+        return TemplateDTO.class;
     }
 
-    private static void init(){
-        getTemplatesMap().clear();
-    }
-
-    private static void registerTemplate(TemplateDTO templateDTO){
-        getTemplatesMap().put(templateDTO.getTemplateId(), templateDTO);
-        generateArchetypeDefinitionsMap(templateDTO.getTemplateId());
-    }
-
-    private static void generateArchetypeDefinitionsMap(String templateId){
-        Archetype archetype = getTemplateAOM(templateId);
-        ArchetypeOntology ao = archetype.getOntology();
-        List<OntologyDefinitions> ods = ao.getTermDefinitionsList();
-        for (OntologyDefinitions od : ods){
-            String lang = od.getLanguage();
-            List<ArchetypeTerm> archetypeTerms = od.getDefinitions();
-            for(ArchetypeTerm archetypeTerm: archetypeTerms){
-                getArchetypeTermsMap(templateId, lang).put(archetypeTerm.getCode(), archetypeTerm);
-            }
+    public void proccessTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
+        for (TemplateDTO templateDTO: templateDTOs){
+            processTemplate(templateDTO);
         }
     }
 
-    public static ArchetypeTerm getArchetypeTerm(String templateId, String lang, String atCode){
-        return getArchetypeTermsMap(templateId, lang).get(atCode);
+    public void processTemplate(TemplateDTO templateDTO) throws InternalErrorException {
+        new TemplateObjectBundleManager(templateDTO, getArchetypes().getArchetypeMap()).buildArchetypeObjectBundleCustomVO();
     }
 
-    private static Map<String, ArchetypeTerm> getArchetypeTermsMap(String templateId, String lang){
-        Map<String, ArchetypeTerm> archetypeTermMap = getArchetypeTermsMap(templateId).get(lang);
-        if(archetypeTermMap==null){
-            archetypeTermMap = new HashMap<String, ArchetypeTerm>();
-            getArchetypeTermsMap(templateId).put(lang, archetypeTermMap);
-        }
-        return archetypeTermMap;
-    }
-
-    private static Map<String, Map<String, ArchetypeTerm>> getArchetypeTermsMap(String archetypeId){
-        Map<String, Map<String, ArchetypeTerm>> archetypeTermMap = getArchetypeTermsMap().get(archetypeId);
-        if(archetypeTermMap==null){
-            archetypeTermMap = new HashMap<String, Map<String, ArchetypeTerm>>();
-            getArchetypeTermsMap().put(archetypeId, archetypeTermMap);
-        }
-        return archetypeTermMap;
-    }
-
-    private static Map<String, Map<String, Map<String, ArchetypeTerm>>> getArchetypeTermsMap(){
-        if(getDelegate()._archetypeTermsMap==null){
-            getDelegate()._archetypeTermsMap = new HashMap<String, Map<String, Map<String, ArchetypeTerm>>>();
-        }
-        return getDelegate()._archetypeTermsMap;
-    }
-
-
-    public static TemplateDTO getTemplateDTO(String idTemplate){
-        return getTemplatesMap().get(idTemplate);
-    }
-
-    public static void loadTemplateObjectBundles(Collection<TemplateDTO> templateDTOs){
-        for (TemplateDTO templateDTO : templateDTOs) {
-            loadTemplateObjectBundle(templateDTO);
+    private void registerTemplateDTOs(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
+        for(TemplateDTO templateDTO: templateDTOs){
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(templateDTO);
+            Archetype archetype = getTemplateAOM(templateDTO);
+            getArchetypeManager().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
         }
     }
 
-    public static void loadTemplateObjectBundle(TemplateDTO templateDTO){
-        registerTemplate(templateDTO);
-        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO =
-                (ArchetypeObjectBundleCustomVO)IOUtils.getObject(templateDTO.getAobcVO());
-        ArchetypeElements.loadArchetypeElements(archetypeObjectBundleCustomVO.getElementVOs());
-        Clusters.loadClusters(archetypeObjectBundleCustomVO.getClusterVOs());
-        CodedTexts.loadCodedTexts(archetypeObjectBundleCustomVO.getCodedTextVOs());
-        Ordinals.loadOrdinals(archetypeObjectBundleCustomVO.getOrdinalVOs());
-        Units.loadUnits(archetypeObjectBundleCustomVO.getUnitVOs());
+    public ImageIcon getIcon(String idTemplate) throws InternalErrorException, InstanceNotFoundException {
+        return ICON;
     }
 
-    public static ArrayList<TemplateDTO> getTemplates(String entryType){
-        ArrayList<TemplateDTO> list = new ArrayList<TemplateDTO>();
-        for (TemplateDTO templateDTO : getTemplatesMap().values()) {
-            if (entryType.equals(templateDTO.getRMName())){
-                list.add(templateDTO);
-            }
+    private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(TemplateDTO templateDTO){
+        return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(templateDTO.getAobcVO());
+    }
+
+    public Archetype getTemplateAOMById(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        return getTemplatesAOMsByIds(Collections.singleton(templateId)).iterator().next();
+    }
+
+    public Collection<Archetype> getTemplatesAOMsByIds(Collection<String> templateIds) throws InternalErrorException, InstanceNotFoundException {
+        Collection<TemplateDTO> templateDTOs = getCMElementByIds(templateIds);
+        Collection<Archetype> archetypes = new ArrayList<Archetype>();
+        for(TemplateDTO templateDTO: templateDTOs){
+            archetypes.add(getTemplateAOM(templateDTO));
         }
-        return list;
+        return archetypes;
     }
 
-    public static void removeTemplate(String templateId) throws InternalErrorException{
-        getTemplatesMap().remove(templateId);
-    }
-
-    public static ImageIcon getIcon(String idTemplate){
-        String entryType = getTemplateDTO(idTemplate).getRMName();
-        ImageIcon icon = OpenEHRConstUI.getIcon(entryType);
-        if (icon!=null){
-            return icon;
-        }else{
-            return ICON;
+    public Archetype getTemplateAOM(TemplateDTO templateDTO) throws InternalErrorException {
+        if (templateDTO.getAom() == null){
+            processTemplate(templateDTO);
         }
+        return (Archetype)IOUtils.getObject(templateDTO.getAom());
     }
 
-    public static List<TemplateDTO> getAllTemplates(){
-        return new ArrayList<TemplateDTO>(getTemplatesMap().values());
+    public Archetype getTemplateAOM(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        return (Archetype)IOUtils.getObject(getCMElement(templateId).getAom());
     }
 
-    public static List<String> getAllTemplateIds(){
-        return new ArrayList<String>(getTemplatesMap().keySet());
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
     }
 
-    private static Map<String, TemplateDTO> getTemplatesMap(){
-        if (getDelegate()._templatessById == null){
-            getDelegate()._templatessById = new HashMap<String, TemplateDTO>();
+    public TemplateMap generateTemplateMap(String templateId) throws InternalErrorException, InstanceNotFoundException {
+        TemplateDTO templateDTO = getCMElement(templateId);
+        String archetypeId = templateDTO.getArcehtypeId();
+        Collection<ArchetypeElementVO> archetypeElementVOs =
+                getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, templateId);
+        Map<String, TemplateElementMap> templateElementMaps = new HashMap<String, TemplateElementMap>();
+        TemplateMap templateMap = new TemplateMap(archetypeId, templateId, templateElementMaps);
+        Collection<String> elementMapIds = new ArrayList<String>();
+        for(ArchetypeElementVO archetypeElementVO: archetypeElementVOs){
+            TemplateElementMap templateElementMap = getArchetypeManager().getTemplateElementMap(archetypeElementVO, elementMapIds);
+            templateElementMaps.put(templateElementMap.getElementMapId(), templateElementMap);
         }
-        return getDelegate()._templatessById;
-    }
-
-    public static Archetype getTemplateAOM(String templateId){
-        Archetype aom = null;
-        TemplateDTO templateDTO = getTemplateDTO(templateId);
-        if (templateDTO!=null && templateDTO.getAom()!=null){
-            aom = (Archetype)IOUtils.getObject(templateDTO.getAom());
-        }else {
-            Logger.getLogger(Archetype.class).debug("Template '"+templateId+"' not found.");
-        }
-        return aom;
-    }
-
-    public int hashCode(){
-        return generateHashCode(getTemplatesMap().values());
-    }
-
-    public static int generateHashCode(Collection<TemplateDTO> templateDTOs) {
-        List<TemplateDTO> templateDTOsList = new ArrayList<TemplateDTO>(templateDTOs);
-        Collections.sort(templateDTOsList, new TemplateComparator());
-        List<String> defs = new ArrayList<String>();
-        for(TemplateDTO templateDTO: templateDTOsList){
-            defs.add(templateDTO.getArchetype());
-        }
-        return defs.hashCode();
-    }
-
-    public static boolean hasBeenLoaded(){
-        return getDelegate()._loaded;
-    }
-
-    public static Templates getDelegate(){
-        if (_instance == null){
-            _instance = new Templates();
-        }
-        return _instance;
+        return templateMap;
     }
 }
 /*

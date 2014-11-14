@@ -10,7 +10,7 @@ import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-public class CompileGuideSW extends CDSSwingWorker{
+public class CompileGuideSW extends CDSSwingWorker {
     private String _errorMsg = null;
     private byte[] _compiledGuide = null;
     private Guide _guide = null;

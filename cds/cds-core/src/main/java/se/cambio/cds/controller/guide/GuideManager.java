@@ -1,7 +1,8 @@
 package se.cambio.cds.controller.guide;
 
+import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.model.guide.dto.GuideDTO;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 
@@ -19,7 +20,7 @@ public class GuideManager extends SimpleGuideManager{
         super(loadGuideDTOs(guideDTOs));
         _allGuidesDTOMap = new HashMap<String, GuideDTO>();
         for (GuideDTO guideDTO: guideDTOs){
-            _allGuidesDTOMap.put(guideDTO.getIdGuide(), guideDTO);
+            _allGuidesDTOMap.put(guideDTO.getId(), guideDTO);
         }
     }
 
@@ -28,10 +29,10 @@ public class GuideManager extends SimpleGuideManager{
         for (GuideDTO guideDTO : guidesDTO) {
             try {
                 Guide guide = null;
-                if (guideDTO.getGuideObject()!=null){
+                if (Guides.hasGuideObject(guideDTO)){
                     guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
                 }else{
-                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
+                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
                 }
                 guides.add(guide);
             } catch (Exception e) {

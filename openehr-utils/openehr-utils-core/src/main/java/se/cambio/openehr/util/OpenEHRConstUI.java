@@ -120,6 +120,11 @@ public class OpenEHRConstUI {
         _openEHRConstDescriptions.put(OpenEHRConst.ACTION, OpenEHRLanguageManager.getMessage("EntryActionDesc"));
         _openEHRConstIcons.put(OpenEHRConst.ACTION, OpenEHRImageUtil.ENTRY_ACTION_ICON);
         _openEHRConstIconNames.put(OpenEHRConst.ACTION, OpenEHRImageUtil.ENTRY_ACTION_NAME);
+
+        _openEHRConstNames.put(OpenEHRConst.ENTRY, OpenEHRLanguageManager.getMessage("Entry"));
+        _openEHRConstDescriptions.put(OpenEHRConst.ENTRY, OpenEHRLanguageManager.getMessage("Entry"));
+        _openEHRConstIcons.put(OpenEHRConst.ENTRY, OpenEHRImageUtil.ARCHETYPE);
+        _openEHRConstIconNames.put(OpenEHRConst.ENTRY, OpenEHRImageUtil.ARCHETYPE_NAME);
     }
 
     public static String getName(String idDataValue){

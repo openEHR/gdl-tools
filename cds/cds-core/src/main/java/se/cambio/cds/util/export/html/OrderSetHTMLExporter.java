@@ -1,6 +1,7 @@
 package se.cambio.cds.util.export.html;
 
 import se.cambio.cds.model.orderset.OrderSet;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -9,8 +10,8 @@ import java.util.Map;
 
 public class OrderSetHTMLExporter extends ClinicalModelHTMLExporter<OrderSet> {
 
-    public OrderSetHTMLExporter(OrderSet entity, String lang) {
-        super(entity, lang);
+    public OrderSetHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override

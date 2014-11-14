@@ -4,8 +4,7 @@ import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
@@ -38,7 +37,7 @@ public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWi
 
     public String toString(){
         if (getValue()!=null){
-            String name = ArchetypeElements.getText(getValue(), UserConfigurationManager.getLanguage());
+            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), UserConfigurationManager.getLanguage());
             return name;
         }else{
             return getText();

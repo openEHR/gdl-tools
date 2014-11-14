@@ -26,91 +26,91 @@ public class DVISACodedTextPanel extends DVGenericPanel{
     private DataValue _dataValue = null;
 
     public DVISACodedTextPanel(DVGenericPanel dvGenericPanel, DataValue dataValue, GDLEditor controller){
-	super(dvGenericPanel.getIdElement(),
-		dvGenericPanel.getIdTemplate(),
-		dvGenericPanel.isAllowsNull(),
-		dvGenericPanel.isRequestFocus());
-	_controller = controller;
-	_defaultDVGenericPanel = dvGenericPanel;
-	_dataValue = dataValue;
-	init();
+        super(dvGenericPanel.getIdElement(),
+                dvGenericPanel.getIdTemplate(),
+                dvGenericPanel.isAllowsNull(),
+                dvGenericPanel.isRequestFocus());
+        _controller = controller;
+        _defaultDVGenericPanel = dvGenericPanel;
+        _dataValue = dataValue;
+        init();
     }
 
     private void init(){
-	this.setLayout(new FlowLayout(FlowLayout.LEFT));
-	this.add(getButtonPanel());
-	this.add(getJComboBox());
-	String value = null;
-	if (_dataValue instanceof DvCodedText){
-	    value = ((DvCodedText)_dataValue).toString();
-	}else if (_dataValue instanceof DvText){
-	    value = ((DvText)_dataValue).getValue();
-	}
-	//TODO This check should be done in a better way (avoid gt check)
-	if (value!=null && value.startsWith("local::gt")){
-	    getBindingDVGenericPanel().setDataValue(_dataValue);
-	    getJComboBox().setSelectedIndex(1);
-	}
+        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.add(getButtonPanel());
+        this.add(getJComboBox());
+        String value = null;
+        if (_dataValue instanceof DvCodedText){
+            value = ((DvCodedText)_dataValue).toString();
+        }else if (_dataValue instanceof DvText){
+            value = ((DvText)_dataValue).getValue();
+        }
+        //TODO This check should be done in a better way (avoid gt check)
+        if (value!=null && value.startsWith("local::gt")){
+            getBindingDVGenericPanel().setDataValue(_dataValue);
+            getJComboBox().setSelectedIndex(1);
+        }
     }
 
     private JPanel getButtonPanel(){
-	if (buttonPanel==null){
-	    buttonPanel = new JPanel();
-	    buttonPanel.add(getDefaultDVGenericPanel());
-	}
-	return buttonPanel;
+        if (buttonPanel==null){
+            buttonPanel = new JPanel();
+            buttonPanel.add(getDefaultDVGenericPanel());
+        }
+        return buttonPanel;
     }
 
     private JComboBox getJComboBox(){
-	if (comboBox==null){
-	    comboBox = new JComboBox();
-	    comboBox.addItem(GDLEditorLanguageManager.getMessage("Default"));
-	    comboBox.addItem(GDLEditorLanguageManager.getMessage("Binding"));
-	    comboBox.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-		    getButtonPanel().removeAll();
-		    if (getJComboBox().getSelectedIndex()==0){
-			getButtonPanel().add(getDefaultDVGenericPanel());
-		    }else{
-			getButtonPanel().add(getBindingDVGenericPanel());
-		    }
-		    getButtonPanel().revalidate();
-		    getButtonPanel().repaint();
-		}
-	    });
-	}
-	return comboBox;
+        if (comboBox==null){
+            comboBox = new JComboBox();
+            comboBox.addItem(GDLEditorLanguageManager.getMessage("Default"));
+            comboBox.addItem(GDLEditorLanguageManager.getMessage("Binding"));
+            comboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    getButtonPanel().removeAll();
+                    if (getJComboBox().getSelectedIndex()==0){
+                        getButtonPanel().add(getDefaultDVGenericPanel());
+                    }else{
+                        getButtonPanel().add(getBindingDVGenericPanel());
+                    }
+                    getButtonPanel().revalidate();
+                    getButtonPanel().repaint();
+                }
+            });
+        }
+        return comboBox;
     }
 
     public DVGenericPanel getDefaultDVGenericPanel(){
-	return _defaultDVGenericPanel;
+        return _defaultDVGenericPanel;
     }
 
     public DVGenericPanel getBindingDVGenericPanel(){
-	if (_bindingDVGenericPanel==null){
-	    _bindingDVGenericPanel = new DVLocalCodedTextPanel(_controller);
-	}
-	return _bindingDVGenericPanel;
+        if (_bindingDVGenericPanel==null){
+            _bindingDVGenericPanel = new DVLocalCodedTextPanel(_controller);
+        }
+        return _bindingDVGenericPanel;
     }
 
     public void setDataValue(DataValue dataValue) {
-	getSelectedGenericPanel().setDataValue(dataValue);
+        getSelectedGenericPanel().setDataValue(dataValue);
     }
 
     public DVGenericPanel getSelectedGenericPanel(){
-	return getJComboBox().getSelectedIndex()==0?getDefaultDVGenericPanel():getBindingDVGenericPanel();
+        return getJComboBox().getSelectedIndex()==0?getDefaultDVGenericPanel():getBindingDVGenericPanel();
     }
 
     public DataValue getDataValue(){
-	return getSelectedGenericPanel().getDataValue();
+        return getSelectedGenericPanel().getDataValue();
     }
 
     public Collection<JComponent> getJComponents() {
-	Collection<JComponent> components = new ArrayList<JComponent>();
-	components.addAll(getDefaultDVGenericPanel().getJComponents());
-	components.addAll(getBindingDVGenericPanel().getJComponents());
-	return components;
+        Collection<JComponent> components = new ArrayList<JComponent>();
+        components.addAll(getDefaultDVGenericPanel().getJComponents());
+        components.addAll(getBindingDVGenericPanel().getJComponents());
+        return components;
     }
 }
 /*

@@ -1,0 +1,165 @@
+﻿archetype (adl_version=1.5)
+	CIMI-CORE-ENTRY.observation.v1
+
+specialise
+	CIMI-CORE-ENTRY.clinical_entry.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	original_author = <
+		["name"] = <"Thomas Beale">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"thomas.beale@oceaninformatics.com">
+		["date"] = <"10/04/2012">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Pattern archetype for draft CIMI 'Observation' type">
+			keywords = <"Entry", ...>
+			copyright = <"© 2012 openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"Draft">
+	other_details = <
+		["model_level"] = <"reference">
+	>
+
+definition
+	ENTRY[at0000.1] matches {
+		/participation matches {
+			PARTICIPATION [at0.2] occurrences matches {0..1} matches {*}
+			PARTICIPATION [at0.3] occurrences matches {0..1} matches {*}
+			PARTICIPATION [at0.4] occurrences matches {0..1} matches {*}
+		}
+		data matches {
+			CLUSTER [at0.5] occurrences matches {1} matches {
+				item matches {
+					ELEMENT [at0.6] occurrences matches {1} matches {
+						value matches {
+							TEXT matches {*}
+						}
+					}
+					ELEMENT [at0.7] occurrences matches {0..1} matches {
+						value matches {
+							TEXT matches {*}
+						}
+					}
+					ITEM [at0.8] matches {*}
+				}
+			}
+			CLUSTER [at0.9] occurrences matches {1} matches {
+				item matches {
+					ELEMENT [at0.10] occurrences matches {0..1} matches {
+						value matches {
+							DATE_TIME matches {*}
+						}
+					}
+					ELEMENT [at0.11] occurrences matches {0..1} matches {
+						value matches {
+							INTERVAL_VALUE<DATE_TIME> matches {*}
+						}
+					}
+					ELEMENT [at0.12] occurrences matches {0..1} matches {
+						value matches {
+							DURATION matches {*}
+						}
+					}
+					ELEMENT [at0.13] occurrences matches {0..1} matches {
+						value matches {
+							DURATION matches {*}
+						}
+					}
+					ELEMENT [at0.14] occurrences matches {0..1} matches {
+						value matches {
+							DATE_TIME matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1"] = <
+				text = <"OBSERVATION">
+				description = <"Observation CIMI reference type">
+			>
+			["at0.2"] = <
+				text = <"observer">
+				description = <"Observer of phenomenon">
+			>
+			["at0.3"] = <
+				text = <"location of subject">
+				description = <"Location of subject at time of observation">
+			>
+			["at0.4"] = <
+				text = <"location of observer">
+				description = <"Location of observer at time of observation">
+			>
+			["at0.5"] = <
+				text = <"observable">
+				description = <"Information about observable phenomenon">
+			>
+			["at0.6"] = <
+				text = <"name">
+				description = <"observable name">
+			>
+			["at0.7"] = <
+				text = <"status">
+				description = <"observable status">
+			>
+			["at0.8"] = <
+				text = <"details">
+				description = <"observable details">
+			>
+			["at0.9"] = <
+				text = <"timing">
+				description = <"timing information about observation">
+			>
+			["at0.10"] = <
+				text = <"datetime">
+				description = <"datetime of observation">
+			>
+			["at0.11"] = <
+				text = <"datetime range">
+				description = <"datetime range of observation">
+			>
+			["at0.12"] = <
+				text = <"duration">
+				description = <"duration of observation">
+			>
+			["at0.13"] = <
+				text = <"offset">
+				description = <"offset of observation">
+			>
+			["at0.14"] = <
+				text = <"offset origin datetime">
+				description = <"offset origin datetime of observation">
+			>
+			["at0.15"] = <
+				text = <"result">
+				description = <"description of result">
+			>
+			["at0.16"] = <
+				text = <"value">
+				description = <"value of result">
+			>
+			["at0.17"] = <
+				text = <"notes">
+				description = <"notes">
+			>
+			["at0.18"] = <
+				text = <"interpretation">
+				description = <"interpretation of result">
+			>
+			["at0.19"] = <
+				text = <"reference range">
+				description = <"reference range of result">
+			>
+		>
+	>

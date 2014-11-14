@@ -24,9 +24,9 @@ public class NodeConversor {
         SEARCH_ONLY_LEAVES, SEARCH_ONLY_PARENT, SEARCH_ALL
     }
 
-    public static void  setAllVisible(SelectableNode<?> raizNodo){
-        raizNodo.setVisible(true);
-        Enumeration<?> e = raizNodo.getAllchildren();
+    public static void  setAllVisible(SelectableNode<?> rootNode){
+        rootNode.setVisible(true);
+        Enumeration<?> e = rootNode.getAllchildren();
         while (e.hasMoreElements()){
             NodeConversor.setAllVisible((SelectableNode<?>)e.nextElement());
         }
@@ -65,18 +65,27 @@ public class NodeConversor {
         }
     }
 
-    public static Object getSelectedObject(SelectableNode<?> nodoRaiz){
-        SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, false);
+    /*
+     * @deprecated use {@link #getSelectedElement()} instead
+     */
+    @Deprecated
+    public static Object getSelectedObject(SelectableNode<?> rootNode){
+        SelectableNode<?> selectedNode = getSelectedNode(rootNode, false);
         return selectedNode!=null?selectedNode.getObject():null;
     }
 
-    public static Object getSelectedObject(SelectableNode<?> nodoRaiz, boolean allowParent){
-        SelectableNode<?> selectedNode = getSelectedNode(nodoRaiz, allowParent);
+    public static <E> E getSelectedElement(SelectableNode<E> rootNode){
+        SelectableNode<E> selectedNode = getSelectedNode(rootNode, false);
+        return selectedNode!=null?selectedNode.getObject():null;
+    }
+    
+    public static Object getSelectedObject(SelectableNode<?> rootNode, boolean allowParent){
+        SelectableNode<?> selectedNode = getSelectedNode(rootNode, allowParent);
         return selectedNode!=null?selectedNode.getObject():null;
     }
 
-    public static <K>SelectableNode<K> getSelectedNode(SelectableNode<K> nodoRaiz, boolean allowParent){
-        Enumeration<?> e = nodoRaiz.getAllchildren();
+    public static <K>SelectableNode<K> getSelectedNode(SelectableNode<K> rootNode, boolean allowParent){
+        Enumeration<?> e = rootNode.getAllchildren();
         while (e.hasMoreElements()){
             SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
             if (node.isSelected() && (allowParent || node.isLeaf() || node.isMultipleSelectionMode())){
@@ -90,22 +99,24 @@ public class NodeConversor {
         return null;
     }
 
-    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> nodoRaiz){
-        return getSelectedObjects(nodoRaiz, SearchType.SEARCH_ALL);
+    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> rootNode){
+        return getSelectedObjects(rootNode, SearchType.SEARCH_ALL);
     }
 
-    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> nodoRaiz, SearchType searchType){
+    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> rootNode, SearchType searchType){
         Collection<SelectableNode<K>> selectedNodes = new ArrayList<SelectableNode<K>>();
-        addSelectedNodes(nodoRaiz, selectedNodes, searchType);
-        Collection<K> objs = new ArrayList<K>();
-        for (SelectableNode<K> nodoSeleccionable : selectedNodes) {
-            objs.add(nodoSeleccionable.getObject());
+        addSelectedNodes(rootNode, selectedNodes, searchType);
+        Collection<K> selectedObjects = new ArrayList<K>();
+        for (SelectableNode<K> node : selectedNodes) {
+            if (node.getObject() != null) {
+                selectedObjects.add(node.getObject());
+            }
         }
-        return objs;
+        return selectedObjects;
     }
 
-    public static <K>void addSelectedNodes(SelectableNode<K> nodoRaiz, Collection<SelectableNode<K>> selectedNodes, SearchType searchType){
-        Enumeration<?> e = nodoRaiz.getAllchildren();
+    public static <K>void addSelectedNodes(SelectableNode<K> rootNode, Collection<SelectableNode<K>> selectedNodes, SearchType searchType){
+        Enumeration<?> e = rootNode.getAllchildren();
         while (e.hasMoreElements()){
             SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
             if (node.isSelected()){

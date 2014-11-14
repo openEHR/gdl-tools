@@ -1,68 +1,63 @@
 package se.cambio.cds.gdl.converters.drools;
 
 
+import org.drools.KnowledgeBase;
+import org.drools.KnowledgeBaseFactory;
+import org.drools.RuntimeDroolsException;
+import org.drools.builder.*;
+import org.drools.definition.KnowledgePackage;
+import org.drools.io.Resource;
+import org.drools.io.ResourceFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.drools.KnowledgeBase;
-import org.drools.KnowledgeBaseFactory;
-import org.drools.RuntimeDroolsException;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderConfiguration;
-import org.drools.builder.KnowledgeBuilderErrors;
-import org.drools.builder.KnowledgeBuilderFactory;
-import org.drools.builder.ResourceType;
-import org.drools.definition.KnowledgePackage;
-import org.drools.io.Resource;
-import org.drools.io.ResourceFactory;
-
 public class CompilationManager {
-    
+
     public static byte[] compile(String guideStr) throws CompilationErrorException {
-	Resource guide = ResourceFactory.newByteArrayResource(guideStr.getBytes());
-	return compile(guide);
+        Resource guide = ResourceFactory.newByteArrayResource(guideStr.getBytes());
+        return compile(guide);
     }
-    
-    public static byte[] compile(Resource guide) 
-	    throws CompilationErrorException {
-	try {
-	    Collection<Resource> guides = new ArrayList<Resource>();
-	    guides.add(guide);
-	    KnowledgeBase kb = getKnowledgeBase(guides);
-	    KnowledgePackage kpakage = kb.getKnowledgePackages().iterator().next();
-	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	    ObjectOutputStream objOut = new ObjectOutputStream(baos);
-	    objOut.writeObject(kpakage);
-	    objOut.flush();
-	    return baos.toByteArray();
-	} catch (RuntimeDroolsException e) {
-	    throw new CompilationErrorException(e);
-	} catch (IOException e) {
-	    throw new CompilationErrorException(e);
-	}
+
+    public static byte[] compile(Resource guide) throws CompilationErrorException {
+        try {
+            Collection<Resource> guides = new ArrayList<Resource>();
+            guides.add(guide);
+            KnowledgeBase kb = getKnowledgeBase(guides);
+            KnowledgePackage kpakage = kb.getKnowledgePackages().iterator().next();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream objOut = new ObjectOutputStream(baos);
+            objOut.writeObject(kpakage);
+            objOut.flush();
+            return baos.toByteArray();
+        } catch (RuntimeDroolsException e) {
+            throw new CompilationErrorException(e);
+        } catch (IOException e) {
+            throw new CompilationErrorException(e);
+        }
     }
 
     public static KnowledgeBase getKnowledgeBase(Collection<Resource> guides)
-	    throws CompilationErrorException{
-	return getKnowledgeBase(guides, null);
+            throws CompilationErrorException{
+        return getKnowledgeBase(guides, null);
     }
 
-    public static KnowledgeBase getKnowledgeBase(Collection<Resource> guides, KnowledgeBuilderConfiguration kbc) 
-	    throws CompilationErrorException{
-	final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(kbc);
-	for (Resource guia : guides) {
-	    kbuilder.add( guia, ResourceType.DRL);
-	}
-	KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
-	kbase.addKnowledgePackages( kbuilder.getKnowledgePackages() );
-	KnowledgeBuilderErrors packErrors = kbuilder.getErrors();
-	if (packErrors.size()>0){
-	    throw new CompilationErrorException(packErrors.iterator().next().getMessage());
-	}
-	return kbase;
+    public static KnowledgeBase getKnowledgeBase(Collection<Resource> guides, KnowledgeBuilderConfiguration kbc)
+            throws CompilationErrorException{
+        final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(kbc);
+        for (Resource guia : guides) {
+            kbuilder.add(guia, ResourceType.DRL);
+        }
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+        kbase.addKnowledgePackages( kbuilder.getKnowledgePackages() );
+        KnowledgeBuilderErrors packErrors = kbuilder.getErrors();
+        if (packErrors.size()>0){
+            throw new CompilationErrorException(packErrors.iterator().next().getMessage());
+        }
+        return kbase;
     }
 }
 /*

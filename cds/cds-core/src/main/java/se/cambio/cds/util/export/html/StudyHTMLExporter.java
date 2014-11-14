@@ -10,8 +10,9 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.model.study.GTCodeReference;
 import se.cambio.cds.model.study.Study;
-import se.cambio.cds.util.exceptions.GuideNotFoundException;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -21,8 +22,8 @@ import java.util.Map;
 
 public class StudyHTMLExporter extends ClinicalModelHTMLExporter<Study> {
 
-    public StudyHTMLExporter(Study entity, String lang) {
-        super(entity, lang);
+    public StudyHTMLExporter(ArchetypeManager archetypeManager) {
+        super(archetypeManager);
     }
 
     @Override
@@ -58,7 +59,9 @@ public class StudyHTMLExporter extends ClinicalModelHTMLExporter<Study> {
         String text = null;
         try {
             text = getTermText(gtCodeReference, lang);
-        } catch (GuideNotFoundException e) {
+        } catch (InstanceNotFoundException e) {
+            ExceptionHandler.handle(e);
+        } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
         if (text==null){
@@ -67,8 +70,8 @@ public class StudyHTMLExporter extends ClinicalModelHTMLExporter<Study> {
         return text;
     }
 
-    private static TermDefinition getTermDefinition(GTCodeReference gtCodeReference, String lang) throws GuideNotFoundException {
-        Guide guide = Guides.getGuide(gtCodeReference.getGuideId());
+    private static TermDefinition getTermDefinition(GTCodeReference gtCodeReference, String lang) throws InternalErrorException, InstanceNotFoundException {
+        Guide guide = Guides.getInstance().getGuide(gtCodeReference.getGuideId());
         TermDefinition td = guide.getOntology().getTermDefinitions().get(lang);
         if (td == null || td.getTerms().get(gtCodeReference.getGtCode()) == null){
             String originalLang = guide.getLanguage().getOriginalLanguage().getCodeString();
@@ -77,7 +80,7 @@ public class StudyHTMLExporter extends ClinicalModelHTMLExporter<Study> {
         return td;
     }
 
-    private static String getTermText(GTCodeReference gtCodeReference, String lang) throws GuideNotFoundException {
+    private static String getTermText(GTCodeReference gtCodeReference, String lang) throws InstanceNotFoundException, InternalErrorException {
         TermDefinition td = getTermDefinition(gtCodeReference, lang);
         return td.getTermText(gtCodeReference.getGtCode());
     }

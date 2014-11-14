@@ -5,7 +5,6 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.OpenEHRConfigurationParametersManager;
 
 import javax.naming.InitialContext;
 import java.io.File;
@@ -34,18 +33,18 @@ public class TerminologyServiceConfiguration {
         parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
         try {
 	    /* Read property file (if exists).*/
-            Class<OpenEHRConfigurationParametersManager> configurationParametersManagerClass =
-                    OpenEHRConfigurationParametersManager.class;
+            Class<TerminologyServiceConfiguration> configurationParametersManagerClass =
+                    TerminologyServiceConfiguration.class;
             ClassLoader classLoader =
                     configurationParametersManagerClass.getClassLoader();
             File configFile = getConfigFile();
             InputStream inputStream = null;
             if (configFile!=null){
                 inputStream = new FileInputStream(configFile);
-                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(TerminologyServiceConfiguration.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
             }else{
                 inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(TerminologyServiceConfiguration.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
             }
             Properties properties = new Properties();
             properties.load(inputStream);
@@ -107,14 +106,8 @@ public class TerminologyServiceConfiguration {
                 int i = keyStr.lastIndexOf("_");
                 String terminology = keyStr.substring(0, i);
                 String value = getParameter(keyStr);
-		/*if (key.endsWith("_src")) {
-		terminologies.add(terminology);
-		sources.put(terminology, value);
-	    } else */
                 if (keyStr.endsWith("_url")) {
                     terminologyURLs.put(terminology, value);
-		    /*} else if (key.endsWith("_plugin.src.file")) {
-		pluginSources.put(terminology, value);*/
                 } else if(keyStr.endsWith("_plugin.src.class")) {
                     terminologyPluginSourcesClass.put(terminology, value);
                 }
@@ -150,7 +143,7 @@ public class TerminologyServiceConfiguration {
     }*/
 
     public static boolean languageSupported(CodePhrase language) {
-        return getDelegate().supportedLanguages.contains(language);
+        return getInstance().supportedLanguages.contains(language);
     }
 
     /*
@@ -163,7 +156,7 @@ public class TerminologyServiceConfiguration {
     }*/
 
     public static String terminologyURL(String terminology) {
-        return getDelegate().terminologyURLs.get(terminology);
+        return getInstance().terminologyURLs.get(terminology);
     }
 
     /*
@@ -171,12 +164,12 @@ public class TerminologyServiceConfiguration {
 	return terminologyPluginSources;
     }*/
 
-    public static String getPluginSourceClass(String terminology) {
-        return getDelegate().terminologyPluginSourcesClass.get(terminology);
+    public String getPluginSourceClass(String terminology) {
+        return terminologyPluginSourcesClass.get(terminology);
     }
 
-    public static TerminologyServiceConfiguration getDelegate(){
-        if(_delegate==null){
+    public static TerminologyServiceConfiguration getInstance(){
+        if(_delegate == null){
             _delegate = new TerminologyServiceConfiguration();
         }
         return _delegate;

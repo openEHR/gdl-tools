@@ -1,21 +1,15 @@
 package se.cambio.openehr.controller.terminology.plugins;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-
-import se.cambio.openehr.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnknownPropertyException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+
+import java.io.InputStream;
+import java.util.*;
 
 public class DummyTerminologyServicePlugin implements TerminologyServicePlugin {
 

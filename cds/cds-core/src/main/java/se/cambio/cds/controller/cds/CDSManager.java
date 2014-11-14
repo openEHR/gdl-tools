@@ -6,6 +6,7 @@ import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.*;
@@ -171,10 +172,11 @@ public class CDSManager {
                                 DVUtil.compareDVs(pgeiNew.getDataValue(), pgeiPrev.getDataValue())!=0){
                             //TODO Find a predicate (if possible) that includes both
                             //Incompatible predicates found, we remove data value and operation
-                            new PredicateGeneratedElementInstance(
-                                    pgeiPrev.getId(),
-                                    null, pgeiPrev.getArchetypeReference(), null,
-                                    OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO, null);
+                            new PredicateGeneratedElementInstanceBuilder()
+                                    .setId(pgeiPrev.getId())
+                                    .setArchetypeReference(pgeiPrev.getArchetypeReference())
+                                    .setNullFlavour(OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO)
+                                    .createPredicateGeneratedElementInstance();
                         }
                     }
                 }

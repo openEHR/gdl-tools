@@ -1,63 +1,21 @@
 package se.cambio.cds.controller.session.data;
 
-import org.apache.log4j.Logger;
-import se.cambio.cds.controller.CDSSessionManager;
-import se.cambio.cds.model.app.dto.CDSAppDTO;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.util.comparators.CDSAppComparator;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.cm.model.app.dto.CDSAppDTO;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 
-import java.util.*;
+import java.util.Map;
 
 
-public class CDSApps {
+public class CDSApps extends AbstractCMManager<CDSAppDTO>{
     private static CDSApps _instance = null;
     private Map<String, CDSAppDTO> _cdsAppMap = null;
 
     private CDSApps(){
     }
 
-    public void loadApps() throws InternalErrorException{
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        Collection<CDSAppDTO> cdsAppDTOs = adminFD.searchAllCDSApps();
-        loadStudies(cdsAppDTOs);
-    }
-
-    public void loadStudiesById(Collection<String> cdsAppIds) throws InternalErrorException, InstanceNotFoundException {
-        CDSAdministrationFacadeDelegate adminFD = CDSSessionManager.getAdministrationFacadeDelegate();
-        for (String cdsAppId : cdsAppIds){
-            CDSAppDTO cdsAppDTO = adminFD.searchCDSApp(cdsAppId);
-            registerApp(cdsAppDTO);
-        }
-    }
-
-    public void loadStudies(Collection<CDSAppDTO> cdsAppDTOs) throws InternalErrorException{
-        init();
-        for (CDSAppDTO cdsAppDTO : cdsAppDTOs) {
-            registerApp(cdsAppDTO);
-        }
-    }
-
-    public void registerApp(CDSAppDTO cdsAppDTO){
-        getAppsMap().put(cdsAppDTO.getCdaAppId(), cdsAppDTO);
-        Logger.getLogger(CDSApps.class).info("Registering app: '"+cdsAppDTO.getCdaAppId()+"'.");
-    }
-
-    public CDSAppDTO getCDSAppDTO(String idStudy){
-        return getAppsMap().get(idStudy);
-    }
-
-    public List<CDSAppDTO> getAllApps(){
-        return new ArrayList<CDSAppDTO>(getAppsMap().values());
-    }
-
-    public Collection<String> getAllAppIds(){
-        return new ArrayList<String>(getAppsMap().keySet());
-    }
-
-    public void removeApp(String cdsAppId) throws InternalErrorException{
-        getAppsMap().remove(cdsAppId);
+    @Override
+    public Class<CDSAppDTO> getCMElementClass() {
+        return CDSAppDTO.class;
     }
 
     public static CDSApps getInstance(){
@@ -65,31 +23,6 @@ public class CDSApps {
             _instance = new CDSApps();
         }
         return _instance;
-    }
-
-    private void init(){
-        getAppsMap().clear();
-    }
-
-    private Map<String, CDSAppDTO> getAppsMap(){
-        if (getInstance()._cdsAppMap ==null){
-            getInstance()._cdsAppMap = new HashMap<String, CDSAppDTO>();
-        }
-        return getInstance()._cdsAppMap;
-    }
-
-    public int generateHashCode() {
-        return generateHashCode(getAllApps());
-    }
-
-    public static int generateHashCode(Collection<CDSAppDTO> cdsAppDTOs){
-        List<CDSAppDTO> cdsAppDTOsList = new ArrayList<CDSAppDTO>(cdsAppDTOs);
-        Collections.sort(cdsAppDTOsList, new CDSAppComparator());
-        List<String> defs = new ArrayList<String>();
-        for(CDSAppDTO cdsAppDTO: cdsAppDTOsList){
-            defs.add(cdsAppDTO.getAppSrc());
-        }
-        return defs.hashCode();
     }
 }
 /*

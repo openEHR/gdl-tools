@@ -1,0 +1,65 @@
+archetype (adl_version=1.5; generated)
+	CIMI-CORE-ENTRY.observation.v4
+
+specialize
+	CIMI-CORE-ENTRY.clinical_entry.v2
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			>
+	>
+	lifecycle_state = <"initial">
+
+definition
+	ENTRY[at0000.1] matches { -- Observation
+		link matches {
+			LINK[at0.1] occurrences matches {0..*} -- Associated request
+		}
+		data matches {
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.observable.v1] -- Observable
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.finding.v1] -- Results
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.observe_action.v1] -- Observe action
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.interpret_action.v1] -- Interpret action
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.approve_action.v1] -- Approve action
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.report_action.v1] -- Report action
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.cancel_action.v1] -- Cancel action
+			use_archetype CLUSTER [CIMI-CORE-CLUSTER.update_action.v1] -- Update action
+			ELEMENT[at0.2] occurrences matches {0..*} matches { -- Associated request identifier
+				value matches {
+					IDENTIFIER matches {*}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1"] = <
+				text = <"Observation">
+				description = <"Observation">
+			>
+			["at0.1"] = <
+				text = <"Associated request">
+				description = <"Associated request">
+			>
+			["at0.2"] = <
+				text = <"Associated request identifier">
+				description = <"Associated request identifier">
+			>
+		>
+	>
+	term_bindings = <
+		["SNOMED-CT"] = <
+			items = <
+				["at0000.1"] = <[SNOMED-CT::363787002]>
+				["at0.1"] = <[SNOMED-CT::308539001]>
+				["at0.2"] = <[SNOMED-CT::423901009]>
+			>
+		>
+	>

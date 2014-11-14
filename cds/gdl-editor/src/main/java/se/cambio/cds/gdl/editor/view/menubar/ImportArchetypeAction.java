@@ -6,37 +6,44 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.util.ImportUtils;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class ImportArchetypeAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -3561842193285119707L;
 
     public ImportArchetypeAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("ImportArchetype"));
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
-	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("ImportArchetype"));
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	ImportUtils.showImportArchetypeDialogAndAddToRepo(EditorManager.getActiveEditorWindow(), null);
+        try {
+            ImportUtils.showImportArchetypeDialogAndAddToRepo(EditorManager.getActiveEditorWindow(), null);
+        } catch (InternalErrorException e1) {
+            ExceptionHandler.handle(e1);
+        } catch (InstanceNotFoundException e1) {
+            ExceptionHandler.handle(e1);
+        }
     }
 }
 /*

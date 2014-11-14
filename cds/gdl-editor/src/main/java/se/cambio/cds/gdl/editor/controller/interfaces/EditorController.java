@@ -9,11 +9,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-05
- * Time: 08:26
- */
 public interface EditorController<E> {
 
     public void init();
@@ -36,6 +31,6 @@ public interface EditorController<E> {
     public void save();
     public void saveAs();
     public void entitySaved();
-    public String getSerializedEntity();
-    public E parseEntity(InputStream is);
+    public String getSerializedEntity() throws InternalErrorException;
+    public E parseEntity(InputStream is) throws InternalErrorException;
 }

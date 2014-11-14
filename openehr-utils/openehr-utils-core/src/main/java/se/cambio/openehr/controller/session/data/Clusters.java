@@ -1,19 +1,20 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import se.cambio.openehr.model.archetype.vo.ClusterVO;
+import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.PathUtils;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
 public class Clusters {
-    private static Clusters _instance = null;
+    private final ArchetypeManager archetypeManager;
     private  Map<String, ClusterVO> _clustersById = null;
     private Map<String, Map<String, ClusterVO>> _templateClustersByTemplateIdAndId = null;
 
 
-    private Clusters(){
+    public Clusters(ArchetypeManager archetypeManager){
+        this.archetypeManager = archetypeManager;
         init();
     }
 
@@ -22,50 +23,40 @@ public class Clusters {
         _templateClustersByTemplateIdAndId = new HashMap<String, Map<String,ClusterVO>>();
     }
 
-    public static void loadClusters(Collection<ClusterVO> clusterVOs){
+    public void loadClusters(Collection<ClusterVO> clusterVOs){
         for (ClusterVO clusterVO : clusterVOs) {
             registerCluster(clusterVO);
         }
     }
 
-    public static void registerCluster(ClusterVO clusterVO){
+    public void registerCluster(ClusterVO clusterVO){
         if (clusterVO.getIdTemplate()==null){
-            getDelegate()._clustersById.put(clusterVO.getId(), clusterVO);
+            _clustersById.put(clusterVO.getId(), clusterVO);
         }else{
             getClusterVOMap(clusterVO.getIdTemplate()).put(clusterVO.getId(), clusterVO);
         }
     }
 
-    private static Map<String, ClusterVO> getClusterVOMap(String idTemplate){
-        Map<String, ClusterVO> map = getDelegate()._templateClustersByTemplateIdAndId.get(idTemplate);
+    private Map<String, ClusterVO> getClusterVOMap(String idTemplate){
+        Map<String, ClusterVO> map = _templateClustersByTemplateIdAndId.get(idTemplate);
         if (map==null){
             map = new LinkedHashMap<String, ClusterVO>();
-            getDelegate()._templateClustersByTemplateIdAndId.put(idTemplate, map);
+            _templateClustersByTemplateIdAndId.put(idTemplate, map);
         }
         return map;
     }
 
-    public static ClusterVO getClusterVO(String idTemplate, String idCluster){
+    public ClusterVO getClusterVO(String idTemplate, String idCluster){
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idCluster);
         if (idTemplate!=null){
             return getClusterVOMap(idTemplate).get(idCluster);
         }else{
-            return getDelegate()._clustersById.get(idCluster);
+            return _clustersById.get(idCluster);
         }
     }
 
-    public static ClusterVO getClusterVOWithCardinalityGT1(String idTemplate, String idCluster){
-        ClusterVO clusterVO = getClusterVO(idTemplate, idCluster);
-        while (clusterVO!=null){
-            if (clusterVO.getUpperCardinality()==null || clusterVO.getUpperCardinality()>1){
-                return clusterVO;
-            }else{
-                clusterVO = getClusterVO(idTemplate, clusterVO.getIdParent());
-            }
-        }
-        return null;
-    }
 
-    public static Collection<ClusterVO> getSections(String idTemplate){
+    public Collection<ClusterVO> getSections(String idTemplate){
         Collection<ClusterVO> sections = new ArrayList<ClusterVO>();
         for (ClusterVO clusterVO : getClusterVOMap(idTemplate).values()) {
             if(clusterVO.getRMType().equals(OpenEHRConst.SECTION)){
@@ -75,21 +66,14 @@ public class Clusters {
         return sections;
     }
 
-    public static Clusters getDelegate(){
-        if (_instance == null){
-            _instance = new Clusters();
-        }
-        return _instance;
-    }
-
-    public static String getText(ClusterVO clusterVO, String lang){
+    public String getText(ClusterVO clusterVO, String lang) throws InternalErrorException {
         return getText(clusterVO.getIdTemplate(), clusterVO.getId(), lang);
     }
 
-    public static String getText(String idTemplate, String idElement, String lang){
+    public String getText(String idTemplate, String idElement, String lang) {
         ClusterVO clusterVO = getClusterVO(idTemplate, idElement);
         if (clusterVO!=null){
-            ArchetypeTerm archetypeTem = getArchetypeTerm(idTemplate, idElement, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getText();
             }else{
@@ -100,14 +84,14 @@ public class Clusters {
         }
     }
 
-    public static String getDescription(ClusterVO clusterVO, String lang){
+    public String getDescription(ClusterVO clusterVO, String lang) throws InternalErrorException {
         return getDescription(clusterVO.getIdTemplate(), clusterVO.getId(), lang);
     }
 
-    public static String getDescription(String idTemplate, String idElement, String lang){
+    public String getDescription(String idTemplate, String idElement, String lang) throws InternalErrorException {
         ClusterVO clusterVO = getClusterVO(idTemplate, idElement);
         if (clusterVO!=null){
-            ArchetypeTerm archetypeTem = getArchetypeTerm(idTemplate, idElement, lang);
+            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
             if (archetypeTem!=null){
                 return archetypeTem.getDescription();
             }else{
@@ -118,21 +102,8 @@ public class Clusters {
         }
     }
 
-    private static ArchetypeTerm getArchetypeTerm(String idTemplate, String idElement, String lang){
-        String atCode = idElement.substring(idElement.lastIndexOf("[")+1, idElement.length()-1);
-        ArchetypeTerm archetypeTem = null;
-        if (idTemplate==null){
-            String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
-        }else{
-            String archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, Archetypes.getAOMMap().keySet());
-            if (archetypeId==null){
-                archetypeTem = Templates.getArchetypeTerm(idTemplate, lang, atCode);
-            }else{
-                archetypeTem = Archetypes.getArchetypeTerm(archetypeId, lang, atCode);
-            }
-        }
-        return archetypeTem;
+    private ArchetypeTerms getArchetypeTerms() {
+        return this.archetypeManager.getArchetypeTerms();
     }
 }
 /*

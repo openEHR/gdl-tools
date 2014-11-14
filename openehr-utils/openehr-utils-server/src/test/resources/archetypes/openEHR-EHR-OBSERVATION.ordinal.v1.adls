@@ -1,0 +1,88 @@
+archetype (adl_version=1.5)
+	openEHR-EHR-OBSERVATION.ordinal_tuple.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	original_author = <
+		["name"] = <"Thomas Beale">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"thomas.beale@oceaninformatics.com">
+		["date"] = <"2013-08-14">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Test Ordinal tuple pattern.">
+			copyright = <"© openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+
+definition
+	OBSERVATION[at0000] matches {	-- Apgar score
+		data matches {
+			HISTORY[at0002] matches {	-- history
+				events cardinality matches {1..*; unordered} matches {
+					POINT_EVENT[at0003] occurrences matches {0..1} matches {	-- 1 minute
+						data matches {
+							ITEM_LIST[at0001] matches {	-- structure
+								items cardinality matches {1..6; ordered} matches {
+									ELEMENT[at0009] occurrences matches {0..1} matches {	-- Respiratory effort
+										value matches {
+											DV_ORDINAL matches {
+											    value matches {
+                                                    0|[local::at0010],
+                                                    1|[local::at0011],
+                                                    2|[local::at0012]
+											    }
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000"] = <
+				text = <"Apgar score">
+				description = <"Clinical score derived from assessment of respiratory effort, heart rate, reflex irritability, muscle tone and skin colour.">
+			>
+			["at0001"] = <
+				text = <"structure">
+				description = <"@ internal @">
+			>
+			["at0002"] = <
+				text = <"history">
+				description = <"@ internal @">
+			>
+			["at0003"] = <
+				text = <"1 minute">
+				description = <"Apgar score 1 minute after birth.">
+			>
+			["at0009"] = <
+				text = <"Respiratory effort">
+				description = <"Observation of the infant's respiratory effort.">
+			>
+			["at0010"] = <
+				text = <"Absent">
+				description = <"No effort to breath.">
+			>
+			["at0011"] = <
+				text = <"Weak or irregular">
+				description = <"Some effort to breath, moving chest.">
+			>
+			["at0012"] = <
+				text = <"Normal">
+				description = <"Breathing normally or crying.">
+			>
+		>
+	>

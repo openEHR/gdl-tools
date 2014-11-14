@@ -1,24 +1,24 @@
 package se.cambio.openehr.controller.session;
 
-import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegate;
-import se.cambio.openehr.model.facade.administration.delegate.OpenEHRAdministrationFacadeDelegateFactory;
-import se.cambio.openehr.model.facade.terminology.delegate.TerminologyFacadeDelegate;
-import se.cambio.openehr.model.facade.terminology.delegate.TerminologyFacadeDelegateFactory;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegateFactory;
+import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
+import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegateFactory;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class OpenEHRSessionManager {
     private static OpenEHRSessionManager _delegate = null;
-    private OpenEHRAdministrationFacadeDelegate _afd;
+    private CMAdministrationFacadeDelegate _afd;
     private TerminologyFacadeDelegate _tfd = null;
 
     private OpenEHRSessionManager(){
     }
 
-    public static OpenEHRAdministrationFacadeDelegate getAdministrationFacadeDelegate(){
+    public static CMAdministrationFacadeDelegate getAdministrationFacadeDelegate(){
         if (getDelegate()._afd==null){
             try {
-                getDelegate()._afd = OpenEHRAdministrationFacadeDelegateFactory.getDelegate();
+                getDelegate()._afd = CMAdministrationFacadeDelegateFactory.getDelegate();
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
             }

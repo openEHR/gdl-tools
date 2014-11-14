@@ -2,24 +2,12 @@ package se.cambio.cds.formgen.view;
 
 
 import se.cambio.cds.formgen.view.frame.CDSFormGenFrame;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
 
 public class InitCDSFormGenerator {
 
     public static void main(String[] args) {
-	//GenericGuideDAO guideDAO;
 	try {
-	    Archetypes.loadArchetypes();
-	    Templates.loadTemplates();
 	    CDSFormGenFrame cdsFormGenFrame = new CDSFormGenFrame();
-	    /*guideDAO = GenericGuideFactory.getDAO();
-	    Collection<GuideDTO> allGuides = guideDAO.searchAll();
-	    for (GuideDTO guideDTO : allGuides) {
-		FormGeneratorController controller = 
-			new FormGeneratorController(guideDTO, null);
-		cdsFormGenFrame.addFormGeneratorController(controller);
-	    }*/
 	    cdsFormGenFrame.setVisible(true);
 	} catch (Exception e) {
 	    e.printStackTrace();

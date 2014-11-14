@@ -139,7 +139,7 @@
 						text = <"The Du Bois and Du Bois formula">
 					>
 					["gt0017"] = (TERM) <
-                        text = <"Test bindings rule">
+                        text = <"Test bindings readableGuide">
                     >
 				>
 			>

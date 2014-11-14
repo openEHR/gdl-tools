@@ -4,6 +4,7 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.listeners.SelectableRuleLineDragMouseListener;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineContainerPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
@@ -97,7 +98,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
         return selectableRuleLineDragMouseListener;
     }
 
-    protected abstract List<RuleLine> getRuleLines();
+    protected abstract RuleLineCollection getRuleLines();
 
     public void addRuleLine(RuleLine ruleLine){
         if (RuleLineDirectory.isDirectoryRuleLine(ruleLine)){

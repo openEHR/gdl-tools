@@ -1,7 +1,5 @@
 package se.cambio.cds.controller;
 
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegate;
-import se.cambio.cds.model.facade.administration.delegate.CDSAdministrationFacadeDelegateFactory;
 import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegateFactory;
 import se.cambio.cds.model.facade.ehr.delegate.EHRFacadeDelegate;
@@ -14,24 +12,11 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 public class CDSSessionManager {
     private static CDSSessionManager _delegate = null;
 
-    private CDSAdministrationFacadeDelegate _afd = null;
     private CDSExecutionFacadeDelegate _cdsfd = null;
     private RuleExecutionFacadeDelegate _refd = null;
     private EHRFacadeDelegate _ehrfd;
 
     private CDSSessionManager(){
-    }
-
-
-    public static CDSAdministrationFacadeDelegate getAdministrationFacadeDelegate(){
-        if (getDelegate()._afd==null){
-            try {
-                getDelegate()._afd = CDSAdministrationFacadeDelegateFactory.getDelegate();
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
-        }
-        return getDelegate()._afd;
     }
 
     public static CDSExecutionFacadeDelegate getCDSExecutionFacadeDelegate(){

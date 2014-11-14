@@ -1,0 +1,366 @@
+﻿archetype (adl_version=1.5)
+	CIMI-CORE-ENTRY.heartrate.v1
+
+specialise
+	CIMI-CORE-ENTRY.observation.v1
+
+language
+	original_language = <[ISO_639-1::en]>
+
+description
+	original_author = <
+		["name"] = <"Thomas Beale">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"thomas.beale@oceaninformatics.com">
+		["date"] = <"10/04/2012">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Archetype for herat rate">
+			keywords = <"Entry", "cardiology", "heart">
+			copyright = <"© 2012 openEHR Foundation">
+		>
+	>
+	lifecycle_state = <"Draft">
+
+definition
+	ENTRY[at0000.1.1] matches {
+		/data[at0.5]/item matches {
+			ELEMENT [at0.6] matches {
+				value matches {
+					CODED_TEXT matches {
+						terminology_id matches {
+							TERMINOLOGY_ID matches {
+								value matches {"local"}
+							}
+						}
+						term_id matches {"at0.0.2"}
+					}
+				}
+			}
+			ELEMENT [at0.0.27] matches {
+				value matches {
+					CODED_TEXT matches {
+						terminology_id matches {
+							TERMINOLOGY_ID matches {
+								value matches {"local"}
+							}
+						}
+						term_id matches {"at0.0.4"}
+					}
+				}
+			}
+			ELEMENT [at0.0.32] occurrences matches {0..1} matches {
+				value matches {
+					CODED_TEXT matches {
+						terminology_id matches {
+							TERMINOLOGY_ID matches {
+								value matches {"local"}
+							}
+						}
+						term_id matches {"at0.0.6", "at0.0.7", "at0.0.8", "at0.0.9", "at0.0.10", "at0.0.11", "at0.0.12"}
+					}
+				}
+			}
+			ELEMENT [at0.0.33] matches {
+				value matches {
+					CODED_TEXT matches {
+						term_id matches {[ac0.0.1]}
+					}
+				}
+			}
+			ELEMENT [at0.0.34] occurrences matches {0..1} matches {
+				value matches {
+					CODED_TEXT matches {
+						term_id matches {[ac0.0.2]}
+					}
+				}
+			}
+			CLUSTER [at0.0.35] occurrences matches {1} matches {
+				item matches {
+					ELEMENT [at0.0.13] occurrences matches {0..1} matches { -- body site
+						value matches {
+							CODED_TEXT matches {
+								terminology_id matches {
+									TERMINOLOGY_ID matches {
+										value matches {"local"}
+									}
+								}
+								term_id matches {"at0.0.14", "at0.0.15", "at0.0.16", "at0.0.17"}
+							}
+						}
+					}
+					ELEMENT [at0.0.18] occurrences matches {0..1} matches { -- body side
+						value matches {
+							CODED_TEXT matches {
+								terminology_id matches {
+									TERMINOLOGY_ID matches {
+										value matches {"local"}
+									}
+								}
+								term_id matches {"at0.0.19", "at0.0.20", "at0.0.21"}
+							}
+						}
+					}
+					ELEMENT [at0.0.22] occurrences matches {0..1} matches { -- body site descriptor
+						value matches {
+							CODED_TEXT matches {
+								terminology_id matches {
+									TERMINOLOGY_ID matches {
+										value matches {"local"}
+									}
+								}
+								term_id matches {"at0.0.23", "at0.0.24", "at0.0.25"}
+							}
+						}
+					}
+				}
+			}
+			ELEMENT [at0.0.36] matches { -- method
+				value matches {
+					CODED_TEXT matches {
+						term_id matches {[ac0.0.3]}
+					}
+				}
+			}
+			ELEMENT [at0.0.37] matches { -- device
+				value matches {
+					CODED_TEXT matches {
+						term_id matches {[ac0.0.4]}
+					}
+				}
+			}
+			ELEMENT [at0.0.38] matches { -- time of day
+				value matches {
+					CODED_TEXT matches {
+						term_id matches {[ac0.0.5]}
+					}
+				}
+			}
+			ELEMENT [at0.0.39] matches { -- aggregate function
+				value matches {
+					CODED_TEXT matches {
+						term_id matches {[ac0.0.6]}
+					}
+				}
+			}
+		}
+		/data[at0.9]/item matches {
+			ELEMENT [at0.16.1] occurrences matches {0..1} matches {
+				value matches {
+					QUANTITY matches {
+						units matches {
+							CODED_TEXT matches {
+								terminology_id matches {
+									TERMINOLOGY_ID matches {
+										value matches {"local"}
+									}
+								}
+								term_id matches {"at0.0.26"}
+							}
+						}
+					}
+				}
+			}
+			ELEMENT [at0.16.2] occurrences matches {0..1} matches {
+				value matches {
+					YESNO matches {*}
+				}
+			}
+			ELEMENT [at0.0.30] occurrences matches {0..1} matches {
+				value matches {
+					PLAIN_TEXT matches {*}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			["at0000.1.1"] = <
+				text = <"Heart rate">
+				description = <"Observation of heart rate">
+			>
+			["at0.0.27"] = <
+				text = <"reason">
+				description = <"reason">
+			>
+			["at0.0.32"] = <
+				text = <"body position">
+				description = <"body position">
+			>
+			["at0.0.33"] = <
+				text = <"confounding factors">
+				description = <"confounding factors">
+			>
+			["at0.0.34"] = <
+				text = <"exertion">
+				description = <"exertion">
+			>
+			["at0.0.35"] = <
+				text = <"body location">
+				description = <"body location">
+			>
+			["at0.0.36"] = <
+				text = <"method">
+				description = <"method">
+			>
+			["at0.0.37"] = <
+				text = <"device">
+				description = <"device">
+			>
+			["at0.0.38"] = <
+				text = <"time of day">
+				description = <"time of day">
+			>
+			["at0.0.39"] = <
+				text = <"aggregate function">
+				description = <"aggregate function">
+			>
+			["at0.0.2"] = <
+				text = <"heart rate">
+				description = <"heart rate">
+			>
+			["at0.0.4"] = <
+				text = <"clinical finding">
+				description = <"clinical finding">
+			>
+			["at0.0.6"] = <
+				text = <"head of bed raised">
+				description = <"head of bed raised">
+			>
+			["at0.0.7"] = <
+				text = <"lying on left side">
+				description = <"lying on left side">
+			>
+			["at0.0.8"] = <
+				text = <"lying on right side">
+				description = <"lying on right side">
+			>
+			["at0.0.9"] = <
+				text = <"prone body position">
+				description = <"prone body position">
+			>
+			["at0.0.10"] = <
+				text = <"sitting position">
+				description = <"sitting position">
+			>
+			["at0.0.11"] = <
+				text = <"standing">
+				description = <"standing">
+			>
+			["at0.0.12"] = <
+				text = <"supine">
+				description = <"supine">
+			>
+			["at0.0.13"] = <
+				text = <"body site">
+				description = <"body site">
+			>
+			["at0.0.14"] = <
+				text = <"apical">
+				description = <"apical">
+			>
+			["at0.0.15"] = <
+				text = <"brachial">
+				description = <"brachial">
+			>
+			["at0.0.16"] = <
+				text = <"femoral">
+				description = <"femoral">
+			>
+			["at0.0.17"] = <
+				text = <"radial">
+				description = <"radial">
+			>
+			["at0.0.18"] = <
+				text = <"body side">
+				description = <"body side">
+			>
+			["at0.0.19"] = <
+				text = <"left and right">
+				description = <"left and right">
+			>
+			["at0.0.20"] = <
+				text = <"left">
+				description = <"left">
+			>
+			["at0.0.21"] = <
+				text = <"right">
+				description = <"right">
+			>
+			["at0.0.22"] = <
+				text = <"body site descriptor">
+				description = <"body site descriptor">
+			>
+			["at0.0.23"] = <
+				text = <"anterior">
+				description = <"anterior">
+			>
+			["at0.0.24"] = <
+				text = <"anterior dorsal">
+				description = <"anterior dorsal">
+			>
+			["at0.0.25"] = <
+				text = <"anterolateral">
+				description = <"anterolateral">
+			>
+			["at0.0.26"] = <
+				text = <"beats/min">
+				description = <"beats/min">
+			>
+			["at0.16.1"] = <
+				text = <"heart rate value">
+				description = <"heart rate value">
+			>
+			["at0.16.2"] = <
+				text = <"heart rate present">
+				description = <"heart rate present">
+			>
+			["at0.0.30"] = <
+				text = <"clinical notes">
+				description = <"clinical notes">
+			>
+		>
+	>
+
+	constraint_definitions = <
+		["en"] = <
+			["ac0.0.1"] = <
+				text = <"counfounding factor">
+				description = <"type of counfounding factor">
+			>
+			["ac0.0.2"] = <
+				text = <"exertion level">
+				description = <"exertion level">
+			>
+			["ac0.0.3"] = <
+				text = <"kind of method">
+				description = <"kind of method">
+			>
+			["ac0.0.4"] = <
+				text = <"type of device">
+				description = <"type of device">
+			>
+			["ac0.0.5"] = <
+				text = <"time of day">
+				description = <"time of day">
+			>
+			["ac0.0.6"] = <
+				text = <"aggregate function value">
+				description = <"aggregate function">
+			>
+		>
+	>
+
+	term_bindings = <
+		["SNOMEDCT"] = <
+			items = <
+				["at0.0.27"] = <[SNOMED-CT::416083004]>
+				["at0.0.4"] = <[SNOMED-CT::404684003]>
+			>
+		>
+	>
+

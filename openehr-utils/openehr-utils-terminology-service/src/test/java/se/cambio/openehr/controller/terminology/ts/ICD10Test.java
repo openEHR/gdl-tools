@@ -1,19 +1,16 @@
 package se.cambio.openehr.controller.terminology.ts;
 
+import org.openehr.rm.datatypes.text.CodePhrase;
+import se.cambio.openehr.util.exceptions.InvalidCodeException;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import org.openehr.rm.datatypes.text.CodePhrase;
-
-import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
 
 public class ICD10Test extends TerminologyServiceTestBase {
 
 	public ICD10Test() throws Exception {
 		super();
-		// TODO Auto-generated constructor stub
-	}
+    }
 	
 	public void testICD10Supported() {
 		assertTrue(ts.isTerminologySupported("ICD10"));
@@ -21,9 +18,9 @@ public class ICD10Test extends TerminologyServiceTestBase {
 	
 	public void testICD10SupportedCodePhrase() {
 		CodePhrase cp = new CodePhrase("ICD10", "I64");
-		assertTrue(((TerminologyServiceImpl) ts).isTerminologySupported(cp));
+		assertTrue(ts.isTerminologySupported(cp));
 		cp = new CodePhrase("ICD10", "I10X");
-		assertTrue(((TerminologyServiceImpl) ts).isTerminologySupported(cp));
+		assertTrue(ts.isTerminologySupported(cp));
 	}
 	
 	public void testTopGroupSingleMatch() throws Exception {

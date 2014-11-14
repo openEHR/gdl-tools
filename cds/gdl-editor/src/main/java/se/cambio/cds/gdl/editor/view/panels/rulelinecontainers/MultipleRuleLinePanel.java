@@ -46,10 +46,10 @@ public class MultipleRuleLinePanel extends RuleLineContainerPanel{
             JPanel aux = new JPanel(new BorderLayout(0,0));
             mainPanel.add(aux, BorderLayout.CENTER);
             aux.add(getRuleLineListPanel(), BorderLayout.NORTH);
-            if (_ruleLine.getChildrenRuleLines().isEmpty()){
+            if (_ruleLine.getChildrenRuleLines().getRuleLines().isEmpty()){
                 getRuleLineListPanel().add(Box.createRigidArea(new Dimension(50,20)));
             }else{
-                for (RuleLine ruleLine : _ruleLine.getChildrenRuleLines()) {
+                for (RuleLine ruleLine : _ruleLine.getChildrenRuleLines().getRuleLines()) {
                     JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
                     JPanel auxLine = new JPanel(new BorderLayout(0,0));
                     auxLine.add(Box.createHorizontalStrut(16), BorderLayout.WEST);

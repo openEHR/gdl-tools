@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm"
+                 version="1.0">
+    <entity class="se.cambio.cm.model.archetype.dto.ArchetypeDTO">
+        <table name="cm_archetype"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="aom"/>
+            <basic name="aobcVO"/>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.template.dto.TemplateDTO">
+        <table name="cm_template"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="aom"/>
+            <basic name="aobcVO"/>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.terminology.dto.TerminologyDTO">
+        <table name="cm_terminology"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.guide.dto.GuideDTO">
+        <table name="cm_guideline"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="guideObject"/>
+            <basic name="compiledGuide"/>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.study.dto.StudyDTO">
+        <table name="cm_study"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.view.dto.DSViewDTO">
+        <table name="cm_dsview"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.kb.instance.dto.KBInstanceDTO">
+        <table name="cm_kb_instance"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.orderset.dto.OrderSetDTO">
+        <table name="cm_orderset"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.app.dto.CDSAppDTO">
+        <table name="cm_cds_app"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+    <entity class="se.cambio.cm.model.scenario.dto.ScenarioDTO">
+        <table name="cm_scenario"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="source">
+                <column column-definition="TEXT"/>
+            </basic>
+            <basic name="lastUpdate"/>
+        </attributes>
+    </entity>
+</entity-mappings>

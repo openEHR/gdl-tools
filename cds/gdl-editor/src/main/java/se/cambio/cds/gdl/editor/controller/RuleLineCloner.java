@@ -29,7 +29,6 @@ public class RuleLineCloner {
             String gtCode = EditorManager.getActiveGDLEditor().createNextGTCode(generateTerm);
             tdRuleLine.setGTCode(gtCode);
         }
-        clonedRuleLine.setTermDefinition(EditorManager.getActiveGDLEditor().getCurrentTermDefinition());
         return clonedRuleLine;
     }
 

@@ -9,6 +9,7 @@ import se.cambio.cds.model.facade.cds.vo.DomainData;
 import se.cambio.cds.model.facade.cds.vo.EIValue;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 
@@ -50,7 +51,12 @@ public class DomainDataUtil {
                             gei = new GeneratedElementInstance(elementId, dv, archetypeReference, null, null);
 
                         }else{
-                            gei = new PredicateGeneratedElementInstance(elementId, dv, archetypeReference, null, null, eiValue.getOperatorKind());
+                            gei = new PredicateGeneratedElementInstanceBuilder()
+                                    .setId(elementId)
+                                    .setDataValue(dv)
+                                    .setArchetypeReference(archetypeReference)
+                                    .setOperatorKind(eiValue.getOperatorKind())
+                                    .createPredicateGeneratedElementInstance();
                         }
                         gei.setRuleReferences(eiValue.getRuleReferences());
                     }

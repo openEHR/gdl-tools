@@ -9,18 +9,17 @@ import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegate;
-import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegateFactory;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
-import se.cambio.cds.model.guide.dto.GuideDTO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.cds.util.GuideImporter;
+import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -104,7 +103,7 @@ public class FormGeneratorController {
     public Guide getGuide(){
         if(_guide==null){
             try {
-                _guide = getGuideManager().getGuide(getGuideDTO().getIdGuide());
+                _guide = getGuideManager().getGuide(getGuideDTO().getId());
             } catch (Exception e) {
                 ExceptionHandler.handle(e);
             }
@@ -148,7 +147,7 @@ public class FormGeneratorController {
     }
 
     public Collection<String> getSupportedLanguages(){
-        return getReadableGuideMap().get(_guideDTO.getIdGuide()).keySet();
+        return getReadableGuideMap().get(_guideDTO.getId()).keySet();
     }
 
     public List<RuleReference> getLastRulesFired(){
@@ -162,12 +161,12 @@ public class FormGeneratorController {
                 GDLParser parser = new GDLParser();
                 for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
                     Map<String, ReadableGuide> auxMap = new HashMap<String, ReadableGuide>();
-                    _readableGuideMap.put(guideDTO.getIdGuide(), auxMap);
-                    Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getGuideSrc().getBytes()));
+                    _readableGuideMap.put(guideDTO.getId(), auxMap);
+                    Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
                     Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
                     for (TermDefinition termDefinition : termDefinitions.values()) {
                         String lang = termDefinition.getId();
-                        auxMap.put(lang, GuideImporter.importGuide(guide, lang));
+                        auxMap.put(lang, GuideImporter.importGuide(guide, lang, ArchetypeManager.getInstance()));
                     }
                 }
             } catch (Exception e) {
@@ -175,13 +174,6 @@ public class FormGeneratorController {
             }
         }
         return _readableGuideMap;
-    }
-
-    public CDSExecutionFacadeDelegate getCDSFacadeDelegate() throws InternalErrorException{
-        if (cdsfd==null){
-            cdsfd = CDSExecutionFacadeDelegateFactory.getDelegate();
-        }
-        return cdsfd;
     }
 
     public String getLanguage(){

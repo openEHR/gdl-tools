@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.util.export.json.DVDefSerializer;
-import se.cambio.openehr.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
@@ -66,7 +66,11 @@ public class ExpressionUtil {
                 }
             }
         } else if (expressionItem instanceof StringConstant) {
-            sb.append(expressionItem.toString());
+            String stringValue = expressionItem.toString();
+            if (stringValue.startsWith("'") && stringValue.endsWith("'") && stringValue.length() > 1){
+                stringValue = "\"" + stringValue.substring(1, stringValue.length()-1) + "\"";
+            }
+            sb.append(stringValue);
         } else if (expressionItem instanceof ConstantExpression) {
             sb.append(formatConstantValue((ConstantExpression) expressionItem));
         } else {

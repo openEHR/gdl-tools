@@ -6,8 +6,7 @@ import org.openehr.rm.util.GenerationStrategy;
 import org.openehr.rm.util.SkeletonGenerator;
 import se.cambio.cds.model.kb.instance.KBInstance;
 import se.cambio.cds.util.export.json.JSONSerialization;
-import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.controller.session.data.Templates;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -30,8 +29,8 @@ public class KBInstanceTest {
         CMUtil.testLoadCM();
         KBInstance kbInstance = new KBInstance("testKBInstance");
         String templateId = "diagnosis_icd10";
-        Archetype archetype = Templates.getTemplateAOM(templateId);
-        Object obj = SkeletonGenerator.getInstance().create(archetype, templateId, Archetypes.getArchetypeMap(), GenerationStrategy.MINIMUM);
+        Archetype archetype = ArchetypeManager.getInstance().getTemplates().getTemplateAOM(templateId);
+        Object obj = SkeletonGenerator.getInstance().create(archetype, templateId, ArchetypeManager.getInstance().getArchetypes().getArchetypeMap(), GenerationStrategy.MINIMUM);
         assertTrue(obj instanceof Locatable);
         kbInstance.setLocatable((Locatable)obj);
         String kbiSerialized = JSONSerialization.serialize(KBInstance.class, kbInstance);
