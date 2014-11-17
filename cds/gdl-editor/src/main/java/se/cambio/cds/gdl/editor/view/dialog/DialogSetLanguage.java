@@ -57,9 +57,9 @@ public class DialogSetLanguage extends DialogEditor {
         if (_languageSelection==null){
             _languageSelection = new JComboBox(Languages.getSupportedLanguages().toArray());
             _languageSelection.setRenderer(new LanguageRenderer());
-            String lang = UserConfigurationManager.getLanguage();
-            if (Languages.getSupportedLanguages().contains(lang)){
-                _languageSelection.setSelectedItem(lang);
+            String langCountryCode = UserConfigurationManager.getLanguage() + "_" + UserConfigurationManager.getCountryCode();
+            if (Languages.getSupportedLanguages().contains(langCountryCode)){
+                _languageSelection.setSelectedItem(langCountryCode);
             }
         }
         return _languageSelection;
