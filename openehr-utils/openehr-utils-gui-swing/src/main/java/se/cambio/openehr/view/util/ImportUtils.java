@@ -1,7 +1,7 @@
 package se.cambio.openehr.view.util;
 
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
-import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
+import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRLanguageManager;

@@ -3,7 +3,7 @@ package se.cambio.openehr.controller.terminology;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.cm.model.cm.element.dao.GenericCMElementDAO;
+import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.cm.model.util.CMElementDAOFactory;

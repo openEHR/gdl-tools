@@ -8,7 +8,6 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.model.facade.cds.delegate.CDSExecutionFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -22,27 +21,24 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.ByteArrayInputStream;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FormGeneratorController {
 
     private GuideDTO _guideDTO = null;
     private Guide _guide = null;
     private GuideManager _guideManager = null;
-    private CDSExecutionFacadeDelegate cdsfd;
     private CDSFormPanel _cdsFormPanel = null;
     private FormGeneratorViewer _viewer = null;
     private Map<String, Map<String, ReadableGuide>> _readableGuideMap;
     private List<RuleReference> _lastFiredRulesReference = null;
     private Calendar _currentDate = null;
     private String _lang = null;
-
-    public FormGeneratorController(GuideDTO guideDTO){
-        _guideDTO = guideDTO;
-        Collection<GuideDTO> guides = new ArrayList<GuideDTO>();
-        guides.add(guideDTO);
-        init();
-    }
 
     public FormGeneratorController(
             GuideDTO guideDTO,

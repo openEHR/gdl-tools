@@ -63,8 +63,8 @@ public class ArchetypeObjectBundleManager {
             ADLParser adlParser = new ADLParser(archetypeDTO.getSource());
             Archetype ar = adlParser.parse();
             archetypeDTO.setAom(IOUtils.getBytes(ar));
-            GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, archetypeManager.getArchetypes().getArchetypeMap());
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleManager.generateObjectBundleCustomVO();
+            GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, archetypeManager.getArchetypes().getArchetypeMap());
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
         } catch (Exception e) {
             throw new InternalErrorException(e);
@@ -79,8 +79,8 @@ public class ArchetypeObjectBundleManager {
             FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
             byte[] flatArchetypeBytes = IOUtils.getBytes(flatArchetype);
             archetypeDTO.setAom(flatArchetypeBytes);
-            GenericObjectBundle20Manager genericObjectBundle20Manager = new GenericObjectBundle20Manager(flatArchetype, archetypeManager);
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundle20Manager.generateObjectBundleCustomVO();
+            GenericObjectBundleADLSManager genericObjectBundleADLSManager = new GenericObjectBundleADLSManager(flatArchetype, archetypeManager);
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLSManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
         } catch (Exception e) {
             throw new InternalErrorException(e);

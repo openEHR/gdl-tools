@@ -1,6 +1,6 @@
 package se.cambio.cm.model.util;
 
-import se.cambio.cm.model.cm.element.dao.GenericCMElementDAO;
+import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 

@@ -3,7 +3,7 @@ package se.cambio.cds.util;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.expression.*;
-import se.cambio.cds.util.export.json.DVDefSerializer;
+import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
