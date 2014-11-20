@@ -12,7 +12,7 @@ import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CMTypeManager {
@@ -74,7 +74,7 @@ public class CMTypeManager {
 
     private Map<String, CMType> getCmTypeByIdMap() {
         if (cmTypeByIdMap == null) {
-            cmTypeByIdMap = new HashMap<String, CMType>();
+            cmTypeByIdMap = new LinkedHashMap<String, CMType>();
         }
         return cmTypeByIdMap;
     }
