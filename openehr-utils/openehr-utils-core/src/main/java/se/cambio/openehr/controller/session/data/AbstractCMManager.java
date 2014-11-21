@@ -99,7 +99,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
     }
 
     private void findCMElementsInCache(Collection<String> ids, Collection<String> idsNotInCache, Collection<E> foundCMElements) throws InternalErrorException {
-        checkIfCacheIsUpToDate();
+        cacheUpdate();
         for (String id: ids){
             E cmElement = getCmElementMap().get(id);
             if (cmElement!=null){
@@ -110,34 +110,38 @@ public abstract class AbstractCMManager<E extends CMElement> {
         }
     }
 
-    private void checkIfCacheIsUpToDate() throws InternalErrorException {
-        boolean changesDetected = isDataChanged();
+    public boolean cacheUpdate() throws InternalErrorException {
+        boolean changesDetected = false;
+        if (isWaitingTimeForNextCheckReached()) {
+            changesDetected = isDataChanged(changesDetected);
+        }
         if (changesDetected) {
             logger.info("Detected changes on " + getCMElementClass().getSimpleName() + "). Initializing cache...");
             initialize();
         }
+        return changesDetected;
     }
 
-    public boolean isDataChanged() throws InternalErrorException {
-        long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
-        boolean changesDetected = false;
-        boolean waitingTimeForNextCheckReached = false;
-        if (timeSinceLastCheck>=MAX_CHECK_WAITING_TIME_IN_MILLIS){
-            waitingTimeForNextCheckReached = true;
-            lastCheckForUpdates = Calendar.getInstance().getTime();
-        }
-        if (waitingTimeForNextCheckReached) {
-            Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(getCMElementClass());
-            if (lastUpdateDateOnServer != null) {
-                if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
-                    changesDetected = true;
-                    mostRecentLocalUpdate = lastUpdateDateOnServer;
-                }
+    private boolean isDataChanged(boolean changesDetected) throws InternalErrorException {
+        Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(getCMElementClass());
+        if (lastUpdateDateOnServer != null) {
+            if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
+                changesDetected = true;
+                mostRecentLocalUpdate = lastUpdateDateOnServer;
             }
         }
         return changesDetected;
     }
 
+    private boolean isWaitingTimeForNextCheckReached() {
+        boolean waitingTimeForNextCheckReached = false;
+        long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
+        if (timeSinceLastCheck>=MAX_CHECK_WAITING_TIME_IN_MILLIS){
+            waitingTimeForNextCheckReached = true;
+            lastCheckForUpdates = Calendar.getInstance().getTime();
+        }
+        return waitingTimeForNextCheckReached;
+    }
 
     private void findCMElementsNotInCache(final Collection<String> idsNotInCache, final Collection<E> foundCMElements) throws InternalErrorException, InstanceNotFoundException {
         if (!idsNotInCache.isEmpty()) {
