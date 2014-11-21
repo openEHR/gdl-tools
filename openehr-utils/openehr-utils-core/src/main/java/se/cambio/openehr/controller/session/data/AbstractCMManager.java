@@ -9,8 +9,14 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractCMManager<E extends CMElement> {
 
@@ -105,23 +111,31 @@ public abstract class AbstractCMManager<E extends CMElement> {
     }
 
     private void checkIfCacheIsUpToDate() throws InternalErrorException {
+        boolean changesDetected = isDataChanged();
+        if (changesDetected) {
+            logger.info("Detected changes on " + getCMElementClass().getSimpleName() + "). Initializing cache...");
+            initialize();
+        }
+    }
+
+    public boolean isDataChanged() throws InternalErrorException {
         long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
-        if (timeSinceLastCheck<MAX_CHECK_WAITING_TIME_IN_MILLIS){
-            //Waiting time for next check not reached yet
-            return;
-        }else{
-            //Continue with execution
+        boolean changesDetected = false;
+        boolean waitingTimeForNextCheckReached = false;
+        if (timeSinceLastCheck>=MAX_CHECK_WAITING_TIME_IN_MILLIS){
+            waitingTimeForNextCheckReached = true;
             lastCheckForUpdates = Calendar.getInstance().getTime();
         }
-
-        Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(getCMElementClass());
-        if (lastUpdateDateOnServer!=null){
-            if (lastUpdateDateOnServer.getTime()> mostRecentLocalUpdate.getTime()){
-                logger.info("Detected changes on "+getCMElementClass().getSimpleName()+" ("+new SimpleDateFormat().format(lastUpdateDateOnServer)+"). Initializing cache...");
-                initialize();
-                mostRecentLocalUpdate = lastUpdateDateOnServer;
+        if (waitingTimeForNextCheckReached) {
+            Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(getCMElementClass());
+            if (lastUpdateDateOnServer != null) {
+                if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
+                    changesDetected = true;
+                    mostRecentLocalUpdate = lastUpdateDateOnServer;
+                }
             }
         }
+        return changesDetected;
     }
 
 
