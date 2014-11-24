@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.95.5-SNAPSHOT</version>
+		<version>0.95.5</version>
 	</parent>
 	<artifactId>cds-engine-drools</artifactId>
 	<name>cds-engine-drools</name>

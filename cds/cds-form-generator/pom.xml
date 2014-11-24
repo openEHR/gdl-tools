@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.95.5-SNAPSHOT</version>
+		<version>0.95.5</version>
 	</parent>
 	<artifactId>cds-form-generator</artifactId>
 	<name>CDS Form Generator</name>
