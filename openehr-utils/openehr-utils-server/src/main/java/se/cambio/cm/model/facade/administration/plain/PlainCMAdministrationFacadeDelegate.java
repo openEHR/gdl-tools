@@ -3,7 +3,7 @@ package se.cambio.cm.model.facade.administration.plain;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
-import se.cambio.cm.model.cm.element.dao.GenericCMElementDAO;
+import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.CMElement;

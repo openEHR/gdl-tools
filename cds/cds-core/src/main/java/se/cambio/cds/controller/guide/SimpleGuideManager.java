@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.guide;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
@@ -28,6 +29,16 @@ public class SimpleGuideManager {
         }catch(InternalErrorException e){
             ExceptionHandler.handle(e);
         }
+    }
+
+    public String getId(){
+        return generateId(_allGuidesMap.keySet());
+    }
+
+    public static String generateId(Collection<String> guideIds) {
+        List<String> guideIdsAux = new ArrayList<String>(guideIds);
+        Collections.sort(guideIdsAux);
+        return StringUtils.join(guideIdsAux, ",");
     }
 
     private void init(){

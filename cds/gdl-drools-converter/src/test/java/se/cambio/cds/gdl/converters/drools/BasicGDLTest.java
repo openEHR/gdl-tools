@@ -1,5 +1,7 @@
 package se.cambio.cds.gdl.converters.drools;
 
+import com.google.gson.Gson;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openehr.rm.datatypes.basic.DataValue;
@@ -15,6 +17,7 @@ import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.export.ArchetypeReferenceGsonFactory;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
@@ -26,6 +29,8 @@ import java.util.Collections;
 import static org.junit.Assert.*;
 
 public class BasicGDLTest extends GDLTestCase{
+
+    private RuleExecutionResult rer;
 
     public BasicGDLTest(){
         super();
@@ -227,7 +232,6 @@ public class BasicGDLTest extends GDLTestCase{
         }
     }
 
-
     @Test
     public void shouldAllowCDSInitiallization(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
@@ -284,7 +288,7 @@ public class BasicGDLTest extends GDLTestCase{
         guideIds.add("Stroke_prevention_alert.v1.1");
         guideIds.add("Stroke_prevention_medication_recommendation.v1");
         int medicationCount = 0;
-        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        rer = executeGuides(guideIds, elementInstances);
         assertEquals(9, rer.getArchetypeReferences().size());
         assertEquals(11, rer.getFiredRules().size());
         boolean strokeARFound = false;
@@ -303,5 +307,17 @@ public class BasicGDLTest extends GDLTestCase{
         }
         assertTrue(strokeARFound);
         assertEquals(4,medicationCount);
+    }
+
+    @Test
+    public void shouldPerformRountripJSONSerializationOfRuleExecutionResults(){
+        Gson gson = new ArchetypeReferenceGsonFactory().create();
+        if (rer == null){
+            shouldAllowCDSInitiallization();
+        }
+        String json = gson.toJson(rer);
+        RuleExecutionResult auxRer = gson.fromJson(json, RuleExecutionResult.class);
+        boolean equalRER = EqualsBuilder.reflectionEquals(rer, auxRer);
+        assertTrue(equalRER);
     }
 }

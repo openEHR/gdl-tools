@@ -9,8 +9,14 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractCMManager<E extends CMElement> {
 
@@ -93,7 +99,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
     }
 
     private void findCMElementsInCache(Collection<String> ids, Collection<String> idsNotInCache, Collection<E> foundCMElements) throws InternalErrorException {
-        checkIfCacheIsUpToDate();
+        cacheUpdate();
         for (String id: ids){
             E cmElement = getCmElementMap().get(id);
             if (cmElement!=null){
@@ -104,26 +110,38 @@ public abstract class AbstractCMManager<E extends CMElement> {
         }
     }
 
-    private void checkIfCacheIsUpToDate() throws InternalErrorException {
-        long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
-        if (timeSinceLastCheck<MAX_CHECK_WAITING_TIME_IN_MILLIS){
-            //Waiting time for next check not reached yet
-            return;
-        }else{
-            //Continue with execution
-            lastCheckForUpdates = Calendar.getInstance().getTime();
+    public boolean cacheUpdate() throws InternalErrorException {
+        boolean changesDetected = false;
+        if (isWaitingTimeForNextCheckReached()) {
+            changesDetected = isDataChanged(changesDetected);
         }
+        if (changesDetected) {
+            logger.info("Detected changes on " + getCMElementClass().getSimpleName() + "). Initializing cache...");
+            initialize();
+        }
+        return changesDetected;
+    }
 
+    private boolean isDataChanged(boolean changesDetected) throws InternalErrorException {
         Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(getCMElementClass());
-        if (lastUpdateDateOnServer!=null){
-            if (lastUpdateDateOnServer.getTime()> mostRecentLocalUpdate.getTime()){
-                logger.info("Detected changes on "+getCMElementClass().getSimpleName()+" ("+new SimpleDateFormat().format(lastUpdateDateOnServer)+"). Initializing cache...");
-                initialize();
+        if (lastUpdateDateOnServer != null) {
+            if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
+                changesDetected = true;
                 mostRecentLocalUpdate = lastUpdateDateOnServer;
             }
         }
+        return changesDetected;
     }
 
+    private boolean isWaitingTimeForNextCheckReached() {
+        boolean waitingTimeForNextCheckReached = false;
+        long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
+        if (timeSinceLastCheck>=MAX_CHECK_WAITING_TIME_IN_MILLIS){
+            waitingTimeForNextCheckReached = true;
+            lastCheckForUpdates = Calendar.getInstance().getTime();
+        }
+        return waitingTimeForNextCheckReached;
+    }
 
     private void findCMElementsNotInCache(final Collection<String> idsNotInCache, final Collection<E> foundCMElements) throws InternalErrorException, InstanceNotFoundException {
         if (!idsNotInCache.isEmpty()) {

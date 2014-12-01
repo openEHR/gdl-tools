@@ -7,7 +7,7 @@ import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.util.export.json.DVDefSerializer;
+import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;

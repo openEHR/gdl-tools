@@ -1,6 +1,6 @@
 package se.cambio.cm.model.template.dao;
 
-import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
+import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 

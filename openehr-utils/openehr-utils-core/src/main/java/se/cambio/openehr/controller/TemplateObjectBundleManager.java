@@ -7,7 +7,6 @@ import org.openehr.am.template.FlatteningException;
 import org.openehr.am.template.OETParser;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
-import se.cambio.openehr.controller.session.data.Templates;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.TemplateFlattener;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -58,8 +57,8 @@ public class TemplateObjectBundleManager {
             templateDTO.setArcehtypeId(template.getDefinition().getArchetypeId());
             Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
             templateDTO.setAom(IOUtils.getBytes(ar));
-            GenericObjectBundleManager genericObjectBundleManager = new GenericObjectBundleManager(ar, templateDTO.getId(), archetypeMap);
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleManager.generateObjectBundleCustomVO();
+            GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap);
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             templateDTO.setAobcVO(IOUtils.getBytes(archetypeObjectBundleCustomVO));
         } catch (FlatteningException e) {
             throw new InternalErrorException(e);

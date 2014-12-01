@@ -5,13 +5,7 @@ public enum CMTypeFormat {
     ADLS_FORMAT("adls"),
     OET_FORMAT("oet"),
     CSV_FORMAT("csv"),
-    GDL_FORMAT("gdl"),
-    STD_FORMAT("std"),
-    DSV_FORMAT("dsv"),
-    KBI_FORMAT("kbi"),
-    OST_FORMAT("ost"),
-    APP_FORMAT("app"),
-    SCN_FORMAT("scn");
+    GDL_FORMAT("gdl");
 
     private final String format;
 

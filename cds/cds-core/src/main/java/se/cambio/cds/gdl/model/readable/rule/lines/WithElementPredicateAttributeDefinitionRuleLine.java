@@ -12,7 +12,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLin
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.PredicateRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
-import se.cambio.cds.util.export.json.DVDefSerializer;
+import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;

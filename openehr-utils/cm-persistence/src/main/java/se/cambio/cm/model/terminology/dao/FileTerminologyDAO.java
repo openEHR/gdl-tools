@@ -1,6 +1,6 @@
 package se.cambio.cm.model.terminology.dao;
 
-import se.cambio.cm.model.cm.element.dao.FileGenericCMElementDAO;
+import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 

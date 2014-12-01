@@ -17,12 +17,6 @@ public class UserConfigurationManager {
     public static String TERMINOLOGIES_FOLDER_KW = "TerminologiesFolder";
     public static String ONTOLOGIES_FOLDER_KW = "OntologiesFolder";
     public static String DOCUMENTS_FOLDER_KW = "DocumentsFolder";
-    public static String VIEWS_FOLDER_KW = "ViewsFolder";
-    public static String STUDIES_FOLDER_KW = "StudiesFolder";
-    public static String KB_INSTANCE_FOLDER_KW = "KBInstancesFolder";
-    public static String ORDERSET_FOLDER_KW = "OrderSetsFolder";
-    public static String SCENARIOS_FOLDER_KW = "ScenariosFolder";
-    public static String APP_FOLDER_KW = "AppsFolder";
 
     public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
     public static final String LANGUAGE = "Messages/Language";
@@ -45,12 +39,6 @@ public class UserConfigurationManager {
         _defaultValues.put(GUIDES_FOLDER_KW, "guidelines");
         _defaultValues.put(TERMINOLOGIES_FOLDER_KW, "terminologies");
         _defaultValues.put(ONTOLOGIES_FOLDER_KW, "ontologies");
-        _defaultValues.put(VIEWS_FOLDER_KW, "views");
-        _defaultValues.put(STUDIES_FOLDER_KW, "studies");
-        _defaultValues.put(KB_INSTANCE_FOLDER_KW, "instances");
-        _defaultValues.put(ORDERSET_FOLDER_KW, "ordersets");
-        _defaultValues.put(APP_FOLDER_KW, "apps");
-        _defaultValues.put(SCENARIOS_FOLDER_KW, "scenarios");
         _defaultValues.put(DOCUMENTS_FOLDER_KW, "docs");
         _defaultValues.put(CURRENT_DATE_TIME_KW, null);
         _defaultValues.put(LANGUAGE, DEFAULT_LANGUAGE);
@@ -192,11 +180,6 @@ public class UserConfigurationManager {
         return new File(folderStr);
     }
 
-    public static File getStudiesFolder(){
-        String folderStr = getParameterWithDefault(STUDIES_FOLDER_KW);
-        return new File(folderStr);
-    }
-
     public static File getTerminologiesFolder(){
         String folderStr = getParameterWithDefault(TERMINOLOGIES_FOLDER_KW);
         return new File(folderStr);
@@ -209,31 +192,6 @@ public class UserConfigurationManager {
 
     public static File getDocumentsFolder(){
         String folderStr = getParameterWithDefault(DOCUMENTS_FOLDER_KW);
-        return new File(folderStr);
-    }
-
-    public static File getDSViewsFolder(){
-        String folderStr = getParameterWithDefault(VIEWS_FOLDER_KW);
-        return new File(folderStr);
-    }
-
-    public static File getKBInstancesFolder(){
-        String folderStr = getParameterWithDefault(KB_INSTANCE_FOLDER_KW);
-        return new File(folderStr);
-    }
-
-    public static File getOrderSetsFolder(){
-        String folderStr = getParameterWithDefault(ORDERSET_FOLDER_KW);
-        return new File(folderStr);
-    }
-
-    public static File getScenariosFolder(){
-        String folderStr = getParameterWithDefault(SCENARIOS_FOLDER_KW);
-        return new File(folderStr);
-    }
-
-    public static File getAppsFolder(){
-        String folderStr = getParameterWithDefault(APP_FOLDER_KW);
         return new File(folderStr);
     }
 

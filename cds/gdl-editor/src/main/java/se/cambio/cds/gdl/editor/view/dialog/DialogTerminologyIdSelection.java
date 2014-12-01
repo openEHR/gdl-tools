@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.openehr.util.OpenEHRImageUtil;
@@ -46,17 +45,40 @@ public class DialogTerminologyIdSelection extends DialogSelection{
         }
     }
 
+    public boolean isValidTerminologyId(String value) {
+        if (value.isEmpty()) {
+            return false;
+        }
+        for(Character character: value.toCharArray()) {
+            if (!Character.isJavaIdentifierPart(character)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private class AddTerminologyActionListener implements ActionListener{
         private JDialog _dialog = null;
         public AddTerminologyActionListener(JDialog dialog){
             _dialog = dialog;
         }
+
         public void actionPerformed(ActionEvent e) {
-            DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddTerminologyDesc"), null);
-            if (dialog.getAnswer()){
-                _terminologyIdCreated = dialog.getValue();
-                accept();
-            }
+            boolean correctName;
+            do {
+                correctName = true;
+                DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddTerminologyDesc"), null);
+                if (dialog.getAnswer()) {
+                    String value = dialog.getValue();
+                    correctName = isValidTerminologyId(value);
+                    if (correctName) {
+                        _terminologyIdCreated = value;
+                        accept();
+                    } else {
+                        JOptionPane.showMessageDialog(_dialog, GDLEditorLanguageManager.getMessage("InvalidId"), GDLEditorLanguageManager.getMessage("InvalidId"), JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } while (!correctName);
         }
     }
 }

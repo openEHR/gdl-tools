@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRRMUtil;
 
@@ -98,7 +99,7 @@ public class DateTimeARFinder {
     }
 
     public static String getEventTimePath(String archetypeId) {
-        String rmName = AqlUtil.getKind(archetypeId);
+        String rmName = Archetypes.getEntryType(archetypeId);
         if (OpenEHRConst.OBSERVATION.equals(rmName)) {
             return OpenEHRRMUtil.EVENT_TIME_PATH;
         }else if (OpenEHRConst.ACTION.equals(rmName)) {

@@ -3,12 +3,12 @@
     <parent>
         <groupId>se.cambio</groupId>
         <artifactId>gdl-tools</artifactId>
-        <version>0.95.5-SNAPSHOT</version>
+        <version>0.95.6-SNAPSHOT</version>
     </parent>
 	<groupId>se.cambio.cds</groupId>
 	<artifactId>cds</artifactId>
 	<packaging>pom</packaging>
-	<version>0.95.5-SNAPSHOT</version>
+	<version>0.95.6-SNAPSHOT</version>
 	<name>Clinical Decision Support System</name>
 	<organization>
 		<name>Cambio</name>
@@ -66,7 +66,6 @@
 	<modules>
         <module>cds-common</module>
         <module>cds-engine-drools</module>
-		<module>cds-integration-model</module>
 		<module>cds-model</module>
 		<module>gdl-model</module>
 		<module>gdl-parser</module>

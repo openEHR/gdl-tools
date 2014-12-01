@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.openehr.utils</groupId>
 		<artifactId>openehr-utils</artifactId>
-		<version>0.95.5-SNAPSHOT</version>
+		<version>0.95.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>openehr-utils-core</artifactId>
 	<name>OpenEHR utils core</name>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.openehr.adl2-core</groupId>
             <artifactId>adl-parser</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${adl2-core-version}</version>
         </dependency>
     </dependencies>
 </project>

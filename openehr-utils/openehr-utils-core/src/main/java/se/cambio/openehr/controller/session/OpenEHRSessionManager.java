@@ -16,7 +16,7 @@ public class OpenEHRSessionManager {
     }
 
     public static CMAdministrationFacadeDelegate getAdministrationFacadeDelegate(){
-        if (getDelegate()._afd==null){
+        if (getDelegate()._afd == null){
             try {
                 getDelegate()._afd = CMAdministrationFacadeDelegateFactory.getDelegate();
             } catch (InternalErrorException e) {
@@ -28,7 +28,7 @@ public class OpenEHRSessionManager {
 
 
     public static TerminologyFacadeDelegate getTerminologyFacadeDelegate(){
-        if (getDelegate()._tfd==null){
+        if (getDelegate()._tfd == null){
             try {
                 getDelegate()._tfd = TerminologyFacadeDelegateFactory.getDelegate();
             } catch (InternalErrorException e) {
@@ -39,7 +39,7 @@ public class OpenEHRSessionManager {
     }
 
     private static OpenEHRSessionManager getDelegate(){
-        if (_delegate==null){
+        if (_delegate == null){
             _delegate = new OpenEHRSessionManager();
         }
         return _delegate;
