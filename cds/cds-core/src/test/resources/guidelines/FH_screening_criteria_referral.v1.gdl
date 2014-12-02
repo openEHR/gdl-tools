@@ -1,0 +1,107 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"FH_screening_criteria_referral.v1">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				keywords = <"familial hypercholesterolemia", "referral">
+				purpose = <"To recommend a refferal for patients suspected with FH">
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2014-06-19">
+			["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+			["name"] = <"Konstantinos Kalliamvakos">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_contributors = <"Dr Lennart Nilsson",...>
+		other_details = <
+			["references"] = <"1. Nilsson L.Vem ska man screena för FH? In Famijlär hyperkolesterolemi [Presentation]. p. 6.
+
+2. Guidelines for preventive activities in general practice, 8th edn [Internet]. East Melbourne; 2012 p. 125. Available from: http://www.racgp.org.au/download/Documents/Guidelines/Redbook8/redbook8.pdf
+
+3. Guidelines for preventive activities in general practice, 8th edn - Appendix 1 : Dutch Lipid Clinic Network Criteria for making a diagnosis of Familial Hypercholesteroloemia ( FH ) in adults [Internet]. East Melbourne; 2012 p. 115–6. Available from: http://www.racgp.org.au/your-practice/guidelines/redbook/appendices/appendix-1-dutch-lipid-clinic-network-criteria/">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0024"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.screening_criteria_for_familial_hypercholesteroloemia.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0002"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0005]/items[at0013]">
+					>
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]/items[at0007]">
+					>
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0006]/items[at0018]">
+					>
+					["gt0015"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0006]/items[at0015]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0011"] = (RULE) <
+				when = <"$gt0015==null", "$gt0005==null">
+				then = <"$gt0015=0|local::at0019|Absent|", "$gt0005=0|local::at0019|Absent|">
+				priority = <3>
+			>
+			["gt0012"] = (RULE) <
+				when = <"$gt0015!=1|local::at0020|Present|", "$gt0003==1|local::at0020|Present|", "$gt0002>=1">
+				then = <"$gt0015=1|local::at0020|Present|",...>
+				priority = <2>
+			>
+			["gt0018"] = (RULE) <
+				when = <"$gt0005!=1|local::at0020|Present|", "$gt0015==1|local::at0020|Present|">
+				then = <"$gt0005=1|local::at0020|Present|",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"FH screening criteria referral">
+						description = <"Refferal of suspected FH patients">
+					>
+					["gt0002"] = (TERM) <
+						text = <"Section B criteria count">
+						description = <"*">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Total cholesterol >= 8mmol/L (adults) or >= 6mmol/L (children<18 years)">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Referral">
+						description = <"*">
+					>
+					["gt0011"] = (TERM) <
+						text = <"Set default">
+					>
+					["gt0012"] = (TERM) <
+						text = <"Set A and B are satisfied.">
+					>
+					["gt0015"] = (TERM) <
+						text = <"A. and B. are satisfied">
+						description = <"*">
+					>
+					["gt0018"] = (TERM) <
+						text = <"Set referral">
+					>
+				>
+			>
+		>
+	>
+>

@@ -10,7 +10,7 @@
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openehr-java-libs-version>1.0.10</openehr-java-libs-version>
+        <openehr-java-libs-version>1.0.11-SNAPSHOT</openehr-java-libs-version>
         <template-gen-version>0.95.3</template-gen-version>
         <adl2-core-version>1.0.0</adl2-core-version>
         <spring-framework-version>3.2.9.RELEASE</spring-framework-version>

@@ -7,45 +7,44 @@ import java.util.Map;
 import java.util.Set;
 
 public class Languages {
-    
+
     private static Languages _instance;
     private Map<String, String> _languages;
     private Set<String> _supportedLanguages;
     private Languages(){
+        _supportedLanguages = new HashSet<String>();
+        _supportedLanguages.add("en_EN");
+        _supportedLanguages.add("es_ES");
+        _supportedLanguages.add("sv_SE");
+        _supportedLanguages.add("el_GR");
+        //TODO Add more support! :P
 
-
-	_supportedLanguages = new HashSet<String>();
-	_supportedLanguages.add("en_EN");
-	_supportedLanguages.add("es_ES");
-    _supportedLanguages.add("sv_SE");
-	//TODO Add more support! :P
-	
-	_languages = new HashMap<String, String>();
+        _languages = new HashMap<String, String>();
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             Locale locale = new Locale(language, "EN");
             String code = locale.getLanguage();
             String name = locale.getDisplayLanguage();
- 
+
             if (!"".equals(code) && !"".equals(name)) {
-        	_languages.put(code, name);
+                _languages.put(code, name);
             }
         }
     }
-    
+
     public static Set<String> getSupportedLanguages(){
-	return getDelegate()._supportedLanguages;
+        return getDelegate()._supportedLanguages;
     }
- 
+
     public static String getLanguageName(String code){
-	return getDelegate()._languages.get(code);
+        return getDelegate()._languages.get(code);
     }
-    
+
     public static Languages getDelegate(){
-	if (_instance==null){
-	    _instance = new Languages();
-	}
-	return _instance;
+        if (_instance==null){
+            _instance = new Languages();
+        }
+        return _instance;
     }
 }
 /*
