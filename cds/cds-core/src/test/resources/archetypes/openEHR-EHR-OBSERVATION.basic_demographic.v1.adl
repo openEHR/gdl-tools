@@ -1,0 +1,202 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.basic_demographic.v1
+
+concept
+	[at0000]	-- Basic demographic
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"Test archetype">
+			use = <"Test archetype">
+			misuse = <"Test archetype">
+			copyright = <"">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"*Test archetype(en)">
+			use = <"*Test archetype(en)">
+			misuse = <"*Test archetype(en)">
+			copyright = <"*(en)">
+		>
+	>
+	lifecycle_state = <"NotSet">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"65D4529EF3F6E8FB2BEF90992045A71F">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Basic demographic
+		data matches {
+			HISTORY[at0001] matches {	-- Event Series
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- Any event
+						data matches {
+							ITEM_TREE[at0003] matches {	-- Tree
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Gender
+										value matches {
+											DV_CODED_TEXT matches {
+												defining_code matches {
+													[local::
+													at0005, 	-- Male
+													at0006]	-- Female
+												}
+											}
+										}
+									}
+									ELEMENT[at0008] occurrences matches {0..1} matches {	-- Birthdate
+										value matches {
+											DV_DATE_TIME matches {*}
+										}
+									}
+									ELEMENT[at0009] occurrences matches {0..*} matches {	-- Languages
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0010] occurrences matches {0..1} matches {	-- Place of residence
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0011] occurrences matches {0..1} matches {	-- County
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0012] occurrences matches {0..1} matches {	-- Municipality
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Basic demographic">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Any event">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Gender">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"Male">
+					description = <"Male">
+				>
+				["at0006"] = <
+					text = <"Female">
+					description = <"Female">
+				>
+				["at0008"] = <
+					text = <"Birthdate">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"Languages">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"Place of residence">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"County">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"Municipality">
+					description = <"*">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Grundläggande demografi">
+					description = <"okänd">
+				>
+				["at0001"] = <
+					text = <"Händelser">
+					description = <"@ intern@">
+				>
+				["at0002"] = <
+					text = <"Alla händelser">
+					description = <"**(en)">
+				>
+				["at0003"] = <
+					text = <"Träd">
+					description = <"@ intern@">
+				>
+				["at0004"] = <
+					text = <"Kön">
+					description = <"**(en)">
+				>
+				["at0005"] = <
+					text = <"Man">
+					description = <"Man">
+				>
+				["at0006"] = <
+					text = <"Kvinna">
+					description = <"Kvinna">
+				>
+				["at0008"] = <
+					text = <"Födelsedatum">
+					description = <"**(en)">
+				>
+				["at0009"] = <
+					text = <"Språk">
+					description = <"**(en)">
+				>
+				["at0010"] = <
+					text = <"*Place of residence(en)">
+					description = <"**(en)">
+				>
+				["at0011"] = <
+					text = <"*County(en)">
+					description = <"**(en)">
+				>
+				["at0012"] = <
+					text = <"*Municipality(en)">
+					description = <"**(en)">
+				>
+			>
+		>
+	>

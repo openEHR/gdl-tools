@@ -3,6 +3,7 @@ package se.cambio.cds.controller.guide;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
@@ -73,28 +74,24 @@ public class GuideUtil {
                     ExpressionItem l = be.getLeft();
                     ExpressionItem r = be.getRight();
                     if (l instanceof Variable){
+                        String path = ((Variable) l).getPath();
                         if (r instanceof ConstantExpression){
                             String idElement =
-                                    archetypeBinding.getArchetypeId()+((Variable)l).getPath();
-                            String gtCode = null;
+                                    archetypeBinding.getArchetypeId()+ path;
                             ConstantExpression ce = (ConstantExpression)r;
                             DataValue dv = null;
                             if (!"null".equals(ce.getValue())){
                                 dv = getDataValue(ce);
                             }
-                            if (dv instanceof DvCodedText){
-                                DvCodedText dvCodedText = ((DvCodedText)dv);
-                                //TODO Will only work if the same code is used in predicate and definition
-                                if ("local".equals(dvCodedText.getTerminologyId())){
-                                    gtCode = dvCodedText.getCode();
-                                }
-                            }
+
                             ElementInstance ei = generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv);
                             if (ei instanceof PredicateGeneratedElementInstance){
-                                ((PredicateGeneratedElementInstance)ei).getRuleReferences().add(new RuleReference(guideId, gtCode));
+                                String gtCode = getGTCodeForPredicate(archetypeBinding, path, dv);
+                                if (gtCode != null) {
+                                    ((PredicateGeneratedElementInstance) ei).getRuleReferences().add(new RuleReference(guideId, gtCode));
+                                }
                             }
                         }else if (r instanceof ExpressionItem){
-                            String path = ((Variable)l).getPath();
                             String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
                             path = path.substring(0, path.length()-attribute.length()-7);
                             String idElement =
@@ -118,6 +115,30 @@ public class GuideUtil {
                 }
             }
         }
+    }
+
+    private static String getGTCodeForPredicate(ArchetypeBinding archetypeBinding, String path, DataValue dv) {
+        DvCodedText dvCodedText = null;
+        if (dv instanceof DvCodedText) {
+            dvCodedText = ((DvCodedText)dv);
+        } else if (dv instanceof DvOrdinal){
+            dvCodedText = ((DvOrdinal)dv).getSymbol();
+        }
+        if (dvCodedText != null) {
+            //TODO Will only work if the same code is used in predicate and definition
+            if ("local".equals(dvCodedText.getTerminologyId()) &&
+                    dvCodedText.getCode().startsWith("gt")){
+                return dvCodedText.getCode();
+            }
+        }
+        if (archetypeBinding.getElements() != null) {
+            for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
+                if (elementBinding.getPath().equals(path)) {
+                    return elementBinding.getId();
+                }
+            }
+        }
+        return null;
     }
 
     private static ElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv) {

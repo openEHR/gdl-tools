@@ -1,0 +1,100 @@
+﻿archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.family_history.v1
+
+concept
+	[at0000]	-- Family History
+language
+	original_language = <[ISO_639-1::en]>
+description
+	original_author = <
+		["name"] = <"Sam Heard">
+		["organisation"] = <"Ocean Informatics">
+		["email"] = <"sam.heard@oceaninformatics.com">
+		["date"] = <"2010-12-15">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record information about the problems or diagnoses (as defined in the Problem/Diagnosis archetype) found in genetic relatives.">
+			use = <"Use to record a summary of information about problems or diagnoses found in genetic relatives. This information may be used as the basis for assessment of risk to the individual from potentially inheritable conditions or initiation of preventive health activities.
+
+Additional detail about a genetic relative's specific problem or diagnosis can be captured using the EVALUATION.problem_diagnosis archetype and specifying the 'Subject of Care' as the relative.
+
+Use this archetype as the basis for a Family Pedigree chart of health problems/diagnoses.
+
+It may be necessary to identify each Genetic Relative specifically and not just by the relationship to the patient. For example, while there will be only one maternal grandmother, there may be many female maternal cousins. This will ensure that a pedigree chart is accurate and allow for additional problems/diagnoses to be added, or existing records to be updated, for each identified genetic relative. If the record is private and will not be shared, for reasons of clarity it may be preferable to record the relative's name. If the record is to be shared, the genetic relative should be identified by a unique label or alias.">
+			keywords = <"family", "history", "health", "condition", "problem", "diagnosis", "genetic", "pedigree">
+			misuse = <"Not to be used to record family health or social factors which may impart risk to the individual, but are not heritable or genetically based, for example, parental tobacco use. This information will be recorded using other archetypes.
+
+Not to be used to record information about the risk of developing a condition due to a family history of a condition - use the EVALUATION.risk family of archetypes.">
+			copyright = <"© National E-Health Transition Authority">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+	other_contributors = <"Rita Apelt, Department of Health,NT, Australia", "John Bennett, NEHTA, Australia", "Stephen Chu, NEHTA, Australia", "David Evans, Queensland Health, Australia", "Tim Garden, NTG Department of Health, Australia", "Jacquie Garton-Smith, Royal Perth Hospital and DoHWA, Australia", "Andrew Goodchild, NEHTA, Australia", "Sam Heard, Ocean Informatics, Australia (Editor)", "Mary Kelaher, NEHTA, Australia", "Robert L'egan, NEHTA, Australia", "Heather Leslie, Ocean Informatics, Australia (Editor)", "Hugh Leslie, Ocean Informatics, Australia", "Mike Martyn, The Hobart Anaesthetic Group, Australia", "Ian McNicoll, Ocean Informatics UK, United Kingdom", "Chris Mitchell, RACGP, Australia", "Stewart Morrison, NEHTA, Australia", "Jeremy Oats, NT Health, Australia", "Lynne Parsons, Primary and Community Health Services, Australia", "Jodie Pycroft, Adelaide Northern Division of General Practice Ltd, Australia", "Robyn Richards, NEHTA - Clinical Terminology, Australia", "Elizabeth Stanick, Hobart Anaesthetic Group, Australia", "John Taylor, NEHTA, Australia", "Gordon Tomes, Australian Institute of Health and Welfare, Australia", "Richard Townley-O'Neill, NEHTA, Australia", "Donna Truran, ACCTI-UoW, Australia", "Jo Wright, NT Dept of Health, Australia (Editor)">
+	other_details = <
+		["references"] = <"HL7 Version 3 Standard: Clinical Genomics; Pedigree, Release 1. ANSI/HL7 V3 CGPED, R1-2007. Published 2007 May 07.">
+		["MD5-CAM-1.0.1"] = <"66DE1635ED107279C8F83FC692CE5C72">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Family History
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- Summary
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					allow_archetype CLUSTER[at0028] occurrences matches {0..*} matches {	-- Genetic relative
+						include
+							archetype_id/value matches {/openEHR-EHR-CLUSTER\.genetic_relative(-[a-zA-Z0-9_]+)*\.v1/}
+					}
+				}
+			}
+		}
+		protocol matches {
+			ITEM_TREE[at0025] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0026] occurrences matches {0..1} matches {	-- Last updated
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Family History">
+					description = <"Summary information about the problems and/or diagnoses found in genetic relatives.">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Summary">
+					description = <"Textual description about the problems, diagnoses, and genetic markers found in genetic relatives. This field may be used to capture unstructured family history information recorded in clinical records.">
+				>
+				["at0025"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0026"] = <
+					text = <"Last updated">
+					description = <"Date that thisFamily History Summary was last updated.">
+				>
+				["at0028"] = <
+					text = <"Genetic relative">
+					description = <"Family history details of an individiual genetic relative.">
+				>
+			>
+		>
+	>
