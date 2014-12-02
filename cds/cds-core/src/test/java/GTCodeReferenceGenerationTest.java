@@ -26,6 +26,7 @@ public class GTCodeReferenceGenerationTest {
         UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
         UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
         UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("templates").toURI().getPath());
+        UserConfigurationManager.setParameter(UserConfigurationManager.GUIDES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("guidelines").toURI().getPath());
     }
 
     @Test
