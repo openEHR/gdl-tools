@@ -1,14 +1,23 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.dialog.DialogTerminologyIdSelection;
+import se.cambio.cds.gdl.model.Binding;
+import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.view.swing.panel.interfaces.ClosableTabbebPane;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -71,18 +80,45 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
         return newBindingPanel;
     }
 
-    public void addTermTab() {
-        String terminologyId = _controller.createNewTerminologyBinding();
-        if (terminologyId!=null){
+    public void addTermTab() throws InternalErrorException {
+        String terminologyId = createNewTerminologyBinding();
+        if (terminologyId != null){
             refresh();
-            Iterator<BindingPanel> i = bindingPanels.iterator();
-            while(i.hasNext()){
-                BindingPanel bp = i.next();
-                if (terminologyId.equals(bp.getOwnerTabName())){
-                    getTabbedPane().setSelectedComponent(bp);
-                }
+            selectTerminologyId(terminologyId);
+        }
+    }
+
+    public String createNewTerminologyBinding() throws InternalErrorException {
+        List<String> terminologyIds = getTerminologyIdsAvailable();
+        DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(EditorManager.getActiveEditorWindow(), terminologyIds);
+        dialog.setVisible(true);
+        String terminologyId = dialog.getSelectedObject();
+        Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
+        if (terminologyId != null && !terminologyIdsUsed.contains(terminologyId)) {
+            _controller.getTermBindings().put(
+                    terminologyId,
+                    new TermBinding(terminologyId,
+                            new HashMap<String, Binding>()));
+        }
+        return terminologyId;
+    }
+
+    private void selectTerminologyId(String terminologyId) {
+        Iterator<BindingPanel> i = bindingPanels.iterator();
+        while(i.hasNext()){
+            BindingPanel bp = i.next();
+            if (terminologyId.equals(bp.getOwnerTabName())){
+                getTabbedPane().setSelectedComponent(bp);
             }
         }
+    }
+
+    private Collection<String> getTerminologyIdsUsed(){
+        Collection<String> terminologyIdsUsed = new ArrayList<String>();
+        for (BindingPanel bindingPanel: bindingPanels) {
+            terminologyIdsUsed.add(bindingPanel.getOwnerTabName());
+        }
+        return terminologyIdsUsed;
     }
 
     public void deleteTab(int index) {
@@ -109,6 +145,18 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
 
     private void removeReference(String removeRef){
         _controller.getTermBindings().remove(removeRef);
+    }
+
+    public List<String> getTerminologyIdsAvailable() throws InternalErrorException {
+        List<String> terminologyIdsAvailable = new ArrayList<String>();
+        Collection<String> supportedTerminologiesIds = OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies();
+        Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
+        for(String terminologyId: supportedTerminologiesIds){
+          if (!terminologyIdsUsed.contains(terminologyId)){
+              terminologyIdsAvailable.add(terminologyId);
+          }
+        }
+        return terminologyIdsAvailable;
     }
 }
 /*

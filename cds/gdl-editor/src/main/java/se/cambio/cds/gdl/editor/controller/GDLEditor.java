@@ -16,7 +16,6 @@ import se.cambio.cds.gdl.editor.controller.sw.SaveGuideOnFileRSW;
 import se.cambio.cds.gdl.editor.util.DefinitionDependencyChecker;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
-import se.cambio.cds.gdl.editor.view.dialog.DialogTerminologyIdSelection;
 import se.cambio.cds.gdl.editor.view.panels.GDLEditorMainPanel;
 import se.cambio.cds.gdl.editor.view.panels.GDLPanel;
 import se.cambio.cds.gdl.model.*;
@@ -25,7 +24,15 @@ import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
-import se.cambio.cds.gdl.model.readable.rule.lines.*;
+import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.AssignmentExpressionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.ExpressionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExistsDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExpressionDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateFunctionDefinitionRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.GuideImporter;
@@ -48,7 +55,11 @@ import se.cambio.openehr.view.util.ImportUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.List;
 
@@ -266,19 +277,6 @@ public class GDLEditor implements EditorController<Guide>{
             getRenderableRules().put(_ruleAtEdit.getGTCode(), _ruleAtEdit);
         }
         return _ruleAtEdit;
-    }
-
-    public String createNewTerminologyBinding() {
-        DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(EditorManager.getActiveEditorWindow());
-        dialog.setVisible(true);
-        String terminologyId = dialog.getSelectedObject();
-        if (terminologyId != null) {
-            getTermBindings().put(
-                    terminologyId,
-                    new TermBinding(terminologyId,
-                            new HashMap<String, Binding>()));
-        }
-        return terminologyId;
     }
 
     public void ruleEdit(ReadableRule rule) {
@@ -968,7 +966,7 @@ public class GDLEditor implements EditorController<Guide>{
         }
     }
 
-    public void gdlEditingChecked(Guide guide, boolean checkOk, Runnable pendingRunnable){
+    public void gdlEditingChecked(Guide guide, boolean checkOk, String msg, Runnable pendingRunnable){
         if (checkOk && guide!=null){
             String auxOriginalGuide = _originalGuide;
             setEntity(guide);
@@ -977,12 +975,16 @@ public class GDLEditor implements EditorController<Guide>{
                 pendingRunnable.run();
             }
         }else{
-            int answer = JOptionPane.showConfirmDialog(
-                    EditorManager.getActiveEditorWindow(),
-                    GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChanges"),
-                    GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChangesTitle"),
-                    JOptionPane.YES_NO_OPTION);
-            if (answer==JOptionPane.YES_OPTION){
+            DialogLongMessageNotice dialog =
+                    new DialogLongMessageNotice(
+                            EditorManager.getActiveEditorWindow(),
+                            GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChangesTitle"),
+                            GDLEditorLanguageManager.getMessage("IgnoreGDLSourceChanges"),
+                            msg,
+                            MessageType.WARNING_WITH_CANCEL
+                    );
+            dialog.setVisible(true);
+            if (dialog.getAnswer()){
                 if (pendingRunnable!=null){
                     pendingRunnable.run();
                 }
@@ -1218,19 +1220,6 @@ public class GDLEditor implements EditorController<Guide>{
         }
     }
 
-    /*
-    private String createNextArchetypeBindingCode(){
-        String abCode = null;
-        int i = 1;
-        Collection<String> archeytpeBindingCodesUsed = getArchetypeBindingCodesUsed();
-        boolean abCodeFound = false;
-        while(!abCodeFound){
-            abCode = GuideDefinition.ARCHETYPE_BINDING_PREFIX+ StringUtils.leftPad("" + (i++), 4, "0");
-            abCodeFound = !archeytpeBindingCodesUsed.contains(abCode);
-        }
-        return abCode;
-    }
-    */
     private Collection<String> getArchetypeBindingCodesUsed(){
         ArrayList<String> archetypeBindingCodesUsed = new ArrayList<String>();
         for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()){

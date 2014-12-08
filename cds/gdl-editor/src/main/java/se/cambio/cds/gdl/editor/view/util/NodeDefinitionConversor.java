@@ -17,20 +17,30 @@ import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
-import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.openehr.util.*;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRDataValuesUI;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NodeDefinitionConversor {
 
@@ -392,24 +402,20 @@ public class NodeDefinitionConversor {
         return root;
     }
 
-    public static SelectableNode<Object> getNodeTerminologyIds(){
+    public static SelectableNode<Object> getNodeTerminologyIds(List<String> terminologyIds){
         SelectableNode<Object> root =
                 new SelectableNodeBuilder<Object>()
                         .setName(GDLEditorLanguageManager.getMessage("Terminologies"))
-                        .setIcon(GDLEditorImageUtil.ONTOLOGY_ICON)
+                        .setIcon(OpenEHRImageUtil.TERMSET)
                         .createSelectableNode();
-        try{
-            for (String terminologyId : OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies()) {
-                SelectableNode<Object> nodeAux =
-                        new SelectableNodeBuilder<Object>()
-                                .setName(terminologyId)
-                                .setIcon(GDLEditorImageUtil.ONTOLOGY_ICON)
-                                .setObject(terminologyId)
-                                .createSelectableNode();
-                root.add(nodeAux);
-            }
-        }catch (InternalErrorException e){
-            ExceptionHandler.handle(e);
+        for (String terminologyId : terminologyIds) {
+            SelectableNode<Object> nodeAux =
+                    new SelectableNodeBuilder<Object>()
+                            .setName(terminologyId)
+                            .setIcon(OpenEHRImageUtil.TERMSET)
+                            .setObject(terminologyId)
+                            .createSelectableNode();
+            root.add(nodeAux);
         }
         return root;
     }
