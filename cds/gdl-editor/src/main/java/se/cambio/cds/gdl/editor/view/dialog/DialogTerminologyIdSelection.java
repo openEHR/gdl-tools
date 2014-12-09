@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class DialogTerminologyIdSelection extends DialogSelection{
     /**
@@ -18,11 +19,11 @@ public class DialogTerminologyIdSelection extends DialogSelection{
     private JButton addTerminologyButton;
     private String _terminologyIdCreated = null;
 
-    public DialogTerminologyIdSelection(Window owner) {
+    public DialogTerminologyIdSelection(Window owner, List<String> terminologyIds) {
         super(
                 owner,
                 GDLEditorLanguageManager.getMessage("AddTerminologyDesc"),
-                NodeDefinitionConversor.getNodeTerminologyIds(),
+                NodeDefinitionConversor.getNodeTerminologyIds(terminologyIds),
                 true,
                 new Dimension(500,500));
         getSelectionPanel().getFilterPanel().add(getAddTerminologyButton());

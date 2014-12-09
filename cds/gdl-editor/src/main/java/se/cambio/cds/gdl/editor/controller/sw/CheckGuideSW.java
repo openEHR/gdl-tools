@@ -4,21 +4,19 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
+import se.cambio.cds.util.GuideImporter;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 
-// CheckGuideSW will perform parsing and compiling of the guideline to make sure that is valid.
-// If so, it will notify to the controller that it can continue. We pass a pending action to it (pendingRunnable),
-// if the check is ok, the pending action will be processed. This is useful specially when changing from tabs
-// in the editor that deal with source code that can contain errors (GDL view) or trying to generate the CDS form
-// from the current guideline.
 public class CheckGuideSW extends CDSSwingWorker {
     private String _errorMsg = null;
     private GDLEditor _controller = null;
     private Guide _guide = null;
     private String _guideStr = null;
-    private boolean _checkOk = true;
+    private boolean _checkOk = false;
     private Runnable _pendingRunnable = null;
 
     public CheckGuideSW(GDLEditor controller, String guideStr, Runnable pendingRunnable){
@@ -29,10 +27,17 @@ public class CheckGuideSW extends CDSSwingWorker {
 
     @Override
     protected void executeCDSSW() throws InternalErrorException{
-        ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes());
-        _guide = _controller.parseGuide(bais);
-        if (_guide!=null){
-            GuideExportPluginDirectory.compile(_guide);
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes());
+            _guide = _controller.parseGuide(bais);
+            if (_guide!=null){
+                GuideImporter.importGuide(_guide, _controller.getCurrentLanguageCode(), ArchetypeManager.getInstance());
+                GuideExportPluginDirectory.compile(_guide);
+                _checkOk = true;
+            }
+        }catch(Exception e){
+            ExceptionHandler.handle(e);
+            _errorMsg = e.getMessage();
         }
     }
 
@@ -41,7 +46,7 @@ public class CheckGuideSW extends CDSSwingWorker {
     }
 
     protected void done() {
-        _controller.gdlEditingChecked(_guide, _checkOk, _pendingRunnable);
+        _controller.gdlEditingChecked(_guide, _checkOk, _errorMsg, _pendingRunnable);
     }
 }
 /*

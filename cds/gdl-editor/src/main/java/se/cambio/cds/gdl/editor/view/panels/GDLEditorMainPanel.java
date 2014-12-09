@@ -7,6 +7,8 @@ import se.cambio.cds.gdl.editor.view.menubar.LoadGuideAction;
 import se.cambio.cds.gdl.editor.view.menubar.SaveGuideAction;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +97,11 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
                 public void actionPerformed(ActionEvent e) {
                     BindingsPanel bindingPanel = getGuidePanel().getBindingPanel();
                     getGuidePanel().getGuideEditorTabPane().setSelectedComponent(bindingPanel);
-                    bindingPanel.addTermTab();
+                    try {
+                        bindingPanel.addTermTab();
+                    } catch (InternalErrorException e1) {
+                        ExceptionHandler.handle(e1);
+                    }
                 }
             });
         }

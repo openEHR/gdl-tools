@@ -95,7 +95,7 @@ public class DescriptionPanel extends JPanel{
         if (authorDetailsPanel==null){
             authorDetailsPanel = new JPanel(new SpringLayout());
             authorDetailsPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("AuthorDetails")));
-            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Name")+":"));
+            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorName")+":"));
             JTextField nameTF = new JTextField();
             connect(_descriptionContext, "/originalAuthor/name", nameTF);
             authorDetailsPanel.add(nameTF);
