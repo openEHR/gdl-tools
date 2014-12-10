@@ -14,7 +14,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0007"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.estimated_glomerular_filtration_rate.v1">
 				domain = <"EHR">
 				elements = <
@@ -22,12 +22,11 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 					["gt0005"] = (ELEMENT_BINDING) <
-						path = <"/event/time">
+						path = <"/data/events/time">
 					>
 				>
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0008"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.estimated_glomerular_filtration_rate.v1">
 				domain = <"EHR">
 				elements = <
@@ -35,7 +34,7 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 					["gt0006"] = (ELEMENT_BINDING) <
-						path = <"/event/time">
+						path = <"/data/events/time">
 					>
 				>
 			>

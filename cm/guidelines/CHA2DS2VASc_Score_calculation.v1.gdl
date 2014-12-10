@@ -42,7 +42,7 @@
 					>
 				>
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0105|Atrial fibrillation|",...>
-				template_id = <"diagnosis_chadvas_icd10">
+				template_id = <"diagnosis_icd10">
 			>
 			
 			[2] = (ARCHETYPE_BINDING) <
@@ -54,7 +54,7 @@
 					>
 				>
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0101|Hypertension|",...>
-				template_id = <"diagnosis_chadvas_icd10">
+				template_id = <"diagnosis_icd10">
 			>
 			
 			[3] = (ARCHETYPE_BINDING) <
@@ -66,7 +66,7 @@
 					>
 				>
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0102|Diabetes|",...>
-				template_id = <"diagnosis_chadvas_icd10">
+				template_id = <"diagnosis_icd10">
 			>
 			
 			[4] = (ARCHETYPE_BINDING) <
@@ -78,7 +78,7 @@
 					>
 				>
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0100|Congestive heart failure|",...>
-				template_id = <"diagnosis_chadvas_icd10">
+				template_id = <"diagnosis_icd10">
 			>
 			
 			[5] = (ARCHETYPE_BINDING) <
@@ -90,7 +90,7 @@
 					>
 				>
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0103|Previous stroke or TIA|",...>
-				template_id = <"diagnosis_chadvas_icd10">
+				template_id = <"diagnosis_icd10">
 			>
 			
 			[6] = (ARCHETYPE_BINDING) <
@@ -102,7 +102,7 @@
 					>
 				>
 				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0104|Vascular disease|",...>
-				template_id = <"diagnosis_chadvas_icd10">
+				template_id = <"diagnosis_icd10">
 			>
 			
 			[7] = (ARCHETYPE_BINDING) <
