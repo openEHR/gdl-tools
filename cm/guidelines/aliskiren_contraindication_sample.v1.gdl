@@ -14,7 +14,7 @@
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0013"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
 				domain = <"EHR">
 				elements = <
@@ -22,11 +22,10 @@
 						path = <"/data[at0001]/items[at0002.1]">
 					>
 				>
-				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0003|diagnosis_diabetes|",...>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0003|Diabetes diagnosis code|",...>
 				template_id = <"diagnosis_icd10">
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0014"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-INSTRUCTION.medication.v1">
 				domain = <"EHR">
 				elements = <
@@ -34,11 +33,10 @@
 						path = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]">
 					>
 				>
-				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0006|Medication Aliskiren (Tekturna)|",...>
+				predicates = <"/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012] is_a local::gt0006|Aliskerin (Tekturna)  code|",...>
 				template_id = <"medication_atc_indicator">
 			>
-			
-			[3] = (ARCHETYPE_BINDING) <
+			["gt0015"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-EVALUATION.alert.v1">
 				domain = <"CDS">
 				elements = <

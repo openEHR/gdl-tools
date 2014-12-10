@@ -1,6 +1,6 @@
 (GUIDE) <
 	gdl_version = <"0.1">
-	id = <"BMI.Calculation.v.1-Revised function">
+	id = <"BMI.Calculation.v.1">
 	concept = <"gt0000">
 	language = (LANGUAGE) <
 		original_language = <[ISO_639-1::en]>
@@ -8,13 +8,14 @@
 	description = (RESOURCE_DESCRIPTION) <
 		details = <
 			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				keywords = <"obesity", "body mass index", "BMI">
 			>
 		>
 		lifecycle_state = <"Author draft">
 	>
 	definition = (GUIDE_DEFINITION) <
 		archetype_bindings = <
-			[1] = (ARCHETYPE_BINDING) <
+			["gt0005"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
 				domain = <"EHR">
 				elements = <
@@ -22,10 +23,9 @@
 						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
 					>
 				>
-				predicates = <"max(/event/time)",...>
+				predicates = <"max(/data/events/time)",...>
 			>
-			
-			[2] = (ARCHETYPE_BINDING) <
+			["gt0006"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.height.v1">
 				domain = <"EHR">
 				elements = <
@@ -33,10 +33,9 @@
 						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
 					>
 				>
-				predicates = <"max(/event/time)",...>
+				predicates = <"max(/data/events/time)",...>
 			>
-			
-			[3] = (ARCHETYPE_BINDING) <
+			["gt0007"] = (ARCHETYPE_BINDING) <
 				archetype_id = <"openEHR-EHR-OBSERVATION.body_mass_index.v1">
 				domain = <"CDS">
 				elements = <

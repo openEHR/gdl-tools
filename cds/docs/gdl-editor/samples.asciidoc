@@ -1,0 +1,10 @@
+= GDL Editor Samples
+Rong Chen <rong.chen@cambio.se>, Iago Corbal <iago.corbal@cambio.se>
+v0.93, 2014-12-09
+
+FUNDED BY: Cambio Healthcare Systems (http://www.cambio.se)
+
+== Body mass index calculation
+
+
+
