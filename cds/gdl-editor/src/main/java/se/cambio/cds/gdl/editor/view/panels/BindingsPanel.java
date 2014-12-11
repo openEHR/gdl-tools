@@ -152,9 +152,9 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
         Collection<String> supportedTerminologiesIds = OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies();
         Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
         for(String terminologyId: supportedTerminologiesIds){
-          if (!terminologyIdsUsed.contains(terminologyId)){
-              terminologyIdsAvailable.add(terminologyId);
-          }
+            if (!terminologyIdsUsed.contains(terminologyId)){
+                terminologyIdsAvailable.add(terminologyId);
+            }
         }
         return terminologyIdsAvailable;
     }

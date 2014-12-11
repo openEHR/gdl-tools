@@ -1,19 +1,15 @@
 
 package se.cambio.cds.gdl.editor.view.renderers;
 
-import java.awt.Component;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.table.TableCellRenderer;
-
 import org.apache.log4j.Logger;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.util.Map;
 
 public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -37,7 +33,8 @@ public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
 	    setText(GDLEditorLanguageManager.getMessage("Select"));
 	}else{
 	    String gtCode = (String)value;
-	    Term term = EditorManager.getActiveGDLEditor().getCurrentTermDefinition().getTerms().get(gtCode);
+		Map<String, Term> currentTermsMap = EditorManager.getActiveEditorController().getCurrentTermsMap();
+		Term term = currentTermsMap.get(gtCode);
 	    if (term!=null && term.getText()!=null){
 		setText(gtCode+" - "+term.getText());
 		setToolTipText(term.getDescription());

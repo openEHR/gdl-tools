@@ -122,7 +122,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
 
     private void addTermDefinitionInModel() {
         Vector<String> v = new Vector<String>();
-        v.add(_controller.createNextGTCode());
+        v.add(_controller.createNextLocalCode());
         v.add("");
         v.add("");
         getTerminologyTable().getTerminologyTableModel().addRow(v);
