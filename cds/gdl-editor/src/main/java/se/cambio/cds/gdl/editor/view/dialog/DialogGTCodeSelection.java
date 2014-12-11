@@ -2,8 +2,10 @@ package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.model.Term;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 
@@ -11,14 +13,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 public class DialogGTCodeSelection extends DialogSelection{
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-    private JButton addGTCodeButton;
-    private String _gtCodeCreated = null;
+    private JButton addLocalTermButton;
+    private String _codeCreated = null;
 
     public DialogGTCodeSelection(Window owner, GDLEditor controller) {
         super(
@@ -27,37 +30,38 @@ public class DialogGTCodeSelection extends DialogSelection{
                 NodeDefinitionConversor.getNodeGTCodes(controller.getCurrentTermsMap(), controller.getGTCodesUsedInDefinitions()),
                 true,
                 new Dimension(500,500));
-        getSelectionPanel().getFilterPanel().add(getAddGTCodeButton());
+        getSelectionPanel().getFilterPanel().add(getAddLocalTermButton());
     }
 
-    private JButton getAddGTCodeButton(){
-        if (addGTCodeButton==null){
-            addGTCodeButton = new JButton(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
-            addGTCodeButton.setIcon(OpenEHRImageUtil.ADD_ICON);
-            addGTCodeButton.addActionListener(new AddGTTermActionListener(this));
+    private JButton getAddLocalTermButton(){
+        if (addLocalTermButton ==null){
+            addLocalTermButton = new JButton(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
+            addLocalTermButton.setIcon(OpenEHRImageUtil.ADD_ICON);
+            addLocalTermButton.addActionListener(new AddTermActionListener(this));
         }
-        return addGTCodeButton;
+        return addLocalTermButton;
     }
 
     public String getSelectedObject(){
-        if (_gtCodeCreated!=null){
-            return _gtCodeCreated;
+        if (_codeCreated !=null){
+            return _codeCreated;
         }else{
             return (String)super.getSelectedObject();
         }
     }
 
-    private class AddGTTermActionListener implements ActionListener{
+    private class AddTermActionListener implements ActionListener{
         private JDialog _dialog = null;
-        public AddGTTermActionListener(JDialog dialog){
+        public AddTermActionListener(JDialog dialog){
             _dialog = dialog;
         }
         public void actionPerformed(ActionEvent e) {
             DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddLocalTerm"), null);
             if (dialog.getAnswer()){
-                GDLEditor controller = EditorManager.getActiveGDLEditor();
-                _gtCodeCreated = controller.createNextGTCode();
-                controller.getCurrentTermDefinition().getTerms().get(_gtCodeCreated).setText(dialog.getValue());
+                EditorController controller = EditorManager.getActiveEditorController();
+                _codeCreated = controller.createNextLocalCode();
+                Map<String, Term> currentTermsMap = controller.getCurrentTermsMap();
+                currentTermsMap.get(_codeCreated).setText(dialog.getValue());
                 accept();
             }
         }

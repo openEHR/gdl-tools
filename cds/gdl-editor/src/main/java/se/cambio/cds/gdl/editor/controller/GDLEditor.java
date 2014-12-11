@@ -223,7 +223,7 @@ public class GDLEditor implements EditorController<Guide>{
     }
 
     private void generateDialogForm(byte[] compiledGuide, Guide guide) throws InternalErrorException {
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        EditorController controller = EditorManager.getActiveEditorController();
         String gdlGuide = controller.getSerializedEntity();
         if (compiledGuide!=null && gdlGuide!=null){
             GuideDTO guideDTO =
@@ -272,7 +272,7 @@ public class GDLEditor implements EditorController<Guide>{
                 GDLEditorLanguageManager.getMessage("RuleName"), "");
         if (dialog.getAnswer()) {
             _ruleAtEdit = new ReadableRule(getCurrentTermDefinition(),
-                    createNextGTCode(), _readableGuide);
+                    createNextLocalCode(), _readableGuide);
             setGTName(_ruleAtEdit.getGTCode(), dialog.getValue());
             getRenderableRules().put(_ruleAtEdit.getGTCode(), _ruleAtEdit);
         }
@@ -527,7 +527,7 @@ public class GDLEditor implements EditorController<Guide>{
         _currentGuideLanguageCode = languageCode;
     }
 
-    public String createNextGTCode() {
+    public String createNextLocalCode() {
         return createNextGTCode(true);
     }
 
@@ -580,7 +580,7 @@ public class GDLEditor implements EditorController<Guide>{
 
     public String getConceptGTCode() {
         if (_conceptGTCode == null) {
-            _conceptGTCode = createNextGTCode();
+            _conceptGTCode = createNextLocalCode();
         }
         return _conceptGTCode;
     }
@@ -1157,7 +1157,7 @@ public class GDLEditor implements EditorController<Guide>{
     }
 
     public void saveCompiledGuideAsObject(byte[] compiledGuide, Guide guide) {
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        EditorController controller = EditorManager.getActiveEditorController();
         String idGuide = controller.getEntityId();
         if (idGuide == null) {
             idGuide = GDLEditorLanguageManager.getMessage("Guide");
@@ -1234,7 +1234,7 @@ public class GDLEditor implements EditorController<Guide>{
     public ArchetypeElementInstantiationRuleLine addArchetypeElement(
             ArchetypeInstantiationRuleLine airl) {
         ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(airl);
-        aeirl.getGTCodeRuleLineElement().setValue(createNextGTCode());
+        aeirl.getGTCodeRuleLineElement().setValue(createNextLocalCode());
         editRuleElement(aeirl.getArchetypeElementRuleLineDefinitionElement());
         if (aeirl.getArchetypeElementRuleLineDefinitionElement().getValue() != null) {
             return aeirl;

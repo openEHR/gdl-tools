@@ -17,8 +17,9 @@ public interface EditorController<E> {
     public String getTitle();
     public JPanel getEditorPanel();
     public void runIfOKToExit(Runnable runnable);
-    public String createNextGTCode();
+    public String createNextLocalCode();
     public Map<String, Term> getCurrentTermsMap();
+    public void changeLanguage(String language);
     public Collection<String> getUsedCodes();
     public ResourceDescription getResourceDescription();
     public Term getConceptTerm();

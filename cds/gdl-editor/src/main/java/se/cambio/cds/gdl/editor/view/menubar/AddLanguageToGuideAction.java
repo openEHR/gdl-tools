@@ -6,13 +6,11 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
-
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class AddLanguageToGuideAction extends AbstractAction {
 
@@ -39,7 +37,7 @@ public class AddLanguageToGuideAction extends AbstractAction {
 	    if (lang!=null){
 		if (lang.length()==2 && Character.isLetter(lang.charAt(0)) && Character.isLetter(lang.charAt(1))){
 		    invalidCode = false;
-		    EditorManager.getActiveGDLEditor().changeLanguage(lang);
+		    EditorManager.getActiveEditorController().changeLanguage(lang);
 		}else{
 		    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("InvalidLanguageCode", lang));
 		}
