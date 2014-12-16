@@ -23,7 +23,7 @@ The GDL editor is divided in eight tabs:
 * GDL: the output of the editor (in GDL format).
 * HTML: the output of the editor (in HTML format).
 
-image::img/user-manual/description.jpg["Figure 1 – GDL description", align="center"]
+image::img/user-manual/description.jpg[title="GDL description", align="center"]
 
 === Menubar
 
@@ -55,7 +55,7 @@ To create a new definition from the ‘Definitions’ tab (Figure 2), just drag 
 
 NOTE: Commenting definitions, conditions, actions and rules is useful for debugging the guideline, but keep in mind that commented content is not saved.
 
-image::img/user-manual/definitions.jpg["Figure 2 – GDL definitions", align="center"]
+image::img/user-manual/definitions.jpg[title="GDL definitions", align="center"]
 
 
 GDL currently supports four types of definitions:
@@ -64,16 +64,16 @@ GDL currently supports four types of definitions:
 ** Domain: there are three possible values (EHR / CDS / ANY) (Figure 3). See the GDL specification for more information about each one of them.
 ** Archetype/Template: a list with the registered archetypes and templates will be displayed (2).
 
-image::img/user-manual/selecting-archetype-reference.jpg["Figure 3 – Choose archetype dialog", align="center"]
+image::img/user-manual/selecting-archetype-reference.jpg[title="Choose archetype dialog", align="center"]
 
 * Element instantiation: creates a reference to an element inside the archetype or template. It has to be placed inside an archetype instantiation.
 
-image::img/user-manual/selecting-element-instance.jpg["Figure 4 – Choose element instance dialog", align="center"]
+image::img/user-manual/selecting-element-instance.jpg[title="Choose element instance dialog", align="center"]
 
 * Predicate (DataValue): defines a constraint for the archetype instance. It has to be placed inside an archetype instantiation.
 * Predicate (Function): adds constrains to elements defined by using aggregate functions
 
-image::img/user-manual/predicate.jpg["Figure 5 – Predicate functions", align="center"]
+image::img/user-manual/predicate.jpg[title="Predicate functions", align="center"]
 
 NOTE: Definitions, conditions and actions can be added by dragging them into the main panel or simply by double clicking on them.
 
@@ -83,14 +83,14 @@ In this tab we will be able to manage all the rules in the guideline. Each rule 
 
 The managing of rules is very similar to the definitions. To add a new rule use the ‘Add rule button’ situated on the editor’s toolbar. To edit a rule’s name use the pencil icon.
 
-image::img/user-manual/rules.jpg["Figure 6 – Rule list", align="center"]
+image::img/user-manual/rules.jpg[title="Rule list", align="center"]
 
 [[rule_editing]]
 === Rule editing
 
 When a rule is opened, the rule editor will be displayed. The upper part shows the conditions needed for the rule to execute, the bottom part contains the actions that will take place once the rule is activated (see Figure 8). Most of the actions and conditions will refer to an element instance which can be previously defined on the DEFINITIONS section or directly created from the rule editor. In the second case, when selecting an element instance form a condition or action, a dialog for selecting/defining element instances will be displayed. This dialog will allow us to select an already defined element instance (Figure 7), an element instance from an already defined archetype instance (2) or add a new archetype instance (3).
 
-image::img/user-manual/selecting-element-instance-from-rule.jpg["Figure 7 – Select element instance", align="center"]
+image::img/user-manual/selecting-element-instance-from-rule.jpg[title="Select element instance", align="center"]
 
 
 Editing conditions and actions is very similar to the definitions. The current version of the GDL editor supports six types of conditions:
@@ -109,7 +109,7 @@ Currently there are four types of actions supported:
 * Set (Element): copies the value of one element instance to another.
 * Set (Attribute): sets the value of an attribute using a constant or expression (see <<expression_editor, Expression editor>>).
 
-image::img/user-manual/editing-rule.jpg["Figure 8 - Rule editor", align="center"]
+image::img/user-manual/editing-rule.jpg[title="Rule editor", align="center"]
 
 It’s important to note that we will only be able to carry out actions on the element instances that correspond to an archetype instance in the CDS domain. This means that the rule engine is not able to make changes directly on the EHR elements.
 
@@ -122,7 +122,7 @@ Attributes of element archetypes can be compared to expressions containing other
 
 NOTE: The expression viewer is used as an indicator for expression correctness. If empty, it means the text inserted cannot be parsed. 
 
-image::img/user-manual/editing-expressions.jpg["Figure 9 - Expression editor", align="center"]
+image::img/user-manual/editing-expressions.jpg[title="Expression editor", align="center"]
 
 === Preconditions
 
