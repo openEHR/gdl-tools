@@ -25,7 +25,7 @@ The GDL editor is divided in eight tabs:
 
 image::img/user-manual/description.jpg[title="GDL description", align="center"]
 
-=== Menubar
+=== Menu bar
 
 There are three groups of options in the menu bar:
 
@@ -81,7 +81,7 @@ NOTE: Definitions, conditions and actions can be added by dragging them into the
 
 In this tab we will be able to manage all the rules in the guideline. Each rule contains a set of conditions and actions (see <<rule_editing, Rule editing>>). To enter a rule, just click on its name.
 
-The managing of rules is very similar to the definitions. To add a new rule use the ‘Add rule button’ situated on the editor’s toolbar. To edit a rule’s name use the pencil icon.
+The managing of rules is very similar to the definitions. To add a new rule use the ‘Add rule' button situated on the editor’s toolbar. To edit the rule’s name use the pencil icon.
 
 image::img/user-manual/rules.jpg[title="Rule list", align="center"]
 
@@ -128,23 +128,23 @@ image::img/user-manual/editing-expressions.jpg[title="Expression editor", align=
 
 Preconditions are managed the same way conditions on the RULE EDITING. This section defines which facts must be matched before the guideline can execute.
 
-image::img/user-manual/preconditions.jpg["Figure 10 - Editing preconditions", align="center"]
+image::img/user-manual/preconditions.jpg[title="Editing preconditions", align="center"]
 
 === Terminology
 
 The terminology editor allows us to edit the different terms found on the GDL. GT codes are created automatically when we add element instances or create new rules, but they will have to be created manually when creating bindings.
 
-image::img/user-manual/terminology.jpg["Figure 11 - Terminology editing", align="center"]
+image::img/user-manual/terminology.jpg[title="Terminology editing", align="center"]
 
 To change the language of the terminology used we use the menu option Language. If we want to add a new language to the terminology, we can use the option Add language…
 
-image::img/user-manual/changing-language.jpg["Figure 12 - Changing the language of the terminology", align="center"]
+image::img/user-manual/changing-language.jpg[title="Changing the language of the terminology", align="center"]
 
 === Binding
 
 Terminology binding works the same way the rest of the <<definitions>>. Clicking on the button ‘Add terminology’ we will be able to create a new tab with the selected terminology.
 
-image::img/user-manual/selecting-binding.jpg["Figure 13 - Add terminology binding dialog", align="center"]
+image::img/user-manual/selecting-binding.jpg[title="Add terminology binding dialog", align="center"]
 
 When the guideline is executed, any code contained here and referenced with an is_a operator will be translated to its bound terminologies for resolution. Each row in the binding table contains three:
 
@@ -152,30 +152,30 @@ When the guideline is executed, any code contained here and referenced with an i
 * Terminology codes: the codes of the terminology we are binding, separated by comma. Can be inserted manually or using the terminology viewer by double clicking on the magnifier icon.
 * URI: an uniform resource identifier that points to a post-coordination expression (under development).
 
-image::img/user-manual/editing-binding.jpg["Figure 14 - Binding of terminologies", align="center"]
+image::img/user-manual/editing-binding.jpg[title="Binding of terminologies", align="center"]
 
-image::img/user-manual/selecting-terminology-code.jpg["Figure 15 - External terminology selection", align="center"]
+image::img/user-manual/selecting-terminology-code.jpg[title="External terminology selection", align="center"]
 
 === GDL Source
 
 The GDL source tab shows the edited guideline in GDL format. When displayed, all the previous sections will be converted into formal language. This is the same format used when saving the guideline to a .gdl file. The GDL viewer also allows editing the GDL code.
 
-image::img/user-manual/source-code.jpg["Figure 16 - GDL source view", align="center"]
+image::img/user-manual/source-code.jpg[title="GDL source view", align="center"]
 
 If the editor finds any problems generating the GDL language, it will show us a dialog with a message, asking whether to ignore the problem or not. Most of these problems are due to empty values inside conditions and actions. To avoid these types of errors, make sure all the elements are properly filled before loading the GDL viewer.
 
-image::img/user-manual/save-changes-dialog.jpg["Figure 17 - Error serializing GDL guideline", align="center"]
+image::img/user-manual/save-changes-dialog.jpg[title="Error serializing GDL guideline", align="center"]
 
 === HTML view
 
 This tab allows visualization of the GDL guideline in HTML format. You can use the tool File>Export>Export to HTML to save the content of the GDL in this format.
 
-image::img/user-manual/html-view.jpg["Figure 18 - HTML view", align="center"]
+image::img/user-manual/html-view.jpg[title="HTML view", align="center"]
 
 
 === Form generator
 
 GDL editor contains a utility that allows guideline testing. The form generator will create a set of input fields based on the EHR/ANY content defined on the guideline. This data will be used to execute the rules in the guideline and present a result with the calculated values.
 
-image::img/user-manual/form-generator.jpg["Figure 19 - Form generator", align="center"]
+image::img/user-manual/form-generator.jpg[title="Form generator", align="center"]
 
