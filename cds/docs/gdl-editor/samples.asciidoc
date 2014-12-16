@@ -6,5 +6,166 @@ FUNDED BY: Cambio Healthcare Systems (http://www.cambio.se)
 
 == Body mass index calculation
 
+This example will describe how to create a simple guideline to calculate the body mass index using the formula: 
+
+image::img/samples/01_bmi-formula.jpg["Figure 1 - BMI ecuation", align="center"]
+
+NOTE: The description of the guide should include all the necessary information to make sure it is used in the correct context.
+
+To add a new rule, we click on the Add rule button. We include the name of the rule and hit Accept.
+
+image::img/samples/02_creating_new_rule.jpg[title="Creating a new rule", align="center"]
+
+After this step is performed, we will begin the rule editing. We should make sure that the elements needed have the correct units. We want to add two conditions: weight is measured in kilograms and height in centimeters. Double clicking twice on the Compare (Attribute) condition, we will add two empty conditions to the rule.
+
+image::img/samples/03_adding_conditions.jpg[title="Adding conditions to specify units", align="center"]
+
+Now we can specify the units for both elements we are going to obtain from the EHR (weight and height). Clicking on the Element attribute link, we can select the attribute we are going to use. Since we don’t have yet any archetypes defined on the guide, we will have to click on the Add archetype button to add an archetype reference (in this case Body Weight archetype, see Figure 4). Double click on the archetype or just select it and click on the Accept button. Once the archetype reference is added, we can select an element from it. Archetype references are stored in the definition section of the guideline and can be reused to select several elements from them (see Figure 5).
+
+image::img/samples/04_select_element_instance.jpg[title="Select element instance", align="center"]
+
+image::img/samples/05_adding_body_weight.jpg[title="Adding body weigh archetype reference", align="center"]
+
+image::img/samples/06_selecting_element_instance.jpg[title="Selecting an element from the archetype", align="center"]
+
+After selecting the element, we will be presented with a new dialog for selecting the attribute of the element (see Figure 6). We choose the units attribute and click Accept.
+
+image::img/samples/07_selecting_attribute.jpg[title="Select attribute", align="center"]
+
+Now we can select the operator and the units (kg) we want to specify.
+
+image::img/samples/08_defining_units.jpg[title="Specifying kg units for body weight", align="center"]
+
+We can do the same procedure for the archetype Height/Length, using the cm units.  Next we will need to specify that we are interested at calculating the BMI from only the most recent measurements of height and weight. To do so, we need go the definition tab (Figure 8). Double click on the Predicate (Function) and drag it inside the body_weight archetype instantiation. Once it is added, click on the element and select Event time. After selecting the element we set it at max so that it will always select the most recent measurement of weight. The same process can be repeated for the Height/Length archetype.
+
+image::img/samples/09_predicate_function_for_weight.jpg[title="Predicate (Function) for Weight", align="center"]
+
+Next we will need to add an action that will update the magnitude attribute of the element Body Mass Index archetype. We double click on the Action Set (Attribute), located at the lower panel. We follow the same steps as seem before for selecting units, but instead select magnitude attribute. By now, the rule should look like Figure 9.
+
+image::img/samples/10_bmi_magnitude_selected.jpg[title="BMI magnitude selected", align="center"]
+
+Last part requires defining the expression for calculating the BMI. We click on the Expression link to open the expression editor and enter the equation '(weight/( (height/100)^2) )'. Click on Accept button to add the expression to the action. 
+
+NOTE: Expressions on current version must follow the pattern ‘(expression operator expression)’
+
+image::img/samples/11_edit_expression_for_bmi.jpg[title="Expression for BMI calculation", align="center"]
+
+We can now repeat the same task to set units and precision of the element calculated.
+
+image::img/samples/12_bmi_actions.jpg[title="BMI calculation actions", align="center"]
+
+Now the guide is ready for testing. We use the Generate form action to see if the rule is behaving properly.
+
+image::img/samples/13_form_generator_for_bmi.jpg[title="Form generator calculating BMI", align="center"]
+
+The final GDL file will look like can be found at the Appendix A.
+
+
+== CHA2DS2-VASC Calculation
+
+CHA2DS2-VASc is a clinical prediction score for estimating risk of stroke in patients with non -rheumatic atrial fibrillation (AF). We will see a small example on how to create a guideline in GDL to perform this calculation automatically.
+
+image::img/samples/14_cha2ds2-vasc_table.jpg[title="CHA2DS2-VASC table", align="center"]
+
+Before starting with the GDL editing, we must create an intermediate archetype that will store the different parts needed for the final calculation, and score summary. We create an archetype containing seven ordinals and one count (score). The full archetype defined can be found on Appendix B.
+Once we have the archetype we can begin with the GDL editing. We create a new guide and fill up the description part. The first time the guide is executed we want to set default values to the content of the score summary archetype, so we create a rule (e.g. Set default), where we initialize all possible diagnosis to “Absent”. To do this we first check if all the elements have no value (using the “Element exists” condition). 
+The elements that need initializing are those referencing a diagnosis, since the age and gender should always be known, so we will only add five conditions checking for the existence of a value in the elements Diabetes, Vascular diseases, Congestive Heart Failure, Previous stroke and Hypertension (inside CHA2DS2-VASc archetype). The action part will consist of five actions setting these same elements to “Absent” value, using the “Set (DataValue)” action.
+In order to avoid confusion later with the local terms we can move to the Definitions section and rename the elements to Hypertension score, Previous stroke score and so on by clicking on the “DataValue” of each element (Figure 14). The resulting rule should look like the one seem on Figure 15.
+
+image::img/samples/15_renaming_hypertension.jpg[title="Renaming Hypertension to Hypertension score", align="center"]
+
+image::img/samples/16_set_default_rule.jpg[title="Set default on CHA2DS2-VASc archetype", align="center"]
+
+Now the first time the guide is executed, we have a clean instance of the archetype with the values diagnosis set to absent. Next step requires setting these diagnosis, if found on the patient’s EHR. 
+We can start with any of the diagnosis; in this case we will use hypertension. However before we continue with this we need to create a new binding to the template of the openEHR-EHR-EVALUATION.problem-diagnosis.v1 that will contain a subset of the ICD10 codes necessary for the diagnosis elements of CHA2DS2-VASc (for this example a template named diagnosis_chadvas_icd10 is provided within the templates folder). 
+Note that we use a template in this example in order to ease the input on the generated forms.
+To do so, we move to the Definitions tab and we create a new “Archetype instantiation” where we select the template (Figure 16 and Figure 17).
+
+image::img/samples/17_selecting_diagnosis_icd10.jpg[title="Selecting the diagnosis_chadvas_icd10 template", align="center"]
+
+image::img/samples/18_binding_diagnosis.jpg[title="Binding of diagnosis_chadvas_icd10 template to openEHR-EHR-EVALUATION.problem-diagnosis.v1 archetype", align="center"]
+
+Once we have finished with the binding to the template we can begin specifying the elements we are going to use (in this case we are going to need the diagnosis element). Next we click and drag the “Element instantiation” inside the openEHR-EHR-EVALUATION.problem-diagnosis.v1 instantiation. Once it is added click on the element link, select Diagnosis and replace the name of Diagnosis with Hypertension diagnosis. This will be used later on the rule for detecting hypertension. The definition should look so far as in Figure 18.
+
+image::img/samples/19_instantiating_diagnosis.jpg[title="Instantiating Diagnosis as Hypertension diagnosis", align="center"]
+
+The next step is to specify that we are only interested on the instances containing hypertension problems.
+To filter all other problems we will use “Predicate (Data Value)”. Click and drag the “Predicate (Data Value)” inside the openEHR-EHR-EVALUATION.problem-diagnosis.v1 instantiation. We click on the element and select Diagnosis again using an “is_a” condition. Next we click on the “DataValue” and a new window will open where we click “Select term”. This will open another window where we will click on the button “Add local term” in order to create a local code of Hypertension (Figure 19) which we will bind to an ICD10 external terminology on the next step.
+
+image::img/samples/20_local_code_hypertension.jpg[title="Local code for Hypertension", align="center"]
+
+So far the definition should look as in Figure 20. The same steps can be repeated for the other diagnosis parts.
+
+image::img/samples/21_definition_of_hypertension.jpg[title="Definition of Hypertension diagnosis", align="center"]
+
+The next step requires binding the diagnosis of Hypertension to an external ICD10 terminology code. To do so, we click on the “Add binding button” and we select ICD10.  In order to select the local code for Hypertension we click on the + button and then on select, where we are able to choose Hypertension. 
+
+image::img/samples/22_selection_local_code_for_hypertension.jpg[title="Selecting the local code of Hypertension for terminology binding", align="center"]
+
+Next we double click on the magnifying glass under Terminology codes and a new window will open where we can select the appropriate external terminologies (for this example we use the following codes: I10, I11, I12, I13, I15).
+
+image::img/samples/23_selecting_external_ICD10_terminology_codes.jpg[title="Selecting the external ICD10 terminologies for Hypertension", align="center"]
+
+The diagnosis now is properly binded and filtered for Hypertension. The same steps can be repeated for the other parts (Figure 23).
+
+image::img/samples/24_terminology_binding.jpg[title="Terminology binding of the diagnosis elements for CHA2DS2-VASc", align="center"]
+
+Now we are ready to create the rules for detecting these diagnoses on the patient’s EHR. We create a new rule called Set hypertension diagnosis; in here we will check if the patient has the diagnosis Hypertension, if so, we will set the value of the element Hypertension score in the CHA2DS2-VASc archetype instance to “Present”.
+
+To find diagnosis we create a condition using the “Element exists” where we select the Hypertension diagnosis element and we set it to “exists”. Lastly we create an action using the “Set (DataValue)” where we select the element of Hypertension score and we set it to “Present”.
+
+image::img/samples/25_hypertension_rule.jpg[title="Set Hypertension rule", align="center"]
+
+Once we have finished creating the same rules for the other diagnosis parts of CHA2DS2-VASc we can start creating the remaining rules for the gender and the age.
+Before we begin editing the rules we switch to the definitions tab where we create a new “Archetype instantiation” of the openEHR-EHR-OBSERVATION.basic_demographic.v1 archetype. Next we click on “Element instantiation” and we drag it inside the archetype. Finally, we click on the element link and we select Gender. We can repeat this step for Birthdate as well.
+Since we are interested at the latest update of Gender and Birthdate, similar as before we create a condition using “Predicate (Function)” where we select the element Event time and we set it to max.
+
+image::img/samples/26_predicate_function_for_gender_and_age.jpg[title="Predicate (Function) for Gender and Age", align="center"]
+
+Now we are ready to start editing the rules for Gender and Age.
+In order to set the gender of the patient we create a new rule called Set gender female. In here we will check if the patient’s gender is female and if so to set the value of the element gender in the CHA2DS2-VASc archetype to “Female”. To do so, we create a condition using “Compare (DataValue)” where we select as element Gender and as “DataValue” Female.
+Next we create a new action using the “Set (DataValue)” where we select the element Gender from the CHA2DS2-VASc archetype and Female as “DataValue”. The resulting rule should look as in Figure 26.
+We can repeat the same process for the male gender.
+
+image::img/samples/27_gender_rule.jpg[title="Set Gender rule", align="center"]
+
+The next step is to calculate the age of the patient.
+To do this we create a new rule called Set age above or equals to 75. In there we create a new condition using the “Compare (Attribute)”. We click on the element attribute link and we select “Birthdate.value”.
+Next we set the operator to “<=” and we click on the Expression link. This will open the Expression editor where we can enter the equation (Current Date/Time -75, a) which will calculate the age of the patient (Figure 27).
+After setting the expression, we can create a new action using “Set (DataValue)”. We select the element Age from CHA2DS2-VASc and we set it to “Above or equals to 75”. By now the rule should look like Figure 28.
+The same process can be repeated for the ages below 65 and between 65 and 74 (Figure 29 and Figure 30).
+
+image::img/samples/28_expression_for_age_calculation.jpg[title="Expression for Age calculation", align="center"]
+
+image::img/samples/29_condition_for_age_calculation.jpg[title="Set age above or equals to 75 rule", align="center"]
+
+image::img/samples/30_condition_for_age_calculation.jpg[title="Set age between 65-74 rule", align="center"]
+
+image::img/samples/31_condition_for_age_calculation.jpg[title="Set age below 65", align="center"]
+
+The last part requires defining the expression for calculating the CHA2DS2-VASc score.
+
+We create a new rule called Calculate total score. In there we create a new action using the “Set (Attribute)” and we click on the “Element attribute” link. This will open a new window where we click on “Add element” button. On the new window we select the CHA2DS2-VASc archetype. From there we select the “Total score.magnitude”.
+
+image::img/samples/32_selecting_archetype.jpg[title="Selecting the openEHR-EHR-OBSERVATION.chadsvas_score.v1 archetype", align="center"]
+
+image::img/samples/33_total_score_element.jpg[title="Total score element", align="center"]
+
+Finally we open the expression editor where we add all the elements that are needed for CHA2DS2-VASc (Figure 33).
+
+image::img/samples/34_expression_for_calculation_of_score.jpg[title="Expression for calculation of CHA2DS2-VASc score", align="center"]
+
+Once we have finished setting up all the rules we can now set a precondition so the guideline runs only for patients affected by non-rheumatic atrial fibrillation.
+To do so we move to the definition section and we repeat the same steps as with the Hypertension diagnosis (for the Atrial fibrillation binding we use the ICD10 code I48). The definition should look so far as in Figure 34.
+
+image::img/samples/35_definition_of_af_diagnosis.jpg[title="Definition of Atrial fibrilation diagnosis", align="center"]
+
+Finally we move to the Preconditions section and we create a new condition using “Element exists” which will assess the diagnosis of Atrial fibrillation.
+
+image::img/samples/36_af_precondition.jpg[title="Atrial fibrilation precondition", align="center"]
+
+The guide is now ready for testing. We can click on Generate form button and see if the rules behave properly.i
+
+image::img/samples/37_execution_of_cha2ds2-vasc_score_calculation.jpg[title="Execution of CHA2DS2VASc score calculation", align="center"]
 
 
