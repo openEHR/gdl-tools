@@ -63,122 +63,77 @@ A final version of the GDL file can be found at <<Appendix_A>>.
 
 == CHA2DS2-VASC Calculation
 
-CHA2DS2-VASc is a clinical prediction score for estimating risk of stroke in patients with non -rheumatic atrial fibrillation (AF). Following, is an example on how to create a guideline in GDL in order to perform this calculation automatically.
+CHA2DS2-VASc is a clinical prediction score for estimating risk of stroke in patients with non -rheumatic atrial fibrillation (AF).
+
+Following, is an example on how to create a guideline in GDL in order to perform this calculation automatically.
 
 image::img/samples/14_cha2ds2-vasc_table.jpg[title="CHA2DS2-VASC table", align="center"]
 
-Before starting with the GDL editing, we must create an intermediate archetype that will store the different parts needed for the final calculation, and score summary. We create an archetype containing seven ordinals and one count (score). The full archetype defined can be found on <<Appendix_B>>.
-Once we have the archetype we can begin with the GDL editing. We create a new guide and fill up the description part. The first time the guide is executed we want to set default values to the content of the score summary archetype, so we create a rule (e.g. Set default), where we initialize all possible diagnosis to “Absent”. To do this we first check if all the elements have no value (using the “Element exists” condition). 
-The elements that need initializing are those referencing a diagnosis, since the age and gender should always be known, so we will only add five conditions checking for the existence of a value in the elements Diabetes, Vascular diseases, Congestive Heart Failure, Previous stroke and Hypertension (inside CHA2DS2-VASc archetype). The action part will consist of five actions setting these same elements to “Absent” value, using the “Set (DataValue)” action.
-In order to avoid confusion later with the local terms we can move to the Definitions section and rename the elements to Hypertension score, Previous stroke score and so on by clicking on the “DataValue” of each element (Figure 14). The resulting rule should look like the one seem on Figure 15.
 
-image::img/samples/15_renaming_hypertension.jpg[title="Renaming Hypertension to Hypertension score", align="center"]
+=== Overview
 
-image::img/samples/16_set_default_rule.jpg[title="Set default on CHA2DS2-VASc archetype", align="center"]
+Before we can begin building the GDL file for CHA2DS2-VASc, we need to create an archetype that will store the results of the different parameters that are needed for the calculation of the total score, as well as the result of the total score (Figure 14). The complete archetype defined can be found on Appendix B.
 
-Now the first time the guide is executed, we have a clean instance of the archetype with the values diagnosis set to absent. Next step requires setting these diagnosis, if found on the patient’s EHR. 
-We can start with any of the diagnosis; in this case we will use hypertension. However before we continue with this we need to create a new binding to the template of the openEHR-EHR-EVALUATION.problem-diagnosis.v1 that will contain a subset of the ICD10 codes necessary for the diagnosis elements of CHA2DS2-VASc (for this example a template named diagnosis_chadvas_icd10 is provided within the templates folder). 
-Note that we use a template in this example in order to ease the input on the generated forms.
-To do so, we move to the Definitions tab and we create a new “Archetype instantiation” where we select the template (Figure 16 and Figure 17).
+image::img/samples/15_overview_of_the _cha2ds2vasc_score_calculation_guideline.jpg[title="Overview of the CHA2DS2VASc Score calculation guideline", align="center"]
 
-image::img/samples/17_selecting_diagnosis_icd10.jpg[title="Selecting the diagnosis_chadvas_icd10 template", align="center"]
+Once the archetype is ready we can start building the GDL file. The whole process is separated in 5 steps:
+1.	Creating definitions
+2.	Creating rules
+3.	Creating preconditions
+4.	Creating bindings
+5.	Executing
 
-image::img/samples/18_binding_diagnosis.jpg[title="Binding of diagnosis_chadvas_icd10 template to openEHR-EHR-EVALUATION.problem-diagnosis.v1 archetype", align="center"]
 
-Once we have finished with the binding to the template we can begin specifying the elements we are going to use (in this case we are going to need the diagnosis element). Next we click and drag the “Element instantiation” inside the openEHR-EHR-EVALUATION.problem-diagnosis.v1 instantiation. Once it is added click on the element link, select Diagnosis and replace the name of Diagnosis with Hypertension diagnosis. This will be used later on the rule for detecting hypertension. The definition should look so far as in Figure 18.
+=== Creating definitions
 
-image::img/samples/19_instantiating_diagnosis.jpg[title="Instantiating Diagnosis as Hypertension diagnosis", align="center"]
+As shown in Figure 14 we need to instantiate two archetypes and one template (for each diagnosis).
 
-The next step is to specify that we are only interested on the instances containing hypertension problems.
-To filter all other problems we will use “Predicate (Data Value)”. Click and drag the “Predicate (Data Value)” inside the openEHR-EHR-EVALUATION.problem-diagnosis.v1 instantiation. We click on the element and select Diagnosis again using an “is_a” condition. Next we click on the “DataValue” and a new window will open where we click “Select term”. This will open another window where we will click on the button “Add local term” in order to create a local code of Hypertension (Figure 19) which we will bind to an ICD10 external terminology on the next step.
+We start first with the archetype that will store the results of the calculation.
 
-image::img/samples/20_local_code_hypertension.jpg[title="Local code for Hypertension", align="center"]
+To do so we double click (or click and drag) on “Archetype instantiation” and we select the openEHR-EHR-OBSERVATION.chadsvas_score.v1 archetype. Before clicking on “Accept” make sure to set the Domain to “CDS” since these will be data generated by GDL.
 
-So far the definition should look as in Figure 20. The same steps can be repeated for the other diagnosis parts.
+The next step is to instantiate the elements that will be used from this archetype. In this archetype we need all the available elements (except the “Event time”) so we click and drag “Element instantiation” and we place it inside the definition of openEHR-EHR-OBSERVATION.chadsvas_score.v1.
 
-image::img/samples/21_definition_of_hypertension.jpg[title="Definition of Hypertension diagnosis", align="center"]
+Next we click on “Element” and we select the first element in the list. We repeat the same process until the definition looks like in Figure 15.
 
-The next step requires binding the diagnosis of Hypertension to an external ICD10 terminology code. To do so, we click on the “Add binding" button and we select ICD10.  In order to select the local code for Hypertension we click on the + button and then on select, where we are able to choose Hypertension. 
+image::img/samples/16_instantiation_of_openEHR-EHR-OBSERVATION.chadsvas_score.v1.jpg[title="Instantiation of openEHR-EHR-OBSERVATION.chadsvas_score.v1", align="center"]
 
-image::img/samples/22_selection_local_code_for_hypertension.jpg[title="Selecting the local code of Hypertension for terminology binding", align="center"]
+The next archetype to instantiate is the openEHR-EHR-OBSERVATION.basic_demographic.v1. Once again we double click on “Archetype instantiation” and we select the archetype. Before clicking on “Accept” make sure that the Domain is set to “EHR” since these are data that in a normal setting would derive from the EHR record of a patient.
 
-Next we double click on the magnifying glass under Terminology codes and a new window will open where we can select the appropriate external terminologies (for this example we use the following codes: I10, I11, I12, I13, I15).
+Next, repeat the same steps as before in order to instantiate the elements for “Birthdate” and “Gender”.
 
-image::img/samples/23_selecting_external_ICD10_terminology_codes.jpg[title="Selecting the external ICD10 terminologies for Hypertension", align="center"]
+NOTE: Since we are probably going to be interested on the latest information regarding the gender and birthdate, we need to make sure that the guideline is including only the most recent data in the calculation. To do so we click and drag “Predicate (Function)” and we place it inside the definition of openEHR-EHR-OBSERVATION.basic_demographic.v1. Next, we click on “Element”, we select “Event time” and we set the operator to “max”.
 
-The diagnosis now is properly binded and filtered for Hypertension. The same steps can be repeated for the other parts (Figure 23).
+The definition should look like in Figure 16.
 
-image::img/samples/24_terminology_binding.jpg[title="Terminology binding of the diagnosis elements for CHA2DS2-VASc", align="center"]
+image::img/samples/17_instantiation_of_openEHR-EHR-OBSERVATION.basic_demographic.v1.jpg[title="Instantiation of openEHR-EHR-OBSERVATION.basic_demographic.v1", align="center"]
 
-Now we are ready to create the rules for detecting these diagnoses on the patient’s EHR. We create a new rule called Set hypertension diagnosis; in here we will check if the patient has the diagnosis Hypertension, if so, we will set the value of the element Hypertension score in the CHA2DS2-VASc archetype instance to “Present”.
+Once the definition for the “basic_demographic” archetype is ready, we can start creating the definitions for the “diagnosis_icd10” template. Just as with the archetypes we double click on “Archetype instantiation” only this time we click on the “Templates” tab in the Archetypes/Templates window and we select the “diagnosis_icd10” template (Figure 17).
 
-To find diagnosis we create a condition using the “Element exists” where we select the Hypertension diagnosis element and we set it to “exists”. Lastly we create an action using the “Set (DataValue)” where we select the element of Hypertension score and we set it to “Present”.
+image::img/samples/18_instantiating_diagnosis_icd10_template.jpg[title="Instantiating diagnosis_icd10 template", align="center"]
 
-image::img/samples/25_hypertension_rule.jpg[title="Set Hypertension rule", align="center"]
+Once we have finished instantiating the template we can instantiate the element of diagnosis from the template just as in the previous examples (Figure 18).
 
-Once we have finished creating the same rules for the other diagnosis parts of CHA2DS2-VASc we can start creating the remaining rules for the gender and the age.
-Before we begin editing the rules we switch to the definitions tab where we create a new “Archetype instantiation” of the openEHR-EHR-OBSERVATION.basic_demographic.v1 archetype. Next we click on “Element instantiation” and we drag it inside the archetype. Finally, we click on the element link and we select Gender. We can repeat this step for Birthdate as well.
-Since we are interested at the latest update of Gender and Birthdate, similar as before we create a condition using “Predicate (Function)” where we select the element Event time and we set it to max.
+image::img/samples/19_diagnosis_instantiation.jpg[title="Diagnosis instantiation", align="center"]
 
-image::img/samples/26_predicate_function_for_gender_and_age.jpg[title="Predicate (Function) for Gender and Age", align="center"]
+NOTE: Because we are going to instantiate the template for each relevant diagnosis it is better that we rename the element of Diagnosis according to each diagnosis. To do so we click on “Diagnosis” (Figure 19) and we rename the element to Congestive heart failure diagnosis (we add the word diagnosis to the name in order to differentiate from the “Congestive heart failure” element of the “chadsvas_score” archetype) which is the first item on the CHA2DS2-VASc scale.
 
-Now we are ready to start editing the rules for Gender and Age.
-In order to set the gender of the patient we create a new rule called Set gender female. In here we will check if the patient’s gender is female and if so to set the value of the element gender in the CHA2DS2-VASc archetype to “Female”. To do so, we create a condition using “Compare (DataValue)” where we select as element Gender and as “DataValue” Female.
-Next we create a new action using the “Set (DataValue)” where we select the element Gender from the CHA2DS2-VASc archetype and Female as “DataValue”. The resulting rule should look as in Figure 26.
-We can repeat the same process for the male gender.
+image::img/samples/20_renaming_diagnosis_to_congestive_heart_failure_diagnosis.jpg[title="Renaming Diagnosis to Congestive heart failure diagnosis", align="center"]
 
-image::img/samples/27_gender_rule.jpg[title="Set Gender rule", align="center"]
+The following step is to specify that we are only interested on the instances that contain only congestive heart failure problems.
 
-The next step is to calculate the age of the patient.
-To do this we create a new rule called Set age above or equals to 75. In there we create a new condition using the “Compare (Attribute)”. We click on the element attribute link and we select “Birthdate.value”.
-Next we set the operator to “< =” and we click on the Expression link. This will open the Expression editor where we can enter the equation (Current Date/Time -75, a) which will calculate the age of the patient (Figure 27).
-After setting the expression, we can create a new action using “Set (DataValue)”. We select the element Age from CHA2DS2-VASc and we set it to “Above or equals to 75”. By now the rule should look like Figure 28.
-The same process can be repeated for the ages below 65 and between 65 and 74 (Figure 29 and Figure 30).
+To filter all other problems we click and drag “Predicate (Data value)” inside the template definition. We click on the element, we select Diagnosis and we set the operator to “is_a”.
 
-image::img/samples/28_expression_for_age_calculation.jpg[title="Expression for Age calculation", align="center"]
+Lastly, we click on “DataValue” and on the next window we click on “Select term”. This will open a list with all the available local terms that we have created so far, and in there we select the “Congestive heart failure diagnosis” term (Figure 20).
 
-image::img/samples/29_condition_for_age_calculation.jpg[title="Set age above or equals to 75 rule", align="center"]
+image::img/samples/21_filtering_of diagnosis_using_predicate.jpg[title="Filtering of diagnosis using predicate", align="center"]
 
-image::img/samples/30_condition_for_age_calculation.jpg[title="Set age between 65-74 rule", align="center"]
+By now the definitions should look as in Figure 21.
 
-image::img/samples/31_condition_for_age_calculation.jpg[title="Set age below 65", align="center"]
+image::img/samples/22_defined_archetypes_and_templates.jpg[title="Defined archetypes and templates", align="center"]
 
-The last part requires defining the expression for calculating the CHA2DS2-VASc score.
+Repeat the same process for the rest of the diagnosis including atrial fibrillation until the definitions section looks like Figure 22.
 
-We create a new rule called Calculate total score. In there we create a new action using the “Set (Attribute)” and we click on the “Element attribute” link. This will open a new window where we click on “Add element” button. On the new window we select the CHA2DS2-VASc archetype. From there we select the “Total score.magnitude”.
+image::img/samples/23_complete_definitions_list.jpg[title="Complete definitions list", align="center"]
 
-image::img/samples/32_selecting_archetype.jpg[title="Selecting the openEHR-EHR-OBSERVATION.chadsvas_score.v1 archetype", align="center"]
-
-image::img/samples/33_total_score_element.jpg[title="Total score element", align="center"]
-
-Finally we open the expression editor where we add all the elements that are needed for CHA2DS2-VASc (Figure 33).
-
-image::img/samples/34_expression_for_calculation_of_score.jpg[title="Expression for calculation of CHA2DS2-VASc score", align="center"]
-
-Once we have finished setting up all the rules we can now set a precondition so the guideline runs only for patients affected by non-rheumatic atrial fibrillation.
-To do so we move to the definition section and we repeat the same steps as with the Hypertension diagnosis (for the Atrial fibrillation binding we use the ICD10 code I48). The definition should look so far as in Figure 34.
-
-image::img/samples/35_definition_of_af_diagnosis.jpg[title="Definition of Atrial fibrilation diagnosis", align="center"]
-
-Finally we move to the Preconditions section and we create a new condition using “Element exists” which will assess the diagnosis of Atrial fibrillation.
-
-image::img/samples/36_af_precondition.jpg[title="Atrial fibrilation precondition", align="center"]
-
-The guide is now ready for testing. We can click on Run button and see if the rules behave properly.
-
-image::img/samples/37_execution_of_cha2ds2-vasc_score_calculation.jpg[title="Execution of CHA2DS2VASc score calculation", align="center"]
-
-[[Appendix_A]]
-== Appendix A: BMI guideline
-
-----
-include::../../../cm/guidelines/BMI.Calculation.v1.gdl[]
-----
-
-[[Appendix_B]]
-== Appendix B: CHA2DS2-VASc guideline
-
-----
-include::../../../cm/guidelines/CHA2DS2VASc_Score_calculation.v1.gdl[]
-----
-
+Once we have finished creating the rest of the definitions we can start creating the rules for calculating each parameter as well as the total score.
