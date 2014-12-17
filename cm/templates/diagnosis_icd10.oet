@@ -591,6 +591,7 @@
         <includedValues>ICD10::G43::Migraine</includedValues>
         <includedValues>ICD10::G44::Other headache syndromes</includedValues>
         <includedValues>ICD10::G45::Transient cerebral ischaemic attacks and related syndromes</includedValues>
+		<includedValues>ICD10::G459::Transient cerebral ischaemic attack, unspecified</includedValues>
         <includedValues>ICD10::G46::Vascular syndromes of brain in cerebrovascular diseases</includedValues>
         <includedValues>ICD10::G47::Sleep disorders</includedValues>
         <includedValues>ICD10::G50::Disorders of trigeminal nerve</includedValues>
@@ -715,7 +716,15 @@
         <includedValues>ICD10::I22::Subsequent myocardial infarction</includedValues>
         <includedValues>ICD10::I23::Certain current complications following acute myocardial infarction</includedValues>
         <includedValues>ICD10::I24::Other acute ischaemic heart diseases</includedValues>
+		<includedValues>ICD10::I249::Acute ischaemic heart disease, unspecified</includedValues>
         <includedValues>ICD10::I25::Chronic ischaemic heart disease</includedValues>
+		<includedValues>ICD10::I250::Atherosclerotic cardiovascular disease, so described</includedValues>
+		<includedValues>ICD10::I251::Atherosclerotic heart disease</includedValues>
+		<includedValues>ICD10::I252::Old myocardial infarction</includedValues>
+		<includedValues>ICD10::I255::Ischaemic cardiomyopathy</includedValues>
+		<includedValues>ICD10::I256::Silent myocardial ischaemia</includedValues>
+		<includedValues>ICD10::I258::Other forms of chronic ischaemic heart disease</includedValues>
+		<includedValues>ICD10::I259::Chronic ischaemic heart disease, unspecified</includedValues>
         <includedValues>ICD10::I26::Pulmonary embolism</includedValues>
         <includedValues>ICD10::I27::Other pulmonary heart diseases</includedValues>
         <includedValues>ICD10::I28::Other diseases of pulmonary vessels</includedValues>
@@ -752,10 +761,12 @@
         <includedValues>ICD10::I67::Other cerebrovascular diseases</includedValues>
         <includedValues>ICD10::I68::Cerebrovascular disorders in diseases classified elsewhere</includedValues>
         <includedValues>ICD10::I69::Sequelae of cerebrovascular disease</includedValues>
+		<includedValues>ICD10::I693::Sequelae of cerebral infarction</includedValues>
         <includedValues>ICD10::I70::Atherosclerosis</includedValues>
         <includedValues>ICD10::I71::Aortic aneurysm and dissection</includedValues>
         <includedValues>ICD10::I72::Other aneurysm and dissection</includedValues>
         <includedValues>ICD10::I73::Other peripheral vascular diseases</includedValues>
+		<includedValues>ICD10::I739::Peripheral vascular disease, unspecified</includedValues>
         <includedValues>ICD10::I74::Arterial embolism and thrombosis</includedValues>
         <includedValues>ICD10::I77::Other disorders of arteries and arterioles</includedValues>
         <includedValues>ICD10::I78::Diseases of capillaries</includedValues>
@@ -2110,6 +2121,7 @@
         <includedValues>ICD10::Z93::Artificial opening status</includedValues>
         <includedValues>ICD10::Z94::Transplanted organ and tissue status</includedValues>
         <includedValues>ICD10::Z95::Presence of cardiac and vascular implants and grafts</includedValues>
+		<includedValues>ICD10::Z951::Presence of aortocoronary bypass graft</includedValues>
         <includedValues>ICD10::Z96::Presence of other functional implants</includedValues>
         <includedValues>ICD10::Z97::Presence of other devices</includedValues>
         <includedValues>ICD10::Z98::Other postsurgical states</includedValues>
