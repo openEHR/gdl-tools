@@ -96,7 +96,7 @@ The next step is to instantiate the elements that will be used from this archety
 
 Next we click on “Element” and we select the first element in the list. We repeat the same process until the definition looks like in Figure 15.
 
-image::img/samples/16_instantiation_of_openEHR-EHR-OBSERVATION.chadsvas_score.v1.jpg[title="Instantiation of openEHR-EHR-OBSERVATION.chadsvas_score.v1", align="center"]
+image::img/samples/16_instantiation_of_openEHR-EHR-OBSERVATION_chadsvas_score_v1.jpg[title="Instantiation of openEHR-EHR-OBSERVATION.chadsvas_score.v1", align="center"]
 
 The next archetype to instantiate is the openEHR-EHR-OBSERVATION.basic_demographic.v1. Once again we double click on “Archetype instantiation” and we select the archetype. Before clicking on “Accept” make sure that the Domain is set to “EHR” since these are data that in a normal setting would derive from the EHR record of a patient.
 
@@ -106,7 +106,7 @@ NOTE: Since we are probably going to be interested on the latest information reg
 
 The definition should look like in Figure 16.
 
-image::img/samples/17_instantiation_of_openEHR-EHR-OBSERVATION.basic_demographic.v1.jpg[title="Instantiation of openEHR-EHR-OBSERVATION.basic_demographic.v1", align="center"]
+image::img/samples/17_instantiation_of_openEHR-EHR-OBSERVATION_basic_demographic_v1.jpg[title="Instantiation of openEHR-EHR-OBSERVATION.basic_demographic.v1", align="center"]
 
 Once the definition for the “basic_demographic” archetype is ready, we can start creating the definitions for the “diagnosis_icd10” template. Just as with the archetypes we double click on “Archetype instantiation” only this time we click on the “Templates” tab in the Archetypes/Templates window and we select the “diagnosis_icd10” template (Figure 17).
 
@@ -177,7 +177,7 @@ image::img/samples/27_set_gender_female_rule.jpg[title="Set gender female rule",
 
 The next set of rules is for calculating the age of the patient. We create a new rule with the name “Set age above or equals to 75”. In there we create a new condition using the “Compare (Attribute)” and we click on the element attribute link where we select the value of the “Birthdate” element from the available list (Figure 27). 
 
-image::img/samples/28_selecting_birthdate.value.jpg[title="Selecting Birthdate.value", align="center"]
+image::img/samples/28_selecting_birthdate_value.jpg[title="Selecting Birthdate.value", align="center"]
 
 Next we set the operator to “<=” and we click on “Expression”. This will open the Expression editor where we can enter the equation “Current Date/Time -75, a” which will calculate the age of the patient (Figure 28).
 
@@ -240,4 +240,19 @@ The guideline is now ready for execution. We click on the “Run” button and w
 
 image::img/samples/41_execution_of_cha2ds2-vasc_score_calculation.jpg[title="Execution of CHA2DS2VASc score calculation", align="center"]
 
-A version of the final GDL file can be found at Appendix B.
+A version of the final GDL file can be found at <<Appendix_B>>.
+
+[[Appendix_A]]
+== Appendix A: BMI guideline
+
+----
+include::../../../cm/guidelines/BMI.Calculation.v1.gdl[]
+----
+
+[[Appendix_B]]
+== Appendix B: CHA2DS2-VASc guideline
+
+----
+include::../../../cm/guidelines/CHA2DS2VASc_Score_calculation.v1.gdl[]
+----
+
