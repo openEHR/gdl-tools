@@ -137,3 +137,107 @@ Repeat the same process for the rest of the diagnosis including atrial fibrillat
 image::img/samples/23_complete_definitions_list.jpg[title="Complete definitions list", align="center"]
 
 Once we have finished creating the rest of the definitions we can start creating the rules for calculating each parameter as well as the total score.
+
+
+=== Creating rules
+
+The first rule that we want to create is a default rule that will set default values to the content of the “chadsvas_score” archetype at the first step of the execution.
+
+We create a rule with a name e.g. “Set default”, where we set all possible diagnosis to “Absent”.  To do so, we create five conditions using “Element exists” for each relevant diagnosis from the “chadsvas_score” archetype in order to check for the non-existence of a value in these elements.
+
+In the “Actions” we create five actions using “Set (DataValue)” that will set each diagnosis to “Absent”.
+
+NOTE: Since the age and gender should always be known there is no need to create a default value for those.
+
+The resulting rule should look like the one shown on Figure 23.
+
+image::img/samples/24_set_default_rule.jpg[title="Set default rule", align="center"]
+
+Now the first time the guide is executed, we have a clean instance of the archetype with the values diagnosis set to absent. Next step requires setting these diagnosis, if found on the patient’s EHR. We can start with any of the diagnosis; in this case we will use congestive heart failure.
+
+We create a new rule with the name “Set CHF present”; in here we will check if the patient has the diagnosis of congestive heart failure, if so, we will set the value of the element Congestive heart failure in the “chadsvas_score” archetype instance to “Present”.
+
+We create a condition using “Element exists” where we select the element “Congestive heart failure diagnosis” from the list (Figure 24) and we set it to “exists”.
+
+Lastly we create an action using the “Set (DataValue)” where we select the element of Congestive heart failure from the list and we set it to “Present”. The resulting rule should look as in Figure 25.
+
+image::img/samples/25_adding_congestive_heart_failure_diagnosis_element_to_the_conditions.jpg[title="Adding congestive heart failure diagnosis element to the conditions", align="center"]
+
+image::img/samples/26_set_chf_present_rule.jpg[title="Set CHF present rule", align="center"]
+
+Once we have finished creating the same rules for the other diagnosis parts of CHA2DS2-VASc we can start creating the remaining rules for the gender and the age.
+
+In order to set the gender of the patient we create a new rule with the name “Set gender female”. In here we will check if the patient’s gender is female and if so to set the value of the element gender in the “chadsvas_score” archetype to “Female”.
+
+We create a condition using “Compare (DataValue)” where we select the EHR element “Gender” from the list and as “DataValue” Female.
+
+Finally we create an action using the “Set (DataValue)” where we select the element “Gender” from the list and Female as “DataValue”. The resulting rule should look as in Figure 26. We can repeat the same process for the male gender.
+
+image::img/samples/27_set_gender_female_rule.jpg[title="Set gender female rule", align="center"]
+
+The next set of rules is for calculating the age of the patient. We create a new rule with the name “Set age above or equals to 75”. In there we create a new condition using the “Compare (Attribute)” and we click on the element attribute link where we select the value of the “Birthdate” element from the available list (Figure 27). 
+
+image::img/samples/28_selecting_birthdate.value.jpg[title="Selecting Birthdate.value", align="center"]
+
+Next we set the operator to “<=” and we click on “Expression”. This will open the Expression editor where we can enter the equation “Current Date/Time -75, a” which will calculate the age of the patient (Figure 28).
+
+image::img/samples/29_expression_for_age_calculation.jpg[title="Expression for Age calculation", align="center"]
+
+After setting the Expression, we can create a new action using “Set (DataValue)”. We select the element Age from the available list and we set it to “Above or equals to 75”. By now the rule should look like Figure 29. The same process can be repeated for the ages below 65 and between 65 and 74 (Figures 30 and 31).
+
+image::img/samples/30_set_age_above_or_equals_to_75_rule.jpg[title="Set age above or equals to 75 rule", align="center"]
+
+image::img/samples/31_set_age_between_65-74_rule.jpg[title="Set age between 65-74 rule", align="center"]
+
+image::img/samples/32_set_age_below_65_rule.jpg[title="Set age below 65 rule", align="center"]
+
+The last rule is for calculating the CHA2DS2-VASc score. We create a new action using the “Set (Attribute)” and we click on “Element attribute”. This will open a list from where we select the “magnitude” of the “Total score” element (Figure 32).
+
+image::img/samples/33_selecting_total score.magnitude.jpg[title="Selecting Total score.magnitude", align="center"]
+
+Finally we open the expression editor where we add all the elements that are needed for CHA2DS2-VASc (Figure 33).
+
+image::img/samples/34_expression_for_calculation_of_cha2ds2-vasc_score.jpg[title="Expression for calculation of CHA2DS2-VASc score", align="center"]
+
+Once we have finished setting up all the rules we can now set a precondition so the guideline runs only for patients affected by atrial fibrillation.
+
+
+=== Creating preconditions
+
+In order to create a precondition we click on the “Preconditions” tab and we create a new condition using “Element exists” which will assess the diagnosis of Atrial fibrillation. The resulting preconditions should be as in Figure 34.
+
+image::img/samples/35_precondition_for_atrial_fibrillation.jpg[title="Precondition for Atrial fibrillation", align="center"]
+
+
+=== Creating bindings
+
+This is the final step before we are able to execute the guideline. Since the diagnosis of each patient is expected to be coded using terminologies such as ICD10 or SNOMED-CT we need to create bindings to the necessary codes of each diagnosis. In this example we are going to creating bindings from the ICD10 terminology.
+
+In order to do so we click on the button “Add binding” and we select ICD10 from the list of available terminologies (Figure 35).
+
+image::img/samples/36_adding_icd10_terminology.jpg[title="Adding ICD10 terminology", align="center"]
+
+This will bring us to the “Binding” tab where we can create the bindings between the external ICD10 codes and the local terms. To do so we click on the “+” icon and then on “Select” which will bring up a list with all the available local terms. From the list we select the “Congestive heart failure diagnosis” term (Figure 36).
+
+image::img/samples/37_adding_local_terms_for_binding.jpg[title="Adding local terms for binding", align="center"]
+
+We repeat the same process for all of the terms that end with the word “diagnosis”. By now the bindings section should look as in Figure 37.
+
+image::img/samples/38_list_of_local_diagnosis_terms_for_binding.jpg[title="List of local diagnosis terms for binding", align="center"]
+
+In order to complete the bindings we need to assign the external ICD10 codes for each diagnosis. This is possible in two ways either by double clicking on the “Terminology codes” field of each local term and manually entering the codes separated with a coma, or by double clicking on the search icon and selecting the necessary codes from the available list (Figure 38). 
+
+image::img/samples/39_list_of_available_icd10_codes.jpg[title="List of available ICD10 codes", align="center"]
+
+The final list with all the ICD10 codes that are used for this example can be seen in Figure 39.
+
+image::img/samples/40_icd10_terminology_binding_for_CHA2DS2-VASc.jpg[title="ICD10 terminology binding for CHA2DS2-VASc", align="center"]
+
+
+=== Executing
+
+The guideline is now ready for execution. We click on the “Run” button and we can start calculating the CHA2DS2-VASc score.
+
+image::img/samples/41_execution_of_cha2ds2-vasc_score_calculation.jpg[title="Execution of CHA2DS2VASc score calculation", align="center"]
+
+A version of the final GDL file can be found at Appendix B.
