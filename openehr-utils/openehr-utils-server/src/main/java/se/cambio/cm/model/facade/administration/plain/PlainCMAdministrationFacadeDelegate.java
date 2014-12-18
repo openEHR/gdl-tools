@@ -1,40 +1,17 @@
 package se.cambio.cm.model.facade.administration.plain;
 
-import org.openehr.am.archetype.Archetype;
-import se.cambio.openehr.controller.session.data.AbstractCMManager;
-import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
-import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.template.dto.TemplateDTO;
+import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMElementDAOFactory;
-import se.cambio.openehr.template.generator.controller.TemplateGen;
-import se.cambio.openehr.template.generator.model.Template;
-import se.cambio.openehr.util.IOUtils;
+import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
 
 public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFacadeDelegate {
-
-    @Override
-    public Template getSimpleTemplate(String templateId, String lang) throws InternalErrorException, InstanceNotFoundException {
-        Collection<TemplateDTO> templateDTOs = searchCMElementsByIds(TemplateDTO.class, Collections.singleton(templateId));
-        Template simpleTemplate = null;
-        if (!templateDTOs.isEmpty()){
-            Collection<ArchetypeDTO> archetypeDTOs = getAllCMElements(ArchetypeDTO.class);
-            Map<String, Archetype> archetypeMap = new HashMap<String, Archetype>();
-            for(ArchetypeDTO archetypeDTO: archetypeDTOs){
-                archetypeMap.put(archetypeDTO.getId(), (Archetype) IOUtils.getObject(archetypeDTO.getAom()));
-            }
-            TemplateDTO templateDTO = templateDTOs.iterator().next();
-            Archetype templateAOM = (Archetype) IOUtils.getObject(templateDTO.getAom());
-            TemplateGen templateGen = new TemplateGen();
-            simpleTemplate = templateGen.toTemplate(templateDTO.getId(), templateAOM, archetypeMap, lang);
-        }
-        return simpleTemplate;
-    }
 
     @Override
     public <E extends CMElement> Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException {

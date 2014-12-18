@@ -1,18 +1,13 @@
 package se.cambio.cm.model.facade.administration.delegate;
 
 import se.cambio.cm.model.util.CMElement;
-import se.cambio.openehr.template.generator.model.Template;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.ModelException;
 
 import java.util.Collection;
 import java.util.Date;
 
 public interface CMAdministrationFacadeDelegate {
-
-    public Template getSimpleTemplate(String templateId, String lang)
-            throws InternalErrorException, ModelException;
 
     //Generic
     public <E extends CMElement> Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
