@@ -72,7 +72,7 @@ image::img/samples/14_cha2ds2-vasc_table.jpg[title="CHA2DS2-VASC table", align="
 
 === Overview
 
-Before we can begin building the GDL file for CHA2DS2-VASc, we need to create an archetype that will store the results of the different parameters that are needed for the calculation of the total score, as well as the result of the total score (Figure 14). The complete archetype defined can be found on <<Appendix_B>>.
+Before we can begin building the GDL file for CHA2DS2-VASc, we need to create an archetype that will store the results of the different parameters that are needed for the calculation of the total score, as well as the result of the total score (Figure 14). 
 
 image::img/samples/15_overview_of_the_cha2ds2vasc_score_calculation_guideline.jpg[title="Overview of the CHA2DS2VASc Score calculation guideline", align="center"]
 
@@ -194,7 +194,7 @@ image::img/samples/32_set_age_below_65_rule.jpg[title="Set age below 65 rule", a
 
 The last rule is for calculating the CHA2DS2-VASc score. We create a new action using the "Set (Attribute)" and we click on "Element attribute". This will open a list from where we select the "magnitude" of the "Total score" element (Figure 32).
 
-image::img/samples/33_selecting_total score.magnitude.jpg[title="Selecting Total score.magnitude", align="center"]
+image::img/samples/33_selecting_total_score_magnitude.jpg[title="Selecting Total score.magnitude", align="center"]
 
 Finally we open the expression editor where we add all the elements that are needed for CHA2DS2-VASc (Figure 33).
 
