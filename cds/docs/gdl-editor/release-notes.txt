@@ -1,5 +1,14 @@
 GDL Editor - Release Notes
 
+2014-12-19i - v0.95.6
+
++ Using new GDL specification (v0.91)
++ Dynamic load of clinical models
++ Support for ADL2 Archetypes
++ Added translations for Greek
+
+
+
 2013-03-11 - v0.9
 
 + Supports:
