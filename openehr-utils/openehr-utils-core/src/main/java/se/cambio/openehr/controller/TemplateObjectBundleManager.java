@@ -39,9 +39,9 @@ public class TemplateObjectBundleManager {
             }catch(InternalErrorException e){
                 throw e;
             }catch(Error e){
-                new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
+                throw new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }catch(Exception e){
-                new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
+                throw new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }
             long endTime = System.currentTimeMillis();
             Logger.getLogger(TemplateObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");

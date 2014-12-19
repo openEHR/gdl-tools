@@ -1,6 +1,10 @@
 import org.junit.Before;
 import org.junit.Test;
-import se.cambio.openehr.controller.session.data.*;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.controller.session.data.Clusters;
+import se.cambio.openehr.controller.session.data.CodedTexts;
+import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -41,5 +45,8 @@ public class ArchetypeElementsTest {
 
         text = clusters.getText("medication_atc_indicator", "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0033]", "sv");
         assertTrue(text.equals("Dose")); //No translation to swedish
+
+        text = archetypeElements.getText("diagnosis_icd10", "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]", "sv");
+        assertTrue(text.equals("Diagnosis"));
     }
 }

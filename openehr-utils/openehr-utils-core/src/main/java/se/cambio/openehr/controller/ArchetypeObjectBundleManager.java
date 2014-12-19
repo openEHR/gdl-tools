@@ -45,9 +45,9 @@ public class ArchetypeObjectBundleManager {
             }catch(InternalErrorException e){
                 throw e;
             }catch(Error e){
-                new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
+                throw new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
             }catch(Exception e){
-                new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
+                throw new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
             }
             long endTime = System.currentTimeMillis();
             Logger.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
