@@ -212,6 +212,7 @@ public class UserConfigurationManager {
     public static boolean saveConfig(){
         try{
             if (_configFile!=null){
+                _configFile.mkdirs();
                 _configFile.createNewFile();
                 OutputStream out = new FileOutputStream(_configFile);
                 Properties properties = new Properties();
