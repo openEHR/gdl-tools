@@ -16,7 +16,7 @@ public class TerminologyServiceTestBase extends TestCase {
     protected static final String ICD10 = "ICD10";
 
     public TerminologyServiceTestBase() throws URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies").toURI().getPath());
+        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies1").toURI().getPath());
         ts = new TerminologyServiceImpl();
     }
 }
