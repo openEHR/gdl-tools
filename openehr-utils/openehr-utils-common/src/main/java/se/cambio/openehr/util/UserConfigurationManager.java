@@ -52,15 +52,17 @@ public class UserConfigurationManager {
         try {
             InputStream is = null;
             _configFile = getConfigFile();
-            if (_configFile==null){
+            if (_configFile == null || !_configFile.exists()){
                 //Read from jar
                 is = UserConfigurationManager.class.getClassLoader().getResourceAsStream(CONFIGURATION_FILE);
-                if (is==null){
+                if (is == null){
                     //User user configuration directory
                     String path = System.getProperty("user.home")+File.separator+USER_CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE;
                     _configFile = new File(path);
-                    is = new FileInputStream(_configFile);
-                    Logger.getLogger(UserConfigurationManager.class).info("*** Using user home folder for '"+CONFIGURATION_FILE+"'");
+                    if (_configFile.exists()) {
+                        is = new FileInputStream(_configFile);
+                        Logger.getLogger(UserConfigurationManager.class).info("*** Using user home folder for '" + CONFIGURATION_FILE + "'");
+                    }
                 }else{
                     Logger.getLogger(UserConfigurationManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
                 }
@@ -68,7 +70,7 @@ public class UserConfigurationManager {
                 is = new FileInputStream(_configFile);
                 Logger.getLogger(UserConfigurationManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
             }
-            if (is!=null){
+            if (is != null){
                 //We use an extended properties to be able to load paths defined with backslash (\)
                 PropertiesEx properties = new PropertiesEx();
                 properties.load(is);
