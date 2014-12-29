@@ -88,10 +88,10 @@ public class GenericObjectBundleADLSManager {
         for(CAttribute cAttribute: ar.getDefinition().getAttributes()){
             processAttribute(cAttribute, path);
         }
-        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry);
+        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry, null); //TODO Send Archetype (to create long RM paths (data/events/time))
         for (ClusterVO clusterVO: clusterVOs){
             if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")){
-                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath()));
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath(), null)); //TODO Send Archetype (to create long RM paths (data/events/time))
             }
         }
         archetypeElementVOs.addAll(rmArchetypeElements);
