@@ -36,7 +36,8 @@ public class TemplateMapperTest {
         assertEquals(templateElementMap.getAttributeMaps().size(), 2);
         templateElementMap = templateMap.getElementMaps().get("event_time");
         assertNotNull(templateElementMap);
-        assertEquals(templateElementMap.getPath(), "/data[at0001]/events[at0002]/time");
+        //assertEquals(templateElementMap.getPath(), "/data[at0001]/events[at0002]/time");
+        assertEquals(templateElementMap.getPath(), "/data/events/time");  //Short form
     }
 
     @Test

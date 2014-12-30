@@ -1,16 +1,12 @@
 package se.cambio.openehr.util;
 
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.archetype.constraintmodel.CAttribute;
-import org.openehr.am.archetype.constraintmodel.CComplexObject;
-import org.openehr.am.archetype.constraintmodel.CObject;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 public class OpenEHRRMUtil {
     public static String EVENT_TIME_PATH = "/data/events/time";
@@ -105,6 +101,7 @@ public class OpenEHRRMUtil {
     }
 
     private static String getEventsTimePath(Archetype ar) {
+        /*
         if (ar == null || ar.getDefinition() == null) {
             return EVENT_TIME_PATH;
         }
@@ -127,6 +124,8 @@ public class OpenEHRRMUtil {
         }
         CObject cObject = eventItems.iterator().next();
         return cObject.path() + "/time";
+        */
+        return EVENT_TIME_PATH;
     }
 
     public final static Collection<String> getRmPaths(){
