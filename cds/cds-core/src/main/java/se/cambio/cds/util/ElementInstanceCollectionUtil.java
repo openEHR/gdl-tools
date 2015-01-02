@@ -220,7 +220,9 @@ public class ElementInstanceCollectionUtil {
                     }
                 }
                 //If reaches here, no terminology was found (problem)
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("No terminology binding for '"+dv+"' was found! (num guides="+(guides==null?"0":guides.size())+")");
+                String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
+                //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn(message);
                 return null;
             }else{
                 Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '"+dv+"'");
