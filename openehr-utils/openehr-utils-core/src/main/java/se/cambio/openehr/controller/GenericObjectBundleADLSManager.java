@@ -114,7 +114,7 @@ public class GenericObjectBundleADLSManager {
         if (cComplexObject.getRmTypeName().equals("ELEMENT")) {
             processElement(cComplexObject, currentPath);
         } else if (cComplexObject instanceof CArchetypeRoot){
-            String usedArchetypeId = ((CArchetypeRoot)cComplexObject).getArchetypeId().getValue();
+            String usedArchetypeId = ((CArchetypeRoot)cComplexObject).getArchetypeRef();
             processArchetypeReference(usedArchetypeId, currentPath);
         } else {
             for(CAttribute cAttribute: cAttributes){
