@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class TemplateMapperTest {
 
@@ -52,6 +53,8 @@ public class TemplateMapperTest {
     @Test
     public void shouldMapTemplateForStrokeReview() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = ArchetypeManager.getInstance().getTemplates().generateTemplateMap("stroke_prevention_treatment_review");
-        assertEquals(templateMap.getElementMaps().size(), 37);
+        assertTrue(templateMap.getElementMaps().containsKey("diabetes"));
+        assertTrue(templateMap.getElementMaps().containsKey("diabetes1"));
+        assertEquals(templateMap.getElementMaps().size(), 30);
     }
 }
