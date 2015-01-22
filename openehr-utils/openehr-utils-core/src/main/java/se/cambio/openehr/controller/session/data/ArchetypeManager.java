@@ -246,6 +246,7 @@ public class ArchetypeManager {
         do {
             elementMapId = getIdentifier(name, i++);
         } while (elementMapIds.contains(elementMapId));
+        elementMapIds.add(elementMapId);
         return elementMapId;
     }
 

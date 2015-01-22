@@ -48,4 +48,10 @@ public class TemplateMapperTest {
         assertNotNull(templateElementMap);
         assertEquals(templateElementMap.getAttributeMaps().size(), 2);
     }
+
+    @Test
+    public void shouldMapTemplateForStrokeReview() throws InstanceNotFoundException, InternalErrorException {
+        TemplateMap templateMap = ArchetypeManager.getInstance().getTemplates().generateTemplateMap("stroke_prevention_treatment_review");
+        assertEquals(templateMap.getElementMaps().size(), 37);
+    }
 }
