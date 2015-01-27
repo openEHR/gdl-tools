@@ -6,7 +6,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,12 +30,7 @@ public class LoadTerminologyViewerRSW extends OpenEHRUtilSwingWorker {
         _terminologyCodesManager = terminologyCodesManager;
         this.selectionMode = selectionMode;
         this.owner = owner;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
-            }
-        });
+        WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
     }
 
     protected void executeSW() throws InternalErrorException {

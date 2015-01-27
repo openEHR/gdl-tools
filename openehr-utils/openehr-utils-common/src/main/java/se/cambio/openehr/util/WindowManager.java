@@ -38,11 +38,15 @@ public class WindowManager {
     }
 
 
-    public static void setBusy(String description){
-        getDefaultProgressManager().changeLoadingText(description);
-        getDefaultProgressManager().start();
+    public static void setBusy(final String description){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                getDefaultProgressManager().changeLoadingText(description);
+                getDefaultProgressManager().start();
+            }
+        });
     }
-
     public static void changeLoadingText(String description){
         getDelegate()._description = description;
         SwingUtilities.invokeLater(new Runnable() {
@@ -66,7 +70,12 @@ public class WindowManager {
     }
 
     public static void setFree(){
-        getDefaultProgressManager().stop();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                getDefaultProgressManager().stop();
+            }
+        });
     }
 
     public static void setBusy(String progressKey, String description){

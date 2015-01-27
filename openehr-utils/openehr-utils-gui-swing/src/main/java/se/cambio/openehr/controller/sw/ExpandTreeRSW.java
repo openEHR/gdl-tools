@@ -6,7 +6,6 @@ import se.cambio.openehr.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.panels.SelectionPanel;
 
-import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 
 /**
@@ -23,12 +22,7 @@ public class ExpandTreeRSW extends OpenEHRUtilSwingWorker{
     }
 
     protected void executeSW() throws InternalErrorException {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
-            }
-        });
+        WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
         _treeUI = _selectionPanel.getJTree().getUI();
         _selectionPanel.getJTree().setUI(null);
         _selectionPanel.getJTree().expand(_selectionPanel.getNode());

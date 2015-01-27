@@ -35,7 +35,7 @@ public class DateTimeARFinder {
                     configurationParametersManagerClass.getClassLoader();
             File configFile = getConfigFile();
             InputStream inputStream = null;
-            if (configFile!=null) {
+            if (configFile != null) {
                 inputStream = new FileInputStream(configFile);
                 Logger.getLogger(DateTimeARFinder.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
             } else {
@@ -77,7 +77,7 @@ public class DateTimeARFinder {
         }
         try {
             //Current folder
-            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
+            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
             if (!file.exists()){
                 throw new FileNotFoundException();
             }

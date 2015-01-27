@@ -4,6 +4,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.util.CDSSwingWorker;
+import se.cambio.openehr.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
@@ -51,7 +52,7 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
                 _controller.setEntityId(guideId);
             }
         }
-        if (_guideFile!=null){
+        if (_guideFile != null){
             //Check guide Id
             String guideId = getGuideIdFromFile(_guideFile);
             if (!guideId.equals(_controller.getEntityId())){
@@ -68,6 +69,9 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
                 }
             }
             _guideStr = _controller.getSerializedEntity();
+        }
+        if (_guideStr != null) {
+            WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Saving") + "...");
         }
     }
 
@@ -102,10 +106,14 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
     }
 
     protected void done() {
-        if (_guideFile!=null && _guideStr!=null && !_guideStr.isEmpty()){
-            EditorManager.getActiveGDLEditor().entitySaved();
-            EditorManager.setLastFileLoaded(_guideFile);
-            EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
+        try{
+            if (_guideFile!=null && _guideStr!=null && !_guideStr.isEmpty()){
+                EditorManager.getActiveGDLEditor().entitySaved();
+                EditorManager.setLastFileLoaded(_guideFile);
+                EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
+            }
+        }finally{
+            WindowManager.setFree();
         }
     }
 }

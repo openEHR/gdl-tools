@@ -48,13 +48,8 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
             int result = fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
             if (result != JFileChooser.CANCEL_OPTION){
                 _guideFile = fileChooser.getSelectedFile();
+                WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
             }
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
-                }
-            });
         }
     }
 

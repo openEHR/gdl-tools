@@ -16,6 +16,9 @@ public class EHRFacadeDelegateFactory {
             String delegateClassName =
                     CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_PATIENT_DATA);
             theClass = Class.forName(delegateClassName);
+            if (theClass == null) {
+                throw new Exception("Class not found: " + delegateClassName);
+            }
         } catch (Exception e) {
             new InternalErrorException(e);
         }
