@@ -25,7 +25,7 @@ public class TemplateMapperTest {
     @Test
     public void shouldMapTemplate() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = ArchetypeManager.getInstance().getTemplates().generateTemplateMap("medication_atc_indicator");
-        assertEquals(templateMap.getElementMaps().size(), 37);
+        assertEquals(templateMap.getElementMaps().size(), 38);
     }
 
     @Test
