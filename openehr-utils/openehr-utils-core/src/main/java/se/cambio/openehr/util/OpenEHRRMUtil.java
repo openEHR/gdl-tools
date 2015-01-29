@@ -64,8 +64,7 @@ public class OpenEHRRMUtil {
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + NARRATIVE_PATH)
                             .createArchetypeElementVO());
-        }else if (OpenEHRConst.ACTION.equals(entryType)){
-            //Date and time Action step performed
+            //Detailed activity timing
             rmArchetypeElements.add(
                     new ArchetypeElementVOBuilder()
                             .setName(OpenEHRLanguageManager.getMessage("DetailedActivityTiming"))
@@ -74,6 +73,17 @@ public class OpenEHRRMUtil {
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + TIMING_PATH)
+                            .createArchetypeElementVO());
+        }else if (OpenEHRConst.ACTION.equals(entryType)){
+            //Date and time Action step performed
+            rmArchetypeElements.add(
+                    new ArchetypeElementVOBuilder()
+                            .setName(OpenEHRLanguageManager.getMessage("DateTimeActionPerformed"))
+                            .setDescription(OpenEHRLanguageManager.getMessage("DateTimeActionPerformedDesc"))
+                            .setType(OpenEHRDataValues.DV_DATE_TIME)
+                            .setIdArchetype(idArchetype)
+                            .setIdTemplate(idTemplate)
+                            .setPath(parentPath + TIME_PATH)
                             .createArchetypeElementVO());
             //Current Action State
             rmArchetypeElements.add(
