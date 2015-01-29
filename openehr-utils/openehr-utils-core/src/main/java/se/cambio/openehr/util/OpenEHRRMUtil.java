@@ -13,7 +13,7 @@ public class OpenEHRRMUtil {
     public static String EXPIRY_TIME_PATH = "/expiry_time";
     public static String NARRATIVE_PATH =  "/narrative";
     public static String TIME_PATH = "/time";
-    public static String TIMING_PATH = "/activities/time";
+    public static String TIMING_PATH = "/activities/timing";
     public static String ISM_TRANSITION_PATH = "/ism_transition/current_state";
     public static String TEMPLATE_ID_PATH = "/archetype_details/template_id";
 
