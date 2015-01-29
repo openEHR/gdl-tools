@@ -36,7 +36,7 @@ public class GuideImporter {
         GuideDefinition guideDefinition = guide.getDefinition();
         TermDefinition termDefinition = getTermDefinition(guide, language);
         ReadableGuide readableGuide = new ReadableGuide(termDefinition, archetypeManager);
-        Map<String, GTCodeDefiner> gtCodeElementMap = generateGTCodeElementMap(guide, archetypeManager);
+        Map<String, GTCodeDefiner> gtCodeElementMap = generateGTCodeElementMap(guide, archetypeManager, readableGuide);
         if (guideDefinition!=null){
             Map<String, ArchetypeBinding> archetypeBindings = guideDefinition.getArchetypeBindings();
             if (archetypeBindings!=null){
@@ -44,7 +44,7 @@ public class GuideImporter {
                     ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) gtCodeElementMap.get(archetypeBinding.getId());
                     readableGuide.getDefinitionRuleLines().add(airl);
                     if (archetypeBinding.getPredicateStatements()!=null){
-                        proccessPredicateExpressions(archetypeBinding, termDefinition, airl);
+                        processPredicateExpressions(archetypeBinding, termDefinition, airl);
                     }
                 }
             }
@@ -83,7 +83,7 @@ public class GuideImporter {
         return readableGuide;
     }
 
-    private static void proccessPredicateExpressions(
+    private static void processPredicateExpressions(
             ArchetypeBinding archetypeBinding,
             TermDefinition termDefinition,
             ArchetypeInstantiationRuleLine airl) throws InternalErrorException {
@@ -240,7 +240,7 @@ public class GuideImporter {
         return dv;
     }
 
-    protected static void processAssigmentExpression(
+    protected static void processAssignmentExpression(
             RuleLineCollection ruleLines,
             AssignmentExpression assignmentExpression,
             Map<String, GTCodeDefiner> gtCodeELementMap) throws InternalErrorException {
@@ -272,7 +272,7 @@ public class GuideImporter {
                 if (archetypeElementVO==null){
                     throw new InternalErrorException(new Exception("Archetype element not found for gtCode '"+gtCode+"'"));
                 }
-                log.debug("processAssigmentExpression for variable: " + gtCode);
+                log.debug("processAssignmentExpression for variable: " + gtCode);
 
                 String rmType = archetypeElementVO.getRMType();
                 DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO, sedvar.getArchetypeManager());
@@ -291,7 +291,7 @@ public class GuideImporter {
                 }
                 Collection<AssignmentExpression> assignmentExpressions = ((MultipleAssignmentExpression)expressionItemAux).getAssignmentExpressions();
                 for(AssignmentExpression assignmentExpressionAux: assignmentExpressions){
-                    processAssigmentExpression(ruleLinesAssignmentInstance, assignmentExpressionAux, gtCodeELementMap);
+                    processAssignmentExpression(ruleLinesAssignmentInstance, assignmentExpressionAux, gtCodeELementMap);
                 }
                 for(RuleLine ruleLine: ruleLinesAssignmentInstance.getRuleLines()){
                     cirl.addChildRuleLine(ruleLine);
@@ -450,7 +450,7 @@ public class GuideImporter {
             ExpressionItem expressionItem,
             Map<String, GTCodeDefiner> gtCodeELementMap) throws InternalErrorException {
         if (expressionItem instanceof AssignmentExpression){
-            processAssigmentExpression(ruleLines, (AssignmentExpression)expressionItem, gtCodeELementMap);
+            processAssignmentExpression(ruleLines, (AssignmentExpression) expressionItem, gtCodeELementMap);
         }else if (expressionItem instanceof BinaryExpression){
             processBinaryExpression(ruleLines, parentRuleLine, (BinaryExpression)expressionItem, gtCodeELementMap);
         }else if (expressionItem instanceof UnaryExpression){
@@ -474,9 +474,10 @@ public class GuideImporter {
         }
     }
 
-    public static Map<String, GTCodeDefiner> generateGTCodeElementMap(Guide guide, ArchetypeManager archetypeManager) throws InternalErrorException {
+    public static Map<String, GTCodeDefiner> generateGTCodeElementMap(Guide guide, ArchetypeManager archetypeManager, ReadableGuide readableGuide) throws InternalErrorException {
         Map<String, GTCodeDefiner> gtCodeElementMap = new HashMap<String, GTCodeDefiner>();
         ArchetypeElementInstantiationRuleLine dummyAEIRL = new ArchetypeElementInstantiationRuleLine(new ArchetypeInstantiationRuleLine());
+        dummyAEIRL.setReadableGuide(readableGuide);
         dummyAEIRL.setGTCode("currentDateTime");
         gtCodeElementMap.put("currentDateTime", dummyAEIRL);
         GuideDefinition guideDefinition = guide.getDefinition();
@@ -486,6 +487,7 @@ public class GuideImporter {
                 for (ArchetypeBinding archetypeBinding: ab.values()) {
                     ArchetypeInstantiationRuleLine airl =
                             new ArchetypeInstantiationRuleLine();
+                    airl.setReadableGuide(readableGuide);
                     airl.setGTCode(archetypeBinding.getId());
                     ArchetypeReference ar =
                             new ArchetypeReference(
@@ -498,6 +500,7 @@ public class GuideImporter {
                         for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
                             ArchetypeElementInstantiationRuleLine aeirl =
                                     new ArchetypeElementInstantiationRuleLine(airl);
+                            aeirl.setReadableGuide(readableGuide);
                             aeirl.setGTCode(elementBinding.getId());
                             if ("/event/time".equals(elementBinding.getPath())){
                                 //Old event time detected //TODO Remove later on
