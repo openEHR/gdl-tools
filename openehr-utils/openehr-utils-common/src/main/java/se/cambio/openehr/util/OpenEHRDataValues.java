@@ -22,6 +22,7 @@ public class OpenEHRDataValues {
     public final static String DV_URI = "DV_URI";
     public final static String DV_STATE = "DV_STATE";
     public final static String DV_IDENTIFIER = "DV_IDENTIFIER";
+    public final static String DV_PARSABLE = "DV_PARSABLE";
 
     //Functions
     public static final String FUNCTION_COUNT = "count";

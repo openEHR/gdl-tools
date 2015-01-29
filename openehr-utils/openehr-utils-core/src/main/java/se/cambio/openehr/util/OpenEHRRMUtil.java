@@ -13,6 +13,7 @@ public class OpenEHRRMUtil {
     public static String EXPIRY_TIME_PATH = "/expiry_time";
     public static String NARRATIVE_PATH =  "/narrative";
     public static String TIME_PATH = "/time";
+    public static String TIMING_PATH = "/activities/time";
     public static String ISM_TRANSITION_PATH = "/ism_transition/current_state";
     public static String TEMPLATE_ID_PATH = "/archetype_details/template_id";
 
@@ -67,12 +68,12 @@ public class OpenEHRRMUtil {
             //Date and time Action step performed
             rmArchetypeElements.add(
                     new ArchetypeElementVOBuilder()
-                            .setName(OpenEHRLanguageManager.getMessage("DateTimeActionPerformed"))
-                            .setDescription(OpenEHRLanguageManager.getMessage("DateTimeActionPerformedDesc"))
-                            .setType(OpenEHRDataValues.DV_DATE_TIME)
+                            .setName(OpenEHRLanguageManager.getMessage("DetailedActivityTiming"))
+                            .setDescription(OpenEHRLanguageManager.getMessage("DetailedActivityTimingDesc"))
+                            .setType(OpenEHRDataValues.DV_PARSABLE)
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
-                            .setPath(parentPath + TIME_PATH)
+                            .setPath(parentPath + TIMING_PATH)
                             .createArchetypeElementVO());
             //Current Action State
             rmArchetypeElements.add(
