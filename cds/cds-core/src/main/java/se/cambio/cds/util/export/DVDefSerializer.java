@@ -1,5 +1,6 @@
 package se.cambio.cds.util.export;
 
+import org.apache.commons.lang.StringUtils;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
 import org.openehr.rm.datatypes.quantity.*;
@@ -13,10 +14,10 @@ import org.openehr.rm.datatypes.text.DvText;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.util.DVUtil;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
 import se.cambio.openehr.controller.session.data.Ordinals;
-import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -29,7 +30,6 @@ import java.util.regex.Pattern;
 
 public class DVDefSerializer {
 
-    public static String VARTOKEN = "$";
     private static Pattern clonePattern = Pattern.compile("\\.createDV\\([\\s]*\\$([^\\,\"]+),");
     private static Pattern setLinePattern = Pattern.compile("\\.createDV\\([^\\,]+,[\\s]*\"(.*)\"\\)$");
     private static Pattern assignationLinePattern = Pattern.compile("([^\\Q+-*/=\\E]+)([\\Q+-*/\\E]?)\\=\"\\+\\((.*)\\)\\+\"$");
@@ -118,7 +118,7 @@ public class DVDefSerializer {
             }
             return sb.toString();
         }else{
-            throw new IllegalArgumentException("Unknow data value '"+dataValue.getClass().getSimpleName()+"'");
+            throw new IllegalArgumentException("Unknown data value '" + dataValue.getClass().getSimpleName() + "'");
         }
     }
 
@@ -126,14 +126,14 @@ public class DVDefSerializer {
         if (dvDefinition.startsWith("'")){
             dvDefinition = dvDefinition.substring(1, dvDefinition.length()-1);
         }
-        return "new "+dvClassName+"(\""+dvDefinition+"\")";
+        return "new " + dvClassName + "(\"" + dvDefinition + "\")";
     }
 
     public static String getDVInstantiationWithoutQuotes(String dvClassName, String dvDefinition){
-        return "new "+dvClassName+"("+dvDefinition+")";
+        return "new " + dvClassName + "(" + dvDefinition + ")";
     }
 
-    public static String getDVDefinitionWithOutQuotes(String dvInstantiation){
+    public static String getDVDefinitionWithoutQuotes(String dvInstantiation){
         if (dvInstantiation!=null){
             Matcher m = dvDefinitionPatternWithOutQuotes.matcher(dvInstantiation.trim());
             if(m.find()){
@@ -146,7 +146,7 @@ public class DVDefSerializer {
         }
     }
     public static String getDVDefinition(String dvInstantiation){
-        if (dvInstantiation!=null){
+        if (dvInstantiation != null){
             Matcher m = dvDefinitionPatternWithQuotes.matcher(dvInstantiation.trim());
             if(m.find()){
                 return m.group(1);
@@ -159,7 +159,7 @@ public class DVDefSerializer {
     }
 
     public static String getDVCloneInstanceName(String expression){
-        if (expression!=null){
+        if (expression != null){
             Matcher m = clonePattern.matcher(expression.trim());
             if(m.find()){
                 return m.group(1);
@@ -172,7 +172,7 @@ public class DVDefSerializer {
     }
 
     public static boolean isDVExpression(String expression){
-        if (expression!=null){
+        if (expression != null){
             Matcher m = setLinePattern.matcher(expression.trim());
             if(m.find()){
                 return true;
@@ -256,7 +256,7 @@ public class DVDefSerializer {
         while (m.find()){
             String handle = m.group(1);
             String field = m.group(2);
-            String ref = "\\(\\([\\w]+\\)\\Q$"+handle+".getDataValue()).get"+field+"()\\E";
+            String ref = "\\(\\([\\w]+\\)\\Q$" + handle + ".getDataValue()).get" + field + "()\\E";
             stringWithReferences = stringWithReferences.replaceAll(ref, handle);
         }
         return stringWithReferences;
@@ -265,35 +265,35 @@ public class DVDefSerializer {
     public static String getReadableDefinition(String idTemplate, String idElement, String rmName, String dvInstantiation, ArchetypeManager archetypeManager){
         if (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName)){
             String codedTextName = getCodedTextNameFromDVInstantiation(idTemplate, idElement, dvInstantiation, archetypeManager.getCodedTexts());
-            if (codedTextName!=null){
+            if (codedTextName != null){
                 return codedTextName;
             }
         }else if (OpenEHRDataValues.DV_ORDINAL.equals(rmName)){
             String ordinalName = getOrdinalNameFromDVInstantiation(idTemplate, idElement, dvInstantiation, archetypeManager.getOrdinals());
-            if (ordinalName!=null){
+            if (ordinalName != null){
                 return ordinalName;
             }
         }else if (OpenEHRDataValues.DV_COUNT.equals(rmName) ||
                 OpenEHRDataValues.DV_BOOLEAN.equals(rmName)){
-            String dvDefinition = getDVDefinitionWithOutQuotes(dvInstantiation);
-            if (dvDefinition!=null){
+            String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
+            if (dvDefinition != null){
                 return dvDefinition;
             }
         }else if(OpenEHRDataValues.DV_QUANTITY.equals(rmName)){
-            String dvDefinition = getDVDefinitionWithOutQuotes(dvInstantiation);
-            if (dvDefinition!=null){
+            String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
+            if (dvDefinition != null){
                 String[] splitDef = dvDefinition.split("\\,");
-                if (splitDef.length>2){
+                if (splitDef.length > 2){
                     return  roundToStr(Double.parseDouble(splitDef[1]), Integer.parseInt(splitDef[2]))+" "+splitDef[0].replace("\"", "");
                 }else{
                     return dvDefinition;
                 }
             }
         }else if(OpenEHRDataValues.DV_PROPORTION.equals(rmName)){
-            String dvDefinition = getDVDefinitionWithOutQuotes(dvInstantiation);
+            String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
             if (dvDefinition!=null){
                 String[] splitDef = dvDefinition.split("\\,");
-                if (splitDef.length>3){
+                if (splitDef.length > 3){
                     //TODO Display changes depending on proportion kind (slitDef[2])
                     return roundToStr(Double.parseDouble(splitDef[0]), Integer.parseInt(splitDef[3]))+
                             "/"+
@@ -307,7 +307,7 @@ public class DVDefSerializer {
         }else if (OpenEHRDataValues.DV_TIME.equals(rmName)){
             String dvDefinition = getDVDefinition(dvInstantiation);
             String[] defSplit = dvDefinition.split("\\+");
-            if (defSplit.length>1){
+            if (defSplit.length > 1){
                 return defSplit[0];
             }else{
                 return dvDefinition;
@@ -315,13 +315,13 @@ public class DVDefSerializer {
         }else if(OpenEHRDataValues.DV_DATE_TIME.equals(rmName)){
             String dvDefinition = getDVDefinition(dvInstantiation);
             String[] defSplit = dvDefinition.split("\\+");
-            if (defSplit.length>1){
+            if (defSplit.length > 1){
                 dvDefinition = defSplit[0];
             }
             defSplit = dvDefinition.split("T");
             String dateDefinition = null;
             String hourDefinition = null;
-            if (defSplit.length>1){
+            if (defSplit.length > 1){
                 dateDefinition = defSplit[0];
                 hourDefinition = defSplit[1];
             }else{
@@ -329,7 +329,7 @@ public class DVDefSerializer {
             }
 
             String result = "";
-            if (dateDefinition!=null && !dateDefinition.isEmpty()){
+            if (dateDefinition != null && !dateDefinition.isEmpty()){
                 dateDefinition = dateDefinition.replaceAll("-", "");
                 String year = dateDefinition.substring(0,4);
                 int monthInt = (Integer.parseInt(dateDefinition.substring(4,6)));
@@ -343,7 +343,7 @@ public class DVDefSerializer {
             }
             return result;
         }
-        String dvDefinition = getDVDefinitionWithOutQuotes(dvInstantiation);
+        String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
         if (dvDefinition!=null){
             return dvDefinition;
         }else{
@@ -352,17 +352,13 @@ public class DVDefSerializer {
     }
 
     public static String getOrdinalNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, Ordinals ordinals){
-        return ordinals.getText(idTemplate, idParentArchetypeNode, Integer.parseInt(getValueFromDVInstantiation(dvInstantiation)), UserConfigurationManager.getLanguage());
+        String codeString = getOrdinalCodeStringFromDVInstantiation(dvInstantiation);
+        return ordinals.getText(idTemplate, idParentArchetypeNode, codeString, UserConfigurationManager.getLanguage());
     }
 
-    public static String getValueFromDVInstantiation(String dvInstantiation){
-        String dvDefinition = DVDefSerializer.getDVDefinitionWithOutQuotes(dvInstantiation);
-        if (dvDefinition!=null && dvDefinition.contains(",")){
-            dvDefinition = dvDefinition.split(",")[0];
-            return dvDefinition;
-        }else{
-            return null;
-        }
+    public static String getOrdinalCodeStringFromDVInstantiation(String dvInstantiation){
+        String dvDefinition = DVDefSerializer.getDVDefinitionWithoutQuotes(dvInstantiation);
+        return StringUtils.substringAfterLast(dvDefinition, ",");
     }
 
     public static String getCodedTextNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, CodedTexts codedTexts){
@@ -376,7 +372,7 @@ public class DVDefSerializer {
     }
 
     public static String getCodeFromDVInstantiation(String dvInstantiation){
-        String dvDefinition = DVDefSerializer.getDVDefinitionWithOutQuotes(dvInstantiation);
+        String dvDefinition = DVDefSerializer.getDVDefinitionWithoutQuotes(dvInstantiation);
         if (dvDefinition!=null && dvDefinition.contains(",")){
             String[] splittedDVDefinition = dvDefinition.split(",");
             dvDefinition = splittedDVDefinition[splittedDVDefinition.length-1];

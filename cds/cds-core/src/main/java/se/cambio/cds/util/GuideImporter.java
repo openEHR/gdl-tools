@@ -17,8 +17,8 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeElementRu
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 import se.cambio.cds.gdl.model.readable.util.RulePriorityComparator;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRRMUtil;
@@ -209,7 +209,7 @@ public class GuideImporter {
         }else if (dv instanceof DvOrdinal){
             if (archetypeElementVO!=null){
                 DvOrdinal dvOrdinal= (DvOrdinal)dv;
-                String name = archetypeManager.getOrdinals().getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvOrdinal.getValue(), UserConfigurationManager.getLanguage());
+                String name = archetypeManager.getOrdinals().getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvOrdinal.getCode(), UserConfigurationManager.getLanguage());
                 if (name!=null){
                     dvOrdinal.getSymbol().setValue(name);
                 }

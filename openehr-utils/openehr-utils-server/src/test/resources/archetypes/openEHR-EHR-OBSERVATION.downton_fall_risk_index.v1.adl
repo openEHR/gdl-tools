@@ -1,0 +1,345 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.downton_fall_risk_index.v1
+
+concept
+	[at0000]	-- Downton fall risk index
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"Konstantinos Kalliamvakos">
+		["organisation"] = <"Cambio Healthcare Systems">
+		["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+		["date"] = <"2015-01-15">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To assess the risk of falling in elderly">
+			use = <"">
+			keywords = <"Downton Fall Risk Index", "DFRI", "elderly", "fall", "risk">
+			misuse = <"">
+			copyright = <"">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"To assess the risk of falling in elderly">
+			use = <"*(en)">
+			keywords = <"Downton Fall Risk Index", "DFRI", "elderly", "fall", "risk">
+			misuse = <"*(en)">
+			copyright = <"*(en)">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+	other_contributors = <>
+	other_details = <
+		["current_contact"] = <"Konstantinos Kalliamvakos, Cambio Healthcare Systems, Konstantinos.Kalliamvakos@cambio.se">
+		["MD5-CAM-1.0.1"] = <"2830F6D588FA8C6FCFF946A6912B1247">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Downton fall risk index
+		data matches {
+			HISTORY[at0001] matches {	-- Event Series
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- Any event
+						data matches {
+							ITEM_TREE[at0003] matches {	-- Tree
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- Known previous falls
+										value matches {
+											0|[local::at0005], 	-- No
+											1|[local::at0006]  	-- Yes
+										}
+									}
+									ELEMENT[at0007] occurrences matches {0..1} matches {	-- Medications
+										value matches {
+											0|[local::at0008], 	-- None
+											1|[local::at0009],  -- Tranquilizers/sedatives
+											1|[local::at0010],  -- Diuretics
+											1|[local::at0011],  -- Antihypertensives (other than diuretics)
+											1|[local::at0012],  -- Antiparkinsonian drugs
+											1|[local::at0013],  -- Antidepressants
+											0|[local::at0014] 	-- Other medications
+										}
+									}
+									ELEMENT[at0015] occurrences matches {0..1} matches {	-- Sensory deficits
+										value matches {
+											0|[local::at0016], 	-- None
+											1|[local::at0017],  -- Visual impairment
+											1|[local::at0018],  -- Hearing impairment
+											1|[local::at0019]  	-- Motor skills impairment
+										}
+									}
+									ELEMENT[at0020] occurrences matches {0..1} matches {	-- Mental state
+										value matches {
+											0|[local::at0021], 	-- Oriented
+											1|[local::at0022]  	-- Confused
+										}
+									}
+									ELEMENT[at0023] occurrences matches {0..1} matches {	-- Ability to walk
+										value matches {
+											0|[local::at0024], 	-- Safe with or without walking aids
+											1|[local::at0025], 	-- Unsafe
+											0|[local::at0026] 	-- Unable
+										}
+									}
+									ELEMENT[at0027] occurrences matches {0..1} matches {	-- Total score
+										value matches {
+											DV_COUNT matches {
+												magnitude matches {|>=0|}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Downton fall risk index">
+					description = <"Downton Fall Risk Index">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Any event">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Known previous falls">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"No">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"Yes">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"Medications">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"None">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"Tranquilizers/sedatives">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"Diuretics">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"Antihypertensives (other than diuretics)">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"Antiparkinsonian drugs">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"Antidepressants">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"Other medications">
+					description = <"*">
+				>
+				["at0015"] = <
+					text = <"Sensory deficits">
+					description = <"*">
+				>
+				["at0016"] = <
+					text = <"None">
+					description = <"*">
+				>
+				["at0017"] = <
+					text = <"Visual impairment">
+					description = <"*">
+				>
+				["at0018"] = <
+					text = <"Hearing impairment">
+					description = <"*">
+				>
+				["at0019"] = <
+					text = <"Motor skills impairment">
+					description = <"*">
+				>
+				["at0020"] = <
+					text = <"Mental state">
+					description = <"*">
+				>
+				["at0021"] = <
+					text = <"Oriented">
+					description = <"*">
+				>
+				["at0022"] = <
+					text = <"Confused">
+					description = <"*">
+				>
+				["at0023"] = <
+					text = <"Ability to walk">
+					description = <"*">
+				>
+				["at0024"] = <
+					text = <"Safe with or without walking aids">
+					description = <"*">
+				>
+				["at0025"] = <
+					text = <"Unsafe">
+					description = <"*">
+				>
+				["at0026"] = <
+					text = <"Unable">
+					description = <"*">
+				>
+				["at0027"] = <
+					text = <"Total score">
+					description = <"*">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Downton fall risk index">
+					description = <"Downton Fall Risk Index">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Any event">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"Tidigare kända fallolyckor">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"Nej">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"Ja">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"Medicinering">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"Ingen">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"Lugnande/sömnmedel/neuroleptika">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"Diuretika">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"Antihypertensiva (annat än diuretika)">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"Antiparkinson läkemede">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"Antidepressiva läkemedel">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"Andra läkemedel">
+					description = <"*">
+				>
+				["at0015"] = <
+					text = <"Sensoriska funktionsnedsättningar">
+					description = <"*">
+				>
+				["at0016"] = <
+					text = <"Ingen">
+					description = <"*">
+				>
+				["at0017"] = <
+					text = <"Synnedsättning">
+					description = <"*">
+				>
+				["at0018"] = <
+					text = <"Hörselnedsättning">
+					description = <"*">
+				>
+				["at0019"] = <
+					text = <"Nedsatt motorik (har kraft-eller funktionsnedsättningar i någon extremitet)">
+					description = <"*">
+				>
+				["at0020"] = <
+					text = <"Kognitiv funktionsnedsättning">
+					description = <"*">
+				>
+				["at0021"] = <
+					text = <"Orienterad">
+					description = <"*">
+				>
+				["at0022"] = <
+					text = <"Ej orienterad">
+					description = <"*">
+				>
+				["at0023"] = <
+					text = <"Gångförmåga">
+					description = <"*">
+				>
+				["at0024"] = <
+					text = <"Säker med eller utan hjälpmedel">
+					description = <"*">
+				>
+				["at0025"] = <
+					text = <"Osäker gång">
+					description = <"*">
+				>
+				["at0026"] = <
+					text = <"Ingen gångförmåga">
+					description = <"*">
+				>
+				["at0027"] = <
+					text = <"Poäng">
+					description = <"*">
+				>
+			>
+		>
+	>

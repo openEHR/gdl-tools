@@ -57,4 +57,13 @@ public class TemplateMapperTest {
         assertTrue(templateMap.getElementMaps().containsKey("diabetes1"));
         assertEquals(templateMap.getElementMaps().size(), 30);
     }
+
+    @Test
+    public void shouldMapOrdinalsWithSameValue() throws InstanceNotFoundException, InternalErrorException {
+        TemplateMap templateMap = ArchetypeManager.getInstance().getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.downton_fall_risk_index.v1");
+        assertEquals(templateMap.getElementMaps().size(), 8);
+        TemplateElementMap medications = templateMap.getElementMaps().get("medications");
+        assertNotNull(medications);
+        assertEquals(7, medications.getAttributeMaps().size());
+    }
 }

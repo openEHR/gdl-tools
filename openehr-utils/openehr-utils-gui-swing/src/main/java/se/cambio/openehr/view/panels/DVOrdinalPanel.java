@@ -17,24 +17,25 @@ public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
         super(idElement, idTemplate, allowNull, requestFocus);
         for (OrdinalVO ordinalVO : getOrdinals().getOrdinalVOs(idTemplate, idElement)) {
             String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.getLanguage());
-            insertOption(""+ordinalVO.getValue(), ordinalVO.getValue()+" - "+name, ordinalVO.getDescription());
+            insertOption(ordinalVO.getCode(), ordinalVO.getValue() + " - " + name, ordinalVO.getDescription());
         }
     }
 
     public void setDataValue(DataValue dataValue) {
-        String code = null;
+        String codeString = null;
         if (dataValue instanceof DvOrdinal){
-            code =""+((DvOrdinal)dataValue).getValue();
+            DvOrdinal dvOrdinal = (DvOrdinal) dataValue;
+            codeString = dvOrdinal.getCode();
         }
-        getComboBox().setSelectedItem(code);
+        getComboBox().setSelectedItem(codeString);
     }
 
 
     public DataValue getDataValue() {
-        Integer value = Integer.parseInt((String)getComboBox().getSelectedItem());
-        OrdinalVO ordinalVO = getOrdinals().getOrdinalVO(getIdTemplate(), getIdElement(), value);
+        String ordinalKey = (String)getComboBox().getSelectedItem();
+        OrdinalVO ordinalVO = getOrdinals().getOrdinalVO(getIdTemplate(), getIdElement(), ordinalKey);
         String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.getLanguage());
-        return new DvOrdinal(value, name,ordinalVO.getTerminology(), ordinalVO.getCode());
+        return new DvOrdinal(ordinalVO.getValue(), name,ordinalVO.getTerminology(), ordinalVO.getCode());
     }
 
     private Ordinals getOrdinals(){

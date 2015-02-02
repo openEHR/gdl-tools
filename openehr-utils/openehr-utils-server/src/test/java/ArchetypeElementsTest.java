@@ -1,10 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.controller.session.data.Clusters;
-import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.openehr.controller.session.data.Ordinals;
+import se.cambio.openehr.controller.session.data.*;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -37,7 +33,7 @@ public class ArchetypeElementsTest {
         String text = archetypeElements.getText(null,"openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0026]","sv");
         assertTrue(text.equals("Hjärtsvikt/VK-dysfunktion"));
 
-        text = ordinals.getText(null, "openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0026]", 0, "sv");
+        text = ordinals.getText(null, "openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0026]", "at0027", "sv");
         assertTrue(text.equals("Finns ej"));
 
         text = codedTexts.getText(null, "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]", "at0006", "sv");

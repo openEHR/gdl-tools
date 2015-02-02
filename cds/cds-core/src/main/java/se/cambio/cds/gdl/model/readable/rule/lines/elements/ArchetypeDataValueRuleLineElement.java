@@ -32,7 +32,7 @@ public class ArchetypeDataValueRuleLineElement extends DataValueRuleLineElement 
                 }
             }else if (getValue() instanceof DvOrdinal && _archetypeElementVO!=null){
                 DvOrdinal ordinal = (DvOrdinal)getValue();
-                String text = getArchetypeManager().getOrdinals().getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), ordinal.getValue(), lang);
+                String text = getArchetypeManager().getOrdinals().getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), ordinal.getCode(), lang);
                 if (text != null) {
                     return text;
                 } else {
