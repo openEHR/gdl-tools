@@ -560,7 +560,7 @@ public class GDLDroolsConverter {
             ExpressionItem expressionItem,
             Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (!(expressionItem instanceof MultipleAssignmentExpression)){
-            throw new InternalErrorException(new Exception("Guide="+guide.getId()+", Incorrect expression inside creation expression '"+expressionItem+"'"));
+            throw new InternalErrorException(new Exception("Guide=" + guide.getId() + ", Incorrect expression inside creation expression '" + expressionItem + "'"));
         }
         MultipleAssignmentExpression multipleAssignmentExpression = (MultipleAssignmentExpression)expressionItem;
         int i = 0;
