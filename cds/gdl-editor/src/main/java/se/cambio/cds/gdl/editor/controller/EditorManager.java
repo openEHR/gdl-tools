@@ -67,7 +67,7 @@ public class EditorManager {
                 }
             }
         };
-        if (getDelegate()._controller!=null && checkOnExit()){
+        if (getDelegate()._controller != null && checkOnExit()){
             getDelegate()._controller.runIfOKToExit(exitRunnable);
         }else{
             exitRunnable.run();

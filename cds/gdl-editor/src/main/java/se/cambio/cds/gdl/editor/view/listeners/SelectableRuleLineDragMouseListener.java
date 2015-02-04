@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.editor.view.listeners;
 
-import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.panels.DraggableSelectableRuleLinePanel;
@@ -101,14 +100,12 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
                 RuleLine ruleLineAux = multipleRuleLinePanel.getRuleLine();
                 if (RuleLineDirectory.checkRuleLineCompatibility(draggedPanel.getRuleLine(), ruleLineAux)){
                     multipleRuleLinePanel.addRuleLine(draggedPanel.getRuleLine());
-                    Logger.getLogger(this.getClass()).info("Add into "+MultipleRuleLinePanel.class.getName());
                     inserted = true;
                     break;
                 }
             }else if (ruleLineContainer instanceof BaseRuleLineContainerPanel){
                 if (RuleLineDirectory.checkRuleLineCompatibility(draggedPanel.getRuleLine(), null)){
                     _ruleLinesPanel.addRuleLine(draggedPanel.getRuleLine());
-                    Logger.getLogger(this.getClass()).info("Add into "+BaseRuleLineContainerPanel.class.getName());
                     inserted = true;
                     break;
                 }

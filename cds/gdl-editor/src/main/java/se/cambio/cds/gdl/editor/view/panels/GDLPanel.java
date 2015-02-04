@@ -2,6 +2,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import jsyntaxpane.DefaultSyntaxKit;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLSyntaxKit;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
@@ -10,16 +11,15 @@ import java.awt.*;
 
 public class GDLPanel extends JPanel implements RefreshablePanel{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JScrollPane mainScrollPanel;
     private JEditorPane editorPane;
-    private GDLEditor _controller = null;
+    private GDLEditor controller = null;
+    private JPanel mainPanel;
+    private JLabel statusLabel;
 
     public GDLPanel(GDLEditor controller){
-        _controller = controller;
+        this.controller = controller;
         init();
     }
 
@@ -29,6 +29,15 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
         DefaultSyntaxKit.registerContentType("text/gdl", GDLSyntaxKit.class.getCanonicalName());
         this.setFocusable(true);
         refresh();
+    }
+
+    private JPanel getMainPanel() {
+        if (mainPanel == null) {
+            mainPanel = new JPanel(new BorderLayout());
+            mainPanel.add(getMainScrollPanel(), BorderLayout.CENTER);
+            mainPanel.add(getStatusLabel(), BorderLayout.SOUTH);
+        }
+        return mainPanel;
     }
 
     private JScrollPane getMainScrollPanel(){
@@ -42,7 +51,6 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
         if (editorPane ==null){
             editorPane = new JEditorPane();
             editorPane.setEditable(true);
-            //editorPane.setTabSize(4);
         }
         return editorPane;
     }
@@ -52,15 +60,16 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
     }
 
     public void refresh(){
-        if (mainScrollPanel!=null){
-            remove(mainScrollPanel);
+        if (mainPanel != null){
+            remove(mainPanel);
+            mainPanel = null;
             mainScrollPanel = null;
             editorPane = null;
         }
-        this.add(getMainScrollPanel());
+        this.add(getMainPanel());
         getEditorPane().setContentType("text/gdl");
-        String gdlStr = _controller.getSerializedEntity();
-        if (gdlStr!=null){
+        String gdlStr = controller.getSerializedEntity();
+        if (gdlStr != null){
             getEditorPane().setText(gdlStr);
         }
         this.repaint();
@@ -71,6 +80,41 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
                 getMainScrollPanel().getVerticalScrollBar().setValue(0);
             }
         });
+    }
+
+    public JLabel getStatusLabel() {
+        if (statusLabel == null) {
+            statusLabel = new JLabel();
+        }
+        return statusLabel;
+    }
+
+    public void setStatus(StatusType statusType, String message) {
+        getStatusLabel().setForeground(getStatusColor(statusType));
+        getStatusLabel().setIcon(getStatusIcon(statusType));
+        getStatusLabel().setText(message);
+    }
+
+    private Color getStatusColor(StatusType statusType) {
+        if (statusType.equals(StatusType.ERRONEOUS)) {
+            return Color.RED;
+        } else {
+            return Color.BLACK;
+        }
+    }
+
+    private ImageIcon getStatusIcon(StatusType statusType) {
+        if (statusType.equals(StatusType.ERRONEOUS)) {
+            return GDLEditorImageUtil.EXCLAMATION_ICON;
+        } else if (statusType.equals(StatusType.CORRECT)) {
+            return GDLEditorImageUtil.ACCEPT_ICON;
+        } else {
+            return null;
+        }
+    }
+
+    public enum StatusType {
+        ERRONEOUS, CORRECT
     }
 }
 /*

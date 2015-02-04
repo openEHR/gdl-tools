@@ -7,6 +7,8 @@ import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -271,7 +273,7 @@ public class DescriptionPanel extends JPanel{
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            connect(_descriptionContext, "/otherDetails/references",ta);
+            connect(_descriptionContext, "/otherDetails/references", ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
             references.add(ta, BorderLayout.CENTER);
@@ -291,22 +293,32 @@ public class DescriptionPanel extends JPanel{
         public void focusLost(FocusEvent ev) {
             if (ev.getSource() instanceof JTextComponent){
                 JTextComponent textComponent = (JTextComponent)ev.getSource();
-                String text = textComponent.getText();
-                //text = text.replace("\n", "").replace("\r", ""); //Avoid line breaks?
-                if (text!=null){
-                    text = text.replace("\"","\\\"");
-                }
-                context.setValue(xPath, text);
+                saveText(context, xPath, textComponent);
             }else if(ev.getSource() instanceof JComboBox){
                 JComboBox comboBox = (JComboBox)ev.getSource();
                 String text = (String)comboBox.getSelectedItem();
                 context.setValue(xPath, text);
             }
         }
+
+
+    }
+
+    private void saveText(JXPathContext context, String xPath, JTextComponent textComponent) {
+        String text = textComponent.getText();
+        if (text!=null){
+            text = text.replace("\"","\\\"");
+        }
+        context.setValue(xPath, text);
     }
 
     private void connect(JXPathContext context, String xPath, JComponent component){
-        component.addFocusListener(new ComponentFocusAdapter(context, xPath));
+        if (component instanceof JTextComponent) {
+            JTextComponent textComponent = (JTextComponent) component;
+            textComponent.getDocument().addDocumentListener(new DescriptionDocumentListener(context, xPath, textComponent));
+        } else {
+            component.addFocusListener(new ComponentFocusAdapter(context, xPath));
+        }
         String value = null;
         try{
             value = (String)context.getValue(xPath);
@@ -315,11 +327,43 @@ public class DescriptionPanel extends JPanel{
         }
         if (value!=null){
             if (component instanceof JTextComponent){
+                JTextComponent textComponent = (JTextComponent) component;
                 value = value.replace("\\\"","\"");
-                ((JTextComponent)component).setText(value);
+                textComponent.setText(value);
             }else if (component instanceof JComboBox){
                 ((JComboBox)component).setSelectedItem(value);
             }
+        }
+    }
+
+    private class DescriptionDocumentListener implements DocumentListener {
+        private JXPathContext context;
+        private String xPath = null;
+        private JTextComponent textComponent;
+
+        public DescriptionDocumentListener(JXPathContext context, String xPath, JTextComponent textComponent){
+            this.xPath = xPath;
+            this.context = context;
+            this.textComponent = textComponent;
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            update();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            update();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            update();
+        }
+
+        private void update(){
+            saveText(context, xPath, textComponent);
         }
     }
 }
