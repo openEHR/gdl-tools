@@ -5,7 +5,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.List;
 
 public interface EHRDataStream {
-    public EHRDataStreamStatus getStatus() throws InternalErrorException;
+    public boolean isActive() throws InternalErrorException;
     public boolean hasNext(long waitTimeInMillis) throws InternalErrorException;
     public List<Object> next() throws InternalErrorException;
 }
