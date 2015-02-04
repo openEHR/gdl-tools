@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
+import org.openehr.rm.datatypes.encapsulated.DvParsable;
 import org.openehr.rm.datatypes.quantity.*;
 import org.openehr.rm.datatypes.quantity.datetime.DvDate;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
@@ -40,12 +41,13 @@ public class DataValueGenerator {
         dataValueMap.put(OpenEHRDataValues.DV_TEXT, new DvText("text"));
         dataValueMap.put(OpenEHRDataValues.DV_CODED_TEXT, new DvCodedText("text", new CodePhrase("tm", "cd")));
         dataValueMap.put(OpenEHRDataValues.DV_ORDINAL, new DvOrdinal(0, new DvCodedText("text", new CodePhrase("tm", "cd"))));
-        dataValueMap.put(OpenEHRDataValues.DV_DATE_TIME, new DvDateTime("2001-02-11T00"));
-        dataValueMap.put(OpenEHRDataValues.DV_DATE, new DvDate("2001-02-11"));
-        dataValueMap.put(OpenEHRDataValues.DV_TIME, new DvTime("12:00:00"));
+        dataValueMap.put(OpenEHRDataValues.DV_DATE_TIME, new DvDateTime());
+        dataValueMap.put(OpenEHRDataValues.DV_DATE, new DvDate());
+        dataValueMap.put(OpenEHRDataValues.DV_TIME, new DvTime());
         dataValueMap.put(OpenEHRDataValues.DV_DURATION, new DvDuration("P10D"));
         dataValueMap.put(OpenEHRDataValues.DV_BOOLEAN, new DvBoolean(Boolean.FALSE));
         dataValueMap.put(OpenEHRDataValues.DV_PROPORTION, new DvProportion(1,1, ProportionKind.UNITARY,0));
+        dataValueMap.put(OpenEHRDataValues.DV_PARSABLE, new DvParsable("text", "txt"));
     }
 
     public static DataValue createDV(String rmName){
@@ -55,26 +57,28 @@ public class DataValueGenerator {
     public static DataValue createDV(DataValue dataValue, String attributeName, Object value) throws InternalErrorException {
         if (dataValue instanceof DvQuantity){
             return create((DvQuantity)dataValue, attributeName, value);
-        }if (dataValue instanceof DvDuration){
+        } else if (dataValue instanceof DvDuration){
             return create((DvDuration)dataValue, attributeName, value);
-        }if (dataValue instanceof DvDateTime){
+        } else if (dataValue instanceof DvDateTime){
             return create((DvDateTime)dataValue, attributeName, value);
-        }if (dataValue instanceof DvDate){
+        } else if (dataValue instanceof DvDate){
             return create((DvDate)dataValue, attributeName, value);
-        }if (dataValue instanceof DvTime){
+        } else if (dataValue instanceof DvTime){
             return create((DvTime)dataValue, attributeName, value);
-        }if (dataValue instanceof DvOrdinal){
+        } else if (dataValue instanceof DvOrdinal){
             return create((DvOrdinal)dataValue, attributeName, value);
-        }if (dataValue instanceof DvCount){
+        } else if (dataValue instanceof DvCount){
             return create((DvCount)dataValue, attributeName, value);
-        }if (dataValue instanceof DvCodedText){
+        } else if (dataValue instanceof DvCodedText){
             return create((DvCodedText)dataValue, attributeName, value);
-        }if (dataValue instanceof DvText){
+        } else if (dataValue instanceof DvText){
             return create((DvText)dataValue, attributeName, value);
-        }if (dataValue instanceof DvBoolean){
+        } else if (dataValue instanceof DvBoolean){
             return create((DvBoolean)dataValue, attributeName, value);
+        } else if (dataValue instanceof DvProportion){
+            return create((DvProportion)dataValue, attributeName, value);
         }else{
-            throw new IllegalArgumentException("Unknown data value '"+dataValue.getClass().getSimpleName()+"'");
+            throw new IllegalArgumentException("Unknown data value '" + dataValue.getClass().getSimpleName() + "'");
         }
     }
 
@@ -87,7 +91,7 @@ public class DataValueGenerator {
         if (attributeName.equals("magnitude")){
             magnitude = Double.parseDouble(value.toString());
         }else if (attributeName.equals("units")){
-            if (value!=null){
+            if (value != null){
                 units = value.toString();
             }
         }else if (attributeName.equals("precision")){
@@ -112,7 +116,7 @@ public class DataValueGenerator {
         Calendar cal = Calendar.getInstance();
         if (value instanceof Integer){
             setCalendar(cal, Calendar.YEAR, attributeName, (Integer)value, "year", dvDateTime.getYear());
-            setCalendar(cal, Calendar.MONTH, attributeName, (Integer)value, "month", dvDateTime.getMonth());
+            setCalendar(cal, Calendar.MONTH, attributeName, ((Integer)value - 1), "month", dvDateTime.getMonth() - 1);   //We need to subtract one because calendar month starts at 0
             setCalendar(cal, Calendar.DATE, attributeName, (Integer)value, "day", dvDateTime.getDay());
             setCalendar(cal, Calendar.HOUR_OF_DAY, attributeName, (Integer)value, "hour", dvDateTime.getHour());
             setCalendar(cal, Calendar.MINUTE, attributeName, (Integer)value, "minute", dvDateTime.getMinute());
@@ -136,11 +140,11 @@ public class DataValueGenerator {
     private static DvDate create(DvDate dvDate, String attributeName, Object value) throws InternalErrorException{
         Calendar cal = Calendar.getInstance();
         setCalendar(cal, Calendar.YEAR, attributeName, (Integer)value, "year", dvDate.getYear());
-        setCalendar(cal, Calendar.MONTH, attributeName, (Integer)value, "month", dvDate.getMonth());
+        setCalendar(cal, Calendar.MONTH, attributeName, ((Integer)value) - 1, "month", dvDate.getMonth() - 1);     //We need to subtract one because calendar month starts at 0
         setCalendar(cal, Calendar.DATE, attributeName, (Integer)value, "day", dvDate.getDay());
         return new DvDate(
                 cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH)+1,
+                cal.get(Calendar.MONTH) + 1,
                 cal.get(Calendar.DATE));
     }
 
@@ -158,7 +162,7 @@ public class DataValueGenerator {
         return new DvCount(magnitude);
     }
 
-    private static DvCodedText create(DvCodedText dvCodedText, String expressi, String attributeName, Object value) throws InternalErrorException{
+    private static DvCodedText create(DvCodedText dvCodedText, String attributeName, Object value) throws InternalErrorException{
         String codedTextvalue = dvCodedText.getValue();
         String terminologyId = dvCodedText.getDefiningCode().getTerminologyId().getValue();
         String code = dvCodedText.getDefiningCode().getCodeString();
@@ -175,18 +179,47 @@ public class DataValueGenerator {
     private static DvText create(DvText dvText, String attributeName, Object value) throws InternalErrorException{
         String textValue = dvText.getValue();
         if (attributeName.equals("value")){
-            textValue = (String)value;;
+            if (value != null) {
+                textValue = "" + value;
+            } else {
+                textValue = null;
+            }
         }
-
         return new DvText(textValue);
     }
 
     private static DvOrdinal create(DvOrdinal dvOrdinal, String attributeName, Object value) throws InternalErrorException{
         Integer ordinalValue = dvOrdinal.getValue();
+        String codedTextvalue = dvOrdinal.getSymbolValue();
+        String terminologyId = dvOrdinal.getTerminologyId();
+        String code = dvOrdinal.getCode();
         if (attributeName.equals("value")){
             ordinalValue = (Integer)value;
+        } else if (attributeName.equals("symbolValue")){
+            codedTextvalue = (String)value;
+        }else if (attributeName.equals("terminologyId")){
+            terminologyId = (String)value;
+        }else if (attributeName.equals("code")){
+            code = (String) value;
         }
-        return new DvOrdinal(ordinalValue, dvOrdinal.getSymbol());
+        return new DvOrdinal(ordinalValue, codedTextvalue, terminologyId, code);
+    }
+
+    private static DvProportion create(DvProportion dvProportion, String attributeName, Object value) throws InternalErrorException{
+        Double numerator = dvProportion.getNumerator();
+        Double denominator = dvProportion.getDenominator();
+        Integer precision = dvProportion.getPrecision();
+        ProportionKind type = dvProportion.getType();
+        if (attributeName.equals("numerator")){
+            numerator = (Double)value;
+        } else if (attributeName.equals("denominator")){
+            denominator = (Double)value;
+        }else if (attributeName.equals("precision")){
+            precision = (Integer)value;
+        }else if (attributeName.equals("type")){
+            type = (ProportionKind) value;
+        }
+        return new DvProportion(numerator, denominator, type, precision);
     }
 
     private static DvTime create(DvTime dvTime, String attributeName, Object value) throws InternalErrorException{

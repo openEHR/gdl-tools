@@ -228,7 +228,7 @@ public class DialogExpressionEditor extends DialogEditor {
         if (!value.endsWith(")")){
             value = "("+value+")";
         }
-        value = "$gt0001.value="+value;
+        value = "$gt0001.value=" + value;
         ExpressionParser parser = new ExpressionParser(convert(value));
         return parser.parse();
     }
@@ -272,6 +272,14 @@ public class DialogExpressionEditor extends DialogEditor {
         }
     }
 
+    protected boolean acceptDialog(){
+        if (_expressionItem != null) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(this, GDLEditorLanguageManager.getMessage("EmptyExpressionErrorMsg"), GDLEditorLanguageManager.getMessage("EmptyExpressionErrorTitle"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
 
 }  //  @jve:decl-index=0:visual-constraint="124,21"
 /*
