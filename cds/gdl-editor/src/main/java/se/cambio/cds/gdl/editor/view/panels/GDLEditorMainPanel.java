@@ -87,7 +87,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         }
     }
 
-    private JButton getCreateBindingButton() {
+    public JButton getCreateBindingButton() {
         if (createBinding == null) {
             createBinding = new JButton();
             createBinding.setText(GDLEditorLanguageManager.getMessage("AddBinding"));
@@ -150,7 +150,6 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         }
     }
 
-
     public GuidePanel getGuidePanel(){
         if (_guidePanel==null){
             _guidePanel = new GuidePanel(_controller);
@@ -163,15 +162,11 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         return _currentRulePanel;
     }
 
-    /**
-     * This method initializes jButton	
-     *
-     * @return javax.swing.JButton
-     */
     public JButton getSaveButton() {
         if (saveButton == null) {
             saveButton = new JButton(new SaveGuideAction());
             saveButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            saveButton.setEnabled(false);
         }
         return saveButton;
     }
@@ -194,32 +189,6 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         }
         return _titleLabel;
     }
-
-    public class TestGuideAction extends AbstractAction{
-
-        private static final long serialVersionUID = -3085701867293096187L;
-
-        public void actionPerformed(ActionEvent e) {
-            _controller.compile();
-        }
-    }
-
-    public void showError(String errorMsg){
-        JOptionPane.showMessageDialog(
-                this,
-                GDLEditorLanguageManager.getMessage("Error")+": "+errorMsg,
-                GDLEditorLanguageManager.getMessage("Error"),
-                JOptionPane.ERROR_MESSAGE);
-    }
-
-    public void compilationOk(){
-        JOptionPane.showMessageDialog(
-                this,
-                GDLEditorLanguageManager.getMessage("CompilationOK"),
-                GDLEditorLanguageManager.getMessage("CompilationOK"),
-                JOptionPane.INFORMATION_MESSAGE);
-    }
-
 
     private JButton getBackToGuideButton() {
         if (backToGuideButton == null) {

@@ -107,7 +107,7 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
 
     protected void done() {
         try{
-            if (_guideFile!=null && _guideStr!=null && !_guideStr.isEmpty()){
+            if (_guideFile != null && _guideStr != null && !_guideStr.isEmpty()){
                 EditorManager.getActiveGDLEditor().entitySaved();
                 EditorManager.setLastFileLoaded(_guideFile);
                 EditorManager.setLastFolderLoaded(_guideFile.getParentFile());

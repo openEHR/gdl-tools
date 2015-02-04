@@ -10,6 +10,7 @@ import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.view.dialog.CDSFormGenDialog;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
+import se.cambio.cds.gdl.editor.controller.sw.CheckForChangesOnGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.CheckGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.CompileGuideSW;
 import se.cambio.cds.gdl.editor.controller.sw.SaveGuideOnFileRSW;
@@ -24,15 +25,7 @@ import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.AssignmentExpressionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ExpressionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExistsDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExpressionDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateFunctionDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.GuideImporter;
@@ -55,11 +48,7 @@ import se.cambio.openehr.view.util.ImportUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -103,6 +92,7 @@ public class GDLEditor implements EditorController<Guide>{
     public void init() {
         EditorManager.getActiveEditorViewer().setContent(getEditorPanel());
         EditorManager.getMainMenuBar().refreshLanguageMenu();
+        new CheckForChangesOnGuideSW(this).execute();
     }
 
     public String getTitle() {
@@ -178,6 +168,7 @@ public class GDLEditor implements EditorController<Guide>{
     @Override
     public void entitySaved() {
         updateOriginal();
+        getEditorPanel().getSaveButton().setEnabled(false);
     }
 
     public void save() {
@@ -204,7 +195,7 @@ public class GDLEditor implements EditorController<Guide>{
                     CompileGuideSW sw = new CompileGuideSW(){
                         protected void done() {
                             getController().compilationFinished(getErrorMsg());
-                            if (getErrorMsg()==null){
+                            if (getErrorMsg() == null){
                                 try {
                                     generateDialogForm(getCompiledGuide(), getGuide());
                                 } catch (InternalErrorException e) {
@@ -903,7 +894,7 @@ public class GDLEditor implements EditorController<Guide>{
 
     public void tabChanged(Component comp){
         final RefreshablePanel refreshablePanel;
-        if (comp instanceof RefreshablePanel && comp!=_lastRefreshedPanel){
+        if (comp instanceof RefreshablePanel && comp != _lastRefreshedPanel){
             refreshablePanel = (RefreshablePanel)comp;
         }else{
             refreshablePanel = null;
@@ -939,8 +930,7 @@ public class GDLEditor implements EditorController<Guide>{
     }
 
     private void runIfOkWithEditorState(Component currentPanel, Runnable pendingRunnable){
-        if (_lastRefreshedPanel instanceof GDLPanel/* &&
-                _lastRefreshedPanel!=currentPanel*/){
+        if (_lastRefreshedPanel instanceof GDLPanel){
             //Take care of possible changes made
             GDLPanel gdlPanel = (GDLPanel)_lastRefreshedPanel;
             String guideStr = gdlPanel.getGuideStr();
@@ -967,10 +957,8 @@ public class GDLEditor implements EditorController<Guide>{
     }
 
     public void gdlEditingChecked(Guide guide, boolean checkOk, String msg, Runnable pendingRunnable){
-        if (checkOk && guide!=null){
-            String auxOriginalGuide = _originalGuide;
-            setEntity(guide);
-            _originalGuide = auxOriginalGuide;
+        if (checkOk && guide != null){
+            updateGuide(guide);
             if (pendingRunnable!=null){
                 pendingRunnable.run();
             }
@@ -992,6 +980,12 @@ public class GDLEditor implements EditorController<Guide>{
                 loadLastTab();
             }
         }
+    }
+
+    public void updateGuide(Guide guide) {
+        String auxOriginalGuide = _originalGuide;
+        setEntity(guide);
+        _originalGuide = auxOriginalGuide;
     }
 
     private void loadLastTab(){
@@ -1080,8 +1074,7 @@ public class GDLEditor implements EditorController<Guide>{
 
     // Check if all elements inside map have the same amount of gtcodes as the
     // ones in the original language, if not, add them
-    private static void check(String originalLang,
-                              Map<String, TermDefinition> termDefinitionMap) {
+    private static void check(String originalLang, Map<String, TermDefinition> termDefinitionMap) {
         TermDefinition originalTermDefinition =
                 termDefinitionMap.get(originalLang);
         for (String langCode : termDefinitionMap.keySet()) {
@@ -1339,6 +1332,13 @@ public class GDLEditor implements EditorController<Guide>{
             lines.add(string.trim());
         }
         return lines;
+    }
+
+    public void setOnlyGDLSourceEditing(boolean onlyGDLSourceEditing){
+        getEditorPanel().getGuidePanel().getGuideEditorTabPane().setEnabled(!onlyGDLSourceEditing);
+        getEditorPanel().getAddRuleButton().setEnabled(!onlyGDLSourceEditing);
+        getEditorPanel().getCreateBindingButton().setEnabled(!onlyGDLSourceEditing);
+        getEditorPanel().getGenerateFormButton().setEnabled(!onlyGDLSourceEditing);
     }
 }
 /*
