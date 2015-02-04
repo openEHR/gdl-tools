@@ -1102,7 +1102,7 @@ public class GDLEditor implements EditorController<Guide>{
             Guide guide = constructCurrentGuide();
             serializedGuide = GuideUtil.serializeGuide(guide);
         } catch (Exception e) {
-            ExceptionHandler.handle(e);
+            //Error parsing/serializing guideline
         }
         if (_originalGuide != null && !_originalGuide.equals(serializedGuide)) {
             return true;
