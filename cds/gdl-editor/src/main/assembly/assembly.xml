@@ -13,6 +13,7 @@
 		<dependencySet>
 			<!-- Project artifact is not copied under library directory since it is 
 				added to the root directory of the zip package. -->
+			<outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
 			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>lib</outputDirectory>
 			<unpack>false</unpack>
