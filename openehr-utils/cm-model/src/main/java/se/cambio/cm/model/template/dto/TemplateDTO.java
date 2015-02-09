@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class TemplateDTO implements CMElement{
     private java.lang.String id;
-    private java.lang.String arcehtypeId;
+    private java.lang.String archetypeId;
     private String format;
     private java.lang.String source;
     private byte[] aom;
@@ -18,22 +18,22 @@ public class TemplateDTO implements CMElement{
     public TemplateDTO() {
     }
 
-    public TemplateDTO(String id, String format, String arcehtypeId, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
+    public TemplateDTO(String id, String format, String archetypeId, String source, byte[] aom, byte[] aobcVO, Date lastUpdate) {
         this.id = id;
         this.format = format;
-        this.arcehtypeId = arcehtypeId;
+        this.archetypeId = archetypeId;
         this.source = source;
         this.aom = aom;
         this.aobcVO = aobcVO;
         this.lastUpdate = lastUpdate;
     }
 
-    public java.lang.String getArcehtypeId() {
-        return arcehtypeId;
+    public java.lang.String getArchetypeId() {
+        return archetypeId;
     }
 
-    public void setArcehtypeId(java.lang.String arcehtypeId) {
-        this.arcehtypeId = arcehtypeId;
+    public void setArchetypeId(java.lang.String archetypeId) {
+        this.archetypeId = archetypeId;
     }
 
     public byte[] getAom() {

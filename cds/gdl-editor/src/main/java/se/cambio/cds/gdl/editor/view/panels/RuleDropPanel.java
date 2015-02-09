@@ -1,40 +1,37 @@
 package se.cambio.cds.gdl.editor.view.panels;
-import java.awt.Component;
-import java.util.ArrayList;
-
-import javax.swing.JComponent;
-
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 
 public class RuleDropPanel extends DropPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
 
-    private RulesPanel _rulesPanel = null;
-    public RuleDropPanel(RulesPanel rulesPanel) {
-	super();
-	_rulesPanel = rulesPanel;
-    }
+	private static final long serialVersionUID = 1L;
 
-    public void addDraggableLine(JComponent component, ReadableRule rule){
-	DraggablePanel dp = new DraggableRulePanel(component, rule);
-	super.add(dp, getGBC());
-	getGBC().gridy++;
-    }
-
-
-    public void panelDragged(DraggablePanel panel){
-	super.panelDragged(panel);
-	ArrayList<ReadableRule> rules = new ArrayList<ReadableRule>();
-	for (Component component : getComponents()) {
-	    DraggableRulePanel draggablePanel = (DraggableRulePanel)component;
-	    rules.add(draggablePanel.getRule());
+	private RulesPanel _rulesPanel = null;
+	public RuleDropPanel(RulesPanel rulesPanel) {
+		super();
+		_rulesPanel = rulesPanel;
 	}
-	_rulesPanel.updateList(rules);
-    }
+
+	public void addDraggableLine(JComponent component, ReadableRule rule){
+		DraggablePanel dp = new DraggableRulePanel(component, rule);
+		super.add(dp, getGBC());
+		getGBC().gridy++;
+	}
+
+
+	public void panelDragged(DraggablePanel panel){
+		super.panelDragged(panel);
+		ArrayList<ReadableRule> rules = new ArrayList<ReadableRule>();
+		for (Component component : getComponents()) {
+			DraggableRulePanel draggablePanel = (DraggableRulePanel)component;
+			rules.add(draggablePanel.getRule());
+		}
+		_rulesPanel.updateList(rules);
+	}
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

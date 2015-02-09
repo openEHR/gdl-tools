@@ -79,7 +79,7 @@ public class DroolsExecutionManager {
             int initSalience = 0;
             for(String guideId: guideIds) {
                 session.setGlobal(getGuideSalienceId(guideId), initSalience);
-                initSalience = initSalience+1000;
+                initSalience = initSalience + 1000;
             }
             session.execute(workingMemoryObjects);
             executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());

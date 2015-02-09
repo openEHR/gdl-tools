@@ -80,7 +80,7 @@ public class RuleElementEditor {
             if (cmElement instanceof ArchetypeDTO){
                 idArchetype = cmElement.getId();
             } else if (cmElement instanceof TemplateDTO){
-                idArchetype = ((TemplateDTO)cmElement).getArcehtypeId();
+                idArchetype = ((TemplateDTO)cmElement).getArchetypeId();
                 idTemplate = cmElement.getId();
             }
             if (idArchetype==null){

@@ -37,7 +37,8 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener{
     public final static String ACTION_LEFT_CLICK = "LINK_ACTION_LEFT_CLICK";
     private RuleLineElementWithValue<?> _ruleLineElementWithValue = null;
 
-    private static final Color LINK_COLOR_VARSET = Color.BLUE;//new Color(50, 200, 50);
+    private static final Color LINK_COLOR_VARSET = Color.BLUE;
+    private static final Color LINK_COLOR_VARSET_EHR = new Color(50, 150, 50);
     private static final Color LINK_COLOR_VARUNSET = new Color(200, 50, 50);
     private static final Color LINK_COLOR_COMMENTED = Color.GRAY;
 

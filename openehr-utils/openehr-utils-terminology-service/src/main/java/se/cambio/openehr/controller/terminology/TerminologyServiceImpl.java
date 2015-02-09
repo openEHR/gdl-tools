@@ -271,8 +271,7 @@ public class TerminologyServiceImpl implements TerminologyService {
             if (ts != null) {
                 return ts.retrieveAll(terminologyId, language);
             } else {
-                throw new UnsupportedTerminologyException(
-                        "Unknown terminology '" + terminologyId + "'");
+                throw new UnsupportedTerminologyException("Unknown terminology '" + terminologyId + "'");
             }
         }
     }

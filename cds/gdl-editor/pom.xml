@@ -69,9 +69,9 @@
                             <!-- Configures the classpath prefix. This configuration option is
                                 used to specify that all needed libraries are found under lib/ directory. -->
                             <classpathPrefix>lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
                             <!-- Specifies the main class of the application -->
                             <mainClass>se.cambio.cds.gdl.editor.view.InitGDLEditor</mainClass>
-                            <useUniqueVersions>false</useUniqueVersions>
                         </manifest>
                     </archive>
                     <finalName>gdl-editor</finalName>

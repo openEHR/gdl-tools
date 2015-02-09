@@ -54,7 +54,7 @@ public class TemplateObjectBundleManager {
             throws InternalErrorException {
         try {
             TEMPLATE template = getParsedTemplate(templateDTO.getSource());
-            templateDTO.setArcehtypeId(template.getDefinition().getArchetypeId());
+            templateDTO.setArchetypeId(template.getDefinition().getArchetypeId());
             Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
             templateDTO.setAom(IOUtils.getBytes(ar));
             GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap);

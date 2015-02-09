@@ -47,9 +47,10 @@
     </i></#list>
     <br>
 </#if>
-<#if guide_definitions.preconditions?has_content>
+test
+<#if guide_preconditions?has_content>
     <h2>${texts.Preconditions?upper_case}</h2>
-        <#list preconditions as preconditionRuleLine>
+        <#list guide_preconditions as preconditionRuleLine>
         <div class="bg-block">
             ${preconditionRuleLine}
         </div>

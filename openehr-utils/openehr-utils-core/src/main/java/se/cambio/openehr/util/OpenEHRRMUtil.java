@@ -112,30 +112,6 @@ public class OpenEHRRMUtil {
     }
 
     private static String getEventsTimePath(Archetype ar) {
-        /*
-        if (ar == null || ar.getDefinition() == null) {
-            return EVENT_TIME_PATH;
-        }
-        CAttribute data = ar.getDefinition().getAttribute("data");
-        if (data == null) {
-            return EVENT_TIME_PATH;
-        }
-        List<CObject> dataItems = data.getChildren();
-        if (dataItems.isEmpty()){
-            return EVENT_TIME_PATH;
-        }
-        CComplexObject firstDataNode = (CComplexObject) dataItems.iterator().next();
-        CAttribute events = firstDataNode.getAttribute("events");
-        if (events == null) {
-            return EVENT_TIME_PATH;
-        }
-        List<CObject> eventItems = events.getChildren();
-        if (eventItems.isEmpty()){
-            return EVENT_TIME_PATH;
-        }
-        CObject cObject = eventItems.iterator().next();
-        return cObject.path() + "/time";
-        */
         return EVENT_TIME_PATH;
     }
 

@@ -31,33 +31,14 @@ public class RulePanel extends JPanel implements RefreshablePanel{
     private JTabbedPane getRuleEditorTabPane(){
         if (ruleEditorTabPane == null){
             ruleEditorTabPane = new JTabbedPane();
-	    /*TODO
-	    ruleEditorTabPane.addTab(
-		    LanguageManager.getMessage("Configuration"),
-		    ImageUtil.RULE_ICON, 
-		    getConfigurationPanel());*/
             ruleEditorTabPane.addTab(
                     GDLEditorLanguageManager.getMessage("ConditionsAndActions"),
                     GDLEditorImageUtil.RULE_ICON,
                     getConditionsAndActionsPanel());
-		    /*
-	    SwingUtilities.invokeLater(new Runnable() {
-		public void run() {
-		    ruleEditorTabPane.setSelectedIndex(1);
-		}
-	    });*/
-
         }
         return ruleEditorTabPane;
     }
-    /*
-        private JPanel getConfigurationPanel(){
-        if (configurationPanel==null){
-            configurationPanel = new JPanel();
-        }
-        return configurationPanel;
-        }
-    */
+
     private ConditionsAndActionsPanel getConditionsAndActionsPanel(){
         if (conditionsAndActionsPanel==null){
             conditionsAndActionsPanel = new ConditionsAndActionsPanel(_controller);

@@ -102,7 +102,7 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
 
     public TemplateMap generateTemplateMap(String templateId) throws InternalErrorException, InstanceNotFoundException {
         TemplateDTO templateDTO = getCMElement(templateId);
-        String archetypeId = templateDTO.getArcehtypeId();
+        String archetypeId = templateDTO.getArchetypeId();
         Collection<ArchetypeElementVO> archetypeElementVOs =
                 getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, templateId);
         Map<String, TemplateElementMap> templateElementMaps = new HashMap<String, TemplateElementMap>();
