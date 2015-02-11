@@ -18,6 +18,8 @@ import java.util.*;
 
 public class TerminologyServiceImpl implements TerminologyService {
 
+    private Long lastUpdate = null;
+    private static long MAX_INTERVAL_BEFORE_UPLOAD = 5000; //5 seg
     private Map<String, TerminologyService> terminologyPlugins;
     private Set<String> _supportedTerminologies = null;
     private static TerminologyServiceImpl soleInstance;
@@ -27,17 +29,10 @@ public class TerminologyServiceImpl implements TerminologyService {
         init();
     }
 
-
     public void init(){
-        _supportedTerminologies = new HashSet<String>();
-        try {
-            _supportedTerminologies.addAll(getDAO().searchAllIds());
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
     }
 
-    private TerminologyServicePlugin loadTeminology(TerminologyDTO terminologyDTO){
+    private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO){
         try{
             log.debug("Loading terminology : " + terminologyDTO.getId());
             InputStream input = new ByteArrayInputStream(terminologyDTO.getSource().getBytes());
@@ -53,9 +48,8 @@ public class TerminologyServiceImpl implements TerminologyService {
                 terminologyServicePlugin =
                         new CSVTerminologyServicePlugin(terminologyDTO.getId());
             }
-            if (terminologyServicePlugin!=null){
+            if (terminologyServicePlugin != null){
                 terminologyServicePlugin.init(input);
-                this.registerTerminologyServicePlugin(terminologyServicePlugin);
             }
             return terminologyServicePlugin;
         } catch (Exception e) {
@@ -84,7 +78,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         String terminologyId = a.getTerminologyId().getValue();
         boolean ret = false;
         if (isOntology(terminologyId)) {
-	        //TODO Ontology support
+            //TODO Ontology support
         } else {
             ret = getTerminologyServicePlugin(terminologyId).isSubclassOf(a, b);
         }
@@ -123,7 +117,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     public boolean isTerminologySupported(String terminologyId) {
-        return _supportedTerminologies.contains(terminologyId);
+        return getSupportedTerminologiesI().contains(terminologyId);
     }
 
     private boolean isOntology(String terminologyId) {
@@ -330,7 +324,8 @@ public class TerminologyServiceImpl implements TerminologyService {
             try {
                 Collection<TerminologyDTO> terminologyDTOs = getDAO().searchByIds(Collections.singleton(terminologyId));
                 TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
-                terminologyService = loadTeminology(terminologyDTO);
+                terminologyService = generateTerminologyService(terminologyDTO);
+                getTerminologyServicePluginMap().put(terminologyId, terminologyService);
             } catch (InstanceNotFoundException e) {
                 ExceptionHandler.handle(e);
             } catch (InternalErrorException e) {
@@ -338,12 +333,6 @@ public class TerminologyServiceImpl implements TerminologyService {
             }
         }
         return terminologyService;
-    }
-
-    public void registerTerminologyServicePlugin(
-            TerminologyServicePlugin terminologyService) {
-        getTerminologyServicePluginMap().put(
-                terminologyService.getTerminologyId(), terminologyService);
     }
 
     private Map<String, TerminologyService> getTerminologyServicePluginMap() {
@@ -354,11 +343,32 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     private boolean isSupported(String terminologyId){
-        return getSupportedTerminologies().contains(terminologyId);
+        return getSupportedTerminologiesI().contains(terminologyId);
+    }
+
+    private Collection<String> getSupportedTerminologiesI() {
+        if (_supportedTerminologies == null){
+            _supportedTerminologies = new HashSet<String>();
+        }
+        if (shouldUpdateSupportedTerminologyIds()) {
+            try {
+                _supportedTerminologies.clear();
+                _supportedTerminologies.addAll(getDAO().searchAllIds());
+                lastUpdate = System.currentTimeMillis();
+            } catch (InternalErrorException e) {
+                ExceptionHandler.handle(e);
+            }
+        }
+        return _supportedTerminologies;
     }
 
     public Collection<String> getSupportedTerminologies() {
-        return Collections.unmodifiableCollection(_supportedTerminologies);
+        return Collections.unmodifiableCollection(getSupportedTerminologiesI());
+    }
+
+    private boolean shouldUpdateSupportedTerminologyIds() {
+        long currentTimeMinusWaitInterval = System.currentTimeMillis() - MAX_INTERVAL_BEFORE_UPLOAD;
+        return lastUpdate == null || lastUpdate < currentTimeMinusWaitInterval;
     }
 
     public GenericCMElementDAO<TerminologyDTO> getDAO() throws InternalErrorException {

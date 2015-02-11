@@ -19,6 +19,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     private Map<String, ArrayList<String>> _parentsMap = null;
     private Map<String, ArrayList<String>> _childrenMap = null;
     private Map<String, String> _descriptionsMap = null;
+    private static Logger log = Logger.getLogger(CSVTerminologyServicePlugin.class);
 
     public CSVTerminologyServicePlugin(String terminologyId){
         _terminologyId = terminologyId;
@@ -60,9 +61,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             }
             log.debug("Total " + getDescriptionsMap().size() + " term(s) loaded..");
         } catch (Exception e) {
-            Logger.getLogger(TerminologyServiceImpl.class).warn(
-                    "Failed to initialize the terminology service '"
-                            + _terminologyId + "'", e);
+            Logger.getLogger(TerminologyServiceImpl.class).warn("Failed to initialize the terminology service '" + _terminologyId + "'", e);
             throw new InternalErrorException(e);
         }
     }
@@ -83,7 +82,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         checkTerminologySupported(code);
         boolean ret = false;
         for (CodePhrase cp : codes) {
-            if( ! code.getTerminologyId().equals(cp.getTerminologyId())) {
+            if(!code.getTerminologyId().equals(cp.getTerminologyId())) {
                 // simply ignore instead of stopping the rest codes
                 continue;
             }
@@ -93,7 +92,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
                     break;
                 }
             }catch(InvalidCodeException e){
-                Logger.getLogger(CSVTerminologyServicePlugin.class).warn("InvalidCodeException: checkSubclassOf('"+code+"','"+cp.getCodeString()+"') ignored. "+e.getMessage());
+                Logger.getLogger(CSVTerminologyServicePlugin.class).warn("InvalidCodeException: checkSubclassOf('" + code + "','" + cp.getCodeString() + "') ignored. " + e.getMessage());
             }
         }
         return ret;
@@ -108,7 +107,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
     private TerminologyNodeVO retrieveAllSubclasses(String code, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException {
-        // TODO Memory eater!VVVV
+        //TODO Memory eater!VVVV
         TerminologyNodeVO node = getNodeForCode(code, language);
         ArrayList<String> children = _childrenMap.get(code);
         if (children != null) {
@@ -136,14 +135,10 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             ArrayList<TerminologyNodeVO> allNodes = new ArrayList<TerminologyNodeVO>();
             for (String code : _descriptionsMap.keySet()) {
                 if (!code.isEmpty() && _parentsMap.get(code)==null){
-                    //if (code.equals("138875005")){
-                        TerminologyNodeVO node = retrieveAllSubclasses(code, language);
-                        allNodes.add(node);
-                    //}
-
+                    TerminologyNodeVO node = retrieveAllSubclasses(code, language);
+                    allNodes.add(node);
                 }
             }
-            //System.out.println("allNodes="+allNodes.size());
             return allNodes;
         }else{
             throw new UnsupportedTerminologyException(terminologyId+ " not supported");
@@ -159,17 +154,13 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return new TerminologyNodeVO(new DvCodedText(desc, new CodePhrase(_terminologyId, code)));
     }
 
-    public boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property,
-                                      CodePhrase value) throws UnsupportedTerminologyException,
-            UnknownPropertyException {
-        // TODO Auto-generated method stub
+    public boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property, CodePhrase value)
+            throws UnsupportedTerminologyException, UnknownPropertyException {
         return false;
     }
 
-    public List<DvCodedText> retrieveAllPossibleValues(CodePhrase property,
-                                                       CodePhrase language) throws UnsupportedTerminologyException,
-            UnknownPropertyException, UnsupportedLanguageException {
-        // TODO Auto-generated method stub
+    public List<DvCodedText> retrieveAllPossibleValues(CodePhrase property, CodePhrase language)
+            throws UnsupportedTerminologyException, UnknownPropertyException, UnsupportedLanguageException {
         return null;
     }
 
@@ -191,12 +182,10 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     protected boolean checkSubclassOf(String as, String bs)
             throws UnsupportedTerminologyException, InvalidCodeException {
         if (invalidCode(as)) {
-            throw new InvalidCodeException("Invalid " + _terminologyId
-                    + " code: " + as);
+            throw new InvalidCodeException("Invalid " + _terminologyId + " code: " + as);
         }
         if (invalidCode(bs)) {
-            throw new InvalidCodeException("Invalid " + _terminologyId
-                    + " code: " + bs);
+            throw new InvalidCodeException("Invalid " + _terminologyId  + " code: " + bs);
         }
         if (as.equals(bs)) {
             return true;
@@ -214,8 +203,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     private void checkTerminologySupported(String terminology)
             throws UnsupportedTerminologyException {
         if (!isTerminologySupported(terminology)) {
-            throw new UnsupportedTerminologyException(terminology
-                    + " not supported");
+            throw new UnsupportedTerminologyException(terminology + " not supported");
         }
     }
 
@@ -253,7 +241,6 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             UnsupportedLanguageException {
         return getDescription(code);
     }
-    private static Logger log = Logger.getLogger(CSVTerminologyServicePlugin.class);
 
     public Collection<String> getSupportedTerminologies() {
         Collection<String> supportedTerminologies = new ArrayList<String>();

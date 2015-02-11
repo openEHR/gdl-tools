@@ -118,16 +118,17 @@ public class DateTimeARFinder {
     }
 
     private static DateTime getDateTime(ElementInstance ei) {
-        if (ei!=null) {
+        if (ei != null) {
             if(ei.getDataValue() instanceof DvDateTime) {
                 DvDateTime dvDateTime = ((DvDateTime)ei.getDataValue());
-                if (dvDateTime.getDateTime()!=null) {
+                if (dvDateTime.getDateTime() != null) {
                     return dvDateTime.getDateTime();
                 }else{
                     Logger.getLogger(DateTimeARFinder.class).warn("Element instance '"+ei.getId()+"' has no DVDateTime.");
                 }
             }else{
-                Logger.getLogger(DateTimeARFinder.class).warn("Element instance '"+ei.getId()+"' data value is not DVDateTime.");
+                String dvType =  ei.getDataValue() == null? "null" : ei.getDataValue().getClass().getSimpleName();
+                Logger.getLogger(DateTimeARFinder.class).warn("Element instance '"+ei.getId()+"' data value is not DVDateTime, '" + dvType+ "' found instead.)");
             }
         }else{
             Logger.getLogger(DateTimeARFinder.class).warn("Element instance null");
