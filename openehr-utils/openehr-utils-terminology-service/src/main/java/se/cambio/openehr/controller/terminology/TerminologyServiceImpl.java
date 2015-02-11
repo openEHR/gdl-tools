@@ -35,7 +35,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO){
         try{
             log.debug("Loading terminology : " + terminologyDTO.getId());
-            InputStream input = new ByteArrayInputStream(terminologyDTO.getSource().getBytes());
+            InputStream input = new ByteArrayInputStream(terminologyDTO.getSource().getBytes("UTF8"));
             String clazz = TerminologyServiceConfiguration.getInstance().getPluginSourceClass(terminologyDTO.getId());
             TerminologyServicePlugin terminologyServicePlugin = null;
             if(clazz != null) {

@@ -1,13 +1,13 @@
 package se.cambio.openehr.controller.terminology.plugins;
 
-import java.io.InputStream;
-
 import se.cambio.openehr.controller.terminology.TerminologyService;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.InputStream;
+
 public interface TerminologyServicePlugin extends TerminologyService {
-    public String getTerminologyId();
-    public void init(InputStream is) throws InternalErrorException;
+    String getTerminologyId();
+    void init(InputStream is) throws InternalErrorException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

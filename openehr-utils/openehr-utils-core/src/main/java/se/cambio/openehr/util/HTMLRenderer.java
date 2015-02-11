@@ -32,7 +32,7 @@ public class HTMLRenderer {
 
     public String proccess(Map<String, Object> model) throws InternalErrorException {
         try {
-            if (template==null){
+            if (template == null){
                 throw new InternalErrorException(new Exception("No template defined!"));
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
