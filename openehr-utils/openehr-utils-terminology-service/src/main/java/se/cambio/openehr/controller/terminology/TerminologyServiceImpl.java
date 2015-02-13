@@ -332,7 +332,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         TerminologyService terminologyService = getTerminologyServicePluginMap().get(terminologyId);
         if (terminologyService == null && isSupported(terminologyId)){
             try {
-                Collection<TerminologyDTO> terminologyDTOs = getCMAdminFD().searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
+                Collection<TerminologyDTO> terminologyDTOs = getCMAdministrationFacadeDelegate().searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
                 TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
                 terminologyService = generateTerminologyService(terminologyDTO);
                 getTerminologyServicePluginMap().put(terminologyId, terminologyService);
@@ -363,7 +363,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         if (shouldUpdateSupportedTerminologyIds()) {
             try {
                 _supportedTerminologies.clear();
-                _supportedTerminologies.addAll(getCMAdminFD().getAllCMElementIds(TerminologyDTO.class));
+                _supportedTerminologies.addAll(getCMAdministrationFacadeDelegate().getAllCMElementIds(TerminologyDTO.class));
                 lastUpdate = System.currentTimeMillis();
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
@@ -381,7 +381,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         return lastUpdate == null || lastUpdate < currentTimeMinusWaitInterval;
     }
 
-    private CMAdministrationFacadeDelegate getCMAdminFD() throws InternalErrorException {
+    private CMAdministrationFacadeDelegate getCMAdministrationFacadeDelegate() throws InternalErrorException {
         return CMAdministrationFacadeDelegateFactory.getDelegate();
     }
 }

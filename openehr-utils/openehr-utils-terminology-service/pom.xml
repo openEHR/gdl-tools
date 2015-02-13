@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openehr.utils</groupId>
-			<artifactId>openehr-utils-server</artifactId>
+			<artifactId>openehr-utils-core</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
