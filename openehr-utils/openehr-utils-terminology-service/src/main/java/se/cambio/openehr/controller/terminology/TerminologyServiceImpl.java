@@ -3,18 +3,29 @@ package se.cambio.openehr.controller.terminology;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegateFactory;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
-import se.cambio.cm.model.util.CMElementDAOFactory;
 import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.*;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.exceptions.InvalidCodeException;
+import se.cambio.openehr.util.exceptions.UnknownPropertyException;
+import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
+import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TerminologyServiceImpl implements TerminologyService {
 
@@ -226,7 +237,7 @@ public class TerminologyServiceImpl implements TerminologyService {
 		}
 	    }
 	}
-	log.debug("retrieve lable (" + label + ") for class " + klass);
+	log.debug("retrieve label (" + label + ") for class " + klass);
 
 	return label;
     }
@@ -297,8 +308,7 @@ public class TerminologyServiceImpl implements TerminologyService {
             if (ts != null) {
                 return ts.retrieveTerm(concept, language);
             } else {
-                throw new UnsupportedTerminologyException(
-                        "Unknown terminology '" + terminologyId + "'");
+                throw new UnsupportedTerminologyException("Unknown terminology '" + terminologyId + "'");
             }
         }
     }
@@ -322,7 +332,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         TerminologyService terminologyService = getTerminologyServicePluginMap().get(terminologyId);
         if (terminologyService == null && isSupported(terminologyId)){
             try {
-                Collection<TerminologyDTO> terminologyDTOs = getDAO().searchByIds(Collections.singleton(terminologyId));
+                Collection<TerminologyDTO> terminologyDTOs = getCMAdminFD().searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
                 TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
                 terminologyService = generateTerminologyService(terminologyDTO);
                 getTerminologyServicePluginMap().put(terminologyId, terminologyService);
@@ -353,7 +363,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         if (shouldUpdateSupportedTerminologyIds()) {
             try {
                 _supportedTerminologies.clear();
-                _supportedTerminologies.addAll(getDAO().searchAllIds());
+                _supportedTerminologies.addAll(getCMAdminFD().getAllCMElementIds(TerminologyDTO.class));
                 lastUpdate = System.currentTimeMillis();
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
@@ -371,10 +381,11 @@ public class TerminologyServiceImpl implements TerminologyService {
         return lastUpdate == null || lastUpdate < currentTimeMinusWaitInterval;
     }
 
-    public GenericCMElementDAO<TerminologyDTO> getDAO() throws InternalErrorException {
-        return CMElementDAOFactory.getInstance().getDAO(TerminologyDTO.class);
+    private CMAdministrationFacadeDelegate getCMAdminFD() throws InternalErrorException {
+        return CMAdministrationFacadeDelegateFactory.getDelegate();
     }
 }
+
 /*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

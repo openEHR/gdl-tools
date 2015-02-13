@@ -20,6 +20,12 @@
 			<version>2.4</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-server</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
