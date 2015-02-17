@@ -24,6 +24,14 @@ public class CachedCMManager {
 
     public boolean isDataChanged() throws InternalErrorException {
         boolean changesDetected = false;
+        if (isWaitingTimeForNextCheckReached()) {
+            changesDetected = checkIfDataChanged();
+        }
+        return changesDetected;
+    }
+
+    private boolean checkIfDataChanged() throws InternalErrorException {
+        boolean changesDetected = false;
         Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(cmElementClass);
         if (lastUpdateDateOnServer != null) {
             if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
@@ -34,7 +42,7 @@ public class CachedCMManager {
         return changesDetected;
     }
 
-    public boolean isWaitingTimeForNextCheckReached() {
+    private boolean isWaitingTimeForNextCheckReached() {
         boolean waitingTimeForNextCheckReached = false;
         long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
         if (timeSinceLastCheck >= MAX_CHECK_WAITING_TIME_IN_MILLIS){

@@ -94,7 +94,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
     }
 
     private void findCMElementsInCache(Collection<String> ids, Collection<String> idsNotInCache, Collection<E> foundCMElements) throws InternalErrorException {
-        cacheUpdate();
+        checkForCacheUpdate();
         for (String id: ids){
             E cmElement = getCmElementMap().get(id);
             if (cmElement!=null){
@@ -105,16 +105,11 @@ public abstract class AbstractCMManager<E extends CMElement> {
         }
     }
 
-    public boolean cacheUpdate() throws InternalErrorException {
-        boolean changesDetected = false;
-        if (cachedCMManager.isWaitingTimeForNextCheckReached()) {
-            changesDetected = cachedCMManager.isDataChanged();
-        }
-        if (changesDetected) {
+    public void checkForCacheUpdate() throws InternalErrorException {
+        if (cachedCMManager.isDataChanged()) {
             logger.info("Detected changes on " + getCMElementClass().getSimpleName() + "). Initializing cache...");
             initialize();
         }
-        return changesDetected;
     }
 
     private void findCMElementsNotInCache(final Collection<String> idsNotInCache, final Collection<E> foundCMElements) throws InternalErrorException, InstanceNotFoundException {
