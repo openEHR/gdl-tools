@@ -47,7 +47,6 @@
     </i></#list>
     <br>
 </#if>
-test
 <#if guide_preconditions?has_content>
     <h2>${texts.Preconditions?upper_case}</h2>
         <#list guide_preconditions as preconditionRuleLine>
