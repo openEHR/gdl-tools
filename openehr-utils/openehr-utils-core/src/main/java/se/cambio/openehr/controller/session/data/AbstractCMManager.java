@@ -4,33 +4,28 @@ import org.apache.log4j.Logger;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.CMElementComparator;
+import se.cambio.openehr.util.CachedCMManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractCMManager<E extends CMElement> {
 
-    private static long MAX_CHECK_WAITING_TIME_IN_MILLIS = 5000; //5 seg
     private Map<String, E> cmElementMap;
     private boolean useCache = true;
-    private Date lastCheckForUpdates;
-    private Date mostRecentLocalUpdate;
     private Logger logger = Logger.getLogger(AbstractCMManager.class);
+    private CachedCMManager cachedCMManager;
 
     public AbstractCMManager(){
-        Date currentTime = Calendar.getInstance().getTime();
-        mostRecentLocalUpdate = currentTime;
-        lastCheckForUpdates = currentTime;
+        cachedCMManager = new CachedCMManager(getCMElementClass());
     }
 
     public void initialize() {
@@ -112,35 +107,14 @@ public abstract class AbstractCMManager<E extends CMElement> {
 
     public boolean cacheUpdate() throws InternalErrorException {
         boolean changesDetected = false;
-        if (isWaitingTimeForNextCheckReached()) {
-            changesDetected = isDataChanged(changesDetected);
+        if (cachedCMManager.isWaitingTimeForNextCheckReached()) {
+            changesDetected = cachedCMManager.isDataChanged();
         }
         if (changesDetected) {
             logger.info("Detected changes on " + getCMElementClass().getSimpleName() + "). Initializing cache...");
             initialize();
         }
         return changesDetected;
-    }
-
-    private boolean isDataChanged(boolean changesDetected) throws InternalErrorException {
-        Date lastUpdateDateOnServer = OpenEHRSessionManager.getAdministrationFacadeDelegate().getLastUpdate(getCMElementClass());
-        if (lastUpdateDateOnServer != null) {
-            if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
-                changesDetected = true;
-                mostRecentLocalUpdate = lastUpdateDateOnServer;
-            }
-        }
-        return changesDetected;
-    }
-
-    private boolean isWaitingTimeForNextCheckReached() {
-        boolean waitingTimeForNextCheckReached = false;
-        long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
-        if (timeSinceLastCheck>=MAX_CHECK_WAITING_TIME_IN_MILLIS){
-            waitingTimeForNextCheckReached = true;
-            lastCheckForUpdates = Calendar.getInstance().getTime();
-        }
-        return waitingTimeForNextCheckReached;
     }
 
     private void findCMElementsNotInCache(final Collection<String> idsNotInCache, final Collection<E> foundCMElements) throws InternalErrorException, InstanceNotFoundException {
@@ -155,14 +129,8 @@ public abstract class AbstractCMManager<E extends CMElement> {
         if (useCache) {
             for (E cmElement : cmElements) {
                 getCmElementMap().put(cmElement.getId(), cmElement);
-                renewMostRecentLocalUpdate(cmElement.getLastUpdate());
+                cachedCMManager.renewMostRecentLocalUpdate(cmElement.getLastUpdate());
             }
-        }
-    }
-
-    private void renewMostRecentLocalUpdate(Date lastUpdate){
-        if (lastUpdate!=null && lastUpdate.after(mostRecentLocalUpdate)){
-            mostRecentLocalUpdate = lastUpdate;
         }
     }
 

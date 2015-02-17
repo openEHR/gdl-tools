@@ -125,6 +125,7 @@ public class DroolsExecutionManager {
     }
 
     public static void clearCache(){
+        Logger.getLogger(DroolsExecutionManager.class).info("Clearing drools knowledge base cached.");
         getDelegate()._knowledgeBaseCache.clear();
     }
 
