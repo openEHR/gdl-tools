@@ -19,7 +19,7 @@ import java.util.Map;
 public class GDLParser {
 
 	public Guide parse(InputStream input) throws Exception {
-		DADLParser parser = new DADLParser(input);
+		DADLParser parser = new DADLParser(input, "UTF8");
 		ContentObject content = parser.parse();
 		GDLBinding binding = new GDLBinding();
 		

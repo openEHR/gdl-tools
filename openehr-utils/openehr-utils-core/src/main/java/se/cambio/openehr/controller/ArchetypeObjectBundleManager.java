@@ -41,7 +41,7 @@ public class ArchetypeObjectBundleManager {
                 } else if (CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
                     generateArchetype20Data();
                 }
-                    correctlyParsed = true;
+                correctlyParsed = true;
             }catch(InternalErrorException e){
                 throw e;
             }catch(Error e){

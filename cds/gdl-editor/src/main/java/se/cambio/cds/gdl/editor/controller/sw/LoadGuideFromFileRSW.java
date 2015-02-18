@@ -15,7 +15,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
 
 /**
  * @author iago.corbal
@@ -57,9 +56,8 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
         try{
             if (_guideFile!=null){
                 FileInputStream fis = new FileInputStream(_guideFile);
-                InputStreamReader in = new InputStreamReader(fis, "UTF-8");
-                _guideStr = IOUtils.toString(in);
-                Guide guide = GDLEditor.parseGuide(new ByteArrayInputStream(_guideStr.getBytes()));
+                _guideStr = IOUtils.toString(fis, "UTF8");
+                Guide guide = GDLEditor.parseGuide(new ByteArrayInputStream(_guideStr.getBytes("UTF8")));
                 if (guide!=null){
                     _editor = new GDLEditor(guide);
                 }
