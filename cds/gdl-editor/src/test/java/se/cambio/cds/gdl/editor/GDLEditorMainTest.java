@@ -37,7 +37,7 @@ public class GDLEditorMainTest extends TestCase {
 
     public void testCompareSerializedGuides() throws Exception {
         Archetype ar = ArchetypeManager.getInstance().getArchetypes().getArchetypeAOMById("openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1");
-        UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE,"en");
+        UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE, "en");
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {
             if (file.getName().endsWith(".gdl")){
@@ -56,7 +56,7 @@ public class GDLEditorMainTest extends TestCase {
     }
 
     private static String parseAndReserializeGuide(String guideStr) throws Exception {
-        Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes()));
+        Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes("UTF-8")));
         return GuideUtil.serializeGuide(guide);
     }
 }
