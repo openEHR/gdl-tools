@@ -93,7 +93,7 @@ public class GDLOutputTest extends TestCase {
 	    InputStreamReader in = new InputStreamReader(is, "UTF-8");
 	    String str1 = IOUtils.toString(in).replaceAll("\\r\\n", "\n");
 	    GDLParser parser = new GDLParser();
-	    Guide guide = parser.parse(new ByteArrayInputStream(str1.getBytes()));
+	    Guide guide = parser.parse(new ByteArrayInputStream(str1.getBytes("UTF-8")));
 	    StringBuffer sb = new StringBuffer();
 	    DADLSerializer serializer = new DADLSerializer();
 	    for (String line : serializer.toDADL(guide)) {

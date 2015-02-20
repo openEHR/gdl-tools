@@ -28,7 +28,7 @@ public class CheckGuideSW extends CDSSwingWorker {
     @Override
     protected void executeCDSSW() throws InternalErrorException{
         try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes());
+            ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes("UTF-8"));
             _guide = _controller.parseGuide(bais);
             if (_guide!=null){
                 GuideImporter.importGuide(_guide, _controller.getCurrentLanguageCode(), ArchetypeManager.getInstance());

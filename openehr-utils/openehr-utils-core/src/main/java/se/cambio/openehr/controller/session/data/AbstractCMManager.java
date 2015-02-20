@@ -5,9 +5,11 @@ import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.CMElementComparator;
 import se.cambio.openehr.util.CachedCMManager;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -150,7 +152,11 @@ public abstract class AbstractCMManager<E extends CMElement> {
 
     private static <E extends CMElement> String getMD5Checksum(MessageDigest md, List<E> cmElementList) {
         for(E cmElement : cmElementList){
-            md.update(cmElement.getSource().getBytes());
+            try {
+                md.update(cmElement.getSource().getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                ExceptionHandler.handle(e);
+            }
         }
         byte[] md5Bytes = md.digest();
         StringBuilder sb = new StringBuilder();

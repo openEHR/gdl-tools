@@ -135,7 +135,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         }
         File file = new File(folder, cmElement.getId() + "." + cmElement.getFormat());
         try {
-            Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes());
+            Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes("UTF-8"));
         } catch (IOException e) {
             throw new InternalErrorException(e);
         }

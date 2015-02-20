@@ -55,6 +55,11 @@ public class GDLParsingTest extends TestCase {
 		parse("test001.dadl");
 		check("Shahla Foozonkhah", "language/translations/fa/author/name");		
 	}
+
+	public void testSpecialCharactersOnExpressions() throws Exception {
+		parse("test_with_special_character.gdl");
+	}
+
 	
 	private void parse(String input) throws Exception {
 		guide = parser.parse(load(input));

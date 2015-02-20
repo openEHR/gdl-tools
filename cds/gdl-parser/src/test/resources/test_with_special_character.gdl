@@ -1,0 +1,67 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_with_special_character">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				keywords = <"x", "x">
+				misuse = <"">
+				purpose = <"">
+				use = <"">
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2014/09/24">
+			["email"] = <"x">
+			["name"] = <"">
+			["organisation"] = <"">
+		>
+		other_details = <
+			["references"] = <"">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0033"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_temperature.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0034"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"max(/data/events/time)",...>
+			>
+		>
+		rules = <
+			["gt0054"] = (RULE) <
+				when = <"($gt0034<35,°C)||($gt0034>41,°C)", ...>
+				priority = <17>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"x">
+						description = <"x">
+					>
+					["gt0034"] = (TERM) <
+						text = <"Temperature (EHR)">
+						description = <"The measured body temperature (as a surrogate for the whole body).">
+					>
+					["gt0035"] = (TERM) <
+						text = <"Set default">
+					>
+				>
+			>
+		>
+	>
+>

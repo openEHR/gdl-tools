@@ -65,7 +65,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
 
     public static void parseGuide(GuideDTO guideDTO) throws InternalErrorException {
         try {
-            Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
+            Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
             guideDTO.setGuideObject(IOUtils.getBytes(guide));
         } catch (Exception e) {
             throw new InternalErrorException(e);

@@ -4,7 +4,11 @@ package se.cambio.cds.gdl.converters.drools;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.RuntimeDroolsException;
-import org.drools.builder.*;
+import org.drools.builder.KnowledgeBuilder;
+import org.drools.builder.KnowledgeBuilderConfiguration;
+import org.drools.builder.KnowledgeBuilderErrors;
+import org.drools.builder.KnowledgeBuilderFactory;
+import org.drools.builder.ResourceType;
 import org.drools.definition.KnowledgePackage;
 import org.drools.io.Resource;
 import org.drools.io.ResourceFactory;
@@ -12,13 +16,19 @@ import org.drools.io.ResourceFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class CompilationManager {
 
     public static byte[] compile(String guideStr) throws CompilationErrorException {
-        Resource guide = ResourceFactory.newByteArrayResource(guideStr.getBytes());
+        Resource guide = null;
+        try {
+            guide = ResourceFactory.newByteArrayResource(guideStr.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new CompilationErrorException(e);
+        }
         return compile(guide);
     }
 

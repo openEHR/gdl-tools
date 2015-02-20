@@ -159,7 +159,7 @@ public abstract class GDLTestCase {
         InputStream is = load("guides/"+guideId+"."+gdlFormat);
         String gdlStr = IOUtils.toString(is);
         GuideDTO guideDTO = new GuideDTOBuilder().setId(guideId).setFormat(gdlFormat).setSource(gdlStr).setGuideObject(null).setCompiledGuide(null).setLastUpdate(Calendar.getInstance().getTime()).createGuideDTO();
-        Guide guide = new GDLParser().parse(new ByteArrayInputStream(gdlStr.getBytes()));
+        Guide guide = new GDLParser().parse(new ByteArrayInputStream(gdlStr.getBytes("UTF-8")));
         byte[] compiledGuide = GuideCompilerFactory.getDelegate().compile(guide);
         guideDTO.setGuideObject(IOUtils.getBytes(guide));
         guideDTO.setCompiledGuide(compiledGuide);

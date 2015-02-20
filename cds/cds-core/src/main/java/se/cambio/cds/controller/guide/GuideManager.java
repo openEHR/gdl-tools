@@ -32,7 +32,7 @@ public class GuideManager extends SimpleGuideManager{
                 if (Guides.hasGuideObject(guideDTO)){
                     guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
                 }else{
-                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
+                    guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                 }
                 guides.add(guide);
             } catch (Exception e) {

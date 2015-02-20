@@ -158,7 +158,7 @@ public class FormGeneratorController {
                 for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
                     Map<String, ReadableGuide> auxMap = new HashMap<String, ReadableGuide>();
                     _readableGuideMap.put(guideDTO.getId(), auxMap);
-                    Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes()));
+                    Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                     Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
                     for (TermDefinition termDefinition : termDefinitions.values()) {
                         String lang = termDefinition.getId();

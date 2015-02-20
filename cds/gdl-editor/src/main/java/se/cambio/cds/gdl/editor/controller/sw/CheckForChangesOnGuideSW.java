@@ -7,11 +7,13 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.GDLPanel;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
+import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 public class CheckForChangesOnGuideSW extends CDSSwingWorker {
     private GDLEditor controller = null;
@@ -27,7 +29,11 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        checkGuideConsistency();
+                        try {
+                            checkGuideConsistency();
+                        } catch (UnsupportedEncodingException e) {
+                            ExceptionHandler.handle(e);
+                        }
                         JButton saveButton = controller.getEditorPanel().getSaveButton();
                         saveButton.setEnabled(controller.isModified());
                         saveButton.repaint();
@@ -41,11 +47,11 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
         }
     }
 
-    private void checkGuideConsistency() {
+    private void checkGuideConsistency() throws UnsupportedEncodingException {
         Component selectedTab = controller.getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
         if (selectedTab instanceof GDLPanel) {
             GDLPanel gdlPanel = (GDLPanel) selectedTab;
-            ByteArrayInputStream bais = new ByteArrayInputStream(gdlPanel.getGuideStr().getBytes());
+            ByteArrayInputStream bais = new ByteArrayInputStream(gdlPanel.getGuideStr().getBytes("UTF-8"));
             Guide guide = null;
             try {
                 guide = GuideUtil.parseGuide(bais);
