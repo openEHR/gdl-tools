@@ -862,7 +862,7 @@ public class GDLDroolsConverter {
         } else if (OperatorKind.INEQUAL.equals(ok)) {
             return "!" + handle + ".equals(" + value + ")";
         } else {
-            Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Illegar operator '"+ok.getSymbol()+"' used in handle '"+handle+"'.");
+            Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Illegal operator '"+ok.getSymbol()+"' used in handle '"+handle+"'.");
             return "false";
         }
     }

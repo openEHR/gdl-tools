@@ -3,9 +3,11 @@ package se.cambio.cds.gdl.model.readable.rule;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class RuleLineCollection {
@@ -48,5 +50,13 @@ public class RuleLineCollection {
 
     public ArchetypeManager getArchetypeManager() {
         return readableGuide.getArchetypeManager();
+    }
+
+    public String toHTMLString(String lang) {
+        StringBuffer sb = new StringBuffer();
+        for(RuleLine ruleLine : getRuleLines()) {
+            sb.append(ruleLine.toHTMLString(1, lang) + "<br>");
+        }
+        return sb.toString();
     }
 }

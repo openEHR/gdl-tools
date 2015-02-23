@@ -38,9 +38,9 @@ public class DialogArchetypeChooser extends JDialog{
     private SelectableNode<String> templateNode = null;
     private JComboBox domainComboBox;
     private JTabbedPane tabbedPane;
-    private JCheckBox lastCB;
 
     private String ANY_DOMAIN = "*";
+    private JLabel domainLabel;
 
     public DialogArchetypeChooser(Window owner){
         super(owner,
@@ -56,14 +56,14 @@ public class DialogArchetypeChooser extends JDialog{
                 OpenEHRLanguageManager.getMessage("Archetypes") + "/" + OpenEHRLanguageManager.getMessage("Templates"),
                 ModalityType.APPLICATION_MODAL);
         if (onlyShowCDS){
-            getComboBox().setSelectedItem(Domains.CDS_ID);
-            getComboBox().setEnabled(false);
+            getDomainSelector().setSelectedItem(Domains.CDS_ID);
+            getDomainSelector().setEnabled(false);
         }else if (archetypeId!=null){
             if (domainId==null){
                 domainId = ANY_DOMAIN;
             }
             if (!Domains.EHR_ID.equals(domainId)){//Select only if it is not EHR (the one by default) because it will activate the 'Last' ComboBox
-                getComboBox().setSelectedItem(domainId);
+                getDomainSelector().setSelectedItem(domainId);
             }
         }
         init(new Dimension(500,500), selectTemplates);
@@ -91,8 +91,8 @@ public class DialogArchetypeChooser extends JDialog{
         if (jPanel == null) {
             jPanel = new JPanel(new BorderLayout());
             JPanel aux = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            aux.add(new JLabel(OpenEHRLanguageManager.getMessage("Domain") + ":"));
-            aux.add(getComboBox());
+            aux.add(getDomainLabel());
+            aux.add(getDomainSelector());
             jPanel.add(aux, BorderLayout.NORTH);
             jPanel.add(getArchetypeTemplateTabbedPane(), BorderLayout.CENTER);
             JPanel panelAux = new JPanel(new BorderLayout());
@@ -102,7 +102,14 @@ public class DialogArchetypeChooser extends JDialog{
         return jPanel;
     }
 
-    private JComboBox getComboBox(){
+    private JLabel getDomainLabel() {
+        if (domainLabel == null) {
+            domainLabel = new JLabel(OpenEHRLanguageManager.getMessage("Domain") + ":");
+        }
+        return domainLabel;
+    }
+
+    private JComboBox getDomainSelector(){
         if (domainComboBox==null){
             domainComboBox = new JComboBox();
             domainComboBox.addItem(ANY_DOMAIN);
@@ -450,11 +457,18 @@ public class DialogArchetypeChooser extends JDialog{
     }
 
     public String getSelectedDomain() {
-        String idDomain = (String)getComboBox().getSelectedItem();
+        String idDomain = (String) getDomainSelector().getSelectedItem();
         if (idDomain.equals(ANY_DOMAIN)){
             idDomain = null;
         }
         return idDomain;
+    }
+
+    public void setVisibleDomainSelector(boolean isVisible){
+        getDomainLabel().setVisible(isVisible);
+        getDomainSelector().setVisible(isVisible);
+        this.revalidate();
+        this.repaint();
     }
 }
 /*

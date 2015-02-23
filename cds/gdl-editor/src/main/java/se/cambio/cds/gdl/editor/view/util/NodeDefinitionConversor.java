@@ -70,8 +70,7 @@ public class NodeDefinitionConversor {
             throws InstanceNotFoundException, InternalErrorException {
         for (RuleLine ruleLine : ruleLineCollection.getRuleLines()) {
             if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
-                SelectableNode<Object> nodeAux =
-                        getArchetypeElementRuleLineElementNode((ArchetypeElementInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
+                SelectableNode<Object> nodeAux = getArchetypeElementRuleLineElementNode((ArchetypeElementInstantiationRuleLine)ruleLine, onlyCDSDomain, ar);
                 if(nodeAux != null){
                     node.add(nodeAux);
                 }
@@ -122,16 +121,16 @@ public class NodeDefinitionConversor {
     public static SelectableNode<Object> getArchetypeElementRuleLineElementNode(ArchetypeElementInstantiationRuleLine aeirl, boolean onlyCDSDomain, ArchetypeReference ar)
             throws InternalErrorException, InstanceNotFoundException {
         ArchetypeElementVO archetypeElementVO = aeirl.getArchetypeElementRuleLineDefinitionElement().getValue();
-        if(archetypeElementVO!=null){
+        if(archetypeElementVO != null){
             ArchetypeReference arAux = aeirl.getArchetypeReference();
-            if (ar==null || ar.equals(arAux)){
+            if (ar == null || ar.equals(arAux)){
                 String domainId = arAux.getIdDomain();
                 if (!onlyCDSDomain || Domains.CDS_ID.equals(domainId)){
                     String name = EditorManager.getActiveGDLEditor().getGTName(aeirl.getGTCodeRuleLineElement().getValue());
-                    if (name==null){
+                    if (name == null) {
                         name = "*EMPTY*";
                     }
-                    name = name.length()>30?name.substring(0, 30)+"...":name;
+                    name = name.length() > 30 ? name.substring(0, 30) + "..." : name;
                     return new SelectableNodeBuilder<Object>()
                             .setName(name)
                             .setDescription(ArchetypeReferences.getHTMLTooltip(archetypeElementVO, arAux))
