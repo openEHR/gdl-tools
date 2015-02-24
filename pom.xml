@@ -3,7 +3,7 @@
     <groupId>se.cambio</groupId>
     <artifactId>gdl-tools</artifactId>
     <packaging>pom</packaging>
-    <version>0.95.7-SNAPSHOT</version>
+    <version>0.95.7</version>
     <name>GDL Tools</name>
     <organization>
         <name>Cambio</name>
