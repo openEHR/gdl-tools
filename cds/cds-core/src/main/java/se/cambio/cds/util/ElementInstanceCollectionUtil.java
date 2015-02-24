@@ -152,7 +152,16 @@ public class ElementInstanceCollectionUtil {
                 }
                 if (!codePhrases.isEmpty()){
                     try{
-                        return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
+                        if (isLocalTerminology(elementCodePhrase)) {
+                            for (CodePhrase codePhrase: codePhrases) {
+                                if (isLocalTerminology(codePhrase) && isSameCode(elementCodePhrase, codePhrase)){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        } else {
+                            return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
+                        }
                     }catch(Exception e){
                         Logger.getLogger(ElementInstanceCollectionUtil.class).warn(e.getMessage());
                         return false;
@@ -197,6 +206,14 @@ public class ElementInstanceCollectionUtil {
             }
         }
         return false;
+    }
+
+    private static boolean isSameCode(CodePhrase elementCodePhrase, CodePhrase codePhrase) {
+        return codePhrase.getCodeString().equals(elementCodePhrase.getCodeString());
+    }
+
+    private static boolean isLocalTerminology(CodePhrase elementCodePhrase) {
+        return "local".equals(elementCodePhrase.getTerminologyId().getValue());
     }
 
     public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Collection<Guide> guides, Calendar date){

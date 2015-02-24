@@ -3,6 +3,7 @@ package se.cambio.cds.controller.guide;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
+import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
@@ -16,7 +17,11 @@ import se.cambio.cds.gdl.model.Rule;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.parser.DADLSerializer;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.model.facade.execution.vo.*;
+import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
+import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
+import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
@@ -24,7 +29,13 @@ import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GuideUtil {
 
@@ -49,7 +60,7 @@ public class GuideUtil {
                         archetypeBinding.getDomain(),
                         archetypeBinding.getArchetypeId(),
                         archetypeBinding.getTemplateId());
-        if (archetypeBinding.getElements()!=null){
+        if (archetypeBinding.getElements() != null){
             for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
                 String idElement =
                         archetypeBinding.getArchetypeId()+elementBinding.getPath();
@@ -84,12 +95,10 @@ public class GuideUtil {
                                 dv = getDataValue(ce);
                             }
 
-                            ElementInstance ei = generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv);
-                            if (ei instanceof PredicateGeneratedElementInstance){
-                                String gtCode = getGTCodeForPredicate(archetypeBinding, path, dv);
-                                if (gtCode != null) {
-                                    ((PredicateGeneratedElementInstance) ei).getRuleReferences().add(new RuleReference(guideId, gtCode));
-                                }
+                            PredicateGeneratedElementInstance ei = generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv);
+                            String gtCode = getGTCodeForPredicate(archetypeBinding, path, dv);
+                            if (gtCode != null) {
+                                ei.getRuleReferences().add(new RuleReference(guideId, gtCode));
                             }
                         }else if (r instanceof ExpressionItem){
                             String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
@@ -141,13 +150,21 @@ public class GuideUtil {
         return null;
     }
 
-    private static ElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv) {
-        return new PredicateGeneratedElementInstanceBuilder()
+    private static PredicateGeneratedElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv) {
+        Collection<RuleReference> previousRuleReferences = new ArrayList<RuleReference>();
+        ElementInstance elementInstance = ar.getElementInstancesMap().get(idElement);
+        if (elementInstance instanceof GeneratedElementInstance) {
+            GeneratedElementInstance generatedElementInstance = (GeneratedElementInstance) elementInstance;
+            previousRuleReferences.addAll(generatedElementInstance.getRuleReferences());
+        }
+        PredicateGeneratedElementInstance predicateGeneratedElementInstance = new PredicateGeneratedElementInstanceBuilder()
                 .setId(idElement)
                 .setDataValue(dv)
                 .setArchetypeReference(ar)
                 .setOperatorKind(op)
                 .createPredicateGeneratedElementInstance();
+        predicateGeneratedElementInstance.getRuleReferences().addAll(previousRuleReferences);
+        return predicateGeneratedElementInstance;
     }
 
 
@@ -162,12 +179,24 @@ public class GuideUtil {
             return ((OrdinalConstant)e).getOrdinal();
         } else if (e instanceof DateTimeConstant){
             return new DvDateTime(e.getValue());
-        //TODO Use proper BooleanConstant (create) object
+            //TODO Use proper BooleanConstant (create) object
         } else if ("true".equals(e.getValue()) || "false".equals(e.getValue())){
             return new DvBoolean(e.getValue());
+        } else if (e instanceof ConstantExpression && isParsableInteger(e.getValue())){
+            int count = Integer.parseInt(e.getValue());
+            return new DvCount(count);
         } else {
             Logger.getLogger(GuideUtil.class).warn("Unknown data value for constant expression '"+e+"'");
             return null; //TODO Proportion, date, time, count, etc
+        }
+    }
+
+    private static boolean isParsableInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
