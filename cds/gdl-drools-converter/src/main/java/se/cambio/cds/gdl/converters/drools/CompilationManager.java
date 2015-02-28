@@ -16,19 +16,14 @@ import org.drools.io.ResourceFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class CompilationManager {
 
     public static byte[] compile(String guideStr) throws CompilationErrorException {
-        Resource guide = null;
-        try {
-            guide = ResourceFactory.newByteArrayResource(guideStr.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new CompilationErrorException(e);
-        }
+        byte[] guideStrBytes = guideStr.getBytes();
+        Resource guide = ResourceFactory.newByteArrayResource(guideStrBytes);
         return compile(guide);
     }
 
@@ -58,13 +53,13 @@ public class CompilationManager {
     public static KnowledgeBase getKnowledgeBase(Collection<Resource> guides, KnowledgeBuilderConfiguration kbc)
             throws CompilationErrorException{
         final KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(kbc);
-        for (Resource guia : guides) {
-            kbuilder.add(guia, ResourceType.DRL);
+        for (Resource guide : guides) {
+            kbuilder.add(guide, ResourceType.DRL);
         }
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
         kbase.addKnowledgePackages( kbuilder.getKnowledgePackages() );
         KnowledgeBuilderErrors packErrors = kbuilder.getErrors();
-        if (packErrors.size()>0){
+        if (packErrors.size() > 0){
             throw new CompilationErrorException(packErrors.iterator().next().getMessage());
         }
         return kbase;

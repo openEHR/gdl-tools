@@ -39,7 +39,7 @@ public class SaveGuideAsObjectAction extends AbstractAction {
         CompileGuideSW sw = new CompileGuideSW(){
             protected void done() {
                 getController().compilationFinished(getErrorMsg());
-                if (getErrorMsg()==null){
+                if (getErrorMsg() == null){
                     getController().saveCompiledGuideAsObject(getCompiledGuide(), getGuide());
                 }
             }

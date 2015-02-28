@@ -156,7 +156,7 @@ public class BasicGDLTest extends GDLTestCase{
         try {
             Collection<ElementInstance> elementInstances =
                     CDSManager.getElementInstances(null, guideIds, ars, guideManager, Calendar.getInstance());
-            assertEquals(18,elementInstances.size());
+            assertEquals(18, elementInstances.size());
             boolean predicateForBValuesExists = false;
             boolean predicateForGenericEqualsNullValuesExists = false;
             boolean predicateForMinLastAdministrationExists = false;
@@ -165,11 +165,11 @@ public class BasicGDLTest extends GDLTestCase{
                     PredicateGeneratedElementInstance pgei = (PredicateGeneratedElementInstance)elementInstance;
                     if (MEDICATION_CODE_ELEMENT_ID.equals(pgei.getId())){
                         if(OperatorKind.INEQUAL.equals(pgei.getOperatorKind())){
-                            if (pgei.getDataValue()==null){
-                                fail("Predicate medication generic name!=null should not be generated!");
+                            if (pgei.getDataValue() == null){
+                                fail("Predicate medication generic name != null should not be generated!");
                             }
                         }else if(OperatorKind.EQUALITY.equals(pgei.getOperatorKind())){
-                            if (pgei.getDataValue()==null){
+                            if (pgei.getDataValue() == null){
                                 predicateForGenericEqualsNullValuesExists = true;
                             }
                         }else if(OperatorKind.IS_A.equals(pgei.getOperatorKind())){
@@ -179,7 +179,7 @@ public class BasicGDLTest extends GDLTestCase{
                                 if (code.equals("A01AB06")){
                                     fail("Predicate medication generic name is_a 'A01AB06' should not be generated!");
                                 }else if (code.startsWith("B01")){
-                                    predicateForBValuesExists =true;
+                                    predicateForBValuesExists = true;
                                 }
                             }
                         }
@@ -206,7 +206,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldAllowMultpleResults(){
+    public void shouldAllowMultipleResults(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements

@@ -41,7 +41,7 @@ public class DroolsExecutionManager {
             Collection<Object> workingMemoryObjects,
             ExecutionLogger executionLogger)
             throws InternalErrorException{
-        KnowledgeBase kb = null;
+        KnowledgeBase kb;
         if (getDelegate()._useCache){
             kb =  getKnowledgeBase(guideDTOs);
         }else{
@@ -90,7 +90,7 @@ public class DroolsExecutionManager {
     }
 
     public static void cancelCurrentExecution(){
-        if (getDelegate()._logger!=null){
+        if (getDelegate()._logger != null){
             //TODO Cancel current execution is done through the logger... should change this behaviour
             getDelegate()._logger.cancelExecution();
         }
@@ -99,7 +99,7 @@ public class DroolsExecutionManager {
 
     private static KnowledgeBase getKnowledgeBase(Collection<GuideDTO> guideDTOs)
             throws InternalErrorException{
-        if (guideDTOs==null || guideDTOs.isEmpty()){
+        if (guideDTOs == null || guideDTOs.isEmpty()){
             return null;
         }
         String guideIdsId = getGuideIdsId(guideDTOs);
@@ -147,7 +147,7 @@ public class DroolsExecutionManager {
         for (GuideDTO guideDTO : guideDTOs) {
             if (guideDTO.getCompiledGuide()==null){
                 Logger.getLogger(DroolsExecutionManager.class).warn("Guide '" + guideDTO.getId() + "' is not compiled.");
-            };
+            }
             KnowledgePackage knowledgePackage =
                     DroolsExecutionManager.getKnowledgePackage(guideDTO.getCompiledGuide());
             if (knowledgePackage!=null){
@@ -162,7 +162,7 @@ public class DroolsExecutionManager {
     }
 
     private static KnowledgePackage getKnowledgePackage(byte[] guiaCompilada){
-        if (guiaCompilada==null){
+        if (guiaCompilada == null){
             return null;
         }
         ByteArrayInputStream bais = new ByteArrayInputStream(guiaCompilada);

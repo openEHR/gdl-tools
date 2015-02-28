@@ -95,23 +95,11 @@ public class ElementInstanceCollectionUtil {
                 ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
                 if (ei1 instanceof PredicateGeneratedElementInstance){
                     if (ei2!=null){
-                        PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance)ei1);
+                        OperatorKind operatorKind = ((PredicateGeneratedElementInstance)ei1).getOperatorKind();
                         Set<Guide> guides = new HashSet<Guide>();
-                        for(RuleReference ruleReference: pgei.getRuleReferences()){
-                            Guide guide = guideMap.get(ruleReference.getGuideId());
-                            if (guide==null){
-                                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '"+ruleReference+"'");
-                            }else{
-                                guides.add(guide);
-                            }
-                        }
-                        DataValue dv = null;
-                        if (pgei.getOperatorKind().equals(OperatorKind.IS_A)){
-                            dv = ei1.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
-                        } else {
-                            dv = resolvePredicate(ei1.getDataValue(), pgei.getOperatorKind(), guides, date);
-                        }
-                        if (!matches(dv, ei2.getDataValue(), pgei.getOperatorKind(), guides)){
+                        DataValue dv = getResolveDataValueIfNeeded(guideMap, date, ei1, guides);
+                        DataValue dv2 = getResolveDataValueIfNeeded(guideMap, date, ei2, guides);
+                        if (!matches(dv, dv2, operatorKind, guides)){
                             return false;
                         }
                     }else{
@@ -123,6 +111,29 @@ public class ElementInstanceCollectionUtil {
         }
     }
 
+    private static DataValue getResolveDataValueIfNeeded(Map<String, Guide> guideMap, Calendar date, ElementInstance ei, Set<Guide> guides) {
+        DataValue dv = ei.getDataValue();
+        if (ei instanceof PredicateGeneratedElementInstance) {
+            PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance) ei);
+            Set<Guide> localGuides = new HashSet<Guide>();
+            for (RuleReference ruleReference : pgei.getRuleReferences()) {
+                Guide guide = guideMap.get(ruleReference.getGuideId());
+                if (guide == null) {
+                    Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '" + ruleReference + "'");
+                } else {
+                    localGuides.add(guide);
+                }
+            }
+            if (pgei.getOperatorKind().equals(OperatorKind.IS_A)) {
+                dv = ei.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
+            } else {
+                dv = resolvePredicate(ei.getDataValue(), pgei.getOperatorKind(), localGuides, date);
+            }
+            guides.addAll(localGuides);
+        }
+        return dv;
+    }
+
     public static boolean matches(
             DataValue dv1,
             DataValue dv2,
@@ -132,40 +143,21 @@ public class ElementInstanceCollectionUtil {
             if (dv1 instanceof DvCodedText && dv2 instanceof DvCodedText){
                 CodePhrase elementCodePhrase = ((DvCodedText)dv2).getDefiningCode();
                 CodePhrase predicateCodePhrase = ((DvCodedText)dv1).getDefiningCode();
-                Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
-                if (guides!=null){
-                    for(Guide guide: guides){
-                        if (guide.getOntology().getTermBindings()!=null){
-                            for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
-                                TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
-                                if (termBinding!=null){
-                                    Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
-                                    if (binding!=null && binding.getCodes()!=null){
-                                        codePhrases.addAll(binding.getCodes());
-                                    }
-                                }
+                Set<CodePhrase> resolvedCodePhrases = getResolvedCodePhrases(guides, predicateCodePhrase);
+                Set<CodePhrase> resolvedElementCodePhrases = getResolvedCodePhrases(guides, elementCodePhrase);
+                if (!resolvedCodePhrases.isEmpty() && !resolvedElementCodePhrases.isEmpty()){
+                    for (CodePhrase resolvedElementCodePhrase: resolvedElementCodePhrases) {
+                        try {
+                            boolean isSubclass = OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(resolvedElementCodePhrase, resolvedCodePhrases);
+                            if (!isSubclass) {
+                                return false;
                             }
-                        }
-                    }
-                }else{
-                    codePhrases.add(predicateCodePhrase);
-                }
-                if (!codePhrases.isEmpty()){
-                    try{
-                        if (isLocalTerminology(elementCodePhrase)) {
-                            for (CodePhrase codePhrase: codePhrases) {
-                                if (isLocalTerminology(codePhrase) && isSameCode(elementCodePhrase, codePhrase)){
-                                    return true;
-                                }
-                            }
+                        } catch (Exception e) {
+                            Logger.getLogger(ElementInstanceCollectionUtil.class).warn(e.getMessage());
                             return false;
-                        } else {
-                            return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
                         }
-                    }catch(Exception e){
-                        Logger.getLogger(ElementInstanceCollectionUtil.class).warn(e.getMessage());
-                        return false;
                     }
+                    return true;
                 }else{
                     return false;
                 }
@@ -206,6 +198,31 @@ public class ElementInstanceCollectionUtil {
             }
         }
         return false;
+    }
+
+    private static Set<CodePhrase> getResolvedCodePhrases(Collection<Guide> guides, CodePhrase predicateCodePhrase) {
+        if (!"local".equals(predicateCodePhrase.getTerminologyId().getValue())) {
+            return Collections.singleton(predicateCodePhrase); //Already resolved
+        }
+        Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
+        if (guides!=null){
+            for(Guide guide: guides){
+                if (guide.getOntology().getTermBindings()!=null){
+                    for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
+                        TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
+                        if (termBinding!=null){
+                            Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
+                            if (binding!=null && binding.getCodes()!=null){
+                                codePhrases.addAll(binding.getCodes());
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            codePhrases.add(predicateCodePhrase);
+        }
+        return codePhrases;
     }
 
     private static boolean isSameCode(CodePhrase elementCodePhrase, CodePhrase codePhrase) {

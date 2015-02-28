@@ -84,13 +84,6 @@ public class ElementInstanceCollection {
 
 
         Set<ArchetypeReference> archetypeReferencesInCollection = getArchetypeReferences(archetypeReferenceToAdd);
-        //Remove empty (first) AR if existent
-        //DISCARDED: There might be a need for an empty instance (CHA2DS2VASc)
-        //ArchetypeReference arAux2 = ElementInstanceCollectionUtil.getEmptyArchetypeReference(archetypeReferencesInCollection);
-        //if (arAux2!=null){
-        //    remove(arAux2);
-        //}
-        //System.out.println("Addding:\n"+archetypeReferenceToAdd.toString());
         archetypeReferencesInCollection.add(archetypeReferenceToAdd);
     }
 
@@ -135,11 +128,6 @@ public class ElementInstanceCollection {
         }
     }
 
-    /*
-    public boolean matches(GeneratedElementInstance elementInstance, GuideManager guideManager){
-	return matches((GeneratedArchetypeReference)elementInstance.getArchetypeReference(), guideManager);
-    }
-     */
     public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Map<String, Guide> guideMap, Calendar date){
         boolean matches = false;
         Iterator<ArchetypeReference> i = getArchetypeReferences(generatedArchetypeReference).iterator();
@@ -149,32 +137,6 @@ public class ElementInstanceCollection {
         }
         return matches;
     }
-
-    /*
-    public boolean contains(ArchetypeReference archetypeReference){
-	for (ElementInstance elementInstance : elementInstances) {
-	    boolean containsElement = getElementInstances(elementInstance).isEmpty();
-	    if (!containsElement){
-		return false;
-	    }
-	}
-	return true;
-    }
-
-
-    public Set<ElementInstance> getAllElementInstances(String idArchetype, String idDomain, String idAux){
-	Set<ElementInstance> elementInstances = new HashSet<ElementInstance>();
-	if (idDomain!=null && idAux!=null){
-	    for (Collection<ElementInstance> elementInstancesAux : getArchetypeReferences(idArchetype, idDomain, idAux).values()) {
-		elementInstances.addAll(elementInstancesAux);
-	    };
-	}else{
-	    for (Collection<ElementInstance> elementInstancesAux : getArchetypeReferencesCheckIdDomainAndIdAux(idArchetype, idDomain, idAux).values()) {
-		elementInstances.addAll(elementInstancesAux);
-	    } 
-	}
-	return elementInstances;
-    }*/
 
     public Set<String> getElementIdsByIdDomain(String idDomain){
         Set<String> idElements = new HashSet<String>();

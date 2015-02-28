@@ -1179,10 +1179,15 @@ public class GDLEditor implements EditorController<Guide>{
                                     .substring(0, idGuide.length() - 6);
                         }
                         GuideDTO guideDTO =
-                                new GuideDTOBuilder().setId(idGuide).setFormat(guideSource).setSource(CMTypeFormat.GDL_FORMAT.getFormat()).setGuideObject(IOUtils.getBytes(guide)).setCompiledGuide(compiledGuide).setLastUpdate(Calendar.getInstance().getTime()).createGuideDTO();
-                        ObjectOutputStream output = new ObjectOutputStream(
-                                new BufferedOutputStream(new FileOutputStream(
-                                        guideFile)));
+                                new GuideDTOBuilder()
+                                        .setId(idGuide)
+                                        .setFormat(guideSource)
+                                        .setSource(CMTypeFormat.GDL_FORMAT.getFormat())
+                                        .setGuideObject(IOUtils.getBytes(guide))
+                                        .setCompiledGuide(compiledGuide)
+                                        .setLastUpdate(Calendar.getInstance().getTime())
+                                        .createGuideDTO();
+                        ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)));
                         try {
                             output.writeObject(guideDTO);
                         } catch (Exception e) {

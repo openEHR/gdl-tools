@@ -24,7 +24,7 @@ public class CompileGuideSW extends CDSSwingWorker {
     protected void executeCDSSW() throws InternalErrorException{
         try{
             _guide = _controller.getEntity();
-            if (_guide!=null){
+            if (_guide != null){
                 _compiledGuide = GuideExportPluginDirectory.compile(_guide);
             }
         }catch(Throwable e){
