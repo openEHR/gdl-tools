@@ -59,7 +59,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 			ruleListPanel.setBorder(null);
 			ruleListPanel.add(getRuleListDropPanel(), BorderLayout.NORTH);
 			for (ReadableRule rule : _controller.getRenderableRules().values()) {
-				ruleListDropPanel.addDraggableLine(createRulePanel(rule), rule);
+				getRuleListDropPanel().addDraggableLine(createRulePanel(rule), rule);
 			}
 		}
 		this.repaint();

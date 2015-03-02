@@ -32,7 +32,8 @@ public class RuleDropPanel extends DropPanel {
 		}
 		_rulesPanel.updateList(rules);
 	}
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

@@ -1,7 +1,7 @@
 package se.cambio.cds.gdl.editor.view.panels;
-import javax.swing.JComponent;
-
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+
+import javax.swing.*;
 
 
 public class DraggableRulePanel extends DraggablePanel {
@@ -16,7 +16,8 @@ public class DraggableRulePanel extends DraggablePanel {
 	public ReadableRule getRule(){
 		return _rule;
 	}
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
