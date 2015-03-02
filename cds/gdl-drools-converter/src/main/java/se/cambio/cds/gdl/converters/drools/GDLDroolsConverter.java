@@ -686,11 +686,9 @@ public class GDLDroolsConverter {
                                 DVDefSerializer.getDVInstantiation(dv)));
                         sb.append(")");
                     } else {
-                        if (OperatorKind.EQUALITY.equals(binaryExpression
-                                .getOperator())) {
+                        if (OperatorKind.EQUALITY.equals(binaryExpression.getOperator())) {
                             sb.append("eval($" + var.getCode()+ ".hasNoValue(\""+guide.getId()+"/"+var.getCode()+"\"))");
-                        } else if (OperatorKind.INEQUAL.equals(binaryExpression
-                                .getOperator())) {
+                        } else if (OperatorKind.INEQUAL.equals(binaryExpression.getOperator())) {
                             sb.append("eval($" + var.getCode() + ".hasValue())");
                         }
                     }

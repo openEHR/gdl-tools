@@ -19,7 +19,7 @@ public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDel
 
     public RuleExecutionResult execute(
             String ehrId,
-            Collection<GuideDTO> guides,
+            List<GuideDTO> guides,
             Collection<ElementInstance> elementInstances,
             Calendar date)
             throws InternalErrorException, PatientNotFoundException{

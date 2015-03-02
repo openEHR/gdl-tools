@@ -55,7 +55,7 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
                 }
             }
 
-            Collection<GuideDTO> guideDTOs = Collections.singleton(controller.getGuideDTO());
+            List<GuideDTO> guideDTOs = Collections.singletonList(controller.getGuideDTO());
             Calendar currentDateTime = controller.getCurrentDate();
             if (currentDateTime==null){
                 currentDateTime = Calendar.getInstance();

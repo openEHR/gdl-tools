@@ -17,7 +17,7 @@ import java.util.*;
 
 public class SimpleGuideManager {
 
-    private Map<String, Guide> _allGuidesMap = null;
+    private LinkedHashMap<String, Guide> _allGuidesMap = null;
     private Map<String, ElementInstanceCollection> _elementInstanceCollectionByIdGuideMap = null;
     private GeneratedElementInstanceCollection _completeElementInstanceCollection = null;
     private Map<String, Set<String>> _guideIdsByElementIdsMap = null;
@@ -42,7 +42,7 @@ public class SimpleGuideManager {
     }
 
     private void init(){
-        _allGuidesMap = new HashMap<String, Guide>();
+        _allGuidesMap = new LinkedHashMap<String, Guide>();
         _elementInstanceCollectionByIdGuideMap = new HashMap<String, ElementInstanceCollection>();
         _completeElementInstanceCollection = new GeneratedElementInstanceCollection();
         _guideIdsByElementIdsMap = new HashMap<String, Set<String>>();

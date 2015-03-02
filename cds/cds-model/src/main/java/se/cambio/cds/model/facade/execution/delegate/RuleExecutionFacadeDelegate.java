@@ -8,6 +8,7 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -18,7 +19,7 @@ public interface RuleExecutionFacadeDelegate {
 
     public RuleExecutionResult execute(
             String ehrId,
-            Collection<GuideDTO> guides,
+            List<GuideDTO> guides,
             Collection<ElementInstance> elementInstances,
             Calendar date) throws InternalErrorException, PatientNotFoundException;
 

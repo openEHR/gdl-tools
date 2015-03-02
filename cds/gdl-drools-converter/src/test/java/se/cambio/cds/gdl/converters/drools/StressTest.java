@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * User: iago.corbal
@@ -45,7 +46,7 @@ public class StressTest {
     private static void stressTest1(){
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesICD10();
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
-        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+        List<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
             guideDTOs.add(GDLTestCase.parse("CHA2DS2VASc_diagnosis_review.v1"));
             guideDTOs.add(GDLTestCase.parse("Stroke_prevention_dashboard_case.v1"));
@@ -121,7 +122,7 @@ public class StressTest {
         ElementInstance eiBirthdateDate = new ElementInstance(GDLTestCase.BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         elementInstances.add(eiBirthdateDate);
         DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
-        Collection<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+        List<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
             guideDTOs.add(GDLTestCase.parse("guides/MIE_Medication_in_elderly.v1"));
             GuideManager guideManager = new GuideManager(guideDTOs);

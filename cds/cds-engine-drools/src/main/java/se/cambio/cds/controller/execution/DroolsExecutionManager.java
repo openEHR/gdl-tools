@@ -36,7 +36,7 @@ public class DroolsExecutionManager {
     }
 
     public static void executeGuides(
-            Collection<GuideDTO> guideDTOs,
+            List<GuideDTO> guideDTOs,
             Calendar date,
             Collection<Object> workingMemoryObjects,
             ExecutionLogger executionLogger)
@@ -47,7 +47,7 @@ public class DroolsExecutionManager {
         }else{
             kb = generateKnowledgeBase(guideDTOs);
         }
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         for(GuideDTO guideDTO: guideDTOs){
             guideIds.add(guideDTO.getId());
         }
@@ -56,7 +56,7 @@ public class DroolsExecutionManager {
 
 
     private static void executeGuides(
-            Collection<String> guideIds,
+            List<String> guideIds,
             KnowledgeBase knowledgeBase,
             Calendar date,
             Collection<Object> workingMemoryObjects,
@@ -67,7 +67,7 @@ public class DroolsExecutionManager {
 
             final RuleExecutionWMLogger ruleExecutionWMLogger = new RuleExecutionWMLogger();
             session.addEventListener(ruleExecutionWMLogger);
-            if (date==null){
+            if (date == null){
                 date = Calendar.getInstance();
             }
             final DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
@@ -77,7 +77,10 @@ public class DroolsExecutionManager {
             session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
             session.setGlobal("$execute", true);
             int initSalience = 0;
-            for(String guideId: guideIds) {
+
+            List<String> reverseGuideIds = new ArrayList<String>(guideIds);
+            Collections.reverse(reverseGuideIds);
+            for(String guideId: reverseGuideIds) {
                 session.setGlobal(getGuideSalienceId(guideId), initSalience);
                 initSalience = initSalience + 1000;
             }

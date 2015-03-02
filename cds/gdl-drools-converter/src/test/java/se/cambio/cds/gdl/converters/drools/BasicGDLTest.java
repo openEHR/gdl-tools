@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -276,11 +277,11 @@ public class BasicGDLTest extends GDLTestCase{
     public void shouldPerformCDSLinking(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Calendar birthdate = Calendar.getInstance();
-        birthdate.add(Calendar.YEAR, -75);
+        birthdate.add(Calendar.YEAR, -76);
         ars.add(generateBasicDemographicsArchetypeReference(birthdate, Gender.FEMALE));
         ars.add(generateICD10DiagnosisArchetypeReference("I48"));
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         guideIds.add("CHA2DS2VASc_Score_calculation.v1.1");
         guideIds.add("Stroke_risks.v2");
         guideIds.add("CHA2DS2VASc_diagnosis_review.v1");

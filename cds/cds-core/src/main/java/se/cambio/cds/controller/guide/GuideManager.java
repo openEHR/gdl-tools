@@ -9,16 +9,16 @@ import se.cambio.openehr.util.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class GuideManager extends SimpleGuideManager{
 
-    private Map<String, GuideDTO> _allGuidesDTOMap = null;
+    private LinkedHashMap<String, GuideDTO> _allGuidesDTOMap = null;
 
     public GuideManager(Collection<GuideDTO> guideDTOs){
         super(loadGuideDTOs(guideDTOs));
-        _allGuidesDTOMap = new HashMap<String, GuideDTO>();
+        _allGuidesDTOMap = new LinkedHashMap<String, GuideDTO>();
         for (GuideDTO guideDTO: guideDTOs){
             _allGuidesDTOMap.put(guideDTO.getId(), guideDTO);
         }
@@ -42,7 +42,7 @@ public class GuideManager extends SimpleGuideManager{
         return guides;
     }
 
-    public ArrayList<GuideDTO> getAllGuidesDTO(){
+    public List<GuideDTO> getAllGuidesDTO(){
         return new ArrayList<GuideDTO>(_allGuidesDTOMap.values());
     }
 
