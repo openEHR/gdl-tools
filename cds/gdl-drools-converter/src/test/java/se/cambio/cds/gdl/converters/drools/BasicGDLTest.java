@@ -43,7 +43,7 @@ public class BasicGDLTest extends GDLTestCase{
         ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
         ars.add(generateOngoingMedicationArchetypeReference("N02AX02"));
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        RuleExecutionResult rer = executeGuides(Collections.singleton("count_test.v1"), elementInstances);
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("count_test.v1"), elementInstances);
 
         assertEquals(1, rer.getArchetypeReferences().size());
         ArchetypeReference arResult = rer.getArchetypeReferences().iterator().next();
@@ -58,7 +58,7 @@ public class BasicGDLTest extends GDLTestCase{
     public void shouldFindThatElementDoesNotExist(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
-        RuleExecutionResult rer = executeGuides(Collections.singleton("not_exists_test.v1"), elementInstances);
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("not_exists_test.v1"), elementInstances);
         assertEquals(2, rer.getFiredRules().size());
         assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1", "gt0045")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1","gt0039")));
@@ -68,7 +68,7 @@ public class BasicGDLTest extends GDLTestCase{
     public void shouldAllowToDefineOrsWithPredicates(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
-        RuleExecutionResult rer = executeGuides(Collections.singleton("test_or_predicates.v1"), elementInstances);
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("test_or_predicates.v1"), elementInstances);
         assertEquals(4, rer.getFiredRules().size());
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0002")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0012")));
@@ -80,15 +80,15 @@ public class BasicGDLTest extends GDLTestCase{
     public void shouldCreateSeveralElements(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         guideIds.add("test_creation_and_order_1");
         guideIds.add("test_creation_and_order_2");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(4, rer.getFiredRules().size());
-        assertTrue(rer.getFiredRules().get(0).equals(new RuleReference("test_creation_and_order_2","gt0002")));
-        assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("test_creation_and_order_2","gt0005")));
-        assertTrue(rer.getFiredRules().get(2).equals(new RuleReference("test_creation_and_order_1","gt0005")));
-        assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("test_creation_and_order_1","gt0002")));
+        assertEquals(new RuleReference("test_creation_and_order_2", "gt0002"), rer.getFiredRules().get(0));
+        assertEquals(new RuleReference("test_creation_and_order_1", "gt0005"), rer.getFiredRules().get(1));
+        assertEquals(new RuleReference("test_creation_and_order_2", "gt0005"), rer.getFiredRules().get(2));
+        assertEquals(new RuleReference("test_creation_and_order_1", "gt0002"), rer.getFiredRules().get(3));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class BasicGDLTest extends GDLTestCase{
         ars.add(generateContactArchetypeReference(new DateTime().plus(100000)));
         ars.add(generateContactArchetypeReference(new DateTime().plus(-200000)));
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         guideIds.add("cds_count");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(4, rer.getFiredRules().size());
@@ -220,7 +220,7 @@ public class BasicGDLTest extends GDLTestCase{
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID);
         ars.add(generateContactArchetypeReference(new DateTime().plus(100000)));
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         guideIds.add("multiple_results_test");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(7, rer.getArchetypeReferences().size());
@@ -237,7 +237,7 @@ public class BasicGDLTest extends GDLTestCase{
     public void shouldAllowCDSInitiallization(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         guideIds.add("test_cds_init1");
         guideIds.add("test_cds_init2");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
@@ -248,7 +248,7 @@ public class BasicGDLTest extends GDLTestCase{
     public void shouldTestDateOperations(){
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        Collection<String> guideIds = new ArrayList<String>();
+        List<String> guideIds = new ArrayList<String>();
         guideIds.add("test_date_operation");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(1, rer.getArchetypeReferences().size());
@@ -311,7 +311,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldPerformRountripJSONSerializationOfRuleExecutionResults(){
+    public void shouldPerformRoundtripJSONSerializationOfRuleExecutionResults(){
         Gson gson = new ArchetypeReferenceGsonFactory().create();
         if (rer == null){
             shouldAllowCDSInitiallization();

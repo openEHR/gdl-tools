@@ -31,6 +31,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class GDLTestCase {
 
@@ -121,14 +122,14 @@ public abstract class GDLTestCase {
         return new GuideManager(guideDTOs);
     }
 
-    public static RuleExecutionResult executeGuides(Collection<String> guideIds, Collection<ElementInstance> elementInstances){
+    public static RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances){
         RuleExecutionResult rer = null;
         try{
             StringBuffer guideIdsSB = new StringBuffer();
             DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
             String prefix = "";
             for(String guideId: guideIds){
-                guideIdsSB.append(prefix+guideId);
+                guideIdsSB.append(prefix + guideId);
                 prefix = ", ";
             }
             GuideManager guideManager = generateGuideManager(guideIds);
