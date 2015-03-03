@@ -77,6 +77,19 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
+    public void shouldTestPriorityWithSeveralGuidelines(){
+        Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
+        List<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_multiple_guidelines_priority1");
+        guideIds.add("test_multiple_guidelines_priority2");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(3, rer.getFiredRules().size());
+        assertEquals(new RuleReference("test_multiple_guidelines_priority1", "gt0002"), rer.getFiredRules().get(0));
+        assertEquals(new RuleReference("test_multiple_guidelines_priority1", "gt0005"), rer.getFiredRules().get(1));
+        assertEquals(new RuleReference("test_multiple_guidelines_priority2", "gt0006"), rer.getFiredRules().get(2));
+    }
+
+    @Test
     public void shouldCreateSeveralElements(){
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));

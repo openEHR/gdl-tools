@@ -1,0 +1,69 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_multiple_guidelines_priority2">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0003"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.chadsvas_score.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0099]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0002"] = (RULE) <
+				when = <"$gt0004==null",...>
+				then = <"$gt0004=2",...>
+				priority = <1>
+			>
+			["gt0005"] = (RULE) <
+				when = <"$gt0004<3",...>
+				then = <"$gt0004=1",...>
+				priority = <2>
+			>
+			["gt0006"] = (RULE) <
+				when = <"$gt0004>4",...>
+				then = <"$gt0004=10",...>
+				priority = <3>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0002"] = (TERM) <
+						text = <"test2">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Total score">
+						description = <"Study criteria: Atrial Fibrillation = Present">
+					>
+					["gt0005"] = (TERM) <
+						text = <"test1">
+					>
+					["gt0006"] = (TERM) <
+						text = <"test3">
+						description = <"">
+					>
+				>
+			>
+		>
+	>
+>
