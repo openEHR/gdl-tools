@@ -358,7 +358,7 @@ public class DVDefSerializer {
 
     public static String getOrdinalCodeStringFromDVInstantiation(String dvInstantiation){
         String dvDefinition = DVDefSerializer.getDVDefinitionWithoutQuotes(dvInstantiation);
-        return StringUtils.substringAfterLast(dvDefinition, ",");
+        return StringUtils.substringAfterLast(dvDefinition, ",").replace("\"", "");
     }
 
     public static String getCodedTextNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, CodedTexts codedTexts){
