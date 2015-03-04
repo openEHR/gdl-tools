@@ -109,7 +109,7 @@ public class CodedTexts {
         return getDescription(codedTextVO.getIdTemplate(), codedTextVO.getId(), codedTextVO.getCode(), lang);
     }
 
-    public String getDescription(String idTemplate, String idElement, String code, String lang) throws InternalErrorException {
+    public String getDescription(String idTemplate, String idElement, String code, String lang) {
         CodedTextVO codedTextVO = getCodedTextVO(idTemplate, idElement, code);
         if (codedTextVO!=null){
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));

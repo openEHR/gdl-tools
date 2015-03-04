@@ -69,9 +69,12 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
 
     public String toHTMLString(int level, String lang){
         StringBuffer sb = new StringBuffer();
-        sb.append(toHTMLStringSingle(level, lang));
+        sb.append(toHTMLStringSingle(level, lang) + "<br/>");
+        String prefix = "";
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
-            sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
+            sb.append(prefix);
+            sb.append(ruleLine.toHTMLString(level+1, lang));
+            prefix = "<br/>";
         }
         return sb.toString();
     }

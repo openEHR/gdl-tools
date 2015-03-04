@@ -322,12 +322,12 @@ public class GuideUtil {
         if (expressionItem instanceof CreateInstanceExpression){
             MultipleAssignmentExpression multipleAssignmentExpression = ((CreateInstanceExpression)expressionItem).getAssigment();
             for(AssignmentExpression assignmentExpression: multipleAssignmentExpression.getAssignmentExpressions()){
-                addGTCodesInReads(assignmentExpression, gtCodes);
+                addGTCodesInWrites(assignmentExpression, gtCodes);
             }
         }else if (expressionItem instanceof AssignmentExpression){
             gtCodes.add(((AssignmentExpression) expressionItem).getVariable().getCode());
         }else{
-            throw new InternalErrorException(new Exception("Unkown expression '"+expressionItem.getClass().getName()+"'"));
+            throw new InternalErrorException(new Exception("Unknown expression '"+expressionItem.getClass().getName()+"'"));
         }
     }
 
