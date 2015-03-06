@@ -1,5 +1,6 @@
-package se.cambio.cds.view.swing.panel;
+package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.view.swing.panel.interfaces.PluginPanelI;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
@@ -13,22 +14,21 @@ import javax.swing.*;
  */
 public abstract class AbstractPluginPanel extends JPanel implements PluginPanelI, RefreshablePanel {
 
-    private Guide _guide;
-    private String _language;
+    private GDLEditor gdlEditor;
 
-    public void setGuide(Guide guide){
-        _guide = guide;
+    public AbstractPluginPanel() {
+
+    }
+
+    public void setGdlEditor(GDLEditor gdlEditor) {
+        this.gdlEditor = gdlEditor;
     }
 
     public Guide getGuide() {
-        return _guide;
-    }
-
-    public void setLanguage(String language){
-        _language = language;
+        return gdlEditor.getEntity();
     }
 
     public String getLanguage() {
-        return _language;
+        return gdlEditor.getCurrentLanguageCode();
     }
 }

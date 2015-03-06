@@ -2,7 +2,7 @@ package se.cambio.cds.gdl.editor.controller.panelplugins;
 
 import org.apache.log4j.Logger;
 import se.cambio.cds.gdl.editor.util.GDLEditorConfigurationParametersManager;
-import se.cambio.cds.view.swing.panel.AbstractPluginPanel;
+import se.cambio.cds.gdl.editor.view.panels.AbstractPluginPanel;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
