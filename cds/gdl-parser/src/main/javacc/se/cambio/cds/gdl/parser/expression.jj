@@ -122,6 +122,7 @@ TOKEN : /* SYMBOLS - common */
 | < SYM_FOR_ALL : "for_all" >
 | < SYM_MAX : "max" >
 | < SYM_MIN : "min" >
+| < SYM_FIRED : "fired" >
 | < SYM_CURRENT_DATETIME : "currentDateTime" >
 | < SYM_ASSIGNMENT : "=" >
 | < SYM_MODULO : "\\" >
@@ -461,6 +462,14 @@ ExpressionItem expression_node() :
     | < SYM_MIN > item = expression_leaf()
       {
         op = OperatorKind.MIN;
+      }
+    | < SYM_FIRED > item = expression_leaf()
+      {
+        op = OperatorKind.FIRED;
+      }
+    | < SYM_EXCLAMATION > < SYM_FIRED > item = expression_leaf()
+      {
+        op = OperatorKind.NOT_FIRED;
       }
     )
     {

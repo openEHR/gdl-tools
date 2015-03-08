@@ -334,4 +334,17 @@ public class BasicGDLTest extends GDLTestCase{
         boolean equalRER = EqualsBuilder.reflectionEquals(rer, auxRer);
         assertTrue(equalRER);
     }
+
+    @Test
+    public void shouldAllowFiredRulesConditions(){
+        Collection<ElementInstance> elementInstances = getElementInstances(new ArrayList<ArchetypeReference>());
+        List<String> guideIds = new ArrayList<String>();
+        guideIds.add("fired_rule_test");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(4, rer.getFiredRules().size());
+        assertEquals(new RuleReference("fired_rule_test", "gt0003"), rer.getFiredRules().get(0));
+        assertEquals(new RuleReference("fired_rule_test", "gt0004"), rer.getFiredRules().get(1));
+        assertEquals(new RuleReference("fired_rule_test", "gt0002"), rer.getFiredRules().get(2));
+        assertEquals(new RuleReference("fired_rule_test", "gt0004"), rer.getFiredRules().get(3));
+    }
 }

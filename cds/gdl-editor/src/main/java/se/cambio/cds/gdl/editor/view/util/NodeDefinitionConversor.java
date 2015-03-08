@@ -5,6 +5,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
+import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
@@ -16,6 +17,7 @@ import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
+import se.cambio.cds.view.swing.CDSImageUtil;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -417,6 +420,27 @@ public class NodeDefinitionConversor {
             root.add(nodeAux);
         }
         return root;
+    }
+
+    public static SelectableNode<GTCodeRuleLineElement> getGTCodeRuleLineElementNodes(LinkedHashMap<String, ReadableRule> renderableRules) {
+        SelectableNode<GTCodeRuleLineElement> rootNode =
+                new SelectableNodeBuilder()
+                        .setName(GDLEditorLanguageManager.getMessage("Rules"))
+                        .setIcon(CDSImageUtil.RULE_ICON)
+                        .setObject(null)
+                        .createSelectableNode();
+        for (ReadableRule readableRule: renderableRules.values()) {
+            GTCodeRuleLineElement gtCodeRuleLineElement = readableRule.getDefinitionRuleLine().getGTCodeRuleLineElement();
+            String ruleName = readableRule.getTermDefinition().getTermText(readableRule.getGTCode());
+            SelectableNode<GTCodeRuleLineElement> ruleNode =
+                    new SelectableNodeBuilder()
+                            .setName(ruleName)
+                            .setIcon(CDSImageUtil.RULE_ICON)
+                            .setObject(gtCodeRuleLineElement)
+                            .createSelectableNode();
+            rootNode.add(ruleNode);
+        }
+        return rootNode;
     }
 }
 /*

@@ -1,13 +1,29 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
+package se.cambio.cds.gdl.editor.view.dialog;
 
-
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
-public interface GTCodeDefiner {
+import java.awt.*;
 
-    GTCodeRuleLineElement getGTCodeRuleLineElement();
-    String getGTCode();
-    void setGTCode(String gtCode);
+public class DialogRuleSelection extends DialogSelection{
+
+    private static final long serialVersionUID = 1L;
+    private Object _selectedObject = null;
+
+    public DialogRuleSelection(Window owner, GDLEditor controller) {
+        super(owner,
+                GDLEditorLanguageManager.getMessage("SelectRule"),
+                NodeDefinitionConversor.getGTCodeRuleLineElementNodes(controller.getRenderableRules()),
+                true,
+                new Dimension(500,500));
+    }
+
+    public GTCodeRuleLineElement getSelectedGTCodeRuleLineElement(){
+        return (GTCodeRuleLineElement) super.getSelectedObject();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

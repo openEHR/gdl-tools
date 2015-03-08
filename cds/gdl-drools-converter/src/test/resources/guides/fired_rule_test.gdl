@@ -1,0 +1,49 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"fired_rule_test">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		rules = <
+			["gt0002"] = (RULE) <
+				when = <"!fired($gt0002)",...>
+				priority = <1>
+			>
+			["gt0003"] = (RULE) <
+				when = <"!fired($gt0002)",...>
+				priority = <2>
+			>
+			["gt0004"] = (RULE) <
+				when = <"(fired($gt0002))||(fired($gt0003))",...>
+				priority = <3>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0002"] = (TERM) <
+						text = <"test1">
+					>
+					["gt0003"] = (TERM) <
+						text = <"test2">
+					>
+					["gt0004"] = (TERM) <
+						text = <"test3">
+					>
+				>
+			>
+		>
+	>
+>

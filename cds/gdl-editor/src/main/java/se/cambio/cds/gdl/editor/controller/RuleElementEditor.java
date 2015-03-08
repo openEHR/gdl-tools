@@ -57,6 +57,8 @@ public class RuleElementEditor {
             editAttribute((ArchetypeElementAttributeRuleLineElement) ruleLineElementWithValue);
         }else if (ruleLineElementWithValue instanceof ExpressionRuleLineElement){
             editExpression((ExpressionRuleLineElement)ruleLineElementWithValue);
+        }else if (ruleLineElementWithValue instanceof FiredRuleReferenceRuleElement){
+            selectFiredRule((FiredRuleReferenceRuleElement) ruleLineElementWithValue);
         }
     }
 
@@ -193,9 +195,19 @@ public class RuleElementEditor {
 
         if (selectedObject instanceof ArchetypeInstantiationRuleLine){
             ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
-            if (airl!=null){
+            if (airl != null){
                 cdserle.setValue(airl.getGTCodeRuleLineElement());
             }
+        }
+    }
+
+    public static void selectFiredRule(FiredRuleReferenceRuleElement frrrl) {
+        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        DialogRuleSelection dialog = new DialogRuleSelection(EditorManager.getActiveEditorWindow(), controller);
+        dialog.setVisible(true);
+        if (dialog.getAnswer()){
+            GTCodeRuleLineElement gtCodeRuleLineElement = dialog.getSelectedGTCodeRuleLineElement();
+            frrrl.setValue(gtCodeRuleLineElement);
         }
     }
 

@@ -1,15 +1,30 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
-
+package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 
-public interface GTCodeDefiner {
 
-    GTCodeRuleLineElement getGTCodeRuleLineElement();
-    String getGTCode();
-    void setGTCode(String gtCode);
-}
-/*
+public class FiredRuleInstantiationRuleLine extends RuleLine implements GTCodeDefiner{
+
+    private GTCodeRuleLineElement _gtCodeRuleLineElement = null;
+
+    public FiredRuleInstantiationRuleLine() {
+        super("","");
+        _gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
+    }
+
+    public GTCodeRuleLineElement getGTCodeRuleLineElement() {
+        return _gtCodeRuleLineElement;
+    }
+
+    public String getGTCode() {
+        return getGTCodeRuleLineElement().getValue();
+    }
+
+    public void setGTCode(String term) {
+        getGTCodeRuleLineElement().setValue(term);
+    }
+}/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

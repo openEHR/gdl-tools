@@ -262,9 +262,10 @@ public class GDLEditor implements EditorController<Guide>{
                 EditorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("RuleName"), "");
         if (dialog.getAnswer()) {
+            String nextGtCode = createNextLocalCode();
             _ruleAtEdit = new ReadableRule(getCurrentTermDefinition(),
-                    createNextLocalCode(), _readableGuide);
-            setGTName(_ruleAtEdit.getGTCode(), dialog.getValue());
+                    nextGtCode, _readableGuide);
+            setGTName(nextGtCode, dialog.getValue());
             getRenderableRules().put(_ruleAtEdit.getGTCode(), _ruleAtEdit);
         }
         return _ruleAtEdit;
@@ -1045,9 +1046,10 @@ public class GDLEditor implements EditorController<Guide>{
         _guideOntology.setTermBindings(_termBindings);
         generateGTCodesForArchetypeBindings(guide);
         try {
-            _readableGuide = GuideImporter.importGuide(guide, getCurrentLanguageCode(), ArchetypeManager.getInstance());
+            GuideImporter guideImporter = new GuideImporter(ArchetypeManager.getInstance());
+            _readableGuide = guideImporter.importGuide(guide, getCurrentLanguageCode());
         } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
+            throw new RuntimeException(e);
         }
         initResourceDescription();
         updateOriginal();

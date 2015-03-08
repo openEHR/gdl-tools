@@ -17,7 +17,7 @@ public class PreconditionRuleLinesPanel extends RuleLinesPanel {
 
     public PreconditionRuleLinesPanel(GDLEditor controller) {
         super(controller,
-                RuleLineDirectory.getSelectableConditions(),
+                RuleLineDirectory.getSelectablePreconditions(),
                 GDLEditorLanguageManager.getMessage("Preconditions"));
     }
 
