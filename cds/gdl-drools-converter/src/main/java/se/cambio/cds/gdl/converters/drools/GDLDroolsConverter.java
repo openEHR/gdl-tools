@@ -27,15 +27,16 @@ public class GDLDroolsConverter {
     private Guide guide;
 
     // Drools keywords
-    private static String RULE = "rule";
-    private static String WHEN = "when";
-    private static String THEN = "then";
-    private static String END = "end";
-    private static String DEFAULT_CONFIG = "no-loop true";
-    private static String AGENDA_GROUP = "agenda-group";
-    private static String SALIENCE = "salience";
-    private static String TAB = "      ";
-    private static String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
+    private static final String RULE = "rule";
+    private static final String WHEN = "when";
+    private static final String THEN = "then";
+    private static final String END = "end";
+    private static final String DEFAULT_CONFIG = "no-loop true";
+    private static final String AGENDA_GROUP = "agenda-group";
+    private static final String SALIENCE = "salience";
+    private static final String TAB = "      ";
+    private static final String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
+    private static final String DEFAULT_RULE_CODE = "default";
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToElementId = new HashMap<String, String>();
@@ -98,19 +99,20 @@ public class GDLDroolsConverter {
             Map<RefStat, Set<String>> ruleStats = initStats();
             String defaultActionsStr = convertAssignmentExpressionsToMVEL(defaultActions, ruleStats);
             String definition = getDefinitionForRule(ruleStats);
-            sb.append(RULE + " \"" + guide.getId() + "/default\"\n");
+            sb.append(RULE + " \"" + guide.getId() + "/" + DEFAULT_RULE_CODE + "\"\n");
             String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
-            sb.append(SALIENCE + " "+ guideSalienceId + " + 10000\n");
+            sb.append(SALIENCE + " "+ guideSalienceId + " + 9999\n");
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
             if (definition != null) {
                 sb.append(definition);
             }
-            appendFiredRuleCondition(sb, true, guide.getConcept());
+            appendFiredRuleCondition(sb, true, DEFAULT_RULE_CODE);
             sb.append(THEN + "\n");
             if (definition != null) {
                 sb.append(defaultActionsStr);
             }
+            sb.append(getFiredRuleWMInsertion(DEFAULT_RULE_CODE));
             sb.append(END + "\n\n");
         }
     }
@@ -156,13 +158,13 @@ public class GDLDroolsConverter {
             if (thenStr != null){
                 sb.append(thenStr);
             }
-            sb.append(getFiredRuleWMInsertion(rule));
+            sb.append(getFiredRuleWMInsertion(rule.getId()));
             sb.append(END + "\n\n");
         }
     }
 
-    private String getFiredRuleWMInsertion(Rule rule) {
-        return TAB + "insert(new FiredRuleReference(\"" + guide.getId() + "\", \"" + rule.getId() + "\"));\n";
+    private String getFiredRuleWMInsertion(String ruleGtCode) {
+        return TAB + "insert(new FiredRuleReference(\"" + guide.getId() + "\", \"" + ruleGtCode + "\"));\n";
 
     }
 

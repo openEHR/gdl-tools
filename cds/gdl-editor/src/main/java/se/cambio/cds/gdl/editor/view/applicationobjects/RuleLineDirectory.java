@@ -64,6 +64,8 @@ public class RuleLineDirectory {
             getDelegate()._selectableDefaultActions.add(new CreateInstanceActionRuleLine());
             getDelegate()._selectableDefaultActions.add(new SetElementWithDataValueActionRuleLine());
             getDelegate()._selectableDefaultActions.add(new SetElementWithNullValueActionRuleLine());
+            getDelegate()._selectableDefaultActions.add(new SetElementAttributeActionRuleLine());
+
         }
         return getDelegate()._selectableDefaultActions;
     }
@@ -73,7 +75,6 @@ public class RuleLineDirectory {
             getDelegate()._selectableActions = new ArrayList<RuleLine>();
             getDelegate()._selectableActions.addAll(getSelectableDefaultActions());
             getDelegate()._selectableActions.add(new SetElementWithElementActionRuleLine());
-            getDelegate()._selectableActions.add(new SetElementAttributeActionRuleLine());
         }
         return getDelegate()._selectableActions;
     }
