@@ -11,6 +11,7 @@ public class ReadableGuide {
     private LinkedHashMap<String, ReadableRule> renderableRules = null;
     private RuleLineCollection definitionRuleLines = null;
     private RuleLineCollection preconditionRuleLines = null;
+    private RuleLineCollection defaultActions = null;
     private TermDefinition _termDefinition = null;
     private ArchetypeManager archetypeManager;
 
@@ -31,18 +32,28 @@ public class ReadableGuide {
     public LinkedHashMap<String, ReadableRule> getReadableRules() {
         return renderableRules;
     }
+
     public RuleLineCollection getDefinitionRuleLines() {
         if (definitionRuleLines == null) {
             definitionRuleLines = new RuleLineCollection(this);
         }
         return definitionRuleLines;
     }
+
     public RuleLineCollection getPreconditionRuleLines() {
         if (preconditionRuleLines == null) {
             preconditionRuleLines = new RuleLineCollection(this);
         }
         return preconditionRuleLines;
     }
+
+    public RuleLineCollection getDefaultActions() {
+        if (defaultActions == null) {
+            defaultActions = new RuleLineCollection(this);
+        }
+        return defaultActions;
+    }
+
     public TermDefinition getTermDefinition() {
         return _termDefinition;
     }

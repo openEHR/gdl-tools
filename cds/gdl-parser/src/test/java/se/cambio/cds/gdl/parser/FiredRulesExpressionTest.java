@@ -1,29 +1,17 @@
-package se.cambio.cds.util;
+package se.cambio.cds.gdl.parser;
 
-import org.drools.event.rule.AfterActivationFiredEvent;
-import org.drools.event.rule.DefaultAgendaEventListener;
+import se.cambio.cds.gdl.model.expression.OperatorKind;
 
-import java.util.ArrayList;
-
-
-public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
-
-    private ArrayList<String> _firedRules = null;
-
-    @Override
-    public void afterActivationFired(AfterActivationFiredEvent event) {
-        String ruleName = event.getActivation().getRule().getName();
-        getFiredRules().add(ruleName);
-    }
-
-    public ArrayList<String> getFiredRules(){
-        if (_firedRules == null){
-            _firedRules = new  ArrayList<String>();
-        }
-        return _firedRules;
-    }
-
-
+public class FiredRulesExpressionTest extends ExpressionTestBase {
+	
+	public void testFiredInOrCondition() throws Exception {
+		parseSingleExpression("(fired($gt0009)) || (!fired($gt0010))");
+		check(OperatorKind.OR, "/operator");
+		check(OperatorKind.FIRED, "/left/operator");
+		check(OperatorKind.NOT_FIRED, "/right/operator");
+		check("gt0009", "/left/operand/code");
+		check("gt0010", "/right/operand/code");
+	}
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

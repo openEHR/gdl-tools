@@ -1,25 +1,8 @@
 package se.cambio.cds.gdl.parser;
 
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.SortedSet;
-import java.util.StringTokenizer;
-import java.util.TreeSet;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
-
 import se.cambio.cds.gdl.model.ArchetypeBinding;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.ElementBinding;
@@ -29,6 +12,11 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.TranslationDetails;
+
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class DADLSerializer {
 
@@ -94,6 +82,7 @@ public class DADLSerializer {
 
 			// skip objects generated in 2nd phase parsing
 			if ("preConditionExpressions".equals(name)
+					|| "defaultActionExpressions".equals(name)
 					|| "whenStatements".equals(name)
 					|| "thenStatements".equals(name)
 					|| "predicateStatements".equals(name)) {

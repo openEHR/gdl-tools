@@ -379,6 +379,10 @@ public class GDLEditor implements EditorController<Guide>{
         return getReadableGuide().getPreconditionRuleLines();
     }
 
+    public RuleLineCollection getDefaultActions() {
+        return getReadableGuide().getDefaultActions();
+    }
+
     public RuleLineCollection getDefinitionRuleLines() {
         return getReadableGuide().getDefinitionRuleLines();
     }
@@ -708,6 +712,10 @@ public class GDLEditor implements EditorController<Guide>{
         List<ExpressionItem> preConditions = convertToExpressionItems(getPreconditionRuleLines().getRuleLines());
         guideDefinition.setPreConditionExpressions(preConditions);
 
+        // Insert defaultActions
+        List<AssignmentExpression> defaultActions = convertToAssignmentExpressionItems(getDefaultActions().getRuleLines());
+        guideDefinition.setDefaultActionExpressions(defaultActions);
+
         // Insert rules
         int priority = getRenderableRules().size();
         for (ReadableRule renderableRule : getRenderableRules().values()) {
@@ -717,7 +725,7 @@ public class GDLEditor implements EditorController<Guide>{
                 rule.setId(gtCode);
                 guideDefinition.getRules().put(gtCode, rule);
                 rule.setWhenStatements(convertToExpressionItems(renderableRule.getConditionRuleLines().getRuleLines()));
-                rule.setThenStatements(convertToAssigmentExpressionItems(renderableRule.getActionRuleLines().getRuleLines()));
+                rule.setThenStatements(convertToAssignmentExpressionItems(renderableRule.getActionRuleLines().getRuleLines()));
                 rule.setPriority(priority--);
             }
         }
@@ -836,8 +844,7 @@ public class GDLEditor implements EditorController<Guide>{
         return list;
     }
 
-    public List<AssignmentExpression> convertToAssigmentExpressionItems(
-            Collection<RuleLine> ruleLines) {
+    public List<AssignmentExpression> convertToAssignmentExpressionItems(Collection<RuleLine> ruleLines) {
         List<AssignmentExpression> list = new ArrayList<AssignmentExpression>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {

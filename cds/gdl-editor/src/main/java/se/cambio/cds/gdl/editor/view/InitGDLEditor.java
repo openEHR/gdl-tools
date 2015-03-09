@@ -23,7 +23,7 @@ public class InitGDLEditor {
         WindowManager.registerProgressManager(new InfoDialog(ef));
         new LoadEditorSW(dialog).execute();
         dialog.setVisible(true);
-        if (args.length>0){
+        if (args.length > 0){
             //Try to open the GDL File
             new LoadGuideFromFileRSW(new File(args[0])).execute();
         }

@@ -16,6 +16,7 @@ public class RuleLineDirectory {
     private ArrayList<RuleLine> _selectablePreconditions;
     private Collection<RuleLine> _selectableConditions = null;
     private Collection<RuleLine> _selectableActions = null;
+    private ArrayList<RuleLine> _selectableDefaultActions;
     private static RuleLineDirectory _instance =null;
 
     private RuleLineDirectory(){
@@ -57,12 +58,20 @@ public class RuleLineDirectory {
         return getDelegate()._selectableConditions;
     }
 
+    public static Collection<RuleLine> getSelectableDefaultActions(){
+        if (getDelegate()._selectableDefaultActions == null){
+            getDelegate()._selectableDefaultActions = new ArrayList<RuleLine>();
+            getDelegate()._selectableDefaultActions.add(new CreateInstanceActionRuleLine());
+            getDelegate()._selectableDefaultActions.add(new SetElementWithDataValueActionRuleLine());
+            getDelegate()._selectableDefaultActions.add(new SetElementWithNullValueActionRuleLine());
+        }
+        return getDelegate()._selectableDefaultActions;
+    }
+
     public static Collection<RuleLine> getSelectableActions(){
         if (getDelegate()._selectableActions == null){
             getDelegate()._selectableActions = new ArrayList<RuleLine>();
-            getDelegate()._selectableActions.add(new CreateInstanceActionRuleLine());
-            getDelegate()._selectableActions.add(new SetElementWithDataValueActionRuleLine());
-            getDelegate()._selectableActions.add(new SetElementWithNullValueActionRuleLine());
+            getDelegate()._selectableActions.addAll(getSelectableDefaultActions());
             getDelegate()._selectableActions.add(new SetElementWithElementActionRuleLine());
             getDelegate()._selectableActions.add(new SetElementAttributeActionRuleLine());
         }

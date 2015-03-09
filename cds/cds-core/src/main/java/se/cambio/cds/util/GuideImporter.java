@@ -55,10 +55,19 @@ public class GuideImporter {
                     }
                 }
             }
-            if (guideDefinition.getPreConditionExpressions()!=null) {
-                for (ExpressionItem expressionItem : guideDefinition.getPreConditionExpressions()) {
+            List<ExpressionItem> preConditionExpressions = guideDefinition.getPreConditionExpressions();
+            if (preConditionExpressions != null) {
+                for (ExpressionItem expressionItem : preConditionExpressions) {
                     processExpressionItem(
                             readableGuide.getPreconditionRuleLines(), null,
+                            expressionItem, gtCodeElementMap);
+                }
+            }
+            List<AssignmentExpression> defaultActionExpressions = guideDefinition.getDefaultActionExpressions();
+            if (defaultActionExpressions != null) {
+                for (ExpressionItem expressionItem : defaultActionExpressions) {
+                    processExpressionItem(
+                            readableGuide.getDefaultActions(), null,
                             expressionItem, gtCodeElementMap);
                 }
             }
