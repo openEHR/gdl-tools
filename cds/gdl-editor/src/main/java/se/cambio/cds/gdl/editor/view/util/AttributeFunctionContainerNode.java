@@ -5,21 +5,26 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElemen
 public class AttributeFunctionContainerNode {
     private GTCodeRuleLineElement gtCodeRuleLineElement = null;
     private String attributeFunction = null;
-    public AttributeFunctionContainerNode (GTCodeRuleLineElement gtCodeRuleLineElement, String attribute){
-	this.gtCodeRuleLineElement = gtCodeRuleLineElement;
-	this.attributeFunction = attribute;
+
+    public AttributeFunctionContainerNode (GTCodeRuleLineElement gtCodeRuleLineElement, String attribute) {
+        this.gtCodeRuleLineElement = gtCodeRuleLineElement;
+        this.attributeFunction = attribute;
     }
+
     public GTCodeRuleLineElement getGtCodeRuleLineElement() {
-	return gtCodeRuleLineElement;
+        return gtCodeRuleLineElement;
     }
+
     public void setGtCodeRuleLineElement(GTCodeRuleLineElement gtCodeRuleLineElement) {
-	this.gtCodeRuleLineElement = gtCodeRuleLineElement;
+        this.gtCodeRuleLineElement = gtCodeRuleLineElement;
     }
+
     public String getAttributeFunction() {
-	return attributeFunction;
+        return attributeFunction;
     }
+
     public void setAttributeFunction(String attributeFunction) {
-	this.attributeFunction = attributeFunction;
+        this.attributeFunction = attributeFunction;
     }
 }
 /*

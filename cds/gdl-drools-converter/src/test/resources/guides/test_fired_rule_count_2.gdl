@@ -1,0 +1,58 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_fired_rule_count_2">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0004"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+			>
+		>
+		default_actions = <"$gt0004.create($gt0005=76,kg)", "$gt0004.create($gt0005=86,kg)", "$gt0004.create($gt0005=56,kg)">
+		rules = <
+			["gt0002"] = (RULE) <
+				when = <"$gt0003.count==2",...>
+				priority = <2>
+			>
+			["gt0003"] = (RULE) <
+				when = <"$gt0005!=null",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0002"] = (TERM) <
+						text = <"test">
+					>
+					["gt0003"] = (TERM) <
+						text = <"test1">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Weight">
+						description = <"Grams of alcohol consumed.">
+					>
+				>
+			>
+		>
+	>
+>

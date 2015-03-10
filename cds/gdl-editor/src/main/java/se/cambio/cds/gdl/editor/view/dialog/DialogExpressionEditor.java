@@ -124,7 +124,7 @@ public class DialogExpressionEditor extends DialogEditor {
         if (_inPredicate){
             node = NodeDefinitionConversor.getNodeAttributesAndFunctionsPredicate();
         }else{
-            node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor().getDefinitionRuleLines(), false, _ar);
+            node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor(), false, _ar);
         }
         selectionPanel.changeRootNode(node);
         selectionPanel.getJTree().expand(node);
@@ -132,7 +132,7 @@ public class DialogExpressionEditor extends DialogEditor {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount()==2){
-                    Object obj = NodeConversor.getSelectedObject(getSelectionPanel().getNode());
+                    Object obj = NodeConversor.getSelectedElement(getSelectionPanel().getNode());
                     if (obj instanceof AttributeFunctionContainerNode){
                         AttributeFunctionContainerNode attNode = (AttributeFunctionContainerNode)obj;
                         String handle = "$"+attNode.getGtCodeRuleLineElement().getValue()+"."+attNode.getAttributeFunction();

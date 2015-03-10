@@ -52,27 +52,29 @@ public class ExpressionUtil {
         } else if (expressionItem instanceof Variable) {
             Variable var = (Variable) expressionItem;
             String rmName = null;
-            if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())){
+            if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())) {
                 rmName = OpenEHRDataValues.DV_DATE_TIME;
-            }else{
+            } else {
                 ArchetypeElementVO aeVO = elementMap.get(var.getCode());
-                if (aeVO==null){
+                if (aeVO == null && !isFunction(var.getAttribute())){
                     throw new InternalErrorException(new Exception("Archetype element not found for gtcode '"+var.getCode()+"'"));
                 }
-                rmName = aeVO.getRMType();
+                if (aeVO != null) {
+                    rmName = aeVO.getRMType();
+                }
             }
             sb.append(getVariableWithAttributeStr(rmName, var));
-            if (stats!=null){
-                if (isFunction(var.getAttribute())){
+            if (stats != null) {
+                if (isFunction(var.getAttribute())) {
                     stats.get(RefStat.ATT_FUNCTIONS).add(var.getCode()+CODE_FUNCTION_SEPARATOR+var.getAttribute());
                     stats.get(RefStat.ATT_FUNCTIONS_REF).add(var.getCode());
-                }else{
+                } else {
                     stats.get(RefStat.REFERENCE).add(var.getCode());
                 }
             }
         } else if (expressionItem instanceof StringConstant) {
             String stringValue = expressionItem.toString();
-            if (stringValue.startsWith("'") && stringValue.endsWith("'") && stringValue.length() > 1){
+            if (stringValue.startsWith("'") && stringValue.endsWith("'") && stringValue.length() > 1) {
                 stringValue = "\"" + stringValue.substring(1, stringValue.length()-1) + "\"";
             }
             sb.append(stringValue);
@@ -128,25 +130,22 @@ public class ExpressionUtil {
     }
 
     public static String getVariableWithAttributeStr(String rmName, Variable var) {
-
         Logger.getLogger(DVUtil.class).debug("Var.code: " + var.getCode() + ", attr: " + var.getAttribute());
-
-        String dvClassName = DVDefSerializer.getDVClassName(rmName);
         String ret = null;
-
+        String dvClassName = null;
+        if (rmName != null) {
+            dvClassName = DVDefSerializer.getDVClassName(rmName);
+        }
         // TODO fix setting currentDateTime
-        if(OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode()) && (var.getAttribute()==null||var.getAttribute().equals("value"))) {
-            ret = "$"+OpenEHRConst.CURRENT_DATE_TIME_ID+".getDateTime().getMillis()";
-        } else if("value".equals(var.getAttribute()) &&("DvDateTime".equals(dvClassName)
-                || "DvDate".equals(dvClassName))) {
-            ret = "((" + dvClassName + ")$" + var.getCode() +
-                    getDataValueMethod(var.getCode()) +
-                    ").getDateTime().getMillis()";
+        if(OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode()) && (var.getAttribute() == null || var.getAttribute().equals("value"))) {
+            ret = "$" + OpenEHRConst.CURRENT_DATE_TIME_ID + ".getDateTime().getMillis()";
+        } else if("value".equals(var.getAttribute()) && ("DvDateTime".equals(dvClassName) || "DvDate".equals(dvClassName))) {
+            ret = "((" + dvClassName + ")$" + var.getCode() + getDataValueMethod(var.getCode()) + ").getDateTime().getMillis()";
         } else {
-            if (isFunction(var.getAttribute())){
+            if (isFunction(var.getAttribute())) {
                 //Function (Only working for count yet)
-                if (OpenEHRDataValues.FUNCTION_COUNT.equals(var.getAttribute())){
-                    ret = "$"+var.getCode()+var.getAttribute();
+                if (OpenEHRDataValues.FUNCTION_COUNT.equals(var.getAttribute())) {
+                    ret = "$" + var.getCode() + var.getAttribute();
                 }
             }else{
                 //Attribute

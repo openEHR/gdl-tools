@@ -358,36 +358,34 @@ public class RuleElementEditor {
         }
     }
 
-    public static void editExpression(ExpressionRuleLineElement arle){
+    public static void editExpression(ExpressionRuleLineElement arle) {
+        String attribute = getAttributeValue(arle);
         ArchetypeElementVO archetypeElementVO = getArchetypeElementVO(arle.getParentRuleLine());
-        if (archetypeElementVO!=null){
-            String attribute = getAttributeValue(arle);
-            if (OpenEHRDataValues.UNITS_ATT.equals(attribute)){
-                Collection<String> units = arle.getArchetypeManager().getUnits().getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
-                String oldValue = null;
-                if (arle.getValue() instanceof StringConstant){
-                    oldValue = ((StringConstant)arle.getValue()).getValue();
-                }
-                DialogComboBoxInsert dialog =
-                        new DialogComboBoxInsert(EditorManager.getActiveEditorWindow(), OpenEHRLanguageManager.getMessage("Units"), oldValue, units);
-                dialog.setVisible(true);
-                if (dialog.getAnswer()){
-                    String unit = dialog.getSelectedItem();
-                    arle.setValue(new StringConstant(unit));
-                }
-            }else{
-                boolean inPredicate = false;
-                if (arle.getParentRuleLine() instanceof WithElementPredicateExpressionDefinitionRuleLine){
-                    inPredicate = true;
-                }
-                ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
-                DialogExpressionEditor dialog =
-                        new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), archetypeElementVO, arle, inPredicate, ar);
-                dialog.setVisible(true);
-                if (dialog.getAnswer()){
-                    ExpressionItem expressionItem = dialog.getExpressionItem();
-                    arle.setValue(expressionItem);
-                }
+        if (archetypeElementVO != null && OpenEHRDataValues.UNITS_ATT.equals(attribute)) {
+            Collection<String> units = arle.getArchetypeManager().getUnits().getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
+            String oldValue = null;
+            if (arle.getValue() instanceof StringConstant) {
+                oldValue = ((StringConstant) arle.getValue()).getValue();
+            }
+            DialogComboBoxInsert dialog =
+                    new DialogComboBoxInsert(EditorManager.getActiveEditorWindow(), OpenEHRLanguageManager.getMessage("Units"), oldValue, units);
+            dialog.setVisible(true);
+            if (dialog.getAnswer()) {
+                String unit = dialog.getSelectedItem();
+                arle.setValue(new StringConstant(unit));
+            }
+        } else {
+            boolean inPredicate = false;
+            if (arle.getParentRuleLine() instanceof WithElementPredicateExpressionDefinitionRuleLine){
+                inPredicate = true;
+            }
+            ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
+            DialogExpressionEditor dialog =
+                    new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), archetypeElementVO, arle, inPredicate, ar);
+            dialog.setVisible(true);
+            if (dialog.getAnswer()){
+                ExpressionItem expressionItem = dialog.getExpressionItem();
+                arle.setValue(expressionItem);
             }
         }
     }

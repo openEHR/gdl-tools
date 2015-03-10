@@ -16,7 +16,7 @@ public class DialogRuleSelection extends DialogSelection{
     public DialogRuleSelection(Window owner, GDLEditor controller) {
         super(owner,
                 GDLEditorLanguageManager.getMessage("SelectRule"),
-                NodeDefinitionConversor.getGTCodeRuleLineElementNodes(controller.getRenderableRules()),
+                NodeDefinitionConversor.getGTCodeRuleLineElementNodes(controller.getRenderableRules(), false),
                 true,
                 new Dimension(500,500));
     }

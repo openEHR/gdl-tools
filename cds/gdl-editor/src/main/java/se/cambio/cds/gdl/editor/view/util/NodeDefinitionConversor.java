@@ -2,6 +2,7 @@ package se.cambio.cds.gdl.editor.view.util;
 
 import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
@@ -245,7 +246,7 @@ public class NodeDefinitionConversor {
         return singleSelection ? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
     }
 
-    private static SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode, ArchetypeManager archetypeManager){
+    private static SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode, ArchetypeManager archetypeManager) {
         String name = archetypeManager.getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
         String desc = archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
         return  new SelectableNodeBuilder<Object>()
@@ -269,7 +270,7 @@ public class NodeDefinitionConversor {
                         GTCodeRuleLineElement gtCodeRuleLineElement =
                                 (GTCodeRuleLineElement)nodeAux.getObject();
                         addFieldsToNode(nodeAux, aeirl.getArchetypeElement().getRMType(), gtCodeRuleLineElement);
-                        addFuntionsToNode(nodeAux, aeirl.getArchetypeElement().getRMType(), gtCodeRuleLineElement);
+                        addFunctionsToNode(nodeAux, gtCodeRuleLineElement);
                         node.add(nodeAux);
                     }
                 }
@@ -296,7 +297,7 @@ public class NodeDefinitionConversor {
         }
     }
 
-    public static void addFuntionsToNode(SelectableNode<Object> node, String rmName, GTCodeRuleLineElement gtCodeRuleLineElement){
+    public static void addFunctionsToNode(SelectableNode<?> node, GTCodeRuleLineElement gtCodeRuleLineElement){
         node.setObject(null);
         ArrayList<String> functionNames =
                 OpenEHRDataValuesUI.getFunctionNames();
@@ -322,24 +323,34 @@ public class NodeDefinitionConversor {
                 .createSelectableNode();
     }
 
-    public static SelectableNode<Object> getNodeAttributesAndFunctions(RuleLineCollection definitionRuleLines, boolean onlyCDSDomain, ArchetypeReference ar) {
+    public static SelectableNode<Object> getNodeAttributesAndFunctions(GDLEditor gdlEditor, boolean onlyCDSDomain, ArchetypeReference ar) {
+        RuleLineCollection definitionRuleLines = gdlEditor.getDefinitionRuleLines();
         SelectableNode<Object> root = getSingleNodeAttributesAndFunctions();
+        SelectableNode<Object> elementsNode = getElementsNode();
+        root.add(elementsNode);
         try {
-            addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, root, onlyCDSDomain, ar);
+            addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
         } catch (InstanceNotFoundException e) {
             ExceptionHandler.handle(e);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
         if (!onlyCDSDomain){
-            GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
-            SelectableNode<Object> currentDateTimeNode =
-                    getCurrentDateTimeArchetypeElementRuleLineElementNode(currentDateTimeGTCodeRuleLineElement);
-            addFieldsToNode(currentDateTimeNode, OpenEHRDataValues.DV_DATE_TIME, getCurrentDateTimeGTCodeRuleLineElement());
-            root.add(currentDateTimeNode);
+            SelectableNode<Object> currentDateTimeNode = getCurrentTimeNodeWithAttributes();
+            elementsNode.add(currentDateTimeNode);
         }
+        SelectableNode<GTCodeRuleLineElement> rulesNode = getGTCodeRuleLineElementNodes(gdlEditor.getRenderableRules(), true);
+        root.add(rulesNode);
         root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
         return root;
+    }
+
+    private static SelectableNode<Object> getCurrentTimeNodeWithAttributes() {
+        GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
+        SelectableNode<Object> currentDateTimeNode =
+                getCurrentDateTimeArchetypeElementRuleLineElementNode(currentDateTimeGTCodeRuleLineElement);
+        addFieldsToNode(currentDateTimeNode, OpenEHRDataValues.DV_DATE_TIME, getCurrentDateTimeGTCodeRuleLineElement());
+        return currentDateTimeNode;
     }
 
     public static SelectableNode<Object> getNodeAttributesAndFunctionsPredicate(){
@@ -347,13 +358,11 @@ public class NodeDefinitionConversor {
                 .setName(GDLEditorLanguageManager.getMessage("Attributes"))
                 .setIcon(GDLEditorImageUtil.OBJECT_ICON)
                 .createSelectableNode();
-        GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
-        SelectableNode<Object> currentDateTimeNode =
-                getCurrentDateTimeArchetypeElementRuleLineElementNode(currentDateTimeGTCodeRuleLineElement);
-        addFieldsToNode(currentDateTimeNode, OpenEHRDataValues.DV_DATE_TIME, getCurrentDateTimeGTCodeRuleLineElement());
+        SelectableNode<Object> currentDateTimeNode = getCurrentTimeNodeWithAttributes();
         root.add(currentDateTimeNode);
         return root;
     }
+
     public static SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId, ArchetypeManager archetypeManager){
         SelectableNode<Object> root =
                 new SelectableNodeBuilder<Object>()
@@ -422,25 +431,46 @@ public class NodeDefinitionConversor {
         return root;
     }
 
-    public static SelectableNode<GTCodeRuleLineElement> getGTCodeRuleLineElementNodes(LinkedHashMap<String, ReadableRule> renderableRules) {
-        SelectableNode<GTCodeRuleLineElement> rootNode =
+    public static SelectableNode<GTCodeRuleLineElement> getGTCodeRuleLineElementNodes(LinkedHashMap<String, ReadableRule> renderableRules, boolean showAttributes) {
+        SelectableNode<GTCodeRuleLineElement> rulesNode = getRulesNode();
+        addRuleNodes(renderableRules, rulesNode, showAttributes);
+        return rulesNode;
+    }
+
+    public static SelectableNode<Object> getElementsNode() {
+        SelectableNode<Object> elementsNode =  new SelectableNodeBuilder<Object>()
+                .setName(GDLEditorLanguageManager.getMessage("Elements"))
+                .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
+                .createSelectableNode();
+        return elementsNode;
+    }
+
+    private static void addRuleNodes(LinkedHashMap<String, ReadableRule> renderableRules, SelectableNode<GTCodeRuleLineElement> rootNode, boolean showAttributes) {
+        for (ReadableRule readableRule: renderableRules.values()) {
+            GTCodeRuleLineElement gtCodeRuleLineElement = readableRule.getDefinitionRuleLine().getGTCodeRuleLineElement();
+            String ruleName = readableRule.getTermDefinition().getTermText(readableRule.getGTCode());
+            GTCodeRuleLineElement ruleObject = showAttributes ? null : gtCodeRuleLineElement;
+            SelectableNode<GTCodeRuleLineElement> ruleNode =
+                    new SelectableNodeBuilder()
+                            .setName(ruleName)
+                            .setIcon(CDSImageUtil.RULE_ICON)
+                            .setObject(ruleObject)
+                            .createSelectableNode();
+            rootNode.add(ruleNode);
+            if (showAttributes) {
+                addFunctionsToNode(ruleNode, gtCodeRuleLineElement);
+            }
+        }
+    }
+
+    public static SelectableNode<GTCodeRuleLineElement> getRulesNode() {
+        SelectableNode<GTCodeRuleLineElement> rulesNode =
                 new SelectableNodeBuilder()
                         .setName(GDLEditorLanguageManager.getMessage("Rules"))
                         .setIcon(CDSImageUtil.RULE_ICON)
                         .setObject(null)
                         .createSelectableNode();
-        for (ReadableRule readableRule: renderableRules.values()) {
-            GTCodeRuleLineElement gtCodeRuleLineElement = readableRule.getDefinitionRuleLine().getGTCodeRuleLineElement();
-            String ruleName = readableRule.getTermDefinition().getTermText(readableRule.getGTCode());
-            SelectableNode<GTCodeRuleLineElement> ruleNode =
-                    new SelectableNodeBuilder()
-                            .setName(ruleName)
-                            .setIcon(CDSImageUtil.RULE_ICON)
-                            .setObject(gtCodeRuleLineElement)
-                            .createSelectableNode();
-            rootNode.add(ruleNode);
-        }
-        return rootNode;
+        return rulesNode;
     }
 }
 /*

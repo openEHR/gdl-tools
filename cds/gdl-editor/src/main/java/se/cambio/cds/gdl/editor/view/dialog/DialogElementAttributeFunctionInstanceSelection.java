@@ -38,7 +38,7 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
         super(
                 owner,
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getNodeAttributesAndFunctions(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
+                NodeDefinitionConversor.getNodeAttributesAndFunctions(controller, onlyCDSDomain, ar),
                 true,
                 new Dimension(500,500));
         _controller = controller;
