@@ -3,6 +3,8 @@ package se.cambio.cds.gdl.editor.view.panels;
 import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,20 +47,35 @@ public class ListPanel extends JPanel{
         this.setBorder(BorderFactory.createTitledBorder(_title));
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        JButton addButton = generateAddButton();
+        buttonPanel.add(addButton);
+        JButton deleteButton = generateDeleteButton();
+        buttonPanel.add(deleteButton);
+        JButton editButton = generateEditButton();
+        buttonPanel.add(editButton);
+        this.add(buttonPanel, BorderLayout.WEST);
+        this.add(getJList(), BorderLayout.CENTER);
+    }
+
+    private JButton generateAddButton() {
         JButton addButton = new JButton(GDLEditorImageUtil.ADD_ICON);
         addButton.setContentAreaFilled(false);
-        addButton.setPreferredSize(new Dimension(16,16));
+        addButton.setPreferredSize(new Dimension(16, 16));
         addButton.setBorderPainted(false);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String value = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), _title, "");
-                if(value!=null){
-                    DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
+                if (value != null) {
+                    DefaultListModel dlm = ((DefaultListModel) getJList().getModel());
                     dlm.addElement(value);
                     updateListModel(dlm);
                 }
             }
         });
+        return addButton;
+    }
+
+    private JButton generateDeleteButton() {
         JButton deleteButton = new JButton(GDLEditorImageUtil.DELETE_ICON);
         deleteButton.setContentAreaFilled(false);
         deleteButton.setPreferredSize(new Dimension(16,16));
@@ -66,17 +83,38 @@ public class ListPanel extends JPanel{
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int index = getJList().getSelectedIndex();
-                if(index>=0){
+                if(index >= 0) {
                     DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
                     dlm.removeElementAt(index);
                     updateListModel(dlm);
                 }
             }
         });
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
-        this.add(buttonPanel, BorderLayout.WEST);
-        this.add(getJList(), BorderLayout.CENTER);
+        return deleteButton;
+    }
+
+    private JButton generateEditButton() {
+        JButton editButton = new JButton(GDLEditorImageUtil.EDIT_ICON);
+        editButton.setContentAreaFilled(false);
+        editButton.setPreferredSize(new Dimension(16, 16));
+        editButton.setBorderPainted(false);
+        editButton.setToolTipText(GDLEditorLanguageManager.getMessage("EditKeyword"));
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = getJList().getSelectedIndex();
+                if (index >= 0) {
+                    DefaultListModel dlm = ((DefaultListModel) getJList().getModel());
+                    String label = (String) dlm.getElementAt(index);
+                    DialogNameInsert dialogNameInsert = new DialogNameInsert(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EditKeyword"), label);
+                    if (dialogNameInsert.getAnswer()) {
+                        label = dialogNameInsert.getValue();
+                        dlm.setElementAt(label, index);
+                        updateListModel(dlm);
+                    }
+                }
+            }
+        });
+        return editButton;
     }
 
     private JList getJList(){

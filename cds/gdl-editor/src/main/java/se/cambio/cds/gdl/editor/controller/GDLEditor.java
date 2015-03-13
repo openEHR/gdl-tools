@@ -340,7 +340,7 @@ public class GDLEditor implements EditorController<Guide>{
 
     private ResourceDescriptionItem getResourceDescriptionItem(String lang){
         ResourceDescriptionItem resourceDescriptionItem = getDetails().get(lang);
-        if (resourceDescriptionItem==null){
+        if (resourceDescriptionItem == null){
             resourceDescriptionItem = new ResourceDescriptionItem();
             getDetails().put(lang, resourceDescriptionItem);
         }
@@ -624,14 +624,14 @@ public class GDLEditor implements EditorController<Guide>{
         newTerm.setId(gtCode);
         String text = null;
         String description = null;
+        String languagePrefix = "*(" + originalLanguage + ") ";
         if (originalTerm != null && originalTerm.getText() != null
                 && !originalTerm.getText().isEmpty()) {
-            text = "*" + originalTerm.getText() + " (" + originalLanguage + ")";
+            text = languagePrefix + originalTerm.getText();
         }
         if (originalTerm != null && originalTerm.getDescription() != null
                 && !originalTerm.getDescription().isEmpty()) {
-            description = "*" + originalTerm.getDescription() + " ("
-                    + originalLanguage + ")";
+            description = languagePrefix + originalTerm.getDescription();
         }
         newTerm.setText(text);
         newTerm.setDescription(description);
@@ -873,14 +873,14 @@ public class GDLEditor implements EditorController<Guide>{
             TermDefinition termDefinition = getTermDefinition(language);
             for (String gtCode : originalTermDefinition.getTerms().keySet()) {
                 Term term = termDefinition.getTerms().get(gtCode);
-                if (term==null || term.getText()==null){
+                if (term == null || term.getText() == null){
                     term = getTermToDifferentLanguage(
                             gtCode,
                             originalTermDefinition.getTerms().get(gtCode),
                             getOriginalLanguageCode());
                     termDefinition.getTerms().put(gtCode, term);
                 }
-                if (term==null || term.getText()==null){
+                if (term == null || term.getText() == null){
                     term = getTermToDifferentLanguage(
                             gtCode,
                             getTermDefinition(_currentGuideLanguageCode).getTerms().get(gtCode),
@@ -889,10 +889,32 @@ public class GDLEditor implements EditorController<Guide>{
                 }
             }
             _currentGuideLanguageCode = language;
-            getResourceDescriptionItem(language);
+            ResourceDescriptionItem originalResourceDescriptionItem = getResourceDescription().getDetails().get(getOriginalLanguageCode());
+            copyResourceDescriptionItemContent(originalResourceDescriptionItem, getResourceDescriptionItem(language));
 
             EditorManager.getMainMenuBar().refreshLanguageMenu();
             refreshCurrentTab();
+        }
+    }
+
+    private void copyResourceDescriptionItemContent(ResourceDescriptionItem originalResourceDescriptionItem, ResourceDescriptionItem resourceDescriptionItem) {
+        String originalLanguage = getOriginalLanguageCode();
+        String languagePrefix = "*(" + originalLanguage + ") ";
+        String use = originalResourceDescriptionItem.getUse();
+        if (use != null) {
+            resourceDescriptionItem.setUse(languagePrefix + use);
+        }
+        String misuse = originalResourceDescriptionItem.getMisuse();
+        if (misuse != null) {
+            resourceDescriptionItem.setMisuse(languagePrefix + misuse);
+        }
+        String purpose = originalResourceDescriptionItem.getPurpose();
+        if (purpose != null) {
+            resourceDescriptionItem.setPurpose(languagePrefix + purpose);
+        }
+        resourceDescriptionItem.setCopyright(originalResourceDescriptionItem.getCopyright());
+        for (String keyword : originalResourceDescriptionItem.getKeywords()) {
+            resourceDescriptionItem.getKeywords().add(languagePrefix + keyword);
         }
     }
 
