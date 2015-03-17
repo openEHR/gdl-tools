@@ -11,27 +11,32 @@ import java.util.Map;
 
 public interface EditorController<E> {
 
-    public void init();
-    public E getEntity();
-    public void setEntity(E entity);
-    public String getTitle();
-    public JPanel getEditorPanel();
-    public void runIfOKToExit(Runnable runnable);
-    public String createNextLocalCode();
-    public Map<String, Term> getCurrentTermsMap();
-    public void changeLanguage(String language);
-    public Collection<String> getUsedCodes();
-    public ResourceDescription getResourceDescription();
-    public Term getConceptTerm();
-    public String getCurrentLanguageCode();
-    public Collection<String> getSupportedLanguageCodes();
-    public String getEntityId();
-    public String getEntityName();
-    public Collection<String> getSupportedEntityExtensions();
-    public void setEntityId(String entityId);
-    public void save();
-    public void saveAs();
-    public void entitySaved();
-    public String getSerializedEntity() throws InternalErrorException;
-    public E parseEntity(InputStream is) throws InternalErrorException;
+    void init();
+    E getEntity();
+    void setEntity(E entity);
+    String getTitle();
+    JPanel getEditorPanel();
+    void runIfOKToExit(Runnable runnable);
+    String createNextLocalCode();
+    Map<String, Term> getCurrentTermsMap();
+    void updateTerm(Term term);
+    void changeLanguage(String language);
+    Collection<String> getUsedCodes();
+    ResourceDescription getResourceDescription();
+    Term getConceptTerm();
+    String getCurrentLanguageCode();
+    Collection<String> getSupportedLanguageCodes();
+    String getEntityId();
+
+    void setEntityId(String entityId);
+
+    String getEntityName();
+
+    Collection<String> getSupportedEntityExtensions();
+
+    void save();
+    void saveAs();
+    void entitySaved();
+    String getSerializedEntity() throws InternalErrorException;
+    E parseEntity(InputStream is) throws InternalErrorException;
 }

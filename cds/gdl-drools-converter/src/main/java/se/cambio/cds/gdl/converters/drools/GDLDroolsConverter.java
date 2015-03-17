@@ -35,10 +35,6 @@ import java.util.Set;
 public class GDLDroolsConverter {
 
 
-    private static Logger log = Logger.getLogger(GDLDroolsConverter.class);
-    private final ArchetypeManager archetypeManager;
-    private Guide guide;
-
     // Drools keywords
     private static final String RULE = "rule";
     private static final String WHEN = "when";
@@ -50,9 +46,11 @@ public class GDLDroolsConverter {
     private static final String TAB = GdlDroolsConst.TAB;
     private static final String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
     private static final String DEFAULT_RULE_CODE = "default";
+    private static Logger log = Logger.getLogger(GDLDroolsConverter.class);
+    private final ArchetypeManager archetypeManager;
+    private Guide guide;
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
     private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
-    private Map<String, String> _gtElementToElementId = new HashMap<String, String>();
     private Map<String, ArchetypeReference> archetypeReferenceMap;
     private Map<String, ArchetypeElementVO> elementMap;
     private Map<String, String> archetypeBindingGtCodeToDefinition;
@@ -61,11 +59,40 @@ public class GDLDroolsConverter {
     private StringBuffer sb;
     private int predicateCount;
     private int creationIndex;
+    private String preconditionMVEL;
 
     public GDLDroolsConverter(Guide guide, ArchetypeManager archetypeManager) {
         this.guide = guide;
         this.archetypeManager = archetypeManager;
         init();
+    }
+
+    public static String getAttributeSettingStr(String gtCode, String rmName, String attributeName, String setStr) {
+        return "setDataValue(DVUtil.createDV($" + gtCode + ",\"" + rmName + "\",\"" + attributeName + "\"," + setStr + "))";
+    }
+
+    private static String getEqualsString(String handle, String value, boolean inPredicate, boolean negated){
+        return "DVUtil.equalDV(" + inPredicate + ", " + handle + "," + value + getDataValueStrIfNeeded(value) + ", " + negated + ")";
+    }
+
+    private static String getComparisonString(String handle, String value){
+        return "DVUtil.compatibleComparison(" + handle + getDataValueStrIfNeeded(handle) + ", $auxDV=" + value + getDataValueStrIfNeeded(value) + ") && " + "DVUtil.compareDVs(" + handle + ".getDataValue(), $auxDV)";
+    }
+
+    private static String getDataValueStrIfNeeded(String value){
+        if (value.startsWith("$")){
+            return ".getDataValue()";
+        }else{
+            return "";
+        }
+    }
+
+    protected static boolean isString(String rmName, String attribute){
+        return (OpenEHRDataValues.DV_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
+                (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
+                OpenEHRDataValues.UNITS_ATT.equals(attribute) ||
+                OpenEHRDataValues.CODE_ATT.equals(attribute) ||
+                OpenEHRDataValues.TEMINOLOGYID_ATT.equals(attribute);
     }
 
     protected Guide getGuide() {
@@ -120,6 +147,7 @@ public class GDLDroolsConverter {
     public String convertToDrools() throws InternalErrorException{
         createHeader();
         fillDefinitions();
+        initPreconditions();
         insertRules();
         insertDefaultActionsRule();
         return sb.toString();
@@ -130,9 +158,9 @@ public class GDLDroolsConverter {
         sb.append(guideHeader);
     }
 
-    private String getPreconditionString() throws InternalErrorException {
+    private void initPreconditions() throws InternalErrorException {
         List<ExpressionItem> preConditionExpressions = guide.getDefinition().getPreConditionExpressions();
-        return convertExpressionsToMVEL(preConditionExpressions, preconditionStats);
+        preconditionMVEL = convertExpressionsToMVEL(preConditionExpressions, preconditionStats);
     }
 
     private void insertDefaultActionsRule() throws InternalErrorException {
@@ -141,26 +169,23 @@ public class GDLDroolsConverter {
             Map<RefStat, Set<String>> ruleStats = initStats();
             String defaultActionsStr = convertAssignmentExpressionsToMVEL(defaultActions, ruleStats);
             String definition = getDefinitionForRule(ruleStats);
-            sb.append(RULE + " \"" + guide.getId() + "/" + DEFAULT_RULE_CODE + "\"\n");
+            sb.append(RULE + " \"").append(guide.getId()).append("/").append(DEFAULT_RULE_CODE).append("\"\n");
             String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
-            sb.append(SALIENCE + " "+ guideSalienceId + " + 9999\n");
+            sb.append(SALIENCE + " ").append(guideSalienceId).append(" + 9999\n");
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
-            if (definition != null) {
-                sb.append(definition);
-            }
+            sb.append(definition);
+            sb.append(preconditionMVEL);
             appendFiredRuleCondition(sb, true, DEFAULT_RULE_CODE);
             sb.append(THEN + "\n");
-            if (definition != null) {
-                sb.append(defaultActionsStr);
-            }
+            sb.append(defaultActionsStr);
             sb.append(getFiredRuleWMInsertion(DEFAULT_RULE_CODE));
             sb.append(END + "\n\n");
         }
     }
 
     private void insertRules() throws InternalErrorException {
-        String preconditionStr = getPreconditionString();
+        String preconditionStr = preconditionMVEL;
         for (Rule rule : guide.getDefinition().getRules().values()) {
             Map<RefStat, Set<String>> ruleStats = initStats();
             String whenStr = convertExpressionsToMVEL(rule.getWhenStatements(), ruleStats);
@@ -174,30 +199,22 @@ public class GDLDroolsConverter {
             functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
             functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
             String functionExtraCode = getFunctionsExtraCode(functionsRefs);
-            sb.append(RULE + " \"" + guide.getId() + "/" + rule.getId() + "\"\n");
+            sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
             String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
-            sb.append(SALIENCE + " "+ guideSalienceId + " + " + rule.getPriority() + "\n");
+            sb.append(SALIENCE + " ").append(guideSalienceId).append(" + ").append(rule.getPriority()).append("\n");
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
-            if (definition != null){
-                sb.append(definition);
-            }
+            sb.append(definition);
             if (functionExtraCode != null){
                 sb.append(functionExtraCode);
             }
             if (hasValueChecks != null){
                 sb.append(hasValueChecks);
             }
-            if (preconditionStr != null){
-                sb.append(preconditionStr);
-            }
-            if (whenStr != null){
-                sb.append(whenStr);
-            }
+            sb.append(preconditionStr);
+            sb.append(whenStr);
             sb.append(THEN + "\n");
-            if (thenStr != null){
-                sb.append(thenStr);
-            }
+            sb.append(thenStr);
             sb.append(getFiredRuleWMInsertion(rule.getId()));
             sb.append(END + "\n\n");
         }
@@ -212,16 +229,16 @@ public class GDLDroolsConverter {
             StringBuffer archetypeBindingMVELSB = new StringBuffer();
             String gtCodeArchetypeReference = archetypeBinding.getId();
             archetypeBindingMVELSB.append(TAB);
-            archetypeBindingMVELSB.append("$" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + gtCodeArchetypeReference);
+            archetypeBindingMVELSB.append("$" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_").append(gtCodeArchetypeReference);
             String idDomain = archetypeBinding.getDomain();
             archetypeBindingMVELSB.append(":ArchetypeReference");
             archetypeBindingMVELSB.append("(");
             if (idDomain != null){
-                archetypeBindingMVELSB.append("idDomain==\"" + idDomain + "\", ");
+                archetypeBindingMVELSB.append("idDomain==\"").append(idDomain).append("\", ");
             }
             String archetypeId = archetypeBinding.getArchetypeId();
             String templateId = archetypeBinding.getTemplateId();
-            archetypeBindingMVELSB.append("idArchetype==\"" + archetypeId + "\"");
+            archetypeBindingMVELSB.append("idArchetype==\"").append(archetypeId).append("\"");
             archetypeBindingMVELSB.append(")\n");
             getArchetypeReferenceMap().put(gtCodeArchetypeReference, new ArchetypeReference(idDomain, archetypeId, templateId));
             processPredicates(archetypeBinding, archetypeBindingMVELSB);
@@ -234,14 +251,13 @@ public class GDLDroolsConverter {
         Map<String, ElementBinding> elementBindingsMap = archetypeBinding.getElements();
         if (elementBindingsMap!=null) {
             for (ElementBinding element : elementBindingsMap.values()) {
-                StringBuffer elementDefinitionSB = new StringBuffer();
+                StringBuilder elementDefinitionSB = new StringBuilder();
                 String idElement = archetypeBinding.getArchetypeId() + element.getPath();
                 ArchetypeElementVO value = archetypeManager.getArchetypeElements().getArchetypeElement(
                         archetypeBinding.getTemplateId(), idElement);
                 getElementMap().put(element.getId(), value);
-                elementDefinitionSB.append("ElementInstance(id==\"" + idElement + "\", archetypeReference==$" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeReferenceGTCode + ")");
+                elementDefinitionSB.append("ElementInstance(id==\"").append(idElement).append("\", archetypeReference==$").append(GdlDroolsConst.ARCHETYPE_REFERENCE_ID).append("_").append(archetypeReferenceGTCode).append(")");
                 _gtElementToDefinition.put(element.getId(), elementDefinitionSB.toString());
-                _gtElementToElementId.put(element.getId(), idElement);
                 gtElementToArchetypeBindingGtCode.put(element.getId(), archetypeReferenceGTCode);
             }
         }
@@ -269,10 +285,10 @@ public class GDLDroolsConverter {
                     archetypeDefinitions.put(gtCodeArchetypeBinding, definition);
                 }
                 definition.append(TAB);
-                definition.append("$" + elementGtCode + ":" + _gtElementToDefinition.get(elementGtCode) + "\n");
+                definition.append("$").append(elementGtCode).append(":").append(_gtElementToDefinition.get(elementGtCode)).append("\n");
             }
         }
-        StringBuffer resultSB = new StringBuffer();
+        StringBuilder resultSB = new StringBuilder();
         for (StringBuffer definition : archetypeDefinitions.values()) {
             resultSB.append(definition.toString());
         }
@@ -325,7 +341,7 @@ public class GDLDroolsConverter {
             }
             for (String gtCodes : stats.get(RefStat.SET)) {
                 sb.append(TAB);
-                sb.append("modify($"+gtCodes+"){};\n");
+                sb.append("modify($").append(gtCodes).append("){};\n");
             }
         }
         return sb.toString();
@@ -350,10 +366,6 @@ public class GDLDroolsConverter {
                                                Map<RefStat, Set<String>> stats) throws InternalErrorException {
         GdlDroolsAssignmentExpressionProcessor gdlDroolsAssignmentExpressionProcessor = new GdlDroolsAssignmentExpressionProcessor(this, assignmentExpression, stats);
         sb.append(gdlDroolsAssignmentExpressionProcessor.process());
-    }
-
-    public static String getAttributeSettingStr(String gtCode, String rmName, String attributeName, String setStr) {
-        return "setDataValue(DVUtil.createDV($" + gtCode + ",\"" + rmName + "\",\"" + attributeName + "\"," + setStr + "))";
     }
 
     protected void processBinaryExpression(StringBuffer sb,
@@ -436,11 +448,11 @@ public class GDLDroolsConverter {
 
     private String getHasValueStr(Collection<String> gtCodes) {
         if (!gtCodes.isEmpty()) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append("   eval(");
             int count = 0;
             for (String gtCode : gtCodes) {
-                sb.append("$" + gtCode + ".hasValue()");
+                sb.append("$").append(gtCode).append(".hasValue()");
                 if (++count < gtCodes.size()) {
                     sb.append(" && ");
                 }
@@ -452,9 +464,8 @@ public class GDLDroolsConverter {
         }
     }
 
-
     private String getFunctionsExtraCode(Collection<String> gtCodesWithFunctions){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String gtCodesWithFunction : gtCodesWithFunctions) {
             String[] codeSplit = gtCodesWithFunction.split(ExpressionUtil.CODE_FUNCTION_SEPARATOR);
             String code = codeSplit[0];
@@ -475,7 +486,7 @@ public class GDLDroolsConverter {
                         defAux = defAux.substring(0, defAux.length() - 5 - TAB.length());
                     }*/
                     sb.append(TAB);
-                    sb.append("Number($"+code+att+":intValue) from accumulate (\n" + TAB + defAux + ",\n" + TAB + TAB + "count($count_" + code + "))\n");
+                    sb.append("Number($").append(code).append(att).append(":intValue) from accumulate (\n").append(TAB).append(defAux).append(",\n").append(TAB).append(TAB).append("count($count_").append(code).append("))\n");
                 }
             }
         }
@@ -486,7 +497,7 @@ public class GDLDroolsConverter {
     private String getDefinitionsWithAnds(String definition) {
         String[] definitionLines = definition.split("\n");
         String prefix = "";
-        StringBuffer definitionAuxSB = new StringBuffer();
+        StringBuilder definitionAuxSB = new StringBuilder();
         for (String definitionLine : definitionLines) {
             definitionAuxSB.append(prefix);
             definitionAuxSB.append(definitionLine);
@@ -524,28 +535,6 @@ public class GDLDroolsConverter {
         }
     }
 
-    private static String getEqualsString(String handle, String value, boolean inPredicate, boolean negated){
-        StringBuffer sb = new StringBuffer();
-        sb.append("DVUtil.equalDV("+inPredicate+", "+handle+"," + value);
-        sb.append(getDataValueStrIfNeeded(value)+", "+negated+")");
-        return sb.toString();
-    }
-
-    private static String getComparisonString(String handle, String value){
-        StringBuffer sb = new StringBuffer();
-        sb.append("DVUtil.compatibleComparison(" + handle +getDataValueStrIfNeeded(handle)+ ", $auxDV="+ value+getDataValueStrIfNeeded(value) + ") && ");
-        sb.append("DVUtil.compareDVs("+handle+".getDataValue(), $auxDV)");
-        return sb.toString();
-    }
-
-    private static String getDataValueStrIfNeeded(String value){
-        if (value.startsWith("$")){
-            return ".getDataValue()";
-        }else{
-            return "";
-        }
-    }
-
     protected String getAttributeOperatorMVELLine(
             String handle,
             OperatorKind ok,
@@ -561,9 +550,9 @@ public class GDLDroolsConverter {
     }
 
     /*
-     * Parse code from string value and generate right 
+     * Parse code from string value and generate right
      * code_phrase array for subClass evaluation
-     * 
+     *
      * possible values:
      * 1. new DvCodedText("Dubois and Dubois","local","gt0008")
      * 2. new DvText("local::gt0100")
@@ -612,7 +601,7 @@ public class GDLDroolsConverter {
             return value;
         }
         String code = parseCode(value);
-        StringBuffer buf = new StringBuffer("new DvCodedText[] {");
+        StringBuilder buf = new StringBuilder("new DvCodedText[] {");
         boolean first = true;
         for(String terminology : termBindings.keySet()) {
             log.debug("terminology: " + terminology);
@@ -640,14 +629,6 @@ public class GDLDroolsConverter {
         }
         buf.append("}");
         return buf.toString();
-    }
-
-    protected static boolean isString(String rmName, String attribute){
-        return (OpenEHRDataValues.DV_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
-                (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
-                OpenEHRDataValues.UNITS_ATT.equals(attribute) ||
-                OpenEHRDataValues.CODE_ATT.equals(attribute) ||
-                OpenEHRDataValues.TEMINOLOGYID_ATT.equals(attribute);
     }
 
     private String getGuideHeader() {
