@@ -15,57 +15,57 @@ public class SelectableNodeBuilder<E> {
     private Color foregroundColor;
     private Icon icon;
 
-    public SelectableNodeBuilder setName(String name) {
+    public SelectableNodeBuilder<E> setName(String name) {
         this.name = name;
         return this;
     }
 
-    public SelectableNodeBuilder setDescription(String description) {
+    public SelectableNodeBuilder<E> setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    public SelectableNodeBuilder setObject(E object) {
+    public SelectableNodeBuilder<E> setObject(E object) {
         this.object = object;
         return this;
     }
 
-    public SelectableNodeBuilder setSelectionMode(SelectableNode.SelectionMode selectionMode) {
+    public SelectableNodeBuilder<E> setSelectionMode(SelectableNode.SelectionMode selectionMode) {
         this.selectionMode = selectionMode;
         return this;
     }
 
-    public SelectableNodeBuilder setSelectionPropagationMode(SelectableNode.SelectionPropagationMode selectionPropagationMode) {
+    public SelectableNodeBuilder<E> setSelectionPropagationMode(SelectableNode.SelectionPropagationMode selectionPropagationMode) {
         this.selectionPropagationMode = selectionPropagationMode;
         return this;
     }
 
-    public SelectableNodeBuilder setSelected(boolean selected) {
+    public SelectableNodeBuilder<E> setSelected(boolean selected) {
         this.selected = selected;
         return this;
     }
 
-    public SelectableNodeBuilder setBold(boolean bold) {
+    public SelectableNodeBuilder<E> setBold(boolean bold) {
         this.bold = bold;
         return this;
     }
 
-    public SelectableNodeBuilder setItalic(boolean italic) {
+    public SelectableNodeBuilder<E> setItalic(boolean italic) {
         this.italic = italic;
         return this;
     }
 
-    public SelectableNodeBuilder setForegroundColor(Color foregroundColor) {
+    public SelectableNodeBuilder<E> setForegroundColor(Color foregroundColor) {
         this.foregroundColor = foregroundColor;
         return this;
     }
 
-    public SelectableNodeBuilder setIcon(Icon icon) {
+    public SelectableNodeBuilder<E> setIcon(Icon icon) {
         this.icon = icon;
         return this;
     }
 
-    public SelectableNode createSelectableNode() {
-        return new SelectableNode(name, description, object, selectionMode, selectionPropagationMode, selected, bold, italic, foregroundColor, icon);
+    public SelectableNode<E> createSelectableNode() {
+        return new SelectableNode<E>(name, description, object, selectionMode, selectionPropagationMode, selected, bold, italic, foregroundColor, icon);
     }
 }
