@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class ListPanel extends JPanel{
     private String _title;
     private String _xPath;
     private JXPathContext _context;
-    private JList jList;
+    private JList<String> jList;
 
     public ListPanel(String title, String xPath, JXPathContext context){
         _title = title;
@@ -30,7 +32,7 @@ public class ListPanel extends JPanel{
         _context = context;
         Object obj = context.getValue(xPath);
         if (obj instanceof List){
-            DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
+            DefaultListModel<String> dlm = ((DefaultListModel<String>)getJList().getModel());
             for (Object objAux : (List<?>)obj) {
                 String value = (String)objAux;
                 if (value!=null){
@@ -66,7 +68,7 @@ public class ListPanel extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 String value = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), _title, "");
                 if (value != null) {
-                    DefaultListModel dlm = ((DefaultListModel) getJList().getModel());
+                    DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
                     dlm.addElement(value);
                     updateListModel(dlm);
                 }
@@ -78,7 +80,7 @@ public class ListPanel extends JPanel{
     private JButton generateDeleteButton() {
         JButton deleteButton = new JButton(GDLEditorImageUtil.DELETE_ICON);
         deleteButton.setContentAreaFilled(false);
-        deleteButton.setPreferredSize(new Dimension(16,16));
+        deleteButton.setPreferredSize(new Dimension(16, 16));
         deleteButton.setBorderPainted(false);
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -103,24 +105,36 @@ public class ListPanel extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 int index = getJList().getSelectedIndex();
                 if (index >= 0) {
-                    DefaultListModel dlm = ((DefaultListModel) getJList().getModel());
-                    String label = (String) dlm.getElementAt(index);
-                    DialogNameInsert dialogNameInsert = new DialogNameInsert(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EditKeyword"), label);
-                    if (dialogNameInsert.getAnswer()) {
-                        label = dialogNameInsert.getValue();
-                        dlm.setElementAt(label, index);
-                        updateListModel(dlm);
-                    }
+                    editItem(index);
                 }
             }
         });
         return editButton;
     }
 
-    private JList getJList(){
-        if(jList==null){
-            jList = new JList(new DefaultListModel());
+    private void editItem(int index) {
+        DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
+        String label = dlm.getElementAt(index);
+        DialogNameInsert dialogNameInsert = new DialogNameInsert(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EditKeyword"), label);
+        if (dialogNameInsert.getAnswer()) {
+            label = dialogNameInsert.getValue();
+            dlm.setElementAt(label, index);
+            updateListModel(dlm);
+        }
+    }
+
+    private JList<String> getJList() {
+        if(jList == null) {
+            jList = new JList<String>(new DefaultListModel<String>());
             jList.setBorder(BorderFactory.createEtchedBorder());
+            jList.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() >= 2) {
+                       editItem(getJList().getSelectedIndex());
+                    }
+                }
+            });
         }
         return jList;
     }
