@@ -65,7 +65,7 @@ public class BinaryExpression extends ExpressionItem {
 	
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		if(left instanceof BinaryExpression) {
+		if(left instanceof BinaryExpression || left instanceof UnaryExpression) {
 			buf.append("(");
 			buf.append(left.toString());
 			buf.append(")");
@@ -89,7 +89,7 @@ public class BinaryExpression extends ExpressionItem {
 			buf.append(" ");
 		}
 		
-		if(right instanceof BinaryExpression) {
+		if(right instanceof BinaryExpression || right instanceof UnaryExpression) {
 			buf.append("(");
 			buf.append(right.toString());
 			buf.append(")");

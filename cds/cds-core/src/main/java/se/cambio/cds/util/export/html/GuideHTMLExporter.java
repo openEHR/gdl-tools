@@ -22,7 +22,7 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
     @Override
     public Map<String, Object> getEntityObjectsMap() throws InternalErrorException {
         String lang = getLanguage();
-        ReadableGuide readableGuide = GuideImporter.importGuide(getEntity(), lang, getArchetypeManager());
+        ReadableGuide readableGuide = new GuideImporter(getArchetypeManager()).importGuide(getEntity(), lang);
         Collection<String> htmlReadableRules = getHTMLReadableRules(readableGuide, lang);
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("guide", getEntity());

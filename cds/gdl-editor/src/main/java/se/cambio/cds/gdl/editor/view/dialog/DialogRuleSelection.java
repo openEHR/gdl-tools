@@ -1,29 +1,29 @@
-package se.cambio.cds.util;
+package se.cambio.cds.gdl.editor.view.dialog;
 
-import org.drools.event.rule.AfterActivationFiredEvent;
-import org.drools.event.rule.DefaultAgendaEventListener;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.openehr.view.dialogs.DialogSelection;
 
-import java.util.ArrayList;
+import java.awt.*;
 
+public class DialogRuleSelection extends DialogSelection{
 
-public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
+    private static final long serialVersionUID = 1L;
+    private Object _selectedObject = null;
 
-    private ArrayList<String> _firedRules = null;
-
-    @Override
-    public void afterActivationFired(AfterActivationFiredEvent event) {
-        String ruleName = event.getActivation().getRule().getName();
-        getFiredRules().add(ruleName);
+    public DialogRuleSelection(Window owner, GDLEditor controller) {
+        super(owner,
+                GDLEditorLanguageManager.getMessage("SelectRule"),
+                NodeDefinitionConversor.getGTCodeRuleLineElementNodes(controller.getRenderableRules(), false),
+                true,
+                new Dimension(500,500));
     }
 
-    public ArrayList<String> getFiredRules(){
-        if (_firedRules == null){
-            _firedRules = new  ArrayList<String>();
-        }
-        return _firedRules;
+    public GTCodeRuleLineElement getSelectedGTCodeRuleLineElement(){
+        return (GTCodeRuleLineElement) super.getSelectedObject();
     }
-
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

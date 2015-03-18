@@ -13,8 +13,10 @@ import java.util.Collection;
 public class RuleLineDirectory {
 
     private Collection<RuleLine> _selectableDefinitions = null;
+    private ArrayList<RuleLine> _selectablePreconditions;
     private Collection<RuleLine> _selectableConditions = null;
     private Collection<RuleLine> _selectableActions = null;
+    private ArrayList<RuleLine> _selectableDefaultActions;
     private static RuleLineDirectory _instance =null;
 
     private RuleLineDirectory(){
@@ -22,7 +24,7 @@ public class RuleLineDirectory {
     }
 
     public static Collection<RuleLine> getSelectableDefinitions(){
-        if (getDelegate()._selectableDefinitions==null){
+        if (getDelegate()._selectableDefinitions == null){
             getDelegate()._selectableDefinitions = new ArrayList<RuleLine>();
             getDelegate()._selectableDefinitions.add(new ArchetypeInstantiationRuleLine());
             getDelegate()._selectableDefinitions.add(new ArchetypeElementInstantiationRuleLine(null));
@@ -33,28 +35,46 @@ public class RuleLineDirectory {
         }
         return getDelegate()._selectableDefinitions;
     }
+
+    public static Collection<RuleLine> getSelectablePreconditions(){
+        if (getDelegate()._selectablePreconditions == null){
+            getDelegate()._selectablePreconditions = new ArrayList<RuleLine>();
+            getDelegate()._selectablePreconditions.add(new ElementComparisonWithDVConditionRuleLine());
+            getDelegate()._selectablePreconditions.add(new ElementComparisonWithNullValueConditionRuleLine());
+            getDelegate()._selectablePreconditions.add(new ElementComparisonWithElementConditionRuleLine());
+            getDelegate()._selectablePreconditions.add(new ElementAttributeComparisonConditionRuleLine());
+            getDelegate()._selectablePreconditions.add(new ElementInitializedConditionRuleLine());
+            getDelegate()._selectablePreconditions.add(new OrOperatorRuleLine());
+        }
+        return getDelegate()._selectablePreconditions;
+    }
+
     public static Collection<RuleLine> getSelectableConditions(){
-        if (getDelegate()._selectableConditions==null){
+        if (getDelegate()._selectableConditions == null){
             getDelegate()._selectableConditions = new ArrayList<RuleLine>();
-            getDelegate()._selectableConditions.add(new ElementComparisonWithDVConditionRuleLine());
-            getDelegate()._selectableConditions.add(new ElementComparisonWithNullValueConditionRuleLine());
-            getDelegate()._selectableConditions.add(new ElementComparisonWithElementConditionRuleLine());
-            getDelegate()._selectableConditions.add(new ElementAttributeComparisonConditionRuleLine());
-            getDelegate()._selectableConditions.add(new ElementInitializedConditionRuleLine());
-            getDelegate()._selectableConditions.add(new OrOperatorRuleLine());
+            getDelegate()._selectableConditions.addAll(getSelectablePreconditions());
+            getDelegate()._selectableConditions.add(new FiredRuleConditionRuleLine());
         }
         return getDelegate()._selectableConditions;
     }
 
+    public static Collection<RuleLine> getSelectableDefaultActions(){
+        if (getDelegate()._selectableDefaultActions == null){
+            getDelegate()._selectableDefaultActions = new ArrayList<RuleLine>();
+            getDelegate()._selectableDefaultActions.add(new CreateInstanceActionRuleLine());
+            getDelegate()._selectableDefaultActions.add(new SetElementWithDataValueActionRuleLine());
+            getDelegate()._selectableDefaultActions.add(new SetElementWithNullValueActionRuleLine());
+            getDelegate()._selectableDefaultActions.add(new SetElementAttributeActionRuleLine());
+
+        }
+        return getDelegate()._selectableDefaultActions;
+    }
 
     public static Collection<RuleLine> getSelectableActions(){
-        if (getDelegate()._selectableActions==null){
+        if (getDelegate()._selectableActions == null){
             getDelegate()._selectableActions = new ArrayList<RuleLine>();
-            getDelegate()._selectableActions.add(new CreateInstanceActionRuleLine());
-            getDelegate()._selectableActions.add(new SetElementWithDataValueActionRuleLine());
-            getDelegate()._selectableActions.add(new SetElementWithNullValueActionRuleLine());
+            getDelegate()._selectableActions.addAll(getSelectableDefaultActions());
             getDelegate()._selectableActions.add(new SetElementWithElementActionRuleLine());
-            getDelegate()._selectableActions.add(new SetElementAttributeActionRuleLine());
         }
         return getDelegate()._selectableActions;
     }
@@ -78,14 +98,14 @@ public class RuleLineDirectory {
     }
 
     public static RuleLineDirectory getDelegate(){
-        if (_instance==null){
+        if (_instance == null){
             _instance = new RuleLineDirectory();
         }
         return _instance;
     }
 
     public static boolean checkRuleLineCompatibility(RuleLine ruleLine, RuleLine ruleLineParent){
-        if (ruleLineParent==null){
+        if (ruleLineParent == null){
             if(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
                     ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine ||
                     ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine ||

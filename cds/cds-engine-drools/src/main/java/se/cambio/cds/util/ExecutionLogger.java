@@ -17,6 +17,7 @@ public class ExecutionLogger {
     private boolean _halt = false;
     private Set<ElementInstance> _elementInstancesSet = null;
     private long _startTime = 0;
+
     public ExecutionLogger(){
         _startTime = System.currentTimeMillis();
     }
@@ -32,12 +33,16 @@ public class ExecutionLogger {
                         elementInstance.getDataValue()!=null?elementInstance.getDataValue().serialise():null);
         getLog().add(executionLog);
         //TODO This should not be done in the logger
+        checkForExecutionTimeout(drools);
+    }
+
+    private void checkForExecutionTimeout(KnowledgeHelper drools) {
         if (!_halt){
             long executionTime = (System.currentTimeMillis()-_startTime);
-            if (!_executionTimedOut){
+            if (!_executionTimedOut) {
                 _executionTimedOut = executionTime> DroolsExecutionManager.getExecutionTimeOut();
             }
-            if (_executionCanceled || _executionTimedOut){
+            if (_executionCanceled || _executionTimedOut) {
                 Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out! (executionTime= "+executionTime+" ms)");
                 Map<String, Integer> countMap = new HashMap<String, Integer>();
                 for (ExecutionLog logLine : getLog()){
@@ -55,7 +60,7 @@ public class ExecutionLogger {
     }
 
     public List<ExecutionLog> getLog(){
-        if (_log==null){
+        if (_log == null){
             _log = new ArrayList<ExecutionLog>();
         }
         return _log;

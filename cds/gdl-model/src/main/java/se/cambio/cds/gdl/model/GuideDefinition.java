@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model;
 
 import org.apache.commons.lang.StringUtils;
+import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 
 import java.io.Serializable;
@@ -9,19 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Guide definition object
- *
- * @author rong.chen
- *
- */
-
 public class GuideDefinition implements Serializable{
 
     private Map<String, ArchetypeBinding> archetypeBindings;
     private List<String> preConditions;
+    private List<String> defaultActions;
     private Map<String,Rule> rules;
     private List<ExpressionItem> preConditionExpressions;
+    private List<AssignmentExpression> defaultActionExpressions;
 
     public static String ARCHETYPE_BINDING_PREFIX = "ab";
 
@@ -174,7 +170,7 @@ public class GuideDefinition implements Serializable{
     public void setPreConditionExpressions(List<ExpressionItem> preConditionExpressions) {
         this.preConditionExpressions = preConditionExpressions;
         List<String> lines = new ArrayList<String>();
-        if (preConditionExpressions!=null){
+        if (preConditionExpressions != null){
             for(ExpressionItem item : preConditionExpressions) {
                 String str = item.toString();
                 if (str!=null){
@@ -183,6 +179,42 @@ public class GuideDefinition implements Serializable{
             }
         }
         this.preConditions = lines;
+    }
+
+    public List<String> getDefaultActions() {
+        if(getDefaultActionExpressions().isEmpty()) {
+            return defaultActions;
+        }
+        List<String> lines = new ArrayList<String>();
+        for(ExpressionItem item : defaultActionExpressions) {
+            lines.add(item.toString());
+        }
+        return lines;
+    }
+
+    public void setDefaultActions(List<String> defaultActions) {
+        this.defaultActions = defaultActions;
+    }
+
+    public List<AssignmentExpression> getDefaultActionExpressions() {
+        if (defaultActionExpressions == null) {
+            defaultActionExpressions = new ArrayList<AssignmentExpression>();
+        }
+        return defaultActionExpressions;
+    }
+
+    public void setDefaultActionExpressions(List<AssignmentExpression> defaultActionExpressions) {
+        this.defaultActionExpressions = defaultActionExpressions;
+        List<String> lines = new ArrayList<String>();
+        if (defaultActionExpressions != null){
+            for(ExpressionItem item : defaultActionExpressions) {
+                String str = item.toString();
+                if (str!=null){
+                    lines.add(str);
+                }
+            }
+        }
+        this.defaultActions = lines;
     }
 }
 /*

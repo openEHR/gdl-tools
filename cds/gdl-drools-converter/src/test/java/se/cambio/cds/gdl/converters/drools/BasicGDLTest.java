@@ -29,7 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class BasicGDLTest extends GDLTestCase{
+public class BasicGDLTest extends GDLTestCase {
 
     private RuleExecutionResult rer;
 
@@ -38,7 +38,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldCountMedications(){
+    public void shouldCountMedications() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
         ars.add(generateOngoingMedicationArchetypeReference("N02AX02"));
@@ -55,17 +55,17 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldFindThatElementDoesNotExist(){
+    public void shouldFindThatElementDoesNotExist() {
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singletonList("not_exists_test.v1"), elementInstances);
         assertEquals(2, rer.getFiredRules().size());
         assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1", "gt0045")));
-        assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1","gt0039")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("not_exists_test.v1", "gt0039")));
     }
 
     @Test
-    public void shouldAllowToDefineOrsWithPredicates(){
+    public void shouldAllowToDefineOrsWithPredicates() {
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singletonList("test_or_predicates.v1"), elementInstances);
@@ -77,7 +77,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldTestPriorityWithSeveralGuidelines(){
+    public void shouldTestPriorityWithSeveralGuidelines() {
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
         List<String> guideIds = new ArrayList<String>();
         guideIds.add("test_multiple_guidelines_priority1");
@@ -90,7 +90,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldCreateSeveralElements(){
+    public void shouldCreateSeveralElements() {
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         List<String> guideIds = new ArrayList<String>();
@@ -105,7 +105,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldCountCDSElements(){
+    public void shouldCountCDSElements() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.add(generateOngoingMedicationArchetypeReference("A10BX03"));
         ars.add(generateOngoingMedicationArchetypeReference("A10BX02"));
@@ -118,15 +118,15 @@ public class BasicGDLTest extends GDLTestCase{
         guideIds.add("cds_count");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(4, rer.getFiredRules().size());
-        assertTrue(rer.getFiredRules().get(0).equals(new RuleReference("cds_count","gt0006")));
-        assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("cds_count","gt0006")));
-        assertTrue(rer.getFiredRules().get(2).equals(new RuleReference("cds_count","gt0006")));
-        assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("cds_count","gt0011")));
+        assertTrue(rer.getFiredRules().get(0).equals(new RuleReference("cds_count", "gt0006")));
+        assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("cds_count", "gt0006")));
+        assertTrue(rer.getFiredRules().get(2).equals(new RuleReference("cds_count", "gt0006")));
+        assertTrue(rer.getFiredRules().get(3).equals(new RuleReference("cds_count", "gt0011")));
     }
 
 
     @Test
-    public void shouldFindMissingElements(){
+    public void shouldFindMissingElements() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -152,7 +152,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldAllowToDefinePredicates(){
+    public void shouldAllowToDefinePredicates() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -220,7 +220,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldAllowMultipleResults(){
+    public void shouldAllowMultipleResults() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -247,7 +247,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldAllowCDSInitiallization(){
+    public void shouldAllowCDSInitialization() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
         List<String> guideIds = new ArrayList<String>();
@@ -258,7 +258,7 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldTestDateOperations(){
+    public void shouldTestDateOperations() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Collection<ElementInstance> elementInstances = getElementInstances(ars);
         List<String> guideIds = new ArrayList<String>();
@@ -275,19 +275,8 @@ public class BasicGDLTest extends GDLTestCase{
         assertEquals(Calendar.getInstance().get(Calendar.YEAR)-1,((DvDateTime)dv).getYear());
     }
 
-    /* TODO Disabled until we are able to implement the functionality
     @Test
-    public void testPredicateAsDefaultCDSValues(){
-        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
-        Collection<ElementInstance> elementInstances = getElementInstances(ars);
-        Collection<String> guideIds = new ArrayList<String>();
-
-        assertEquals(5, rer.getFiredRules().size());
-    }
-    */
-
-    @Test
-    public void shouldPerformCDSLinking(){
+    public void shouldPerformCDSLinking() {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         Calendar birthdate = Calendar.getInstance();
         birthdate.add(Calendar.YEAR, -76);
@@ -324,14 +313,53 @@ public class BasicGDLTest extends GDLTestCase{
     }
 
     @Test
-    public void shouldPerformRoundtripJSONSerializationOfRuleExecutionResults(){
+    public void shouldPerformRoundtripJSONSerializationOfRuleExecutionResults() {
         Gson gson = new ArchetypeReferenceGsonFactory().create();
         if (rer == null){
-            shouldAllowCDSInitiallization();
+            shouldAllowCDSInitialization();
         }
         String json = gson.toJson(rer);
         RuleExecutionResult auxRer = gson.fromJson(json, RuleExecutionResult.class);
         boolean equalRER = EqualsBuilder.reflectionEquals(rer, auxRer);
         assertTrue(equalRER);
+    }
+
+    @Test
+    public void shouldAllowFiredRulesConditions() {
+        Collection<ElementInstance> elementInstances = getElementInstances(new ArrayList<ArchetypeReference>());
+        List<String> guideIds = new ArrayList<String>();
+        guideIds.add("fired_rule_test");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(4, rer.getFiredRules().size());
+        assertEquals(new RuleReference("fired_rule_test", "gt0003"), rer.getFiredRules().get(0));
+        assertEquals(new RuleReference("fired_rule_test", "gt0004"), rer.getFiredRules().get(1));
+        assertEquals(new RuleReference("fired_rule_test", "gt0002"), rer.getFiredRules().get(2));
+        assertEquals(new RuleReference("fired_rule_test", "gt0004"), rer.getFiredRules().get(3));
+    }
+
+    @Test
+    public void shouldRunCountOnFiredRule() {
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        List<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_fired_rule_count");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(2, rer.getFiredRules().size());
+        assertTrue(rer.getFiredRules().get(0).equals(new RuleReference("test_fired_rule_count", "gt0002")));
+        assertTrue(rer.getFiredRules().get(1).equals(new RuleReference("test_fired_rule_count", "gt0003")));
+    }
+
+    @Test
+    public void shouldRunCountOnFiredRule2() {
+        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Collection<ElementInstance> elementInstances = getElementInstances(ars);
+        List<String> guideIds = new ArrayList<String>();
+        guideIds.add("test_fired_rule_count_2");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(4, rer.getFiredRules().size());
+        assertEquals(new RuleReference("test_fired_rule_count_2", "gt0003"), rer.getFiredRules().get(0));
+        assertEquals(new RuleReference("test_fired_rule_count_2", "gt0003"), rer.getFiredRules().get(1));
+        assertEquals(new RuleReference("test_fired_rule_count_2", "gt0002"), rer.getFiredRules().get(2));
+        assertEquals(new RuleReference("test_fired_rule_count_2", "gt0003"), rer.getFiredRules().get(3));
     }
 }

@@ -44,7 +44,9 @@ public enum OperatorKind {
 	 */
 	FOR_ALL("for all","for_all"),
 	MAX("max","max"),
-	MIN("min","min");
+	MIN("min","min"),
+	FIRED("fired","fired"),
+	NOT_FIRED("!fired","!fired");
 
 	private OperatorKind(String name, String symbol) {
 		this.name = name;

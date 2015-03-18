@@ -1,31 +1,30 @@
-package se.cambio.cds.util;
+package se.cambio.cds.gdl.model.readable.rule.lines;
 
-import org.drools.event.rule.AfterActivationFiredEvent;
-import org.drools.event.rule.DefaultAgendaEventListener;
-
-import java.util.ArrayList;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 
 
-public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
+public class FiredRuleInstantiationRuleLine extends RuleLine implements GTCodeDefiner{
 
-    private ArrayList<String> _firedRules = null;
+    private GTCodeRuleLineElement _gtCodeRuleLineElement = null;
 
-    @Override
-    public void afterActivationFired(AfterActivationFiredEvent event) {
-        String ruleName = event.getActivation().getRule().getName();
-        getFiredRules().add(ruleName);
+    public FiredRuleInstantiationRuleLine() {
+        super("","");
+        _gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
     }
 
-    public ArrayList<String> getFiredRules(){
-        if (_firedRules == null){
-            _firedRules = new  ArrayList<String>();
-        }
-        return _firedRules;
+    public GTCodeRuleLineElement getGTCodeRuleLineElement() {
+        return _gtCodeRuleLineElement;
     }
 
+    public String getGTCode() {
+        return getGTCodeRuleLineElement().getValue();
+    }
 
-}
-/*
+    public void setGTCode(String term) {
+        getGTCodeRuleLineElement().setValue(term);
+    }
+}/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

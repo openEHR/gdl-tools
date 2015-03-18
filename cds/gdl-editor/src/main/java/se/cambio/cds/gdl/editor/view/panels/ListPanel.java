@@ -3,11 +3,15 @@ package se.cambio.cds.gdl.editor.view.panels;
 import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +24,7 @@ public class ListPanel extends JPanel{
     private String _title;
     private String _xPath;
     private JXPathContext _context;
-    private JList jList;
+    private JList<String> jList;
 
     public ListPanel(String title, String xPath, JXPathContext context){
         _title = title;
@@ -28,7 +32,7 @@ public class ListPanel extends JPanel{
         _context = context;
         Object obj = context.getValue(xPath);
         if (obj instanceof List){
-            DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
+            DefaultListModel<String> dlm = ((DefaultListModel<String>)getJList().getModel());
             for (Object objAux : (List<?>)obj) {
                 String value = (String)objAux;
                 if (value!=null){
@@ -45,44 +49,92 @@ public class ListPanel extends JPanel{
         this.setBorder(BorderFactory.createTitledBorder(_title));
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        JButton addButton = generateAddButton();
+        buttonPanel.add(addButton);
+        JButton deleteButton = generateDeleteButton();
+        buttonPanel.add(deleteButton);
+        JButton editButton = generateEditButton();
+        buttonPanel.add(editButton);
+        this.add(buttonPanel, BorderLayout.WEST);
+        this.add(getJList(), BorderLayout.CENTER);
+    }
+
+    private JButton generateAddButton() {
         JButton addButton = new JButton(GDLEditorImageUtil.ADD_ICON);
         addButton.setContentAreaFilled(false);
-        addButton.setPreferredSize(new Dimension(16,16));
+        addButton.setPreferredSize(new Dimension(16, 16));
         addButton.setBorderPainted(false);
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String value = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), _title, "");
-                if(value!=null){
-                    DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
+                if (value != null) {
+                    DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
                     dlm.addElement(value);
                     updateListModel(dlm);
                 }
             }
         });
+        return addButton;
+    }
+
+    private JButton generateDeleteButton() {
         JButton deleteButton = new JButton(GDLEditorImageUtil.DELETE_ICON);
         deleteButton.setContentAreaFilled(false);
-        deleteButton.setPreferredSize(new Dimension(16,16));
+        deleteButton.setPreferredSize(new Dimension(16, 16));
         deleteButton.setBorderPainted(false);
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int index = getJList().getSelectedIndex();
-                if(index>=0){
+                if(index >= 0) {
                     DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
                     dlm.removeElementAt(index);
                     updateListModel(dlm);
                 }
             }
         });
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
-        this.add(buttonPanel, BorderLayout.WEST);
-        this.add(getJList(), BorderLayout.CENTER);
+        return deleteButton;
     }
 
-    private JList getJList(){
-        if(jList==null){
-            jList = new JList(new DefaultListModel());
+    private JButton generateEditButton() {
+        JButton editButton = new JButton(GDLEditorImageUtil.EDIT_ICON);
+        editButton.setContentAreaFilled(false);
+        editButton.setPreferredSize(new Dimension(16, 16));
+        editButton.setBorderPainted(false);
+        editButton.setToolTipText(GDLEditorLanguageManager.getMessage("EditKeyword"));
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = getJList().getSelectedIndex();
+                if (index >= 0) {
+                    editItem(index);
+                }
+            }
+        });
+        return editButton;
+    }
+
+    private void editItem(int index) {
+        DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
+        String label = dlm.getElementAt(index);
+        DialogNameInsert dialogNameInsert = new DialogNameInsert(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EditKeyword"), label);
+        if (dialogNameInsert.getAnswer()) {
+            label = dialogNameInsert.getValue();
+            dlm.setElementAt(label, index);
+            updateListModel(dlm);
+        }
+    }
+
+    private JList<String> getJList() {
+        if(jList == null) {
+            jList = new JList<String>(new DefaultListModel<String>());
             jList.setBorder(BorderFactory.createEtchedBorder());
+            jList.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() >= 2) {
+                       editItem(getJList().getSelectedIndex());
+                    }
+                }
+            });
         }
         return jList;
     }

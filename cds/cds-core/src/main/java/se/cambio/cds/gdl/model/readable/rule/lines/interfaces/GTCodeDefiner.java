@@ -5,9 +5,9 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElemen
 
 public interface GTCodeDefiner {
 
-    public GTCodeRuleLineElement getGTCodeRuleLineElement();
-    public String getGTCode();
-    public void setGTCode(String gtCode);
+    GTCodeRuleLineElement getGTCodeRuleLineElement();
+    String getGTCode();
+    void setGTCode(String gtCode);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

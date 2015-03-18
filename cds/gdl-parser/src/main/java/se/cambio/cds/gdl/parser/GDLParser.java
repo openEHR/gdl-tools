@@ -46,24 +46,30 @@ public class GDLParser {
 	 */
 	private void bindExpressions(Guide guide) throws Exception {
 		List<String> preConditions = guide.getDefinition().getPreConditions();
+		List<ExpressionItem> preConditionExpressions = parseExpressions(preConditions);
+		guide.getDefinition().setPreConditionExpressions(preConditionExpressions);
 
-		guide.getDefinition().setPreConditionExpressions(
-				parseExpressions(preConditions));
+		List<String> defaultActions = guide.getDefinition().getDefaultActions();
+		List<ExpressionItem> expressionItems = parseExpressions(defaultActions);
+		List<AssignmentExpression> defaultActionExpressions = toAssignments(expressionItems);
+		guide.getDefinition().setDefaultActionExpressions(defaultActionExpressions);
 
 		GuideDefinition definition = guide.getDefinition();
 		if (definition.getArchetypeBindings() != null) {
             Map<String, ArchetypeBinding> bindings = definition
 					.getArchetypeBindings();
 			for (ArchetypeBinding binding : bindings.values()) {
-				binding.setPredicateStatements(parseExpressions(binding
-						.getPredicates()));
+				List<ExpressionItem> predicateStatements = parseExpressions(binding.getPredicates());
+				binding.setPredicateStatements(predicateStatements);
 			}
 			if (definition.getRules() != null) {
 				Collection<Rule> rules = definition.getRules().values();
 				for (Rule rule : rules) {
-					rule.setWhenStatements(parseExpressions(rule.getWhen()));
-					rule.setThenStatements(toAssignments(parseExpressions(rule
-							.getThen())));
+					List<ExpressionItem> whenStatements = parseExpressions(rule.getWhen());
+					rule.setWhenStatements(whenStatements);
+					List<ExpressionItem> thenExpressionItems = parseExpressions(rule.getThen());
+					List<AssignmentExpression> thenStatements = toAssignments(thenExpressionItems);
+					rule.setThenStatements(thenStatements);
 				}
 			}
 		}

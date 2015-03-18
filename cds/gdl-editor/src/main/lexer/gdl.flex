@@ -128,6 +128,7 @@ SingleCharacter = [^\r\n\'\\]
   
   /* rules */
   "pre_conditions"                |
+  "default_actions"               |
   "rules"                        |
   "when"                      |
   "then"                        |

@@ -88,6 +88,10 @@ public class GDLOutputTest extends TestCase {
 	    roundTrip("test_negative_number.gdl");
 	}
 
+	public void testRoundTripDefaults() throws Exception {
+		roundTrip("test_default.gdl");
+	}
+
 	public static void roundTrip(String guideFilename) throws Exception {
 	    InputStream is = load(guideFilename);
 	    InputStreamReader in = new InputStreamReader(is, "UTF-8");

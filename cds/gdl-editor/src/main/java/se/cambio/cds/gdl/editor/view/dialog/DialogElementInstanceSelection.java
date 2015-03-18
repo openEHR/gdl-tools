@@ -16,14 +16,12 @@ import java.awt.event.ActionListener;
 
 public class DialogElementInstanceSelection extends DialogSelection{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
     private GDLEditor _controller = null;
     private Object _selectedObject = null;
     private boolean _onlyCDSDomain;
+
     public DialogElementInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain, ArchetypeReference ar) {
         super(owner,
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
@@ -36,7 +34,7 @@ public class DialogElementInstanceSelection extends DialogSelection{
     }
 
     public Object getSelectedObject(){
-        if (_selectedObject!=null){
+        if (_selectedObject != null){
             return _selectedObject;
         }else{
             return super.getSelectedObject();

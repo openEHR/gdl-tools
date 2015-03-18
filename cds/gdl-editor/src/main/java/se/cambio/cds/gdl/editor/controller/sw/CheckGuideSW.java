@@ -31,7 +31,8 @@ public class CheckGuideSW extends CDSSwingWorker {
             ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes("UTF-8"));
             _guide = _controller.parseGuide(bais);
             if (_guide!=null){
-                GuideImporter.importGuide(_guide, _controller.getCurrentLanguageCode(), ArchetypeManager.getInstance());
+                GuideImporter guideImporter = new GuideImporter(ArchetypeManager.getInstance());
+                guideImporter.importGuide(_guide, _controller.getCurrentLanguageCode());
                 GuideExportPluginDirectory.compile(_guide);
                 _checkOk = true;
             }

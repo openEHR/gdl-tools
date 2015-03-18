@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.model.readable.rule;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
+import se.cambio.cds.gdl.model.readable.rule.lines.FiredRuleInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -15,6 +16,8 @@ public class ReadableRule {
     private String gtCode = null;
     private RuleLineCollection _conditionRuleLines = null;
     private RuleLineCollection _actionRuleLines = null;
+    private FiredRuleInstantiationRuleLine definitionRuleLine;
+
     private boolean commented = false;
 
     public ReadableRule(TermDefinition termDefinition, String gtCode, ReadableGuide readableGuide){
@@ -45,6 +48,15 @@ public class ReadableRule {
         return _actionRuleLines;
     }
 
+    public FiredRuleInstantiationRuleLine getDefinitionRuleLine() {
+        if (definitionRuleLine == null) {
+            definitionRuleLine = new FiredRuleInstantiationRuleLine();
+            definitionRuleLine.setReadableGuide(getReadableGuide());
+            definitionRuleLine.setGTCode(getGTCode());
+        }
+        return definitionRuleLine;
+    }
+
     public boolean isCommented(){
         return commented;
     }
@@ -59,7 +71,7 @@ public class ReadableRule {
 
     private String getName(String gtCode){
         Term term = getTermDefinition().getTerms().get(gtCode);
-        if (term!=null){
+        if (term != null){
             return term.getText();
         }else{
             ExceptionHandler.handle(new Exception("Unknow term for gtCode='"+gtCode+"'"));

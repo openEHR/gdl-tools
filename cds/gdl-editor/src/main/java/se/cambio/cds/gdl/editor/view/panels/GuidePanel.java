@@ -21,6 +21,7 @@ public class GuidePanel extends JPanel {
     private JPanel descriptionPanel;
     private RulesPanel rulesPanel;
     private RuleLinesPanel preconditionsPanel;
+    private RuleLinesPanel defaultActionsPanel;
     private RuleLinesPanel definitionsPanel;
     private TerminologyPanel terminologyPanel;
     private BindingsPanel bindingTabPanel;
@@ -59,6 +60,10 @@ public class GuidePanel extends JPanel {
                     GDLEditorLanguageManager.getMessage("Preconditions"),
                     GDLEditorImageUtil.CONDITION_ICON,
                     getPreconditionsPanel());
+            guideEditorTabPane.addTab(
+                    GDLEditorLanguageManager.getMessage("Defaults"),
+                    GDLEditorImageUtil.ACTION_ICON,
+                    getDefaultActionsPanel());
             guideEditorTabPane.addTab(
                     GDLEditorLanguageManager.getMessage("Terminology"),
                     GDLEditorImageUtil.TRANSLATE_ICON,
@@ -113,10 +118,16 @@ public class GuidePanel extends JPanel {
 
     private RuleLinesPanel getPreconditionsPanel(){
         if (preconditionsPanel==null){
-            preconditionsPanel =
-                    new PreconditionRuleLinesPanel(_controller);
+            preconditionsPanel = new PreconditionRuleLinesPanel(_controller);
         }
         return preconditionsPanel;
+    }
+
+    private RuleLinesPanel getDefaultActionsPanel(){
+        if (defaultActionsPanel ==null){
+            defaultActionsPanel = new DefaultActionsPanel(_controller);
+        }
+        return defaultActionsPanel;
     }
 
     private RuleLinesPanel getDefinitionsPanel(){

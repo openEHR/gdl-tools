@@ -202,9 +202,11 @@ public class GuideUtil {
 
     public static List<RuleReference> getRuleReferences(List<String> firedRules){
         List<RuleReference> ruleReferences = new ArrayList<RuleReference>();
-        if (firedRules!=null){
+        if (firedRules != null){
             for (String firedRule : firedRules) {
-                ruleReferences.add(new RuleReference(firedRule));
+                if (!firedRule.endsWith("/default")) {
+                    ruleReferences.add(new RuleReference(firedRule));
+                }
             }
         }
         return ruleReferences;
@@ -236,6 +238,9 @@ public class GuideUtil {
         }
         //Preconditions
         gtCodes.addAll(getPreconditionGTCodesInReads(guide));
+
+        //Default actions
+        gtCodes.addAll(getDefaultActionGTCodesInReads(guide));
         return gtCodes;
     }
 
@@ -256,8 +261,21 @@ public class GuideUtil {
 
     public static Set<String> getPreconditionGTCodesInReads(Guide guide) throws InternalErrorException {
         Set<String> gtCodes = new HashSet<String>();
-        if (guide.getDefinition().getPreConditionExpressions()!=null){
-            for(ExpressionItem expressionItem: guide.getDefinition().getPreConditionExpressions()){
+        List<ExpressionItem> preConditionExpressions = guide.getDefinition().getPreConditionExpressions();
+        if (preConditionExpressions != null){
+            for(ExpressionItem expressionItem: preConditionExpressions){
+                addGTCodesInReads(expressionItem, gtCodes);
+            }
+        }
+        return gtCodes;
+    }
+
+
+    private static Collection<String> getDefaultActionGTCodesInReads(Guide guide) throws InternalErrorException {
+        Set<String> gtCodes = new HashSet<String>();
+        List<AssignmentExpression> defaultActionExpressions = guide.getDefinition().getDefaultActionExpressions();
+        if (defaultActionExpressions != null){
+            for(ExpressionItem expressionItem: defaultActionExpressions){
                 addGTCodesInReads(expressionItem, gtCodes);
             }
         }

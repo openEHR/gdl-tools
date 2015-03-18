@@ -32,7 +32,7 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin {
         }catch (InternalErrorException e) {
             throw new GuideCompilationException(guide.getId(), e);
         }catch (Throwable th) {
-            throw new GuideCompilationException(guide.getId(), new Exception(th)); //TODO
+            throw new GuideCompilationException(guide.getId(), new Exception(th));
         }
     }
 }

@@ -61,6 +61,7 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
             } catch (Exception e) {
                 String statusMsg = GDLEditorLanguageManager.getMessage("ErrorParsingGuide") + ": " + e.getMessage();
                 gdlPanel.setStatus(GDLPanel.StatusType.ERRONEOUS, statusMsg);
+                ExceptionHandler.handle(e);
             }
             controller.setOnlyGDLSourceEditing(guide == null);
         }

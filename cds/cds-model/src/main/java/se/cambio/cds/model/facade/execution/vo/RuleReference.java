@@ -5,24 +5,24 @@ import java.io.Serializable;
 public class RuleReference implements Serializable{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private String guideId = null;
     private String gtCode = null;
-    
+
     public RuleReference(String ruleId) {
-	String[] strs = ruleId.split("/");
-	this.guideId = strs[0];
-	this.gtCode = strs[1];
+        String[] strs = ruleId.split("/");
+        this.guideId = strs[0];
+        this.gtCode = strs[1];
     }
-    
+
     public RuleReference(String guideId, String gtCode) {
-	super();
-	this.guideId = guideId;
-	this.gtCode = gtCode;
+        super();
+        this.guideId = guideId;
+        this.gtCode = gtCode;
     }
-    
+
     public String getGuideId() {
         return guideId;
     }
@@ -35,17 +35,17 @@ public class RuleReference implements Serializable{
     public void setGTCode(String gtCode) {
         this.gtCode = gtCode;
     }
-    
+
     public int hashCode(){
-	return toString().hashCode();
+        return toString().hashCode();
     }
-    
+
     public boolean equals(Object o){
-	return (o!=null && o.hashCode()==this.hashCode()); 
+        return (o!=null && o.hashCode()==this.hashCode());
     }
-    
+
     public String toString(){
-	return guideId+"/"+gtCode;
+        return guideId+"/"+gtCode;
     }
 }
 /*

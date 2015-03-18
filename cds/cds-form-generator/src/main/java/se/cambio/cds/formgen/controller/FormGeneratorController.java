@@ -162,7 +162,9 @@ public class FormGeneratorController {
                     Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
                     for (TermDefinition termDefinition : termDefinitions.values()) {
                         String lang = termDefinition.getId();
-                        auxMap.put(lang, GuideImporter.importGuide(guide, lang, ArchetypeManager.getInstance()));
+                        GuideImporter guideImporter = new GuideImporter(ArchetypeManager.getInstance());
+                        ReadableGuide readableGuide = guideImporter.importGuide(guide, lang);
+                        auxMap.put(lang, readableGuide);
                     }
                 }
             } catch (Exception e) {

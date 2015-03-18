@@ -4,25 +4,22 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-
-import java.util.List;
 
 /**
  * User: Iago.Corbal
  * Date: 2013-08-14
  * Time: 15:05
  */
-public class PreconditionRuleLinesPanel extends RuleLinesPanel {
+public class DefaultActionsPanel extends RuleLinesPanel {
 
-    public PreconditionRuleLinesPanel(GDLEditor controller) {
+    public DefaultActionsPanel(GDLEditor controller) {
         super(controller,
-                RuleLineDirectory.getSelectablePreconditions(),
-                GDLEditorLanguageManager.getMessage("Preconditions"));
+                RuleLineDirectory.getSelectableDefaultActions(),
+                GDLEditorLanguageManager.getMessage("Defaults"));
     }
 
     @Override
     protected RuleLineCollection getRuleLines() {
-        return getController().getPreconditionRuleLines();
+        return getController().getDefaultActions();
     }
 }
