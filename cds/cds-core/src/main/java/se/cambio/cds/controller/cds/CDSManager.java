@@ -9,7 +9,11 @@ import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.*;
+import se.cambio.cds.util.DVUtil;
+import se.cambio.cds.util.DateTimeARFinder;
+import se.cambio.cds.util.Domains;
+import se.cambio.cds.util.ElementInstanceCollection;
+import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -24,70 +28,79 @@ public class CDSManager {
             Collection<ArchetypeReference> data,
             GuideManager guideManager,
             Calendar date)
-            throws PatientNotFoundException, InternalErrorException{
+            throws PatientNotFoundException, InternalErrorException {
+
+        GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
+        ElementInstanceCollection eic = queryEHRForElements(ehrId, data, guideManager, date, completeEIC);
+        return getElementInstancesAndCheckMissing(eic, completeEIC, guideManager, date);
+    }
+
+    public static Collection<ElementInstance> getElementInstancesWithoutMissing(String ehrId, Collection<String> guideIds, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date) throws InternalErrorException, PatientNotFoundException {
+        GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
+        ElementInstanceCollection eic = queryEHRForElements(ehrId, data, guideManager, date, completeEIC);
+        return eic.getAllElementInstances();
+    }
+
+    private static ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) throws InternalErrorException, PatientNotFoundException {
         ElementInstanceCollection eic = new ElementInstanceCollection();
-        if (data != null){
+        if (data != null) {
             eic.addAll(data, guideManager);
         }
-        GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
-        //Search for EHR elements
-        //Query EHR for elements
-        if (ehrId != null){
+        if (ehrId != null) {
             Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
             Map<String, Collection<ElementInstance>> elementInstanceMap =
                     CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(Collections.singleton(ehrId), ars, date);
             Collection<ElementInstance> elementInstances = elementInstanceMap.get(ehrId);
-            if (elementInstances!=null){
+            if (elementInstances != null) {
                 Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-                for (ElementInstance elementInstance: elementInstances){
+                for (ElementInstance elementInstance : elementInstances) {
                     archetypeReferences.add(elementInstance.getArchetypeReference());
                 }
                 eic.addAll(archetypeReferences, null);
             }
         }
-        return getElementInstances(eic, completeEIC, guideManager, date);
+        return eic;
     }
 
-    public static Map<String,Collection<ElementInstance>> getElementInstancesForPopulation(
-            Collection <String> ehrIds,
+    public static Map<String, Collection<ElementInstance>> getElementInstancesForPopulation(
+            Collection<String> ehrIds,
             Collection<String> guideIds,
             GuideManager guideManager,
-            Calendar date) throws PatientNotFoundException, InternalErrorException{
+            Calendar date) throws PatientNotFoundException, InternalErrorException {
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
-        Map<String,Collection<ElementInstance>> ehrMap =
+        Map<String, Collection<ElementInstance>> ehrMap =
                 CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(ehrIds, ars, date);
-        Map<String,Collection<ElementInstance>> cdsEIMap = new HashMap<String, Collection<ElementInstance>>();
+        Map<String, Collection<ElementInstance>> cdsEIMap = new HashMap<String, Collection<ElementInstance>>();
         for (String ehrId : ehrIds) {
             ElementInstanceCollection eic = new ElementInstanceCollection();
             //TODO If the data existed in ehrData, it should not query for it again to EHR
-            if (!ars.isEmpty()){
+            if (!ars.isEmpty()) {
                 Collection<ElementInstance> eis = ehrMap.get(ehrId);
-                if (eis!=null){
+                if (eis != null) {
                     eic.addAll(eis);
                 }
             }
-            cdsEIMap.put(ehrId, getElementInstances(eic, completeEIC, guideManager, date));
+            cdsEIMap.put(ehrId, getElementInstancesAndCheckMissing(eic, completeEIC, guideManager, date));
         }
         return cdsEIMap;
     }
 
-    public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection geic){
+    public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection geic) {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.addAll(geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
         ars.addAll(geic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
         return getCompressedQueryArchetypeReferences(ars);
     }
 
-    public static Collection<ArchetypeReference> getEHRArchetypeReferencesWithEventTimeElements(GeneratedElementInstanceCollection eic){
+    public static Collection<ArchetypeReference> getEHRArchetypeReferencesWithEventTimeElements(GeneratedElementInstanceCollection eic) {
         Collection<ArchetypeReference> ars = getEHRArchetypeReferences(eic);
         addEventTimeElements(ars); //We add all the event time elements if they are not defined
         return ars;
     }
 
-    private static Collection<ElementInstance> getElementInstances(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
-            throws InternalErrorException{
-        //Check for missing elements
+    private static Collection<ElementInstance> getElementInstancesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
+            throws InternalErrorException {
         checkForMissingElements(eic, completeEIC, guideManager, date);
         return eic.getAllElementInstances();
     }
@@ -96,7 +109,7 @@ public class CDSManager {
             ElementInstanceCollection ehrEIC,
             ElementInstanceCollection generatedEIC,
             GuideManager guideManager,
-            Calendar date){
+            Calendar date) {
         checkForWholeMissingElements(ehrEIC, generatedEIC, guideManager, date);
         checkForMissingPathsInEHR(ehrEIC, generatedEIC, date);
     }
@@ -105,14 +118,14 @@ public class CDSManager {
             ElementInstanceCollection eic,
             ElementInstanceCollection generatedEIC,
             GuideManager guideManager,
-            Calendar date){
+            Calendar date) {
         //Check for guide elements, if not present, create archetype reference
         List<ArchetypeReference> guideArchetypeReferences = new ArrayList<ArchetypeReference>(generatedEIC.getAllArchetypeReferences());
         Collections.sort(guideArchetypeReferences, new ARNonEmptyPredicateComparator());
         for (ArchetypeReference archetypeReference : guideArchetypeReferences) {
-            GeneratedArchetypeReference gar = (GeneratedArchetypeReference)archetypeReference;
+            GeneratedArchetypeReference gar = (GeneratedArchetypeReference) archetypeReference;
             boolean matches = eic.matches(gar, guideManager.getAllGuidesMap(), date);
-            if (!matches){
+            if (!matches) {
                 eic.add(archetypeReference, guideManager, date);
             }
         }
@@ -121,14 +134,14 @@ public class CDSManager {
     private static void checkForMissingPathsInEHR(
             ElementInstanceCollection ehrEIC,
             ElementInstanceCollection generatedEIC,
-            Calendar date){
+            Calendar date) {
         //Add missing elements (as null) to the ehr data
         Map<String, ArchetypeReference> compressedARsMap = getCompressedQueryArchetypeReferencesMap(generatedEIC.getAllArchetypeReferences());
-        for(ArchetypeReference ar: ehrEIC.getAllArchetypeReferences()){
+        for (ArchetypeReference ar : ehrEIC.getAllArchetypeReferences()) {
             ArchetypeReference compressedAR = compressedARsMap.get(ar.getIdArchetype());
-            if (compressedAR!=null){
-                for (String elementId: compressedAR.getElementInstancesMap().keySet()){
-                    if (!ar.getElementInstancesMap().containsKey(elementId)){
+            if (compressedAR != null) {
+                for (String elementId : compressedAR.getElementInstancesMap().keySet()) {
+                    if (!ar.getElementInstancesMap().containsKey(elementId)) {
                         new ElementInstance(elementId, null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                     }
                 }
@@ -136,19 +149,19 @@ public class CDSManager {
         }
     }
 
-    private static Collection<ArchetypeReference> getCompressedQueryArchetypeReferences(Collection<ArchetypeReference> generatedArchetypeReferences){
+    private static Collection<ArchetypeReference> getCompressedQueryArchetypeReferences(Collection<ArchetypeReference> generatedArchetypeReferences) {
         return new ArrayList<ArchetypeReference>(getCompressedQueryArchetypeReferencesMap(generatedArchetypeReferences).values());
     }
 
-    private static Map<String, ArchetypeReference> getCompressedQueryArchetypeReferencesMap(Collection<ArchetypeReference> generatedArchetypeReferences){
+    private static Map<String, ArchetypeReference> getCompressedQueryArchetypeReferencesMap(Collection<ArchetypeReference> generatedArchetypeReferences) {
         final Map<String, ArchetypeReference> archetypeReferencesMap = new HashMap<String, ArchetypeReference>();
         //Compress Archetype References with same archetype id
         for (ArchetypeReference arNew : generatedArchetypeReferences) {
-            GeneratedArchetypeReference gar = (GeneratedArchetypeReference)arNew;
+            GeneratedArchetypeReference gar = (GeneratedArchetypeReference) arNew;
             ArchetypeReference arPrev = archetypeReferencesMap.get(arNew.getIdArchetype());
-            if (arPrev!=null){
+            if (arPrev != null) {
                 compressQueryArchetypeReference(arPrev, arNew);
-            }else{
+            } else {
                 arNew = getCleanArchetypeReferenceWithElements(gar);
                 archetypeReferencesMap.put(arNew.getIdArchetype(), arNew);
             }
@@ -156,20 +169,20 @@ public class CDSManager {
         return archetypeReferencesMap;
     }
 
-    private static void compressQueryArchetypeReference(ArchetypeReference arPrev, ArchetypeReference arNew){
+    private static void compressQueryArchetypeReference(ArchetypeReference arPrev, ArchetypeReference arNew) {
         for (ElementInstance newEI : arNew.getElementInstancesMap().values()) {
             ElementInstance eiAux = arPrev.getElementInstancesMap().get(newEI.getId());
-            if (eiAux==null){
+            if (eiAux == null) {
                 //Missing elements
                 cloneElementInstanceWithGTCodes(newEI, arPrev, false);
-            }else{
-                if (newEI instanceof PredicateGeneratedElementInstance){
-                    PredicateGeneratedElementInstance pgeiNew = (PredicateGeneratedElementInstance)newEI;
+            } else {
+                if (newEI instanceof PredicateGeneratedElementInstance) {
+                    PredicateGeneratedElementInstance pgeiNew = (PredicateGeneratedElementInstance) newEI;
                     ElementInstance prevEI = arPrev.getElementInstancesMap().get(pgeiNew.getId());
-                    if (prevEI instanceof PredicateGeneratedElementInstance){
-                        PredicateGeneratedElementInstance pgeiPrev = (PredicateGeneratedElementInstance)prevEI;
+                    if (prevEI instanceof PredicateGeneratedElementInstance) {
+                        PredicateGeneratedElementInstance pgeiPrev = (PredicateGeneratedElementInstance) prevEI;
                         if (!pgeiNew.getOperatorKind().equals(pgeiPrev.getOperatorKind()) ||
-                                DVUtil.compareDVs(pgeiNew.getDataValue(), pgeiPrev.getDataValue())!=0){
+                                DVUtil.compareDVs(pgeiNew.getDataValue(), pgeiPrev.getDataValue()) != 0) {
                             //TODO Find a predicate (if possible) that includes both
                             //Incompatible predicates found, we remove data value and operation
                             new PredicateGeneratedElementInstanceBuilder()
@@ -180,7 +193,7 @@ public class CDSManager {
                         }
                     }
                 }
-                if (eiAux instanceof GeneratedElementInstance && newEI instanceof GeneratedElementInstance){
+                if (eiAux instanceof GeneratedElementInstance && newEI instanceof GeneratedElementInstance) {
                     //Add new rule references
                     GeneratedElementInstance gei = (GeneratedElementInstance) eiAux;
                     GeneratedElementInstance gei2 = (GeneratedElementInstance) newEI;
@@ -190,7 +203,7 @@ public class CDSManager {
         }
     }
 
-    private static GeneratedArchetypeReference getCleanArchetypeReferenceWithElements(GeneratedArchetypeReference ar){
+    private static GeneratedArchetypeReference getCleanArchetypeReferenceWithElements(GeneratedArchetypeReference ar) {
         GeneratedArchetypeReference arNew = ar.clone();
         for (ElementInstance ei : ar.getElementInstancesMap().values()) {
             cloneElementInstanceWithGTCodes(ei, arNew, true);
@@ -198,27 +211,27 @@ public class CDSManager {
         return arNew;
     }
 
-    private static ElementInstance cloneElementInstanceWithGTCodes(ElementInstance ei, ArchetypeReference ar, boolean useGTCodes){
+    private static ElementInstance cloneElementInstanceWithGTCodes(ElementInstance ei, ArchetypeReference ar, boolean useGTCodes) {
         ei = ei.clone();
         ei.setArchetypeReference(ar);
-        if (!useGTCodes && ei instanceof GeneratedElementInstance){
-            ((GeneratedElementInstance)ei).getRuleReferences().clear();
+        if (!useGTCodes && ei instanceof GeneratedElementInstance) {
+            ((GeneratedElementInstance) ei).getRuleReferences().clear();
         }
         return ei;
     }
 
-    private static class ARNonEmptyPredicateComparator implements Comparator<ArchetypeReference>{
+    private static class ARNonEmptyPredicateComparator implements Comparator<ArchetypeReference> {
 
         public int compare(ArchetypeReference o1, ArchetypeReference o2) {
             int count1 = getNumPredicates(o1);
             int count2 = getNumPredicates(o2);
-            return count1-count2;
+            return count1 - count2;
         }
 
-        private int getNumPredicates(ArchetypeReference archetypeReference){
+        private int getNumPredicates(ArchetypeReference archetypeReference) {
             int count = 0;
-            for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
-                if (elementInstance instanceof PredicateGeneratedElementInstance && elementInstance.getDataValue()!=null){
+            for (ElementInstance elementInstance : archetypeReference.getElementInstancesMap().values()) {
+                if (elementInstance instanceof PredicateGeneratedElementInstance && elementInstance.getDataValue() != null) {
                     count++;
                 }
             }
@@ -226,17 +239,17 @@ public class CDSManager {
         }
     }
 
-    private static void addEventTimeElements(Collection<ArchetypeReference> queryARs){
-        for(ArchetypeReference archetypeReference: queryARs){
+    private static void addEventTimeElements(Collection<ArchetypeReference> queryARs) {
+        for (ArchetypeReference archetypeReference : queryARs) {
             String eventTimePath = DateTimeARFinder.getEventTimePath(archetypeReference.getIdArchetype());
-            if (eventTimePath!=null){
-                String eventTimeElementId = archetypeReference.getIdArchetype()+eventTimePath;
-                if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)){
-                    Logger.getLogger(CDSManager.class).info("Adding event path '"+eventTimeElementId+"' for archetype '"+archetypeReference.getIdArchetype()+"'!");
+            if (eventTimePath != null) {
+                String eventTimeElementId = archetypeReference.getIdArchetype() + eventTimePath;
+                if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)) {
+                    Logger.getLogger(CDSManager.class).info("Adding event path '" + eventTimeElementId + "' for archetype '" + archetypeReference.getIdArchetype() + "'!");
                     new GeneratedElementInstance(eventTimeElementId, null, archetypeReference, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 }
-            }else{
-                Logger.getLogger(CDSManager.class).warn("Could not find event path for archetype '"+archetypeReference.getIdArchetype()+"'!");
+            } else {
+                Logger.getLogger(CDSManager.class).warn("Could not find event path for archetype '" + archetypeReference.getIdArchetype() + "'!");
             }
         }
     }
