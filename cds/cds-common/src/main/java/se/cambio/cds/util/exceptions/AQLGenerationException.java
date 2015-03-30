@@ -4,15 +4,12 @@ import se.cambio.openehr.util.exceptions.ModelException;
 
 public class AQLGenerationException extends ModelException {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    public AQLGenerationException(String msg){
-	super("ERROR generating AQL: "+msg);
+    public AQLGenerationException(String msg) {
+        super("ERROR generating AQL: " + msg);
     }
-    
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

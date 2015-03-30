@@ -5,13 +5,14 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 public class GuideCompilationException extends InternalErrorException {
     private static final long serialVersionUID = 1L;
     private String _guideId = null;
-    public GuideCompilationException(String guideId, Exception e){
+
+    public GuideCompilationException(String guideId, Exception e) {
         super(e);
         _guideId = guideId;
     }
 
     public String getMessage() {
-        return "Error compiling guide '"+_guideId+"'.";
+        return "Error compiling guide '" + _guideId + "'.";
     }
 
 }

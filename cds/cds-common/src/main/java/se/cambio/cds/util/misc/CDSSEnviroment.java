@@ -10,7 +10,7 @@ public final class CDSSEnviroment {
 	private static boolean isDebuggin = false;
 	private static boolean isTesting = false;
 	private static boolean _traceSW = false;
-	private static boolean _productionEnviroment = false;
+	private static boolean _productionEnvironment = false;
 	
 	public static boolean isDebuggin(){
 		return isDebuggin;
@@ -25,7 +25,7 @@ public final class CDSSEnviroment {
 	}
 
 	public static boolean isProductionEnviroment(){
-		return _productionEnviroment;
+		return _productionEnvironment;
 	}
 	
 	public static void setDebug(boolean debug){
@@ -48,8 +48,8 @@ public final class CDSSEnviroment {
 		}
 	}
 	
-	public static void setProductionEnviroment(boolean productionEnviroment){
-		_productionEnviroment = productionEnviroment;
+	public static void setProductionEnvironment(boolean productionEnvironment){
+		_productionEnvironment = productionEnvironment;
 	}
 }
 /*

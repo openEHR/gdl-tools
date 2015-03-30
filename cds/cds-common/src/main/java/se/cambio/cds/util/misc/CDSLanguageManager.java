@@ -18,18 +18,13 @@ public final class CDSLanguageManager {
     public static final String MESSAGES_BUNDLE = "se.cambio.cds.view.messages.Messages";
     public String _lng = null;
 
-    private CDSLanguageManager(){
+    private CDSLanguageManager() {
         _lng = UserConfigurationManager.getLanguage();
         String country = UserConfigurationManager.getCountryCode();
-//        try {
-//        String msgBundle = CDSConfigurationParametersManager.getParameter(MESSAGES_BUNDLE);
-        _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE,new Locale(_lng,country), new UTF8Control());
-//	    } catch (MissingConfigurationParameterException e) {
-//	        ExceptionHandler.handle(e);
-//	    }
+        _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(_lng, country), new UTF8Control());
     }
 
-    public static void refreshConfig(){
+    public static void refreshConfig() {
         _instance = null;
         getDelegate();
     }
@@ -43,29 +38,29 @@ public final class CDSLanguageManager {
         }
     }
 
-    public static String getMessage(String key,String data1) {
+    public static String getMessage(String key, String data1) {
         String s = getDelegate()._resource.getString(key);
         int i = s.indexOf("$0");
-        if (i>=0&&i<s.length()){
-            String s1 = s.substring(0,i);
-            String s2 = s.substring(i+2,s.length());
-            return s1+data1+s2;
-        }else return s;
+        if (i >= 0 && i < s.length()) {
+            String s1 = s.substring(0, i);
+            String s2 = s.substring(i + 2, s.length());
+            return s1 + data1 + s2;
+        } else return s;
     }
 
-    public static String getMessage(String key,String [] data) {
+    public static String getMessage(String key, String[] data) {
         String s = getDelegate()._resource.getString(key);
-        for (int i=0;i<data.length && i<10;i++){
-            int index = s.indexOf("$"+i);
-            String s1 = s.substring(0,index);
-            String s2 = s.substring(index+2,s.length());
-            s = s1+data[i]+s2;
+        for (int i = 0; i < data.length && i < 10; i++) {
+            int index = s.indexOf("$" + i);
+            String s1 = s.substring(0, index);
+            String s2 = s.substring(index + 2, s.length());
+            s = s1 + data[i] + s2;
         }
         return s;
     }
 
     private static CDSLanguageManager getDelegate() {
-        if (_instance==null){
+        if (_instance == null) {
             _instance = new CDSLanguageManager();
         }
         return _instance;

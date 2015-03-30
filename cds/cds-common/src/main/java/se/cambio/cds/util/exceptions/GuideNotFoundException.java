@@ -4,15 +4,11 @@ import se.cambio.openehr.util.exceptions.ModelException;
 
 public class GuideNotFoundException extends ModelException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public GuideNotFoundException(String idGuide){
-	super("Guide '"+idGuide+"' not found.");
+    public GuideNotFoundException(String idGuide) {
+        super("Guide '" + idGuide + "' not found.");
     }
-    
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -11,11 +11,11 @@ public class LogEventVO {
     public Map<String, String> parameters = null;
 
     public LogEventVO(String context, String actionName, Long duration) {
-	super();
-	this.context = context;
-	this.actionName = actionName;
-	this.duration = duration;
-	parameters = new HashMap<String, String>();
+        super();
+        this.context = context;
+        this.actionName = actionName;
+        this.duration = duration;
+        parameters = new HashMap<String, String>();
     }
 
     public String getContext() {
@@ -42,15 +42,15 @@ public class LogEventVO {
         this.duration = duration;
     }
 
-    public void addParameter(String key, String value){
-	parameters.put(key, value);
+    public void addParameter(String key, String value) {
+        parameters.put(key, value);
     }
-    
+
     public Map<String, String> getParameters() {
         return parameters;
     }
-    
-    public String toString(){
-	return actionName+" ("+duration+" ms)";
-    }  
+
+    public String toString() {
+        return actionName + " (" + duration + " ms)";
+    }
 }

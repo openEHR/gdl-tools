@@ -5,15 +5,15 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 
-public abstract class CDSSwingWorker extends SwingWorker<Object, Object>{
+public abstract class CDSSwingWorker extends SwingWorker<Object, Object> {
 
     @Override
     protected final Object doInBackground() throws Exception {
-        try{
+        try {
             executeCDSSW();
-        }catch(InternalErrorException e){
+        } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
-        }catch (Throwable e){
+        } catch (Throwable e) {
             ExceptionHandler.handle(e);
         }
         return null;

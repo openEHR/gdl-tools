@@ -14,12 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * @author icorram
- *
-
-
- */
 public class Version {
 
     private static String VERSION_PROPPERTIES_FILE = "Version.properties";
@@ -27,70 +21,69 @@ public class Version {
     private static Version _instance = null;
     private Map<Object, Object> parameters;
 
-    private Version(){
-	try {
-	    Class<Version> version = 
-		    Version.class;
-	    ClassLoader classLoader =
-		    version.getClassLoader();
-	    InputStream inputStream =
-		    classLoader.getResourceAsStream(VERSION_PROPPERTIES_FILE);
-	    Properties properties = new Properties();
-	    properties.load(inputStream);
-	    inputStream.close();
-	    parameters = new HashMap<Object,Object>(properties);
-
-	} catch (Exception e) {
-	    ExceptionHandler.handle(e);
-	}
+    private Version() {
+        try {
+            Class<Version> version =
+                    Version.class;
+            ClassLoader classLoader =
+                    version.getClassLoader();
+            InputStream inputStream =
+                    classLoader.getResourceAsStream(VERSION_PROPPERTIES_FILE);
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            inputStream.close();
+            parameters = new HashMap<Object, Object>(properties);
+        } catch (Exception e) {
+            ExceptionHandler.handle(e);
+        }
     }
 
-    private static String getParameter(String name) 
-	    throws MissingConfigurationParameterException {
-	return (String) getDelegate().parameters.get(name);
+    private static String getParameter(String name)
+            throws MissingConfigurationParameterException {
+        return (String) getDelegate().parameters.get(name);
     }
 
-    public static String getVersion(){
-	return "v"+getVersionNum();
+    public static String getVersion() {
+        return "v" + getVersionNum();
     }
 
-    public static String getVersionNum(){
-	try {
-	    return getParameter("projectVersion");
-	} catch (MissingConfigurationParameterException e) {
-	    ExceptionHandler.handle(e);
-	    return "";
-	}
+    public static String getVersionNum() {
+        try {
+            return getParameter("projectVersion");
+        } catch (MissingConfigurationParameterException e) {
+            ExceptionHandler.handle(e);
+            return "";
+        }
     }
 
-    public static String getBuildDate(){
-	try {
-	    return getParameter("buildDate");
-	} catch (MissingConfigurationParameterException e) {
-	    ExceptionHandler.handle(e);
-	    return "";
-	}
+    public static String getBuildDate() {
+        try {
+            return getParameter("buildDate");
+        } catch (MissingConfigurationParameterException e) {
+            ExceptionHandler.handle(e);
+            return "";
+        }
     }
 
-    public static String getBuildNum(){
-	try {
-	    String buldNum = getParameter("buildNum");
-	    if (buldNum!=null && !buldNum.equals("${buildNumber}")){
-		return "build "+buldNum;
-	    }else{
-		return null;
-	    }
-	} catch (MissingConfigurationParameterException e) {
-	    ExceptionHandler.handle(e);
-	    return "";
-	}
+    public static String getBuildNum() {
+        try {
+            String buildNum = getParameter("buildNum");
+            if (buildNum != null && !buildNum.equals("${buildNumber}")) {
+                return "build " + buildNum;
+            } else {
+                return null;
+            }
+        } catch (MissingConfigurationParameterException e) {
+            ExceptionHandler.handle(e);
+            return "";
+        }
     }
 
-    public static Version getDelegate(){
-	if (_instance==null){
-	    _instance = new Version();
-	}
-	return _instance;
+    public static Version getDelegate() {
+        if (_instance == null) {
+            _instance = new Version();
+        }
+        return _instance;
     }
 }
 /*

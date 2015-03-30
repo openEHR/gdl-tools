@@ -5,13 +5,10 @@ import se.cambio.openehr.util.exceptions.ModelException;
 
 public class GuideNotCompiledException extends ModelException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 5138808685690780254L;
 
     public GuideNotCompiledException(String idGuide, String guideName) {
-	super("Guide \""+guideName+"\" is not compiled: ID="+idGuide);
+        super("Guide \"" + guideName + "\" is not compiled: ID=" + idGuide);
     }
 }
 /*

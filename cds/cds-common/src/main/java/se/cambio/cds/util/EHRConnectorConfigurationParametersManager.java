@@ -7,7 +7,11 @@ import javax.naming.InitialContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 
 public final class EHRConnectorConfigurationParametersManager {
 
@@ -18,15 +22,15 @@ public final class EHRConnectorConfigurationParametersManager {
     public static final String EHR_HOST = "EhrHost";
     public static final String EHR_PORT = "EhrPort";
     public static final String EHR_NAMESPACE = "EhrSubjectNamespace";
-    public static final String REMOTE_LOGGER_URL= "RemoteLoggerURL";
+    public static final String REMOTE_LOGGER_URL = "RemoteLoggerURL";
     private static final String CONFIGURATION_FILE = "EHRService.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
 
     private static boolean usesJNDI;
-    private static Map <Object,Object> parameters;
+    private static Map<Object, Object> parameters;
 
     private static final Map<String, String> defaultParameters =
-            new HashMap<String, String>(){
+            new HashMap<String, String>() {
                 {
                     put(EHR_USERNAME, "admin");
                     put(EHR_PASSWORD, "admin");
@@ -36,26 +40,25 @@ public final class EHRConnectorConfigurationParametersManager {
                 }
             };
 
-
     static {
         /*
          * We use a synchronized map because it will be filled by using a lazy strategy.
          */
-        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
-        try{
-	        /* Read property file (if exists).*/
+        parameters = Collections.synchronizedMap(new HashMap<Object, Object>());
+        try {
+            /* Read property file (if exists).*/
             Class<EHRConnectorConfigurationParametersManager> configurationParametersManagerClass =
                     EHRConnectorConfigurationParametersManager.class;
             ClassLoader classLoader =
                     configurationParametersManagerClass.getClassLoader();
             File configFile = getConfigFile();
             InputStream inputStream = null;
-            if (configFile!=null){
+            if (configFile != null) {
                 inputStream = new FileInputStream(configFile);
-                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
-            }else{
+                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + CONFIGURATION_FILE + "'");
+            } else {
                 inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using resource for '" + CONFIGURATION_FILE + "'");
             }
             Properties properties = new Properties();
             properties.load(inputStream);
@@ -64,39 +67,40 @@ public final class EHRConnectorConfigurationParametersManager {
 	        /* We have been able to read the file. */
             usesJNDI = false;
             parameters.putAll(properties);
-        }catch (Exception e) {
+        } catch (Exception e) {
 	        /* We have not been able to read the file. */
             usesJNDI = true;
-            Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
+            Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using JNDI for '" + CONFIGURATION_FILE + "'");
         }
     }
 
-    private EHRConnectorConfigurationParametersManager() {}
+    private EHRConnectorConfigurationParametersManager() {
+    }
 
-    private static File getConfigFile(){
-        try{
+    private static File getConfigFile() {
+        try {
             File jarFile = new File(EHRConnectorConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
-            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
-                    for (File file2:file.listFiles()){
-                        if (file2.getName().equals(CONFIGURATION_FILE)){
+            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
+                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
+                    for (File file2 : file.listFiles()) {
+                        if (file2.getName().equals(CONFIGURATION_FILE)) {
                             return file2;
                         }
                     }
                 }
             }
-        }catch(Throwable t){
+        } catch (Throwable t) {
             //Problem finding config folder
             //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
-        try{
+        try {
             //Current folder
-            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
-            if (file.exists()){
+            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
+            if (file.exists()) {
                 return file;
             }
-        }catch(Throwable t2){
+        } catch (Throwable t2) {
             //Problem finding config folder
             //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
@@ -114,10 +118,10 @@ public final class EHRConnectorConfigurationParametersManager {
                     parameters.put(key, value);
                 } catch (Exception e) {
                     value = defaultParameters.get(key);
-                    if (value!=null){
-                        Logger.getLogger(EHRConnectorConfigurationParametersManager.class).warn("Using default value for '"+key+"' = '"+value+"'");
+                    if (value != null) {
+                        Logger.getLogger(EHRConnectorConfigurationParametersManager.class).warn("Using default value for '" + key + "' = '" + value + "'");
                         return value;
-                    }else{
+                    } else {
                         throw new MissingConfigurationParameterException(key);
                     }
                 }
@@ -129,7 +133,7 @@ public final class EHRConnectorConfigurationParametersManager {
         return value;
     }
 
-    public static void loadParameters(Hashtable<Object,Object> usrConfig){
+    public static void loadParameters(Hashtable<Object, Object> usrConfig) {
         parameters.putAll(usrConfig);
     }
 }

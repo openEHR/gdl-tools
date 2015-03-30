@@ -3,38 +3,38 @@
  */
 package se.cambio.cds.util.misc;
 
+import se.cambio.openehr.util.ExceptionHandler;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 
-import se.cambio.openehr.util.ExceptionHandler;
-
 public class ByteUtils {
 
-	public static byte[] toByte(InputStream is) throws IOException{
-		byte[] b = new byte[is.available()]; 
-		is.read(b);
-		return b;
-	}
+    public static byte[] toByte(InputStream is) throws IOException {
+        byte[] b = new byte[is.available()];
+        is.read(b);
+        return b;
+    }
 
-	public static byte[] concat(byte[] A, byte[] B) {
-		byte[] C= new byte[A.length+B.length];
-		System.arraycopy(A, 0, C, 0, A.length);
-		System.arraycopy(B, 0, C, A.length, B.length);
-		return C;
-	}
+    public static byte[] concat(byte[] A, byte[] B) {
+        byte[] C = new byte[A.length + B.length];
+        System.arraycopy(A, 0, C, 0, A.length);
+        System.arraycopy(B, 0, C, A.length, B.length);
+        return C;
+    }
 
-	public static byte[] toBytes(Object object){
-		java.io.ByteArrayOutputStream baos = new 
-		java.io.ByteArrayOutputStream();
-		try{
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(object);
-		}catch(java.io.IOException ioe){
-			ExceptionHandler.handle(ioe);
-		}
-		return baos.toByteArray();
-	}
+    public static byte[] toBytes(Object object) {
+        java.io.ByteArrayOutputStream baos = new
+                java.io.ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+        } catch (java.io.IOException ioe) {
+            ExceptionHandler.handle(ioe);
+        }
+        return baos.toByteArray();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
