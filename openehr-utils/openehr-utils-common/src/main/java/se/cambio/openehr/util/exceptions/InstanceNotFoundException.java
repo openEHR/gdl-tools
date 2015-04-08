@@ -3,31 +3,22 @@ package se.cambio.openehr.util.exceptions;
 
 public class InstanceNotFoundException extends ModelException {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 4736892365330906009L;
     private Object _id;
     private String _classname;
 
     public InstanceNotFoundException(Object id, String classname) {
-	super(classname+"\" instance with ID \""+id+"\"  not found.");
-	_id = id;
-	_classname = classname;
+        super("\"" + classname + "\" instance with Id \"" + id + "\" not found.");
+        _id = id;
+        _classname = classname;
     }
 
-    /**
-     * @return Returns the _id.
-     */
     public Object getId() {
-	return _id;
+        return _id;
     }
 
-    /**
-     * @return Returns the classname.
-     */
     public String getClassname() {
-	return _classname;
+        return _classname;
     }
 }
 /*
