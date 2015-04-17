@@ -24,7 +24,7 @@ import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.OpenEHRRMUtil;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
@@ -91,10 +91,10 @@ public class GenericObjectBundleADLManager {
         String archId = ar.getArchetypeId().getValue();
         String rmEntry = ar.getArchetypeId().rmEntity();
         proccessCObject(ar.getDefinition());
-        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, templateId, rmEntry, ar);
+        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, templateId, rmEntry);
         for (ClusterVO clusterVO: clusterVOs){
             if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")){
-                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, templateId, clusterVO.getRMType(), clusterVO.getPath(), ar));
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, templateId, clusterVO.getRMType(), clusterVO.getPath()));
             }
         }
         archetypeElementVOs.addAll(rmArchetypeElements);
@@ -140,7 +140,7 @@ public class GenericObjectBundleADLManager {
         if (hasCardinalityZero(cComplexObject)){
             return;
         }
-        if (OpenEHRDataValuesUI.isManaged(type)){
+        if (OpenEHRDataValues.isDataValue(type)){
             processDataValue(cObject, path, archetypeId, localAOM, text, desc, type, childCObject);
         }else{
             processSectionsAndClusters(cObject, path, archetypeId, text, desc, type);

@@ -1,8 +1,10 @@
-package se.cambio.openehr.util;
+package se.cambio.cm.model.util;
 
-import org.openehr.am.archetype.Archetype;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,15 +29,14 @@ public class OpenEHRRMUtil {
         rmPaths.add(ISM_TRANSITION_PATH);
         rmPaths.add(TEMPLATE_ID_PATH);
     }
-    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, Archetype ar) {
-        return getRMElements(idArchetype, idTemplate, entryType, "", ar);
+    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType) {
+        return getRMElements(idArchetype, idTemplate, entryType, "");
     }
 
-    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, String parentPath, Archetype ar) {
+    public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, String parentPath) {
         Collection<ArchetypeElementVO> rmArchetypeElements = new ArrayList<ArchetypeElementVO>();
         if (OpenEHRConst.OBSERVATION.equals(entryType)) {
-            String eventsTimePath = getEventsTimePath(ar);
-
+            String eventsTimePath = EVENT_TIME_PATH;
             //EventTime
             rmArchetypeElements.add(
                     new ArchetypeElementVOBuilder()
@@ -109,10 +110,6 @@ public class OpenEHRRMUtil {
                             .createArchetypeElementVO());
         }
         return rmArchetypeElements;
-    }
-
-    private static String getEventsTimePath(Archetype ar) {
-        return EVENT_TIME_PATH;
     }
 
     public final static Collection<String> getRmPaths(){

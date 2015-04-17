@@ -182,10 +182,6 @@ public class OpenEHRDataValuesUI {
         return getDelegate()._openEHRDVIcons.get(idDataValue);
     }
 
-    public static boolean isManaged(String idDataValue){
-        return getDelegate()._openEHRDVNames.containsKey(idDataValue);
-    }
-
     public static Collection<String> getManagedDVs(){
         return getDelegate()._openEHRDVNames.keySet();
     }
@@ -208,9 +204,7 @@ public class OpenEHRDataValuesUI {
 
     public static CodePhrase getLanguageCodePhrase(){
         if (getDelegate()._languageCodePhrase==null){
-            getDelegate()._languageCodePhrase = new CodePhrase(
-                    "ISO_639-1",
-                    UserConfigurationManager.getLanguage());
+            getDelegate()._languageCodePhrase = OpenEHRConst.DEFAULT_LANGUAGE_CODE_PHRASE;
         }
         return getDelegate()._languageCodePhrase;
     }

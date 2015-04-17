@@ -7,7 +7,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.OpenEHRRMUtil;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

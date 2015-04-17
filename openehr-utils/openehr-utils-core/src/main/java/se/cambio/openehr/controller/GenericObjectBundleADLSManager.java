@@ -10,7 +10,7 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ArchetypeTermMapGenerator;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.OpenEHRRMUtil;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.ArchetypeProcessingException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -88,10 +88,10 @@ public class GenericObjectBundleADLSManager {
         for(CAttribute cAttribute: ar.getDefinition().getAttributes()){
             processAttribute(cAttribute, path);
         }
-        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry, null); //TODO Send Archetype (to create long RM paths (data/events/time))
+        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry); //TODO Send Archetype (to create long RM paths (data/events/time))
         for (ClusterVO clusterVO: clusterVOs){
             if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")){
-                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath(), null)); //TODO Send Archetype (to create long RM paths (data/events/time))
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath())); //TODO Send Archetype (to create long RM paths (data/events/time))
             }
         }
         archetypeElementVOs.addAll(rmArchetypeElements);

@@ -21,7 +21,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.OpenEHRRMUtil;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 

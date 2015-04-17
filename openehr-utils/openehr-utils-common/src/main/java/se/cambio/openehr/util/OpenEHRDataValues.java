@@ -7,6 +7,7 @@ package se.cambio.openehr.util;
  */
 public class OpenEHRDataValues {
 
+
     //DATA VALUES
     public final static String DV_TEXT = "DV_TEXT";
     public final static String DV_CODED_TEXT = "DV_CODED_TEXT";
@@ -24,6 +25,13 @@ public class OpenEHRDataValues {
     public final static String DV_IDENTIFIER = "DV_IDENTIFIER";
     public final static String DV_PARSABLE = "DV_PARSABLE";
 
+    public enum DataValue {
+        DV_TEXT, DV_CODED_TEXT, DV_ORDINAL,
+        DV_DURATION, DV_COUNT, DV_DATE_TIME,
+        DV_DATE, DV_TIME, DV_BOOLEAN, DV_PROPORTION,
+        DV_QUANTITY, DV_URI, DV_STATE, DV_IDENTIFIER,
+        DV_PARSABLE
+    }
     //Functions
     public static final String FUNCTION_COUNT = "count";
 
@@ -49,6 +57,15 @@ public class OpenEHRDataValues {
     public static final String SECOND_ATT = "second";
     public static final String FRACTIONAL_SECOND_ATT = "fractionalSecond";
     public static final String TIMEZONE_ATT = "timeZone";
+
+    public static boolean isDataValue(String dataValueId){
+        for (DataValue c : DataValue.values()) {
+            if (c.name().equals(dataValueId)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
