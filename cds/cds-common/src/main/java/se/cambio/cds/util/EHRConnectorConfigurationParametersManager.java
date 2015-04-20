@@ -25,7 +25,9 @@ public final class EHRConnectorConfigurationParametersManager {
     public static final String REMOTE_LOGGER_URL = "RemoteLoggerURL";
     private static final String CONFIGURATION_FILE = "EHRService.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
-    private static String OPT_EHR_CONNECTOR_FILE = "/opt/cds-config/cds-ehr-connector/application.properties";
+    private static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
+    private static String EHR_CONNECTOR_FILE = "cds-ehr-connector/application.properties";
+    private static String OPT_EHR_CONNECTOR_FILE = "/opt/cds-config/" + EHR_CONNECTOR_FILE;
 
     private static boolean usesJNDI;
     private static Map<Object, Object> parameters;
@@ -100,6 +102,20 @@ public final class EHRConnectorConfigurationParametersManager {
             File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
             if (file.exists()) {
                 return file;
+            }
+        } catch (Throwable t2) {
+            //Problem finding config folder
+            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+
+        try {
+            //CDS_CONFIG_DIR param
+            String configDir = System.getenv(CDS_CONFIG_DIR);
+            if (configDir != null) {
+                File file = new File(configDir + "/" + EHR_CONNECTOR_FILE);
+                if (file.exists()) {
+                    return file;
+                }
             }
         } catch (Throwable t2) {
             //Problem finding config folder
