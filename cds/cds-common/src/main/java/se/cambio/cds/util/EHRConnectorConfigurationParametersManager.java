@@ -25,6 +25,12 @@ public final class EHRConnectorConfigurationParametersManager {
     private static final String JNDI_PREFIX = "java:global/cds/";
     private static final String CONFIGURATION_FOLDER = "conf";
     private static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
+    private static String EHR_CONNECTOR_FILE = "cds-ehr-connector.properties";
+    private static String DEFAULT_EHR_CONNECTOR_FILE = "default-cds-ehr-connector.properties";
+    private static String OPT_EHR_CONNECTOR_FILE = "/opt/cds-config/" + EHR_CONNECTOR_FILE;
+    private static boolean usesJNDI;
+    private static Map<Object, Object> parameters;
+
     private static final Map<String, String> defaultParameters =
             new HashMap<String, String>() {
                 {
@@ -72,11 +78,6 @@ public final class EHRConnectorConfigurationParametersManager {
             Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using JNDI for '" + EHR_CONNECTOR_FILE + "'");
         }
     }
-    private static String EHR_CONNECTOR_FILE = "cds-ehr-connector.properties";
-    private static String DEFAULT_EHR_CONNECTOR_FILE = "default-cds-ehr-connector.properties";
-    private static String OPT_EHR_CONNECTOR_FILE = "/opt/cds-config/" + EHR_CONNECTOR_FILE;
-    private static boolean usesJNDI;
-    private static Map<Object, Object> parameters;
 
     private EHRConnectorConfigurationParametersManager() {
     }
