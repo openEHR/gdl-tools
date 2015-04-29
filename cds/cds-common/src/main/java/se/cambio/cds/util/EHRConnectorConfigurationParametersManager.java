@@ -2,6 +2,7 @@ package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
 
 import javax.naming.InitialContext;
 import java.io.File;
@@ -15,23 +16,15 @@ import java.util.Properties;
 
 public final class EHRConnectorConfigurationParametersManager {
 
-    private static final String JNDI_PREFIX = "java:global/cds/";
-
     public static final String EHR_USERNAME = "EhrUsername";
     public static final String EHR_PASSWORD = "EhrPassword";
     public static final String EHR_HOST = "EhrHost";
     public static final String EHR_PORT = "EhrPort";
     public static final String EHR_NAMESPACE = "EhrSubjectNamespace";
     public static final String REMOTE_LOGGER_URL = "RemoteLoggerURL";
-    private static final String CONFIGURATION_FILE = "EHRService.properties";
+    private static final String JNDI_PREFIX = "java:global/cds/";
     private static final String CONFIGURATION_FOLDER = "conf";
     private static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
-    private static String EHR_CONNECTOR_FILE = "cds-ehr-connector/application.properties";
-    private static String OPT_EHR_CONNECTOR_FILE = "/opt/cds-config/" + EHR_CONNECTOR_FILE;
-
-    private static boolean usesJNDI;
-    private static Map<Object, Object> parameters;
-
     private static final Map<String, String> defaultParameters =
             new HashMap<String, String>() {
                 {
@@ -42,7 +35,6 @@ public final class EHRConnectorConfigurationParametersManager {
                     put(EHR_NAMESPACE, "default");
                 }
             };
-
     static {
         /*
          * We use a synchronized map because it will be filled by using a lazy strategy.
@@ -54,14 +46,18 @@ public final class EHRConnectorConfigurationParametersManager {
                     EHRConnectorConfigurationParametersManager.class;
             ClassLoader classLoader =
                     configurationParametersManagerClass.getClassLoader();
-            File configFile = getConfigFile();
-            InputStream inputStream = null;
-            if (configFile != null) {
-                inputStream = new FileInputStream(configFile);
-                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + CONFIGURATION_FILE + "'");
+            InputStream inputStream = classLoader.getResourceAsStream(EHR_CONNECTOR_FILE);
+            if (inputStream != null) {
+                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using resource for '" + EHR_CONNECTOR_FILE + "'");
             } else {
-                inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using resource for '" + CONFIGURATION_FILE + "'");
+                File configFile = getConfigFile();
+                if (configFile != null) {
+                    inputStream = new FileInputStream(configFile);
+                    Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + EHR_CONNECTOR_FILE + "'");
+                } else {
+                    inputStream = classLoader.getResourceAsStream(DEFAULT_EHR_CONNECTOR_FILE);
+                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '" + DEFAULT_EHR_CONNECTOR_FILE + "'");
+                }
             }
             Properties properties = new Properties();
             properties.load(inputStream);
@@ -71,11 +67,16 @@ public final class EHRConnectorConfigurationParametersManager {
             usesJNDI = false;
             parameters.putAll(properties);
         } catch (Exception e) {
-	        /* We have not been able to read the file. */
+            /* We have not been able to read the file. */
             usesJNDI = true;
-            Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using JNDI for '" + CONFIGURATION_FILE + "'");
+            Logger.getLogger(EHRConnectorConfigurationParametersManager.class).info("*** Using JNDI for '" + EHR_CONNECTOR_FILE + "'");
         }
     }
+    private static String EHR_CONNECTOR_FILE = "cds-ehr-connector.properties";
+    private static String DEFAULT_EHR_CONNECTOR_FILE = "default-cds-ehr-connector.properties";
+    private static String OPT_EHR_CONNECTOR_FILE = "/opt/cds-config/" + EHR_CONNECTOR_FILE;
+    private static boolean usesJNDI;
+    private static Map<Object, Object> parameters;
 
     private EHRConnectorConfigurationParametersManager() {
     }
@@ -84,11 +85,17 @@ public final class EHRConnectorConfigurationParametersManager {
         try {
             File jarFile = new File(EHRConnectorConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
-            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                    for (File file2 : file.listFiles()) {
-                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                            return file2;
+            File parentFile1 = jarFile.getParentFile();
+            if (parentFile1 != null) {
+                File parentFile = parentFile1.getParentFile();
+                if (parentFile != null) {
+                    for (File file : parentFile.listFiles()) {
+                        if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
+                            for (File file2 : file.listFiles()) {
+                                if (file2.getName().equals(EHR_CONNECTOR_FILE)) {
+                                    return file2;
+                                }
+                            }
                         }
                     }
                 }
@@ -99,7 +106,7 @@ public final class EHRConnectorConfigurationParametersManager {
         }
         try {
             //Current folder
-            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
+            File file = new File(CONFIGURATION_FOLDER + File.separator + EHR_CONNECTOR_FILE);
             if (file.exists()) {
                 return file;
             }

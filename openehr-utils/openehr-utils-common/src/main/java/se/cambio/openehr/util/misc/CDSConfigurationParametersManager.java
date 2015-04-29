@@ -7,48 +7,59 @@ import javax.naming.InitialContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 
 public final class CDSConfigurationParametersManager {
 
     private static final String JNDI_PREFIX = "java:comp/env/";
 
     private static final String CONFIGURATION_FILE = "cds-config.properties";
+    private static final String DEFAULT_CONFIGURATION_FILE = "default-cds-config.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
-
+    private static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
     public static String KM_SERVER_HOST = "KMServer/host";
     public static String KM_SERVER_PORT = "KMServer/port";
     public static String KM_SERVER_USER_LOGIN = "KMServer/login";
     public static String KM_SERVER_USER_PASSWD = "KMServer/password";
-
     public static String USE_LOCAL_CM_CACHE = "CM/UseLocalCache";
     public static String DSV_BASE_URL = "DSVServer/baseURL";
     public static String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
+    private static String OPT_CDS_CONFIG_FILE = "/opt/cds-config/" + CONFIGURATION_FILE;
 
     private static boolean usesJNDI;
-    private static Map <Object,Object> parameters;
+    private static Map<Object, Object> parameters;
+
 
     static {
-	/*         
+    /*
 	 * We use a synchronized map because it will be filled by using a 
 	 * lazy strategy.
 	 */
-        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
+        parameters = Collections.synchronizedMap(new HashMap<Object, Object>());
         try {
 	    /* Read property file (if exists).*/
             Class<CDSConfigurationParametersManager> configurationParametersManagerClass =
                     CDSConfigurationParametersManager.class;
             ClassLoader classLoader =
                     configurationParametersManagerClass.getClassLoader();
-            File configFile = getConfigFile();
-            InputStream inputStream = null;
-            if (configFile!=null){
-                inputStream = new FileInputStream(configFile);
-                Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
-            }else{
-                inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+            InputStream inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
+            if (inputStream != null) {
+                Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '" + CONFIGURATION_FILE + "'");
+            } else {
+                File configFile = getConfigFile();
+                if (configFile != null) {
+                    inputStream = new FileInputStream(configFile);
+                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + CONFIGURATION_FILE + "'");
+                } else {
+                    inputStream = classLoader.getResourceAsStream(DEFAULT_CONFIGURATION_FILE);
+                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '" + DEFAULT_CONFIGURATION_FILE + "'");
+                }
             }
+
             Properties properties = new Properties();
             properties.load(inputStream);
             inputStream.close();
@@ -63,32 +74,57 @@ public final class CDSConfigurationParametersManager {
         }
     }
 
-    private CDSConfigurationParametersManager() {}
+    private CDSConfigurationParametersManager() {
+    }
 
-    private static File getConfigFile(){
-        try{
+    private static File getConfigFile() {
+        try {
             File jarFile = new File(CDSConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
-            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
-                    for (File file2:file.listFiles()){
-                        if (file2.getName().equals(CONFIGURATION_FILE)){
+            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
+                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
+                    for (File file2 : file.listFiles()) {
+                        if (file2.getName().equals(CONFIGURATION_FILE)) {
                             return file2;
                         }
                     }
                 }
             }
-        }catch(Throwable t){
+        } catch (Throwable t) {
             //Problem finding config folder
             //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
-        try{
+        try {
             //Current folder
-            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
-            if (file.exists()){
+            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
+            if (file.exists()) {
                 return file;
             }
-        }catch(Throwable t2){
+        } catch (Throwable t2) {
+            //Problem finding config folder
+            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+        try {
+            //CDS_CONFIG_DIR param
+            String configDir = System.getenv(CDS_CONFIG_DIR);
+            if (configDir != null) {
+                File file = new File(configDir + "/" + CONFIGURATION_FILE);
+                if (file.exists()) {
+                    return file;
+                }
+            }
+        } catch (Throwable t2) {
+            //Problem finding config folder
+            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
+        }
+
+        try {
+            //OPT folder
+            File file = new File(OPT_CDS_CONFIG_FILE);
+            if (file.exists()) {
+                return file;
+            }
+        } catch (Throwable t2) {
             //Problem finding config folder
             //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
@@ -116,7 +152,7 @@ public final class CDSConfigurationParametersManager {
         return value;
     }
 
-    public static void loadParameters(Hashtable<Object,Object> usrConfig){
+    public static void loadParameters(Hashtable<Object, Object> usrConfig) {
         parameters.putAll(usrConfig);
     }
 
@@ -141,6 +177,10 @@ public final class CDSConfigurationParametersManager {
             }
         }
         return value;
+    }
+
+    public static Map<Object, Object> getParameters() {
+        return parameters;
     }
 }
 /*
