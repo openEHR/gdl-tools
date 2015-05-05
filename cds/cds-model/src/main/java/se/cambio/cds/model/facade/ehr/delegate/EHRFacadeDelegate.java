@@ -21,6 +21,10 @@ import java.util.Map;
  */
 public interface EHRFacadeDelegate {
 
+    public String getServerHost();
+
+    public Integer getServerPort();
+
     public Map<String,String> getEHRIds(Collection<String> externalEHRIds)
 	    throws InternalErrorException, PatientNotFoundException; 
 

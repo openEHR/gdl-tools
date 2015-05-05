@@ -20,28 +20,29 @@ public final class CDSConfigurationParametersManager {
     private static final String CONFIGURATION_FILE = "cds-config.properties";
     private static final String DEFAULT_CONFIGURATION_FILE = "default-cds-config.properties";
     private static final String CONFIGURATION_FOLDER = "conf";
-    private static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
-    public static String KM_SERVER_HOST = "KMServer/host";
-    public static String KM_SERVER_PORT = "KMServer/port";
-    public static String KM_SERVER_USER_LOGIN = "KMServer/login";
-    public static String KM_SERVER_USER_PASSWD = "KMServer/password";
-    public static String USE_LOCAL_CM_CACHE = "CM/UseLocalCache";
-    public static String DSV_BASE_URL = "DSVServer/baseURL";
-    public static String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
-    private static String OPT_CDS_CONFIG_FILE = "/opt/cds-config/" + CONFIGURATION_FILE;
+    public static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
+    public static final String KM_SERVER_HOST = "KMServer/host";
+    public static final String KM_SERVER_PORT = "KMServer/port";
+    public static final String KM_SERVER_USER_LOGIN = "KMServer/login";
+    public static final String KM_SERVER_USER_PASSWD = "KMServer/password";
+    public static final String USE_LOCAL_CM_CACHE = "CM/UseLocalCache";
+    public static final String DSV_BASE_URL = "DSVServer/baseURL";
+    public static final String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
+    public static final String OPT_CDS_CONFIG_FOLDER = "/opt/cds-config";
+    private static final String OPT_CDS_CONFIG_FILE = OPT_CDS_CONFIG_FOLDER + "/" + CONFIGURATION_FILE;
 
     private static boolean usesJNDI;
     private static Map<Object, Object> parameters;
 
 
     static {
-    /*
-	 * We use a synchronized map because it will be filled by using a 
-	 * lazy strategy.
-	 */
+        /*
+         * We use a synchronized map because it will be filled by using a
+         * lazy strategy.
+         */
         parameters = Collections.synchronizedMap(new HashMap<Object, Object>());
         try {
-	    /* Read property file (if exists).*/
+	        /* Read property file (if exists).*/
             Class<CDSConfigurationParametersManager> configurationParametersManagerClass =
                     CDSConfigurationParametersManager.class;
             ClassLoader classLoader =
@@ -63,14 +64,12 @@ public final class CDSConfigurationParametersManager {
             Properties properties = new Properties();
             properties.load(inputStream);
             inputStream.close();
-	    /* We have been able to read the file. */
+	        /* We have been able to read the file. */
             usesJNDI = false;
             parameters.putAll(properties);
         } catch (Exception e) {
-	    /* We have not been able to read the file. */
+	        /* We have not been able to read the file. */
             usesJNDI = true;
-            //Logger.getLogger(OpenEHRConfigurationParametersManager.class).info("*** Using JNDI for '"+CONFIGURATION_FILE+"'");
-            //e.printStackTrace();
         }
     }
 
