@@ -15,11 +15,6 @@ import java.util.Properties;
 
 public final class CDSConfigurationParametersManager {
 
-    private static final String JNDI_PREFIX = "java:comp/env/";
-
-    private static final String CONFIGURATION_FILE = "cds-config.properties";
-    private static final String DEFAULT_CONFIGURATION_FILE = "default-cds-config.properties";
-    private static final String CONFIGURATION_FOLDER = "conf";
     public static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
     public static final String KM_SERVER_HOST = "KMServer/host";
     public static final String KM_SERVER_PORT = "KMServer/port";
@@ -29,6 +24,10 @@ public final class CDSConfigurationParametersManager {
     public static final String DSV_BASE_URL = "DSVServer/baseURL";
     public static final String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
     public static final String OPT_CDS_CONFIG_FOLDER = "/opt/cds-config";
+    private static final String JNDI_PREFIX = "java:comp/env/";
+    private static final String CONFIGURATION_FILE = "cds-config.properties";
+    private static final String DEFAULT_CONFIGURATION_FILE = "default-cds-config.properties";
+    private static final String CONFIGURATION_FOLDER = "conf";
     private static final String OPT_CDS_CONFIG_FILE = OPT_CDS_CONFIG_FOLDER + "/" + CONFIGURATION_FILE;
 
     private static boolean usesJNDI;
@@ -54,7 +53,7 @@ public final class CDSConfigurationParametersManager {
                 File configFile = getConfigFile();
                 if (configFile != null) {
                     inputStream = new FileInputStream(configFile);
-                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + CONFIGURATION_FILE + "'");
+                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using '" + configFile.getPath() + "' folder for '" + CONFIGURATION_FILE + "'");
                 } else {
                     inputStream = classLoader.getResourceAsStream(DEFAULT_CONFIGURATION_FILE);
                     Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '" + DEFAULT_CONFIGURATION_FILE + "'");
