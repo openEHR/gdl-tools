@@ -11,29 +11,19 @@ import java.util.concurrent.Future;
 
 /**
  * @author icorram
- *
  */
 public class InfoDialog extends JDialog implements ProgressManager {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -2310821412359230220L;
 
     private ProgressBarPanel progressBarPanel = null;  //  @jve:decl-index=0:visual-constraint="372,178"
 
 
-    /**
-     * This method initializes 
-     *
-     */
     public InfoDialog(Window owner) {
         super(owner, "", ModalityType.APPLICATION_MODAL);
         initialize();
     }
-    /**
-     * This method initializes this
-     */
+
     private void initialize() {
         this.setSize(200, 80);
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
@@ -41,38 +31,33 @@ public class InfoDialog extends JDialog implements ProgressManager {
         this.setUndecorated(true);
     }
 
-    public void changeLoadingText(String description){
+    public void changeLoadingText(String description) {
         getProgressBarPanel().changeLoadingText(description);
     }
 
-    public void start(){
+    public void start() {
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         getProgressBarPanel().start();
         this.setVisible(true);
     }
 
-    public void stop(){
+    public void stop() {
         getProgressBarPanel().stop();
         this.setVisible(false);
     }
 
-    public void setCurrentProgress(String msg, double progress){
+    public void setCurrentProgress(String msg, double progress) {
         getProgressBarPanel().setCurrentProgress(msg, progress);
     }
 
-    public void setCurrentThread(Future<?> currentThread){
+    public void setCurrentThread(Future<?> currentThread) {
         getProgressBarPanel().setCurrentThread(currentThread);
     }
 
-    public Future<?> getCurrentThread(){
+    public Future<?> getCurrentThread() {
         return getProgressBarPanel().getCurrentThread();
     }
 
-    /**
-     * This method initializes jPanel1	
-     *
-     * @return javax.swing.JPanel
-     */
     private ProgressBarPanel getProgressBarPanel() {
         if (progressBarPanel == null) {
             progressBarPanel = new ProgressBarPanel();
@@ -80,7 +65,11 @@ public class InfoDialog extends JDialog implements ProgressManager {
         return progressBarPanel;
     }
 
-    public static void main(String[] args){
+    public void setShowCancelButton(boolean showCancelButton) {
+        getProgressBarPanel().setShowCancelButton(showCancelButton);
+    }
+
+    public static void main(String[] args) {
         new InfoDialog(null).setVisible(true);
     }
 

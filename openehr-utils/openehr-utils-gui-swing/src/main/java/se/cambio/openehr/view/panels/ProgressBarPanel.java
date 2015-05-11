@@ -20,14 +20,15 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
 
     private JProgressBar jProgressBar = null;
     private Future<?> _currentThread = null;
-    private boolean _isProgresoActivo = false;
+    private boolean isActive = false;
+    private boolean showCancelButton = true;
     private int _progressValue = 0;
     private String _description = null;
     private JButton cancelButton;
     private JLabel descriptionLabel = null;
     private JPanel mainPanel;
 
-    public ProgressBarPanel(){
+    public ProgressBarPanel() {
         _description = "";
         getDescriptionLabel().setText(_description);
         this.setLayout(new BorderLayout());
@@ -43,12 +44,12 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
             mainPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.LOWERED));
             gridBagConstraints1.gridx = 0;
             gridBagConstraints1.gridy = 0;
-            gridBagConstraints1.weightx=1;
-            gridBagConstraints1.weighty=1;
-            gridBagConstraints1.insets = new java.awt.Insets(0,5,0,0);
+            gridBagConstraints1.weightx = 1;
+            gridBagConstraints1.weighty = 1;
+            gridBagConstraints1.insets = new java.awt.Insets(0, 5, 0, 0);
             gridBagConstraints1.fill = java.awt.GridBagConstraints.HORIZONTAL;
             gridBagConstraints1.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints1.insets = new java.awt.Insets(5,10,0,10);
+            gridBagConstraints1.insets = new java.awt.Insets(5, 10, 0, 10);
             mainPanel.add(getDescriptionLabel(), gridBagConstraints1);
             gridBagConstraints1.gridy++;
             mainPanel.add(getJProgressBar(), gridBagConstraints1);
@@ -61,22 +62,22 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
     }
 
 
-    public void changeLoadingText(String description){
+    public void changeLoadingText(String description) {
         _description = description;
         getDescriptionLabel().setText(_description);
         this.repaint();
         this.validate();
     }
 
-    public void start(){
-        _isProgresoActivo = true;
+    public void start() {
+        isActive = true;
         _progressValue = 1;
         new Thread(new ProgresoActivo()).start();
         this.getJProgressBar().setVisible(true);
     }
 
-    public void stop(){
-        _isProgresoActivo = false;
+    public void stop() {
+        isActive = false;
         _progressValue = 0;
         _description = "";
         _currentThread = null;
@@ -86,36 +87,35 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
         stateUpdated();
     }
 
-    public void setCurrentProgress(String msg, double progress){
-        _isProgresoActivo = false;
-        _progressValue = (int)(100*progress);
+    public void setCurrentProgress(String msg, double progress) {
+        isActive = false;
+        _progressValue = (int) (100 * progress);
         _description = msg;
         stateUpdated();
     }
 
-
     public void stateUpdated() {
-        if (_description!=null && !_description.isEmpty()){
+        if (_description != null && !_description.isEmpty()) {
             getJProgressBar().setVisible(true);
-            getCancelButton().setVisible(true);
+            getCancelButton().setVisible(showCancelButton);
         }
         getDescriptionLabel().setText(_description);
-        if (_progressValue>=0){
+        if (_progressValue >= 0) {
             getJProgressBar().setValue(_progressValue);
         }
     }
 
-    public void setCurrentThread(Future<?> currentThread){
+    public void setCurrentThread(Future<?> currentThread) {
         _currentThread = currentThread;
-        getCancelButton().setVisible(true);
+        getCancelButton().setVisible(showCancelButton);
     }
 
-    public Future<?> getCurrentThread(){
+    public Future<?> getCurrentThread() {
         return _currentThread;
     }
 
-    public JButton getCancelButton(){
-        if (cancelButton==null){
+    public JButton getCancelButton() {
+        if (cancelButton == null) {
             cancelButton = new JButton(OpenEHRLanguageManager.getMessage("Cancel"));
             cancelButton.setIcon(OpenEHRImageUtil.STOP_ICON);
             cancelButton.setBackground(null);
@@ -124,9 +124,9 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
             cancelButton.setFocusable(false);
             cancelButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(_currentThread!=null){
-                    _currentThread.cancel(true);
-                    }else{
+                    if (_currentThread != null) {
+                        _currentThread.cancel(true);
+                    } else {
                         Logger.getLogger(ProgressBarPanel.class).warn("Stopping progress, but currentThread is not set!");
                     }
                     stop();
@@ -136,43 +136,38 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
         return cancelButton;
     }
 
-    public JLabel getDescriptionLabel(){
-        if (descriptionLabel == null){
+    public JLabel getDescriptionLabel() {
+        if (descriptionLabel == null) {
             descriptionLabel = new JLabel();
             descriptionLabel.setText("");
         }
         return descriptionLabel;
     }
 
-    /**
-     * This method initializes jProgressBar
-     *
-     * @return javax.swing.JProgressBar
-     */
     public JProgressBar getJProgressBar() {
         if (jProgressBar == null) {
             jProgressBar = new JProgressBar();
             jProgressBar.setName("jProgressBar");
-            jProgressBar.setPreferredSize(new java.awt.Dimension(200,14));
+            jProgressBar.setPreferredSize(new java.awt.Dimension(200, 14));
             jProgressBar.setVisible(false);
         }
         return jProgressBar;
     }
 
-    /* (non-Javadoc)
-     * @see es.sergas.canalejo.sisegtx.model.facade.vo.StatusObserver#stateUpdated()
-     */
 
+    public void setShowCancelButton(boolean showCancelButton) {
+        this.showCancelButton = showCancelButton;
+    }
 
-
-    private class ProgresoActivo implements Runnable{
+    private class ProgresoActivo implements Runnable {
         private boolean up = true;
+
         public void run() {
-            while (_isProgresoActivo){
-                if (up) _progressValue = _progressValue+3;
-                else _progressValue = _progressValue-3;
-                if (_progressValue>=100) up = false;
-                else if (_progressValue<=1) up = true;
+            while (isActive) {
+                if (up) _progressValue = _progressValue + 3;
+                else _progressValue = _progressValue - 3;
+                if (_progressValue >= 100) up = false;
+                else if (_progressValue <= 1) up = true;
                 stateUpdated();
                 try {
                     Thread.sleep(50);
