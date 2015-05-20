@@ -282,7 +282,7 @@ public class ElementInstanceCollectionUtil {
     private static DataValue getResolvedCodedText(DataValue dv, Collection<Guide> guides) {
         DvCodedText dvCT = (DvCodedText) dv;
         if (!"local".equals(dvCT.getTerminologyId())) {
-             return dvCT;
+             return null;
         }  else {
             return getLocalResolvedCodedText(dv, guides, dvCT);
         }
