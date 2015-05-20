@@ -26,58 +26,65 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ElementInstanceCollectionUtil {
 
 
-    public static boolean isEmpty(ArchetypeReference ar){
+    public static boolean isEmpty(ArchetypeReference ar) {
         for (String idElement : ar.getElementInstancesMap().keySet()) {
             ElementInstance ei = ar.getElementInstancesMap().get(idElement);
-            if (ei.getDataValue()!=null){
+            if (ei.getDataValue() != null) {
                 return false;
             }
         }
         return true;
     }
 
-    public static ArchetypeReference getEmptyArchetypeReference(Set<ArchetypeReference> archetypeReferences){
+    public static ArchetypeReference getEmptyArchetypeReference(Set<ArchetypeReference> archetypeReferences) {
         for (ArchetypeReference archetypeReference : archetypeReferences) {
-            if (isEmpty(archetypeReference)){
+            if (isEmpty(archetypeReference)) {
                 return archetypeReference;
             }
         }
         return null;
     }
 
-    public static boolean containsAll(ArchetypeReference ar1, ArchetypeReference ar2){
+    public static boolean containsAll(ArchetypeReference ar1, ArchetypeReference ar2) {
         return ar1.getElementInstancesMap().keySet().containsAll(ar2.getElementInstancesMap().keySet());
     }
 
     /**
      * Looks if the second reference matches the first one, if empty references are found, they will be copied into the second one (only if the rest is matched).
+     *
      * @param ar1
      * @param ar2
      * @param guideMap
      * @param date
      * @return true if ar1 matches ar2
      */
-    public static boolean matchAndFill(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap, Calendar date){
+    public static boolean matchAndFill(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap, Calendar date) {
         Collection<ElementInstance> emptyElementInstances = new ArrayList<ElementInstance>();
         boolean matches = matches(ar1, ar2, guideMap, date);
-        if (!matches){
+        if (!matches) {
             return false;
         }//else continue with the filling
         //Set AR to empty elementInstances found
-        for (String  idElement : ar1.getElementInstancesMap().keySet()) {
+        for (String idElement : ar1.getElementInstancesMap().keySet()) {
             ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
             ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
-            if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2==null){
+            if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2 == null) {
                 ei2 = ei1.clone();
                 emptyElementInstances.add(ei2);
             }
-            if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance){
-                ((GeneratedElementInstance)ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
+            if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance) {
+                ((GeneratedElementInstance) ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
             }
         }
         for (ElementInstance elementInstance : emptyElementInstances) {
@@ -86,23 +93,23 @@ public class ElementInstanceCollectionUtil {
         return true;
     }
 
-    public static boolean matches(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap, Calendar date){
-        if (!ar1.getIdArchetype().equals(ar2.getIdArchetype())){
+    public static boolean matches(GeneratedArchetypeReference ar1, ArchetypeReference ar2, Map<String, Guide> guideMap, Calendar date) {
+        if (!ar1.getIdArchetype().equals(ar2.getIdArchetype())) {
             return false;
-        }else{
-            for (String  idElement : ar1.getElementInstancesMap().keySet()) {
+        } else {
+            for (String idElement : ar1.getElementInstancesMap().keySet()) {
                 ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
                 ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
-                if (ei1 instanceof PredicateGeneratedElementInstance){
-                    if (ei2!=null){
-                        OperatorKind operatorKind = ((PredicateGeneratedElementInstance)ei1).getOperatorKind();
+                if (ei1 instanceof PredicateGeneratedElementInstance) {
+                    if (ei2 != null) {
+                        OperatorKind operatorKind = ((PredicateGeneratedElementInstance) ei1).getOperatorKind();
                         Set<Guide> guides = new HashSet<Guide>();
                         DataValue dv = getResolveDataValueIfNeeded(guideMap, date, ei1, guides);
                         DataValue dv2 = getResolveDataValueIfNeeded(guideMap, date, ei2, guides);
-                        if (!matches(dv, dv2, operatorKind, guides)){
+                        if (!matches(dv, dv2, operatorKind, guides)) {
                             return false;
                         }
-                    }else{
+                    } else {
                         return false;
                     }
                 }
@@ -138,15 +145,15 @@ public class ElementInstanceCollectionUtil {
             DataValue dv1,
             DataValue dv2,
             OperatorKind operatorKind,
-            Collection<Guide> guides){
-        if (OperatorKind.IS_A.equals(operatorKind)){
-            if (dv1 instanceof DvCodedText && dv2 instanceof DvCodedText){
-                CodePhrase elementCodePhrase = ((DvCodedText)dv2).getDefiningCode();
-                CodePhrase predicateCodePhrase = ((DvCodedText)dv1).getDefiningCode();
+            Collection<Guide> guides) {
+        if (OperatorKind.IS_A.equals(operatorKind)) {
+            if (dv1 instanceof DvCodedText && dv2 instanceof DvCodedText) {
+                CodePhrase elementCodePhrase = ((DvCodedText) dv2).getDefiningCode();
+                CodePhrase predicateCodePhrase = ((DvCodedText) dv1).getDefiningCode();
                 Set<CodePhrase> resolvedCodePhrases = getResolvedCodePhrases(guides, predicateCodePhrase);
                 Set<CodePhrase> resolvedElementCodePhrases = getResolvedCodePhrases(guides, elementCodePhrase);
-                if (!resolvedCodePhrases.isEmpty() && !resolvedElementCodePhrases.isEmpty()){
-                    for (CodePhrase resolvedElementCodePhrase: resolvedElementCodePhrases) {
+                if (!resolvedCodePhrases.isEmpty() && !resolvedElementCodePhrases.isEmpty()) {
+                    for (CodePhrase resolvedElementCodePhrase : resolvedElementCodePhrases) {
                         try {
                             boolean isSubclass = OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(resolvedElementCodePhrase, resolvedCodePhrases);
                             if (!isSubclass) {
@@ -158,43 +165,43 @@ public class ElementInstanceCollectionUtil {
                         }
                     }
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
-        }else if (OperatorKind.EQUALITY.equals(operatorKind)){
+        } else if (OperatorKind.EQUALITY.equals(operatorKind)) {
             return DVUtil.equalDVs(dv1, dv2);
-        }else if (OperatorKind.INEQUAL.equals(operatorKind)){
+        } else if (OperatorKind.INEQUAL.equals(operatorKind)) {
             return !DVUtil.equalDVs(dv1, dv2);
-        }else if (OperatorKind.MAX.equals(operatorKind)|| (OperatorKind.MIN.equals(operatorKind))){
-            if(dv2==null){
+        } else if (OperatorKind.MAX.equals(operatorKind) || (OperatorKind.MIN.equals(operatorKind))) {
+            if (dv2 == null) {
                 return false;
-            }else{
+            } else {
                 return true;
             }
-        }else if (OperatorKind.GREATER_THAN.equals(operatorKind)){
-            if(dv2==null){
+        } else if (OperatorKind.GREATER_THAN.equals(operatorKind)) {
+            if (dv2 == null) {
                 return false;
-            }else{
-                return DVUtil.compareDVs(dv1, dv2)<0;
+            } else {
+                return DVUtil.compareDVs(dv1, dv2) < 0;
             }
-        }else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(operatorKind)){
-            if(dv2==null){
+        } else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(operatorKind)) {
+            if (dv2 == null) {
                 return false;
-            }else{
-                return DVUtil.compareDVs(dv1, dv2)<=0;
+            } else {
+                return DVUtil.compareDVs(dv1, dv2) <= 0;
             }
-        }else if (OperatorKind.LESS_THAN.equals(operatorKind)){
-            if(dv2==null){
+        } else if (OperatorKind.LESS_THAN.equals(operatorKind)) {
+            if (dv2 == null) {
                 return false;
-            }else{
-                return DVUtil.compareDVs(dv1, dv2)>0;
+            } else {
+                return DVUtil.compareDVs(dv1, dv2) > 0;
             }
-        }else if (OperatorKind.LESS_THAN_OR_EQUAL.equals(operatorKind)){
-            if(dv2==null){
+        } else if (OperatorKind.LESS_THAN_OR_EQUAL.equals(operatorKind)) {
+            if (dv2 == null) {
                 return false;
-            }else{
-                return DVUtil.compareDVs(dv1, dv2)>=0;
+            } else {
+                return DVUtil.compareDVs(dv1, dv2) >= 0;
             }
         }
         return false;
@@ -205,21 +212,21 @@ public class ElementInstanceCollectionUtil {
             return Collections.singleton(predicateCodePhrase); //Already resolved
         }
         Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
-        if (guides!=null){
-            for(Guide guide: guides){
-                if (guide.getOntology().getTermBindings()!=null){
+        if (guides != null) {
+            for (Guide guide : guides) {
+                if (guide.getOntology().getTermBindings() != null) {
                     for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
                         TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
-                        if (termBinding!=null){
+                        if (termBinding != null) {
                             Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
-                            if (binding!=null && binding.getCodes()!=null){
+                            if (binding != null && binding.getCodes() != null) {
                                 codePhrases.addAll(binding.getCodes());
                             }
                         }
                     }
                 }
             }
-        }else{
+        } else {
             codePhrases.add(predicateCodePhrase);
         }
         return codePhrases;
@@ -233,60 +240,85 @@ public class ElementInstanceCollectionUtil {
         return "local".equals(elementCodePhrase.getTerminologyId().getValue());
     }
 
-    public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Collection<Guide> guides, Calendar date){
-        if (OperatorKind.IS_A.equals(op)){
-            if (dv instanceof DvCodedText){
-                DvCodedText dvCT = (DvCodedText)dv;
-                if (guides!=null){
-                    for(Guide guide: guides){
-                        if (guide!=null && guide.getOntology().getTermBindings()!=null){
-                            for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
-                                TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
-                                if (termBinding!=null){
-                                    Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
-                                    if (binding!=null && binding.getCodes()!=null && !binding.getCodes().isEmpty()){
-                                        CodePhrase cf = binding.getCodes().get(0);
-                                        return new DvCodedText(dvCT.getValue(),cf);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //If reaches here, no terminology was found (problem)
-                String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
-                //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn(message);
-                return null;
-            }else{
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '"+dv+"'");
+    public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Collection<Guide> guides, Calendar date) {
+        if (OperatorKind.IS_A.equals(op)) {
+            if (dv instanceof DvCodedText) {
+                return getResolvedCodedText(dv, guides);
+            } else {
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '" + dv + "'");
                 return null;
             }
-        }else if (dv instanceof CurrentTimeExpressionDataValue){
-            CurrentTimeExpressionDataValue ctedv = ((CurrentTimeExpressionDataValue)dv);
-            ExpressionItem expressionItem = ctedv.getExpressionItem();
-            String attribute = ctedv.getAttrbute();
-            try {
-                String expStr = ExpressionUtil.getArithmeticExpressionStr(null, expressionItem, null);
-                date = (date!=null?date:Calendar.getInstance());
-                DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
-                JexlEngine engine = new JexlEngine();
-                Expression e = engine.createExpression(expStr);
-                JexlContext context = new MapContext();
-                context.set("$"+OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
-                Object obj = e.evaluate(context);
-                if (obj instanceof Double){
-                    obj = ((Double)obj).longValue(); //In dates we never need double value
-                }
-                currentDateTime = (DvDateTime)DataValueGenerator.createDV(currentDateTime, attribute, obj);
-                return currentDateTime;
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
-            return dv;
-        }else{
+        } else if (dv instanceof CurrentTimeExpressionDataValue) {
+            return getResolvedCurrentDateTime(dv, date);
+        } else {
             return dv;
         }
+    }
+
+    private static DataValue getResolvedCurrentDateTime(DataValue dv, Calendar date) {
+        CurrentTimeExpressionDataValue ctedv = ((CurrentTimeExpressionDataValue) dv);
+        ExpressionItem expressionItem = ctedv.getExpressionItem();
+        String attribute = ctedv.getAttrbute();
+        try {
+            String expStr = ExpressionUtil.getArithmeticExpressionStr(null, expressionItem, null);
+            date = (date != null ? date : Calendar.getInstance());
+            DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
+            JexlEngine engine = new JexlEngine();
+            Expression e = engine.createExpression(expStr);
+            JexlContext context = new MapContext();
+            context.set("$" + OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
+            Object obj = e.evaluate(context);
+            if (obj instanceof Double) {
+                obj = ((Double) obj).longValue(); //In dates we never need double value
+            }
+            currentDateTime = (DvDateTime) DataValueGenerator.createDV(currentDateTime, attribute, obj);
+            return currentDateTime;
+        } catch (InternalErrorException e) {
+            ExceptionHandler.handle(e);
+        }
+        return dv;
+    }
+
+    private static DataValue getResolvedCodedText(DataValue dv, Collection<Guide> guides) {
+        DvCodedText dvCT = (DvCodedText) dv;
+        if (!"local".equals(dvCT.getTerminologyId())) {
+             return dvCT;
+        }  else {
+            return getLocalResolvedCodedText(dv, guides, dvCT);
+        }
+    }
+
+    private static DataValue getLocalResolvedCodedText(DataValue dv, Collection<Guide> guides, DvCodedText dvCT) {
+        if (guides != null) {
+            for (Guide guide : guides) {
+                DvCodedText resolvedCodedText = getResolvedCodedText(dvCT, guide);
+                if (resolvedCodedText != null) {
+                    return resolvedCodedText;
+                }
+            }
+        }
+        //If reaches here, no terminology was found (problem)
+        String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
+        //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
+        Logger.getLogger(ElementInstanceCollectionUtil.class).warn(message);
+        return null;
+    }
+
+    private static DvCodedText getResolvedCodedText(DvCodedText dvCT, Guide guide) {
+        DvCodedText resolvedCodedText = null;
+        if (guide.getOntology().getTermBindings() != null) {
+            for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
+                TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
+                if (termBinding != null) {
+                    Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
+                    if (binding != null && binding.getCodes() != null && !binding.getCodes().isEmpty()) {
+                        CodePhrase cf = binding.getCodes().get(0);
+                        resolvedCodedText = new DvCodedText(dvCT.getValue(), cf);
+                    }
+                }
+            }
+        }
+        return resolvedCodedText;
     }
 }
 /*
