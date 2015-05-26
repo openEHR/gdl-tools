@@ -54,6 +54,8 @@ public interface EHRFacadeDelegate {
 
     public EHREventVO getEHREventFromQueueMessage(Object message)
         throws InternalErrorException;
+
+    String getEhrDataHashKey(String ehrId) throws InternalErrorException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
