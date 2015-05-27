@@ -45,18 +45,19 @@ public class CDSManager {
         ElementInstanceCollection eic = new ElementInstanceCollection();
         if (data != null) {
             eic.addAll(data, guideManager);
-        }
-        if (ehrId != null) {
-            Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
-            Map<String, Collection<ElementInstance>> elementInstanceMap =
-                    CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(Collections.singleton(ehrId), ars, date);
-            Collection<ElementInstance> elementInstances = elementInstanceMap.get(ehrId);
-            if (elementInstances != null) {
-                Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-                for (ElementInstance elementInstance : elementInstances) {
-                    archetypeReferences.add(elementInstance.getArchetypeReference());
+        } else {
+            if (ehrId != null) {
+                Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
+                Map<String, Collection<ElementInstance>> elementInstanceMap =
+                        CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(Collections.singleton(ehrId), ars, date);
+                Collection<ElementInstance> elementInstances = elementInstanceMap.get(ehrId);
+                if (elementInstances != null) {
+                    Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
+                    for (ElementInstance elementInstance : elementInstances) {
+                        archetypeReferences.add(elementInstance.getArchetypeReference());
+                    }
+                    eic.addAll(archetypeReferences, null);
                 }
-                eic.addAll(archetypeReferences, null);
             }
         }
         return eic;
