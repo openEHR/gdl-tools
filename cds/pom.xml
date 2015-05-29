@@ -3,12 +3,12 @@
     <parent>
         <groupId>se.cambio</groupId>
         <artifactId>gdl-tools</artifactId>
-        <version>0.95.8-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 	<groupId>se.cambio.cds</groupId>
 	<artifactId>cds</artifactId>
 	<packaging>pom</packaging>
-	<version>0.95.8-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Clinical Decision Support System</name>
 	<organization>
 		<name>Cambio</name>

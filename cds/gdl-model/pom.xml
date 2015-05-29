@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>se.cambio.cds</groupId>
 		<artifactId>cds</artifactId>
-		<version>0.95.8-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	<artifactId>gdl-model</artifactId>
 	<name>GDL model</name>
