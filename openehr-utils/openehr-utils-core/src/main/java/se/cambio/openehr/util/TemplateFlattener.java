@@ -786,7 +786,6 @@ public class TemplateFlattener {
     // TODO
     protected void applyHideOnFormConstraint(ArchetypeConstraint constraint,
                                              boolean hideOnForm) {
-        return;
     }
 
     // TODO
@@ -860,7 +859,7 @@ public class TemplateFlattener {
             cattr = new CSingleAttribute(ccobj.path() + "/" + VALUE,
                     VALUE, Existence.REQUIRED);
 
-        } else if (cattr != null && cattr.getChildren().size() == 1) {
+        } else if (cattr.getChildren().size() == 1) {
             CObject child = cattr.getChildren().get(0);
 
             if(child instanceof CComplexObject) {
@@ -875,7 +874,7 @@ public class TemplateFlattener {
         Interval<Integer> occurrences = new Interval<Integer>(1,1);
 
         // simple text value
-        if(defaultValue.indexOf("::") < 0) {
+        if(!defaultValue.contains("::")) {
 
             String path = cattr.path() + "/" + VALUE;
             CComplexObject valueObj = CComplexObject.createSingleRequired(path, DV_TEXT);
@@ -922,9 +921,6 @@ public class TemplateFlattener {
         log.debug("applyOccurrencesConstraint, min: " + min + ", max: " + max
                 + ", at: " + cobj.path());
 
-        if( !cobj.isRoot() ) {
-            //assert(cobj.getParent() != null);
-        }
 
         String path = cobj.path();
 
@@ -941,19 +937,19 @@ public class TemplateFlattener {
         }
 
         if(max != null && occurrences.getUpper() != null
-                && max.intValue() > occurrences.getUpper().intValue()) {
+                && max.intValue() > occurrences.getUpper()) {
             throw new FlatteningException("more permissive max occurrences, " + path);
         }
 
         if(max != null && occurrences.getLower() != null
-                && max.intValue() < occurrences.getLower().intValue()) {
+                && max.intValue() < occurrences.getLower()) {
             throw new FlatteningException("contradicting max occurrences [max: "
                     + max.intValue() + ", occurrences.lower: "
-                    + occurrences.getLower().intValue() + "] at path: " + path);
+                    + occurrences.getLower() + "] at path: " + path);
         }
 
         if(min != null && occurrences.getLower() != null
-                && min.intValue() < occurrences.getLower().intValue()) {
+                && min.intValue() < occurrences.getLower()) {
             throw new FlatteningException("more permissive min occurrences, " + path);
         }
 
@@ -965,8 +961,8 @@ public class TemplateFlattener {
         // it's required already
         // special case for archetype node!
         if(( !"/".equals(path)) && occurrences.getUpper() != null && occurrences.getLower() != null
-                && occurrences.getUpper().intValue() == 1
-                && occurrences.getLower().intValue() == 1) {
+                && occurrences.getUpper() == 1
+                && occurrences.getLower() == 1) {
             log.warn("try to set occurrences constraint on required node: "
                     + cobj.path());
             return;
@@ -1005,7 +1001,7 @@ public class TemplateFlattener {
         log.debug("newOccurrences: " + newOccurrences);
 
         if(newOccurrences.getLower() != null
-                && newOccurrences.getLower().intValue() > 0
+                && newOccurrences.getLower() > 0
                 && !"/".equals(path)) {
 
             CAttribute parent = getParentAttribute(archetype, path);
@@ -1179,8 +1175,7 @@ public class TemplateFlattener {
         log.debug("applying value constraint on path: " + constraint.path());
 
         if( ! (constraint instanceof CComplexObject)) {
-            throw new FlatteningException("Unexpected constraint type: " +
-                    (constraint == null ? "null" : constraint.getClass()));
+            throw new FlatteningException("Unexpected constraint type: " + (constraint.getClass()));
         }
 
         CComplexObject ccobj = (CComplexObject) constraint;
@@ -1471,8 +1466,7 @@ public class TemplateFlattener {
      * Returns next unique nodeId in "at0001" format
      */
     protected String formatNodeId(long count) {
-        String nextId = AT + format.format(count);
-        return nextId;
+        return AT + format.format(count);
     }
 
     /*
@@ -1480,9 +1474,8 @@ public class TemplateFlattener {
      */
     private String nextNodeId() {
         nodeCount++;
-        String nextId = formatNodeId(nodeCount);
         //log.debug("next nodeId: " + nextId);
-        return nextId;
+        return formatNodeId(nodeCount);
     }
 
     /*

@@ -509,7 +509,7 @@ public class CSVReader {
 
 		// use headersHolder.Length here in case headers is null
 		for (int i = 0; i < headersHolder.Length; i++) {
-			headersHolder.IndexByName.put(headers[i], new Integer(i));
+			headersHolder.IndexByName.put(headers[i], i);
 		}
 	}
 
@@ -1240,7 +1240,7 @@ public class CSVReader {
 			headersHolder.Headers[i] = columnValue;
 
 			// if there are duplicate header names, we will save the last one
-			headersHolder.IndexByName.put(columnValue, new Integer(i));
+			headersHolder.IndexByName.put(columnValue, i);
 		}
 
 		if (result) {
@@ -1281,11 +1281,7 @@ public class CSVReader {
 	public boolean isQualified(int columnIndex) throws IOException {
 		checkClosed();
 
-		if (columnIndex < columnsCount && columnIndex > -1) {
-			return isQualified[columnIndex];
-		} else {
-			return false;
-		}
+		return columnIndex < columnsCount && columnIndex > -1 && isQualified[columnIndex];
 	}
 
 	/**
@@ -1450,7 +1446,7 @@ public class CSVReader {
 		Object indexValue = headersHolder.IndexByName.get(headerName);
 
 		if (indexValue != null) {
-			return ((Integer) indexValue).intValue();
+			return (Integer) indexValue;
 		} else {
 			return -1;
 		}

@@ -1,9 +1,3 @@
-/*
- * Created on 07-jul-2006
- *
-
-
- */
 package se.cambio.openehr.view.util;
 
 import org.openehr.rm.datatypes.basic.DataValue;
@@ -26,12 +20,7 @@ import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * @author icorram
- *
 
-
- */
 public class FormatConverter {
 
     private static long secondInMillis = 1000;
@@ -43,7 +32,7 @@ public class FormatConverter {
 
     public static Integer toInt(String str) throws Exception{
         try{
-            return new Integer(Integer.parseInt(str.trim()));
+            return Integer.parseInt(str.trim());
         }catch(NumberFormatException e){
             throw new Exception(str);
         }
@@ -67,19 +56,15 @@ public class FormatConverter {
 
     public static Short toShort(String str){
         try{
-            return new Short(Short.parseShort(str.trim()));
+            return Short.parseShort(str.trim());
         }catch(NumberFormatException e){
-            return new Short((short)0);
+            return (short) 0;
         }
     }
 
     public static Boolean toBoolean(String str){
         try{
-            if (str.trim().equals("1")) {
-                return true;
-            } else {
-                return false;
-            }
+            return str.trim().equals("1");
         }catch(NumberFormatException e){
             return null;
         }
@@ -92,26 +77,22 @@ public class FormatConverter {
                 birthDate.get(Calendar.DAY_OF_MONTH)<0){
             restaUno = true;
         }
-        if (fechaAct.get(Calendar.MONTH) -
-                (birthDate.get(Calendar.MONTH)+(restaUno?1:0))<0){
-            restaUno = true;
-        }else{
-            restaUno=false;
-        }
-        return new Short((short)
-                ((fechaAct.get(Calendar.YEAR) - (birthDate.get(Calendar.YEAR)+(restaUno?1:0)))));
+        restaUno = fechaAct.get(Calendar.MONTH) -
+                (birthDate.get(Calendar.MONTH) + (restaUno ? 1 : 0)) < 0;
+        return (short)
+                ((fechaAct.get(Calendar.YEAR) - (birthDate.get(Calendar.YEAR) + (restaUno ? 1 : 0))));
     }
 
     public static String toString(Properties properties){
-        String resultStr = new String();
+        StringBuilder resultStr = new StringBuilder();
         ArrayList<String> lista = new ArrayList<String>();
         for (Object id : properties.keySet()) lista.add((String)id);
         Collections.sort(lista);
         for (String id : lista) {
             Object value = properties.get(id);
-            resultStr=resultStr+id+"="+value+"\n";
+            resultStr.append(resultStr).append(id).append("=").append(value).append("\n");
         }
-        return resultStr;
+        return resultStr.toString();
     }
 
     public static Calendar toCalendar(Date date){
@@ -201,13 +182,13 @@ public class FormatConverter {
 
             String str = null;
 
-            str = (String)st.nextToken();
+            str = st.nextToken();
             cDate.set(Calendar.DAY_OF_MONTH,Integer.parseInt(str));
 
-            str = (String)st.nextToken();
+            str = st.nextToken();
             cDate.set(Calendar.MONTH,Integer.parseInt(str)-1);
 
-            str = (String)st.nextToken();
+            str = st.nextToken();
             cDate.set(Calendar.YEAR,Integer.parseInt(str));
 
             return cDate;
@@ -250,23 +231,15 @@ public class FormatConverter {
     }
 
     public static boolean isSameDay(Calendar fecha1, Calendar fecha2){
-        if (
-                (fecha1.get(Calendar.YEAR)==fecha2.get(Calendar.YEAR)) &&
-                        (fecha1.get(Calendar.MONTH)==fecha2.get(Calendar.MONTH)) &&
-                        (fecha1.get(Calendar.DAY_OF_MONTH)==fecha2.get(Calendar.DAY_OF_MONTH))
-                ){
-            return true;
-        } else return false;
+        return (fecha1.get(Calendar.YEAR) == fecha2.get(Calendar.YEAR)) &&
+                (fecha1.get(Calendar.MONTH) == fecha2.get(Calendar.MONTH)) &&
+                (fecha1.get(Calendar.DAY_OF_MONTH) == fecha2.get(Calendar.DAY_OF_MONTH));
     }
 
     public static boolean isBirthday(Calendar fecha){
         Calendar today = Calendar.getInstance();
-        if (
-                (fecha.get(Calendar.MONTH)==today.get(Calendar.MONTH)) &&
-                        (fecha.get(Calendar.DAY_OF_MONTH)==today.get(Calendar.DAY_OF_MONTH))
-                ){
-            return true;
-        } else return false;
+        return (fecha.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
+                (fecha.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
     }
 
 

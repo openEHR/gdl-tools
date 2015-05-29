@@ -148,6 +148,7 @@ public class UserConfigurationManager {
         try {
             value = getParameter(keyword);
         } catch (MissingConfigurationParameterException e) {
+            //empty
         }
         if (value==null){
             return _defaultValues.get(keyword);
@@ -163,7 +164,9 @@ public class UserConfigurationManager {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 return dateFormat.parse(value);
             }
-        }catch(ParseException e){}
+        }catch(ParseException e){
+            //empty
+        }
         return null;
     }
 
@@ -209,21 +212,31 @@ public class UserConfigurationManager {
         setParameter(keyword, value);
     }
 
-    public static boolean saveConfig(){
-        try{
-            if (_configFile!=null){
+    public static boolean saveConfig() {
+        OutputStream out = null;
+        try {
+            if (_configFile != null) {
                 _configFile.getParentFile().mkdirs();
                 _configFile.createNewFile();
-                OutputStream out = new FileOutputStream(_configFile);
+                out = new FileOutputStream(_configFile);
                 Properties properties = new Properties();
                 properties.putAll(parameters);
                 properties.store(out, "User Config");
             }
             return true;
-        }catch(IOException e){
+        } catch (IOException e) {
             ExceptionHandler.handle(e);
             JOptionPane.showMessageDialog(null, "Error saving config file", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
+        } finally {
+            if(out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    //empty
+                }
+            }
+
         }
     }
 }

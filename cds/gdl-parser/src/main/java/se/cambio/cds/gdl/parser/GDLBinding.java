@@ -74,7 +74,7 @@ public class GDLBinding {
 
 	private String toCamelCase(String underscoreSeparated) {
 		StringTokenizer tokens = new StringTokenizer(underscoreSeparated, "_");
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		while (tokens.hasMoreTokens()) {
 			String word = tokens.nextToken();
 			buf.append(word.substring(0, 1).toUpperCase());
@@ -146,7 +146,7 @@ public class GDLBinding {
 			}
 			return list;
 		} else if (block.getSimpleIntervalValue() != null) {
-			Interval<Comparable> values = block.getSimpleIntervalValue();
+			block.getSimpleIntervalValue();
 			// TODO
 			return null;
 		} else if (block.getTermCode() != null) {

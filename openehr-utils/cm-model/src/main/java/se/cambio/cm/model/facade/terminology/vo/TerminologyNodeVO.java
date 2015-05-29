@@ -61,6 +61,12 @@ public class TerminologyNodeVO implements Serializable{
 				.append(children, node.children)
 				.isEquals();
 	}
+
+	public int hashCode() {
+		int result = value.hashCode();
+		result = 31 * result + children.hashCode();
+		return result;
+	}
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

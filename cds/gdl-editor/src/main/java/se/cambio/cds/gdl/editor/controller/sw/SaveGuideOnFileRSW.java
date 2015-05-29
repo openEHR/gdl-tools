@@ -11,24 +11,21 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 
-/**
- * @author iago.corbal
- */
+
 public class SaveGuideOnFileRSW extends CDSSwingWorker {
 
     private File _guideFile = null;
-    private GDLEditor _controller = null;
     private String _guideStr = null;
 
     public SaveGuideOnFileRSW(File guideFile) {
         super();
         _guideFile = guideFile;
-        _controller = EditorManager.getActiveGDLEditor();
+        GDLEditor _controller = EditorManager.getActiveGDLEditor();
         if (_guideFile==null){
             JFileChooser fileChooser = new JFileChooser(EditorManager.getLastFolderLoaded());
             FileNameExtensionFilter filter =
                     new FileNameExtensionFilter(
-                            GDLEditorLanguageManager.getMessage("Guide"),new String[]{"gdl"});
+                            GDLEditorLanguageManager.getMessage("Guide"), "gdl");
             fileChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SaveGuide"));
             fileChooser.setFileFilter(filter);
             String guideId = _controller.getEntityId();
@@ -84,9 +81,9 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
                 output.write(_guideStr);
                 output.close();
             } catch (FileNotFoundException e) {
-                new InternalErrorException(e);
+                throw new InternalErrorException(e);
             } catch (IOException e) {
-                new InternalErrorException(e);
+                throw new InternalErrorException(e);
             }
         }else{
             this.cancel(true);

@@ -20,7 +20,7 @@ public class EHRFacadeDelegateFactory {
                 throw new Exception("Class not found: " + delegateClassName);
             }
         } catch (Exception e) {
-            new InternalErrorException(e);
+            throw new InternalErrorException(e);
         }
         return theClass;
     }

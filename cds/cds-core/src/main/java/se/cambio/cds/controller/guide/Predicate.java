@@ -73,14 +73,8 @@ public class Predicate {
 		}
 	    }
 
-	}else{
-	    if (dataValue!=null){
-		return DVUtil.equalDVs(getDataValue(), dv);
-	    }else{
-		if (dataValue==dv){
-		    return true;
-		}
-	    }
+	}else {
+		return dataValue == null || DVUtil.equalDVs(getDataValue(), dv);
 	}
 	return false;
     }
@@ -90,8 +84,8 @@ public class Predicate {
     }
 
     public String toString(){
-	return "OP="+operatorKind+", "+dataValue!=null?dataValue.toString():"NULL_DV";
-    }
+		return "OP=" + operatorKind + ", " + (dataValue != null ? dataValue.toString() : "NULL_DV");
+	}
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

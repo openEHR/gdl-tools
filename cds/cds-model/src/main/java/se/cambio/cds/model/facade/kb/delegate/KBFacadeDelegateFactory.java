@@ -17,7 +17,7 @@ public class KBFacadeDelegateFactory {
                     CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_KNOWLEDGE_BASE);
             theClass = Class.forName(delegateClassName);
         } catch (Exception e) {
-            new InternalErrorException(e);
+            throw new InternalErrorException(e);
         }
         return theClass;
     }
