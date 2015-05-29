@@ -57,12 +57,13 @@ public class GDLBinding {
 		for (Method method : methods) {
 			String methodName = method.getName();
 			if (methodName.startsWith("set")) {
-				for (String attribute : valueMap.keySet()) {
+				for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
+					String attribute = entry.getKey();
 					String setter = "set" + toCamelCase(attribute);
 
 					if (methodName.equals(setter)) {
 						log.debug("setter: " + setter);
-						method.invoke(obj, valueMap.get(attribute));
+						method.invoke(obj, entry.getValue());
 						break;
 					}
 				}
@@ -175,7 +176,7 @@ public class GDLBinding {
 
 		} else {
 			MultipleAttributeObjectBlock multiBlock = (MultipleAttributeObjectBlock) block;
-			String type = multiBlock.getTypeIdentifier();
+			multiBlock.getTypeIdentifier();
 			List<KeyedObject> list = multiBlock.getKeyObjects();
 			
 			// can't tell list or map

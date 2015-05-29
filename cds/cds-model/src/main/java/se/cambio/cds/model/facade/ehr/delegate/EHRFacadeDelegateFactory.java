@@ -11,14 +11,11 @@ public class EHRFacadeDelegateFactory {
     }
 
     private static Class<?> getDelegateClass() throws InternalErrorException {
-        Class<?> theClass = null;
+        Class<?> theClass;
         try {
             String delegateClassName =
                     CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_PATIENT_DATA);
             theClass = Class.forName(delegateClassName);
-            if (theClass == null) {
-                throw new Exception("Class not found: " + delegateClassName);
-            }
         } catch (Exception e) {
             throw new InternalErrorException(e);
         }

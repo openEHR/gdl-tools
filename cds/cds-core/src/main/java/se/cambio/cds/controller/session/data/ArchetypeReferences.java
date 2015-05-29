@@ -99,7 +99,10 @@ public class ArchetypeReferences {
             idDomain = ar.getIdDomain();
         }
 
-        String archetypeImageName = OpenEHRConstUI.getIconName(Archetypes.getEntryType(ar.getIdArchetype()));
+        String archetypeImageName = null;
+        if (ar != null) {
+            archetypeImageName = OpenEHRConstUI.getIconName(Archetypes.getEntryType(ar.getIdArchetype()));
+        }
         String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
 
         String elementName = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());

@@ -195,9 +195,7 @@ public class RuleElementEditor {
 
         if (selectedObject instanceof ArchetypeInstantiationRuleLine){
             ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
-            if (airl != null){
-                cdserle.setValue(airl.getGTCodeRuleLineElement());
-            }
+            cdserle.setValue(airl.getGTCodeRuleLineElement());
         }
     }
 

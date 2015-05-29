@@ -182,7 +182,7 @@ public class GuideUtil {
             //TODO Use proper BooleanConstant (create) object
         } else if ("true".equals(e.getValue()) || "false".equals(e.getValue())){
             return new DvBoolean(e.getValue());
-        } else if (e instanceof ConstantExpression && isParsableInteger(e.getValue())){
+        } else if (isParsableInteger(e.getValue())){
             int count = Integer.parseInt(e.getValue());
             return new DvCount(count);
         } else {

@@ -52,7 +52,7 @@ public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElement
                 return archetypeVO.getId();
             }else{
                 Logger.getLogger(this.getClass()).error("Archetype not found! ("+idArchetype+")");
-                return null;
+                return "";
             }
         }else{
             return getText();

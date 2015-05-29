@@ -1,9 +1,3 @@
-/*
- * Creado el 11-dic-2007
- *
-
-
- */
 package se.cambio.openehr.view.trees.renderers;
 
 import se.cambio.openehr.util.OpenEHRImageUtil;
@@ -18,12 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * @author icorram
- *
 
-
- */
 public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     private JCheckBox leafRenderer = new JCheckBox();
     private SelectableNode<E> _nodoSeleccionable = new SelectableNodeBuilder().createSelectableNode();
@@ -43,7 +32,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     public CheckBoxNodeRenderer() {
         Boolean booleanValue = (Boolean) UIManager.get("Tree.drawsFocusBorderAroundIcon");
         leafRenderer.setFocusPainted((booleanValue != null)
-                && (booleanValue.booleanValue()));
+                && (booleanValue));
         leafRenderer.addActionListener(new CheckBoxNodeActionListener());
         selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
         selectionForeground = UIManager.getColor("Tree.selectionForeground");
@@ -103,21 +92,19 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
                     Icon selectedIcon = OpenEHRImageUtil.ACCEPT_ICON;
                     Icon unSelectedIcon = OpenEHRImageUtil.UNACCEPT_ICON;
                     Icon halfSelectedIcon = OpenEHRImageUtil.HALF_ACCEPT_ICON;
-                    if (value instanceof SelectableNode<?>){
-                        selectedIcon = new MultipleIcon( new Icon[]{
-                                selectedIcon,
-                                ((SelectableNode<?>)value).getIcon()});
-                        unSelectedIcon = new MultipleIcon( new Icon[]{
-                                unSelectedIcon,
-                                ((SelectableNode<?>)value).getIcon()});
-                        halfSelectedIcon = new MultipleIcon( new Icon[]{
-                                halfSelectedIcon,
-                                ((SelectableNode<?>)value).getIcon()});
-                    }
+                    selectedIcon = new MultipleIcon( new Icon[]{
+                            selectedIcon,
+                            ((SelectableNode<?>)value).getIcon()});
+                    unSelectedIcon = new MultipleIcon( new Icon[]{
+                            unSelectedIcon,
+                            ((SelectableNode<?>)value).getIcon()});
+                    halfSelectedIcon = new MultipleIcon( new Icon[]{
+                            halfSelectedIcon,
+                            ((SelectableNode<?>)value).getIcon()});
                     //leafRenderer.setIcon(new MultipleIcon(unSelectedicons));
                     leafRenderer.setSelectedIcon(selectedIcon);
                     leafRenderer.setDisabledSelectedIcon(unSelectedIcon);
-                    if (node.isSelected().booleanValue()) {
+                    if (node.isSelected()) {
                         leafRenderer.setIcon(selectedIcon);
                     } else if (node.hasChildrenSelected()) {
                         leafRenderer.setIcon(halfSelectedIcon);
@@ -125,16 +112,13 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
                         leafRenderer.setIcon(unSelectedIcon);
                     }
                 } else {
-                    Icon icon = OpenEHRImageUtil.EMPTY_ICON;
-                    if (value instanceof SelectableNode<?>) {
-                        icon = ((SelectableNode<?>)value).getIcon();
-                    }
+                    Icon icon = ((SelectableNode<?>)value).getIcon();
                     leafRenderer.setIcon(icon);
                     leafRenderer.setSelectedIcon(icon);
                     leafRenderer.setDisabledSelectedIcon(icon);
                 }
                 leafRenderer.setDisabledIcon(leafRenderer.getIcon());
-                leafRenderer.setSelected(node.isSelected().booleanValue());
+                leafRenderer.setSelected(node.isSelected());
             }
 
         }

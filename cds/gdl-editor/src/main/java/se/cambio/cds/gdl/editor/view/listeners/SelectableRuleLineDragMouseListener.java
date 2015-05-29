@@ -135,7 +135,7 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
         while (component!=null && !(component instanceof RuleLineContainerPanel)){
             component = component.getParent();
         }
-        if (component instanceof RuleLineContainerPanel){
+        if (component != null){
             return (RuleLineContainerPanel)component;
         }else{
             return null;

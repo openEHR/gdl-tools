@@ -7,7 +7,7 @@ public class ExpressionUtil {
     
     public static String convertToHTMLText(RuleLineElementWithValue<ExpressionItem> ruleLineElement, ExpressionItem expressionItem){
 	StringBuffer sb = new StringBuffer();
-	//sb.append("<HTML>"); 
+	//sb.append("<HTML>");
 	sb.append(toString(ruleLineElement, expressionItem));
 	//sb.append("</HTML>");
 	return sb.toString();
@@ -23,7 +23,7 @@ public class ExpressionUtil {
 	    UnaryExpression ue = (UnaryExpression)expressionItem;
 	    return ue.getOperator().getSymbol()+"("+toString(ruleLineElement, ue.getOperand())+")";
 	}else if (expressionItem instanceof StringConstant){
-	    return expressionItem!=null?expressionItem.toString():null;
+	    return expressionItem.toString();
 	}else{
 	    return expressionItem!=null?expressionItem.toString().replace(",", " "):null;
 	}

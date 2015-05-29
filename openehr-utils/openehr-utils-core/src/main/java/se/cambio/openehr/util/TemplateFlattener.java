@@ -777,7 +777,7 @@ public class TemplateFlattener {
 
         archetype.updatePathNodeMap((CObject) constraint);
 
-        if(constraint instanceof CObject) {
+        if(constraint != null) {
             log.debug("newly set Occurrences: " + ((CObject) constraint).getOccurrences() );
         }
 

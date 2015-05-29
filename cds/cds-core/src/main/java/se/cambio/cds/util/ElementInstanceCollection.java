@@ -93,7 +93,7 @@ public class ElementInstanceCollection {
         for(String guideId: guideIds){
             Guide guide = guideManager.getGuide(guideId);
             if (guide==null){
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '"+guide+"'");
+                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '"+guideId+"'");
             }else{
                 guides.add(guide);
             }
