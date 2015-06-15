@@ -1,19 +1,22 @@
 package se.cambio.cm.model.facade.terminology.plain;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import org.openehr.rm.datatypes.text.CodePhrase;
-
-import se.cambio.openehr.controller.terminology.TerminologyService;
-import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.openehr.controller.terminology.TerminologyService;
+import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+@Component
+@Profile("terminology-plain-service")
 public class PlainTerminologyFacadeDelegate implements TerminologyFacadeDelegate {
 
     private TerminologyService _terminologyService = null;

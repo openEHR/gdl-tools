@@ -1,5 +1,6 @@
 package se.cambio.openehr.util;
 
+import org.springframework.context.annotation.Profile;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.util.CMElement;
@@ -11,6 +12,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.Collection;
 import java.util.Date;
 
+@Profile("cm-admin-dummy-service")
 public class DummyCMAdministrationFacadeDelegate implements CMAdministrationFacadeDelegate {
 
     @Override

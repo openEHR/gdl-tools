@@ -1,5 +1,7 @@
 package se.cambio.cm.model.facade.administration.plain;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.util.CMElement;
@@ -11,6 +13,8 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.Collection;
 import java.util.Date;
 
+@Component
+@Profile("cm-admin-plain-service")
 public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFacadeDelegate {
 
     @Override
