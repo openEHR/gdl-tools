@@ -6,7 +6,7 @@ import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.ontology.dto.OntologyDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-@Component
+@Component("OntologyDAO")
 @Profile("cm-admin-file-dao")
 public class FileOntologyDAO extends FileGenericCMElementDAO<OntologyDTO> {
 

@@ -6,7 +6,7 @@ import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-@Component
+@Component("TemplateDAO")
 @Profile("cm-admin-file-dao")
 public class FileTemplateDAO extends FileGenericCMElementDAO<TemplateDTO> {
 

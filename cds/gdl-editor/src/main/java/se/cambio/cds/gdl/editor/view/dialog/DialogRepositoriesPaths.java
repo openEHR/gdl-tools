@@ -176,11 +176,11 @@ public class DialogRepositoriesPaths extends DialogEditor {
         String terminologiesFolderStrSelected = getTerminologiesRepositoryFolderPanel().getFileNameJTextField().getText();
         String guidesFolderStrSelected = getGuidesRepositoryFolderPanel().getFileNameJTextField().getText();
         String ontologiesFolderStrSelected = getOntologiesRepositoryFolderPanel().getFileNameJTextField().getText();
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypeFolderStrSelected);
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.TEMPLATES_FOLDER_KW, templateFolderStrSelected);
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesFolderStrSelected);
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.GUIDES_FOLDER_KW, guidesFolderStrSelected);
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.ONTOLOGIES_FOLDER_KW, ontologiesFolderStrSelected);
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypeFolderStrSelected);
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templateFolderStrSelected);
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesFolderStrSelected);
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidesFolderStrSelected);
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ONTOLOGIES_FOLDER_KW, ontologiesFolderStrSelected);
         JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
         return UserConfigurationManager.saveConfig();
     }

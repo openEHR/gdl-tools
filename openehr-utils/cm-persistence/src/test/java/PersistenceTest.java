@@ -1,6 +1,12 @@
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTOBuilder;
+import se.cambio.cm.model.configuration.CmPersistenceConfig;
 import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.util.CMElementDAOFactory;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -14,11 +20,17 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = CmPersistenceConfig.class)
+@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public class PersistenceTest {
+
+    @Autowired
+    private CMElementDAOFactory cmElementDAOFactory;
 
     @Test
     public void shouldAllowRoundTripForAllCMElements() throws InternalErrorException, InstanceNotFoundException, URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, PersistenceTest.class.getClassLoader().getResource("").toURI().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, PersistenceTest.class.getClassLoader().getResource("").toURI().getPath());
 
         ArchetypeDTO archetypeDTO =
                 new ArchetypeDTOBuilder()
@@ -28,7 +40,7 @@ public class PersistenceTest {
                         .setLastUpdate(Calendar.getInstance().getTime())
                         .createArchetypeDTO();
         archetypeDTO.setLastUpdate(Calendar.getInstance().getTime());
-        GenericCMElementDAO<ArchetypeDTO> dao = CMElementDAOFactory.getInstance().getDAO(ArchetypeDTO.class);
+        GenericCMElementDAO<ArchetypeDTO> dao = cmElementDAOFactory.getDAO(ArchetypeDTO.class);
         dao.insert(archetypeDTO);
         Collection<ArchetypeDTO> archetypeDTOs = dao.searchAll();
         assertEquals(1, archetypeDTOs.size());

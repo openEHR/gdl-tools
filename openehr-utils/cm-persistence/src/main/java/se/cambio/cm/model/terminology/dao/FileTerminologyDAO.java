@@ -6,7 +6,7 @@ import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-@Component
+@Component("TerminologyDAO")
 @Profile("cm-admin-file-dao")
 public class FileTerminologyDAO extends FileGenericCMElementDAO<TerminologyDTO> {
 

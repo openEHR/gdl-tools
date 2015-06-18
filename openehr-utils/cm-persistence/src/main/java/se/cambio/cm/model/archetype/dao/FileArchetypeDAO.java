@@ -6,7 +6,7 @@ import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
-@Component
+@Component("ArchetypeDAO")
 @Profile("cm-admin-file-dao")
 public class FileArchetypeDAO extends FileGenericCMElementDAO<ArchetypeDTO> {
 

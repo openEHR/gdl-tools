@@ -2,9 +2,16 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.Guide;
@@ -16,9 +23,13 @@ import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.GuideCompilerFactory;
+import se.cambio.cm.model.configuration.CmPersistenceConfig;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
 import se.cambio.cm.model.util.CMTypeFormat;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -26,6 +37,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -33,7 +45,27 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = CmPersistenceConfig.class)
+@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public abstract class GDLTestCase {
+
+    @Autowired
+    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
+    @Autowired
+    private TerminologyFacadeDelegate terminologyFacadeDelegate;
+
+    @Value("classpath:/archetypes")
+    Resource archetypesResource;
+
+    @Value("classpath:/templates")
+    Resource templatesResource;
+
+    @Value("classpath:/terminologies")
+    Resource terminologiesResource;
+
+    @Value("classpath:/guides")
+    Resource guidelinesResource;
 
     public static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
     public static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
@@ -54,12 +86,13 @@ public abstract class GDLTestCase {
     public static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
 
     @Before
-    public void initializeCM() throws URISyntaxException {
-        //Load KM
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
-    }
+    public void initializeCM() throws URISyntaxException, IOException {
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidelinesResource.getFile().getPath());
+        OpenEHRSessionManager.setCmAdministrationFacadeDelegate(cmAdministrationFacadeDelegate);
+        OpenEHRSessionManager.setTerminologyFacadeDelegate(terminologyFacadeDelegate);    }
 
     public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code){
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.DIAGNOSIS_ARCHETYPE_ID, GDLTestCase.DIAGNOSIS_TEMPLATE_ID);

@@ -1,4 +1,3 @@
-import org.junit.Before;
 import org.junit.Test;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -10,25 +9,14 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
 
-public class CDSManagerTest {
-
-    @Before
-    public void configCM() throws URISyntaxException, InternalErrorException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, CDSManagerTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, CDSManagerTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, CDSManagerTest.class.getClassLoader().getResource("templates").toURI().getPath());
-    }
-
+public class CDSManagerTest extends TestBase {
 
     @Test
     public void shouldContainGeneratedElementInstances(){

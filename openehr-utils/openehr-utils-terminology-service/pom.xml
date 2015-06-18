@@ -36,6 +36,12 @@
             <artifactId>cm-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- TODO Bring back when starting Ontology development -->
 		<!-- dependency> <groupId>net.sourceforge.owlapi</groupId> <artifactId>owlapi-api</artifactId> 
 			<version>3.3</version> </dependency> <dependency> <groupId>net.sourceforge.owlapi</groupId> 
