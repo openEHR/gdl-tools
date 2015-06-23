@@ -15,7 +15,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertTrue;
 
-public class GTCodeReferenceGenerationTest extends TestBase{
+public class GTCodeReferenceGenerationTest extends GenericTestBase {
 
     @Test
     public void shouldContainGTCodeReferences() throws InstanceNotFoundException, InternalErrorException {

@@ -16,7 +16,7 @@ import java.util.Iterator;
 import static org.junit.Assert.*;
 
 
-public class CDSManagerTest extends TestBase {
+public class CDSManagerTest extends GenericTestBase {
 
     @Test
     public void shouldContainGeneratedElementInstances(){

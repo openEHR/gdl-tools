@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openehr.am.archetype.Archetype;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,13 +12,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cm.model.configuration.CmPersistenceConfig;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.SpringConfiguration;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
@@ -30,20 +26,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CmPersistenceConfig.class)
+@ContextConfiguration(classes = SpringConfiguration.class)
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public class GDLEditorMainTest {
 
     protected static String MAIN_GUIDE_REPOSITORY_PATH = UserConfigurationManager.getGuidesFolder().getFolder().getPath() + File.separator;
-
-    @Autowired
-    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
-    @Autowired
-    private TerminologyFacadeDelegate terminologyFacadeDelegate;
 
     @Value("classpath:/archetypes")
     Resource archetypesResource;
@@ -63,13 +55,16 @@ public class GDLEditorMainTest {
         UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
         UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
         UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidelinesResource.getFile().getPath());
-        OpenEHRSessionManager.setCmAdministrationFacadeDelegate(cmAdministrationFacadeDelegate);
-        OpenEHRSessionManager.setTerminologyFacadeDelegate(terminologyFacadeDelegate);
+    }
+
+    @Test
+    public void should_get_facades_implementation_from_annotations() {
+        CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate = BeanProvider.getBean(CMAdministrationFacadeDelegate.class);
+        assertNotNull(cmAdministrationFacadeDelegate);
     }
 
     @Test
     public void testCompareSerializedGuides() throws Exception {
-        Archetype ar = ArchetypeManager.getInstance().getArchetypes().getArchetypeAOMById("openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1");
         UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE, "en");
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {

@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
-public class CompositionTemplateTest extends TestBase{
+public class CompositionTemplateTest extends GenericTestBase {
 
     @Test
     public void shouldDetectProperNumberOfElementsInTemplate(){

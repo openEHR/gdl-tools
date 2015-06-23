@@ -20,7 +20,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 
-public class EHRFilteringTest extends TestBase {
+public class EHRFilteringTest extends GenericTestBase {
 
     private Collection<ElementInstance> generateElementInstances(){
         Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();

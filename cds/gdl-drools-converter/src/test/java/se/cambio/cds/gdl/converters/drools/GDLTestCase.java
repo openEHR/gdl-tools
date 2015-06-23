@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,12 +23,9 @@ import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.GuideCompilerFactory;
 import se.cambio.cm.model.configuration.CmPersistenceConfig;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
 import se.cambio.cm.model.util.CMTypeFormat;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -49,11 +45,6 @@ import java.util.List;
 @ContextConfiguration(classes = CmPersistenceConfig.class)
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public abstract class GDLTestCase {
-
-    @Autowired
-    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
-    @Autowired
-    private TerminologyFacadeDelegate terminologyFacadeDelegate;
 
     @Value("classpath:/archetypes")
     Resource archetypesResource;
@@ -91,8 +82,7 @@ public abstract class GDLTestCase {
         UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
         UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
         UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidelinesResource.getFile().getPath());
-        OpenEHRSessionManager.setCmAdministrationFacadeDelegate(cmAdministrationFacadeDelegate);
-        OpenEHRSessionManager.setTerminologyFacadeDelegate(terminologyFacadeDelegate);    }
+    }
 
     public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code){
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.DIAGNOSIS_ARCHETYPE_ID, GDLTestCase.DIAGNOSIS_TEMPLATE_ID);
