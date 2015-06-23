@@ -145,7 +145,7 @@ public class UserConfigurationManager {
 
     public static Object getObjectParameter(String name)
             throws MissingConfigurationParameterException {
-        Object value = (Object) parameters.get(name);
+        Object value = parameters.get(name);
         if (value == null) {
             throw new MissingConfigurationParameterException(name);
         }
@@ -217,11 +217,15 @@ public class UserConfigurationManager {
         cmFolder.setFolder(folder);
     }
 
-    private static CmFolder getCmFolder(String parameter) {
+    public static CmFolder getCmFolder(String parameter) {
         CmFolder cmFolder = cmFolderMap.get(parameter);
         if (cmFolder == null) {
             String path = getParameterWithDefault(parameter);
-            cmFolder = new CmFolder(new File(path));
+            File folder = new File(".");
+            if (path != null) {
+                folder = new File(path);
+            }
+            cmFolder = new CmFolder(folder);
             cmFolderMap.put(parameter, cmFolder);
         }
         return cmFolder;

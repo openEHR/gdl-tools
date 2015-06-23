@@ -3,6 +3,10 @@ package se.cambio.openehr.controller.session;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
 
+/*
+    Should access all classes using autowired Spring
+ */
+@Deprecated
 public class OpenEHRSessionManager {
     private static OpenEHRSessionManager _delegate = null;
 

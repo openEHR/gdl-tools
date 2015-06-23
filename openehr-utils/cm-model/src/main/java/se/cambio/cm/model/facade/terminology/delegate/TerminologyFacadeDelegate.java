@@ -18,24 +18,24 @@ import java.util.Set;
  *
  */
 public interface TerminologyFacadeDelegate {
-    public boolean isSubclassOf(CodePhrase a, CodePhrase b) 
+    boolean isSubclassOf(CodePhrase a, CodePhrase b)
 	    throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException;
 
-    public boolean isSubclassOf(CodePhrase a, Set<CodePhrase> b) 
+    boolean isSubclassOf(CodePhrase a, Set<CodePhrase> b)
 	    throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException;
 
-    public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)  
+    TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
 	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;
 
-    public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
+    List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
 	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException;
 
-    public String retrieveTerm(CodePhrase concept, CodePhrase language)  
+    String retrieveTerm(CodePhrase concept, CodePhrase language)
 	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;
 
-    public boolean isValidCodePhrase(CodePhrase cp) throws InternalErrorException;
+    boolean isValidCodePhrase(CodePhrase cp) throws InternalErrorException;
 
-    public Collection<String> getSupportedTerminologies() throws InternalErrorException;
+    Collection<String> getSupportedTerminologies() throws InternalErrorException;
 
 }
 /*
