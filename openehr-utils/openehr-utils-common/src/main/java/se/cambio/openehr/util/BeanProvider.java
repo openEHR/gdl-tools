@@ -7,7 +7,7 @@ import se.cambio.openehr.util.configuration.SpringConfiguration;
 public class BeanProvider {
 
     private static BeanProvider instance;
-    public AnnotationConfigApplicationContext appCtx;
+    public ConfigurableApplicationContext appCtx;
 
     private BeanProvider() {
     }
@@ -16,7 +16,7 @@ public class BeanProvider {
         if (appCtx == null) {
             appCtx = new AnnotationConfigApplicationContext();
             appCtx.getEnvironment().setDefaultProfiles("cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao");
-            appCtx.register(SpringConfiguration.class);
+            ((AnnotationConfigApplicationContext)appCtx).register(SpringConfiguration.class);
             appCtx.refresh();
         }
         return appCtx;
@@ -29,8 +29,16 @@ public class BeanProvider {
     public static void setActiveProfiles (String... activeProfiles) {
         getInstance().appCtx = new AnnotationConfigApplicationContext();
         getInstance().appCtx.getEnvironment().setActiveProfiles(activeProfiles);
-        getInstance().appCtx.register(SpringConfiguration.class);
+        ((AnnotationConfigApplicationContext)getInstance().appCtx).register(SpringConfiguration.class);
         getInstance().appCtx.refresh();
+    }
+
+    public static String[] getActiveProfiles() {
+        return getInstance().getAppCtx().getEnvironment().getActiveProfiles();
+    }
+
+    public static void setApplicationContext(ConfigurableApplicationContext appCtx) {
+        getInstance().appCtx = appCtx;
     }
 
     public static BeanProvider getInstance() {
