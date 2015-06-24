@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan({"se.cambio"})
-public class SpringConfiguration {
+public class CdsConfiguration {
 }

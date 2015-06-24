@@ -16,7 +16,7 @@ import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeD
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.configuration.SpringConfiguration;
+import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
@@ -31,7 +31,7 @@ import static junit.framework.TestCase.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringConfiguration.class)
+@ContextConfiguration(classes = CdsConfiguration.class)
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public class GDLEditorMainTest {
 
