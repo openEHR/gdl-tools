@@ -7,7 +7,7 @@ import se.cambio.openehr.util.configuration.CdsConfiguration;
 public class BeanProvider {
 
     private static BeanProvider instance;
-    public ConfigurableApplicationContext appCtx;
+    private ConfigurableApplicationContext appCtx;
 
     private BeanProvider() {
     }

@@ -115,11 +115,18 @@ public class ArchetypeManager {
 
     protected ArchetypeTerm getArchetypeTerm(String idTemplate, String idElement, String lang) {
         loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
-        String atCode = idElement.substring(idElement.lastIndexOf("[") + 1, idElement.length() - 1);
-        ArchetypeTerm archetypeTerm;
+        int bracketIndex = idElement.lastIndexOf("[");
+        String atCode = null;
+        if (bracketIndex > 0) {
+            atCode = idElement.substring(bracketIndex + 1, idElement.length() - 1);
+        }
+        ArchetypeTerm archetypeTerm = null;
         if (idTemplate == null) {
-            String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
+            int slashIndex = idElement.indexOf("/");
+            if (slashIndex > 0) {
+                String archetypeId = idElement.substring(0, slashIndex);
+                archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
+            }
         } else {
             Collection<String> archetypeIds = new ArrayList<String>();
             try {
@@ -160,9 +167,12 @@ public class ArchetypeManager {
 
 
     public void loadArchetypesAndTemplatesIfNeeded(String templateId, String idElement) {
-        String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-        loadArchetypesIfNeeded(archetypeId);
-        loadTemplateIfNeeded(templateId);
+        int slashIndex = idElement.indexOf("/");
+        if (slashIndex > 0) {
+            String archetypeId = idElement.substring(0, slashIndex);
+            loadArchetypesIfNeeded(archetypeId);
+            loadTemplateIfNeeded(templateId);
+        }
     }
 
     public void loadArchetypesIfNeeded(String archetypeId) {

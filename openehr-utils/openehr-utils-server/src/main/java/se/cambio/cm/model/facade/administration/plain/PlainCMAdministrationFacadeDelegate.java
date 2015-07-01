@@ -23,10 +23,10 @@ public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFaca
 
     @Autowired
     private CMElementDAOFactory cmElementDAOFactory;
-    private Map<String, GenericCMElementDAO<? extends CMElement>> cmElementDAOMap;
+    private Map<Class, GenericCMElementDAO<? extends CMElement>> cmElementDAOMap;
 
     public PlainCMAdministrationFacadeDelegate() {
-        cmElementDAOMap = Collections.synchronizedMap(new HashMap<String, GenericCMElementDAO<? extends CMElement>>());
+        cmElementDAOMap = Collections.synchronizedMap(new HashMap<Class, GenericCMElementDAO<? extends CMElement>>());
     }
 
     @Override
@@ -82,7 +82,12 @@ public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFaca
     }
 
     private <E extends CMElement> GenericCMElementDAO<E> getCmElementDAO(Class<E> cmElementClass) throws InternalErrorException {
-        return cmElementDAOFactory.getDAO(cmElementClass);
+        GenericCMElementDAO<? extends CMElement> genericCMElementDAO = cmElementDAOMap.get(cmElementClass);
+        if (genericCMElementDAO == null) {
+            genericCMElementDAO = cmElementDAOFactory.getDAO(cmElementClass);
+            cmElementDAOMap.put(cmElementClass, genericCMElementDAO);
+        }
+        return (GenericCMElementDAO<E>)genericCMElementDAO;
     }
 }
 /*

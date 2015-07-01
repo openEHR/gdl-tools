@@ -38,7 +38,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
     public void registerCMElementsInCache(Collection<ArchetypeDTO> cmElements){
         super.registerCMElementsInCache(cmElements);
         try {
-            proccessArchetypes(cmElements);
+            processArchetypes(cmElements);
             registerArchetypeDTOs(cmElements);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
@@ -50,7 +50,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         return ArchetypeDTO.class;
     }
 
-    public void proccessArchetypes(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
+    public void processArchetypes(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
         for (ArchetypeDTO archetypeDTO: archetypeDTOs){
             processArchetype(archetypeDTO);
         }

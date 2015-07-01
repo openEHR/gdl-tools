@@ -2,6 +2,7 @@ package se.cambio.cm.model.util;
 
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
+import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -18,6 +19,7 @@ public class OpenEHRRMUtil {
     public static String TIMING_PATH = "/activities/timing";
     public static String ISM_TRANSITION_PATH = "/ism_transition/current_state";
     public static String TEMPLATE_ID_PATH = "/archetype_details/template_id";
+    public static String ARCHETYPE_DETAILS_PATH = "/archetype_details";
 
     private static Collection<String> rmPaths;
     static {
@@ -110,6 +112,21 @@ public class OpenEHRRMUtil {
                             .createArchetypeElementVO());
         }
         return rmArchetypeElements;
+    }
+
+    public static Collection<ClusterVO> getRMClusters(String idArchetype, String idTemplate) {
+        Collection<ClusterVO> rmArchetypeClusters = new ArrayList<ClusterVO>();
+        ClusterVO clusterVO =
+                new ClusterVO(
+                        OpenEHRLanguageManager.getMessage("ArchetypeDetails"),
+                        OpenEHRLanguageManager.getMessage("ArchetypeDetails"),
+                        OpenEHRConst.CLUSTER,
+                        idArchetype,
+                        idTemplate,
+                        ARCHETYPE_DETAILS_PATH
+                );
+        rmArchetypeClusters.add(clusterVO);
+        return rmArchetypeClusters;
     }
 
     public final static Collection<String> getRmPaths(){
