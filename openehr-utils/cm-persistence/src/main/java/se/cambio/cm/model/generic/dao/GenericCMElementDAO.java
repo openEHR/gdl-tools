@@ -9,20 +9,20 @@ import java.util.Date;
 
 public interface GenericCMElementDAO<E extends CMElement> {
 
-    public Collection<E> searchByIds(Collection<String> ids)
+    Collection<E> searchByIds(Collection<String> ids)
             throws InternalErrorException, InstanceNotFoundException;
 
-    public Collection<E> searchAll() throws InternalErrorException;
+    Collection<E> searchAll() throws InternalErrorException;
 
-    public Collection<String> searchAllIds() throws InternalErrorException;
+    Collection<String> searchAllIds() throws InternalErrorException;
 
-    public void insert(E cmElement) throws InternalErrorException;
+    void insert(E cmElement) throws InternalErrorException;
 
-    public void update(E cmElement) throws InternalErrorException, InstanceNotFoundException;
+    void update(E cmElement) throws InternalErrorException, InstanceNotFoundException;
 
-    public void remove(String id)  throws InternalErrorException, InstanceNotFoundException;
+    void remove(String id)  throws InternalErrorException, InstanceNotFoundException;
 
-    public void removeAll()  throws InternalErrorException;
+    void removeAll()  throws InternalErrorException;
 
-    public Date getLastUpdateDate()  throws InternalErrorException;
+    Date getLastUpdateDate()  throws InternalErrorException;
 }
