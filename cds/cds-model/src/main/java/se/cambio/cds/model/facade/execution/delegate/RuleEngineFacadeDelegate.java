@@ -1,41 +1,35 @@
 package se.cambio.cds.model.facade.execution.delegate;
 
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
+import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.misc.CDSConfigurationParametersManager;
+import se.cambio.openehr.util.exceptions.PatientNotFoundException;
+
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+
 
 /**
  * @author iago.corbal
- *
  */
-public class RuleExecutionFacadeDelegateFactory {
+public interface RuleEngineFacadeDelegate {
 
-    private static String DELEGATE_CLASS_EXECUTION = "RuleExecutionFacadeDelegate/Class";
+    RuleExecutionResult execute(
+            String ehrId,
+            List<GuideDTO> guides,
+            Collection<ElementInstance> elementInstances,
+            Calendar date) throws InternalErrorException, PatientNotFoundException;
 
-	private RuleExecutionFacadeDelegateFactory() {
-	}
+    void cancelExecution();
 
-    private static Class<?> getDelegateClass() throws InternalErrorException {
-        Class<?> theClass = null;
-        try {
-            String delegateClassName =
-                    CDSConfigurationParametersManager.getParameter(DELEGATE_CLASS_EXECUTION);
-            theClass = Class.forName(delegateClassName);
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        }
-        return theClass;
-    }
+    void clearCache();
 
-    public static RuleExecutionFacadeDelegate getDelegate()
-            throws InternalErrorException {
-        try {
-            return (RuleExecutionFacadeDelegate)getDelegateClass().newInstance();
-        } catch (InstantiationException e) {
-            throw new InternalErrorException(e);
-        } catch (IllegalAccessException e) {
-            throw new InternalErrorException(e);
-        }
-    }
+    void setUseCache(boolean useCache);
+
+    byte[] compile(Guide guide) throws InternalErrorException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

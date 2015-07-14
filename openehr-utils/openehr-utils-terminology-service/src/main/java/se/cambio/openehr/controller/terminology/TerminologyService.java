@@ -28,7 +28,7 @@ public interface TerminologyService {
 	 * @param b
 	 * @return true if a is subclass of b
 	 */
-	public boolean isSubclassOf(CodePhrase a, CodePhrase b) 
+	boolean isSubclassOf(CodePhrase a, CodePhrase b) 
 			throws UnsupportedTerminologyException, InvalidCodeException;
 	
 	/**
@@ -39,7 +39,7 @@ public interface TerminologyService {
 	 * @param codes
 	 * @return true if a is subclass of b
 	 */
-	public boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes) 
+	boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes) 
 			throws UnsupportedTerminologyException, InvalidCodeException;
 	
 	/**
@@ -48,14 +48,14 @@ public interface TerminologyService {
 	 * @param concept
 	 * @return returns a tree representation of subclasses
 	 */
-	public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
+	TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
 			throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;	
 	
 	
-	public List<TerminologyNodeVO> retrieve(String expression, CodePhrase language)  
+	List<TerminologyNodeVO> retrieve(String expression, CodePhrase language)  
 			throws UnsupportedTerminologyException, UnsupportedLanguageException;	
 	
-	public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)  
+	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)  
 		throws UnsupportedTerminologyException, UnsupportedLanguageException;	
 	
 	/**
@@ -66,7 +66,7 @@ public interface TerminologyService {
 	 * @param value
 	 * @return true if the property has value
 	 */
-	public boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property, 
+	boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property, 
 			CodePhrase value) throws UnsupportedTerminologyException, 
 			UnknownPropertyException;
 	
@@ -79,7 +79,7 @@ public interface TerminologyService {
 	 * @throws UnsupportedTerminologyException
 	 * @throws UnsupportedLanguageException
 	 */
-	public String retrieveTerm(CodePhrase concept, CodePhrase language) 
+	String retrieveTerm(CodePhrase concept, CodePhrase language) 
 			throws UnsupportedTerminologyException, UnsupportedLanguageException;
 	
 	
@@ -90,20 +90,20 @@ public interface TerminologyService {
 	 * @param language
 	 * @return a list of coded texts
 	 */
-	public List<DvCodedText> retrieveAllPossibleValues(CodePhrase property, 
+	List<DvCodedText> retrieveAllPossibleValues(CodePhrase property, 
 			CodePhrase language) throws UnsupportedTerminologyException, 
 			UnknownPropertyException, UnsupportedLanguageException;
 	
-	public boolean isTerminologySupported(String terminologyId);
-	public boolean isValidCodePhrase(CodePhrase codePhrase);
+	boolean isTerminologySupported(String terminologyId);
+	boolean isValidCodePhrase(CodePhrase codePhrase);
 	
-	public Collection<String> getSupportedTerminologies();
+	Collection<String> getSupportedTerminologies();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
- *  The contents of this file are subject to the Mozilla Public License Version
+ *  The contents of this file are subject to the Mozilla License Version
  *  2.0 (the 'License'); you may not use this file except in compliance with
  *  the License. You may obtain a copy of the License at
  *  http://www.mozilla.org/MPL/

@@ -3,6 +3,7 @@ package se.cambio.cds.controller.cds;
 import org.apache.log4j.Logger;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
+import se.cambio.cds.model.facade.ehr.delegate.EHRFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -49,7 +50,7 @@ public class CDSManager {
             if (ehrId != null) {
                 Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
                 Map<String, Collection<ElementInstance>> elementInstanceMap =
-                        CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(Collections.singleton(ehrId), ars, date);
+                        getEhrService().queryEHRElements(Collections.singleton(ehrId), ars, date);
                 Collection<ElementInstance> elementInstances = elementInstanceMap.get(ehrId);
                 if (elementInstances != null) {
                     Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
@@ -63,6 +64,10 @@ public class CDSManager {
         return eic;
     }
 
+    private static EHRFacadeDelegate getEhrService() {
+        return CDSSessionManager.getEHRFacadeDelegate();
+    }
+
     public static Map<String, Collection<ElementInstance>> getElementInstancesForPopulation(
             Collection<String> ehrIds,
             Collection<String> guideIds,
@@ -71,7 +76,7 @@ public class CDSManager {
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
         Map<String, Collection<ElementInstance>> ehrMap =
-                CDSSessionManager.getEHRFacadeDelegate().queryEHRElements(ehrIds, ars, date);
+                getEhrService().queryEHRElements(ehrIds, ars, date);
         Map<String, Collection<ElementInstance>> cdsEIMap = new HashMap<String, Collection<ElementInstance>>();
         for (String ehrId : ehrIds) {
             ElementInstanceCollection eic = new ElementInstanceCollection();

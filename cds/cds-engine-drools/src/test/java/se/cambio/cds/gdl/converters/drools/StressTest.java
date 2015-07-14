@@ -6,7 +6,8 @@ import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.model.facade.execution.drools.DroolsRuleExecutionFacadeDelegate;
+import se.cambio.cds.controller.session.data.Guides;
+import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -45,12 +46,12 @@ public class StressTest {
 
     private static void stressTest1(){
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesICD10();
-        DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
+        DroolsRuleEngineFacadeDelegate droolsREFD = new DroolsRuleEngineFacadeDelegate();
         List<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
-            guideDTOs.add(GDLTestCase.parse("CHA2DS2VASc_diagnosis_review.v1"));
-            guideDTOs.add(GDLTestCase.parse("Stroke_prevention_dashboard_case.v1"));
-            guideDTOs.add(GDLTestCase.parse("MIE_Medication_in_elderly.v1"));
+            guideDTOs.add(Guides.getInstance().getCMElement("CHA2DS2VASc_diagnosis_review.v1"));
+            guideDTOs.add(Guides.getInstance().getCMElement("Stroke_prevention_dashboard_case.v1"));
+            guideDTOs.add(Guides.getInstance().getCMElement("MIE_Medication_in_elderly.v1"));
 
             GuideManager guideManager = new GuideManager(guideDTOs);
             Calendar cal = Calendar.getInstance();
@@ -121,10 +122,10 @@ public class StressTest {
         DataValue dataValue = new DvDateTime("1900-01-01T12:00");
         ElementInstance eiBirthdateDate = new ElementInstance(GDLTestCase.BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, dataValue!=null?null: OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         elementInstances.add(eiBirthdateDate);
-        DroolsRuleExecutionFacadeDelegate droolsREFD = new DroolsRuleExecutionFacadeDelegate();
+        DroolsRuleEngineFacadeDelegate droolsREFD = new DroolsRuleEngineFacadeDelegate();
         List<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
         try {
-            guideDTOs.add(GDLTestCase.parse("guides/MIE_Medication_in_elderly.v1"));
+            guideDTOs.add(Guides.getInstance().getCMElement("guides/MIE_Medication_in_elderly.v1"));
             GuideManager guideManager = new GuideManager(guideDTOs);
             Calendar cal = Calendar.getInstance();
             droolsREFD.execute(null, guideDTOs, new ArrayList<ElementInstance>(), null); //WARM UP THE ENGINE

@@ -9,10 +9,13 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CMTypeManager {
@@ -84,5 +87,29 @@ public class CMTypeManager {
             instance = new CMTypeManager();
         }
         return instance;
+    }
+
+    public <E extends CMElement>CmElementListParameterizedType<E> getCmElementListParameterizedType(Class<E> cmElementClass) {
+        return new CmElementListParameterizedType<E>(cmElementClass);
+    }
+
+    private class CmElementListParameterizedType<E extends CMElement> implements ParameterizedType {
+        private Class<E> cmElementClass;
+
+        public CmElementListParameterizedType(Class<E> cmElementClass) {
+            this.cmElementClass = cmElementClass;
+        }
+
+        public Type getRawType() {
+            return List.class;
+        }
+
+        public Type getOwnerType() {
+            return null;
+        }
+
+        public Type[] getActualTypeArguments() {
+            return new Type[] {cmElementClass};
+        }
     }
 }

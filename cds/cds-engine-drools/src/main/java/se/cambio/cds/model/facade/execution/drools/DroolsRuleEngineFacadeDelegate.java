@@ -1,28 +1,40 @@
 package se.cambio.cds.model.facade.execution.drools;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideUtil;
-import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegate;
+import se.cambio.cds.gdl.converters.drools.CompilationManager;
+import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
+import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDelegate{
+@Component
+@Profile("rule-drools-engine")
+public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
 
     public RuleExecutionResult execute(
             String ehrId,
             List<GuideDTO> guides,
             Collection<ElementInstance> elementInstances,
             Calendar date)
-            throws InternalErrorException, PatientNotFoundException{
+            throws InternalErrorException, PatientNotFoundException {
         final HashSet<Object> workingMemoryObjects = new HashSet<Object>();
         for (ElementInstance elementInstance : elementInstances) {
             workingMemoryObjects.add(elementInstance);
@@ -31,8 +43,8 @@ public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDel
         }
 
         final ExecutionLogger executionLogger = new ExecutionLogger();
-        if (!guides.isEmpty()){
-            Logger.getLogger(DroolsRuleExecutionFacadeDelegate.class).debug("Executing "+guides.size()+" guides using "+workingMemoryObjects.size()+" objects.");
+        if (!guides.isEmpty()) {
+            Logger.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
             DroolsExecutionManager.executeGuides(
                     guides, date, workingMemoryObjects, executionLogger);
         }
@@ -44,7 +56,10 @@ public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDel
         final List<RuleReference> ruleReferences =
                 GuideUtil.getRuleReferences(executionLogger.getFiredRules());
 
-        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, modifiedArhetypeReferences, executionLogger.getLog(), ruleReferences);
+        if (date == null) {
+            date = Calendar.getInstance();
+        }
+        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, date.getTime(), modifiedArhetypeReferences, executionLogger.getLog(), ruleReferences);
         ruleExecutionResult.setTimedOut(executionLogger.executionTimedOut());
         return ruleExecutionResult;
     }
@@ -60,8 +75,18 @@ public class DroolsRuleExecutionFacadeDelegate implements RuleExecutionFacadeDel
     }
 
     @Override
-    public void setUseCache(boolean useCache){
+    public void setUseCache(boolean useCache) {
         DroolsExecutionManager.setUseCache(useCache);
+    }
+
+    @Override
+    public byte[] compile(Guide guide) throws InternalErrorException {
+        try {
+            String droolsGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
+            return CompilationManager.compile(droolsGuide);
+        } catch (Exception e) {
+            throw new InternalErrorException(e);
+        }
     }
 
 }

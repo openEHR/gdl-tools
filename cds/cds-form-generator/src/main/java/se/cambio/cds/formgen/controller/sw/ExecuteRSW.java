@@ -1,11 +1,11 @@
 package se.cambio.cds.formgen.controller.sw;
 
+import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
-import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegate;
-import se.cambio.cds.model.facade.execution.delegate.RuleExecutionFacadeDelegateFactory;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -16,14 +16,19 @@ import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ExecuteRSW extends SwingWorker<Object, Object> {
 
     //private long _executionTime = 0;
     private RuleExecutionResult _result = null;
     private FormGeneratorController _controller = null;
-    private RuleExecutionFacadeDelegate _refd = null;
+    private RuleEngineFacadeDelegate _refd = null;
     public ExecuteRSW(FormGeneratorController controller) {
         super();
         _controller = controller;
@@ -63,7 +68,7 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
             GuideManager guideManager = new GuideManager(guideDTOs);
             Collection<ElementInstance> elementInstances =
                     CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager, currentDateTime);
-            _refd = RuleExecutionFacadeDelegateFactory.getDelegate();
+            _refd = CDSSessionManager.getRuleEngineFacadeDelegate();
             RuleExecutionResult result = _refd.execute(null, guideDTOs, elementInstances, currentDateTime);
             //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
             return result;

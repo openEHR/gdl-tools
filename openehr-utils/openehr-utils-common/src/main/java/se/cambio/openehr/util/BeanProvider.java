@@ -15,7 +15,7 @@ public class BeanProvider {
     private ConfigurableApplicationContext getAppCtx() {
         if (appCtx == null) {
             appCtx = new AnnotationConfigApplicationContext();
-            appCtx.getEnvironment().setDefaultProfiles("cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao");
+            appCtx.getEnvironment().setDefaultProfiles("cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao", "rule-drools-engine");
             ((AnnotationConfigApplicationContext)appCtx).register(CdsConfiguration.class);
             appCtx.refresh();
         }

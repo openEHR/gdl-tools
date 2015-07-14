@@ -17,7 +17,8 @@ import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.export.ArchetypeReferenceGsonFactory;
+import se.cambio.cds.util.export.CdsGsonBuilderFactory;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
@@ -126,7 +127,7 @@ public class BasicGDLTest extends GDLTestCase {
 
 
     @Test
-    public void shouldFindMissingElements() {
+    public void shouldFindMissingElements() throws InstanceNotFoundException, InternalErrorException {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -152,7 +153,7 @@ public class BasicGDLTest extends GDLTestCase {
     }
 
     @Test
-    public void shouldAllowToDefinePredicates() {
+    public void shouldAllowToDefinePredicates() throws InstanceNotFoundException, InternalErrorException {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A10BX03");
         ar.getElementInstancesMap().remove(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID); //Remove end elements
@@ -314,7 +315,7 @@ public class BasicGDLTest extends GDLTestCase {
 
     @Test
     public void shouldPerformRoundtripJSONSerializationOfRuleExecutionResults() {
-        Gson gson = new ArchetypeReferenceGsonFactory().create();
+        Gson gson = new CdsGsonBuilderFactory().getGsonBuilder().create();
         if (rer == null){
             shouldAllowCDSInitialization();
         }

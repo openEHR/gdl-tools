@@ -1,185 +1,48 @@
 package se.cambio.openehr.util.misc;
 
-import org.apache.log4j.Logger;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.env.Environment;
 
-import javax.naming.InitialContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
+@Configuration
+@PropertySources({
+        @PropertySource("classpath:cds-config-default.properties"),
+        @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/cds-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true),
+})
+public class CDSConfigurationParametersManager {
 
-public final class CDSConfigurationParametersManager {
+    private static final String KM_SERVER_HOST = "KMServer/host";
+    private static final String KM_SERVER_PORT = "KMServer/port";
+    private static final String KM_SERVER_USER_LOGIN = "KMServer/login";
+    private static final String KM_SERVER_USER_PASSWD = "KMServer/password";
+    private static final String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
 
-    public static final String CDS_CONFIG_DIR = "CDS_CONFIG_DIR";
-    public static final String KM_SERVER_HOST = "KMServer/host";
-    public static final String KM_SERVER_PORT = "KMServer/port";
-    public static final String KM_SERVER_USER_LOGIN = "KMServer/login";
-    public static final String KM_SERVER_USER_PASSWD = "KMServer/password";
-    public static final String USE_LOCAL_CM_CACHE = "CM/UseLocalCache";
-    public static final String DSV_BASE_URL = "DSVServer/baseURL";
-    public static final String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
-    public static final String OPT_CDS_CONFIG_FOLDER = "/opt/cds-config";
-    private static final String JNDI_PREFIX = "java:comp/env/";
-    private static final String CONFIGURATION_FILE = "cds-config.properties";
-    private static final String DEFAULT_CONFIGURATION_FILE = "default-cds-config.properties";
-    private static final String CONFIGURATION_FOLDER = "conf";
-    private static final String OPT_CDS_CONFIG_FILE = OPT_CDS_CONFIG_FOLDER + "/" + CONFIGURATION_FILE;
+    @Autowired
+    Environment environment;
 
-    private static boolean usesJNDI;
-    private static Map<Object, Object> parameters;
-
-
-    static {
-        /*
-         * We use a synchronized map because it will be filled by using a
-         * lazy strategy.
-         */
-        parameters = Collections.synchronizedMap(new HashMap<Object, Object>());
-        try {
-	        /* Read property file (if exists).*/
-            Class<CDSConfigurationParametersManager> configurationParametersManagerClass =
-                    CDSConfigurationParametersManager.class;
-            ClassLoader classLoader =
-                    configurationParametersManagerClass.getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-            if (inputStream != null) {
-                Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '" + CONFIGURATION_FILE + "'");
-            } else {
-                File configFile = getConfigFile();
-                if (configFile != null) {
-                    inputStream = new FileInputStream(configFile);
-                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using '" + configFile.getPath() + "' folder for '" + CONFIGURATION_FILE + "'");
-                } else {
-                    inputStream = classLoader.getResourceAsStream(DEFAULT_CONFIGURATION_FILE);
-                    Logger.getLogger(CDSConfigurationParametersManager.class).info("*** Using resource for '" + DEFAULT_CONFIGURATION_FILE + "'");
-                }
-            }
-
-            Properties properties = new Properties();
-            properties.load(inputStream);
-            inputStream.close();
-	        /* We have been able to read the file. */
-            usesJNDI = false;
-            parameters.putAll(properties);
-        } catch (Exception e) {
-	        /* We have not been able to read the file. */
-            usesJNDI = true;
-        }
+    public String getKmHost() {
+        return environment.getProperty(KM_SERVER_HOST, String.class, "localhost");
     }
 
-    private CDSConfigurationParametersManager() {
+    public Integer getKmPort() {
+        return environment.getProperty(KM_SERVER_PORT, Integer.class, 8080);
     }
 
-    private static File getConfigFile() {
-        try {
-            File jarFile = new File(CDSConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            //../conf
-            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                    for (File file2 : file.listFiles()) {
-                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                            return file2;
-                        }
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            //Problem finding config folder
-            //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
-        }
-        try {
-            //Current folder
-            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
-            if (file.exists()) {
-                return file;
-            }
-        } catch (Throwable t2) {
-            //Problem finding config folder
-            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
-        }
-        try {
-            //CDS_CONFIG_DIR param
-            String configDir = System.getenv(CDS_CONFIG_DIR);
-            if (configDir != null) {
-                File file = new File(configDir + "/" + CONFIGURATION_FILE);
-                if (file.exists()) {
-                    return file;
-                }
-            }
-        } catch (Throwable t2) {
-            //Problem finding config folder
-            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
-        }
-
-        try {
-            //OPT folder
-            File file = new File(OPT_CDS_CONFIG_FILE);
-            if (file.exists()) {
-                return file;
-            }
-        } catch (Throwable t2) {
-            //Problem finding config folder
-            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
-        }
-        return null;
+    public String getKmUser() {
+        return environment.getProperty(KM_SERVER_USER_LOGIN, String.class, "km");
     }
 
-    public static String getParameter(String name)
-            throws MissingConfigurationParameterException {
-        String value = (String) parameters.get(name);
-        if (value == null) {
-            //System.out.println("Missing "+name);
-            if (usesJNDI) {
-                try {
-                    InitialContext initialContext = new InitialContext();
-                    value = (String) initialContext.lookup(
-                            JNDI_PREFIX + name);
-                    parameters.put(name, value);
-                } catch (Exception e) {
-                    throw new MissingConfigurationParameterException(name);
-                }
-            } else {
-                throw new MissingConfigurationParameterException(name);
-            }
-        }
-        return value;
+    public String getKmPassword() {
+        return environment.getProperty(KM_SERVER_USER_PASSWD, String.class, "km");
     }
 
-    public static void loadParameters(Hashtable<Object, Object> usrConfig) {
-        parameters.putAll(usrConfig);
+    public Long getCdsExecutionTimeOut() {
+        return environment.getProperty(CDS_EXECUTION_TIMEOUT, Long.class, 10000L);
     }
 
-    public static Object getObjectParameter(String name)
-            throws MissingConfigurationParameterException {
-        Object value = (Object) parameters.get(name);
-        if (value == null) {
-            //System.out.println("Missing "+name);
-            if (usesJNDI) {
-                try {
-                    InitialContext initialContext = new InitialContext();
-
-                    value = (Object) initialContext.lookup(
-                            JNDI_PREFIX + name);
-                    parameters.put(name, value);
-                } catch (Exception e) {
-                    throw new MissingConfigurationParameterException(name);
-                }
-            } else {
-                throw new MissingConfigurationParameterException(name);
-
-            }
-        }
-        return value;
-    }
-
-    public static Map<Object, Object> getParameters() {
-        return parameters;
-    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

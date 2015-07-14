@@ -4,15 +4,14 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
-public class RuleExecutionResult implements Serializable{
+public class RuleExecutionResult implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 30072012L;
     private String ehrId = null;
+    private Date date;
     private Collection<ArchetypeReference> ars = null;
     private List<ExecutionLog> log = null;
     private List<RuleReference> firedRules = null;
@@ -20,11 +19,13 @@ public class RuleExecutionResult implements Serializable{
 
     public RuleExecutionResult(
             String ehrId,
+            Date date,
             Collection<ArchetypeReference> ars,
             List<ExecutionLog> log,
             List<RuleReference> firedRules) {
         super();
         this.ehrId = ehrId;
+        this.date = date;
         this.ars = ars;
         this.log = log;
         this.firedRules = firedRules;
@@ -38,12 +39,22 @@ public class RuleExecutionResult implements Serializable{
         this.ehrId = ehrId;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public Collection<ArchetypeReference> getArchetypeReferences() {
         return ars;
     }
+
     public List<ExecutionLog> getLog() {
         return log;
     }
+
     public List<RuleReference> getFiredRules() {
         return firedRules;
     }
