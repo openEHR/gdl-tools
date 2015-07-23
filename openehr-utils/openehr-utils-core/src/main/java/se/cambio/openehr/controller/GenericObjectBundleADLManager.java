@@ -337,7 +337,7 @@ public class GenericObjectBundleADLManager {
         if (!OpenEHRConst.LOCAL.equals(codedTextVO.getTerminology())) {
             try {
                 TerminologyNodeVO node =
-                        OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveAllSubclasses(
+                        OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveTerminologyNode(
                                 new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
                                 OpenEHRDataValuesUI.getLanguageCodePhrase());
                 if (node == null) {

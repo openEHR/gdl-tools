@@ -24,7 +24,7 @@ public interface TerminologyFacadeDelegate {
     boolean isSubclassOf(CodePhrase a, Set<CodePhrase> b)
 	    throws InternalErrorException, UnsupportedTerminologyException, InvalidCodeException;
 
-    TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
+    TerminologyNodeVO retrieveTerminologyNode(CodePhrase concept, CodePhrase language)
 	    throws InternalErrorException, UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;
 
     List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)

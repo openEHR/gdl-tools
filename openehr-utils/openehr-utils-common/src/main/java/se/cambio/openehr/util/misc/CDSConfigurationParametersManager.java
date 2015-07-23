@@ -19,6 +19,9 @@ public class CDSConfigurationParametersManager {
     private static final String KM_SERVER_USER_LOGIN = "KMServer/login";
     private static final String KM_SERVER_USER_PASSWD = "KMServer/password";
     private static final String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
+    private static final String DB_URL = "KMServer/db/url";
+    private static final String DB_USER = "KMServer/db/user";
+    private static final String DB_PASSWORD = "KMServer/db/password";
 
     @Autowired
     Environment environment;
@@ -44,6 +47,18 @@ public class CDSConfigurationParametersManager {
 
     public Long getCdsExecutionTimeOut() {
         return environment.getProperty(CDS_EXECUTION_TIMEOUT, Long.class, 10000L);
+    }
+
+    public String getDbUrl() {
+        return environment.getProperty(DB_URL, String.class, "jdbc:postgresql://localhost:5432/cds");
+    }
+
+    public String getDbUser() {
+        return environment.getProperty(DB_USER, String.class, "sa");
+    }
+
+    public String getDbPassword() {
+        return environment.getProperty(DB_PASSWORD, String.class, "sa");
     }
 
 }

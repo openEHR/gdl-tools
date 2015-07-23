@@ -15,7 +15,7 @@ public class CdsGsonBuilderFactory {
                 .registerTypeAdapter(DataValue.class, new DataValueJsonSerializer())
                 .registerTypeAdapter(ArchetypeReference.class, new ArchetypeReferenceJsonSerializer())
                 .registerTypeHierarchyAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
                     public boolean shouldSkipField(FieldAttributes f) {

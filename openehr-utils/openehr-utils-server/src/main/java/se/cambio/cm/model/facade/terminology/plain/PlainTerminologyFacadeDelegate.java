@@ -37,7 +37,7 @@ public class PlainTerminologyFacadeDelegate implements TerminologyFacadeDelegate
         return _terminologyService.isSubclassOf(a, b);
     }
 
-    public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
+    public TerminologyNodeVO retrieveTerminologyNode(CodePhrase concept, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException{
         return _terminologyService.retrieveAllSubclasses(concept, language);
     }
