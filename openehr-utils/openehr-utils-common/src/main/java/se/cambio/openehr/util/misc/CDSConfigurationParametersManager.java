@@ -50,7 +50,7 @@ public class CDSConfigurationParametersManager {
     }
 
     public String getDbUrl() {
-        return environment.getProperty(DB_URL, String.class, "jdbc:postgresql://localhost:5432/cds");
+        return environment.getProperty(DB_URL, String.class, "jdbc:h2:./data/cds");
     }
 
     public String getDbUser() {
