@@ -8,9 +8,9 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySources({
+        @PropertySource(value = "classpath:cds-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/cds-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:cds-config.properties", ignoreResourceNotFound = true)
+        @PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true)
 })
 public class CDSConfigurationParametersManager {
 
