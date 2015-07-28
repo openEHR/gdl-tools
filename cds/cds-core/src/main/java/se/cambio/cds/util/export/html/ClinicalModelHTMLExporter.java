@@ -71,7 +71,7 @@ public abstract class ClinicalModelHTMLExporter<E> {
     public abstract InputStream getInputStreamTemplate();
 
     public String addText(Map<String, String> textsMap, String textId) {
-        return textsMap.put(textId, CDSLanguageManager.getMessage(textId));
+        return textsMap.put(textId, CDSLanguageManager.getMessageWithLanguage(textId, getLanguage()));
     }
 
     public E getEntity() {
