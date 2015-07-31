@@ -4,7 +4,7 @@ import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
 
-public class PredicateAttributeComparisonOperatorRuleLineElement extends AbstractComparisonOperatorRuleLineElement{
+public class PredicateAttributeComparisonOperatorRuleLineElement extends AbstractComparisonOperatorRuleLineElement {
 
     public PredicateAttributeComparisonOperatorRuleLineElement(RuleLine ruleLine) {
         super(ruleLine);

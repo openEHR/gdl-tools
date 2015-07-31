@@ -23,7 +23,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         super(CDSLanguageManager.getMessage("CreateInstance"),
                 CDSLanguageManager.getMessage("CreateInstanceDesc"));
         cdsEntryRuleLineElement = new CDSEntryRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(CDSLanguageManager.getMessage("CreateInstanceRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("CreateInstanceRLE"));
         getRuleLineElements().add(cdsEntryRuleLineElement);
     }
 

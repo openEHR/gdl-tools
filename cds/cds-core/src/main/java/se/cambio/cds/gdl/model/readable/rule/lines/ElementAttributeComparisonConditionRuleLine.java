@@ -7,12 +7,14 @@ import se.cambio.cds.gdl.model.expression.Variable;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementAttributeRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.AttributeComparisonOperatorRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
+import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine{
+public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine {
 
     private ArchetypeElementAttributeRuleLineElement archetypeElementAttributeRuleLineElement = null;
     private AttributeComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
@@ -20,57 +22,92 @@ public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleL
 
 
     public ElementAttributeComparisonConditionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("CompareElementAttributeWithExpression"), 
-		OpenEHRLanguageManager.getMessage("CompareElementAttributeWithExpressionDesc"));
-	archetypeElementAttributeRuleLineElement = new ArchetypeElementAttributeRuleLineElement(this);
-	comparisonOperatorRuleLineElement = new AttributeComparisonOperatorRuleLineElement(this);
-	expressionRuleLineElement = new ExpressionRuleLineElement(this);
+        super(OpenEHRLanguageManager.getMessage("CompareElementAttributeWithExpression"),
+                OpenEHRLanguageManager.getMessage("CompareElementAttributeWithExpressionDesc"));
+        archetypeElementAttributeRuleLineElement = new ArchetypeElementAttributeRuleLineElement(this);
+        comparisonOperatorRuleLineElement = new AttributeComparisonOperatorRuleLineElement(this);
+        expressionRuleLineElement = new ExpressionRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
-	getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
-	getRuleLineElements().add(comparisonOperatorRuleLineElement);
-	getRuleLineElements().add(expressionRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
+        getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
+        getRuleLineElements().add(comparisonOperatorRuleLineElement);
+        getRuleLineElements().add(expressionRuleLineElement);
     }
 
-    public ArchetypeElementAttributeRuleLineElement getArchetypeElementAttributeRuleLineElement(){
-	return archetypeElementAttributeRuleLineElement;
+    public ArchetypeElementAttributeRuleLineElement getArchetypeElementAttributeRuleLineElement() {
+        return archetypeElementAttributeRuleLineElement;
     }
 
-    public AttributeComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement(){
-	return comparisonOperatorRuleLineElement;
+    public AttributeComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement() {
+        return comparisonOperatorRuleLineElement;
     }
 
-    public ExpressionRuleLineElement getExpressionRuleLineElement(){
-	return expressionRuleLineElement;
+    public ExpressionRuleLineElement getExpressionRuleLineElement() {
+        return expressionRuleLineElement;
     }
 
-    public ExpressionItem toExpressionItem() throws IllegalStateException{
-	if (archetypeElementAttributeRuleLineElement!=null &&
-		getArchetypeElementAttributeRuleLineElement().getValue()!=null){
-	    String gtCode = 
-		    getArchetypeElementAttributeRuleLineElement().getValue().getValue().getValue();
-	    ExpressionRuleLineElement expressionRuleLineElement = 
-		    getExpressionRuleLineElement();
-	    OperatorKind operatorKind =
-		    getComparisonOperatorRuleLineElement().getValue();
-	    if (operatorKind==null){
-		throw new IllegalStateException("No operator kind set");
-	    }
-	    Variable var = 
-		    new Variable(gtCode, null, null, getArchetypeElementAttributeRuleLineElement().getAttribute());
-	    if (expressionRuleLineElement.getValue()==null){
-		throw new IllegalStateException("No expression set");
-	    }
-	    return new BinaryExpression(
-		    var,
-		    expressionRuleLineElement.getValue(),
-		    operatorKind);
-
-	}else{
-	    throw new IllegalStateException("Element instance not found for"+ this.toString());
-	}
+    public ExpressionItem toExpressionItem() throws IllegalStateException {
+        if (archetypeElementAttributeRuleLineElement != null &&
+                getArchetypeElementAttributeRuleLineElement().getValue() != null) {
+            String gtCode =
+                    getArchetypeElementAttributeRuleLineElement().getValue().getValue().getValue();
+            ExpressionRuleLineElement expressionRuleLineElement =
+                    getExpressionRuleLineElement();
+            OperatorKind operatorKind =
+                    getComparisonOperatorRuleLineElement().getValue();
+            if (operatorKind == null) {
+                throw new IllegalStateException("No operator kind set");
+            }
+            Variable var =
+                    new Variable(gtCode, null, null, getArchetypeElementAttributeRuleLineElement().getAttribute());
+            if (expressionRuleLineElement.getValue() == null) {
+                throw new IllegalStateException("No expression set");
+            }
+            return new BinaryExpression(
+                    var,
+                    expressionRuleLineElement.getValue(),
+                    operatorKind);
+        } else {
+            throw new IllegalStateException("Element instance not found for" + this.toString());
+        }
     }
-}/*
+
+    public String toHTMLString(int level, String lang) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(getLevelSpace(level));
+        int i = 0;
+        for (RuleLineElement ruleLineElement : getRuleLineElements()) {
+            sb.append(ruleLineElement.getLabelTextHTML(lang));
+            i++;
+            if (i < getRuleLineElements().size()) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+    private boolean isAgeCondition() {
+        if (getRuleLineElements().size() == 4) {
+            RuleLineElement ruleLineElement = getRuleLineElements().get(3);
+            if (ruleLineElement instanceof ExpressionRuleLineElement) {
+                ExpressionItem expressionItem = ((ExpressionRuleLineElement) ruleLineElement).getValue();
+                if (expressionItem instanceof BinaryExpression) {
+                    ExpressionItem currentDateTime = ((BinaryExpression) expressionItem).getLeft();
+                    if (currentDateTime instanceof Variable) {
+                        Variable currentDateVar = (Variable) currentDateTime;
+                        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(currentDateVar.getCode()) &&
+                                OpenEHRConst.VALUE.equals(currentDateVar.getAttribute())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

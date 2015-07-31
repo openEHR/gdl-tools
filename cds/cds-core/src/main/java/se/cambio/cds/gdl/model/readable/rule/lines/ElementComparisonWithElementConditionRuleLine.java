@@ -27,7 +27,7 @@ public class ElementComparisonWithElementConditionRuleLine extends ExpressionRul
         comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
         archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(archetypeElementRuleLineElement2);

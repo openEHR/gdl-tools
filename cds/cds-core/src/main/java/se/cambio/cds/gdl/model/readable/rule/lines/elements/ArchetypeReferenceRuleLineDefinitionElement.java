@@ -13,32 +13,34 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeReference> {
 
     public ArchetypeReferenceRuleLineDefinitionElement(ArchetypeInstantiationRuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Archetype"));
+        super(ruleLine, "Archetype");
     }
 
-    public String getDomainId(){
+    public String getDomainId() {
         return getValue().getIdDomain();
     }
 
-    public String getTemplateId(){
-        if (getValue()!=null){
+    public String getTemplateId() {
+        if (getValue() != null) {
             return getValue().getIdTemplate();
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
-    public String getDescription() {
-        if (getValue()==null){
-            return OpenEHRLanguageManager.getMessage("Archetype");
-        }else{
-            return ReadableArchetypeReferencesUtil.getHTMLTooltip((ArchetypeInstantiationRuleLine)getParentRuleLine());
+    public String getLabelDescription(String lang) {
+        if (getValue() == null) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("Archetype", lang);
+        } else {
+            return ReadableArchetypeReferencesUtil.getHTMLTooltip((ArchetypeInstantiationRuleLine) getParentRuleLine());
         }
     }
 
-    public String toString(){
-        if (getValue()!=null){
+
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null) {
             String idArchetype = getValue().getIdArchetype();
             ArchetypeDTO archetypeVO = null;
             try {
@@ -48,14 +50,14 @@ public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElement
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
             }
-            if (archetypeVO!=null){
+            if (archetypeVO != null) {
                 return archetypeVO.getId();
-            }else{
-                Logger.getLogger(this.getClass()).error("Archetype not found! ("+idArchetype+")");
+            } else {
+                Logger.getLogger(this.getClass()).error("Archetype not found! (" + idArchetype + ")");
                 return "";
             }
-        }else{
-            return getText();
+        } else {
+            return super.getLabelText(lang);
         }
     }
 

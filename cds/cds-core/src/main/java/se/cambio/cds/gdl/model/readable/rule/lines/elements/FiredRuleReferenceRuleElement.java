@@ -1,24 +1,23 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.util.misc.CDSLanguageManager;
 
 public class FiredRuleReferenceRuleElement extends RuleLineElementWithValue<GTCodeRuleLineElement> {
     public FiredRuleReferenceRuleElement(RuleLine ruleLine) {
-        super(ruleLine, CDSLanguageManager.getMessage("RuleFired"));
+        super(ruleLine, "RuleFired");
     }
 
-    public String toString(){
+    public String getLabelText(String lang) {
         if (getValue() != null) {
             return getValue().toString();
         } else {
-            return getText();
+            return getLabelText(lang);
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
     }
 }
 

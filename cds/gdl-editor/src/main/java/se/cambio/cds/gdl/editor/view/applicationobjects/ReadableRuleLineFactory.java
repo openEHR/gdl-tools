@@ -19,6 +19,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleE
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.InstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +77,7 @@ public class ReadableRuleLineFactory {
                 }else{
                     JLinkRuleElementLabel linkLabel =
                             new JLinkRuleElementLabel(ruleLineElementWithValue);
-                    linkLabel.setToolTipText(ruleLineElement.getDescription());
+                    linkLabel.setToolTipText(ruleLineElement.getLabelDescription());
                     linkLabel.setCommented(ruleLine.isCommented());
                     linkLabel.refresh();
                     linkLabel.addActionListener(new PluginTypeLinkListener(ruleLinesPanel));
@@ -94,12 +95,12 @@ public class ReadableRuleLineFactory {
     }
 
     public static JLabel createLabel(RuleLine ruleLine, RuleLineElement ruleLineElement){
-        String text = null;
+        String text;
         if (ruleLineElement instanceof ExpressionRuleLineElement){
             ExpressionRuleLineElement erli = (ExpressionRuleLineElement)ruleLineElement;
-            text = ExpressionUtil.convertToHTMLText(erli, erli.getValue());
+            text = ExpressionUtil.convertToHTMLText(erli, erli.getValue(), UserConfigurationManager.getLanguage());
         }else{
-            text = ruleLineElement.toString();
+            text = ruleLineElement.getLabelText();
         }
         text =  "<HTML>"+text+"</HTML>";
         JLabel label = new JLabel(text);

@@ -9,27 +9,29 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class ExpressionRuleLineElement extends RuleLineElementWithValue<ExpressionItem> {
 
     public ExpressionRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Expression"));
+        super(ruleLine, "Expression");
     }
 
     @Override
-    public String getDescription() {
-        return OpenEHRLanguageManager.getMessage("Expression");
+    public String getLabelDescription(String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage("Expression", lang);
     }
 
-    public String toHTMLString(String lang){
-        if (getValue()!=null){
-            return "<font color='#00803a'>"+ExpressionUtil.convertToHTMLText(this, getValue())+"</font>";
-        }else{
-            return getText();
+    @Override
+    public String getLabelTextHTML(String lang) {
+        if (getValue() != null) {
+            return "<font color='#00803a'>" + ExpressionUtil.convertToHTMLText(this, getValue(), lang) + "</font>";
+        } else {
+            return getLabelTextHTML(lang);
         }
     }
 
-    public String toString(){
-        if (getValue()!=null){
-            return ExpressionUtil.toString(this, getValue());
-        }else{
-            return getText();
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null) {
+            return ExpressionUtil.toString(this, getValue(), lang);
+        } else {
+            return super.getLabelText(lang);
         }
     }
 }

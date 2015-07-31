@@ -3,34 +3,37 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class EqualityComparisonOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind>{
+public class EqualityComparisonOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind> {
 
     private Collection<OperatorKind> _operators = null;
 
     public EqualityComparisonOperatorRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, "??");
+        super(ruleLine, null);
         _operators = new ArrayList<OperatorKind>();
         _operators.add(OperatorKind.EQUALITY);
         _operators.add(OperatorKind.INEQUAL);
     }
 
-    public String getResolvedName(OperatorKind item) {
-        if (item!=null){
+    @Override
+    public String getResolvedName(OperatorKind item, String language) {
+        if (item != null) {
             return item.getSymbol();
-        }else{
+        } else {
             return null;
         }
     }
 
-    public String getResolvedDescription(OperatorKind item) {
-        if (item!=null){
+    @Override
+    public String getResolvedDescription(OperatorKind item, String language) {
+        if (item != null) {
             return item.getName();
-        }else{
+        } else {
             return null;
         }
     }
@@ -39,16 +42,29 @@ public class EqualityComparisonOperatorRuleLineElement extends RuleLineElementWi
         return _operators;
     }
 
-    public String toString(){
-        if (getValue()!=null){
-            switch(getValue()){
-                case EQUALITY: return OpenEHRLanguageManager.getMessage("EqualsRLE");
-                case INEQUAL: return OpenEHRLanguageManager.getMessage("NotEqualsRLE");
-                default: return "??";
+    @Override
+    public String toString() {
+        return getOperatorText(UserConfigurationManager.getLanguage());
+    }
+
+    private String getOperatorText(String language) {
+        if (getValue() != null) {
+            switch (getValue()) {
+                case EQUALITY:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("EqualsRLE", language);
+                case INEQUAL:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("NotEqualsRLE", language);
+                default:
+                    return "??";
             }
-        }else{
+        } else {
             return "??";
         }
+    }
+
+    @Override
+    public String getLabelTextHTML(String lang) {
+        return getOperatorText(lang);
     }
 }
 /*

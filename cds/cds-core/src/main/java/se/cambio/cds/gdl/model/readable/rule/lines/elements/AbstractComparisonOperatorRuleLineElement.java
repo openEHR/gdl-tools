@@ -8,31 +8,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind>{
+public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind> {
 
     private Collection<OperatorKind> _operators = null;
 
     public AbstractComparisonOperatorRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, "??");
+        super(ruleLine, null);
         _operators = new ArrayList<OperatorKind>();
     }
 
-    protected void addOperator(OperatorKind ok){
+    protected void addOperator(OperatorKind ok) {
         _operators.add(ok);
     }
 
-    public String getResolvedName(OperatorKind item) {
-        if (item!=null){
+    @Override
+    public String getResolvedName(OperatorKind item, String language) {
+        if (item != null) {
             return item.getSymbol();
-        }else{
+        } else {
             return null;
         }
     }
 
-    public String getResolvedDescription(OperatorKind item) {
-        if (item!=null){
+    @Override
+    public String getResolvedDescription(OperatorKind item, String language) {
+        if (item != null) {
             return item.getName();
-        }else{
+        } else {
             return null;
         }
     }
@@ -41,27 +43,32 @@ public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLine
         return _operators;
     }
 
-    public String toString(){
-        if (getValue()!=null){
-            switch(getValue()){
-                case EQUALITY: return OpenEHRLanguageManager.getMessage("EqualsRLE");
-                case INEQUAL: return OpenEHRLanguageManager.getMessage("NotEqualsRLE");
-                case LESS_THAN: return OpenEHRLanguageManager.getMessage("LessThanRLE");
-                case LESS_THAN_OR_EQUAL: return OpenEHRLanguageManager.getMessage("LessThanOrEqualsRLE");
-                case GREATER_THAN: return OpenEHRLanguageManager.getMessage("GreaterThanRLE");
-                case GREATER_THAN_OR_EQUAL: return OpenEHRLanguageManager.getMessage("GreaterThanOrEqualsRLE");
-                case IS_A: return OpenEHRLanguageManager.getMessage("IsARLE");
-                case IS_NOT_A: return OpenEHRLanguageManager.getMessage("IsNotARLE");
-                default: return "??";
+    @Override
+    public String getLabelText(String language) {
+        if (getValue() != null) {
+            switch (getValue()) {
+                case EQUALITY:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("EqualsRLE", language);
+                case INEQUAL:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("NotEqualsRLE", language);
+                case LESS_THAN:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("LessThanRLE", language);
+                case LESS_THAN_OR_EQUAL:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("LessThanOrEqualsRLE", language);
+                case GREATER_THAN:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("GreaterThanRLE", language);
+                case GREATER_THAN_OR_EQUAL:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("GreaterThanOrEqualsRLE", language);
+                case IS_A:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("IsARLE", language);
+                case IS_NOT_A:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("IsNotARLE", language);
+                default:
+                    return "??";
             }
-        }else{
+        } else {
             return "??";
         }
-    }
-
-    @Override
-    public String toHTMLString(String lang) {
-        return toString();
     }
 }
 /*

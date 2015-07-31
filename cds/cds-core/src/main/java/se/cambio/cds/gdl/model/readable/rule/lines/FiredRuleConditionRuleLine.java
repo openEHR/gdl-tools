@@ -19,7 +19,7 @@ public class FiredRuleConditionRuleLine extends ExpressionRuleLine implements Co
                 CDSLanguageManager.getMessage("FiredRuleConditionDesc"));
         firedRuleReferenceRuleElement = new FiredRuleReferenceRuleElement(this);
         firedRuleOperatorRuleLineElement = new FiredRuleOperatorRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(CDSLanguageManager.getMessage("Rule")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("Rule"));
         getRuleLineElements().add(firedRuleReferenceRuleElement);
         getRuleLineElements().add(firedRuleOperatorRuleLineElement);
     }

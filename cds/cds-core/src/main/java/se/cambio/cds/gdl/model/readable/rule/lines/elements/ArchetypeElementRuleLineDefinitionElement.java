@@ -11,36 +11,37 @@ import se.cambio.openehr.util.UserConfigurationManager;
 public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeElementVO> {
 
     public ArchetypeElementRuleLineDefinitionElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
+        super(ruleLine, "Element");
     }
 
     public ArchetypeReference getArchetypeReference() {
-        if (getParentRuleLine() instanceof ArchetypeReferenceRuleLine){
-            return ((ArchetypeReferenceRuleLine)getParentRuleLine()).getArchetypeReference();
-        }else{
+        if (getParentRuleLine() instanceof ArchetypeReferenceRuleLine) {
+            return ((ArchetypeReferenceRuleLine) getParentRuleLine()).getArchetypeReference();
+        } else {
             return null;
         }
     }
 
     @Override
-    public String getDescription() {
-        if (getValue()==null){
-            return OpenEHRLanguageManager.getMessage("Element");
-        }else{
+    public String getLabelDescription(String lang) {
+        if (getValue() == null) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("Element", lang);
+        } else {
             return ArchetypeReferences.getHTMLTooltip(getValue(), getArchetypeReference());
         }
     }
 
-    public String getDomainId(){
+    public String getDomainId() {
         return getArchetypeReference().getIdDomain();
     }
 
-    public String toString(){
-        if (getValue()!=null){
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null) {
             String name = getArchetypeManager().getArchetypeElements().getText(getValue(), UserConfigurationManager.getLanguage());
             return name;
-        }else{
-            return getText();
+        } else {
+            return super.getLabelText(lang);
         }
     }
 }

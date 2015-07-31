@@ -2,7 +2,9 @@ package se.cambio.openehr.util;
 
 import se.cambio.openehr.util.misc.UTF8Control;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -12,57 +14,97 @@ public final class OpenEHRLanguageManager {
 
     private static OpenEHRLanguageManager _instance;
 
-    private ResourceBundle _resource = null;
+    private Map<String, ResourceBundle> _resourceMap = null;
     public static final String MESSAGES_BUNDLE = "se.cambio.openehr.view.messages.Messages";
-    public String _lng = null;
+    private String language;
+    private String country;
 
-    private OpenEHRLanguageManager(){
-        _lng = UserConfigurationManager.getLanguage();
-        String country = UserConfigurationManager.getCountryCode();
-        _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE,new Locale(_lng,country), new UTF8Control());
+    private OpenEHRLanguageManager() {
+        language = UserConfigurationManager.getLanguage();
+        country = UserConfigurationManager.getCountryCode();
+        _resourceMap = new HashMap<String, ResourceBundle>();
     }
-    public static void refreshConfig(){
+
+    private ResourceBundle getResourceBundle() {
+        return getResourceBundle(language);
+    }
+
+    private ResourceBundle getResourceBundle(String language) {
+        if (language == null) {
+            return getResourceBundle();
+        }
+        ResourceBundle resourceBundle = _resourceMap.get(language);
+        if (resourceBundle == null) {
+            try {
+                resourceBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());
+            } catch (Exception e) {
+                if (!this.language.equals(language)) {
+                    resourceBundle = getResourceBundle();
+                }
+                ExceptionHandler.handle(e);
+            }
+            _resourceMap.put(language, resourceBundle);
+        }
+        return resourceBundle;
+    }
+
+    public static void refreshConfig() {
         _instance = null;
         getDelegate();
     }
 
     public static String getMessage(String key) {
+        return getMessageWithLanguage(key, getDelegate().getLanguage());
+    }
+
+    public static String getMessageWithLanguage(String key, String language) {
         try {
-            return getDelegate()._resource.getString(key);
+            return getDelegate().getResourceBundle(language).getString(key);
         } catch (MissingResourceException e) {
             ExceptionHandler.handle(e);
             return "ERROR: Text not Found!";
         }
     }
 
-    public static String getMessage(String key,String data1) {
-        String s = getDelegate()._resource.getString(key);
-        int i = s.indexOf("$0");
-        if (i>=0&&i<s.length()){
-            String s1 = s.substring(0,i);
-            String s2 = s.substring(i+2,s.length());
-            return s1+data1+s2;
-        }else return s;
+    public static String getMessage(String key, String data1) {
+        return getMessageWithLanguage(key, data1, getDelegate().getLanguage());
     }
 
-    public static String getMessage(String key,String [] data) {
-        String s = getDelegate()._resource.getString(key);
-        for (int i=0;i<data.length && i<10;i++){
-            int index = s.indexOf("$"+i);
-            String s1 = s.substring(0,index);
-            String s2 = s.substring(index+2,s.length());
-            s = s1+data[i]+s2;
+    public static String getMessageWithLanguage(String key, String data1, String language) {
+        String s = getDelegate().getResourceBundle(language).getString(key);
+        int i = s.indexOf("$0");
+        if (i >= 0 && i < s.length()) {
+            String s1 = s.substring(0, i);
+            String s2 = s.substring(i + 2, s.length());
+            return s1 + data1 + s2;
+        } else return s;
+    }
+
+    public static String getMessage(String key, String[] data) {
+        return getMessageWithLanguage(key, data, getDelegate().getLanguage());
+    }
+
+    public static String getMessageWithLanguage(String key, String[] data, String language) {
+        String s = getDelegate().getResourceBundle(language).getString(key);
+        for (int i = 0; i < data.length && i < 10; i++) {
+            int index = s.indexOf("$" + i);
+            String s1 = s.substring(0, index);
+            String s2 = s.substring(index + 2, s.length());
+            s = s1 + data[i] + s2;
         }
         return s;
     }
 
     private static OpenEHRLanguageManager getDelegate() {
-        if (_instance==null){
+        if (_instance == null) {
             _instance = new OpenEHRLanguageManager();
         }
         return _instance;
     }
 
+    public String getLanguage() {
+        return language;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

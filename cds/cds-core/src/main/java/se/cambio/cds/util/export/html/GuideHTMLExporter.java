@@ -3,6 +3,7 @@ package se.cambio.cds.util.export.html;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -24,11 +25,12 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
         String lang = getLanguage();
         ReadableGuide readableGuide = new GuideImporter(getArchetypeManager()).importGuide(getEntity(), lang);
         Collection<String> htmlReadableRules = getHTMLReadableRules(readableGuide, lang);
+        Collection<String> htmlRuleLines = getHTMLRuleLines(readableGuide.getPreconditionRuleLines().getRuleLines(), lang);
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("guide", getEntity());
         objectMap.put("guide_details", getEntity().getDescription().getDetails().get(lang));
         objectMap.put("guide_definitions", readableGuide);
-        objectMap.put("guide_preconditions", readableGuide.getPreconditionRuleLines().getRuleLines());
+        objectMap.put("guide_preconditions", htmlRuleLines);
         objectMap.put("guide_rules", htmlReadableRules);
         objectMap.put("guide_terms", getEntity().getOntology().getTermDefinitions().get(lang).getTerms());
         return objectMap;
@@ -42,6 +44,13 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
         return htmlReadableRules;
     }
 
+    private static Collection<String> getHTMLRuleLines(Collection<RuleLine> ruleLines, String lang){
+        Collection<String> htmlRuleLine = new ArrayList<String>();
+        for(RuleLine ruleLine: ruleLines){
+            htmlRuleLine.add(ruleLine.toHTMLString(lang));
+        }
+        return htmlRuleLine;
+    }
 
     @Override
     public Map<String, String> getEntityTextMap() {

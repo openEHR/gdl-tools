@@ -28,9 +28,9 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("SetElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("ToRLE"));
         getRuleLineElements().add(archetypeDataValueRuleLineElement);
     }
 

@@ -5,73 +5,64 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeElementsUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 public class ArchetypeElementRuleLineElement extends RuleLineElementWithValue<GTCodeRuleLineElement> {
 
     public ArchetypeElementRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
+        super(ruleLine, "Element");
     }
 
     public ArchetypeReference getArchetypeReference() {
         ArchetypeElementInstantiationRuleLine aeirl = getArchetypeElementInstantiationRuleLine();
-        if (aeirl!=null){
+        if (aeirl != null) {
             return aeirl.getArchetypeReference();
-        }else{
+        } else {
             return null;
         }
     }
 
-    public ArchetypeElementVO getArchetypeElementVO(){
+    public ArchetypeElementVO getArchetypeElementVO() {
         ArchetypeElementInstantiationRuleLine aeirl = getArchetypeElementInstantiationRuleLine();
-        if (aeirl!=null){
+        if (aeirl != null) {
             return aeirl.getArchetypeElement();
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
-    public String getDescription() {
-        if (getValue()!=null && getValue().getValue()!=null){
-            if (getArchetypeElementVO()!=null && getArchetypeElementVO().getIdArchetype()!=null){
+    public String getLabelDescription(String lang) {
+        if (getValue() != null && getValue().getValue() != null) {
+            if (getArchetypeElementVO() != null && getArchetypeElementVO().getIdArchetype() != null) {
                 return ReadableArchetypeElementsUtil.getHTMLTooltip(getArchetypeElementInstantiationRuleLine());
-            }else{
-                return getText();
+            } else {
+                return super.getLabelDescription(lang);
             }
-        }else{
-            return getText(); //currentDateTime
+        } else {
+            return super.getLabelDescription(lang); //currentDateTime
         }
     }
 
     private ArchetypeElementInstantiationRuleLine getArchetypeElementInstantiationRuleLine() {
-        if (getValue()!=null && getValue().getParentRuleLine() instanceof ArchetypeElementInstantiationRuleLine){
-            return ((ArchetypeElementInstantiationRuleLine)getValue().getParentRuleLine());
-        }else{
+        if (getValue() != null && getValue().getParentRuleLine() instanceof ArchetypeElementInstantiationRuleLine) {
+            return ((ArchetypeElementInstantiationRuleLine) getValue().getParentRuleLine());
+        } else {
             return null;
         }
     }
 
-    public String getDomainId(){
+    public String getDomainId() {
         ArchetypeReference ar = getArchetypeReference();
-        if (ar!=null){
+        if (ar != null) {
             return ar.getIdDomain();
-        }else {
+        } else {
             return null;
-        }
-    }
-
-    public String toString(){
-        if (getValue()!=null){
-            return getValue().toString();
-        }else{
-            return getText();
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
     }
 }
 /*

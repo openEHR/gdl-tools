@@ -18,8 +18,8 @@ public final class CDSLanguageManager {
 
     private Map<String, ResourceBundle> _resourceMap = null;
     private static final String MESSAGES_BUNDLE = "se.cambio.cds.view.messages.Messages";
-    private static String language;
-    private static String country;
+    private String language;
+    private String country;
 
     private CDSLanguageManager() {
         language = UserConfigurationManager.getLanguage();
@@ -56,7 +56,7 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessage(String key) {
-        return getMessageWithLanguage(key, language);
+        return getMessageWithLanguage(key, getDelegate().getLanguage());
     }
 
     public static String getMessageWithLanguage(String key, String language) {
@@ -69,7 +69,7 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessage(String key, String data1) {
-        return getMessageWithLanguage(key, data1, language);
+        return getMessageWithLanguage(key, data1, getDelegate().getLanguage());
     }
 
     public static String getMessageWithLanguage(String key, String data1, String language) {
@@ -83,7 +83,7 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessage(String key, String[] data) {
-        return getMessageWithLanguage(key, data, language);
+        return getMessageWithLanguage(key, data, getDelegate().getLanguage());
     }
 
     public static String getMessageWithLanguage(String key, String[] data, String language) {
@@ -104,6 +104,10 @@ public final class CDSLanguageManager {
         return _instance;
     }
 
+
+    public String getLanguage() {
+        return language;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

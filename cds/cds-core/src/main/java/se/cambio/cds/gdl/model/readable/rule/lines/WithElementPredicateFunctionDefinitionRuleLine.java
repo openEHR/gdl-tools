@@ -29,7 +29,7 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         functionRuleLineElement = new PredicateComparisonFunctionRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(functionRuleLineElement);
     }

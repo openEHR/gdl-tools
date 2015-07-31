@@ -22,7 +22,7 @@ public class ArchetypeInstantiationRuleLine extends RuleLine implements Archetyp
                 OpenEHRLanguageManager.getMessage("ArchetypeInstantiationDesc"));
         archetypeReferenceRuleLineDefinitionElement = new ArchetypeReferenceRuleLineDefinitionElement(this);
         gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("InstantiateArchetypeRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("InstantiateArchetypeRLE"));
         getRuleLineElements().add(archetypeReferenceRuleLineDefinitionElement);
     }
 

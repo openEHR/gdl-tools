@@ -18,11 +18,11 @@ public class CheckContainerRuleLine extends RuleLine implements DefinitionsRuleL
 	archetypeElementRuleLineElement1 = new ArchetypeElementRuleLineElement(this);
 	archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 	
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElemntsRLE")));
+	getRuleLineElements().add(new StaticTextRuleLineElement("ElemntsRLE"));
 	getRuleLineElements().add(archetypeElementRuleLineElement1);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("andRLE")));
+	getRuleLineElements().add(new StaticTextRuleLineElement("andRLE"));
 	getRuleLineElements().add(archetypeElementRuleLineElement2);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("areOnTheSameContainerRLE")));
+	getRuleLineElements().add(new StaticTextRuleLineElement("areOnTheSameContainerRLE"));
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -5,6 +5,7 @@ import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
 
@@ -42,50 +43,51 @@ public abstract class RuleLine {
         return ruleLineElements;
     }
 
-    public String toString(){
+    public String toString() {
+        String language = UserConfigurationManager.getLanguage(); //TODO Remove
         StringBuffer sb = new StringBuffer();
         int i = 0;
         for (RuleLineElement ruleLineElement : ruleLineElements) {
-            sb.append(ruleLineElement.toString());
+            sb.append(ruleLineElement.getLabelText(language));
             i++;
-            if (i<ruleLineElements.size()){
+            if (i < ruleLineElements.size()) {
                 sb.append(" ");
             }
         }
         return sb.toString();
     }
 
-    public String toHTMLString(String lang){
+    public String toHTMLString(String lang) {
         return toHTMLString(0, lang);
     }
 
-    public String toHTMLString(int level, String lang){
+    public String toHTMLString(int level, String lang) {
         StringBuffer sb = new StringBuffer();
         int i = 0;
         sb.append(getLevelSpace(level));
         for (RuleLineElement ruleLineElement : ruleLineElements) {
-            sb.append(ruleLineElement.toHTMLString(lang));
+            sb.append(ruleLineElement.getLabelTextHTML(lang));
             i++;
-            if (i<ruleLineElements.size()){
+            if (i < ruleLineElements.size()) {
                 sb.append(" ");
             }
         }
         return sb.toString();
     }
 
-    protected String getLevelSpace(int level){
+    protected String getLevelSpace(int level) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < level; i++) {
-            sb.append("&nbsp&nbsp&nbsp&nbsp");
+            sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
         }
         return sb.toString();
     }
 
-    public boolean isCommented(){
+    public boolean isCommented() {
         return commented;
     }
 
-    public void setCommented(boolean commented){
+    public void setCommented(boolean commented) {
         this.commented = commented;
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             ruleLine.setCommented(commented);
@@ -95,6 +97,7 @@ public abstract class RuleLine {
     public RuleLine getParentRuleLine() {
         return parentRuleLine;
     }
+
     private void setParentRuleLine(RuleLine parentRuleLine) {
         this.parentRuleLine = parentRuleLine;
     }
@@ -106,19 +109,19 @@ public abstract class RuleLine {
         return childrenRuleLines;
     }
 
-    public void addChildRuleLine(RuleLine ruleLine){
+    public void addChildRuleLine(RuleLine ruleLine) {
         getChildrenRuleLines().add(ruleLine);
         ruleLine.setParentRuleLine(this);
     }
 
-    public void detachFromParent(){
+    public void detachFromParent() {
         this.parentRuleLine.getChildrenRuleLines().remove(this);
         this.parentRuleLine = null;
     }
 
     public ReadableGuide getReadableGuide() {
-        if (readableGuide==null){
-            if (parentRuleLine!=null){
+        if (readableGuide == null) {
+            if (parentRuleLine != null) {
                 readableGuide = parentRuleLine.getReadableGuide();
             }
         }
@@ -130,7 +133,7 @@ public abstract class RuleLine {
         return getReadableGuide().getTermDefinition();
     }
 
-    public ArchetypeManager getArchetypeManager(){
+    public ArchetypeManager getArchetypeManager() {
         return getReadableGuide().getArchetypeManager();
     }
 }

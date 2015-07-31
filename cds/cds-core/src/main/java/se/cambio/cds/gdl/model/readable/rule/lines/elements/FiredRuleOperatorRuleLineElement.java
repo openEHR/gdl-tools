@@ -10,21 +10,23 @@ import java.util.Collection;
 public class FiredRuleOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind>{
 
     public FiredRuleOperatorRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, "??");
+        super(ruleLine, null);
     }
 
-    public String getResolvedName(OperatorKind operatorKind) {
+    @Override
+    public String getResolvedName(OperatorKind operatorKind, String lang) {
         if (OperatorKind.FIRED.equals(operatorKind)){
-            return CDSLanguageManager.getMessage("HasBeenFiredRLE");
+            return CDSLanguageManager.getMessageWithLanguage("HasBeenFiredRLE", lang);
         }else if (OperatorKind.NOT_FIRED.equals(operatorKind)){
-            return CDSLanguageManager.getMessage("HasNotBeenFiredRLE");
+            return CDSLanguageManager.getMessageWithLanguage("HasNotBeenFiredRLE", lang);
         } else {
             throw new RuntimeException("Unknown operator '" + operatorKind + "'");
         }
     }
 
-    public String getResolvedDescription(OperatorKind item) {
-        return getResolvedName(item);
+    @Override
+    public String getResolvedDescription(OperatorKind item, String lang) {
+        return getResolvedName(item, lang);
     }
 
     @Override
@@ -35,17 +37,13 @@ public class FiredRuleOperatorRuleLineElement extends RuleLineElementWithValue<O
         return items;
     }
 
-    public String toString(){
-        if (getValue() != null){
-            return getResolvedName(getValue());
-        }else{
-            return super.getText();
-        }
-    }
-
     @Override
-    public String toHTMLString(String lang) {
-        return toString();
+    public String getLabelText(String language){
+        if (getValue() != null){
+            return getResolvedName(getValue(), language);
+        }else{
+            return super.getLabelText(language);
+        }
     }
 }
 /*

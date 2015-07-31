@@ -9,6 +9,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleElement;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class SingleSelectionRuleElementRenderer extends JLabel implements ListCellRenderer {
     private static final long serialVersionUID = 1L;
@@ -35,7 +36,7 @@ public class SingleSelectionRuleElementRenderer extends JLabel implements ListCe
 	}
 	String resolvedName = null;
 	if (value!=null){
-	    resolvedName = _singleSelectionRuleElement.getResolvedName(value);
+	    resolvedName = _singleSelectionRuleElement.getResolvedName(value, UserConfigurationManager.getLanguage());
 	}
 	if (resolvedName != null){
 	    setText(resolvedName);

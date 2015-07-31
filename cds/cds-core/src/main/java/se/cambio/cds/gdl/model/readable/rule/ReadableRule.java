@@ -20,7 +20,7 @@ public class ReadableRule {
 
     private boolean commented = false;
 
-    public ReadableRule(TermDefinition termDefinition, String gtCode, ReadableGuide readableGuide){
+    public ReadableRule(TermDefinition termDefinition, String gtCode, ReadableGuide readableGuide) {
         this.gtCode = gtCode;
         _termDefinition = termDefinition;
         this.readableGuide = readableGuide;
@@ -57,11 +57,11 @@ public class ReadableRule {
         return definitionRuleLine;
     }
 
-    public boolean isCommented(){
+    public boolean isCommented() {
         return commented;
     }
 
-    public void setCommented(boolean commented){
+    public void setCommented(boolean commented) {
         this.commented = commented;
     }
 
@@ -69,30 +69,30 @@ public class ReadableRule {
         return _termDefinition;
     }
 
-    private String getName(String gtCode){
+    private String getName(String gtCode) {
         Term term = getTermDefinition().getTerms().get(gtCode);
-        if (term != null){
+        if (term != null) {
             return term.getText();
-        }else{
-            ExceptionHandler.handle(new Exception("Unknow term for gtCode='"+gtCode+"'"));
+        } else {
+            ExceptionHandler.handle(new Exception("Unknown term for gtCode='" + gtCode + "'"));
             return "*UNKNOWN*";
         }
     }
 
-    public String toString(){
+    public String toString() {
         return toHTMLString(UserConfigurationManager.getLanguage());
     }
 
-    public String toHTMLString(String lang){
+    public String toHTMLString(String lang) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Rule")+"</font><font> "+getName(gtCode)+"</font></b><br>");
-        sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("When")+"</font></b><br>");
+        sb.append("<b><font color='#999999'>" + OpenEHRLanguageManager.getMessageWithLanguage("Rule", lang) + "</font><font> " + getName(gtCode) + "</font></b><br>");
+        sb.append("<b><font color='#999999'>" + OpenEHRLanguageManager.getMessageWithLanguage("When", lang) + "</font></b><br>");
         for (RuleLine ruleLine : getConditionRuleLines().getRuleLines()) {
-            sb.append(ruleLine.toHTMLString(1, lang)+"<br>");
+            sb.append(ruleLine.toHTMLString(1, lang) + "<br>");
         }
-        sb.append("<b><font color='#999999'>"+OpenEHRLanguageManager.getMessage("Then")+"</font></b><br>");
+        sb.append("<b><font color='#999999'>" + OpenEHRLanguageManager.getMessageWithLanguage("Then", lang) + "</font></b><br>");
         for (RuleLine ruleLine : getActionRuleLines().getRuleLines()) {
-            sb.append(ruleLine.toHTMLString(1, lang)+"<br>");
+            sb.append(ruleLine.toHTMLString(1, lang) + "<br>");
         }
         return sb.toString();
     }

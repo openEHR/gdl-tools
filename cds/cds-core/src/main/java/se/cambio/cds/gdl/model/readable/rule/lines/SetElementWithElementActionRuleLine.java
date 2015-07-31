@@ -22,9 +22,9 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("SetElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("ToRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement2);
     }
 
@@ -44,9 +44,7 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
         Variable varAux = new Variable(
                 archetypeElementRuleLineElement2.getValue().getValue(),
                 null, name);
-        return new AssignmentExpression(
-                var,
-                varAux);//TODO
+        return new AssignmentExpression(var, varAux);//TODO
     }
     public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
         return archetypeElementRuleLineElement;
