@@ -2,7 +2,7 @@ package se.cambio.cds.model.facade.execution.delegate;
 
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -20,7 +20,7 @@ public interface RuleEngineFacadeDelegate {
     RuleExecutionResult execute(
             String ehrId,
             List<GuideDTO> guides,
-            Collection<ElementInstance> elementInstances,
+            Collection<ArchetypeReference> archetypeReferences,
             Calendar date) throws InternalErrorException, PatientNotFoundException;
 
     void cancelExecution();

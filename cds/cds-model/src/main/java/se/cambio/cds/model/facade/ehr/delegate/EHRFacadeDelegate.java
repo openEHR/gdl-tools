@@ -4,7 +4,6 @@ import se.cambio.cds.model.facade.ehr.util.EHRDataStream;
 import se.cambio.cds.model.facade.ehr.vo.EHREventVO;
 import se.cambio.cds.model.facade.ehr.vo.EHRTriggerVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.InvalidAQLForEHRIdsException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -21,38 +20,38 @@ import java.util.Map;
  */
 public interface EHRFacadeDelegate {
 
-    public String getServerHost();
+    String getServerHost();
 
-    public Integer getServerPort();
+    Integer getServerPort();
 
-    public Map<String,String> getEHRIds(Collection<String> externalEHRIds)
+    Map<String,String> getEHRIds(Collection<String> externalEHRIds)
 	    throws InternalErrorException, PatientNotFoundException; 
 
-    public Collection<String> queryForEHRIds(String aql) 
+    Collection<String> queryForEHRIds(String aql)
 	    throws InternalErrorException, InvalidAQLForEHRIdsException;
 
-    public List<List<Object>> query(String aql)
+    List<List<Object>> query(String aql)
             throws InternalErrorException, InvalidAQLForEHRIdsException;
 
-    public EHRDataStream queryStream(String aql)
+    EHRDataStream queryStream(String aql)
             throws InternalErrorException, InvalidAQLForEHRIdsException;
 
-    public Map<String, Collection<ElementInstance>> queryEHRElements(
+    Map<String, Collection<ArchetypeReference>> queryEHRElements(
 	    Collection<String> ehrIds,
 	    Collection<ArchetypeReference> archetypeReferences,
         Calendar date)
 		    throws InternalErrorException, PatientNotFoundException;    
    
-    public boolean storeCDSResults(
+    boolean storeCDSResults(
             String ehrId,
             Collection<String> guideIds,
             Collection<ArchetypeReference> archetypeReferences)
 		    throws InternalErrorException, PatientNotFoundException;
     
-    public void upsertEHRTriggerVO(EHRTriggerVO ehrTriggerVO)
+    void upsertEHRTriggerVO(EHRTriggerVO ehrTriggerVO)
 	    throws InternalErrorException;
 
-    public EHREventVO getEHREventFromQueueMessage(Object message)
+    EHREventVO getEHREventFromQueueMessage(Object message)
         throws InternalErrorException;
 
     String getEhrDataHashKey(String ehrId) throws InternalErrorException;

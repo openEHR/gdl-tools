@@ -66,10 +66,10 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
                 currentDateTime = Calendar.getInstance();
             }
             GuideManager guideManager = new GuideManager(guideDTOs);
-            Collection<ElementInstance> elementInstances =
-                    CDSManager.getElementInstances(null, guideIds, archetypeReferences, guideManager, currentDateTime);
+            Collection<ArchetypeReference> ehrArchetypeReferences =
+                    CDSManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
             _refd = CDSSessionManager.getRuleEngineFacadeDelegate();
-            RuleExecutionResult result = _refd.execute(null, guideDTOs, elementInstances, currentDateTime);
+            RuleExecutionResult result = _refd.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
             //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
             return result;
         }catch(Throwable e){

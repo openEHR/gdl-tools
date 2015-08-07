@@ -142,9 +142,9 @@ public class BasicGDLTest extends GDLTestCase {
         guideIds.add("test_med_definition");
         GuideManager guideManager = generateGuideManager(guideIds);
         try {
-            Collection<ElementInstance> elementInstances =
-                    CDSManager.getElementInstances(null, guideIds, ars, guideManager, Calendar.getInstance());
-            assertEquals(9,elementInstances.size());
+            Collection<ArchetypeReference> archetypeReferences =
+                    CDSManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
+            assertEquals(9,archetypeReferences.size());
         } catch (PatientNotFoundException e) {
             e.printStackTrace();
         } catch (InternalErrorException e) {
@@ -169,8 +169,12 @@ public class BasicGDLTest extends GDLTestCase {
         guideIds.add("test_med_definition_with_predicates2");
         GuideManager guideManager = generateGuideManager(guideIds);
         try {
-            Collection<ElementInstance> elementInstances =
-                    CDSManager.getElementInstances(null, guideIds, ars, guideManager, Calendar.getInstance());
+            Collection<ArchetypeReference> archetypeReferences =
+                    CDSManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
+            Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
+            for (ArchetypeReference archetypeReference : archetypeReferences) {
+                elementInstances.addAll(archetypeReference.getElementInstancesMap().values());
+            }
             assertEquals(18, elementInstances.size());
             boolean predicateForBValuesExists = false;
             boolean predicateForGenericEqualsNullValuesExists = false;

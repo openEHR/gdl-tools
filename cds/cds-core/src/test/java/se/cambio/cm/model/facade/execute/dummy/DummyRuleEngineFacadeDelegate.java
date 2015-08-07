@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -18,7 +18,7 @@ import java.util.List;
 @Profile("rule-dummy-engine")
 public class DummyRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
     @Override
-    public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ElementInstance> elementInstances, Calendar date) throws InternalErrorException, PatientNotFoundException {
+    public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) throws InternalErrorException, PatientNotFoundException {
         return null;
     }
 

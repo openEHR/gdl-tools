@@ -23,7 +23,7 @@ import java.util.*;
 
 public class CDSManager {
 
-    public static Collection<ElementInstance> getElementInstances(
+    public static Collection<ArchetypeReference> getArchetypeReferences(
             String ehrId,
             Collection<String> guideIds,
             Collection<ArchetypeReference> data,
@@ -33,7 +33,7 @@ public class CDSManager {
 
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         ElementInstanceCollection eic = queryEHRForElements(ehrId, data, guideManager, date, completeEIC);
-        return getElementInstancesAndCheckMissing(eic, completeEIC, guideManager, date);
+        return getArchetypeReferencesAndCheckMissing(eic, completeEIC, guideManager, date);
     }
 
     public static Collection<ElementInstance> getElementInstancesWithoutMissing(String ehrId, Collection<String> guideIds, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date) throws InternalErrorException, PatientNotFoundException {
@@ -49,14 +49,10 @@ public class CDSManager {
         } else {
             if (ehrId != null) {
                 Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
-                Map<String, Collection<ElementInstance>> elementInstanceMap =
+                Map<String, Collection<ArchetypeReference>> ehrDataMap =
                         getEhrService().queryEHRElements(Collections.singleton(ehrId), ars, date);
-                Collection<ElementInstance> elementInstances = elementInstanceMap.get(ehrId);
-                if (elementInstances != null) {
-                    Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-                    for (ElementInstance elementInstance : elementInstances) {
-                        archetypeReferences.add(elementInstance.getArchetypeReference());
-                    }
+                Collection<ArchetypeReference> archetypeReferences = ehrDataMap.get(ehrId);
+                if (archetypeReferences != null) {
                     eic.addAll(archetypeReferences, null);
                 }
             }
@@ -68,26 +64,26 @@ public class CDSManager {
         return CDSSessionManager.getEHRFacadeDelegate();
     }
 
-    public static Map<String, Collection<ElementInstance>> getElementInstancesForPopulation(
+    public static Map<String, Collection<ArchetypeReference>> getElementInstancesForPopulation(
             Collection<String> ehrIds,
             Collection<String> guideIds,
             GuideManager guideManager,
             Calendar date) throws PatientNotFoundException, InternalErrorException {
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
-        Map<String, Collection<ElementInstance>> ehrMap =
+        Map<String, Collection<ArchetypeReference>> ehrMap =
                 getEhrService().queryEHRElements(ehrIds, ars, date);
-        Map<String, Collection<ElementInstance>> cdsEIMap = new HashMap<String, Collection<ElementInstance>>();
+        Map<String, Collection<ArchetypeReference>> cdsEIMap = new HashMap<String, Collection<ArchetypeReference>>();
         for (String ehrId : ehrIds) {
             ElementInstanceCollection eic = new ElementInstanceCollection();
             //TODO If the data existed in ehrData, it should not query for it again to EHR
             if (!ars.isEmpty()) {
-                Collection<ElementInstance> eis = ehrMap.get(ehrId);
-                if (eis != null) {
-                    eic.addAll(eis);
+                Collection<ArchetypeReference> archetypeReferences = ehrMap.get(ehrId);
+                if (archetypeReferences != null) {
+                    eic.addAll(archetypeReferences, null);
                 }
             }
-            cdsEIMap.put(ehrId, getElementInstancesAndCheckMissing(eic, completeEIC, guideManager, date));
+            cdsEIMap.put(ehrId, getArchetypeReferencesAndCheckMissing(eic, completeEIC, guideManager, date));
         }
         return cdsEIMap;
     }
@@ -105,10 +101,10 @@ public class CDSManager {
         return ars;
     }
 
-    private static Collection<ElementInstance> getElementInstancesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
+    private static Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
             throws InternalErrorException {
         checkForMissingElements(eic, completeEIC, guideManager, date);
-        return eic.getAllElementInstances();
+        return eic.getAllArchetypeReferences();
     }
 
     public static void checkForMissingElements(

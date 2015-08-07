@@ -149,9 +149,9 @@ public abstract class GDLTestCase {
             ElementInstanceCollection eic = new ElementInstanceCollection();
             eic.addAll(elementInstances);
             CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
-            Collection<ElementInstance> eis = eic.getAllElementInstances();
+            Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();
             System.out.println("Executing : " + guideIdsSB.toString());
-            rer = droolsREFD.execute(null, guideManager.getAllGuidesDTO(), eis, cal);
+            rer = droolsREFD.execute(null, guideManager.getAllGuidesDTO(), archetypeReferences, cal);
             long execTime = (System.currentTimeMillis() - startTime);
             System.out.println("Executed in: " + execTime + " ms");
             System.out.println("Rules fired: " + rer.getFiredRules().size());

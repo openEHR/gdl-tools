@@ -32,14 +32,13 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
     public RuleExecutionResult execute(
             String ehrId,
             List<GuideDTO> guides,
-            Collection<ElementInstance> elementInstances,
+            Collection<ArchetypeReference> archetypeReferences,
             Calendar date)
             throws InternalErrorException, PatientNotFoundException {
         final HashSet<Object> workingMemoryObjects = new HashSet<Object>();
-        for (ElementInstance elementInstance : elementInstances) {
-            workingMemoryObjects.add(elementInstance);
-            //If repeated, wont duplicate (it's a Set)
-            workingMemoryObjects.add(elementInstance.getArchetypeReference());
+        for (ArchetypeReference archetypeReference : archetypeReferences) {
+            workingMemoryObjects.addAll(archetypeReference.getElementInstancesMap().values());
+            workingMemoryObjects.add(archetypeReference);
         }
 
         final ExecutionLogger executionLogger = new ExecutionLogger();
