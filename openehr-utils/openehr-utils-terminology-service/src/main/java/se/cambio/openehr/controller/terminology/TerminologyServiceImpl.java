@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegateFactory;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
+import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -382,7 +382,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     private CMAdministrationFacadeDelegate getCMAdministrationFacadeDelegate() throws InternalErrorException {
-        return CMAdministrationFacadeDelegateFactory.getDelegate();
+        return OpenEHRSessionManager.getAdministrationFacadeDelegate();
     }
 }
 

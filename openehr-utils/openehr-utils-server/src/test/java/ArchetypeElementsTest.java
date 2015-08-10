@@ -1,25 +1,44 @@
 import org.junit.Before;
 import org.junit.Test;
-import se.cambio.openehr.controller.session.data.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cm.model.configuration.CmPersistenceConfig;
+import se.cambio.openehr.controller.session.data.ArchetypeElements;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.controller.session.data.Clusters;
+import se.cambio.openehr.controller.session.data.CodedTexts;
+import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-03-17
- * Time: 11:02
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = CmPersistenceConfig.class)
+@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public class ArchetypeElementsTest {
 
+    @Value("classpath:/archetypes")
+    Resource archetypesResource;
+
+    @Value("classpath:/templates")
+    Resource templatesResource;
+
+    @Value("classpath:/terminologies")
+    Resource terminologiesResource;
+
     @Before
-    public void loadCM() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, ArchetypeElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
+    public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
     }
 
     @Test

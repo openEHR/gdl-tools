@@ -1,22 +1,31 @@
 package se.cambio.openehr.controller.terminology.ts;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class TerminologyServiceTestBase extends TestCase {
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TerminologyTestConfig.class)
+public class TerminologyServiceTestBase {
     protected TerminologyServiceImpl ts;
     protected static final CodePhrase EN = new CodePhrase("ISO_639-1", "en");
     protected static final CodePhrase SV = new CodePhrase("ISO_639-1", "sv");
     protected static final String SCT = "SNOMED-CT";
     protected static final String ICD10 = "ICD10";
 
-    public TerminologyServiceTestBase() throws URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies1").toURI().getPath());
+    @Before
+    public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
+        BeanProvider.setActiveProfiles("cm-admin-dummy-service", "cm-admin-file-dao");
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies1").toURI().getPath());
         ts = new TerminologyServiceImpl();
     }
 }

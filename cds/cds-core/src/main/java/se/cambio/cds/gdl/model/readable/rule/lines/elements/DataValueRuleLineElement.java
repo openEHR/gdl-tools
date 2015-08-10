@@ -14,46 +14,47 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class DataValueRuleLineElement extends RuleLineElementWithValue<DataValue> {
 
     public DataValueRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("DataValue"));
+        super(ruleLine, "DataValue");
     }
 
     @Override
-    public String getDescription() {
-        if (getValue()!=null){
-            if (getValue() instanceof DvCodedText){
-                CodePhrase cp = ((DvCodedText)getValue()).getDefiningCode();
+    public String getLabelDescription(String lang) {
+        if (getValue() != null) {
+            if (getValue() instanceof DvCodedText) {
+                CodePhrase cp = ((DvCodedText) getValue()).getDefiningCode();
                 Term term = getTerm(cp);
-                if (term!=null){
+                if (term != null) {
                     return term.getDescription();
-                }else{
-                    return ((DvCodedText)getValue()).getValue();
+                } else {
+                    return ((DvCodedText) getValue()).getValue();
                 }
-            }else if (getValue() instanceof DvOrdinal){
-                CodePhrase cp = ((DvOrdinal)getValue()).getSymbol().getDefiningCode();
+            } else if (getValue() instanceof DvOrdinal) {
+                CodePhrase cp = ((DvOrdinal) getValue()).getSymbol().getDefiningCode();
                 Term term = getTerm(cp);
-                if (term!=null){
+                if (term != null) {
                     return term.getDescription();
-                }else{
-                    return ((DvOrdinal)getValue()).getSymbol().getValue();
+                } else {
+                    return ((DvOrdinal) getValue()).getSymbol().getValue();
                 }
             }
         }
-        return OpenEHRLanguageManager.getMessage("DataValue"); //Default
+        return OpenEHRLanguageManager.getMessageWithLanguage("DataValue", lang); //Default
     }
 
-    public String toString(){
-        if (getValue()!=null){
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null) {
             return DVDefSerializer.getReadableValue(getValue(), getParentRuleLine().getTermDefinition());
-        }else{
-            return getText();
+        } else {
+            return super.getLabelText(lang);
         }
     }
 
 
-    private Term getTerm(CodePhrase cp){
-        if (cp.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)){
-            TermDefinition termDefinition =  getParentRuleLine().getTermDefinition();
-            if (termDefinition!=null){
+    private Term getTerm(CodePhrase cp) {
+        if (cp.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)) {
+            TermDefinition termDefinition = getParentRuleLine().getTermDefinition();
+            if (termDefinition != null) {
                 return termDefinition.getTerms().get(cp.getCodeString());
             }
         }
@@ -61,8 +62,8 @@ public class DataValueRuleLineElement extends RuleLineElementWithValue<DataValue
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#00803a'><b>"+toString()+"</b></font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#00803a'><b>" + getLabelText(lang) + "</b></font>";
     }
 }
 /*

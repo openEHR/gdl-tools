@@ -7,7 +7,7 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class IsAOperatorRuleLineElement extends RuleLineElementWithValue<String> implements SingleSelectionRuleElement<String>{
+public class IsAOperatorRuleLineElement extends RuleLineElementWithValue<String> implements SingleSelectionRuleElement<String> {
 
     private static String IS_A_VALUE = "is_a";
     private static String IS_NOT_A_VALUE = "is_not_a";
@@ -15,31 +15,34 @@ public class IsAOperatorRuleLineElement extends RuleLineElementWithValue<String>
     private ArrayList<String> _codes = null;
 
     public IsAOperatorRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, "??");
+        super(ruleLine, null);
         _codes = new ArrayList<String>();
         _codes.add(IS_A_VALUE);
         _codes.add(IS_NOT_A_VALUE);
     }
 
-    public String getResolvedName(String item) {
-        if (IS_A_VALUE.equals(item)){
-            return OpenEHRLanguageManager.getMessage("IsARLE");
-        }else if (IS_NOT_A_VALUE.equals(item)){
-            return OpenEHRLanguageManager.getMessage("IsNotARLE");
-        }else{
+    @Override
+    public String getResolvedName(String item, String lang) {
+        if (IS_A_VALUE.equals(item)) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("IsARLE", lang);
+        } else if (IS_NOT_A_VALUE.equals(item)) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("IsNotARLE", lang);
+        } else {
             return null;
         }
     }
 
-    public String getResolvedDescription(String item) {
-        return getResolvedName(item);
+    @Override
+    public String getResolvedDescription(String item, String lang) {
+        return getResolvedName(item, lang);
     }
 
-    public String toString(){
-        if (getValue()!=null){
-            return getResolvedName(getValue());
-        }else{
-            return super.getText();
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null) {
+            return getResolvedName(getValue(), lang);
+        } else {
+            return super.getLabelText(lang);
         }
     }
 
@@ -48,26 +51,26 @@ public class IsAOperatorRuleLineElement extends RuleLineElementWithValue<String>
     }
 
     public OperatorKind getOperator() {
-        if (IS_A_VALUE.equals(getValue())){
+        if (IS_A_VALUE.equals(getValue())) {
             return OperatorKind.IS_A;
-        }else if (IS_NOT_A_VALUE.equals(getValue())){
+        } else if (IS_NOT_A_VALUE.equals(getValue())) {
             return OperatorKind.IS_NOT_A;
-        }else{
+        } else {
             return null;
         }
     }
 
-    public void setOperator(OperatorKind operatorKind){
-        if (OperatorKind.IS_A.equals(operatorKind)){
+    public void setOperator(OperatorKind operatorKind) {
+        if (OperatorKind.IS_A.equals(operatorKind)) {
             setValue(IS_A_VALUE);
-        }else if (OperatorKind.IS_NOT_A.equals(operatorKind)){
+        } else if (OperatorKind.IS_NOT_A.equals(operatorKind)) {
             setValue(IS_NOT_A_VALUE);
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#c29700'>"+toString()+"</font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#c29700'>" + getLabelText(lang) + "</font>";
     }
 }
 /*

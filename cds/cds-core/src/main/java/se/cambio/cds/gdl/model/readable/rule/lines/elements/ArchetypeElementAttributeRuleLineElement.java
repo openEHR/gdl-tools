@@ -2,45 +2,36 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 public class ArchetypeElementAttributeRuleLineElement extends RuleLineElementWithValue<ArchetypeElementRuleLineElement> {
 
     private String _attribute = null;
 
     public ArchetypeElementAttributeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("ElementAttribute"));
+        super(ruleLine, "ElementAttribute");
     }
 
     public ArchetypeReference getArchetypeReference() {
         return getValue().getArchetypeReference();
     }
 
-    @Override
-    public String getDescription() {
-        if (getValue()!=null){
-            return getValue().getDescription();
-        }else{
-            return getText();
-        }
-    }
-
-    public String getDomainId(){
+    public String getDomainId() {
         return getArchetypeReference().getIdDomain();
     }
 
-    public String toString(){
-        if (getValue()!=null && getAttribute()!=null){
-            String name = getName(getValue().getValue().getValue());
-            return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
-        }else{
-            return getText();
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null && getAttribute() != null) {
+            String name = getName(getValue().getValue().getValue(), lang);
+            return "\"<b>" + name + "</b><font size=2><sub>" + getAttribute().toUpperCase() + "</sub></font>\"";
+        } else {
+            return super.getLabelText(lang);
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
     }
 
     public String getAttribute() {

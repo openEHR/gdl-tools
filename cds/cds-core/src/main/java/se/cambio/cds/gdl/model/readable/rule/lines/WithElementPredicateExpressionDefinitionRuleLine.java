@@ -35,7 +35,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
             archetypeInstantiationRuleLine.addChildRuleLine(this);
         }
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
         getRuleLineElements().add(archetypeElementAttributeRuleLineDefinitionElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(expressionRuleLineElement);

@@ -1,4 +1,3 @@
-import org.junit.Before;
 import org.junit.Test;
 import se.cambio.cds.controller.guide.SimpleGuideManager;
 import se.cambio.cds.controller.session.data.Guides;
@@ -8,26 +7,15 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertTrue;
 
-public class GTCodeReferenceGenerationTest {
-
-    @Before
-    public void initializeCM() throws URISyntaxException {
-        //Load KM
-        UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("templates").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.GUIDES_FOLDER_KW, GTCodeReferenceGenerationTest.class.getClassLoader().getResource("guidelines").toURI().getPath());
-    }
+public class GTCodeReferenceGenerationTest extends GenericTestBase {
 
     @Test
     public void shouldContainGTCodeReferences() throws InstanceNotFoundException, InternalErrorException {

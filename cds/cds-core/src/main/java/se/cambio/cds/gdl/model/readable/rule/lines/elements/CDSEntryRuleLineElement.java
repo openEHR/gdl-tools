@@ -9,46 +9,47 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class CDSEntryRuleLineElement extends RuleLineElementWithValue<GTCodeRuleLineElement> {
 
     public CDSEntryRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Entry"));
+        super(ruleLine, "Entry");
     }
 
     public ArchetypeReference getArchetypeReference() {
         ArchetypeInstantiationRuleLine airl = getArchetypeInstantiationRuleLine();
-        if (airl!=null){
+        if (airl != null) {
             return airl.getArchetypeReference();
-        }else{
+        } else {
             return null;
         }
     }
 
     private ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-        if (getValue()!=null && getValue().getParentRuleLine() instanceof ArchetypeInstantiationRuleLine){
-            return ((ArchetypeInstantiationRuleLine)getValue().getParentRuleLine());
-        }else{
+        if (getValue() != null && getValue().getParentRuleLine() instanceof ArchetypeInstantiationRuleLine) {
+            return ((ArchetypeInstantiationRuleLine) getValue().getParentRuleLine());
+        } else {
             return null;
         }
     }
 
     @Override
-    public String getDescription() {
-        if (getArchetypeInstantiationRuleLine()==null){
-            return OpenEHRLanguageManager.getMessage("Entry");
-        }else{
+    public String getLabelDescription(String lang) {
+        if (getArchetypeInstantiationRuleLine() == null) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("Entry", lang);
+        } else {
             return ReadableArchetypeReferencesUtil.getHTMLTooltip(getArchetypeInstantiationRuleLine());
         }
     }
 
-    public String toString(){
-        if (getArchetypeInstantiationRuleLine()!=null){
+    @Override
+    public String getLabelText(String lang) {
+        if (getArchetypeInstantiationRuleLine() != null) {
             return getArchetypeInstantiationRuleLine().getIdArchetype();
-        }else{
-            return getText();
+        } else {
+            return super.getLabelText(lang);
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#4f81bd'><b>"+toString()+"</b></font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
     }
 }
 /*

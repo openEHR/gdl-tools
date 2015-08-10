@@ -23,8 +23,8 @@ public class RMElementsTest {
 
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, RMElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, RMElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, RMElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, RMElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
     }
 
     @Test

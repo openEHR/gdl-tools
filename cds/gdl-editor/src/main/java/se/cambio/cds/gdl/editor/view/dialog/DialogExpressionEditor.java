@@ -17,6 +17,7 @@ import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
 import se.cambio.cds.gdl.parser.ExpressionParser;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.dialogs.DialogEditor;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
@@ -34,6 +35,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Reader;
 import java.io.StringReader;
+
 /**
  * @author icorram
  */
@@ -60,9 +62,9 @@ public class DialogExpressionEditor extends DialogEditor {
      * This is the default constructor
      */
     public DialogExpressionEditor(Window owner, ArchetypeElementVO archetypeElementVO, ExpressionRuleLineElement expressionRuleLineElement, boolean inPredicate, ArchetypeReference ar) {
-        super(owner, GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700,400), true, true);
+        super(owner, GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700, 400), true, true);
         _expressionRuleLineElement = expressionRuleLineElement;
-        if (_expressionRuleLineElement.getValue()!=null){
+        if (_expressionRuleLineElement.getValue() != null) {
             _expressionItem = _expressionRuleLineElement.getValue();
             getExpressionEditorTextComponent().setText(ExpressionUtil.getEditableExpressionString(_expressionItem));
         }
@@ -75,21 +77,21 @@ public class DialogExpressionEditor extends DialogEditor {
     /**
      * This method initializes this
      */
-    private  void initialize() {
+    private void initialize() {
         getJPanel().setLayout(new BorderLayout());
         getJPanel().add(getMainPanel(), BorderLayout.CENTER);
         getJPanel().add(getButtonsPanel(), BorderLayout.SOUTH);
     }
 
 
-    public JPanel getButtonsPanel(){
-        if (buttonsPanel==null){
+    public JPanel getButtonsPanel() {
+        if (buttonsPanel == null) {
             buttonsPanel = new JPanel(new BorderLayout());
             JPanel panelAux = new JPanel(new FlowLayout(FlowLayout.CENTER));
             panelAux.add(getAcceptButton());
             panelAux.add(getCancelButton());
             buttonsPanel.add(panelAux, BorderLayout.CENTER);
-            if (!_inPredicate){
+            if (!_inPredicate) {
                 panelAux = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 panelAux.add(getAddElementButton());
                 buttonsPanel.add(panelAux, BorderLayout.EAST);
@@ -98,8 +100,8 @@ public class DialogExpressionEditor extends DialogEditor {
         return buttonsPanel;
     }
 
-    public JPanel getMainPanel(){
-        if (mainPanel == null){
+    public JPanel getMainPanel() {
+        if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
             JPanel expressionPanel = new JPanel(new BorderLayout());
             expressionPanel.add(getExpressionEditorPanel(), BorderLayout.CENTER);
@@ -110,8 +112,8 @@ public class DialogExpressionEditor extends DialogEditor {
         return mainPanel;
     }
 
-    public SelectionPanel getSelectionPanel(){
-        if (selectionPanel==null){
+    public SelectionPanel getSelectionPanel() {
+        if (selectionPanel == null) {
             selectionPanel = new SelectionPanel(new SelectableNodeBuilder().createSelectableNode());
             selectionPanel.setPreferredSize(new Dimension(300, 600));
             updateSelectionPanel();
@@ -119,11 +121,11 @@ public class DialogExpressionEditor extends DialogEditor {
         return selectionPanel;
     }
 
-    private void updateSelectionPanel(){
+    private void updateSelectionPanel() {
         SelectableNode<Object> node = null;
-        if (_inPredicate){
+        if (_inPredicate) {
             node = NodeDefinitionConversor.getNodeAttributesAndFunctionsPredicate();
-        }else{
+        } else {
             node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor(), false, _ar);
         }
         selectionPanel.changeRootNode(node);
@@ -131,11 +133,11 @@ public class DialogExpressionEditor extends DialogEditor {
         selectionPanel.getJTree().addExtraMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount()==2){
+                if (e.getClickCount() == 2) {
                     Object obj = NodeConversor.getSelectedElement(getSelectionPanel().getNode());
-                    if (obj instanceof AttributeFunctionContainerNode){
-                        AttributeFunctionContainerNode attNode = (AttributeFunctionContainerNode)obj;
-                        String handle = "$"+attNode.getGtCodeRuleLineElement().getValue()+"."+attNode.getAttributeFunction();
+                    if (obj instanceof AttributeFunctionContainerNode) {
+                        AttributeFunctionContainerNode attNode = (AttributeFunctionContainerNode) obj;
+                        String handle = "$" + attNode.getGtCodeRuleLineElement().getValue() + "." + attNode.getAttributeFunction();
                         getExpressionEditorTextComponent().replaceSelection(handle);
                     }
                 }
@@ -143,20 +145,20 @@ public class DialogExpressionEditor extends DialogEditor {
         });
     }
 
-    public JPanel getRenderedExpressionPanel(){
-        if (renderedExpressionPanel==null){
+    public JPanel getRenderedExpressionPanel() {
+        if (renderedExpressionPanel == null) {
             renderedExpressionPanel = new JPanel(new BorderLayout());
             renderedExpressionPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionViewer")));
             JScrollPane jScrollPane = new JScrollPane();
             jScrollPane.setViewportView(getRenderedExpresionTextComponent());
-            jScrollPane.setPreferredSize(new Dimension(300,150));
+            jScrollPane.setPreferredSize(new Dimension(300, 150));
             renderedExpressionPanel.add(jScrollPane, BorderLayout.CENTER);
         }
         return renderedExpressionPanel;
     }
 
-    public JEditorPane getRenderedExpresionTextComponent(){
-        if (renderedExpressionTextComponent==null){
+    public JEditorPane getRenderedExpresionTextComponent() {
+        if (renderedExpressionTextComponent == null) {
             renderedExpressionTextComponent = new JEditorPane();
             renderedExpressionTextComponent.setEditorKit(new StyledEditorKit());
             renderedExpressionTextComponent.setContentType("text/html");
@@ -165,8 +167,8 @@ public class DialogExpressionEditor extends DialogEditor {
         return renderedExpressionTextComponent;
     }
 
-    public JPanel getExpressionEditorPanel(){
-        if (expressionEditorPanel==null){
+    public JPanel getExpressionEditorPanel() {
+        if (expressionEditorPanel == null) {
             expressionEditorPanel = new JPanel(new BorderLayout());
             expressionEditorPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionEditor")));
             JScrollPane jScrollPane = new JScrollPane();
@@ -176,8 +178,8 @@ public class DialogExpressionEditor extends DialogEditor {
         return expressionEditorPanel;
     }
 
-    public JTextArea getExpressionEditorTextComponent(){
-        if (expressionEditorTextComponent==null){
+    public JTextArea getExpressionEditorTextComponent() {
+        if (expressionEditorTextComponent == null) {
             expressionEditorTextComponent = new JTextArea();
             expressionEditorTextComponent.setLineWrap(true);
             expressionEditorTextComponent.getDocument().addDocumentListener(new DocumentListener() {
@@ -195,7 +197,8 @@ public class DialogExpressionEditor extends DialogEditor {
                 public void changedUpdate(DocumentEvent e) {
                     update();
                 }
-                private void update(){
+
+                private void update() {
                     updateRenderedTextComponent(getExpressionEditorTextComponent().getText());
                 }
             });
@@ -203,30 +206,30 @@ public class DialogExpressionEditor extends DialogEditor {
         return expressionEditorTextComponent;
     }
 
-    public void updateRenderedTextComponent(String expression){
+    public void updateRenderedTextComponent(String expression) {
         _expressionItem = null;
-        try{
-            _expressionItem = ((AssignmentExpression)parse(expression)).getAssignment();
-        }catch(Throwable e){
-            Logger.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: "+e.getMessage());
+        try {
+            _expressionItem = ((AssignmentExpression) parse(expression)).getAssignment();
+        } catch (Throwable e) {
+            Logger.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + e.getMessage());
         }
-        if (_expressionItem!=null){
-            String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem);
+        if (_expressionItem != null) {
+            String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem, UserConfigurationManager.getLanguage());
             getRenderedExpresionTextComponent().setText(htmlStr);
-        }else{
+        } else {
             getRenderedExpresionTextComponent().setText("");
         }
         getExpressionEditorTextComponent().requestFocus();
     }
 
-    public ExpressionItem getExpressionItem(){
+    public ExpressionItem getExpressionItem() {
         return _expressionItem;
     }
 
     public static ExpressionItem parse(String value) throws Exception {
         //This needs to be done to trick the parser to accept the expression "gtXXXX.attribute"
-        if (!value.endsWith(")")){
-            value = "("+value+")";
+        if (!value.endsWith(")")) {
+            value = "(" + value + ")";
         }
         value = "$gt0001.value=" + value;
         ExpressionParser parser = new ExpressionParser(convert(value));
@@ -253,26 +256,26 @@ public class DialogExpressionEditor extends DialogEditor {
         return addElementButton;
     }
 
-    public void addElement(){
+    public void addElement() {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         DialogElementInstanceSelection dialog =
                 new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false, _ar);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             Object selectedObject = dialog.getSelectedObject();
-            if (selectedObject instanceof ArchetypeInstantiationRuleLine){
-                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
+            if (selectedObject instanceof ArchetypeInstantiationRuleLine) {
+                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) selectedObject;
                 ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
-                if (aeirl!=null){
+                if (aeirl != null) {
                     updateSelectionPanel();
                 }
-            }else{
+            } else {
                 updateSelectionPanel();
             }
         }
     }
 
-    protected boolean acceptDialog(){
+    protected boolean acceptDialog() {
         if (_expressionItem != null) {
             return true;
         } else {

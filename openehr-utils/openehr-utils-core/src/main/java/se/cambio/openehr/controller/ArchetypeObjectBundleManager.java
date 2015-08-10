@@ -22,44 +22,44 @@ public class ArchetypeObjectBundleManager {
     private ArchetypeDTO archetypeDTO = null;
     protected boolean correctlyParsed = false;
 
-    public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO,ArchetypeManager archetypeManager) {
+    public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO, ArchetypeManager archetypeManager) {
         this.archetypeDTO = archetypeDTO;
         this.archetypeManager = archetypeManager;
     }
 
     public void buildArchetypeObjectBundleCustomVO() throws InternalErrorException {
         Object obj = null;
-        if (archetypeDTO.getAobcVO() != null){
+        if (archetypeDTO.getAobcVO() != null) {
             obj = IOUtils.getObject(archetypeDTO.getAobcVO());
         }
-        if (!(obj instanceof ArchetypeObjectBundleCustomVO)){
+        if (!(obj instanceof ArchetypeObjectBundleCustomVO)) {
             Logger.getLogger(ArchetypeObjectBundleManager.class).info("Parsing archetype '" + archetypeDTO.getId() + "'...");
             long startTime = System.currentTimeMillis();
-            try{
-                if (CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())){
+            try {
+                if (CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
                     generateArchetype14Data();
                 } else if (CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
                     generateArchetype20Data();
                 }
                 correctlyParsed = true;
-            }catch(InternalErrorException e){
+            } catch (InternalErrorException e) {
                 throw e;
-            }catch(Error e){
-                throw new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
-            }catch(Exception e){
-                throw new InternalErrorException(new Exception("Failed to parse archetype '"+archetypeDTO.getId()+"'", e));
+            } catch (Error e) {
+                throw new InternalErrorException(new Exception("Failed to parse archetype '" + archetypeDTO.getId() + "'", e));
+            } catch (Exception e) {
+                throw new InternalErrorException(new Exception("Failed to parse archetype '" + archetypeDTO.getId() + "'", e));
             }
             long endTime = System.currentTimeMillis();
             Logger.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
-        }else{
+        } else {
             correctlyParsed = true;
         }
     }
 
 
     private void generateArchetype14Data()
-            throws InternalErrorException{
-        try{
+            throws InternalErrorException {
+        try {
             ADLParser adlParser = new ADLParser(archetypeDTO.getSource());
             Archetype ar = adlParser.parse();
             archetypeDTO.setAom(IOUtils.getBytes(ar));
@@ -72,8 +72,8 @@ public class ArchetypeObjectBundleManager {
     }
 
     private void generateArchetype20Data()
-            throws InternalErrorException{
-        try{
+            throws InternalErrorException {
+        try {
             AdlDeserializer adlDeserializer = new AdlDeserializer(new OpenEhrRmModel());
             DifferentialArchetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
             FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);

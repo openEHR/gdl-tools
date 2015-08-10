@@ -6,7 +6,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ArchetypeDataValueRuleLineElement extends DataValueRuleLineElement {
 
@@ -45,12 +44,13 @@ public class ArchetypeDataValueRuleLineElement extends DataValueRuleLineElement 
         return OpenEHRLanguageManager.getMessage("DataValue"); //Default
     }
 
-    public String toString(){
-        return getDvText(UserConfigurationManager.getLanguage());
+    @Override
+    public String getLabelText(String lang){
+        return getDvText(lang);
     }
 
     @Override
-    public String toHTMLString(String lang) {
+    public String getLabelTextHTML(String lang) {
         return "<font color='#00803a'><b>"+getDvText(lang)+"</b></font>";
     }
 }

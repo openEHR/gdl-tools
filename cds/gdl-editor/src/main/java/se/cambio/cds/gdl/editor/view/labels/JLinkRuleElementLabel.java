@@ -20,7 +20,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class JLinkRuleElementLabel extends JLabel implements MouseListener{
+public class JLinkRuleElementLabel extends JLabel implements MouseListener {
 
     /**
      * Comentario para <code>serialVersionUID</code>
@@ -42,7 +42,7 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener{
     private static final Color LINK_COLOR_VARUNSET = new Color(200, 50, 50);
     private static final Color LINK_COLOR_COMMENTED = Color.GRAY;
 
-    public JLinkRuleElementLabel(RuleLineElementWithValue<?> ruleLineElementWithValue){
+    public JLinkRuleElementLabel(RuleLineElementWithValue<?> ruleLineElementWithValue) {
         _ruleLineElementWithValue = ruleLineElementWithValue;
         linkColorVarSet = LINK_COLOR_VARSET;
         linkColorVarUnSet = LINK_COLOR_VARUNSET;
@@ -53,139 +53,139 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener{
         addMouseListener(this);
     }
 
-    public void setCommented(boolean commented){
-        if (commented){
+    public void setCommented(boolean commented) {
+        if (commented) {
             linkColorVarSet = LINK_COLOR_COMMENTED;
             linkColorVarUnSet = LINK_COLOR_COMMENTED;
-        }else{
+        } else {
             linkColorVarSet = LINK_COLOR_VARSET;
             linkColorVarUnSet = LINK_COLOR_VARUNSET;
         }
     }
 
 
-    public void addActionListener(ActionListener listener){
+    public void addActionListener(ActionListener listener) {
         listeners.add(listener);
     }
 
-    public void removeActionListener(ActionListener listener){
+    public void removeActionListener(ActionListener listener) {
         listeners.remove(listener);
     }
 
-    public RuleLineElementWithValue<?> getRuleLineElementWithValue(){
+    public RuleLineElementWithValue<?> getRuleLineElementWithValue() {
         return _ruleLineElementWithValue;
     }
 
-    public void setRuleLineElementWithValue(RuleLineElementWithValue<?> ruleLineElementWithValue){
+    public void setRuleLineElementWithValue(RuleLineElementWithValue<?> ruleLineElementWithValue) {
         _ruleLineElementWithValue = ruleLineElementWithValue;
     }
 
-    private void mouseClickedAction(String actionCommand){
+    private void mouseClickedAction(String actionCommand) {
         ActionEvent event = new ActionEvent(this, 0, actionCommand);
         ActionListener listener;
-        for(Iterator<ActionListener> i$ = listeners.iterator(); i$.hasNext(); listener.actionPerformed(event))
-            listener = (ActionListener)i$.next();
+        for (Iterator<ActionListener> i$ = listeners.iterator(); i$.hasNext(); listener.actionPerformed(event))
+            listener = (ActionListener) i$.next();
     }
 
-    public void setLinkVarSetColor(Color color){
+    public void setLinkVarSetColor(Color color) {
         linkColorVarSet = color;
         refresh();
     }
 
-    public Color getLinkVarSetColor(){
+    public Color getLinkVarSetColor() {
         return linkColorVarSet;
     }
 
-    public void setLinkVarUnSetColor(Color color){
+    public void setLinkVarUnSetColor(Color color) {
         linkColorVarUnSet = color;
         refresh();
     }
 
-    public Color getLinkVarUnSetColor(){
+    public Color getLinkVarUnSetColor() {
         return linkColorVarUnSet;
     }
 
-    public void setHoverColor(Color color){
+    public void setHoverColor(Color color) {
         hoverColor = color;
     }
 
-    public Color getHoverColor(){
+    public Color getHoverColor() {
         return hoverColor;
     }
 
-    public void setPressColor(Color color){
+    public void setPressColor(Color color) {
         pressColor = color;
     }
 
-    public Color getPressColor(){
+    public Color getPressColor() {
         return pressColor;
     }
 
-    public void setText(String text){
-        if(text != null && text.length() > 0){
-            super.setText("<html><u>"+text+"</u></html>");
-        }else{
+    public void setText(String text) {
+        if (text != null && text.length() > 0) {
+            super.setText("<html><u>" + text + "</u></html>");
+        } else {
             super.setText("");
         }
     }
 
-    public void mouseClicked(MouseEvent e){
-        if(super.isEnabled()){
-            if (e.getButton()==MouseEvent.BUTTON1){
+    public void mouseClicked(MouseEvent e) {
+        if (super.isEnabled()) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
                 mouseClickedAction(ACTION_LEFT_CLICK);
-            }else if (e.getButton()==MouseEvent.BUTTON3){
+            } else if (e.getButton() == MouseEvent.BUTTON3) {
                 mouseClickedAction(ACTION_RIGHT_CLICK);
             }
         }
     }
 
-    public void mousePressed(MouseEvent e){
-        if(super.isEnabled()){
+    public void mousePressed(MouseEvent e) {
+        if (super.isEnabled()) {
             setForeground(pressColor);
         }
     }
 
-    public void mouseReleased(MouseEvent e){
-        if(super.isEnabled()){
+    public void mouseReleased(MouseEvent e) {
+        if (super.isEnabled()) {
             setForeground(hoverColor);
         }
     }
 
-    public void mouseEntered(MouseEvent e){
-        if(super.isEnabled()){
+    public void mouseEntered(MouseEvent e) {
+        if (super.isEnabled()) {
             setForeground(hoverColor);
             setCursor(Cursor.getPredefinedCursor(12));
         }
     }
 
-    public void mouseExited(MouseEvent e){
+    public void mouseExited(MouseEvent e) {
         refresh();
         setCursor(Cursor.getPredefinedCursor(0));
     }
 
-    public void refresh(){
-        String text = _ruleLineElementWithValue.toString();
+    public void refresh() {
+        String text = _ruleLineElementWithValue.getLabelText();
         setText(text);
-        if (_ruleLineElementWithValue.getValue() instanceof ArchetypeReference){
-            String domainId = ((ArchetypeReference)_ruleLineElementWithValue.getValue()).getIdDomain();
+        if (_ruleLineElementWithValue.getValue() instanceof ArchetypeReference) {
+            String domainId = ((ArchetypeReference) _ruleLineElementWithValue.getValue()).getIdDomain();
             setIcon(DomainsUI.getIcon(domainId));
-        }else if (_ruleLineElementWithValue.getValue() instanceof ArchetypeElementRuleLineElement){
-            ArchetypeElementRuleLineElement aerle = ((ArchetypeElementRuleLineElement)_ruleLineElementWithValue.getValue());
+        } else if (_ruleLineElementWithValue.getValue() instanceof ArchetypeElementRuleLineElement) {
+            ArchetypeElementRuleLineElement aerle = ((ArchetypeElementRuleLineElement) _ruleLineElementWithValue.getValue());
             String domainId = null;
-            if (aerle!=null){
+            if (aerle != null) {
                 domainId = aerle.getDomainId();
             }
             setIcon(DomainsUI.getIcon(domainId));
-        }else if (_ruleLineElementWithValue.getValue() instanceof GTCodeRuleLineElement){
-            RuleLine parentRuleLine = ((GTCodeRuleLineElement)_ruleLineElementWithValue.getValue()).getParentRuleLine();
-            if (parentRuleLine instanceof ArchetypeElementInstantiationRuleLine){
-                String domainId = ((ArchetypeElementInstantiationRuleLine)parentRuleLine).getArchetypeReference().getIdDomain();
+        } else if (_ruleLineElementWithValue.getValue() instanceof GTCodeRuleLineElement) {
+            RuleLine parentRuleLine = ((GTCodeRuleLineElement) _ruleLineElementWithValue.getValue()).getParentRuleLine();
+            if (parentRuleLine instanceof ArchetypeElementInstantiationRuleLine) {
+                String domainId = ((ArchetypeElementInstantiationRuleLine) parentRuleLine).getArchetypeReference().getIdDomain();
                 setIcon(DomainsUI.getIcon(domainId));
             }
         }
-        if (_ruleLineElementWithValue.getValue()!=null){
+        if (_ruleLineElementWithValue.getValue() != null) {
             setForeground(linkColorVarSet);
-        }else{
+        } else {
             setForeground(linkColorVarUnSet);
         }
     }

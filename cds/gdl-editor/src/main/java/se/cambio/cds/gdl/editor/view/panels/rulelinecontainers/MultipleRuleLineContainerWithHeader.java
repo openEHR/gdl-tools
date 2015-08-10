@@ -1,22 +1,22 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
-import java.awt.BorderLayout;
-
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
-public class MultipleRuleLineContainerWithHeader extends MultipleRuleLinePanel{
+import java.awt.*;
+
+public class MultipleRuleLineContainerWithHeader extends MultipleRuleLinePanel {
 
     private static final long serialVersionUID = 1L;
 
-    public MultipleRuleLineContainerWithHeader(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine){
-	super(ruleLinesPanel, ruleLine);
-	init();
+    public MultipleRuleLineContainerWithHeader(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine) {
+        super(ruleLinesPanel, ruleLine);
+        init();
     }
-    
-    private void init(){
-	getMainPanel().add(ReadableRuleLineFactory.createRuleLinePanel(getRuleLinesPanel(), getRuleLine()), BorderLayout.NORTH);
+
+    private void init() {
+        getMainPanel().add(ReadableRuleLineFactory.createRuleLinePanel(getRuleLinesPanel(), getRuleLine()), BorderLayout.NORTH);
     }
 }
 /*

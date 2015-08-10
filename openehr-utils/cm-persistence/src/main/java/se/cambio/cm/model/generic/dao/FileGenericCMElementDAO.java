@@ -2,6 +2,7 @@ package se.cambio.cm.model.generic.dao;
 
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMTypeManager;
+import se.cambio.openehr.util.CmFolder;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
@@ -22,12 +23,12 @@ import java.util.Date;
 public class FileGenericCMElementDAO <E extends CMElement> implements GenericCMElementDAO<E>{
 
     private Class<E> cmElementClass;
-    private File folder;
+    private CmFolder cmFolder;
     private Collection<String> fileExtensions;
 
-    public FileGenericCMElementDAO(Class<E> cmElementClass, File folder) {
+    public FileGenericCMElementDAO(Class<E> cmElementClass, CmFolder cmFolder) {
         this.cmElementClass = cmElementClass;
-        this.folder = folder;
+        this.cmFolder = cmFolder;
     }
 
     @Override
@@ -45,11 +46,11 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
 
     @Override
     public Collection<String> searchAllIds() throws InternalErrorException {
-        if (!folder.isDirectory()) {
-            throw new FolderNotFoundException(folder.getAbsolutePath());
+        if (!getFolder().isDirectory()) {
+            throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
         Collection<String> ids = new ArrayList<String>();
-        File[] listOfFiles = folder.listFiles();
+        File[] listOfFiles = getFolder().listFiles();
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
                 String fileName = listOfFiles[i].getName();
@@ -66,10 +67,10 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     @Override
     public Collection<E> searchAll() throws InternalErrorException {
         Collection<E> cmElements = new ArrayList<E>();
-        if (!folder.isDirectory()) {
-            throw new FolderNotFoundException(folder.getAbsolutePath());
+        if (!getFolder().isDirectory()) {
+            throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
-        File[] listOfFiles = folder.listFiles();
+        File[] listOfFiles = getFolder().listFiles();
         for (int i = 0; i < listOfFiles.length; i++) {
             File file = listOfFiles[i];
             if (file.isFile()) {
@@ -130,10 +131,10 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     }
 
     private void upsert(E cmElement) throws InternalErrorException {
-        if (!folder.isDirectory()) {
-            throw new FolderNotFoundException(folder.getAbsolutePath());
+        if (!getFolder().isDirectory()) {
+            throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
-        File file = new File(folder, cmElement.getId() + "." + cmElement.getFormat());
+        File file = new File(getFolder(), cmElement.getId() + "." + cmElement.getFormat());
         try {
             Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes("UTF-8"));
         } catch (IOException e) {
@@ -143,16 +144,16 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
 
     @Override
     public void remove(String id) throws InternalErrorException {
-        if (!folder.isDirectory()) {
-            throw new FolderNotFoundException(folder.getAbsolutePath());
+        if (!getFolder().isDirectory()) {
+            throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
-        File file = new File(folder, id + "." + getFileExtensions().iterator().next());
+        File file = new File(getFolder(), id + "." + getFileExtensions().iterator().next());
         file.delete();
     }
 
     @Override
     public void removeAll() throws InternalErrorException {
-        File[] listOfFiles = folder.listFiles();
+        File[] listOfFiles = getFolder().listFiles();
         for (int i = 0; i < listOfFiles.length; i++) {
             File file = listOfFiles[i];
             String matchingExtension = matchingFileExtension(file.getName());
@@ -165,11 +166,11 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
 
     @Override
     public Date getLastUpdateDate() throws InternalErrorException {
-        if (!folder.isDirectory()) {
-            throw new FolderNotFoundException(folder.getAbsolutePath());
+        if (!getFolder().isDirectory()) {
+            throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
         Date lastModifiedDate = null;
-        File[] listOfFiles = folder.listFiles();
+        File[] listOfFiles = getFolder().listFiles();
         for (int i = 0; i < listOfFiles.length; i++) {
             File file = listOfFiles[i];
             Date date = new Date(file.lastModified());
@@ -178,6 +179,10 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
             }
         }
         return lastModifiedDate;
+    }
+
+    private File getFolder() {
+        return cmFolder.getFolder();
     }
 
     private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {

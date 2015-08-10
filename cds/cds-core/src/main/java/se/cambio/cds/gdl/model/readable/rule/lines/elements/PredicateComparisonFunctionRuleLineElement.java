@@ -4,12 +4,12 @@ import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
 
-public class PredicateComparisonFunctionRuleLineElement extends AbstractComparisonOperatorRuleLineElement{
+public class PredicateComparisonFunctionRuleLineElement extends AbstractComparisonOperatorRuleLineElement {
 
     public PredicateComparisonFunctionRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine);
-	addOperator(OperatorKind.MAX);
-	addOperator(OperatorKind.MIN);
+        super(ruleLine);
+        addOperator(OperatorKind.MAX);
+        addOperator(OperatorKind.MIN);
     }
 }
 /*

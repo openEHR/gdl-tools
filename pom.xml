@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <openehr-java-libs-version>1.0.12</openehr-java-libs-version>
         <adl2-core-version>1.0.0</adl2-core-version>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.1.7.RELEASE</spring.version>
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
     <scm>

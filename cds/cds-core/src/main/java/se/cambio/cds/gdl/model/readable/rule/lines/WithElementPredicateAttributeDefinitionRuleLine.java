@@ -32,7 +32,7 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         comparisonOperatorRuleLineElement = new PredicateComparisonOperatorRuleLineElement(this);
         dataValueRuleLineElement = new DataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("WithElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(dataValueRuleLineElement);

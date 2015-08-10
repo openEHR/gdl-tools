@@ -10,21 +10,21 @@ import java.util.Date;
 public interface CMAdministrationFacadeDelegate {
 
     //Generic
-    public <E extends CMElement> Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
+    <E extends CMElement> Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
 
-    public <E extends CMElement> Collection<String> getAllCMElementIds(Class<E> cmElementClass) throws InternalErrorException;
+    <E extends CMElement> Collection<String> getAllCMElementIds(Class<E> cmElementClass) throws InternalErrorException;
 
-    public <E extends CMElement> Collection<E> searchCMElementsByIds(Class<E> cmElementClass, Collection<String> ids) throws InternalErrorException, InstanceNotFoundException;
+    <E extends CMElement> Collection<E> searchCMElementsByIds(Class<E> cmElementClass, Collection<String> ids) throws InternalErrorException, InstanceNotFoundException;
 
-    public <E extends CMElement> void upsertCMElement(E cmElement) throws InternalErrorException;
+    <E extends CMElement> void upsertCMElement(E cmElement) throws InternalErrorException;
 
-    public <E extends CMElement> void removeCMElement(Class<E> cmElementClass, String id) throws InternalErrorException, InstanceNotFoundException;
+    <E extends CMElement> void removeCMElement(Class<E> cmElementClass, String id) throws InternalErrorException, InstanceNotFoundException;
 
-    public <E extends CMElement> String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException;
+    <E extends CMElement> String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException;
 
-    public <E extends CMElement> Date getLastUpdate(Class<E> cmElementClass) throws InternalErrorException;
+    <E extends CMElement> Date getLastUpdate(Class<E> cmElementClass) throws InternalErrorException;
 
-    public <E extends CMElement> void removeAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
+    <E extends CMElement> void removeAllCMElements(Class<E> cmElementClass) throws InternalErrorException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

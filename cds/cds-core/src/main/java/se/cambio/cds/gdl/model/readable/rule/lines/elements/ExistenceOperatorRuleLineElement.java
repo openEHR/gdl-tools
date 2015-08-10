@@ -7,7 +7,7 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<String> implements SingleSelectionRuleElement<String>{
+public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<String> implements SingleSelectionRuleElement<String> {
 
     private static String HAS_VALUE = "!=null";
     private static String HAS_NO_VALUE = "==null";
@@ -15,31 +15,34 @@ public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<S
     private ArrayList<String> _codes = null;
 
     public ExistenceOperatorRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, "??");
+        super(ruleLine, null);
         _codes = new ArrayList<String>();
         _codes.add(HAS_VALUE);
         _codes.add(HAS_NO_VALUE);
     }
 
-    public String getResolvedName(String item) {
-        if (HAS_VALUE.equals(item)){
-            return OpenEHRLanguageManager.getMessage("ExistsRLE");
-        }else if (HAS_NO_VALUE.equals(item)){
-            return OpenEHRLanguageManager.getMessage("DoesNotExistRLE");
-        }else{
+    @Override
+    public String getResolvedName(String item, String language) {
+        if (HAS_VALUE.equals(item)) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("ExistsRLE", language);
+        } else if (HAS_NO_VALUE.equals(item)) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("DoesNotExistRLE", language);
+        } else {
             return null;
         }
     }
 
-    public String getResolvedDescription(String item) {
-        return getResolvedName(item);
+    @Override
+    public String getResolvedDescription(String item, String language) {
+        return getResolvedName(item, language);
     }
 
-    public String toString(){
-        if (getValue()!=null){
-            return getResolvedName(getValue());
-        }else{
-            return super.getText();
+    @Override
+    public String getLabelText(String language) {
+        if (getValue() != null) {
+            return getResolvedName(getValue(), language);
+        } else {
+            return super.getLabelText(language);
         }
     }
 
@@ -48,26 +51,30 @@ public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<S
     }
 
     public OperatorKind getOperator() {
-        if (HAS_VALUE.equals(getValue())){
+        if (HAS_VALUE.equals(getValue())) {
             return OperatorKind.INEQUAL;
-        }else if (HAS_NO_VALUE.equals(getValue())){
+        } else if (HAS_NO_VALUE.equals(getValue())) {
             return OperatorKind.EQUALITY;
-        }else{
+        } else {
             return null;
         }
     }
 
-    public void setOperator(OperatorKind operatorKind){
-        if (OperatorKind.INEQUAL.equals(operatorKind)){
+    public void setOperator(OperatorKind operatorKind) {
+        if (OperatorKind.INEQUAL.equals(operatorKind)) {
             setValue(HAS_VALUE);
-        }else if (OperatorKind.EQUALITY.equals(operatorKind)){
+        } else if (OperatorKind.EQUALITY.equals(operatorKind)) {
             setValue(HAS_NO_VALUE);
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return toString();
+    public String getLabelTextHTML(String lang) {
+        if (getValue() != null) {
+            return getResolvedName(getValue(), lang);
+        } else {
+            return super.getLabelTextHTML(lang);
+        }
     }
 }
 /*

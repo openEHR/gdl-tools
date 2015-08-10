@@ -4,18 +4,18 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.listeners.SelectableRuleLineDragMouseListener;
-import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
-import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineContainerPanel;
+import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Collection;
-import java.util.List;
 
 public abstract class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
 
@@ -166,7 +166,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     public String getDescription(RuleLineElementWithValue<?> ruleLineElementWithValue){
         if (ruleLineElementWithValue!=null){
-            return ruleLineElementWithValue.getDescription();
+            return ruleLineElementWithValue.getLabelDescription(UserConfigurationManager.getLanguage());
         }else{
             return null;
         }

@@ -8,34 +8,35 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class CurrentDateTimeRuleLineElement extends RuleLineElementWithValue<GTCodeRuleLineElement> {
 
     public CurrentDateTimeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Element"));
+        super(ruleLine, "Element");
     }
 
     public ArchetypeReference getArchetypeReference() {
         return null;
     }
 
-    public ArchetypeElementVO getArchetypeElementVO(){
+    public ArchetypeElementVO getArchetypeElementVO() {
         return null;
     }
 
     @Override
-    public String toString() {
-        return OpenEHRLanguageManager.getMessage("CurrentDateTime");
+    public String getLabelText(String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage("CurrentDateTime", lang);
     }
 
     @Override
-    public String getName(String gtCode){
-        return OpenEHRLanguageManager.getMessage("CurrentDateTime");
+    public String getName(String gtCode, String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage("CurrentDateTime", lang);
     }
 
     @Override
-    public String getDescription() {
-        return OpenEHRLanguageManager.getMessage("CurrentDateTime");
+    public String getLabelDescription(String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage("CurrentDateTime", lang);
     }
+
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#800000'><b>\""+toString()+"\"</b></font>";
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#800000'><b>\"" + getLabelText(lang) + "\"</b></font>";
     }
 }
 /*

@@ -2,14 +2,13 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineElementWithValue<ArchetypeElementVO> {
     private String _attribute = null;
 
     public PredicateArchetypeElementAttributeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("ElementAttribute"));
+        super(ruleLine, "ElementAttribute");
     }
 
     public String getAttribute() {
@@ -20,32 +19,29 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
         this._attribute = attribute;
     }
 
-    public String getDescription() {
-        if (getValue()!=null){
+    @Override
+    public String getLabelDescription(String lang) {
+        if (getValue() != null) {
             String elementDesc = getArchetypeManager().getArchetypeElements().getDescription(getValue(), UserConfigurationManager.getLanguage());
             return elementDesc;
-        }else{
-            return getText();
-        }
-    }
-
-
-    public String toString(){
-        return toString(UserConfigurationManager.getLanguage());
-    }
-
-    private String toString(String lang){
-        if (getValue()!=null && getAttribute()!=null){
-            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), lang);
-            return "\"<b>"+name+"</b><font size=2><sub>"+getAttribute().toUpperCase()+"</sub></font>\"";
-        }else{
-            return getText();
+        } else {
+            return super.getLabelDescription(lang);
         }
     }
 
     @Override
-    public String toHTMLString(String lang) {
-        return "<font color='#4f81bd'><b>"+toString(lang)+"</b></font>";
+    public String getLabelText(String lang) {
+        if (getValue() != null && getAttribute() != null) {
+            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), lang);
+            return "\"<b>" + name + "</b><font size=2><sub>" + getAttribute().toUpperCase() + "</sub></font>\"";
+        } else {
+            return this.getLabelText(lang);
+        }
+    }
+
+    @Override
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
     }
 }
 /*

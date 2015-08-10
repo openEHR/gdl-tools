@@ -4,10 +4,12 @@ import java.util.Collection;
 
 public interface SingleSelectionRuleElement<E> {
 
-    public String getResolvedName(E item);
-    public String getResolvedDescription(E item);
-    public Collection<E> getItems();
-    
+    String getResolvedName(E item, String language);
+
+    String getResolvedDescription(E item, String language);
+
+    Collection<E> getItems();
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

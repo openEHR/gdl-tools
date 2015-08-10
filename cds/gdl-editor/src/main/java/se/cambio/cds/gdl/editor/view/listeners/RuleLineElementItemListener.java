@@ -1,20 +1,20 @@
 package se.cambio.cds.gdl.editor.view.listeners;
 
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 
 public class RuleLineElementItemListener<E> implements ItemListener {
     private RuleLineElementWithValue<E> _ruleLineElementWithValue = null;
 
-    public RuleLineElementItemListener(RuleLineElementWithValue<E> ruleLineElementWithValue){
-	_ruleLineElementWithValue = ruleLineElementWithValue;
+    public RuleLineElementItemListener(RuleLineElementWithValue<E> ruleLineElementWithValue) {
+        _ruleLineElementWithValue = ruleLineElementWithValue;
     }
-    
+
     @SuppressWarnings("unchecked")
     public void itemStateChanged(ItemEvent e) {
-	_ruleLineElementWithValue.setValue((E)e.getItem());
+        _ruleLineElementWithValue.setValue((E) e.getItem());
     }
 
 }

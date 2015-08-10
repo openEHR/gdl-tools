@@ -2,41 +2,45 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public abstract class RuleLineElement {
-    private String text = null;
-    private String description = null;
+    private String labelTextId = null;
+    private String labelDescriptionId = null;
     private RuleLine parentRuleLine = null;
 
     public RuleLineElement(RuleLine ruleLine, String text) {
-        this.text = text;
-        this.description = text;
+        this.labelTextId = text;
+        labelDescriptionId = text;
         this.parentRuleLine = ruleLine;
     }
 
-    public String getText() {
-        return text;
+    public final String getLabelText() {
+        return getLabelText(UserConfigurationManager.getLanguage());
     }
 
-    public String toString(){
-        return text;
+    public String getLabelText(String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage(labelTextId, lang);
     }
 
-    public String getDescription() {
-        return description;
+    public final String getLabelDescription() {
+        return getLabelDescription(UserConfigurationManager.getLanguage());
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getLabelDescription(String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage(labelDescriptionId, lang);
     }
 
-    public abstract String toHTMLString(String lang);
+    public String getLabelTextHTML(String lang) {
+        return getLabelText(lang);
+    }
 
     public RuleLine getParentRuleLine() {
         return parentRuleLine;
     }
 
-    public ArchetypeManager getArchetypeManager(){
+    public ArchetypeManager getArchetypeManager() {
         return parentRuleLine.getReadableGuide().getArchetypeManager();
     }
 }

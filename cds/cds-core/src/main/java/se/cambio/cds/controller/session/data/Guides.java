@@ -1,10 +1,9 @@
 package se.cambio.cds.controller.session.data;
 
 import org.apache.log4j.Logger;
+import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.util.GuideCompiler;
-import se.cambio.cds.util.GuideCompilerFactory;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -20,7 +19,6 @@ import java.util.Map;
 
 public class Guides extends AbstractCMManager<GuideDTO> {
     private static Guides _instance = null;
-    private static GuideCompiler guideCompiler;
 
     public Guides(){
     }
@@ -78,18 +76,11 @@ public class Guides extends AbstractCMManager<GuideDTO> {
                 parseGuide(guideDTO);
             }
             Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
-            byte[] compiledGuide = getGuideCompiler().compile(guide);
+            byte[] compiledGuide = CDSSessionManager.getRuleEngineFacadeDelegate().compile(guide);
             guideDTO.setCompiledGuide(compiledGuide);
         } catch (Exception e) {
             throw new InternalErrorException(e);
         }
-    }
-
-    private static GuideCompiler getGuideCompiler() throws InternalErrorException {
-        if (guideCompiler == null) {
-            guideCompiler = GuideCompilerFactory.getDelegate();
-        }
-        return guideCompiler;
     }
 
     public Guide getGuide(String guideId) throws InternalErrorException, InstanceNotFoundException {

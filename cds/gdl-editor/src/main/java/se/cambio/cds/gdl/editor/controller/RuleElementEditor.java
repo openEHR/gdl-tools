@@ -104,9 +104,9 @@ public class RuleElementEditor {
         String title = null;
         RuleLine ruleLine = gtCodeRuleLineElement.getParentRuleLine();
         if (ruleLine instanceof ArchetypeInstantiationRuleLine){
-            title = ((ArchetypeInstantiationRuleLine)ruleLine).getArchetypeReferenceRuleLineDefinitionElement().getText();
+            title = ((ArchetypeInstantiationRuleLine)ruleLine).getArchetypeReferenceRuleLineDefinitionElement().getLabelText();
         }else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
-            title = ((ArchetypeElementInstantiationRuleLine)ruleLine).getArchetypeElementRuleLineDefinitionElement().getText();
+            title = ((ArchetypeElementInstantiationRuleLine)ruleLine).getArchetypeElementRuleLineDefinitionElement().getLabelText();
         }
         Term term = EditorManager.getActiveGDLEditor().getTerm(gtCodeRuleLineElement.getValue());
         String oldValue = term.getText();

@@ -71,7 +71,6 @@
 		<module>gdl-parser</module>
 		<module>cds-core</module>
 		<module>cds-gui-swing</module>
-		<module>gdl-drools-converter</module>
         <module>cds-form-generator</module>
         <module>gdl-editor</module>
 	</modules>

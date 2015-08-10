@@ -27,9 +27,9 @@ public class ElementComparisonWithNullValueConditionRuleLine extends ExpressionR
 	equalityComparisonOperatorRuleLineElement = new EqualityComparisonOperatorRuleLineElement(this);
 	nullValueRuleLineElement = new NullValueRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ElementRLE")));
+	getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
 	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("NullValueRLE")));
+	getRuleLineElements().add(new StaticTextRuleLineElement("NullValueRLE"));
 	getRuleLineElements().add(equalityComparisonOperatorRuleLineElement);
 	getRuleLineElements().add(nullValueRuleLineElement);
     }

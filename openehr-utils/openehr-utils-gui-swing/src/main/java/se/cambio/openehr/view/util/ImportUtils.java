@@ -4,6 +4,7 @@ import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.CmFolder;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -66,8 +67,10 @@ public class ImportUtils {
     }
 
     public static ArchetypeDTO getArchetypeDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
+        File folder = file.getParentFile();
+        CmFolder cmFolder = new CmFolder(folder);
         FileGenericCMElementDAO<ArchetypeDTO> dao =
-                new FileGenericCMElementDAO<ArchetypeDTO>(ArchetypeDTO.class, file.getParentFile());
+                new FileGenericCMElementDAO<ArchetypeDTO>(ArchetypeDTO.class, cmFolder);
         String fileName = file.getName();
         String archetypeId = fileName.substring(0, fileName.length()-".adl".length());
         Collection<ArchetypeDTO> archetypeDTOs = dao.searchByIds(Collections.singleton(archetypeId));
@@ -81,8 +84,10 @@ public class ImportUtils {
 
 
     public static TemplateDTO getTemplateDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
+        File folder = file.getParentFile();
+        CmFolder cmFolder = new CmFolder(folder);
         FileGenericCMElementDAO<TemplateDTO> dao =
-                new FileGenericCMElementDAO<TemplateDTO>(TemplateDTO.class, file.getParentFile());
+                new FileGenericCMElementDAO<TemplateDTO>(TemplateDTO.class, cmFolder);
         String fileName = file.getName();
         String templateId = fileName.substring(0, fileName.length()-".oet".length());
         Collection<TemplateDTO> templateDTOs = dao.searchByIds(Collections.singleton(templateId));

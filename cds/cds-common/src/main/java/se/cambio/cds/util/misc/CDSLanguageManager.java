@@ -4,7 +4,9 @@ import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.misc.UTF8Control;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -14,14 +16,38 @@ public final class CDSLanguageManager {
 
     private static CDSLanguageManager _instance;
 
-    private ResourceBundle _resource = null;
-    public static final String MESSAGES_BUNDLE = "se.cambio.cds.view.messages.Messages";
-    public String _lng = null;
+    private Map<String, ResourceBundle> _resourceMap = null;
+    private static final String MESSAGES_BUNDLE = "se.cambio.cds.view.messages.Messages";
+    private String language;
+    private String country;
 
     private CDSLanguageManager() {
-        _lng = UserConfigurationManager.getLanguage();
-        String country = UserConfigurationManager.getCountryCode();
-        _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(_lng, country), new UTF8Control());
+        language = UserConfigurationManager.getLanguage();
+        country = UserConfigurationManager.getCountryCode();
+        _resourceMap = new HashMap<String, ResourceBundle>();
+    }
+
+    private ResourceBundle getResourceBundle() {
+        return getResourceBundle(language);
+    }
+
+    private ResourceBundle getResourceBundle(String language) {
+        if (language == null) {
+            return getResourceBundle();
+        }
+        ResourceBundle resourceBundle = _resourceMap.get(language);
+        if (resourceBundle == null) {
+            try {
+                resourceBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());
+            } catch (Exception e) {
+                if (!this.language.equals(language)) {
+                    resourceBundle = getResourceBundle();
+                }
+                ExceptionHandler.handle(e);
+            }
+            _resourceMap.put(language, resourceBundle);
+        }
+        return resourceBundle;
     }
 
     public static void refreshConfig() {
@@ -30,8 +56,12 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessage(String key) {
+        return getMessageWithLanguage(key, getDelegate().getLanguage());
+    }
+
+    public static String getMessageWithLanguage(String key, String language) {
         try {
-            return getDelegate()._resource.getString(key);
+            return getDelegate().getResourceBundle(language).getString(key);
         } catch (MissingResourceException e) {
             ExceptionHandler.handle(e);
             return "ERROR: Text not Found!";
@@ -39,7 +69,11 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessage(String key, String data1) {
-        String s = getDelegate()._resource.getString(key);
+        return getMessageWithLanguage(key, data1, getDelegate().getLanguage());
+    }
+
+    public static String getMessageWithLanguage(String key, String data1, String language) {
+        String s = getDelegate().getResourceBundle(language).getString(key);
         int i = s.indexOf("$0");
         if (i >= 0 && i < s.length()) {
             String s1 = s.substring(0, i);
@@ -49,7 +83,11 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessage(String key, String[] data) {
-        String s = getDelegate()._resource.getString(key);
+        return getMessageWithLanguage(key, data, getDelegate().getLanguage());
+    }
+
+    public static String getMessageWithLanguage(String key, String[] data, String language) {
+        String s = getDelegate().getResourceBundle(language).getString(key);
         for (int i = 0; i < data.length && i < 10; i++) {
             int index = s.indexOf("$" + i);
             String s1 = s.substring(0, index);
@@ -66,6 +104,10 @@ public final class CDSLanguageManager {
         return _instance;
     }
 
+
+    public String getLanguage() {
+        return language;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

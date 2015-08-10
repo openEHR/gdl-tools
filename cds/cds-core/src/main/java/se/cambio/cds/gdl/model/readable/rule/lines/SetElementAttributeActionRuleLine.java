@@ -20,9 +20,9 @@ public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleL
                 OpenEHRLanguageManager.getMessage("SetElementAttributeDesc"));
         archetypeElementAttributeRuleLineElement = new ArchetypeElementAttributeRuleLineElement(this);
         expressionRuleLineElement = new ExpressionRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("SetElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("SetElementRLE"));
         getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ToRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("ToRLE"));
         getRuleLineElements().add(expressionRuleLineElement);
     }
 

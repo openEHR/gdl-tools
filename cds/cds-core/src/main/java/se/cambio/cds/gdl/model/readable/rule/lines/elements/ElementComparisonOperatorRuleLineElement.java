@@ -4,18 +4,18 @@ import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
 
-public class ElementComparisonOperatorRuleLineElement extends AbstractComparisonOperatorRuleLineElement{
+public class ElementComparisonOperatorRuleLineElement extends AbstractComparisonOperatorRuleLineElement {
 
     public ElementComparisonOperatorRuleLineElement(RuleLine ruleLine) {
-	super(ruleLine);
-	addOperator(OperatorKind.EQUALITY);
-	addOperator(OperatorKind.INEQUAL);
-	addOperator(OperatorKind.LESS_THAN);
-	addOperator(OperatorKind.LESS_THAN_OR_EQUAL);
-	addOperator(OperatorKind.GREATER_THAN);
-	addOperator(OperatorKind.GREATER_THAN_OR_EQUAL);
-	addOperator(OperatorKind.IS_A);
-	addOperator(OperatorKind.IS_NOT_A);
+        super(ruleLine);
+        addOperator(OperatorKind.EQUALITY);
+        addOperator(OperatorKind.INEQUAL);
+        addOperator(OperatorKind.LESS_THAN);
+        addOperator(OperatorKind.LESS_THAN_OR_EQUAL);
+        addOperator(OperatorKind.GREATER_THAN);
+        addOperator(OperatorKind.GREATER_THAN_OR_EQUAL);
+        addOperator(OperatorKind.IS_A);
+        addOperator(OperatorKind.IS_NOT_A);
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

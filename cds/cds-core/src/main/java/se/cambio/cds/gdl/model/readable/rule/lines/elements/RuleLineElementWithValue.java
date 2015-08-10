@@ -6,7 +6,7 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public abstract class RuleLineElementWithValue<E> extends RuleLineElement{
+public abstract class RuleLineElementWithValue<E> extends RuleLineElement {
 
     private E value = null;
 
@@ -22,52 +22,47 @@ public abstract class RuleLineElementWithValue<E> extends RuleLineElement{
         this.value = value;
     }
 
-    public String getDescription() {
-        return toString();
-    }
-
-
-    public String toString(){
-        if (value!=null){
-            return value.toString();
-        }else{
-            return getText();
-        }
-    }
-
-    public String getName(String gtCode){
-        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)){
-            return OpenEHRLanguageManager.getMessage("CurrentDateTime");
-        }else if (getParentRuleLine()!=null && getParentRuleLine().getTermDefinition()!=null && getParentRuleLine().getTermDefinition().getTerms()!=null){
-            Term term = getParentRuleLine().getTermDefinition().getTerms().get(gtCode);
-            if (term!=null){
-                return term.getText();
-            }else{
-                return null;
-            }
-        }else{
-            return null;
-        }
-    }
-
-    public String getDescription(String gtCode){
-        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)){
-            return OpenEHRLanguageManager.getMessage("CurrentDateTime");
-        }else if (getParentRuleLine()!=null && getParentRuleLine().getTermDefinition()!=null && getParentRuleLine().getTermDefinition().getTerms()!=null){
-            Term term = getParentRuleLine().getTermDefinition().getTerms().get(gtCode);
-            if (term!=null){
-                return term.getDescription();
-            }else{
-                return null;
-            }
-        }else{
-            return null;
-        }
-    }
-
     @Override
-    public String toHTMLString(String lang) {
-        return toString();
+    public String getLabelText(String lang) {
+        if (value != null) {
+            if (value instanceof RuleLineElement) {
+                return ((RuleLineElement)value).getLabelText(lang);
+            } else {
+                return value.toString();
+            }
+        } else {
+            return super.getLabelText(lang);
+        }
+    }
+
+    public String getName(String gtCode, String lang) {
+        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("CurrentDateTime", lang);
+        } else if (getParentRuleLine() != null && getParentRuleLine().getTermDefinition() != null && getParentRuleLine().getTermDefinition().getTerms() != null) {
+            Term term = getParentRuleLine().getTermDefinition().getTerms().get(gtCode);
+            if (term != null) {
+                return term.getText();
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public String getDescription(String gtCode, String lang) {
+        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)) {
+            return OpenEHRLanguageManager.getMessageWithLanguage("CurrentDateTime", lang);
+        } else if (getParentRuleLine() != null && getParentRuleLine().getTermDefinition() != null && getParentRuleLine().getTermDefinition().getTerms() != null) {
+            Term term = getParentRuleLine().getTermDefinition().getTerms().get(gtCode);
+            if (term != null) {
+                return term.getDescription();
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

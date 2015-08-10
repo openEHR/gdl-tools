@@ -1,5 +1,6 @@
 package se.cambio.cm.model.facade.administration.plain;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
@@ -11,33 +12,44 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Profile("cm-admin-plain-service")
 public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFacadeDelegate {
 
+    @Autowired
+    private CMElementDAOFactory cmElementDAOFactory;
+    private Map<Class, GenericCMElementDAO<? extends CMElement>> cmElementDAOMap;
+
+    public PlainCMAdministrationFacadeDelegate() {
+        cmElementDAOMap = Collections.synchronizedMap(new HashMap<Class, GenericCMElementDAO<? extends CMElement>>());
+    }
+
     @Override
     public <E extends CMElement> Collection<E> getAllCMElements(Class<E> cmElementClass) throws InternalErrorException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         return dao.searchAll();
     }
 
     @Override
     public <E extends CMElement> Collection<String> getAllCMElementIds(Class<E> cmElementClass) throws InternalErrorException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         return dao.searchAllIds();
     }
 
     @Override
     public <E extends CMElement> Collection<E> searchCMElementsByIds(Class<E> cmElementClass, Collection<String> ids) throws InternalErrorException, InstanceNotFoundException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         return dao.searchByIds(ids);
     }
 
     @Override
     public <E extends CMElement> void upsertCMElement(E cmElement) throws InternalErrorException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElement.getClass());
+        GenericCMElementDAO<E> dao = (GenericCMElementDAO<E>) getCmElementDAO(cmElement.getClass());
         try {
             dao.update(cmElement);
         } catch (InstanceNotFoundException e) {
@@ -47,26 +59,35 @@ public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFaca
 
     @Override
     public <E extends CMElement> void removeCMElement(Class<E> cmElementClass, String id) throws InternalErrorException, InstanceNotFoundException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         dao.remove(id);
     }
 
     @Override
     public <E extends CMElement> void removeAllCMElements(Class<E> cmElementClass) throws InternalErrorException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         dao.removeAll();
     }
 
     @Override
     public <E extends CMElement> String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         return AbstractCMManager.generateChecksum(dao.searchAll());
     }
 
     @Override
     public <E extends CMElement> Date getLastUpdate(Class<E> cmElementClass) throws InternalErrorException {
-        GenericCMElementDAO<E> dao = CMElementDAOFactory.getInstance().getDAO(cmElementClass);
+        GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
         return dao.getLastUpdateDate();
+    }
+
+    private <E extends CMElement> GenericCMElementDAO<E> getCmElementDAO(Class<E> cmElementClass) throws InternalErrorException {
+        GenericCMElementDAO<? extends CMElement> genericCMElementDAO = cmElementDAOMap.get(cmElementClass);
+        if (genericCMElementDAO == null) {
+            genericCMElementDAO = cmElementDAOFactory.getDAO(cmElementClass);
+            cmElementDAOMap.put(cmElementClass, genericCMElementDAO);
+        }
+        return (GenericCMElementDAO<E>)genericCMElementDAO;
     }
 }
 /*

@@ -27,9 +27,9 @@ public class ArchetypeElementInstantiationRuleLine extends RuleLine implements A
         _archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         _gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("InstantiateElementRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("InstantiateElementRLE"));
         getRuleLineElements().add(_archetypeElementRuleLineDefinitionElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("asRLE")));
+        getRuleLineElements().add(new StaticTextRuleLineElement("asRLE"));
         getRuleLineElements().add(_gtCodeRuleLineElement);
     }
 

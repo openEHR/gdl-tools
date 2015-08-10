@@ -1,47 +1,75 @@
 package se.cambio.cds.gdl.editor;
 
-import junit.framework.TestCase;
 import org.apache.log4j.Logger;
-import org.openehr.am.archetype.Archetype;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.CdsConfiguration;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.TestCase.assertEquals;
 
 
-public class GDLEditorMainTest extends TestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = CdsConfiguration.class)
+@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
+public class GDLEditorMainTest {
 
-    protected static String MAIN_GUIDE_REPOSITORY_PATH = UserConfigurationManager.getGuidesFolder().getPath()+File.separator;
+    protected static String MAIN_GUIDE_REPOSITORY_PATH = UserConfigurationManager.getGuidesFolder().getFolder().getPath() + File.separator;
 
-    private static boolean setUpIsDone = false;
+    @Value("classpath:/archetypes")
+    Resource archetypesResource;
 
-    public void setUp() {
-        if (!setUpIsDone){
-            //Load archetypes and templates
-            try{
-                UserConfigurationManager.setParameter(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-                UserConfigurationManager.setParameter(UserConfigurationManager.ARCHETYPES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-                UserConfigurationManager.setParameter(UserConfigurationManager.TEMPLATES_FOLDER_KW, GDLEditorMainTest.class.getClassLoader().getResource("templates").toURI().getPath());
-            }catch(Exception e){
-                ExceptionHandler.handle(e);
-                fail("Exception caught loading archetypes and templates");
-            }
-            setUpIsDone = true;
-        }
+    @Value("classpath:/templates")
+    Resource templatesResource;
+
+    @Value("classpath:/terminologies")
+    Resource terminologiesResource;
+
+    @Value("classpath:/guidelines")
+    Resource guidelinesResource;
+
+    @Before
+    public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
+        UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidelinesResource.getFile().getPath());
     }
 
+    @Test
+    public void should_get_facades_implementation_from_annotations() {
+        CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate = BeanProvider.getBean(CMAdministrationFacadeDelegate.class);
+        assertNotNull(cmAdministrationFacadeDelegate);
+    }
+
+    @Test
     public void testCompareSerializedGuides() throws Exception {
-        Archetype ar = ArchetypeManager.getInstance().getArchetypes().getArchetypeAOMById("openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1");
         UserConfigurationManager.setParameter(UserConfigurationManager.LANGUAGE, "en");
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {
-            if (file.getName().endsWith(".gdl")){
-                Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '"+file.getName()+"'");
+            if (file.getName().endsWith(".gdl")) {
+                Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '" + file.getName() + "'");
                 String originalGuideStr = readGuideFile(file);
                 String output = parseAndReserializeGuide(originalGuideStr);
                 assertEquals(originalGuideStr, output);

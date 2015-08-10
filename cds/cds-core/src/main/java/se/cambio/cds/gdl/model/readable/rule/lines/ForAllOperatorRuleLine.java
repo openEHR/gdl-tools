@@ -14,7 +14,7 @@ public class ForAllOperatorRuleLine extends ExpressionRuleLine implements Condit
     public ForAllOperatorRuleLine() {
 	super(OpenEHRLanguageManager.getMessage("ForAllOperator"), 
 		OpenEHRLanguageManager.getMessage("ForAllOperatorDesc"));
-	getRuleLineElements().add(new StaticTextRuleLineElement(OpenEHRLanguageManager.getMessage("ForAllRLE")+" ("));
+	getRuleLineElements().add(new StaticTextRuleLineElement("ForAllRLE"));
     }
     
     public ExpressionItem toExpressionItem(){

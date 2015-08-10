@@ -6,24 +6,25 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 public class GTCodeRuleLineElement extends RuleLineElementWithValue<String> {
 
     public GTCodeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, OpenEHRLanguageManager.getMessage("Name"));
+        super(ruleLine, "Name");
     }
 
     @Override
-    public String getDescription() {
-        return OpenEHRLanguageManager.getMessage("Name");
+    public String getLabelDescription(String lang) {
+        return OpenEHRLanguageManager.getMessageWithLanguage("Name", lang);
     }
 
-    public String toString(){
-        if (getValue()!=null){
-            String name = getName(getValue());
-            if(name!=null){
+    @Override
+    public String getLabelText(String lang) {
+        if (getValue() != null) {
+            String name = getName(getValue(), lang);
+            if (name != null) {
                 return name;
-            }else{
-                return getText();
+            } else {
+                return OpenEHRLanguageManager.getMessageWithLanguage("Name", lang);
             }
-        }else{
-            return getText();
+        } else {
+            return super.getLabelText(lang);
         }
     }
 }

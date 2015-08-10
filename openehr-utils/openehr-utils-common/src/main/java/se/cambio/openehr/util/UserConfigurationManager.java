@@ -4,10 +4,21 @@ import org.apache.log4j.Logger;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 
 public class UserConfigurationManager {
 
@@ -28,12 +39,13 @@ public class UserConfigurationManager {
     private static final String CONFIGURATION_FOLDER = "conf";
     private static final String USER_CONFIGURATION_FOLDER = ".gdleditor";
     private static final String CONFIGURATION_FILE = "UserConfig.properties";
-    private static Map <Object,Object> parameters;
+    private static Map<Object, Object> parameters;
+    private static Map<String, CmFolder> cmFolderMap = new HashMap<String, CmFolder>();
     private static File _configFile = null;
 
     private static Map<String, String> _defaultValues = new HashMap<String, String>();
 
-    static{
+    static {
         _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");
         _defaultValues.put(TEMPLATES_FOLDER_KW, "templates");
         _defaultValues.put(GUIDES_FOLDER_KW, "guidelines");
@@ -45,32 +57,32 @@ public class UserConfigurationManager {
         _defaultValues.put(COUNTRY, DEFAULT_COUNTRY);
 
 	/*         
-	 * We use a synchronized map because it will be filled by using a 
+     * We use a synchronized map because it will be filled by using a
 	 * lazy strategy.
 	 */
-        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
+        parameters = Collections.synchronizedMap(new HashMap<Object, Object>());
         try {
             InputStream is = null;
             _configFile = getConfigFile();
-            if (_configFile == null || !_configFile.exists()){
+            if (_configFile == null || !_configFile.exists()) {
                 //Read from jar
                 is = UserConfigurationManager.class.getClassLoader().getResourceAsStream(CONFIGURATION_FILE);
-                if (is == null){
+                if (is == null) {
                     //User user configuration directory
-                    String path = System.getProperty("user.home")+File.separator+USER_CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE;
+                    String path = System.getProperty("user.home") + File.separator + USER_CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE;
                     _configFile = new File(path);
                     if (_configFile.exists()) {
                         is = new FileInputStream(_configFile);
                         Logger.getLogger(UserConfigurationManager.class).info("*** Using user home folder for '" + CONFIGURATION_FILE + "'");
                     }
-                }else{
-                    Logger.getLogger(UserConfigurationManager.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
+                } else {
+                    Logger.getLogger(UserConfigurationManager.class).info("*** Using resource for '" + CONFIGURATION_FILE + "'");
                 }
-            }else{
+            } else {
                 is = new FileInputStream(_configFile);
-                Logger.getLogger(UserConfigurationManager.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
+                Logger.getLogger(UserConfigurationManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + CONFIGURATION_FILE + "'");
             }
-            if (is != null){
+            if (is != null) {
                 //We use an extended properties to be able to load paths defined with backslash (\)
                 PropertiesEx properties = new PropertiesEx();
                 properties.load(is);
@@ -83,38 +95,39 @@ public class UserConfigurationManager {
         }
     }
 
-    private static File getConfigFile(){
-        try{
+    private static File getConfigFile() {
+        try {
             File jarFile = new File(UserConfigurationManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
-            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
-                    for (File file2:file.listFiles()){
-                        if (file2.getName().equals(CONFIGURATION_FILE)){
+            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
+                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
+                    for (File file2 : file.listFiles()) {
+                        if (file2.getName().equals(CONFIGURATION_FILE)) {
                             return file2;
                         }
                     }
                 }
             }
-        }catch(Throwable t){
+        } catch (Throwable t) {
             //Problem finding config folder
             //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
-        try{
+        try {
             //Current folder
-            File file = new File(CONFIGURATION_FOLDER+File.separator+CONFIGURATION_FILE);
-            if (file.exists()){
+            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
+            if (file.exists()) {
                 return file;
             }
 
-        }catch(Throwable t2){
+        } catch (Throwable t2) {
             //Problem finding config folder
             //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
         }
         return null;
     }
 
-    private UserConfigurationManager() {}
+    private UserConfigurationManager() {
+    }
 
     public static String getParameter(String name)
             throws MissingConfigurationParameterException {
@@ -126,13 +139,13 @@ public class UserConfigurationManager {
 
     }
 
-    public static void loadParameters(Hashtable<Object,Object> usrConfig){
+    public static void loadParameters(Hashtable<Object, Object> usrConfig) {
         parameters.putAll(usrConfig);
     }
 
     public static Object getObjectParameter(String name)
             throws MissingConfigurationParameterException {
-        Object value = (Object) parameters.get(name);
+        Object value = parameters.get(name);
         if (value == null) {
             throw new MissingConfigurationParameterException(name);
         }
@@ -143,56 +156,51 @@ public class UserConfigurationManager {
         parameters.put(name, value);
     }
 
-    public static String getParameterWithDefault(String keyword){
+    public static String getParameterWithDefault(String keyword) {
         String value = null;
         try {
             value = getParameter(keyword);
         } catch (MissingConfigurationParameterException e) {
             //empty
         }
-        if (value==null){
+        if (value == null) {
             return _defaultValues.get(keyword);
-        }else{
+        } else {
             return value;
         }
     }
 
-    public static Date getCustomDate(){
-        try{
+    public static Date getCustomDate() {
+        try {
             String value = getParameterWithDefault(CURRENT_DATE_TIME_KW);
-            if (value!=null){
+            if (value != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 return dateFormat.parse(value);
             }
-        }catch(ParseException e){
+        } catch (ParseException e) {
             //empty
         }
         return null;
     }
 
-    public static File getArchetypeFolder(){
-        String folderStr = getParameterWithDefault(ARCHETYPES_FOLDER_KW);
-        return new File(folderStr);
+    public static CmFolder getArchetypeFolder() {
+        return getCmFolder(ARCHETYPES_FOLDER_KW);
     }
 
-    public static File getTemplateFolder(){
-        String folderStr = getParameterWithDefault(TEMPLATES_FOLDER_KW);
-        return new File(folderStr);
+    public static CmFolder getTemplateFolder() {
+        return getCmFolder(TEMPLATES_FOLDER_KW);
     }
 
-    public static File getGuidesFolder(){
-        String folderStr = getParameterWithDefault(GUIDES_FOLDER_KW);
-        return new File(folderStr);
+    public static CmFolder getGuidesFolder() {
+        return getCmFolder(GUIDES_FOLDER_KW);
     }
 
-    public static File getTerminologiesFolder(){
-        String folderStr = getParameterWithDefault(TERMINOLOGIES_FOLDER_KW);
-        return new File(folderStr);
+    public static CmFolder getTerminologiesFolder() {
+        return getCmFolder(TERMINOLOGIES_FOLDER_KW);
     }
 
-    public static File getOntologiesFolder(){
-        String folderStr = getParameterWithDefault(ONTOLOGIES_FOLDER_KW);
-        return new File(folderStr);
+    public static CmFolder getOntologiesFolder() {
+        return getCmFolder(ONTOLOGIES_FOLDER_KW);
     }
 
     public static File getDocumentsFolder(){
@@ -200,15 +208,38 @@ public class UserConfigurationManager {
         return new File(folderStr);
     }
 
-    public static String getLanguage(){
+    public static void setCmFolder(String parameter, String path) {
+        CmFolder cmFolder = getCmFolder(parameter);
+        File folder = new File(path);
+        if (!folder.exists() || !folder.isDirectory()) {
+            throw new InvalidParameterException("Invalid path '" + path + "' given. Trying to set parameter " + parameter);
+        }
+        cmFolder.setFolder(folder);
+    }
+
+    public static CmFolder getCmFolder(String parameter) {
+        CmFolder cmFolder = cmFolderMap.get(parameter);
+        if (cmFolder == null) {
+            String path = getParameterWithDefault(parameter);
+            File folder = new File(".");
+            if (path != null) {
+                folder = new File(path);
+            }
+            cmFolder = new CmFolder(folder);
+            cmFolderMap.put(parameter, cmFolder);
+        }
+        return cmFolder;
+    }
+
+    public static String getLanguage() {
         return getParameterWithDefault(LANGUAGE);
     }
 
-    public static String getCountryCode(){
+    public static String getCountryCode() {
         return getParameterWithDefault(COUNTRY);
     }
 
-    public static void setParameterWithDefault(String keyword, String value){
+    public static void setParameterWithDefault(String keyword, String value) {
         setParameter(keyword, value);
     }
 
@@ -229,7 +260,7 @@ public class UserConfigurationManager {
             JOptionPane.showMessageDialog(null, "Error saving config file", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         } finally {
-            if(out != null) {
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {

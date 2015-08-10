@@ -13,6 +13,10 @@ public class InstanceNotFoundException extends ModelException {
         _classname = classname;
     }
 
+    public InstanceNotFoundException(String message) {
+        super(message);
+    }
+
     public Object getId() {
         return _id;
     }
