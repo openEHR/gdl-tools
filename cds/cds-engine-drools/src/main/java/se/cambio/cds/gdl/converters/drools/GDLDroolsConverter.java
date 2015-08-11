@@ -603,9 +603,10 @@ public class GDLDroolsConverter {
         String code = parseCode(value);
         StringBuilder buf = new StringBuilder("new DvCodedText[] {");
         boolean first = true;
-        for(String terminology : termBindings.keySet()) {
+        for(Map.Entry<String, TermBinding> terminologyEntrySet : termBindings.entrySet()) {
+            String terminology = terminologyEntrySet.getKey();
             log.debug("terminology: " + terminology);
-            TermBinding termBinding = termBindings.get(terminology);
+            TermBinding termBinding = terminologyEntrySet.getValue();
             Map<String, Binding> bindings = termBinding.getBindings();
             log.debug("bindings: " + bindings);
             if(bindings.containsKey(code)) {
