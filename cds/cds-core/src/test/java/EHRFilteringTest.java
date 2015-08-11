@@ -15,6 +15,7 @@ import se.cambio.openehr.util.OpenEHRConstUI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -22,34 +23,32 @@ import static org.junit.Assert.assertEquals;
 
 public class EHRFilteringTest extends GenericTestBase {
 
-    private Collection<ElementInstance> generateElementInstances(){
-        Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
+    private Collection<ArchetypeReference> generateArchetypeReference(){
+        Collection<ArchetypeReference> archetypeReferences = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        elementInstances.add(
-                new ElementInstance(
-                        "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]",
-                        new DvCodedText("Inpatient", "local", "at0007"),
-                        ar, null, null));
+        archetypeReferences.add(ar);
+        new ElementInstance(
+                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]",
+                new DvCodedText("Inpatient", "local", "at0007"),
+                ar, null, null);
         DvDateTime dvDateTime = new DvDateTime("2013-04-05T12:01:00");
-        elementInstances.add(
-                new ElementInstance(
-                        "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
-                        dvDateTime,
-                        ar, null, null));
+        new ElementInstance(
+                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
+                dvDateTime,
+                ar, null, null);
 
         ar = new ArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
-        elementInstances.add(
-                new ElementInstance(
-                        "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]",
-                        new DvCodedText("Inpatient", "local", "at0008"),
-                        ar, null, null));
+        archetypeReferences.add(ar);
+        new ElementInstance(
+                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]",
+                new DvCodedText("Inpatient", "local", "at0008"),
+                ar, null, null);
         dvDateTime = new DvDateTime("2013-06-05T12:01:00");
-        elementInstances.add(
-                new ElementInstance(
-                        "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
-                        dvDateTime,
-                        ar, null, null));
-        return elementInstances;
+        new ElementInstance(
+                "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]",
+                dvDateTime,
+                ar, null, null);
+        return archetypeReferences;
     }
 
 
@@ -68,9 +67,9 @@ public class EHRFilteringTest extends GenericTestBase {
                 .setOperatorKind(OperatorKind.MIN)
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
-        Collection<ElementInstance> elementInstances = generateElementInstances();
+        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
         Set<ArchetypeReference> archetypeReferenceSet =
-                EHRDataFilterUtil.filterEHRData ("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
+                EHRDataFilterUtil.filterEHRData ("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
 
         assertEquals(1, archetypeReferenceSet.size());
     }
@@ -92,9 +91,9 @@ public class EHRFilteringTest extends GenericTestBase {
                 .setOperatorKind(OperatorKind.MIN)
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
-        Collection<ElementInstance> elementInstances = generateElementInstances();
+        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
         Set<ArchetypeReference> archetypeReferenceSet =
-                EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
+                EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(2, archetypeReferenceSet.size());
     }
 
@@ -117,9 +116,9 @@ public class EHRFilteringTest extends GenericTestBase {
                 .setOperatorKind(OperatorKind.MIN)
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
-        Collection<ElementInstance> elementInstances = generateElementInstances();
+        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
         Set<ArchetypeReference> archetypeReferenceSet =
-                EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), elementInstances);
+                EHRDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(2, archetypeReferenceSet.size());
     }
 }
