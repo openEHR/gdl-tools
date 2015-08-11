@@ -106,7 +106,7 @@ public class GdlDroolsPredicateProcessor {
             if (binaryExpression.getRight() instanceof ConstantExpression) {
                 ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
                 processConstantExpressionInBinaryPredicate(constantExpression, variable, binaryExpression.getOperator());
-            }else if (binaryExpression.getRight() instanceof ExpressionItem) {
+            } else {
                 ExpressionItem expressionItem = binaryExpression.getRight();
                 processExpressionItemInBinaryPredicate(expressionItem, variable, binaryExpression.getOperator());
             }

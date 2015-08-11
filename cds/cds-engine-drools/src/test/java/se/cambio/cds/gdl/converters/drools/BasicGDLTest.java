@@ -34,7 +34,7 @@ public class BasicGDLTest extends GDLTestCase {
 
     private RuleExecutionResult rer;
 
-    public BasicGDLTest(){
+    public BasicGDLTest() {
         super();
     }
 
@@ -52,7 +52,7 @@ public class BasicGDLTest extends GDLTestCase {
         ElementInstance ei = arResult.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]");
         assertNotNull(ei);
         assertTrue(ei.getDataValue() instanceof DvCount);
-        assertEquals(2, ((DvCount)ei.getDataValue()).getMagnitude().intValue());
+        assertEquals(2, ((DvCount) ei.getDataValue()).getMagnitude().intValue());
     }
 
     @Test
@@ -73,8 +73,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(4, rer.getFiredRules().size());
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0002")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0012")));
-        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0013")));
-        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1","gt0014")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0013")));
+        assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0014")));
     }
 
     @Test
@@ -144,7 +144,11 @@ public class BasicGDLTest extends GDLTestCase {
         try {
             Collection<ArchetypeReference> archetypeReferences =
                     CDSManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
-            assertEquals(9,archetypeReferences.size());
+            int elementInstanceSize = 0;
+            for (ArchetypeReference archetypeReference : archetypeReferences) {
+                elementInstanceSize += archetypeReference.getElementInstancesMap().size();
+            }
+            assertEquals(9, elementInstanceSize);
         } catch (PatientNotFoundException e) {
             e.printStackTrace();
         } catch (InternalErrorException e) {
@@ -179,37 +183,37 @@ public class BasicGDLTest extends GDLTestCase {
             boolean predicateForBValuesExists = false;
             boolean predicateForGenericEqualsNullValuesExists = false;
             boolean predicateForMinLastAdministrationExists = false;
-            for(ElementInstance elementInstance: elementInstances){
-                if (elementInstance instanceof PredicateGeneratedElementInstance){
-                    PredicateGeneratedElementInstance pgei = (PredicateGeneratedElementInstance)elementInstance;
-                    if (MEDICATION_CODE_ELEMENT_ID.equals(pgei.getId())){
-                        if(OperatorKind.INEQUAL.equals(pgei.getOperatorKind())){
-                            if (pgei.getDataValue() == null){
+            for (ElementInstance elementInstance : elementInstances) {
+                if (elementInstance instanceof PredicateGeneratedElementInstance) {
+                    PredicateGeneratedElementInstance pgei = (PredicateGeneratedElementInstance) elementInstance;
+                    if (MEDICATION_CODE_ELEMENT_ID.equals(pgei.getId())) {
+                        if (OperatorKind.INEQUAL.equals(pgei.getOperatorKind())) {
+                            if (pgei.getDataValue() == null) {
                                 fail("Predicate medication generic name != null should not be generated!");
                             }
-                        }else if(OperatorKind.EQUALITY.equals(pgei.getOperatorKind())){
-                            if (pgei.getDataValue() == null){
+                        } else if (OperatorKind.EQUALITY.equals(pgei.getOperatorKind())) {
+                            if (pgei.getDataValue() == null) {
                                 predicateForGenericEqualsNullValuesExists = true;
                             }
-                        }else if(OperatorKind.IS_A.equals(pgei.getOperatorKind())){
-                            if (pgei.getDataValue() instanceof DvCodedText){
-                                DvCodedText dvCodedText = (DvCodedText)pgei.getDataValue();
+                        } else if (OperatorKind.IS_A.equals(pgei.getOperatorKind())) {
+                            if (pgei.getDataValue() instanceof DvCodedText) {
+                                DvCodedText dvCodedText = (DvCodedText) pgei.getDataValue();
                                 String code = dvCodedText.getCode();
-                                if (code.equals("A01AB06")){
+                                if (code.equals("A01AB06")) {
                                     fail("Predicate medication generic name is_a 'A01AB06' should not be generated!");
-                                }else if (code.startsWith("B01")){
+                                } else if (code.startsWith("B01")) {
                                     predicateForBValuesExists = true;
                                 }
                             }
                         }
-                    }else if (MEDICATION_DATE_INIT_ELEMENT_ID.equals(pgei.getId())){
-                        if(OperatorKind.MAX.equals(pgei.getOperatorKind())){
+                    } else if (MEDICATION_DATE_INIT_ELEMENT_ID.equals(pgei.getId())) {
+                        if (OperatorKind.MAX.equals(pgei.getOperatorKind())) {
                             fail("Predicate medication generic name!=null should not be generated!");
                         }
 
-                    }else if (MEDICATION_DATE_END_ELEMENT_ID.equals(pgei.getId())){
-                        if(OperatorKind.MIN.equals(pgei.getOperatorKind())){
-                            predicateForMinLastAdministrationExists=true;
+                    } else if (MEDICATION_DATE_END_ELEMENT_ID.equals(pgei.getId())) {
+                        if (OperatorKind.MIN.equals(pgei.getOperatorKind())) {
+                            predicateForMinLastAdministrationExists = true;
                         }
                     }
                 }
@@ -244,8 +248,8 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(7, rer.getArchetypeReferences().size());
         assertEquals(4, rer.getFiredRules().size());
         assertEquals(4, ars.size());
-        for(ArchetypeReference arAux: ars){
-            if (GDLTestCase.MEDICATION_ARCHETYPE_ID.equals(arAux.getIdArchetype())){
+        for (ArchetypeReference arAux : ars) {
+            if (GDLTestCase.MEDICATION_ARCHETYPE_ID.equals(arAux.getIdArchetype())) {
                 assertEquals(3, arAux.getElementInstancesMap().size()); //End date is generated in CDSManager
             }
         }
@@ -277,7 +281,7 @@ public class BasicGDLTest extends GDLTestCase {
         assertNotNull(contactEndElement);
         DataValue dv = contactEndElement.getDataValue();
         assertTrue(dv instanceof DvDateTime);
-        assertEquals(Calendar.getInstance().get(Calendar.YEAR)-1,((DvDateTime)dv).getYear());
+        assertEquals(Calendar.getInstance().get(Calendar.YEAR) - 1, ((DvDateTime) dv).getYear());
     }
 
     @Test
@@ -300,27 +304,27 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(9, rer.getArchetypeReferences().size());
         assertEquals(11, rer.getFiredRules().size());
         boolean strokeARFound = false;
-        for(ArchetypeReference ar: rer.getArchetypeReferences()){
-            if (ar.getIdArchetype().equals("openEHR-EHR-OBSERVATION.stroke_risk.v1")){
+        for (ArchetypeReference ar : rer.getArchetypeReferences()) {
+            if (ar.getIdArchetype().equals("openEHR-EHR-OBSERVATION.stroke_risk.v1")) {
                 strokeARFound = true;
                 assertEquals(1, ar.getElementInstancesMap().size());
                 ElementInstance strokeRiskElement = ar.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.stroke_risk.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]");
                 assertNotNull(strokeRiskElement);
                 DataValue dv = strokeRiskElement.getDataValue();
                 assertTrue(dv instanceof DvOrdinal);
-                assertEquals(3, ((DvOrdinal)dv).getValue());
-            }else if (ar.getIdArchetype().equals("openEHR-EHR-INSTRUCTION.medication.v1")){
+                assertEquals(3, ((DvOrdinal) dv).getValue());
+            } else if (ar.getIdArchetype().equals("openEHR-EHR-INSTRUCTION.medication.v1")) {
                 medicationCount++;
             }
         }
         assertTrue(strokeARFound);
-        assertEquals(4,medicationCount);
+        assertEquals(4, medicationCount);
     }
 
     @Test
     public void shouldPerformRoundtripJSONSerializationOfRuleExecutionResults() {
         Gson gson = new CdsGsonBuilderFactory().getGsonBuilder().create();
-        if (rer == null){
+        if (rer == null) {
             shouldAllowCDSInitialization();
         }
         String json = gson.toJson(rer);
