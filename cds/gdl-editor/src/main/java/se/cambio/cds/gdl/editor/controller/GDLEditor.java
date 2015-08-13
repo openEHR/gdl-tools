@@ -152,9 +152,9 @@ public class GDLEditor implements EditorController<Guide> {
     private static void check(String originalLang, Map<String, TermDefinition> termDefinitionMap) {
         TermDefinition originalTermDefinition =
                 termDefinitionMap.get(originalLang);
-        for (String langCode : termDefinitionMap.keySet()) {
-            if (!langCode.equals(originalLang)) {
-                TermDefinition td = termDefinitionMap.get(langCode);
+        for (Map.Entry<String, TermDefinition> langCode : termDefinitionMap.entrySet()) {
+            if (!langCode.getKey().equals(originalLang)) {
+                TermDefinition td = langCode.getValue();
                 for (String gtCode : originalTermDefinition.getTerms().keySet()) {
                     if (!td.getTerms().containsKey(gtCode)) {
                         Logger.getLogger(GDLEditor.class).warn(
