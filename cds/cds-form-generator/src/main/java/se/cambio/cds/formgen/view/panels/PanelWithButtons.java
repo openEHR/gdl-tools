@@ -24,13 +24,13 @@ public class PanelWithButtons extends JPanel {
 	panelAux.setLayout(new BoxLayout(panelAux, BoxLayout.Y_AXIS));
 	this.add(panelAux);
 	this.setBorder(BorderFactory.createTitledBorder(name));
-	for (JLabel label : dvGenericPanelsMap.keySet()) {
+	for (Map.Entry<JLabel, DVGenericPanel> dvGenericPanelEntry : dvGenericPanelsMap.entrySet()) {
 	    JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-	    panelAux2.add(label);
+	    panelAux2.add(dvGenericPanelEntry.getKey());
         panelAux2.add(Box.createHorizontalStrut(5));
         panelAux2.add(new JLabel("="));
         panelAux2.add(Box.createHorizontalStrut(5));
-	    panelAux2.add(dvGenericPanelsMap.get(label));
+	    panelAux2.add(dvGenericPanelEntry.getValue());
 	    panelAux.add(panelAux2);
 	}
 	if (_addButton!=null){
