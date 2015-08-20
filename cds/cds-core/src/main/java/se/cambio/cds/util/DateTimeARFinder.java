@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-
+//TODO use Spring
 public class DateTimeARFinder {
     private static DateTimeARFinder _delegate = null;
     public static final String CONFIGURATION_FILE = "DateTimePath.properties";

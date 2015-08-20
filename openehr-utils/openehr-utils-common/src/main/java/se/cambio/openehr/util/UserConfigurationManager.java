@@ -20,6 +20,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 
+//TODO use Spring
 public class UserConfigurationManager {
 
     public static String ARCHETYPES_FOLDER_KW = "ArchetypesFolder";

@@ -92,13 +92,13 @@ public class SimpleGuideManager {
         //Get all idElements
         Set<String> idElementsEHR = elementInstancesCollection.getElementIdsByIdDomain(Domains.EHR_ID);
 
-        for (String idGuide : _elementInstanceCollectionByIdGuideMap.keySet()) {
-            ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
+        for (Map.Entry<String, ElementInstanceCollection> idGuide : _elementInstanceCollectionByIdGuideMap.entrySet()) {
+            ElementInstanceCollection eic = idGuide.getValue();
             Set<String> idElementsEHRAux = new HashSet<String>();
             idElementsEHRAux.addAll(eic.getElementIdsByIdDomain(Domains.EHR_ID));
             idElementsEHRAux.addAll(eic.getElementIdsByIdDomain(ElementInstanceCollection.EMPTY_CODE));
             if (idElementsEHR.containsAll(idElementsEHRAux)) {
-                guideIds.add(idGuide);
+                guideIds.add(idGuide.getKey());
             }
         }
         return guideIds;
@@ -278,9 +278,9 @@ public class SimpleGuideManager {
 
     public Set<String> getAllGuideIdsWithCDSDomain(ElementInstance elementInstance) {
         Set<String> idGuides = new HashSet<String>();
-        for (String idGuide : _elementInstanceCollectionByIdGuideMap.keySet()) {
+        for (Map.Entry<String, ElementInstanceCollection> idGuide : _elementInstanceCollectionByIdGuideMap.entrySet()) {
             Set<ArchetypeReference> archetypeReferences =
-                    _elementInstanceCollectionByIdGuideMap.get(idGuide).getArchetypeReferences(elementInstance.getArchetypeReference());
+                    idGuide.getValue().getArchetypeReferences(elementInstance.getArchetypeReference());
             Iterator<ArchetypeReference> i = archetypeReferences.iterator();
             boolean inCDS = false;
             while (i.hasNext() && !inCDS) {
@@ -290,7 +290,7 @@ public class SimpleGuideManager {
                 }
             }
             if (inCDS) {
-                idGuides.add(idGuide);
+                idGuides.add(idGuide.getKey());
             }
         }
         return idGuides;

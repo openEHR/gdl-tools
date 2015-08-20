@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 
+//TODO use Spring
 public final class GDLEditorConfigurationParametersManager {
 
     private static final String JNDI_PREFIX = "java:comp/env/";
