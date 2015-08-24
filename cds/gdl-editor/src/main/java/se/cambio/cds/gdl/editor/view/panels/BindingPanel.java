@@ -166,7 +166,7 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
                 int rows[] = getBindingTable()
                         .getSelectedRows();
                 if (otm != null) {
-                    if (rows.length >= 0) {
+                    if (rows.length > 0) {
                         for (int i = rows.length - 1; i >= 0; i--) {
                             otm.removeRow(rows[i]);
                         }

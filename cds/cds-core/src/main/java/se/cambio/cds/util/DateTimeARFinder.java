@@ -63,15 +63,17 @@ public class DateTimeARFinder {
             if (!jarFile.exists()){
                 throw new FileNotFoundException();
             }
-            for (File file: jarFile.getParentFile().getParentFile().listFiles()) {
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                    for (File file2:file.listFiles()) {
-                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                            return file2;
-                        }
-                    }
-                }
-            }
+			if(jarFile != null && jarFile.getParentFile() != null && jarFile.getParentFile().getParentFile() != null) {
+				for (File file: jarFile.getParentFile().getParentFile().listFiles()) {
+					if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER) && file.listFiles() != null) {
+						for (File file2:file.listFiles()) {
+							if (file2.getName().equals(CONFIGURATION_FILE)) {
+								return file2;
+							}
+						}
+					}
+				}
+			}
         } catch(Exception t) {
             logger.debug("CONF Folder not found in jar: " + t.getMessage());
         }

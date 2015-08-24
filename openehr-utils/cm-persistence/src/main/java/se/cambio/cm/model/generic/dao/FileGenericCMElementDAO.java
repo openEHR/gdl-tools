@@ -51,16 +51,18 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         }
         Collection<String> ids = new ArrayList<String>();
         File[] listOfFiles = getFolder().listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                String fileName = listOfFiles[i].getName();
-                String fileExtension = matchingFileExtension(fileName);
-                if (fileExtension!=null) {
-                    String id = getId(fileName, fileExtension);
-                    ids.add(id);
-                }
-            }
-        }
+		if(listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					String fileName = listOfFiles[i].getName();
+					String fileExtension = matchingFileExtension(fileName);
+					if (fileExtension!=null) {
+						String id = getId(fileName, fileExtension);
+						ids.add(id);
+					}
+				}
+			}
+		}
         return ids;
     }
 
@@ -71,26 +73,28 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
             throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
         File[] listOfFiles = getFolder().listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            File file = listOfFiles[i];
-            if (file.isFile()) {
-                String fileName = file.getName();
-                String fileExtension = matchingFileExtension(fileName);
-                if (fileExtension!=null) {
-                    try {
-                        FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-                        try {
-                            E cmElement = getCMElement(fileName, fileExtension, fis, new Date(file.lastModified()));
-                            cmElements.add(cmElement);
-                        }finally{
-                            fis.close();
-                        }
-                    } catch (Exception e) {
-                        ExceptionHandler.handle(e);
-                    }
-                }
-            }
-        }
+		if(listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				File file = listOfFiles[i];
+				if (file.isFile()) {
+					String fileName = file.getName();
+					String fileExtension = matchingFileExtension(fileName);
+					if (fileExtension!=null) {
+						try {
+							FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+							try {
+								E cmElement = getCMElement(fileName, fileExtension, fis, new Date(file.lastModified()));
+								cmElements.add(cmElement);
+							}finally{
+								fis.close();
+							}
+						} catch (Exception e) {
+							ExceptionHandler.handle(e);
+						}
+					}
+				}
+			}
+		}
         return cmElements;
     }
 
@@ -154,14 +158,16 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     @Override
     public void removeAll() throws InternalErrorException {
         File[] listOfFiles = getFolder().listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            File file = listOfFiles[i];
-            String matchingExtension = matchingFileExtension(file.getName());
-            if (matchingExtension != null){
-                String id = getId(file.getName(), matchingExtension);
-                remove(id);
-            }
-        }
+		if(listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				File file = listOfFiles[i];
+				String matchingExtension = matchingFileExtension(file.getName());
+				if (matchingExtension != null){
+					String id = getId(file.getName(), matchingExtension);
+					remove(id);
+				}
+			}
+		}
     }
 
     @Override
@@ -171,13 +177,15 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         }
         Date lastModifiedDate = null;
         File[] listOfFiles = getFolder().listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            File file = listOfFiles[i];
-            Date date = new Date(file.lastModified());
-            if (lastModifiedDate == null || date.after(lastModifiedDate)){
-                lastModifiedDate = date;
-            }
-        }
+		if(listOfFiles != null) {
+			for (int i = 0; i < listOfFiles.length; i++) {
+				File file = listOfFiles[i];
+				Date date = new Date(file.lastModified());
+				if (lastModifiedDate == null || date.after(lastModifiedDate)){
+					lastModifiedDate = date;
+				}
+			}
+		}
         return lastModifiedDate;
     }
 

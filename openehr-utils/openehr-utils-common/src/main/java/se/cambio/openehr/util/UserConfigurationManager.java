@@ -100,15 +100,17 @@ public class UserConfigurationManager {
         try {
             File jarFile = new File(UserConfigurationManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
-            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                    for (File file2 : file.listFiles()) {
-                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                            return file2;
-                        }
-                    }
-                }
-            }
+			if(jarFile != null) {
+				for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
+					if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER) && file.listFiles() != null) {
+						for (File file2 : file.listFiles()) {
+							if (file2.getName().equals(CONFIGURATION_FILE)) {
+								return file2;
+							}
+						}
+					}					
+				}
+			}
         } catch (Throwable t) {
             //Problem finding config folder
             //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
