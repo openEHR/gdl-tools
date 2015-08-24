@@ -16,11 +16,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 
-public class TestConvertToDrools {
+public class ConvertToDroolsTest {
 
     @Before
 	public void setUp() throws Exception {
-        String archetypesFolderPath = TestConvertToDrools.class.getClassLoader().getResource("archetypes").getPath();
+        String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
         UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
 		parser = new GDLParser();
 		guide = null;
