@@ -13,12 +13,7 @@ import java.io.OutputStream;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 //TODO use Spring
 public class UserConfigurationManager {
@@ -99,16 +94,27 @@ public class UserConfigurationManager {
     private static File getConfigFile() {
         try {
             File jarFile = new File(UserConfigurationManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            //../conf
-            for (File file : jarFile.getParentFile().getParentFile().listFiles()) {
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                    for (File file2 : file.listFiles()) {
-                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                            return file2;
+            File parentFile = jarFile.getParentFile();
+            if(parentFile != null) {
+                File grandParentFile = parentFile.getParentFile();
+                if(grandParentFile != null) {
+                    File[] files = grandParentFile.listFiles();
+                    if(files != null) {
+                        for (File file : files) {
+                            if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER) && file.listFiles() != null) {
+                                File[] files2 = file.listFiles();
+                                if(files2 != null) {
+                                    for (File file2 : files2) {
+                                        if (file2.getName().equals(CONFIGURATION_FILE)) {
+                                            return file2;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            }
+			}
         } catch (Throwable t) {
             //Problem finding config folder
             //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());

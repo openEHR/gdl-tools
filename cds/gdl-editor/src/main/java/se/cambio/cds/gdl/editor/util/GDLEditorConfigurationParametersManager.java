@@ -60,16 +60,27 @@ public final class GDLEditorConfigurationParametersManager {
     private static File getConfigFile(){
         try{
             File jarFile = new File(GDLEditorConfigurationParametersManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            //../conf
-            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
-                    for (File file2:file.listFiles()){
-                        if (file2.getName().equals(CONFIGURATION_FILE)){
-                            return file2;
+            File parentFile = jarFile.getParentFile();
+            if(parentFile != null) {
+                File grandParentFile = parentFile.getParentFile();
+                if(grandParentFile != null) {
+                    File[] files = grandParentFile.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
+                                File[] files2 = file.listFiles();
+                                if(files2 != null) {
+                                    for (File file2 : files2) {
+                                        if (file2.getName().equals(CONFIGURATION_FILE)) {
+                                            return file2;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            }
+				}
+			}
         }catch(Throwable t){
             //Problem finding config folder
             //Logger.getLogger(GDLEditorConfigurationParametersManager.class).warn("CONF Folder not found "+t.getMessage());
