@@ -59,20 +59,29 @@ public class DateTimeARFinder {
     private static File getConfigFile() {
         try{
             File jarFile = new File(DateTimeARFinder.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            //../conf
             if (!jarFile.exists()){
                 throw new FileNotFoundException();
             }
-			if(jarFile != null && jarFile.getParentFile() != null && jarFile.getParentFile().getParentFile() != null) {
-				for (File file: jarFile.getParentFile().getParentFile().listFiles()) {
-					if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER) && file.listFiles() != null) {
-						for (File file2:file.listFiles()) {
-							if (file2.getName().equals(CONFIGURATION_FILE)) {
-								return file2;
-							}
-						}
-					}
-				}
+            File parentFile = jarFile.getParentFile();
+            if(parentFile != null) {
+                File grandParentFile = parentFile.getParentFile();
+                if(grandParentFile != null) {
+                    File[] files = grandParentFile.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
+                                File[] files2 = file.listFiles();
+                                if(files2 != null) {
+                                    for (File file2 : files2) {
+                                        if (file2.getName().equals(CONFIGURATION_FILE)) {
+                                            return file2;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 			}
         } catch(Exception t) {
             logger.debug("CONF Folder not found in jar: " + t.getMessage());
