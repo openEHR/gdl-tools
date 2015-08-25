@@ -194,7 +194,7 @@
         </dependency>
         <dependency>
             <groupId>se.cambio.cds</groupId>
-            <artifactId>gdl-drools-converter</artifactId>
+            <artifactId>cds-engine-drools</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
