@@ -80,15 +80,17 @@ public class TerminologyServiceConfiguration {
         try{
             File jarFile = new File(TerminologyServiceConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             //../conf
-            for (File file:jarFile.getParentFile().getParentFile().listFiles()){
-                if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)){
-                    for (File file2:file.listFiles()){
-                        if (file2.getName().equals(CONFIGURATION_FILE)){
-                            return file2;
-                        }
-                    }
-                }
-            }
+			if(jarFile != null) {
+				for (File file:jarFile.getParentFile().getParentFile().listFiles()){
+					if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER) && file != null){
+						for (File file2:file.listFiles()){
+							if (file2.getName().equals(CONFIGURATION_FILE)){
+								return file2;
+							}
+						}
+					}
+				}
+			}
         }catch(Throwable t){
             //Problem finding config folder
             //Logger.getLogger(TerminologyServiceConfiguration.class).warn("CONF Folder not found "+t.getMessage());

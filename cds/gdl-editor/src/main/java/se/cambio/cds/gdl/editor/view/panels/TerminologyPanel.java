@@ -169,7 +169,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
             ttm = getTerminologyTable().getTerminologyTableModel();
             int rows[] = getTerminologyTable().getSelectedRows();
             if (ttm != null) {
-                if (rows.length >= 0) {
+                if (rows.length > 0) {
                     for (int i = rows.length - 1; i >= 0; i--) {
                         ttm.removeRow(rows[i]);
                     }
@@ -185,7 +185,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
         TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
         int rows[] = getTerminologyTable().getSelectedRows();
         if (ttm != null) {
-            if (rows.length >= 0) {
+            if (rows.length > 0) {
                 for (int i = rows.length - 1; i >= 0; i--) {
                     gtCodes.add((String)ttm.getValueAt(rows[i], 0));
                 }
