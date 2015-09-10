@@ -171,16 +171,6 @@ public class ElementInstanceCollection {
         return elementInstances;
     }
 
-    /*
-    public Set<ArchetypeReference> getArchetypeReferencesByDomain(String idDomain){
-	Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-	for (String idArchetype : getArchetypeReferenceMap().keySet()) {
-	    archetypeReferences.addAll(getAllArchetypeReferences(idArchetype, idDomain));
-	}
-	return archetypeReferences;
-    }
-     */
-
     public void merge(Collection<ElementInstanceCollection> elementInstanceCollections){
         for (ElementInstanceCollection eic : elementInstanceCollections) {
             this.merge(eic);
@@ -235,37 +225,6 @@ public class ElementInstanceCollection {
         return arSet;
     }
 
-    /*
-    private Set<ArchetypeReference> getArchetypeReferencesCheckIdDomainAndIdAux(String idArchetype, String idDomain, String idAux){
-	if (idDomain==null){
-	    if (idAux==null){
-		return getAllArchetypeReferences(idArchetype);
-	    }else{
-		return getAllArchetypeReferencesNoIdDomain(idArchetype, idAux);
-	    }
-	}else{
-	    return getArchetypeReferencesCheckIdAux(idArchetype, idDomain, idAux);
-	}
-    }
-
-    private Set<ArchetypeReference> getArchetypeReferencesCheckIdAux(String idArchetype, String idDomain, String idAux){
-	if (idAux==null){
-	    return getAllArchetypeReferences(idArchetype, idDomain);
-	}else{
-	    return getArchetypeReferences(idArchetype, idDomain, idAux);
-	}
-    }
-
-    private Set<ArchetypeReference> getAllArchetypeReferencesNoIdDomain(String idArchetype, String idAux){
-	Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
-	Map<String, Map<String, Set<ArchetypeReference>>> archetypeReferencesMap = getArchetypeReferenceMap(idArchetype);
-	for (String idDomain : archetypeReferencesMap.keySet()) {
-	    archetypeReferences.addAll(getArchetypeReferences(idArchetype, idDomain, idAux));
-	}
-	return archetypeReferences;
-    }
-
-     */
 
     private Set<ArchetypeReference> getAllArchetypeReferences(String idArchetype){
         Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
@@ -278,26 +237,12 @@ public class ElementInstanceCollection {
     private Set<ArchetypeReference> getAllArchetypeReferences(String idArchetype, String idDomain){
         Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
         Map<String, Set<ArchetypeReference>> archetypeReferencesMap = getArchetypeReferenceMap(idArchetype, idDomain);
-        for (String idAux : archetypeReferencesMap.keySet()) {
-            archetypeReferences.addAll(archetypeReferencesMap.get(idAux));
+        for (Set<ArchetypeReference> idAux : archetypeReferencesMap.values()) {
+            archetypeReferences.addAll(idAux);
         }
         return archetypeReferences;
     }
 
-    /*
-    private Set<ElementInstance> getElementInstances(String idArchetype, String idDomain, String idAux, String elementId){
-	if (elementId==null){
-	    Logger.getLogger(ElementInstanceCollection.class).warn("Call to getElementInstances with elementId=='null'");
-	}
-	Set<ArchetypeReference> archetypeReferences = 
-		getArchetypeReferences(idArchetype, idDomain, idAux);
-	Set<ElementInstance> elementInstances = new HashSet<ElementInstance>();
-	for (ArchetypeReference archetypeReference : archetypeReferences) {
-	    elementInstances.add(archetypeReference.getElementInstancesMap().get(elementId));
-	}
-	return elementInstances;
-    }
-     */
     private Set<ArchetypeReference> getArchetypeReferences(String idArchetype, String idDomain, String idAux){
         if (idAux==null){
             Logger.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferences with idAux=='null'");

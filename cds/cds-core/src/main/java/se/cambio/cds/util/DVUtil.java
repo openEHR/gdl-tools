@@ -56,7 +56,9 @@ public class DVUtil {
         }else if (dv1 instanceof DvProportion && dv2 instanceof DvProportion){
             DvProportion dvProportion1 = (DvProportion) dv1;
             DvProportion dvProportion2 = (DvProportion) dv2;
-            return (dvProportion1.getNumerator()/dvProportion1.getDenominator()) == (dvProportion2.getNumerator()/dvProportion2.getDenominator());
+            BigDecimal bigDecimalProportion1 = BigDecimal.valueOf(dvProportion1.getNumerator() / dvProportion1.getDenominator());
+            BigDecimal bigDecimalProportion2 = BigDecimal.valueOf(dvProportion2.getNumerator()/dvProportion2.getDenominator());
+            return bigDecimalProportion1.equals(bigDecimalProportion2);
         }else if (dv1 instanceof DvTemporal && dv2 instanceof DvTemporal){
             DvTemporal dvTemporal1 = (DvTemporal)dv1;
             DvTemporal dvTemporal2 = (DvTemporal)dv2;
