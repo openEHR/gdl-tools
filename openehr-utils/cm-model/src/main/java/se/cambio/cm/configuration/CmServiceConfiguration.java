@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySources;
 @ComponentScan({"se.cambio.cm.model", "se.cambio.openehr.model"})
 @PropertySources({
         @PropertySource("classpath:cds-config-default.properties"),
-        @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/cds-config.properties", ignoreResourceNotFound = true)
+        @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/default-cds-config.properties", ignoreResourceNotFound = true)
 })
 public class CmServiceConfiguration {
 }

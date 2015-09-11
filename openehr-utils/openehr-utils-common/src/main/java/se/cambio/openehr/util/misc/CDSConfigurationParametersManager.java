@@ -8,10 +8,10 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySources({
-        @PropertySource(value = "classpath:default-cds-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/cds-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:cds-config.properties", ignoreResourceNotFound = true)
+        @PropertySource(value = "classpath:default-default-cds-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/default-cds-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:conf/default-cds-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "classpath:default-cds-config.properties", ignoreResourceNotFound = true)
 })
 public class CDSConfigurationParametersManager {
     private static final String KM_SERVER_HOST = "km-server.host";
