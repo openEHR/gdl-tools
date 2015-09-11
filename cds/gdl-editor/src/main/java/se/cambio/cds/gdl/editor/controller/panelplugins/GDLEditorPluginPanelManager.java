@@ -1,10 +1,9 @@
 package se.cambio.cds.gdl.editor.controller.panelplugins;
 
-import org.apache.log4j.Logger;
-import se.cambio.cds.gdl.editor.util.GDLEditorConfigurationParametersManager;
+import se.cambio.cds.gdl.editor.util.GDLEditorConfig;
 import se.cambio.cds.gdl.editor.view.panels.AbstractPluginPanel;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,34 +18,30 @@ public class GDLEditorPluginPanelManager {
     private static GDLEditorPluginPanelManager _instance;
     private Map<String, AbstractPluginPanel> pluginPanelMap = null;
 
-    private GDLEditorPluginPanelManager(){
-        String gdlEditorPlugins = null;
+    private GDLEditorPluginPanelManager() {
+        GDLEditorConfig gdlEditorConfig = BeanProvider.getBean(GDLEditorConfig.class);
+        String gdlEditorPlugins = gdlEditorConfig.getGdlEditorPlugins();
         pluginPanelMap = new HashMap<String, AbstractPluginPanel>();
-        try {
-            gdlEditorPlugins = GDLEditorConfigurationParametersManager.getParameter(GDLEditorConfigurationParametersManager.GDL_PLUGINS_KEY);
-        } catch (MissingConfigurationParameterException e) {
-            Logger.getLogger(GDLEditorPluginPanelManager.class).info("No gdl editor plugins found.");
-        }
-        if (gdlEditorPlugins!=null && !gdlEditorPlugins.trim().isEmpty()){
-            try{
+        if (gdlEditorPlugins != null && !gdlEditorPlugins.trim().isEmpty()) {
+            try {
                 String[] gdlEditorPluginsClasses = gdlEditorPlugins.split(",");
-                for(String gdlEditorPluginClass: gdlEditorPluginsClasses){
+                for (String gdlEditorPluginClass : gdlEditorPluginsClasses) {
                     gdlEditorPluginClass = gdlEditorPluginClass.trim();
                     Class pluginClass = Class.forName(gdlEditorPluginClass);
-                    AbstractPluginPanel abstractPluginPanel = (AbstractPluginPanel)pluginClass.newInstance();
+                    AbstractPluginPanel abstractPluginPanel = (AbstractPluginPanel) pluginClass.newInstance();
                     pluginPanelMap.put(gdlEditorPluginClass, abstractPluginPanel);
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 ExceptionHandler.handle(e);
             }
         }
     }
 
-    public static Collection<AbstractPluginPanel> getPluginPanels(){
+    public static Collection<AbstractPluginPanel> getPluginPanels() {
         return getDelegate().pluginPanelMap.values();
     }
 
-    public static GDLEditorPluginPanelManager getDelegate(){
+    public static GDLEditorPluginPanelManager getDelegate() {
         if (_instance == null) {
             _instance = new GDLEditorPluginPanelManager();
         }

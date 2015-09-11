@@ -1,14 +1,12 @@
 package se.cambio.cds.gdl.editor.util;
 
+import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.misc.UTF8Control;
+
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
-import se.cambio.openehr.util.misc.UTF8Control;
-
 
 
 public final class GDLEditorLanguageManager {
@@ -17,60 +15,55 @@ public final class GDLEditorLanguageManager {
     private static GDLEditorLanguageManager _instance;
 
     private ResourceBundle _resource = null;
-    public static final String MESSAGES_BUNDLE = "Messages/ResourceBundle";
+    public static final String MESSAGES_BUNDLE = "se.cambio.cds.gdl.editor.view.messages.Messages";
     public String _lng = null;
 
-    private GDLEditorLanguageManager(){
-	_lng = UserConfigurationManager.getLanguage();
-	String country = UserConfigurationManager.getCountryCode();
-	try {
-	    String msgBundle = GDLEditorConfigurationParametersManager.getParameter(MESSAGES_BUNDLE);
-	    _resource = ResourceBundle.getBundle(msgBundle,new Locale(_lng,country), new UTF8Control());
-	} catch (MissingConfigurationParameterException e) {
-	    ExceptionHandler.handle(e);
-	}
+    private GDLEditorLanguageManager() {
+        _lng = UserConfigurationManager.getLanguage();
+        String country = UserConfigurationManager.getCountryCode();
+        _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(_lng, country), new UTF8Control());
     }
 
-    public static void refreshConfig(){
-	_instance = null;
-	getDelegate();
+    public static void refreshConfig() {
+        _instance = null;
+        getDelegate();
     }
 
     public static String getMessage(String key) {
-	try {
-	    return getDelegate()._resource.getString(key);
-	} catch (MissingResourceException e) {
-	    ExceptionHandler.handle(e);
-	    return "ERROR: Text not Found!";
-	}
+        try {
+            return getDelegate()._resource.getString(key);
+        } catch (MissingResourceException e) {
+            ExceptionHandler.handle(e);
+            return "ERROR: Text not Found!";
+        }
     }
 
-    public static String getMessage(String key,String data1) {
-	String s = getDelegate()._resource.getString(key);
-	int i = s.indexOf("$0");
-	if (i>=0&&i<s.length()){
-	    String s1 = s.substring(0,i);
-	    String s2 = s.substring(i+2,s.length());
-	    return s1+data1+s2;
-	}else return s;
+    public static String getMessage(String key, String data1) {
+        String s = getDelegate()._resource.getString(key);
+        int i = s.indexOf("$0");
+        if (i >= 0 && i < s.length()) {
+            String s1 = s.substring(0, i);
+            String s2 = s.substring(i + 2, s.length());
+            return s1 + data1 + s2;
+        } else return s;
     }
 
-    public static String getMessage(String key,String [] data) {
-	String s = getDelegate()._resource.getString(key);
-	for (int i=0;i<data.length && i<10;i++){
-	    int index = s.indexOf("$"+i);
-	    String s1 = s.substring(0,index);
-	    String s2 = s.substring(index+2,s.length());
-	    s = s1+data[i]+s2;
-	}
-	return s;
+    public static String getMessage(String key, String[] data) {
+        String s = getDelegate()._resource.getString(key);
+        for (int i = 0; i < data.length && i < 10; i++) {
+            int index = s.indexOf("$" + i);
+            String s1 = s.substring(0, index);
+            String s2 = s.substring(index + 2, s.length());
+            s = s1 + data[i] + s2;
+        }
+        return s;
     }
 
     private static GDLEditorLanguageManager getDelegate() {
-	if (_instance==null){
-	    _instance = new GDLEditorLanguageManager();
-	}
-	return _instance;
+        if (_instance == null) {
+            _instance = new GDLEditorLanguageManager();
+        }
+        return _instance;
     }
 
 }

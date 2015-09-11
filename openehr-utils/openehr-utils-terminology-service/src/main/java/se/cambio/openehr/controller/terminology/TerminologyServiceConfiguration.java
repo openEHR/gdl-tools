@@ -2,187 +2,70 @@ package se.cambio.openehr.controller.terminology;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.env.Environment;
 
-import javax.naming.InitialContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-//TODO use Spring
+@Configuration
+@PropertySources({
+        @PropertySource(value = "classpath:default-terminology-service-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/terminology-service-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
+})
 public class TerminologyServiceConfiguration {
 
-    private static final String JNDI_PREFIX = "java:comp/env/";
-    private static final String CONFIGURATION_FILE = "TerminologyServiceConfig.properties";
-    private static final String CONFIGURATION_FOLDER = "conf";
     private static TerminologyServiceConfiguration _delegate = null;
     private Set<CodePhrase> supportedLanguages;
-    private Map<String, String> terminologyPluginSourcesClass;
+    private Map<String, String> terminologyPluginSourcesClassMap;
     private Map<String, String> terminologyURLs;
     private static Logger log = Logger.getLogger(TerminologyServiceConfiguration.class);
-    private static boolean usesJNDI;
-    private static Map <Object,Object> parameters;
 
-    static {
-	/*         
-	 * We use a synchronized map because it will be filled by using a 
-	 * lazy strategy.
-	 */
-        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
-        try {
-	    /* Read property file (if exists).*/
-            Class<TerminologyServiceConfiguration> configurationParametersManagerClass =
-                    TerminologyServiceConfiguration.class;
-            ClassLoader classLoader =
-                    configurationParametersManagerClass.getClassLoader();
-            File configFile = getConfigFile();
-            InputStream inputStream = null;
-            if (configFile!=null){
-                inputStream = new FileInputStream(configFile);
-                Logger.getLogger(TerminologyServiceConfiguration.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
-            }else{
-                inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(TerminologyServiceConfiguration.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
-            }
-            Properties properties = new Properties();
-            properties.load(inputStream);
-            inputStream.close();
+    @Autowired
+    Environment environment;
+    private static final String URL_POSTFIX = "-url";
+    private static final String PLUGIN_CLASS_POSTFIX = "-plugin.class";
 
-	    /* We have been able to read the file. */
-            usesJNDI = false;
-            parameters.putAll(properties);
-        } catch (Exception e) {
-	    /* We have not been able to read the file. */
-            usesJNDI = true;
-        }
-    }
-
-    private TerminologyServiceConfiguration() {
-        super();
+    public TerminologyServiceConfiguration() {
         // TODO hardcoded language supports
         this.supportedLanguages = new HashSet<CodePhrase>();
         this.supportedLanguages.add(new CodePhrase("ISO_639-1", "en"));
         this.supportedLanguages.add(new CodePhrase("ISO_639-1", "sv"));
         this.supportedLanguages.add(new CodePhrase("ISO_639-1", "es"));
-        try {
-            loadFromProperties();
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (MissingConfigurationParameterException e) {
-            ExceptionHandler.handle(e);
+        this.terminologyURLs = new HashMap<String, String>();
+        this.terminologyPluginSourcesClassMap = new HashMap<String, String>();
+    }
+
+    public boolean languageSupported(CodePhrase language) {
+        return supportedLanguages.contains(language);
+    }
+
+    public String terminologyURL(String terminologyId) {
+        if (!terminologyURLs.containsKey(terminologyId)) {
+            loadFromProperties(terminologyId);
         }
+        return terminologyURLs.get(terminologyId);
     }
 
-    private static File getConfigFile(){
-        try{
-            File jarFile = new File(TerminologyServiceConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            File parentFile = jarFile.getParentFile();
-            if(parentFile != null) {
-                File grandParentFile = parentFile.getParentFile();
-                if(grandParentFile != null) {
-                    File[] files = grandParentFile.listFiles();
-                    if (files != null) {
-                        for (File file : files) {
-                            if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                                File[] files2 = file.listFiles();
-                                if(files2 != null) {
-                                    for (File file2 : files2) {
-                                        return file2;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-			}
-        }catch(Throwable t){
-            //Problem finding config folder
-            //Logger.getLogger(TerminologyServiceConfiguration.class).warn("CONF Folder not found "+t.getMessage());
+    public String getPluginSourceClass(String terminologyId) {
+        if (!terminologyPluginSourcesClassMap.containsKey(terminologyId)) {
+            loadFromProperties(terminologyId);
         }
-        return null;
+        return terminologyPluginSourcesClassMap.get(terminologyId);
     }
 
-    private void loadFromProperties() throws InternalErrorException, MissingConfigurationParameterException {
-        Set<Object> keys = parameters.keySet();
-        terminologyURLs = new HashMap<String, String>();
-        terminologyPluginSourcesClass = new HashMap<String, String>();
-
-        for (Object key : keys) {
-            if (key instanceof String){
-                String keyStr = (String)key;
-                int i = keyStr.lastIndexOf("_");
-                String terminology = keyStr.substring(0, i);
-                String value = getParameter(keyStr);
-                if (keyStr.endsWith("_url")) {
-                    terminologyURLs.put(terminology, value);
-                } else if(keyStr.endsWith("_plugin.src.class")) {
-                    terminologyPluginSourcesClass.put(terminology, value);
-                }
-            }
-        }
-    }
-
-    public static String getParameter(String name)
-            throws MissingConfigurationParameterException {
-
-        String value = (String) parameters.get(name);
-
-        if (value == null) {
-            if (usesJNDI) {
-                try {
-                    InitialContext initialContext = new InitialContext();
-                    value = (String) initialContext.lookup(
-                            JNDI_PREFIX + name);
-                    parameters.put(name, value);
-                } catch (Exception e) {
-                    throw new MissingConfigurationParameterException(name);
-                }
-            } else {
-                throw new MissingConfigurationParameterException(name);
-            }
-        }
-        return value;
-    }     
-
-    /*
-    public boolean terminologySupported(String terminology) {
-	return supportedTerminologies.contains(terminology);
-    }*/
-
-    public static boolean languageSupported(CodePhrase language) {
-        return getInstance().supportedLanguages.contains(language);
-    }
-
-    /*
-    public Set<String> listSupportedTerminologies() {
-	return Collections.unmodifiableSet(supportedTerminologies);
-    }
-
-    public String terminologySource(String terminology) {
-	return terminologySources.get(terminology);
-    }*/
-
-    public static String terminologyURL(String terminology) {
-        return getInstance().terminologyURLs.get(terminology);
-    }
-
-    /*
-    public Map<String, String> getTerminologyPluginSources() {
-	return terminologyPluginSources;
-    }*/
-
-    public String getPluginSourceClass(String terminology) {
-        return terminologyPluginSourcesClass.get(terminology);
-    }
-
-    public static TerminologyServiceConfiguration getInstance(){
-        if(_delegate == null){
-            _delegate = new TerminologyServiceConfiguration();
-        }
-        return _delegate;
+    private void loadFromProperties(String terminologyId) {
+        String url = environment.getProperty(terminologyId + URL_POSTFIX);
+        String pluginClass = environment.getProperty(terminologyId + PLUGIN_CLASS_POSTFIX);
+        terminologyURLs.put(terminologyId, url);
+        terminologyPluginSourcesClassMap.put(terminologyId, pluginClass);
     }
 }
 /*

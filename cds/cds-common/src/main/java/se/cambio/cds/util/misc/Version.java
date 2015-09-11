@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class Version {
 
-    private static String VERSION_PROPPERTIES_FILE = "Version.properties";
+    private static String VERSION_PROPPERTIES_FILE = "version.properties";
 
     private static Version _instance = null;
     private Map<Object, Object> parameters;

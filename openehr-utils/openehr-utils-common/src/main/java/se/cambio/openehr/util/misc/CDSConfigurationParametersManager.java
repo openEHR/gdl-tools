@@ -14,15 +14,14 @@ import org.springframework.core.env.Environment;
         @PropertySource(value = "classpath:cds-config.properties", ignoreResourceNotFound = true)
 })
 public class CDSConfigurationParametersManager {
-
-    private static final String KM_SERVER_HOST = "KMServer/host";
-    private static final String KM_SERVER_PORT = "KMServer/port";
-    private static final String KM_SERVER_USER_LOGIN = "KMServer/login";
-    private static final String KM_SERVER_USER_PASSWD = "KMServer/password";
-    private static final String CDS_EXECUTION_TIMEOUT = "CDSExecution/timeout";
-    private static final String DB_URL = "KMServer/db/url";
-    private static final String DB_USER = "KMServer/db/user";
-    private static final String DB_PASSWORD = "KMServer/db/password";
+    private static final String KM_SERVER_HOST = "km-server.host";
+    private static final String KM_SERVER_PORT = "km-server-port";
+    private static final String KM_SERVER_USER_LOGIN = "km-server.login";
+    private static final String KM_SERVER_USER_PASSWD = "km-server.password";
+    private static final String CDS_EXECUTION_TIMEOUT = "cds-execution.timeout";
+    private static final String DB_URL = "km-server.db.url";
+    private static final String DB_USER = "km-server.db.user";
+    private static final String DB_PASSWORD = "km-server.db.password";
 
     @Autowired
     Environment environment;

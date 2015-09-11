@@ -9,6 +9,7 @@ import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -34,6 +35,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     private Map<String, TerminologyService> terminologyPlugins;
     private Set<String> _supportedTerminologies = null;
     private static TerminologyServiceImpl soleInstance;
+    private TerminologyServiceConfiguration terminologyServiceConfiguration;
     private static Logger log = Logger.getLogger(TerminologyServiceImpl.class);
 
     public TerminologyServiceImpl(){
@@ -41,13 +43,14 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     public void init(){
+        terminologyServiceConfiguration = BeanProvider.getBean(TerminologyServiceConfiguration.class);
     }
 
     private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO){
         try{
             log.debug("Loading terminology : " + terminologyDTO.getId());
             InputStream input = new ByteArrayInputStream(terminologyDTO.getSource().getBytes("UTF8"));
-            String clazz = TerminologyServiceConfiguration.getInstance().getPluginSourceClass(terminologyDTO.getId());
+            String clazz = terminologyServiceConfiguration.getPluginSourceClass(terminologyDTO.getId());
             TerminologyServicePlugin terminologyServicePlugin = null;
             if(clazz != null) {
                 try {
@@ -244,7 +247,7 @@ public class TerminologyServiceImpl implements TerminologyService {
      */
     private void checkLanguageSupported(CodePhrase language)
             throws UnsupportedLanguageException {
-        if (!TerminologyServiceConfiguration.languageSupported(language)) {
+        if (!terminologyServiceConfiguration.languageSupported(language)) {
             throw new UnsupportedLanguageException("Language (" + language
                     + ") not supported.");
         }
