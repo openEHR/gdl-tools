@@ -1,8 +1,10 @@
-package se.cambio.openehr.controller.terminology;
+package se.cambio.cm.configuration;
+
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
@@ -15,11 +17,12 @@ import java.util.Set;
 
 @Configuration
 @PropertySources({
-        @PropertySource(value = "classpath:default-terminology-service-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "classpath:default-terminology-service-config.properties"),
         @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
 })
+@ComponentScan("se.cambio.cm.controller.terminology")
 public class TerminologyServiceConfiguration {
 
     private static TerminologyServiceConfiguration _delegate = null;

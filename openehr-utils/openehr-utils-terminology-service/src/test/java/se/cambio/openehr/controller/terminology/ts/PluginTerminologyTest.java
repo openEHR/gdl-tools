@@ -13,20 +13,20 @@ import static org.junit.Assert.assertTrue;
 public class PluginTerminologyTest extends TerminologyServiceTestBase {
 
 	public void testTEST_TERMINOLOGYSupported() {
-		assertTrue(ts.isTerminologySupported("TEST-TERMINOLOGY"));
+		assertTrue(terminologyService.isTerminologySupported("TEST-TERMINOLOGY"));
 	}
 
 	@Test
 	public void testTEST_TERMINOLOGYSupportedCodePhrase() {
 		CodePhrase cp = new CodePhrase("TEST-TERMINOLOGY", "test1");
-		assertTrue(ts.isTerminologySupported(cp));
+		assertTrue(terminologyService.isTerminologySupported(cp));
 	}
 
 	@Test
 	public void testSelfSingleMatch() throws Exception {
 		CodePhrase c1 = new CodePhrase(TEST_TERMINOLOGY, "test1");
 		CodePhrase c2 = new CodePhrase(TEST_TERMINOLOGY, "test1");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class PluginTerminologyTest extends TerminologyServiceTestBase {
 		try {
 			CodePhrase c1 = new CodePhrase(TEST_TERMINOLOGY, "tist1");
 			CodePhrase c2 = new CodePhrase(TEST_TERMINOLOGY, "test1");
-			ts.isSubclassOf(c1, c2);
+			terminologyService.isSubclassOf(c1, c2);
 		} catch(Exception e) {
 			assertTrue("unexpected exception: " + e, e instanceof InvalidCodeException);
 		}
@@ -45,7 +45,7 @@ public class PluginTerminologyTest extends TerminologyServiceTestBase {
 		try {
 			CodePhrase c1 = new CodePhrase(TEST_TERMINOLOGY, "test1");
 			CodePhrase c2 = new CodePhrase(TEST_TERMINOLOGY, "tist1");
-			ts.isSubclassOf(c1, c2);
+			terminologyService.isSubclassOf(c1, c2);
 		} catch(Exception e) {
 			assertTrue("unexpected exception: " + e, e instanceof InvalidCodeException);
 		}
@@ -55,21 +55,21 @@ public class PluginTerminologyTest extends TerminologyServiceTestBase {
 	public void testTopGroupSingleMatchFalse() throws Exception {
 		CodePhrase c1 = new CodePhrase(TEST_TERMINOLOGY, "test1");
 		CodePhrase c2 = new CodePhrase(TEST_TERMINOLOGY, "test2");
-		assertFalse(ts.isSubclassOf(c1, c2));
+		assertFalse(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testTopGroupSingleMatch() throws Exception {
 		CodePhrase c1 = new CodePhrase(TEST_TERMINOLOGY, "test2");
 		CodePhrase c2 = new CodePhrase(TEST_TERMINOLOGY, "test1");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testSubGroupSingleMatch() throws Exception {
 		CodePhrase c1 = new CodePhrase(TEST_TERMINOLOGY, "test5");
 		CodePhrase c2 = new CodePhrase(TEST_TERMINOLOGY, "test1");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class PluginTerminologyTest extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertTrue(ts.isSubclassOf(c1, codes));
+		assertTrue(terminologyService.isSubclassOf(c1, codes));
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class PluginTerminologyTest extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertFalse(ts.isSubclassOf(c1, codes));
+		assertFalse(terminologyService.isSubclassOf(c1, codes));
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class PluginTerminologyTest extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertTrue(ts.isSubclassOf(c1, codes));
+		assertTrue(terminologyService.isSubclassOf(c1, codes));
 	}
 
 	private static final String TEST_TERMINOLOGY = "TEST-TERMINOLOGY";

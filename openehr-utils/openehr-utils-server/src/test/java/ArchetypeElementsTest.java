@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.model.configuration.CmPersistenceConfig;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -21,7 +22,7 @@ import java.net.URISyntaxException;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CmPersistenceConfig.class)
+@ContextConfiguration(classes = {CmPersistenceConfig.class, TerminologyServiceConfiguration.class})
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public class ArchetypeElementsTest {
 

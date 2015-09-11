@@ -1,15 +1,17 @@
-package se.cambio.openehr.controller.terminology;
+package se.cambio.cm.controller.terminology;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import se.cambio.cm.configuration.TerminologyServiceConfiguration;
+import se.cambio.cm.controller.terminology.plugins.CSVTerminologyServicePlugin;
+import se.cambio.cm.controller.terminology.plugins.TerminologyServicePlugin;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.controller.terminology.plugins.CSVTerminologyServicePlugin;
-import se.cambio.openehr.controller.terminology.plugins.TerminologyServicePlugin;
-import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Component
 public class TerminologyServiceImpl implements TerminologyService {
 
     private Long lastUpdate = null;
@@ -38,12 +41,9 @@ public class TerminologyServiceImpl implements TerminologyService {
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
     private static Logger log = Logger.getLogger(TerminologyServiceImpl.class);
 
-    public TerminologyServiceImpl(){
-        init();
-    }
-
-    public void init(){
-        terminologyServiceConfiguration = BeanProvider.getBean(TerminologyServiceConfiguration.class);
+    @Autowired
+    public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration){
+        this.terminologyServiceConfiguration = terminologyServiceConfiguration;
     }
 
     private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO){
@@ -71,13 +71,6 @@ public class TerminologyServiceImpl implements TerminologyService {
             ExceptionHandler.handle(iee);
         }
         return null;
-    }
-
-    public static TerminologyServiceImpl getInstance(){
-        if (soleInstance == null) {
-            soleInstance = new TerminologyServiceImpl();
-        }
-        return soleInstance;
     }
 
     public boolean isSubclassOf(CodePhrase a, CodePhrase b)

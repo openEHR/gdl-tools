@@ -1,4 +1,4 @@
-package se.cambio.openehr.controller.terminology;
+package se.cambio.cm.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;

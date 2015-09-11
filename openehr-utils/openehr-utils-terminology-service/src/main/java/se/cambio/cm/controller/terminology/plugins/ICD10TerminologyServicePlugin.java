@@ -1,4 +1,4 @@
-package se.cambio.openehr.controller.terminology.plugins;
+package se.cambio.cm.controller.terminology.plugins;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
@@ -12,13 +12,13 @@ import java.io.InputStream;
 import java.util.*;
 
 
-public class ATCTerminologyServicePlugin extends CSVTerminologyServicePlugin{
+public class ICD10TerminologyServicePlugin extends CSVTerminologyServicePlugin{
 
-    private static String TERMINOLOGY_ID = "ATC";
+    private static String TERMINOLOGY_ID = "ICD10";
     private Map<String, TerminologyNodeVO> _allTerminologyNodeMap = null;
     private Map<String, TerminologyNodeVO> _parentsTerminologyNodeMap = null;
 
-    public ATCTerminologyServicePlugin() {
+    public ICD10TerminologyServicePlugin() {
         super(TERMINOLOGY_ID);
     }
 
@@ -51,15 +51,16 @@ public class ATCTerminologyServicePlugin extends CSVTerminologyServicePlugin{
             throws UnsupportedTerminologyException, InvalidCodeException {
         String cleanAS = cleanUpCode(as);
         if (invalidCode(cleanAS)){
-            throw new InvalidCodeException("Invalid ATC code: " + as);
+            throw new InvalidCodeException("Invalid ICD10 code: " + as);
         }
         String cleanBS = cleanUpCode(bs);
         if (invalidCode(cleanBS)){
-            throw new InvalidCodeException("Invalid ATC code: " + bs);
+            throw new InvalidCodeException("Invalid ICD10 code: " + bs);
         }
         return cleanAS.contains(cleanBS); //No need to check parent nodes
         //return super.checkSubclassOf(cleanAS, cleanBS);
     }
+
 
     public String retrieveTerm(String code, CodePhrase language)
             throws UnsupportedTerminologyException,
@@ -99,10 +100,10 @@ public class ATCTerminologyServicePlugin extends CSVTerminologyServicePlugin{
             UnsupportedLanguageException, InvalidCodeException {
         String code = concept.getCodeString();
         code = cleanUpCode(code);
-        return retrieveAllSubclasses(code);
+        return retrieveAllSubclasses(code, language);
     }
 
-    private TerminologyNodeVO retrieveAllSubclasses(String code)
+    private TerminologyNodeVO retrieveAllSubclasses(String code, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException {
         return getAllTerminologyNodeMap().get(code);
     }

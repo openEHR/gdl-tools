@@ -1,12 +1,12 @@
 package se.cambio.cm.model.facade.terminology.plain;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cm.model.facade.terminology.delegate.TerminologyFacadeDelegate;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.controller.terminology.TerminologyService;
-import se.cambio.openehr.controller.terminology.TerminologyServiceImpl;
+import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
@@ -19,45 +19,45 @@ import java.util.Set;
 @Profile("terminology-plain-service")
 public class PlainTerminologyFacadeDelegate implements TerminologyFacadeDelegate {
 
-    private TerminologyService _terminologyService = null;
+    private TerminologyService terminologyService = null;
 
-    public PlainTerminologyFacadeDelegate(){
-        TerminologyServiceImpl tsi = new TerminologyServiceImpl();
-        _terminologyService = tsi;
+    @Autowired
+    public PlainTerminologyFacadeDelegate(TerminologyService tsi){
+        terminologyService = tsi;
     }
 
 
     public boolean isSubclassOf(CodePhrase a, CodePhrase b)
             throws UnsupportedTerminologyException, InvalidCodeException{
-        return _terminologyService.isSubclassOf(a, b);
+        return terminologyService.isSubclassOf(a, b);
     }
 
     public boolean isSubclassOf(CodePhrase a, Set<CodePhrase> b)
             throws UnsupportedTerminologyException, InvalidCodeException{
-        return _terminologyService.isSubclassOf(a, b);
+        return terminologyService.isSubclassOf(a, b);
     }
 
     public TerminologyNodeVO retrieveTerminologyNode(CodePhrase concept, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException{
-        return _terminologyService.retrieveAllSubclasses(concept, language);
+        return terminologyService.retrieveAllSubclasses(concept, language);
     }
 
     public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException{
-        return _terminologyService.retrieveAll(terminologyId, language);
+        return terminologyService.retrieveAll(terminologyId, language);
     }
 
     public String retrieveTerm(CodePhrase concept, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException{
-        return _terminologyService.retrieveTerm(concept, language);
+        return terminologyService.retrieveTerm(concept, language);
     }
 
     public boolean isValidCodePhrase(CodePhrase cp) {
-        return _terminologyService.isValidCodePhrase(cp);
+        return terminologyService.isValidCodePhrase(cp);
     }
 
     public Collection<String> getSupportedTerminologies() {
-        return _terminologyService.getSupportedTerminologies();
+        return terminologyService.getSupportedTerminologies();
     }
 }
 /*

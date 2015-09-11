@@ -1,6 +1,6 @@
-package se.cambio.openehr.controller.terminology.plugins;
+package se.cambio.cm.controller.terminology.plugins;
 
-import se.cambio.openehr.controller.terminology.TerminologyService;
+import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;

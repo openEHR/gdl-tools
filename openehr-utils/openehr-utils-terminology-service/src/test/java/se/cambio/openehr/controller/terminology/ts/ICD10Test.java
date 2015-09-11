@@ -13,22 +13,22 @@ import static org.junit.Assert.assertTrue;
 public class ICD10Test extends TerminologyServiceTestBase {
 
 	public void testICD10Supported() {
-		assertTrue(ts.isTerminologySupported("ICD10"));
+		assertTrue(terminologyService.isTerminologySupported("ICD10"));
 	}
 
 	@Test
 	public void testICD10SupportedCodePhrase() {
 		CodePhrase cp = new CodePhrase("ICD10", "I64");
-		assertTrue(ts.isTerminologySupported(cp));
+		assertTrue(terminologyService.isTerminologySupported(cp));
 		cp = new CodePhrase("ICD10", "I10X");
-		assertTrue(ts.isTerminologySupported(cp));
+		assertTrue(terminologyService.isTerminologySupported(cp));
 	}
 
 	@Test
 	public void testTopGroupSingleMatch() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I61");
 		CodePhrase c2 = new CodePhrase(ICD10, "I61");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		try {
 			CodePhrase c1 = new CodePhrase(ICD10, "IX");
 			CodePhrase c2 = new CodePhrase(ICD10, "I61");
-			ts.isSubclassOf(c1, c2);
+			terminologyService.isSubclassOf(c1, c2);
 		} catch(Exception e) {
 			assertTrue("unexpected exception: " + e, e instanceof InvalidCodeException);
 		}
@@ -47,7 +47,7 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		try {
 			CodePhrase c1 = new CodePhrase(ICD10, "I");
 			CodePhrase c2 = new CodePhrase(ICD10, "I61");
-			ts.isSubclassOf(c1, c2);
+			terminologyService.isSubclassOf(c1, c2);
 		} catch(Exception e) {
 			assertTrue("unexpected exception: " + e, e instanceof InvalidCodeException);
 		}
@@ -57,14 +57,14 @@ public class ICD10Test extends TerminologyServiceTestBase {
 	public void testTopGroupSingleMatchExtraDash() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I61-");
 		CodePhrase c2 = new CodePhrase(ICD10, "I61");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testTopGroupSingleMatchExtraDashChar() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I61-P");
 		CodePhrase c2 = new CodePhrase(ICD10, "I61");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
@@ -72,57 +72,57 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		CodePhrase c1 = new CodePhrase(ICD10, "E106W");
 		CodePhrase c2 = new CodePhrase(ICD10, "E106B");
 		CodePhrase c3 = new CodePhrase(ICD10, "E10");
-		assertTrue(ts.isSubclassOf(c1, c3));
-		assertTrue(ts.isSubclassOf(c2, c3));
+		assertTrue(terminologyService.isSubclassOf(c1, c3));
+		assertTrue(terminologyService.isSubclassOf(c2, c3));
 	}
 
 	@Test
 	public void testTopGroupSingleMatchFalse() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I61");
 		CodePhrase c2 = new CodePhrase(ICD10, "M20");
-		assertFalse(ts.isSubclassOf(c1, c2));
+		assertFalse(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testTopGroupSingleMatchExtraDashFalse() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I61-");
 		CodePhrase c2 = new CodePhrase(ICD10, "M20");
-		assertFalse(ts.isSubclassOf(c1, c2));
+		assertFalse(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testTopGroupSingleMatchExtraDashCharFalse() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I61-P");
 		CodePhrase c2 = new CodePhrase(ICD10, "M20");
-		assertFalse(ts.isSubclassOf(c1, c2));
+		assertFalse(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testSubGroupSingleMatch() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I489");
 		CodePhrase c2 = new CodePhrase(ICD10, "I48.9");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testSubGroupSingleMatchExtraChar() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I489B");
 		CodePhrase c2 = new CodePhrase(ICD10, "I48.9");
-		assertTrue(ts.isSubclassOf(c1, c2));
+		assertTrue(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testSubGroupSingleMatchFalse() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I489");
 		CodePhrase c2 = new CodePhrase(ICD10, "H31.9");
-		assertFalse(ts.isSubclassOf(c1, c2));
+		assertFalse(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
 	public void testSubGroupSingleMatchExtraCharFalse() throws Exception {
 		CodePhrase c1 = new CodePhrase(ICD10, "I489B");
 		CodePhrase c2 = new CodePhrase(ICD10, "B19");
-		assertFalse(ts.isSubclassOf(c1, c2));
+		assertFalse(terminologyService.isSubclassOf(c1, c2));
 	}
 
 	@Test
@@ -135,7 +135,7 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertTrue(ts.isSubclassOf(c1, codes));
+		assertTrue(terminologyService.isSubclassOf(c1, codes));
 	}
 
 	@Test
@@ -148,7 +148,7 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertFalse(ts.isSubclassOf(c1, codes));
+		assertFalse(terminologyService.isSubclassOf(c1, codes));
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertTrue(ts.isSubclassOf(c1, codes));
+		assertTrue(terminologyService.isSubclassOf(c1, codes));
 	}
 
 	@Test
@@ -174,6 +174,6 @@ public class ICD10Test extends TerminologyServiceTestBase {
 		codes.add(c2);
 		codes.add(c3);
 		codes.add(c4);
-		assertFalse(ts.isSubclassOf(c1, codes));
+		assertFalse(terminologyService.isSubclassOf(c1, codes));
 	}
 }
