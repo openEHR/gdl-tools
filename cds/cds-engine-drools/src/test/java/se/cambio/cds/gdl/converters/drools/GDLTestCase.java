@@ -20,6 +20,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
+import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.model.configuration.CmPersistenceConfig;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.OpenEHRConstUI;
@@ -37,7 +38,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CmPersistenceConfig.class)
+@ContextConfiguration(classes = {CmPersistenceConfig.class, TerminologyServiceConfiguration.class})
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public abstract class GDLTestCase {
 
