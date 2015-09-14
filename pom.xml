@@ -13,7 +13,6 @@
     <properties>
         <openehr-java-libs-version>1.0.13</openehr-java-libs-version>
         <adl2-core-version>1.0.0</adl2-core-version>
-        <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
 
     <modules>
