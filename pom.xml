@@ -1,113 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>se.cambio.cds</groupId>
+        <artifactId>mig-project</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>se.cambio</groupId>
     <artifactId>gdl-tools</artifactId>
     <packaging>pom</packaging>
     <version>1.0.2-SNAPSHOT</version>
     <name>GDL Tools</name>
-    <organization>
-        <name>Cambio</name>
-    </organization>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <openehr-java-libs-version>1.0.13</openehr-java-libs-version>
         <adl2-core-version>1.0.0</adl2-core-version>
-        <spring.version>4.1.7.RELEASE</spring.version>
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
-
-        <sonar.host.url>http://css-cds-3</sonar.host.url>
-        <sonar.jdbc.url>jdbc:postgresql://css-cds-3/sonar</sonar.jdbc.url>
-        <sonar.jdbc.driver>org.postgresql.Driver</sonar.jdbc.driver>
-        <sonar.jdbc.username>sonar</sonar.jdbc.username>
-        <sonar.jdbc.password>sonar</sonar.jdbc.password>
-        <sonar.exclusions>file:**/generated-sources/**</sonar.exclusions>
-
     </properties>
-    <scm>
-        <developerConnection>scm:git:ssh://git@css-cds-3:7999/cds/gdl-tools.git</developerConnection>
-    </scm>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <encoding>UTF-8</encoding>
-                    <compilerArgument />
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <!-- <docletPath>/path/to/UmlGraph.jar</docletPath> -->
-                    <docletArtifact>
-                        <groupId>org.umlgraph</groupId>
-                        <artifactId>umlgraph</artifactId>
-                        <version>5.6</version>
-                    </docletArtifact>
-                    <additionalparam>
-                        -inferrel -inferdep -quiet -hide java.*
-                        -collpackages java.util.* -qualify
-                        -postfixpackage -nodefontsize 9
-                        -nodefontpackagesize 7
-                        -edgefontname "Trebuchet MS"
-                        -nodefontabstractname "Trebuchet MS"
-                        -nodefontclassabstractname
-                        "Trebuchet MS"
-                        -nodefontclassname "Trebuchet MS"
-                        -nodefontname
-                        "Trebuchet MS"
-                        -nodefontpackagename "Trebuchet MS"
-                        -nodefonttagname
-                        "Trebuchet MS"
-                    </additionalparam>
-                    <useStandardDocletOptions>true</useStandardDocletOptions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.fusesource.mvnplugins</groupId>
-                <artifactId>maven-graph-plugin</artifactId>
-                <version>1.29</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
     <modules>
         <module>openehr-utils</module>
         <module>cds</module>
     </modules>
-    <distributionManagement>
-        <repository>
-            <id>repo.cambio.se_releases</id>
-            <name>releases</name>
-            <url>http://css-cds-3:8081/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.cambio.se_snapshots</id>
-            <name>snapshots</name>
-            <url>http://css-cds-3:8081/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
