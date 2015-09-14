@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
 })
 public class CDSConfigurationParametersManager {
     private static final String KM_SERVER_HOST = "km-server.host";
-    private static final String KM_SERVER_PORT = "km-server-port";
+    private static final String KM_SERVER_PORT = "km-server.port";
     private static final String KM_SERVER_USER_LOGIN = "km-server.login";
     private static final String KM_SERVER_USER_PASSWD = "km-server.password";
     private static final String CDS_EXECUTION_TIMEOUT = "cds-execution.timeout";
