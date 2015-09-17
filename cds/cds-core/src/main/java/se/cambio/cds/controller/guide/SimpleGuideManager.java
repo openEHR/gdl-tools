@@ -50,12 +50,12 @@ public class SimpleGuideManager {
 
     public void loadGuides(Collection<Guide> guides) throws InternalErrorException {
         for (Guide guide : guides) {
-            GeneratedElementInstanceCollection gei = proccessGuide(guide);
+            GeneratedElementInstanceCollection gei = processGuide(guide);
             _completeElementInstanceCollection.merge(gei);
         }
     }
 
-    private GeneratedElementInstanceCollection proccessGuide(Guide guide) throws InternalErrorException {
+    private GeneratedElementInstanceCollection processGuide(Guide guide) throws InternalErrorException {
         GeneratedElementInstanceCollection elementInstanceCollection = new GeneratedElementInstanceCollection();
         GuideUtil.fillElementInstanceCollection(guide, elementInstanceCollection);
         _allGuidesMap.put(guide.getId(), guide);
@@ -65,7 +65,7 @@ public class SimpleGuideManager {
 
     public Collection<String> getGuideIds(ExecutionMode executionMode, ElementInstanceCollection elementInstancesCollection)
             throws InternalErrorException {
-        Collection<String> guideIds = null;
+        Collection<String> guideIds;
         if (executionMode.equals(ExecutionMode.STRICT_BY_CONTEXT)) {
             guideIds = getGuideIdsStrict(elementInstancesCollection);
         } else if (executionMode.equals(ExecutionMode.CHAINED_BY_CONTEXT)) {

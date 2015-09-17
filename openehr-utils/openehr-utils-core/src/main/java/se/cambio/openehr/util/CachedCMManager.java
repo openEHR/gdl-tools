@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class CachedCMManager {
 
-    private static long MAX_CHECK_WAITING_TIME_IN_MILLIS = 5000; //5 seg
+    private static long MAX_CHECK_WAITING_TIME_IN_MILLIS = 30000; //30 seg
     private Date lastCheckForUpdates;
     private Date mostRecentLocalUpdate;
     private Class<? extends CMElement> cmElementClass;
