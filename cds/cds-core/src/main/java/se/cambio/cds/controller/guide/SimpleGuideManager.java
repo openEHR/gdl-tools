@@ -21,6 +21,8 @@ public class SimpleGuideManager {
     private Map<String, ElementInstanceCollection> _elementInstanceCollectionByIdGuideMap = null;
     private GeneratedElementInstanceCollection _completeElementInstanceCollection = null;
     private Map<String, Set<String>> _guideIdsByElementIdsMap = null;
+    private Collection<String> lastGuideIdsUsed = null;
+    private GeneratedElementInstanceCollection lastGeneratedElementInstanceCollection = null;
 
     public SimpleGuideManager(Collection<Guide> guides) {
         init();
@@ -42,10 +44,10 @@ public class SimpleGuideManager {
     }
 
     private void init() {
-        _allGuidesMap = new LinkedHashMap<String, Guide>();
-        _elementInstanceCollectionByIdGuideMap = new HashMap<String, ElementInstanceCollection>();
+        _allGuidesMap = new LinkedHashMap<>();
+        _elementInstanceCollectionByIdGuideMap = new HashMap<>();
         _completeElementInstanceCollection = new GeneratedElementInstanceCollection();
-        _guideIdsByElementIdsMap = new HashMap<String, Set<String>>();
+        _guideIdsByElementIdsMap = new HashMap<>();
     }
 
     public void loadGuides(Collection<Guide> guides) throws InternalErrorException {
@@ -80,7 +82,7 @@ public class SimpleGuideManager {
         ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
         if (eic == null) {
             Logger.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
-            return new ArrayList<ElementInstance>();
+            return new ArrayList<>();
         } else {
             return eic.getAllElementInstances();
         }
@@ -88,13 +90,11 @@ public class SimpleGuideManager {
 
 
     public Collection<String> getGuideIdsStrict(ElementInstanceCollection elementInstancesCollection) {
-        Set<String> guideIds = new HashSet<String>();
-        //Get all idElements
+        Set<String> guideIds = new HashSet<>();
         Set<String> idElementsEHR = elementInstancesCollection.getElementIdsByIdDomain(Domains.EHR_ID);
-
         for (Map.Entry<String, ElementInstanceCollection> idGuide : _elementInstanceCollectionByIdGuideMap.entrySet()) {
             ElementInstanceCollection eic = idGuide.getValue();
-            Set<String> idElementsEHRAux = new HashSet<String>();
+            Set<String> idElementsEHRAux = new HashSet<>();
             idElementsEHRAux.addAll(eic.getElementIdsByIdDomain(Domains.EHR_ID));
             idElementsEHRAux.addAll(eic.getElementIdsByIdDomain(ElementInstanceCollection.EMPTY_CODE));
             if (idElementsEHR.containsAll(idElementsEHRAux)) {
@@ -109,22 +109,35 @@ public class SimpleGuideManager {
     }
 
     public GeneratedElementInstanceCollection getElementInstanceCollection(Collection<String> guideIds) {
+        GeneratedElementInstanceCollection geic;
         if (guideIds == null) {
-            return getCompleteElementInstanceCollection();
+            geic = getCompleteElementInstanceCollection();
         } else {
-            GeneratedElementInstanceCollection guideEIC = new GeneratedElementInstanceCollection();
-            for (String guideId : guideIds) {
-                ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(guideId);
-                if (eic != null) {
-                    guideEIC.merge(eic);
-                }
-            }
-            return guideEIC;
+            geic = getGeneratedElementInstanceCollection(guideIds);
         }
+        return geic;
+    }
+
+    private synchronized GeneratedElementInstanceCollection getGeneratedElementInstanceCollection(Collection<String> guideIds) {
+        if (lastGuideIdsUsed == null || !lastGuideIdsUsed.equals(guideIds) || lastGeneratedElementInstanceCollection == null) {
+            lastGuideIdsUsed = guideIds;
+            lastGeneratedElementInstanceCollection = generateElementInstanceCollection(guideIds);
+        }
+        return lastGeneratedElementInstanceCollection;
+    }
+
+    private GeneratedElementInstanceCollection generateElementInstanceCollection(Collection<String> guideIds) {
+        GeneratedElementInstanceCollection guideEIC = new GeneratedElementInstanceCollection();
+        for (String guideId : guideIds) {
+            ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(guideId);
+            if (eic != null) {
+                guideEIC.merge(eic);
+            }
+        }
+        return guideEIC;
     }
 
     public Collection<String> getGuideIdsNormal(ElementInstanceCollection elementInstancesCollection) throws InternalErrorException {
-        //Get all idElements
         Set<String> elementIds = elementInstancesCollection.getElementIdsByIdDomain(Domains.EHR_ID);
         return getGuideIdsNormal(elementIds);
     }
@@ -146,7 +159,7 @@ public class SimpleGuideManager {
 
     private String getELementIdsKey(Collection<String> elementIds) {
         StringBuffer sb = new StringBuffer();
-        ArrayList<String> elementIdsList = new ArrayList<String>(elementIds);
+        ArrayList<String> elementIdsList = new ArrayList<>(elementIds);
         Collections.sort(elementIdsList);
         for (String elementId : elementIdsList) {
             sb.append(elementId);
@@ -155,7 +168,7 @@ public class SimpleGuideManager {
     }
 
     private Set<String> getGuideIdsNormal(Set<String> skipElementIds, Collection<String> elementIds, String domainId) throws InternalErrorException {
-        Set<String> guideIds = new HashSet<String>();
+        Set<String> guideIds = new HashSet<>();
         for (String guideId : getAllGuideIds()) {
             Set<String> idElementsRead = getElementIdsByReads(Collections.singleton(guideId), domainId);
             Iterator<String> i = idElementsRead.iterator();
@@ -170,7 +183,7 @@ public class SimpleGuideManager {
         //Look for linked guides
         Set<String> elementIdsByCDSWrites = getElementIdsByCDSWrites(guideIds);
         if (skipElementIds == null) {
-            skipElementIds = new HashSet<String>();
+            skipElementIds = new HashSet<>();
         }
         //First call are EHR element ids, we dont want to include those
         if (Domains.CDS_ID.equals(domainId)) {
@@ -184,7 +197,7 @@ public class SimpleGuideManager {
     }
 
     private Set<String> getElementIdsByReads(Collection<String> guideIds, String domainId) throws InternalErrorException {
-        Set<String> elementIds = new HashSet<String>();
+        Set<String> elementIds = new HashSet<>();
         for (String guideId : guideIds) {
             Guide guide = getGuide(guideId);
             if (guide == null) {
@@ -203,7 +216,7 @@ public class SimpleGuideManager {
     }
 
     private Set<String> getElementIdsByCDSWrites(Collection<String> guideIds) throws InternalErrorException {
-        Set<String> elementIds = new HashSet<String>();
+        Set<String> elementIds = new HashSet<>();
         for (String guideId : guideIds) {
             Guide guide = getGuide(guideId);
             if (guide == null) {
@@ -223,7 +236,7 @@ public class SimpleGuideManager {
     }
 
     public ArrayList<String> getAllGuideIds() {
-        return new ArrayList<String>(_allGuidesMap.keySet());
+        return new ArrayList<>(_allGuidesMap.keySet());
     }
 
     public Guide getGuide(String idGuide) {
@@ -231,7 +244,7 @@ public class SimpleGuideManager {
     }
 
     public Collection<Guide> getAllGuides() {
-        return new ArrayList<Guide>(_allGuidesMap.values());
+        return new ArrayList<>(_allGuidesMap.values());
     }
 
     public final Map<String, Guide> getAllGuidesMap() {
@@ -239,7 +252,7 @@ public class SimpleGuideManager {
     }
 
     public Collection<String> getGuidesKey(Collection<GuideDTO> guides) {
-        ArrayList<String> idGuides = new ArrayList<String>();
+        ArrayList<String> idGuides = new ArrayList<>();
         for (GuideDTO guideDTO : guides) {
             idGuides.add(guideDTO.getId());
         }
@@ -251,7 +264,7 @@ public class SimpleGuideManager {
         ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
         if (eic == null) {
             Logger.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
-            return new HashSet<ElementInstance>();
+            return new HashSet<>();
         } else {
             return eic.getAllElementInstancesByDomain(Domains.CDS_ID);
         }
@@ -261,14 +274,14 @@ public class SimpleGuideManager {
         ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
         if (eic == null) {
             Logger.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
-            return new HashSet<ElementInstance>();
+            return new HashSet<>();
         } else {
             return eic.getAllElementInstancesByDomain(Domains.EHR_ID);
         }
     }
 
     public Set<ElementInstance> getAllElementIdsCDSDomain() {
-        Set<ElementInstance> elementInstances = new HashSet<ElementInstance>();
+        Set<ElementInstance> elementInstances = new HashSet<>();
         for (String idGuide : _elementInstanceCollectionByIdGuideMap.keySet()) {
             elementInstances.addAll(getElementIdsCDSDomain(idGuide));
         }
@@ -277,7 +290,7 @@ public class SimpleGuideManager {
 
 
     public Set<String> getAllGuideIdsWithCDSDomain(ElementInstance elementInstance) {
-        Set<String> idGuides = new HashSet<String>();
+        Set<String> idGuides = new HashSet<>();
         for (Map.Entry<String, ElementInstanceCollection> idGuide : _elementInstanceCollectionByIdGuideMap.entrySet()) {
             Set<ArchetypeReference> archetypeReferences =
                     idGuide.getValue().getArchetypeReferences(elementInstance.getArchetypeReference());

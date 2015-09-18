@@ -28,7 +28,7 @@ public class ArchetypeReference implements Serializable{
 
     public Map<String,ElementInstance> getElementInstancesMap(){
         if (elementInstancesMap == null) {
-            elementInstancesMap = new HashMap<String, ElementInstance>();
+            elementInstancesMap = new HashMap<>();
         }
         return elementInstancesMap;
     }
