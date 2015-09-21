@@ -56,9 +56,9 @@ public class UserConfigurationManager {
      * We use a synchronized map because it will be filled by using a
 	 * lazy strategy.
 	 */
-        parameters = Collections.synchronizedMap(new HashMap<Object, Object>());
+        InputStream is = null;
+        parameters = Collections.synchronizedMap(new HashMap<>());
         try {
-            InputStream is = null;
             _configFile = getConfigFile();
             if (_configFile == null || !_configFile.exists()) {
                 //Read from jar
@@ -88,6 +88,8 @@ public class UserConfigurationManager {
 
         } catch (Exception e) {
             ExceptionHandler.handle(e);
+        } finally {
+            IOUtils.closeQuietly(is);
         }
     }
 

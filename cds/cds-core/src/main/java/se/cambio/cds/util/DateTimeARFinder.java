@@ -6,6 +6,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.data.Archetypes;
+import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
 
@@ -27,14 +28,14 @@ public class DateTimeARFinder {
     private static Logger logger = Logger.getLogger(DateTimeARFinder.class);
 
     static {
-        dvDateTimePathsByArchetypeId = Collections.synchronizedMap(new HashMap<Object, Object>());
+        dvDateTimePathsByArchetypeId = Collections.synchronizedMap(new HashMap<>());
+        InputStream inputStream = null;
         try {
             Class<DateTimeARFinder> configurationParametersManagerClass =
                     DateTimeARFinder.class;
             ClassLoader classLoader =
                     configurationParametersManagerClass.getClassLoader();
             File configFile = getConfigFile();
-            InputStream inputStream = null;
             if (configFile != null) {
                 inputStream = new FileInputStream(configFile);
                 Logger.getLogger(DateTimeARFinder.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
@@ -48,6 +49,8 @@ public class DateTimeARFinder {
             dvDateTimePathsByArchetypeId.putAll(properties);
         } catch (Exception e) {
             Logger.getLogger(DateTimeARFinder.class).warn("*** Configuration Data Time Path file '" + CONFIGURATION_FILE + "' not found!");
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
     }
 
