@@ -1,8 +1,8 @@
 package se.cambio.cm.model.generic.dao;
 
+import org.apache.commons.io.IOUtils;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMTypeManager;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.Resources;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -156,7 +156,7 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     }
 
     private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {
-        Collection<String> foundIds = new ArrayList<String>();
+        Collection<String> foundIds = new ArrayList<>();
         for (CMElement cmElement: cmElements){
             foundIds.add(cmElement.getId());
         }

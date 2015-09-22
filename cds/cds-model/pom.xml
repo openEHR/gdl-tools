@@ -8,9 +8,6 @@
     <artifactId>cds-model</artifactId>
     <packaging>jar</packaging>
     <name>CDS Model</name>
-    <organization>
-        <name>Cambio</name>
-    </organization>
     <dependencies>
         <dependency>
             <groupId>se.cambio.cds</groupId>

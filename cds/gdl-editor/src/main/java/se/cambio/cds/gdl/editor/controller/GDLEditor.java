@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.controller;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
@@ -44,7 +45,6 @@ import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
 import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -342,7 +342,7 @@ public class GDLEditor implements EditorController<Guide> {
                             .setId(controller.getEntityId())
                             .setFormat(CMTypeFormat.GDL_FORMAT.getFormat())
                             .setSource(gdlGuide)
-                            .setGuideObject(IOUtils.getBytes(guide))
+                            .setGuideObject(SerializationUtils.serialize(guide))
                             .setCompiledGuide(compiledGuide)
                             .setLastUpdate(Calendar.getInstance().getTime())
                             .createGuideDTO();
@@ -1301,7 +1301,7 @@ public class GDLEditor implements EditorController<Guide> {
                                         .setId(idGuide)
                                         .setFormat(guideSource)
                                         .setSource(CMTypeFormat.GDL_FORMAT.getFormat())
-                                        .setGuideObject(IOUtils.getBytes(guide))
+                                        .setGuideObject(SerializationUtils.serialize(guide))
                                         .setCompiledGuide(compiledGuide)
                                         .setLastUpdate(Calendar.getInstance().getTime())
                                         .createGuideDTO();

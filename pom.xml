@@ -19,4 +19,13 @@
         <module>openehr-utils</module>
         <module>cds</module>
     </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

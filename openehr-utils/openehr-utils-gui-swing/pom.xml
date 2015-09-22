@@ -7,10 +7,6 @@
 	</parent>
 	<artifactId>openehr-utils-gui-swing</artifactId>
 	<name>OpenEHR utils gui swing</name>
-	<organization>
-		<name>Cambio</name>
-	</organization>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.openehr.utils</groupId>

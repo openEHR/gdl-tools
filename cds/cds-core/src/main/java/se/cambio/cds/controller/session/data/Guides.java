@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.session.data;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.model.Guide;
@@ -7,7 +8,6 @@ import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -64,7 +64,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
     public static void parseGuide(GuideDTO guideDTO) throws InternalErrorException {
         try {
             Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
-            guideDTO.setGuideObject(IOUtils.getBytes(guide));
+            guideDTO.setGuideObject(SerializationUtils.serialize(guide));
         } catch (Exception e) {
             throw new InternalErrorException(e);
         }
@@ -75,7 +75,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
             if (!hasGuideObject(guideDTO)){
                 parseGuide(guideDTO);
             }
-            Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
+            Guide guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
             byte[] compiledGuide = CDSSessionManager.getRuleEngineFacadeDelegate().compile(guide);
             guideDTO.setCompiledGuide(compiledGuide);
         } catch (Exception e) {
@@ -93,8 +93,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
             if (!hasGuideObject(guideDTO)){
                 parseGuide(guideDTO);
             }
-            Guide guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
-            return guide;
+            return (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
         }else{
             return null;
         }

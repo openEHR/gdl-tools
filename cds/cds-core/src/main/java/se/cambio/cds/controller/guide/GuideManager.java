@@ -1,10 +1,10 @@
 package se.cambio.cds.controller.guide;
 
+import org.apache.commons.lang.SerializationUtils;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -18,19 +18,19 @@ public class GuideManager extends SimpleGuideManager{
 
     public GuideManager(Collection<GuideDTO> guideDTOs){
         super(loadGuideDTOs(guideDTOs));
-        _allGuidesDTOMap = new LinkedHashMap<String, GuideDTO>();
+        _allGuidesDTOMap = new LinkedHashMap<>();
         for (GuideDTO guideDTO: guideDTOs){
             _allGuidesDTOMap.put(guideDTO.getId(), guideDTO);
         }
     }
 
     public static Collection<Guide> loadGuideDTOs(Collection<GuideDTO> guidesDTO){
-        Collection<Guide> guides = new ArrayList<Guide>();
+        Collection<Guide> guides = new ArrayList<>();
         for (GuideDTO guideDTO : guidesDTO) {
             try {
-                Guide guide = null;
+                Guide guide;
                 if (Guides.hasGuideObject(guideDTO)){
-                    guide = (Guide) IOUtils.getObject(guideDTO.getGuideObject());
+                    guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
                 }else{
                     guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                 }
@@ -43,7 +43,7 @@ public class GuideManager extends SimpleGuideManager{
     }
 
     public List<GuideDTO> getAllGuidesDTO(){
-        return new ArrayList<GuideDTO>(_allGuidesDTOMap.values());
+        return new ArrayList<>(_allGuidesDTOMap.values());
     }
 
     public GuideDTO getGuideDTO(String idGuide){

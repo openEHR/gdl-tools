@@ -1,12 +1,12 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
+import org.apache.commons.io.IOUtils;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -16,10 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
-/**
- * @author iago.corbal
- *
- */
+
 public class LoadGuideFromFileRSW extends CDSSwingWorker {
 
     private File _guideFile = null;
@@ -41,7 +38,7 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
         if (_guideFile==null){
             JFileChooser fileChooser = new JFileChooser(EditorManager.getLastFolderLoaded());
             FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                    GDLEditorLanguageManager.getMessage("Guide"),new String[]{"gdl"});
+                    GDLEditorLanguageManager.getMessage("Guide"), "gdl");
             fileChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("LoadGuide"));
             fileChooser.setFileFilter(filter);
             int result = fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());

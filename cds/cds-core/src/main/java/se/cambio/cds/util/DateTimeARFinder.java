@@ -1,12 +1,12 @@
 package se.cambio.cds.util;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
 

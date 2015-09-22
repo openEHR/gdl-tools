@@ -7,9 +7,6 @@
 	</parent>
 	<artifactId>cds-form-generator</artifactId>
 	<name>CDS Form Generator</name>
-	<organization>
-		<name>Cambio</name>
-	</organization>
 	<dependencies>
 		<dependency>
 			<groupId>se.cambio.cds</groupId>

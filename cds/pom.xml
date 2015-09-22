@@ -10,11 +10,8 @@
 	<packaging>pom</packaging>
 	<version>1.0.2-SNAPSHOT</version>
 	<name>Clinical Decision Support System</name>
-	<organization>
-		<name>Cambio</name>
-	</organization>
+
 	<properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <drools.version>5.5.0.Final</drools.version>
 	</properties>
     <scm>

@@ -1,5 +1,6 @@
 package se.cambio.openehr.util;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
@@ -36,10 +37,10 @@ public class UserConfigurationManager {
     private static final String USER_CONFIGURATION_FOLDER = ".gdleditor";
     private static final String CONFIGURATION_FILE = "UserConfig.properties";
     private static Map<Object, Object> parameters;
-    private static Map<String, CmFolder> cmFolderMap = new HashMap<String, CmFolder>();
+    private static Map<String, CmFolder> cmFolderMap = new HashMap<>();
     private static File _configFile = null;
 
-    private static Map<String, String> _defaultValues = new HashMap<String, String>();
+    private static Map<String, String> _defaultValues = new HashMap<>();
 
     static {
         _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");

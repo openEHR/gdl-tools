@@ -1,3 +1,4 @@
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +10,6 @@ import se.cambio.cm.configuration.CmServiceConfiguration;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;

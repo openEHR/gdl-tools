@@ -7,9 +7,6 @@
     </parent>
     <artifactId>gdl-editor</artifactId>
     <name>GDL editor</name>
-    <organization>
-        <name>Cambio</name>
-    </organization>
     <build>
         <resources>
             <resource>
@@ -153,6 +150,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
             <groupId>se.cambio.cds</groupId>
             <artifactId>cds-core</artifactId>
             <version>${project.version}</version>
@@ -180,18 +181,12 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <version>${commons.lang.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>

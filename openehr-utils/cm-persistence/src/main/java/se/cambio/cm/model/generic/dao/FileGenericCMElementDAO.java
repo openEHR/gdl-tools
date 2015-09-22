@@ -4,7 +4,7 @@ import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMTypeManager;
 import se.cambio.openehr.util.CmFolder;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
+import org.apache.commons.io.IOUtils;
 import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.FolderNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;

@@ -1,5 +1,6 @@
 package se.cambio.openehr.controller.session.data;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.jaxb.am.FlatArchetype;
@@ -12,7 +13,6 @@ import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.util.ArchetypeOnDemandMap;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -138,7 +138,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         if (archetypeDTO.getAom() == null){
             processArchetype(archetypeDTO);
         }
-        return (Archetype)IOUtils.getObject(archetypeDTO.getAom());
+        return (Archetype)SerializationUtils.deserialize(archetypeDTO.getAom());
     }
 
     public FlatArchetype getArchetypeAOM2ById(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
@@ -157,7 +157,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         if (archetypeDTO.getAom() == null){
             processArchetype(archetypeDTO);
         }
-        return (FlatArchetype)IOUtils.getObject(archetypeDTO.getAom());
+        return (FlatArchetype)SerializationUtils.deserialize(archetypeDTO.getAom());
     }
 
     public ArchetypeObjectBundleCustomVO getArchetypeAOBCVOById(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
@@ -172,11 +172,11 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         if (archetypeDTO.getAobcVO() == null){
             processArchetype(archetypeDTO);
         }
-        return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
+        return (ArchetypeObjectBundleCustomVO) SerializationUtils.deserialize(archetypeDTO.getAobcVO());
     }
 
     private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO){
-        return (ArchetypeObjectBundleCustomVO)IOUtils.getObject(archetypeDTO.getAobcVO());
+        return (ArchetypeObjectBundleCustomVO)SerializationUtils.deserialize(archetypeDTO.getAobcVO());
     }
 
     public ArchetypeManager getArchetypeManager() {

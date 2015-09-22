@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,6 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.openehr.util.BeanProvider;
-import se.cambio.openehr.util.IOUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
