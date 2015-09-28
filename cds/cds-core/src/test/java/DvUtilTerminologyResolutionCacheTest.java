@@ -22,7 +22,10 @@ public class DvUtilTerminologyResolutionCacheTest {
         assertTrue(subClassOf);
         Map<String, Boolean> map = bindingsMap.get(ei);
         assertEquals(1, map.size());
-        subClassOf = DVUtil.isSubClassOf(false, ei, bindingsMap, dv1, dv2, dv3);
+        DataValue dvAux1 = new DvCodedText("test1", "ICD10", "I48");
+        DataValue dvAux2 = new DvCodedText("test2", "ICD10", "B1");
+        DataValue dvAux3 = new DvCodedText("test3", "ICD10", "C1");
+        subClassOf = DVUtil.isSubClassOf(false, ei, bindingsMap, dvAux1, dvAux2, dvAux3);
         assertTrue(subClassOf);
         map = bindingsMap.get(ei);
         assertEquals(1, map.size());
