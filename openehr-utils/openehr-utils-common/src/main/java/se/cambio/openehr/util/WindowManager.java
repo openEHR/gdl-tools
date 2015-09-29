@@ -15,7 +15,7 @@ public class WindowManager {
     public Map<String, ProgressManager> _progressManagerMap = null;
     private String _description = null;
 
-    public static String DFAULT_PROGRESS_MANAGER_KEY = "default";
+    public static String DEFAULT_PROGRESS_MANAGER_KEY = "default";
 
     private WindowManager(){
 
@@ -26,7 +26,7 @@ public class WindowManager {
     }
 
     public static void registerProgressManager(ProgressManager progressManager){
-        getProgressManagerMap().put(DFAULT_PROGRESS_MANAGER_KEY,progressManager);
+        getProgressManagerMap().put(DEFAULT_PROGRESS_MANAGER_KEY,progressManager);
     }
 
     public static void registerProgressManager(String progressKey, ProgressManager progressManager){
@@ -110,7 +110,7 @@ public class WindowManager {
     }
 
     private static ProgressManager getDefaultProgressManager(){
-        return getProgressManager(DFAULT_PROGRESS_MANAGER_KEY);
+        return getProgressManager(DEFAULT_PROGRESS_MANAGER_KEY);
     }
 
     private static ProgressManager getProgressManager(String progressKey){
