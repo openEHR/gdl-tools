@@ -71,23 +71,23 @@ public class GDLDroolsConverter {
         return "setDataValue(DVUtil.createDV($" + gtCode + ",\"" + rmName + "\",\"" + attributeName + "\"," + setStr + "))";
     }
 
-    private static String getEqualsString(String handle, String value, boolean inPredicate, boolean negated){
+    private static String getEqualsString(String handle, String value, boolean inPredicate, boolean negated) {
         return "DVUtil.equalDV(" + inPredicate + ", " + handle + "," + value + getDataValueStrIfNeeded(value) + ", " + negated + ")";
     }
 
-    private static String getComparisonString(String handle, String value){
+    private static String getComparisonString(String handle, String value) {
         return "DVUtil.compatibleComparison(" + handle + getDataValueStrIfNeeded(handle) + ", $auxDV=" + value + getDataValueStrIfNeeded(value) + ") && " + "DVUtil.compareDVs(" + handle + ".getDataValue(), $auxDV)";
     }
 
-    private static String getDataValueStrIfNeeded(String value){
-        if (value.startsWith("$")){
+    private static String getDataValueStrIfNeeded(String value) {
+        if (value.startsWith("$")) {
             return ".getDataValue()";
-        }else{
+        } else {
             return "";
         }
     }
 
-    protected static boolean isString(String rmName, String attribute){
+    protected static boolean isString(String rmName, String attribute) {
         return (OpenEHRDataValues.DV_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
                 (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
                 OpenEHRDataValues.UNITS_ATT.equals(attribute) ||
@@ -107,7 +107,7 @@ public class GDLDroolsConverter {
         return predicateCount;
     }
 
-    protected void increasePredicateCount(){
+    protected void increasePredicateCount() {
         predicateCount++;
     }
 
@@ -144,7 +144,7 @@ public class GDLDroolsConverter {
         sb = new StringBuffer();
     }
 
-    public String convertToDrools() throws InternalErrorException{
+    public String convertToDrools() throws InternalErrorException {
         createHeader();
         fillDefinitions();
         initPreconditions();
@@ -205,10 +205,10 @@ public class GDLDroolsConverter {
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
             sb.append(definition);
-            if (functionExtraCode != null){
+            if (functionExtraCode != null) {
                 sb.append(functionExtraCode);
             }
-            if (hasValueChecks != null){
+            if (hasValueChecks != null) {
                 sb.append(hasValueChecks);
             }
             sb.append(preconditionStr);
@@ -225,7 +225,7 @@ public class GDLDroolsConverter {
     }
 
     private void fillDefinitions() throws InternalErrorException {
-        for(ArchetypeBinding archetypeBinding: guide.getDefinition().getArchetypeBindings().values()){
+        for (ArchetypeBinding archetypeBinding : guide.getDefinition().getArchetypeBindings().values()) {
             StringBuffer archetypeBindingMVELSB = new StringBuffer();
             String gtCodeArchetypeReference = archetypeBinding.getId();
             archetypeBindingMVELSB.append(TAB);
@@ -233,7 +233,7 @@ public class GDLDroolsConverter {
             String idDomain = archetypeBinding.getDomain();
             archetypeBindingMVELSB.append(":ArchetypeReference");
             archetypeBindingMVELSB.append("(");
-            if (idDomain != null){
+            if (idDomain != null) {
                 archetypeBindingMVELSB.append("idDomain==\"").append(idDomain).append("\", ");
             }
             String archetypeId = archetypeBinding.getArchetypeId();
@@ -249,7 +249,7 @@ public class GDLDroolsConverter {
 
     private void processElementBindings(String archetypeReferenceGTCode, ArchetypeBinding archetypeBinding) {
         Map<String, ElementBinding> elementBindingsMap = archetypeBinding.getElements();
-        if (elementBindingsMap!=null) {
+        if (elementBindingsMap != null) {
             for (ElementBinding element : elementBindingsMap.values()) {
                 StringBuilder elementDefinitionSB = new StringBuilder();
                 String idElement = archetypeBinding.getArchetypeId() + element.getPath();
@@ -293,7 +293,7 @@ public class GDLDroolsConverter {
             resultSB.append(definition.toString());
         }
 
-        for (String elementGtCode: gtCodesRef){
+        for (String elementGtCode : gtCodesRef) {
             String gtCodeArchetypeBinding = gtElementToArchetypeBindingGtCode.get(elementGtCode);
             if (gtCodeArchetypeBinding != null) {
                 String archetypeDefinition = archetypeDefinitions.get(gtCodeArchetypeBinding).toString();
@@ -357,7 +357,7 @@ public class GDLDroolsConverter {
         } else if (expressionItem instanceof UnaryExpression) {
             processUnaryExpression(sb, (UnaryExpression) expressionItem, stats);
         } else {
-            throw new InternalErrorException(new Exception("Unknown expression '"+ expressionItem.getClass().getName() + "'"));
+            throw new InternalErrorException(new Exception("Unknown expression '" + expressionItem.getClass().getName() + "'"));
         }
     }
 
@@ -415,7 +415,7 @@ public class GDLDroolsConverter {
                 throw new CompilationErrorException("Expected variable inside fired() operation. Instead got '" + unaryExpression.getOperand().getClass().getSimpleName() + "'");
             }
             boolean negated = OperatorKind.NOT_FIRED.equals(unaryExpression.getOperator());
-            String gtCode = ((Variable)unaryExpression.getOperand()).getCode();
+            String gtCode = ((Variable) unaryExpression.getOperand()).getCode();
             appendFiredRuleCondition(sb, negated, gtCode);
         } else {
             throw new InternalErrorException(new Exception(
@@ -464,14 +464,14 @@ public class GDLDroolsConverter {
         }
     }
 
-    private String getFunctionsExtraCode(Collection<String> gtCodesWithFunctions){
+    private String getFunctionsExtraCode(Collection<String> gtCodesWithFunctions) {
         StringBuilder sb = new StringBuilder();
         for (String gtCodesWithFunction : gtCodesWithFunctions) {
             String[] codeSplit = gtCodesWithFunction.split(ExpressionUtil.CODE_FUNCTION_SEPARATOR);
             String code = codeSplit[0];
             String att = codeSplit[1];
-            if (ExpressionUtil.isFunction(att)){
-                if (OpenEHRDataValues.FUNCTION_COUNT.equals(att)){
+            if (ExpressionUtil.isFunction(att)) {
+                if (OpenEHRDataValues.FUNCTION_COUNT.equals(att)) {
                     //TODO HACK - Should be done in a proper way...
                     String definition = _gtElementToWholeDefinition.get(code);
                     definition = getDefinitionsWithAnds(definition);
@@ -480,7 +480,7 @@ public class GDLDroolsConverter {
                             .replace("eval(DVUtil.equalDV(true, $count_predicate", "eval(DVUtil.equalDV(false, $count_predicate")
                             .replace("eval(DVUtil.isSubClassOf(true, $count_predicate", "eval(DVUtil.isSubClassOf(false, $count_predicate")
                             .replace("$count_" + code + ":ElementInstance(", "$count_" + code + ":ElementInstance(!predicate, dataValue!=null, ")
-                            .replace("$count_" + OpenEHRConst.CURRENT_DATE_TIME_ID,"$" + OpenEHRConst.CURRENT_DATE_TIME_ID);
+                            .replace("$count_" + OpenEHRConst.CURRENT_DATE_TIME_ID, "$" + OpenEHRConst.CURRENT_DATE_TIME_ID);
                     /*if (defAux.length()>5){
                         //Remove last ' and\n'+TAB
                         defAux = defAux.substring(0, defAux.length() - 5 - TAB.length());
@@ -491,7 +491,7 @@ public class GDLDroolsConverter {
             }
         }
         String str = sb.toString();
-        return str.isEmpty()?null:str;
+        return str.isEmpty() ? null : str;
     }
 
     private String getDefinitionsWithAnds(String definition) {
@@ -519,9 +519,11 @@ public class GDLDroolsConverter {
         } else if (OperatorKind.INEQUAL.equals(ok)) {
             return getEqualsString(handle, value, inPredicate, true);
         } else if (OperatorKind.IS_A.equals(ok)) {
-            return "DVUtil.isSubClassOf("+ inPredicate+", "+ handle + ", $bindingMap, "+ getTermBindings(value) + ")";
+            String code = parseCode(value);
+            return "DVUtil.isSubClassOf(" + inPredicate + ", " + handle + ", $bindingMap, \"" + getGuide().getId() + "/" + code + "\", " + getTermBindings(value) + ")";
         } else if (OperatorKind.IS_NOT_A.equals(ok)) {
-            return "DVUtil.isNotSubClassOf(" + inPredicate + ", "+ handle+", $bindingMap, "+ getTermBindings(value) + ")";
+            String code = parseCode(value);
+            return "DVUtil.isNotSubClassOf(" + inPredicate + ", " + handle + ", $bindingMap, \"" + getGuide().getId() + "/" + code + "\", "  + getTermBindings(value) + ")";
         } else if (OperatorKind.GREATER_THAN.equals(ok)) {
             return getComparisonString(handle, value) + ">0";
         } else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(ok)) {
@@ -540,7 +542,7 @@ public class GDLDroolsConverter {
             OperatorKind ok,
             String value) throws CompilationErrorException {
         if (OperatorKind.EQUALITY.equals(ok)) {
-            return handle + ".equals("+ value + ")";
+            return handle + ".equals(" + value + ")";
         } else if (OperatorKind.INEQUAL.equals(ok)) {
             return "!" + handle + ".equals(" + value + ")";
         } else {
@@ -570,16 +572,16 @@ public class GDLDroolsConverter {
         String code;
 
 
-        if(value.contains("DvCodedText")) {
+        if (value.contains("DvCodedText")) {
             code = value.substring(i + 8, value.length() - 2);
-        } else if(value.contains("'")) { // due to a logic somewhere in gdl-editor introducing single quotation to code_phrase
+        } else if (value.contains("'")) { // due to a logic somewhere in gdl-editor introducing single quotation to code_phrase
             code = value.substring(i + 7, value.length() - 3);
         } else {
             code = value.substring(i + 7, value.length() - 2);
         }
 
         int j = code.indexOf("|");
-        if(j > 0) {
+        if (j > 0) {
             code = code.substring(0, j);
         }
 
@@ -589,32 +591,32 @@ public class GDLDroolsConverter {
     }
 
     private String getTermBindings(String value) {
-        if (value.startsWith("$")){
-            Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Subclass comparison between elements is not supported.");
+        if (value.startsWith("$")) {
+            Logger.getLogger(GDLDroolsConverter.class).warn("Guide=" + guide.getId() + ", Subclass comparison between elements is not supported.");
             //TODO Give support to subclass comparison between elements
             return "null";
         }
         Map<String, TermBinding> termBindings = guide.getOntology().getTermBindings();
         // TODO log.warn if gt code is unbound to terminologies
-        if(termBindings == null) {
+        if (termBindings == null) {
             //Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
             return value;
         }
         String code = parseCode(value);
         StringBuilder buf = new StringBuilder("new DvCodedText[] {");
         boolean first = true;
-        for(Map.Entry<String, TermBinding> terminologyEntrySet : termBindings.entrySet()) {
+        for (Map.Entry<String, TermBinding> terminologyEntrySet : termBindings.entrySet()) {
             String terminology = terminologyEntrySet.getKey();
             log.debug("terminology: " + terminology);
             TermBinding termBinding = terminologyEntrySet.getValue();
             Map<String, Binding> bindings = termBinding.getBindings();
             log.debug("bindings: " + bindings);
-            if(bindings.containsKey(code)) {
+            if (bindings.containsKey(code)) {
                 log.debug("hasCode: " + code);
                 Binding binding = bindings.get(code);
-                if(binding.getCodes() != null) {
-                    for(CodePhrase cp : binding.getCodes()) {
-                        if(first) {
+                if (binding.getCodes() != null) {
+                    for (CodePhrase cp : binding.getCodes()) {
+                        if (first) {
                             first = false;
                         } else {
                             buf.append(",");

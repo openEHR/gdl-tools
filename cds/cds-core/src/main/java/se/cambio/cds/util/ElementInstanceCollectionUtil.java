@@ -103,9 +103,10 @@ public class ElementInstanceCollectionUtil {
                 if (ei1 instanceof PredicateGeneratedElementInstance) {
                     if (ei2 != null) {
                         OperatorKind operatorKind = ((PredicateGeneratedElementInstance) ei1).getOperatorKind();
-                        Set<Guide> guides = new HashSet<Guide>();
-                        DataValue dv = getResolveDataValueIfNeeded(guideMap, date, ei1, guides);
-                        DataValue dv2 = getResolveDataValueIfNeeded(guideMap, date, ei2, guides);
+                        Set<String> guideIds = new HashSet<>();
+                        DataValue dv = getResolveDataValueIfNeeded(guideMap, date, ei1, guideIds);
+                        DataValue dv2 = getResolveDataValueIfNeeded(guideMap, date, ei2, guideIds);
+                        Collection<Guide> guides = getGuides(guideMap, guideIds);
                         if (!matches(dv, dv2, operatorKind, guides)) {
                             return false;
                         }
@@ -118,25 +119,39 @@ public class ElementInstanceCollectionUtil {
         }
     }
 
-    private static DataValue getResolveDataValueIfNeeded(Map<String, Guide> guideMap, Calendar date, ElementInstance ei, Set<Guide> guides) {
+    private static Collection<Guide> getGuides(Map<String, Guide> guideMap, Set<String> guideIds) {
+        Collection<Guide> guides = new ArrayList<>();
+        for (String guideId : guideIds) {
+            Guide guide = guideMap.get(guideId);
+            guides.add(guide);
+        }
+        return guides;
+    }
+
+    private static DataValue getResolveDataValueIfNeeded(Map<String, Guide> guideMap, Calendar date, ElementInstance ei, Set<String> guideIds) {
         DataValue dv = ei.getDataValue();
         if (ei instanceof PredicateGeneratedElementInstance) {
+            Set<String> localGuideIds = new HashSet<>();
             PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance) ei);
-            Set<Guide> localGuides = new HashSet<Guide>();
             for (RuleReference ruleReference : pgei.getRuleReferences()) {
                 Guide guide = guideMap.get(ruleReference.getGuideId());
                 if (guide == null) {
                     Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '" + ruleReference + "'");
                 } else {
-                    localGuides.add(guide);
+                    localGuideIds.add(guide.getId());
                 }
+            }
+            Collection<Guide> localGuides = new ArrayList<>();
+            for (String guideId : localGuideIds) {
+                Guide guide = guideMap.get(guideId);
+                localGuides.add(guide);
             }
             if (pgei.getOperatorKind().equals(OperatorKind.IS_A)) {
                 dv = ei.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
             } else {
                 dv = resolvePredicate(ei.getDataValue(), pgei.getOperatorKind(), localGuides, date);
             }
-            guides.addAll(localGuides);
+            guideIds.addAll(localGuideIds);
         }
         return dv;
     }

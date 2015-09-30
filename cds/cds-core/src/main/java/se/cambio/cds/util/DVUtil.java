@@ -112,17 +112,28 @@ public class DVUtil {
         }
     }
 
+
+    @Deprecated
     public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
-        return isSubClassOfCached(inPredicate, ei, bindingsMap, false, dataValues);
+        return isSubClassOf(inPredicate, ei, bindingsMap, null, dataValues);
     }
 
-    public static boolean isSubClassOfCached(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, boolean negation, DataValue... dataValues) {
+    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, String bindReference, DataValue... dataValues) {
+        return isSubClassOfCached(inPredicate, ei, bindingsMap, false, bindReference, dataValues);
+    }
+
+    public static boolean isSubClassOfCached(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, boolean negation, String bindReference, DataValue... dataValues) {
         Map<String, Boolean> bindingMapByElementInstance = bindingsMap.get(ei);
         if (bindingMapByElementInstance == null) {
             bindingMapByElementInstance = new HashMap<>();
             bindingsMap.put(ei, bindingMapByElementInstance);
         }
-        String dataValueKey = getDataValuesKey(dataValues);
+        String dataValueKey;
+        if (bindReference != null) {
+            dataValueKey = negation + bindReference;
+        } else {
+            dataValueKey = getDataValuesKey(dataValues, negation);
+        }
         Boolean isSubClass = bindingMapByElementInstance.get(dataValueKey);
         if (isSubClass == null) {
             if (!negation) {
@@ -135,12 +146,47 @@ public class DVUtil {
         return isSubClass;
     }
 
-    private static String getDataValuesKey(DataValue[] dataValues) {
+    private static String getDataValuesKey(DataValue[] dataValues, boolean negation) {
         StringBuilder sb = new StringBuilder();
+        sb.append(negation).append(",");
         for (DataValue dataValue : dataValues) {
-            sb.append(dataValue.serialise());
+            if (dataValue instanceof DvCodedText) {
+                DvCodedText codedText = (DvCodedText) dataValue;
+                appendCodedTextKey(sb, codedText);
+            } else if (dataValue instanceof DvOrdinal) {
+                DvCodedText codedText = ((DvOrdinal) dataValue).getSymbol();
+                appendCodedTextKey(sb, codedText);
+            } else {
+                sb.append(dataValue.serialise());
+            }
         }
         return sb.toString();
+    }
+
+    private static void appendCodedTextKey(StringBuilder sb, DvCodedText codedText) {
+        sb.append(codedText.getTerminologyId()).append("-").append(codedText.getCode()).append(",");
+    }
+
+    private static CodePhrase getCodePhrase(DataValue dv) {
+        if (dv instanceof DvCodedText) {
+            return ((DvCodedText) dv).getDefiningCode();
+        } else if (dv instanceof DvOrdinal) {
+            return ((DvOrdinal) dv).getSymbol().getDefiningCode();
+        } else if (dv instanceof DvText) {
+            try {
+                DataValue dvAux = DataValue.parseValue(OpenEHRDataValues.DV_CODED_TEXT + "," + ((DvText) dv).getValue());
+                if (dvAux instanceof DvCodedText) {
+                    return ((DvCodedText) dvAux).getDefiningCode();
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                Logger.getLogger(DVUtil.class).warn("Unable to get CodePhrase from text '" + dv.toString() + "'");
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues) {
@@ -166,31 +212,13 @@ public class DVUtil {
         }
     }
 
-    private static CodePhrase getCodePhrase(DataValue dv) {
-        if (dv instanceof DvCodedText) {
-            return ((DvCodedText) dv).getDefiningCode();
-        } else if (dv instanceof DvOrdinal) {
-            return ((DvOrdinal) dv).getSymbol().getDefiningCode();
-        } else if (dv instanceof DvText) {
-            try {
-                DataValue dvAux = DataValue.parseValue(OpenEHRDataValues.DV_CODED_TEXT + "," + ((DvText) dv).getValue());
-                if (dvAux instanceof DvCodedText) {
-                    return ((DvCodedText) dvAux).getDefiningCode();
-                } else {
-                    return null;
-                }
-            } catch (Exception e) {
-                Logger.getLogger(DVUtil.class).warn("Unable to get CodePhrase from text '" + dv.toString() + "'");
-                return null;
-            }
-        } else {
-            return null;
-        }
+    @Deprecated
+    public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
+        return isNotSubClassOf(inPredicate, ei, bindingsMap, null, dataValues);
     }
 
-
-    public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
-        return isSubClassOfCached(inPredicate, ei, bindingsMap, true, dataValues);
+    public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, String bindReference, DataValue... dataValues) {
+        return isSubClassOfCached(inPredicate, ei, bindingsMap, true, bindReference, dataValues);
     }
 
     public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues) {
@@ -199,7 +227,7 @@ public class DVUtil {
         } else {
             //TODO Remove, exceptions should be handled
             CodePhrase a = getCodePhrase(ei.getDataValue());
-            Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
+            Set<CodePhrase> codePhrases = new HashSet<>();
             for (int i = 0; i < dataValues.length; i++) {
                 codePhrases.add(getCodePhrase(dataValues[i]));
             }
@@ -291,7 +319,7 @@ public class DVUtil {
 
     public static boolean checkMaxMin(DataValue predicateDV, DataValue dv, String opSymbol) throws InternalErrorException {
         if (predicateDV instanceof DvOrdered && dv instanceof DvOrdered) {
-            int comp = ((DvOrdered) predicateDV).compareTo((DvOrdered) dv);
+            int comp = ((DvOrdered) predicateDV).compareTo(dv);
             if (OperatorKind.MAX.getSymbol().equals(opSymbol)) {
                 return comp < 0;
             } else if (OperatorKind.MIN.getSymbol().equals(opSymbol)) {
