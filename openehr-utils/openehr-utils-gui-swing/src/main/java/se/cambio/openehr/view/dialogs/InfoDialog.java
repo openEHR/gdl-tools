@@ -54,6 +54,21 @@ public class InfoDialog extends JDialog implements ProgressManager {
         getProgressBarPanel().setCurrentThread(currentThread);
     }
 
+    @Override
+    public String getId() {
+        return "InfoDialog";
+    }
+
+    @Override
+    public double getCurrentProgress() {
+        return 0; //Generated
+    }
+
+    @Override
+    public String getCurrentMessage() {
+        return null; //Generated
+    }
+
     public Future<?> getCurrentThread() {
         return getProgressBarPanel().getCurrentThread();
     }

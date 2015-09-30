@@ -110,6 +110,21 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
         getCancelButton().setVisible(showCancelButton);
     }
 
+    @Override
+    public String getId() {
+        return "ProgressBar";
+    }
+
+    @Override
+    public double getCurrentProgress() {
+        return 0; //Generated
+    }
+
+    @Override
+    public String getCurrentMessage() {
+        return null; //Generated
+    }
+
     public Future<?> getCurrentThread() {
         return _currentThread;
     }
