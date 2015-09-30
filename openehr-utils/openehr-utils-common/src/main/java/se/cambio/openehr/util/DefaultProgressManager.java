@@ -4,11 +4,6 @@ import org.apache.log4j.Logger;
 
 import java.util.concurrent.Future;
 
-/**
- * User: Iago.Corbal
- * Date: 2013-12-23
- * Time: 13:33
- */
 public class DefaultProgressManager implements ProgressManager {
     private double lastUpdatedProgress = 0.0;
     private String message = "";
