@@ -1,2 +1,5 @@
-target
-*.pdf
+.idea
+*.iml
+target/
+logs/
+/conf/
