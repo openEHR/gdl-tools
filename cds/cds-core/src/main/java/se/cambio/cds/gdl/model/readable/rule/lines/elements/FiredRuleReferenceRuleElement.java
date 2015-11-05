@@ -11,7 +11,7 @@ public class FiredRuleReferenceRuleElement extends RuleLineElementWithValue<GTCo
         if (getValue() != null) {
             return getValue().toString();
         } else {
-            return getLabelText(lang);
+            return super.getLabelText(lang);
         }
     }
 

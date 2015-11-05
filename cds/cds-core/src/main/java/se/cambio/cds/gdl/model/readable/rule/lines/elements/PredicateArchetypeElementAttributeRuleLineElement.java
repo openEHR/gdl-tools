@@ -35,7 +35,7 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
             String name = getArchetypeManager().getArchetypeElements().getText(getValue(), lang);
             return "\"<b>" + name + "</b><font size=2><sub>" + getAttribute().toUpperCase() + "</sub></font>\"";
         } else {
-            return this.getLabelText(lang);
+            return super.getLabelText(lang);
         }
     }
 

@@ -22,7 +22,7 @@ public class ExpressionRuleLineElement extends RuleLineElementWithValue<Expressi
         if (getValue() != null) {
             return "<font color='#00803a'>" + ExpressionUtil.convertToHTMLText(this, getValue(), lang) + "</font>";
         } else {
-            return getLabelTextHTML(lang);
+            return super.getLabelTextHTML(lang);
         }
     }
 
