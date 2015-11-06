@@ -9,7 +9,7 @@ public class FiredRuleReferenceRuleElement extends RuleLineElementWithValue<GTCo
 
     public String getLabelText(String lang) {
         if (getValue() != null) {
-            return getValue().toString();
+            return getValue().getLabelText(lang);
         } else {
             return super.getLabelText(lang);
         }
