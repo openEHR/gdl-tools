@@ -56,6 +56,16 @@
     </#list>
     <br>
 </#if>
+
+<#if guide_default_actions?has_content>
+    <h2>${texts.Defaults?upper_case}</h2>
+        <#list guide_default_actions as defaultRuleLine>
+        <div class="bg-block">
+            ${defaultRuleLine}
+        </div>
+        </#list>
+    <br>
+</#if>
 <#if guide_rules?? && guide_rules?has_content>
     <h2>${texts.RuleList?upper_case}</h2>
     <#list guide_rules as readableGuide>

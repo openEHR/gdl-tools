@@ -11,7 +11,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ArchetypeInstantiationRuleLine extends RuleLine implements ArchetypeReferenceRuleLine,DefinitionsRuleLine, GTCodeDefiner, InstantiationRuleLine {
+public class ArchetypeInstantiationRuleLine extends RuleLine implements ArchetypeReferenceRuleLine, DefinitionsRuleLine, GTCodeDefiner, InstantiationRuleLine {
 
     private ArchetypeReferenceRuleLineDefinitionElement archetypeReferenceRuleLineDefinitionElement = null;
     private GTCodeRuleLineElement gtCodeRuleLineElement = null;
