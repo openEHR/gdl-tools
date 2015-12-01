@@ -12,7 +12,7 @@ import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.EHRDataFilterUtil;
+import se.cambio.cds.util.EhrDataFilterManager;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 public class EHRFilteringTest extends GenericTestBase {
 
     @Autowired
-    EHRDataFilterUtil ehrDataFilterUtil;
+    EhrDataFilterManager ehrDataFilterManager;
 
     private Collection<ArchetypeReference> generateArchetypeReference(){
         Collection<ArchetypeReference> archetypeReferences = new ArrayList<ArchetypeReference>();
@@ -77,7 +77,7 @@ public class EHRFilteringTest extends GenericTestBase {
         geic.add(gar);
         Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
         Set<ArchetypeReference> archetypeReferenceSet =
-                ehrDataFilterUtil.filterEHRData ("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
+                ehrDataFilterManager.filterEHRData ("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
 
         assertEquals(1, archetypeReferenceSet.size());
     }
@@ -101,7 +101,7 @@ public class EHRFilteringTest extends GenericTestBase {
         geic.add(gar);
         Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
         Set<ArchetypeReference> archetypeReferenceSet =
-                ehrDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
+                ehrDataFilterManager.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(2, archetypeReferenceSet.size());
     }
 
@@ -126,7 +126,7 @@ public class EHRFilteringTest extends GenericTestBase {
         geic.add(gar);
         Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
         Set<ArchetypeReference> archetypeReferenceSet =
-                ehrDataFilterUtil.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
+                ehrDataFilterManager.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(2, archetypeReferenceSet.size());
     }
 }

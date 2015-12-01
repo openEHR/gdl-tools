@@ -13,19 +13,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class EHRDataFilterUtil {
+public class EhrDataFilterManager {
 
     DateTimeARFinder dateTimeARFinder;
 
     @Autowired
-    public EHRDataFilterUtil(DateTimeARFinder dateTimeARFinder) {
+    public EhrDataFilterManager(DateTimeARFinder dateTimeARFinder) {
         this.dateTimeARFinder = dateTimeARFinder;
     }
 
     public Set<ArchetypeReference> filterEHRData(String ehrId, DateTime ehrDate, Collection<ArchetypeReference> queryARs, Collection<ArchetypeReference> ehrData) {
         Set<ArchetypeReference> ehrIdARs = new HashSet<ArchetypeReference>();
         if (ehrData == null) {
-            Logger.getLogger(EHRDataFilterUtil.class).warn("No ehrData found for ehrId '" + ehrId + "'");
+            Logger.getLogger(EhrDataFilterManager.class).warn("No ehrData found for ehrId '" + ehrId + "'");
         } else {
             for (ArchetypeReference archetypeReference : ehrData) {
                 //If using time series comparison filter elements outside the range
@@ -38,9 +38,9 @@ public class EHRDataFilterUtil {
                         useAR = false;
                         DateFormat df = DateFormat.getDateTimeInstance();
                         if (dateTime == null) {
-                            Logger.getLogger(EHRDataFilterUtil.class).warn("Date time for ehrId " + ehrId + " with AR " + archetypeReference.getIdArchetype() + " is null!");
+                            Logger.getLogger(EhrDataFilterManager.class).warn("Date time for ehrId " + ehrId + " with AR " + archetypeReference.getIdArchetype() + " is null!");
                         } else {
-                            Logger.getLogger(EHRDataFilterUtil.class).debug(df.format(dateTime.toDate()) + " after " + df.format(ehrDate.toDate()));
+                            Logger.getLogger(EhrDataFilterManager.class).debug(df.format(dateTime.toDate()) + " after " + df.format(ehrDate.toDate()));
                         }
                     }
                 }
