@@ -1,4 +1,8 @@
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
@@ -9,14 +13,19 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.configuration.CdsConfiguration;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = CdsConfiguration.class)
 public class CDSManagerTest extends GenericTestBase {
+
+    @Autowired
+    CDSManager cdsManager;
 
     @Test
     public void shouldContainGeneratedElementInstances(){
@@ -30,7 +39,7 @@ public class CDSManagerTest extends GenericTestBase {
         new GeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         geic.add(gar);
 
-        Collection<ArchetypeReference> ars = CDSManager.getEHRArchetypeReferencesWithEventTimeElements(geic);
+        Collection<ArchetypeReference> ars = cdsManager.getEHRArchetypeReferencesWithEventTimeElements(geic);
         assertEquals(1, ars.size()); //Compact ars
         ArchetypeReference ar = ars.iterator().next();
 
@@ -79,7 +88,7 @@ public class CDSManagerTest extends GenericTestBase {
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
 
-        Collection<ArchetypeReference> ars = CDSManager.getEHRArchetypeReferencesWithEventTimeElements(geic);
+        Collection<ArchetypeReference> ars = cdsManager.getEHRArchetypeReferencesWithEventTimeElements(geic);
         assertEquals(1, ars.size()); //Compact ars
         Iterator<ArchetypeReference> i = ars.iterator();
         ArchetypeReference ar = i.next();

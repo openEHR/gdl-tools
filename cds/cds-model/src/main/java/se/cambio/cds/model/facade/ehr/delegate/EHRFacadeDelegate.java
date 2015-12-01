@@ -5,7 +5,6 @@ import se.cambio.cds.model.facade.ehr.vo.EHREventVO;
 import se.cambio.cds.model.facade.ehr.vo.EHRTriggerVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.InvalidAQLForEHRIdsException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.Calendar;
@@ -14,10 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * @author iago.corbal
- *
- */
 public interface EHRFacadeDelegate {
 
     String getServerHost();
@@ -28,13 +23,13 @@ public interface EHRFacadeDelegate {
 	    throws InternalErrorException, PatientNotFoundException; 
 
     Collection<String> queryForEHRIds(String aql)
-	    throws InternalErrorException, InvalidAQLForEHRIdsException;
+	    throws InternalErrorException;
 
     List<List<Object>> query(String aql)
-            throws InternalErrorException, InvalidAQLForEHRIdsException;
+            throws InternalErrorException;
 
     EHRDataStream queryStream(String aql)
-            throws InternalErrorException, InvalidAQLForEHRIdsException;
+            throws InternalErrorException;
 
     Map<String, Collection<ArchetypeReference>> queryEHRElements(
 	    Collection<String> ehrIds,

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,6 +26,7 @@ import se.cambio.cm.model.configuration.CmPersistenceConfig;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -38,9 +40,12 @@ import java.util.Collection;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CmPersistenceConfig.class, TerminologyServiceConfiguration.class})
+@ContextConfiguration(classes = {CmPersistenceConfig.class, TerminologyServiceConfiguration.class, CdsConfiguration.class})
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public abstract class GDLTestCase {
+
+    @Autowired
+    CDSManager cdsManager;
 
     @Value("classpath:/archetypes")
     Resource archetypesResource;
@@ -134,7 +139,7 @@ public abstract class GDLTestCase {
         return new GuideManager(guideDTOs);
     }
 
-    public static RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances) {
+    public RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances) {
         RuleExecutionResult rer = null;
         try {
             StringBuffer guideIdsSB = new StringBuffer();
@@ -149,7 +154,7 @@ public abstract class GDLTestCase {
             long startTime = System.currentTimeMillis();
             ElementInstanceCollection eic = new ElementInstanceCollection();
             eic.addAll(elementInstances);
-            CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
+            cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
             Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();
             System.out.println("Executing : " + guideIdsSB.toString());
             rer = droolsREFD.execute(null, guideManager.getAllGuidesDTO(), archetypeReferences, cal);

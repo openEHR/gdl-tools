@@ -1,6 +1,8 @@
 package se.cambio.cds.controller.cds;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.ehr.delegate.EHRFacadeDelegate;
@@ -21,28 +23,36 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
+@Component
 public class CDSManager {
 
-    public static Collection<ArchetypeReference> getArchetypeReferences(
+    DateTimeARFinder dateTimeARFinder;
+
+    @Autowired
+    public CDSManager(DateTimeARFinder dateTimeARFinder) {
+        this.dateTimeARFinder = dateTimeARFinder;
+    }
+
+
+    public Collection<ArchetypeReference> getArchetypeReferences(
             String ehrId,
             Collection<String> guideIds,
             Collection<ArchetypeReference> data,
             GuideManager guideManager,
             Calendar date)
             throws PatientNotFoundException, InternalErrorException {
-
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         ElementInstanceCollection eic = queryEHRForElements(ehrId, data, guideManager, date, completeEIC);
         return getArchetypeReferencesAndCheckMissing(eic, completeEIC, guideManager, date);
     }
 
-    public static Collection<ElementInstance> getElementInstancesWithoutMissing(String ehrId, Collection<String> guideIds, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date) throws InternalErrorException, PatientNotFoundException {
+    public Collection<ElementInstance> getElementInstancesWithoutMissing(String ehrId, Collection<String> guideIds, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date) throws InternalErrorException, PatientNotFoundException {
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         ElementInstanceCollection eic = queryEHRForElements(ehrId, data, guideManager, date, completeEIC);
         return eic.getAllElementInstances();
     }
 
-    private static ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) throws InternalErrorException, PatientNotFoundException {
+    private ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) throws InternalErrorException, PatientNotFoundException {
         ElementInstanceCollection eic = new ElementInstanceCollection();
         if (data != null) {
             eic.addAll(data, guideManager);
@@ -64,7 +74,7 @@ public class CDSManager {
         return CDSSessionManager.getEHRFacadeDelegate();
     }
 
-    public static Map<String, Collection<ArchetypeReference>> getElementInstancesForPopulation(
+    public Map<String, Collection<ArchetypeReference>> getElementInstancesForPopulation(
             Collection<String> ehrIds,
             Collection<String> guideIds,
             GuideManager guideManager,
@@ -88,26 +98,26 @@ public class CDSManager {
         return cdsEIMap;
     }
 
-    public static Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection geic) {
+    public Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection geic) {
         Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
         ars.addAll(geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
         ars.addAll(geic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
         return getCompressedQueryArchetypeReferences(ars);
     }
 
-    public static Collection<ArchetypeReference> getEHRArchetypeReferencesWithEventTimeElements(GeneratedElementInstanceCollection eic) {
+    public Collection<ArchetypeReference> getEHRArchetypeReferencesWithEventTimeElements(GeneratedElementInstanceCollection eic) {
         Collection<ArchetypeReference> ars = getEHRArchetypeReferences(eic);
         addEventTimeElements(ars); //We add all the event time elements if they are not defined
         return ars;
     }
 
-    private static Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
+    private Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
             throws InternalErrorException {
         checkForMissingElements(eic, completeEIC, guideManager, date);
         return eic.getAllArchetypeReferences();
     }
 
-    public static void checkForMissingElements(
+    public void checkForMissingElements(
             ElementInstanceCollection ehrEIC,
             ElementInstanceCollection generatedEIC,
             GuideManager guideManager,
@@ -241,9 +251,9 @@ public class CDSManager {
         }
     }
 
-    private static void addEventTimeElements(Collection<ArchetypeReference> queryARs) {
+    private void addEventTimeElements(Collection<ArchetypeReference> queryARs) {
         for (ArchetypeReference archetypeReference : queryARs) {
-            String eventTimePath = DateTimeARFinder.getEventTimePath(archetypeReference.getIdArchetype());
+            String eventTimePath = dateTimeARFinder.getEventTimePath(archetypeReference.getIdArchetype());
             if (eventTimePath != null) {
                 String eventTimeElementId = archetypeReference.getIdArchetype() + eventTimePath;
                 if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)) {

@@ -1,159 +1,79 @@
 package se.cambio.cds.util;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.env.Environment;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.cm.model.util.OpenEHRRMUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-//TODO use Spring
+@Configuration
+@PropertySources({
+        @PropertySource(value = "classpath:default-date-time-path.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:conf/date-time-path.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "classpath:date-time-path.properties", ignoreResourceNotFound = true)
+})
 public class DateTimeARFinder {
-    private static DateTimeARFinder _delegate = null;
-    public static final String CONFIGURATION_FILE = "DateTimePath.properties";
-    private static final String CONFIGURATION_FOLDER = "conf";
-    private static Map <Object,Object> dvDateTimePathsByArchetypeId;
-    private static Logger logger = Logger.getLogger(DateTimeARFinder.class);
 
-    static {
-        dvDateTimePathsByArchetypeId = Collections.synchronizedMap(new HashMap<>());
-        InputStream inputStream = null;
-        try {
-            Class<DateTimeARFinder> configurationParametersManagerClass =
-                    DateTimeARFinder.class;
-            ClassLoader classLoader =
-                    configurationParametersManagerClass.getClassLoader();
-            File configFile = getConfigFile();
-            if (configFile != null) {
-                inputStream = new FileInputStream(configFile);
-                Logger.getLogger(DateTimeARFinder.class).info("*** Using '"+CONFIGURATION_FOLDER+"' folder for '"+CONFIGURATION_FILE+"'");
-            } else {
-                inputStream = classLoader.getResourceAsStream(CONFIGURATION_FILE);
-                Logger.getLogger(DateTimeARFinder.class).info("*** Using resource for '"+CONFIGURATION_FILE+"'");
-            }
-            Properties properties = new Properties();
-            properties.load(inputStream);
-            inputStream.close();
-            dvDateTimePathsByArchetypeId.putAll(properties);
-        } catch (Exception e) {
-            Logger.getLogger(DateTimeARFinder.class).warn("*** Configuration Data Time Path file '" + CONFIGURATION_FILE + "' not found!");
-        } finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-    }
+    private Logger logger = Logger.getLogger(DateTimeARFinder.class);
 
-    private DateTimeARFinder() {
+    @Autowired
+    Environment environment;
 
-    }
-
-
-    private static File getConfigFile() {
-        try{
-            File jarFile = new File(DateTimeARFinder.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            if (!jarFile.exists()){
-                throw new FileNotFoundException();
-            }
-            File parentFile = jarFile.getParentFile();
-            if(parentFile != null) {
-                File grandParentFile = parentFile.getParentFile();
-                if(grandParentFile != null) {
-                    File[] files = grandParentFile.listFiles();
-                    if (files != null) {
-                        for (File file : files) {
-                            if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER)) {
-                                File[] files2 = file.listFiles();
-                                if(files2 != null) {
-                                    for (File file2 : files2) {
-                                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                                            return file2;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-			}
-        } catch(Exception t) {
-            logger.debug("CONF Folder not found in jar: " + t.getMessage());
-        }
-        try {
-            //Current folder
-            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
-            if (!file.exists()){
-                throw new FileNotFoundException();
-            }
-            return file;
-        } catch(Exception t2) {
-            logger.warn("CONF Folder not found in file system: " + t2.getMessage());
-        }
-        return null;
-    }
-
-    public static DateTime getDateTime(ArchetypeReference ar) {
+    public DateTime getDateTime(ArchetypeReference ar) {
         String dvDateTimePath = getEventTimePath(ar.getIdArchetype());
-        if (dvDateTimePath!=null) {
-            ElementInstance ei = ar.getElementInstancesMap().get(ar.getIdArchetype()+dvDateTimePath);
+        if (dvDateTimePath != null) {
+            ElementInstance ei = ar.getElementInstancesMap().get(ar.getIdArchetype() + dvDateTimePath);
             return getDateTime(ei);
-        }else{
+        } else {
             return null;
         }
     }
 
-    public static String getEventTimePath(String archetypeId) {
+    public String getEventTimePath(String archetypeId) {
         String rmName = Archetypes.getEntryType(archetypeId);
         if (OpenEHRConst.OBSERVATION.equals(rmName)) {
             return OpenEHRRMUtil.EVENT_TIME_PATH;
-        }else if (OpenEHRConst.ACTION.equals(rmName)) {
+        } else if (OpenEHRConst.ACTION.equals(rmName)) {
             return OpenEHRRMUtil.TIME_PATH;
-        }else if (OpenEHRConst.EVALUATION.equals(rmName) ||
-                OpenEHRConst.INSTRUCTION.equals(rmName)) {
-            String dateTimePath = (String)dvDateTimePathsByArchetypeId.get(archetypeId);
-            if (dateTimePath==null) {
-                Logger.getLogger(DateTimeARFinder.class).warn("Unregistered DvDateTime for '"+archetypeId+"', please add the path to '"+CONFIGURATION_FILE+"'");
+        } else {
+            if (OpenEHRConst.EVALUATION.equals(rmName) ||
+                    OpenEHRConst.INSTRUCTION.equals(rmName)) {
+                String dateTimePath = environment.getProperty(archetypeId, String.class);
+                if (dateTimePath == null) {
+                    logger.warn("Unregistered DvDateTime for '" + archetypeId + "', please add the path to 'date-time-path.properties'");
+                }
+                return dateTimePath;
+            } else {
+                logger.warn("Unknown RM '" + rmName + "'");
+                return null;
             }
-            return dateTimePath;
-        }else{
-            Logger.getLogger(DateTimeARFinder.class).warn("Unknown RM '"+rmName+"'");
-            return null;
         }
     }
 
-    private static DateTime getDateTime(ElementInstance ei) {
+    private DateTime getDateTime(ElementInstance ei) {
         if (ei != null) {
-            if(ei.getDataValue() instanceof DvDateTime) {
-                DvDateTime dvDateTime = ((DvDateTime)ei.getDataValue());
+            if (ei.getDataValue() instanceof DvDateTime) {
+                DvDateTime dvDateTime = ((DvDateTime) ei.getDataValue());
                 if (dvDateTime.getDateTime() != null) {
                     return dvDateTime.getDateTime();
-                }else{
-                    Logger.getLogger(DateTimeARFinder.class).warn("Element instance '"+ei.getId()+"' has no DVDateTime.");
+                } else {
+                    logger.warn("Element instance '" + ei.getId() + "' has no DVDateTime.");
                 }
-            }else{
-                String dvType =  ei.getDataValue() == null? "null" : ei.getDataValue().getClass().getSimpleName();
-                Logger.getLogger(DateTimeARFinder.class).warn("Element instance '"+ei.getId()+"' data value is not DVDateTime, '" + dvType+ "' found instead.)");
+            } else {
+                String dvType = ei.getDataValue() == null ? "null" : ei.getDataValue().getClass().getSimpleName();
+                logger.warn("Element instance '" + ei.getId() + "' data value is not DVDateTime, '" + dvType + "' found instead.)");
             }
-        }else{
-            Logger.getLogger(DateTimeARFinder.class).warn("Element instance null");
+        } else {
+            logger.warn("Element instance null");
         }
         return null;
-    }
-
-    public static DateTimeARFinder getDelegate() {
-        if(_delegate==null) {
-            _delegate = new DateTimeARFinder();
-        }
-        return _delegate;
     }
 }

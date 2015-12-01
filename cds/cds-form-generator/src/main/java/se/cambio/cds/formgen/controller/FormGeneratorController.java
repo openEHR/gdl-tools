@@ -16,6 +16,7 @@ import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -39,65 +40,67 @@ public class FormGeneratorController {
     private List<RuleReference> _lastFiredRulesReference = null;
     private Calendar _currentDate = null;
     private String _lang = null;
+    private CDSManager cdsManager;
 
     public FormGeneratorController(
             GuideDTO guideDTO,
-            String lang){
+            String lang) {
         _guideDTO = guideDTO;
         _lang = lang;
+        cdsManager = BeanProvider.getBean(CDSManager.class);
         init();
     }
 
-    private void init(){
+    private void init() {
         getCDSFormPanel().setInputElements(getInputArcehtypeReferences());
     }
 
-    public Collection<ElementInstance> getAllElementInstances(){
+    public Collection<ElementInstance> getAllElementInstances() {
         return getCDSFormPanel().getElementInstances();
     }
 
-    public GuideDTO getGuideDTO(){
+    public GuideDTO getGuideDTO() {
         return _guideDTO;
     }
 
-    public String getName(){
+    public String getName() {
         Term ct = getConcepTerm();
-        if (ct!=null){
+        if (ct != null) {
             return ct.getText();
-        }else{
+        } else {
             return OpenEHRLanguageManager.getMessage("Unknown");
         }
     }
 
-    public String getDescription(){
+    public String getDescription() {
         Term ct = getConcepTerm();
-        if (ct!=null){
+        if (ct != null) {
             return ct.getDescription();
-        }else{
+        } else {
             return OpenEHRLanguageManager.getMessage("Unknown");
         }
     }
 
-    public Term getConcepTerm(){
+    public Term getConcepTerm() {
         String concept = getGuide().getConcept();
         TermDefinition td = getTermDefinition();
-        if (td!=null){
+        if (td != null) {
             return td.getTerms().get(concept);
-        }else{
+        } else {
             return null;
         }
     }
 
-    public TermDefinition getTermDefinition(){
+    public TermDefinition getTermDefinition() {
         TermDefinition termDefinition = getGuide().getOntology().getTermDefinitions().get(getLanguage());
-        if (termDefinition==null){
+        if (termDefinition == null) {
             termDefinition = getGuide().getOntology().getTermDefinitions().get(getGuide().getLanguage().getOriginalLanguage().getCodeString());
         }
         return termDefinition;
     }
 
-    public Guide getGuide(){
-        if(_guide==null){
+    public Guide getGuide() {
+        if (_guide == null) {
             try {
                 _guide = getGuideManager().getGuide(getGuideDTO().getId());
             } catch (Exception e) {
@@ -107,56 +110,56 @@ public class FormGeneratorController {
         return _guide;
     }
 
-    public CDSFormPanel getCDSFormPanel(){
-        if (_cdsFormPanel==null){
+    public CDSFormPanel getCDSFormPanel() {
+        if (_cdsFormPanel == null) {
             _cdsFormPanel = new CDSFormPanel(this);
         }
         return _cdsFormPanel;
     }
 
 
-    public GuideManager getGuideManager(){
-        if (_guideManager==null){
+    public GuideManager getGuideManager() {
+        if (_guideManager == null) {
             _guideManager = new GuideManager(Collections.singletonList(getGuideDTO()));
         }
         return _guideManager;
     }
 
-    public Calendar getCurrentDate(){
+    public Calendar getCurrentDate() {
         return _currentDate;
     }
 
-    public void setCurrentDate(Calendar currentDate){
-        _currentDate= currentDate;
+    public void setCurrentDate(Calendar currentDate) {
+        _currentDate = currentDate;
     }
 
-    public Collection<ArchetypeReference> getInputArcehtypeReferences(){
+    public Collection<ArchetypeReference> getInputArcehtypeReferences() {
         GeneratedElementInstanceCollection eic = getGuideManager().getCompleteElementInstanceCollection();
-        return CDSManager.getEHRArchetypeReferences(eic);
+        return cdsManager.getEHRArchetypeReferences(eic);
     }
 
-    public void updateResults(RuleExecutionResult result){
+    public void updateResults(RuleExecutionResult result) {
         getCDSFormPanel().updateResults(result);
-        if (result!=null){
+        if (result != null) {
             _lastFiredRulesReference = result.getFiredRules();
         }
     }
 
-    public Collection<String> getSupportedLanguages(){
+    public Collection<String> getSupportedLanguages() {
         return getReadableGuideMap().get(_guideDTO.getId()).keySet();
     }
 
-    public List<RuleReference> getLastRulesFired(){
+    public List<RuleReference> getLastRulesFired() {
         return _lastFiredRulesReference;
     }
 
-    public Map<String, Map<String, ReadableGuide>> getReadableGuideMap(){
-        if (_readableGuideMap == null){
-            _readableGuideMap = new HashMap<String, Map<String, ReadableGuide>>();
+    public Map<String, Map<String, ReadableGuide>> getReadableGuideMap() {
+        if (_readableGuideMap == null) {
+            _readableGuideMap = new HashMap<>();
             try {
                 GDLParser parser = new GDLParser();
                 for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
-                    Map<String, ReadableGuide> auxMap = new HashMap<String, ReadableGuide>();
+                    Map<String, ReadableGuide> auxMap = new HashMap<>();
                     _readableGuideMap.put(guideDTO.getId(), auxMap);
                     Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                     Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
@@ -174,18 +177,18 @@ public class FormGeneratorController {
         return _readableGuideMap;
     }
 
-    public String getLanguage(){
-        if (_lang==null){
+    public String getLanguage() {
+        if (_lang == null) {
             _lang = UserConfigurationManager.getLanguage();
         }
         return _lang;
     }
 
-    public void setViewer(FormGeneratorViewer viewer){
+    public void setViewer(FormGeneratorViewer viewer) {
         _viewer = viewer;
     }
 
-    public FormGeneratorViewer getViewer(){
+    public FormGeneratorViewer getViewer() {
         return _viewer;
     }
 }

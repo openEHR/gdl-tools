@@ -12,6 +12,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
     private RuleExecutionResult _result = null;
     private FormGeneratorController _controller = null;
     private RuleEngineFacadeDelegate _refd = null;
+    private CDSManager cdsManager = BeanProvider.getBean(CDSManager.class);
+
     public ExecuteRSW(FormGeneratorController controller) {
         super();
         _controller = controller;
@@ -67,7 +70,7 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
             }
             GuideManager guideManager = new GuideManager(guideDTOs);
             Collection<ArchetypeReference> ehrArchetypeReferences =
-                    CDSManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
+                    cdsManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
             _refd = CDSSessionManager.getRuleEngineFacadeDelegate();
             RuleExecutionResult result = _refd.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
             //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();

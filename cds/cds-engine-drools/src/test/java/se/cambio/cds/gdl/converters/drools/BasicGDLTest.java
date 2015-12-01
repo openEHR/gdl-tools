@@ -4,11 +4,15 @@ import com.google.gson.Gson;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -18,6 +22,9 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
+import se.cambio.cm.configuration.TerminologyServiceConfiguration;
+import se.cambio.cm.model.configuration.CmPersistenceConfig;
+import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -30,7 +37,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {CdsConfiguration.class})
 public class BasicGDLTest extends GDLTestCase {
+
+    @Autowired
+    CDSManager cdsManager;
 
     private RuleExecutionResult rer;
 
@@ -143,7 +155,7 @@ public class BasicGDLTest extends GDLTestCase {
         GuideManager guideManager = generateGuideManager(guideIds);
         try {
             Collection<ArchetypeReference> archetypeReferences =
-                    CDSManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
+                    cdsManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
             int elementInstanceSize = 0;
             for (ArchetypeReference archetypeReference : archetypeReferences) {
                 elementInstanceSize += archetypeReference.getElementInstancesMap().size();
@@ -174,7 +186,7 @@ public class BasicGDLTest extends GDLTestCase {
         GuideManager guideManager = generateGuideManager(guideIds);
         try {
             Collection<ArchetypeReference> archetypeReferences =
-                    CDSManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
+                    cdsManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
             Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
             for (ArchetypeReference archetypeReference : archetypeReferences) {
                 elementInstances.addAll(archetypeReference.getElementInstancesMap().values());

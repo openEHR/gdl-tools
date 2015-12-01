@@ -14,6 +14,7 @@ import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -25,12 +26,14 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * User: iago.corbal
- * Date: 2014-06-26
- * Time: 15:21
- */
+
 public class StressTest {
+
+    private CDSManager cdsManager;
+
+    public StressTest() {
+        cdsManager = BeanProvider.getBean(CDSManager.class);
+    }
 
     public static void main(String[] args) {
         try {
@@ -38,13 +41,13 @@ public class StressTest {
             UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
             UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
             UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
-            stressTest2();
+            new StressTest().stressTest2();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
-    private static void stressTest1() {
+    private void stressTest1() {
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesICD10();
         DroolsRuleEngineFacadeDelegate droolsREFD = new DroolsRuleEngineFacadeDelegate();
         List<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
@@ -61,7 +64,7 @@ public class StressTest {
             for (int i = 0; i < numExec; i++) {
                 ElementInstanceCollection eic = new ElementInstanceCollection();
                 eic.addAll(elementInstances);
-                CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
+                cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
                 long startTime = System.currentTimeMillis();
                 RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, eic.getAllArchetypeReferences(), cal);
                 long execTime = (System.currentTimeMillis() - startTime);
@@ -116,7 +119,7 @@ public class StressTest {
         return elementInstances;
     }
 
-    private static void stressTest2() {
+    private void stressTest2() {
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesATC();
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
         DataValue dataValue = new DvDateTime("1900-01-01T12:00");
@@ -135,7 +138,7 @@ public class StressTest {
                 long startTime = System.currentTimeMillis();
                 ElementInstanceCollection eic = new ElementInstanceCollection();
                 eic.addAll(elementInstances);
-                CDSManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
+                cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
                 Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();
                 RuleExecutionResult rer = droolsREFD.execute(null, guideDTOs, archetypeReferences, cal);
                 long execTime = (System.currentTimeMillis() - startTime);
