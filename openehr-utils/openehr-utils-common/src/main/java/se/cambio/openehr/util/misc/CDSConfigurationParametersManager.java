@@ -48,15 +48,15 @@ public class CDSConfigurationParametersManager {
     }
 
     public String getDbUrl() {
-        return environment.getProperty(DB_URL, String.class, "systemProperties['km-server.db.url']:jdbc:h2:./data/cds");
+        return environment.getProperty(DB_URL, String.class, "systemEnvironment['km-server.db.url']:jdbc:h2:./data/cds");
     }
 
     public String getDbUser() {
-        return environment.getProperty(DB_USER, String.class, "systemProperties['km-server.db.user']:sa");
+        return environment.getProperty(DB_USER, String.class, "systemEnvironment['km-server.db.user']:sa");
     }
 
     public String getDbPassword() {
-        return environment.getProperty(DB_PASSWORD, String.class, "systemProperties['km-server.db.password']:sa");
+        return environment.getProperty(DB_PASSWORD, String.class, "systemEnvironment['km-server.db.password']:sa");
     }
 
 }
