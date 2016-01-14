@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySources({
+        @PropertySource(value = "classpath:default-cds-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/cds-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true),
 })
@@ -48,15 +49,15 @@ public class CDSConfigurationParametersManager {
     }
 
     public String getDbUrl() {
-        return environment.getProperty(DB_URL, String.class, "systemEnvironment['km-server.db.url']:jdbc:h2:./data/cds");
+        return environment.getProperty(DB_URL, String.class);
     }
 
     public String getDbUser() {
-        return environment.getProperty(DB_USER, String.class, "systemEnvironment['km-server.db.user']:sa");
+        return environment.getProperty(DB_USER, String.class);
     }
 
     public String getDbPassword() {
-        return environment.getProperty(DB_PASSWORD, String.class, "systemEnvironment['km-server.db.password']:sa");
+        return environment.getProperty(DB_PASSWORD, String.class);
     }
 
 }
