@@ -2,6 +2,12 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.kie.api.KieServices;
+import org.kie.api.builder.KieBuilder;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.builder.Message;
+import org.kie.api.io.Resource;
+import org.kie.internal.io.ResourceFactory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -10,10 +16,9 @@ import se.cambio.openehr.util.UserConfigurationManager;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 public class ConvertToDroolsTest {
@@ -37,8 +42,8 @@ public class ConvertToDroolsTest {
 	}
 
     @Test
-	public void shouldConvertTemperalGuide() throws Exception {
-		parse("temperal.gdl");
+	public void shouldConvertTemporalGuide() throws Exception {
+		parse("temporal.gdl");
 		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
 		//System.out.println(output);	
@@ -53,8 +58,8 @@ public class ConvertToDroolsTest {
 	}
 
     @Test
-    public void shouldCompileTemperalGuide() throws Exception {
-		String guide = readFile("temperal.drools");
+    public void shouldCompileTemporalGuide() throws Exception {
+		String guide = readFile("temporal.drools");
 		//System.out.println(guide);
 		compile(guide);
 	}
@@ -82,12 +87,23 @@ public class ConvertToDroolsTest {
 
 	public byte[] compile(String guide) {
 		try {
-			return CompilationManager.compile(guide);
-		} catch (CompilationErrorException e) {
+			final KieServices kieServices = KieServices.Factory.get();
+			final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+			Resource resource = ResourceFactory.newByteArrayResource(guide.getBytes("UTF8"));
+			if (resource != null) {
+				kieFileSystem.write("src/main/resources/test.drl", resource);
+			}
+			final KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
+			kieBuilder.buildAll();
+			if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
+				fail("failed to compile guide..");
+				throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
+			}
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			fail("failed to compile guide..");
-			return null;
 		}
+		return null;
 	}
 
 	private GDLParser parser;

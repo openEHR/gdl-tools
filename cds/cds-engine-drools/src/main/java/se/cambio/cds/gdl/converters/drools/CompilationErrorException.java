@@ -4,9 +4,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CompilationErrorException extends InternalErrorException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
 
