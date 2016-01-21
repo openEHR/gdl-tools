@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideUtil;
-import se.cambio.cds.gdl.converters.drools.CompilationManager;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
@@ -82,7 +81,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
     public byte[] compile(Guide guide) throws InternalErrorException {
         try {
             String droolsGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
-            return CompilationManager.compile(droolsGuide);
+            return droolsGuide.getBytes("UTF8");
         } catch (Exception e) {
             throw new InternalErrorException(e);
         }

@@ -12,7 +12,7 @@
 	<name>Clinical Decision Support System</name>
 
 	<properties>
-        <drools.version>5.5.0.Final</drools.version>
+        <drools.version>6.3.0.Final</drools.version>
 	</properties>
     <scm>
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>

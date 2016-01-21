@@ -1,7 +1,7 @@
 package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
-import org.drools.spi.KnowledgeHelper;
+import org.drools.core.spi.KnowledgeHelper;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
