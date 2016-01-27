@@ -119,7 +119,7 @@ public class DroolsExecutionManager {
                 //Remove oldest KB in cache
                 String oldestGuideIdsId = getDelegate()._knowledgeBaseCache.keySet().iterator().next();
                 getDelegate()._knowledgeBaseCache.remove(oldestGuideIdsId);
-                Logger.getLogger(DroolsExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
+                Logger.getLogger(DroolsExecutionManager.class).info("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
             }
         }
         return kb;
