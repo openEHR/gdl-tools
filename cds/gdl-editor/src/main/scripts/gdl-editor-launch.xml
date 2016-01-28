@@ -16,7 +16,7 @@
   <jre>
     <path>jre</path>
     <minVersion>1.6.0</minVersion>
-    <maxVersion>1.7.6</maxVersion>
+    <!-- <maxVersion>1.8.2</maxVersion> -->
     <jdkPreference>preferJre</jdkPreference>
     <initialHeapSize>128</initialHeapSize>
     <maxHeapSize>1024</maxHeapSize>

@@ -518,7 +518,7 @@ public class GenericObjectBundleADLSManager {
 
     private Map<String, Map<String, String>> getTermDefinitionsArchetypeTermMap() throws ArchetypeProcessingException {
         if (termDefinitionsArchetypeTermMap == null) {
-            ArchetypeTermMapGenerator archetypeTermMapGenerator = new ArchetypeTermMapGenerator(ar.getOntology().getTermDefinitions(), language);
+            ArchetypeTermMapGenerator archetypeTermMapGenerator = new ArchetypeTermMapGenerator(ar.getTerminology().getTermDefinitions(), language);
             termDefinitionsArchetypeTermMap = archetypeTermMapGenerator.generateTermDefinitionsArchetypeTermMap();
         }
         return termDefinitionsArchetypeTermMap;
@@ -533,7 +533,7 @@ public class GenericObjectBundleADLSManager {
 
     private Map<String, List<String>> generateValueSetsMap() {
         Map valueSetMap = new HashMap<String, List<String>>();
-        for(ValueSetItem valueSetItem : ar.getOntology().getValueSets()){
+        for(ValueSetItem valueSetItem : ar.getTerminology().getValueSets()){
             valueSetMap.put(valueSetItem.getId(), valueSetItem.getMembers());
         }
         return valueSetMap;
