@@ -9,9 +9,10 @@
         <name>Cambio</name>
     </organization>
     <properties>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <openehr-java-libs-version>1.0.11-SNAPSHOT</openehr-java-libs-version>
-        <adl2-core-version>1.0.0-SNAPSHOT</adl2-core-version>
+        <openehr-java-libs-version>1.0.14-SNAPSHOT</openehr-java-libs-version>
+        <adl2-core-version>1.1.0-SNAPSHOT</adl2-core-version>
         <spring-framework-version>3.2.9.RELEASE</spring-framework-version>
         <distribution.path>//css-cds/dist/${project.artifactId}/${project.version}</distribution.path>
     </properties>
@@ -24,8 +25,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>UTF-8</encoding>
                     <compilerArgument />
                 </configuration>

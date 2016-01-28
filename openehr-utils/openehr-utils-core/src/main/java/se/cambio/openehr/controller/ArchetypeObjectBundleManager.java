@@ -74,7 +74,8 @@ public class ArchetypeObjectBundleManager {
     private void generateArchetype20Data()
             throws InternalErrorException{
         try{
-            AdlDeserializer adlDeserializer = new AdlDeserializer(new OpenEhrRmModel());
+           // AdlDeserializer adlDeserializer = new AdlDeserializer(OpenEhrRmModel.getInstance());
+            AdlDeserializer adlDeserializer = new AdlDeserializer();
             DifferentialArchetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
             FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
             byte[] flatArchetypeBytes = IOUtils.getBytes(flatArchetype);
@@ -88,7 +89,7 @@ public class ArchetypeObjectBundleManager {
     }
 
     protected FlatArchetype parseAndFlattenArchetype(DifferentialArchetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {
-        ArchetypeFlattener flattener = new ArchetypeFlattener(new OpenEhrRmModel());
+        ArchetypeFlattener flattener = new ArchetypeFlattener(OpenEhrRmModel.getInstance());
         FlatArchetype parent;
         ArchetypeId parentArchetypeId = differentialArchetype.getParentArchetypeId();
         if (parentArchetypeId != null) {
