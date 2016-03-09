@@ -83,7 +83,7 @@ public class DroolsExecutionManager {
             session.setGlobal("$execute", true);
             int initSalience = 0;
 
-            List<String> reverseGuideIds = new ArrayList<String>(guideIds);
+            List<String> reverseGuideIds = new ArrayList<>(guideIds);
             Collections.reverse(reverseGuideIds);
             for (String guideId : reverseGuideIds) {
                 session.setGlobal(getGuideSalienceId(guideId), initSalience);
@@ -137,12 +137,12 @@ public class DroolsExecutionManager {
     }
 
     private static String getGuideIdsId(Collection<GuideDTO> guideDTOs) {
-        List<String> guideIdsIdList = new ArrayList<String>();
+        List<String> guideIdsIdList = new ArrayList<>();
         for (GuideDTO guideDTO : guideDTOs) {
             guideIdsIdList.add(guideDTO.getId());
         }
         Collections.sort(guideIdsIdList);
-        StringBuffer guideIdsIdSB = new StringBuffer();
+        StringBuilder guideIdsIdSB = new StringBuilder();
         for (String guideId : guideIdsIdList) {
             guideIdsIdSB.append(guideId);
         }

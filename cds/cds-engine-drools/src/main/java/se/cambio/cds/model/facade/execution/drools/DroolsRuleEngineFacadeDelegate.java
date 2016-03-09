@@ -34,7 +34,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
             Collection<ArchetypeReference> archetypeReferences,
             Calendar date)
             throws InternalErrorException, PatientNotFoundException {
-        final HashSet<Object> workingMemoryObjects = new HashSet<Object>();
+        final HashSet<Object> workingMemoryObjects = new HashSet<>();
         for (ArchetypeReference archetypeReference : archetypeReferences) {
             workingMemoryObjects.addAll(archetypeReference.getElementInstancesMap().values());
             workingMemoryObjects.add(archetypeReference);
@@ -46,10 +46,10 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
             DroolsExecutionManager.executeGuides(
                     guides, date, workingMemoryObjects, executionLogger);
         }
-        final Set<ArchetypeReference> modifiedArhetypeReferences = new HashSet<ArchetypeReference>();
-        //Search for modified elements
+        final Set<ArchetypeReference> modifiedArchetypeReferences = new HashSet<>();
+
         for (ElementInstance elementInstance : executionLogger.getElementInstancesSet()) {
-            modifiedArhetypeReferences.add(elementInstance.getArchetypeReference());
+            modifiedArchetypeReferences.add(elementInstance.getArchetypeReference());
         }
         final List<RuleReference> ruleReferences =
                 GuideUtil.getRuleReferences(executionLogger.getFiredRules());
@@ -57,7 +57,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
         if (date == null) {
             date = Calendar.getInstance();
         }
-        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, date.getTime(), modifiedArhetypeReferences, executionLogger.getLog(), ruleReferences);
+        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, date.getTime(), modifiedArchetypeReferences, executionLogger.getLog(), ruleReferences);
         ruleExecutionResult.setTimedOut(executionLogger.executionTimedOut());
         return ruleExecutionResult;
     }

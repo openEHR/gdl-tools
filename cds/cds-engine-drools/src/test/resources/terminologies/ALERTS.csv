@@ -15,3 +15,9 @@ id,text,parent
 1005,"Demographics",1
 1005.1,"No Documented Age",1005
 1005.2,"No Documented Gender",1005
+STROKE,Stroke alert,
+STROKE-NC01,Non compliance with CHA2DS2VASc guideline detected (score>=2),STROKE
+STROKE-NC02,Non compliance with CHA2DS2VASc guideline detected (score==1),STROKE
+STROKE-NC03,Stroke prevention alert (Non-compliance) – No anticoagulation treatment detected,STROKE
+STROKE-NC04,Stroke prevention alert (Non-compliance) – Documented deviation with different CHA2DS2VASc score,STROKE
+STROKE-NC05,Stroke prevention alert (Non-compliance) – Documented deviation older than 6 months,STROKE
