@@ -43,8 +43,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
         final ExecutionLogger executionLogger = new ExecutionLogger();
         if (!guides.isEmpty()) {
             Logger.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
-            DroolsExecutionManager.executeGuides(
-                    guides, date, workingMemoryObjects, executionLogger);
+            DroolsExecutionManager.executeGuides(guides, date, workingMemoryObjects, executionLogger);
         }
         final Set<ArchetypeReference> modifiedArchetypeReferences = new HashSet<>();
 

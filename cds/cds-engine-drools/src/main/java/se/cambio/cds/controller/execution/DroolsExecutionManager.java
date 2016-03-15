@@ -80,7 +80,6 @@ public class DroolsExecutionManager {
             getDelegate()._logger = executionLogger;
             session.setGlobal("$executionLogger", executionLogger);
             session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
-            session.setGlobal("$execute", true);
             int initSalience = 0;
 
             List<String> reverseGuideIds = new ArrayList<>(guideIds);

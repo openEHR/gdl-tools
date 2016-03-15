@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import com.google.gson.Gson;
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +26,7 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -92,12 +92,14 @@ public class BasicGDLTest extends GDLTestCase {
     @Test
     public void shouldCreateSeveralElements() {
         RuleExecutionResult rer = null;
-        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
-        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
-        List<String> guideIds = new ArrayList<>();
-        guideIds.add("test_creation_and_order_1");
-        guideIds.add("test_creation_and_order_2");
-        rer = executeGuides(guideIds, elementInstances);
+        for (int i = 0; i < 200; i++) {
+            ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
+            Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+            List<String> guideIds = new ArrayList<>();
+            guideIds.add("test_creation_and_order_1");
+            guideIds.add("test_creation_and_order_2");
+            rer = executeGuides(guideIds, elementInstances);
+        }
         assertEquals(4, rer.getFiredRules().size());
         assertEquals(new RuleReference("test_creation_and_order_2", "gt0002"), rer.getFiredRules().get(0));
         assertEquals(new RuleReference("test_creation_and_order_1", "gt0005"), rer.getFiredRules().get(1));
@@ -327,8 +329,8 @@ public class BasicGDLTest extends GDLTestCase {
         RuleExecutionResult rer = executeRuleEngineInit();
         String json = gson.toJson(rer);
         RuleExecutionResult auxRer = gson.fromJson(json, RuleExecutionResult.class);
-        boolean equalRER = EqualsBuilder.reflectionEquals(rer, auxRer);
-        assertTrue(equalRER);
+        String jsonAux = gson.toJson(auxRer);
+        assertThat(json, equalTo(jsonAux));
     }
 
     @Test

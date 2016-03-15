@@ -1,0 +1,103 @@
+package se.cambio.cds;
+import se.cambio.cds.model.instance.ArchetypeReference;
+import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.model.instance.ContainerInstance;
+import se.cambio.cds.model.instance.FiredRuleReference;
+import se.cambio.cds.util.DVUtil;
+import org.openehr.rm.datatypes.quantity.DvOrdered;
+import org.openehr.rm.datatypes.quantity.DvCount;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
+import org.openehr.rm.datatypes.quantity.datetime.DvDate;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.openehr.rm.datatypes.quantity.datetime.DvDuration;
+import org.openehr.rm.datatypes.quantity.datetime.DvTime;
+import org.openehr.rm.datatypes.quantity.DvProportion;
+import org.openehr.rm.datatypes.quantity.ProportionKind;
+import org.openehr.rm.datatypes.basic.DvBoolean;
+import org.openehr.rm.datatypes.text.DvCodedText;
+import org.openehr.rm.datatypes.text.DvText;
+global se.cambio.cds.util.ExecutionLogger $executionLogger;
+global org.openehr.rm.datatypes.basic.DataValue $auxDV;
+global org.openehr.rm.datatypes.quantity.datetime.DvDateTime $currentDateTime;
+global java.util.Map<se.cambio.cds.model.instance.ElementInstance, java.util.Map<String, Boolean>> $bindingMap;
+global java.lang.Integer $testcreationandorder1_salience;
+global java.lang.Integer $testcreationandorder2_salience;
+
+rule "test_creation_and_order_1/gt0002"
+salience $testcreationandorder1_salience - 2
+no-loop true
+when
+      $archetypeReference_gt0008:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1")
+      $gt0010:ElementInstance(id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0029]", archetypeReference==$archetypeReference_gt0008)
+      $archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1")
+      $gt0004:ElementInstance(id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$archetypeReference_gt0003)
+      Number($gt0004count:intValue) from accumulate (
+            $count_archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1") and
+            $count_gt0004:ElementInstance(!predicate, dataValue!=null, id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$count_archetypeReference_gt0003),
+            count($count_gt0004))
+      eval($gt0010.hasNoValue("test_creation_and_order_1/gt0010"))
+      eval(($gt0004count>=2))
+then
+      $gt0010.setDataValue(new DvOrdinal(1,"Present","local","at0028"));$gt0010.setNullFlavour(null);$executionLogger.addLog(drools, $gt0010);
+      modify($gt0010){};
+      insert(new FiredRuleReference("test_creation_and_order_1", "gt0002"));
+end
+
+rule "test_creation_and_order_1/gt0005"
+salience $testcreationandorder1_salience - 1
+no-loop true
+when
+      $archetypeReference_gt0008:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1")
+      $gt0009:ElementInstance(id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0032]", archetypeReference==$archetypeReference_gt0008)
+      $archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1")
+      $gt0004:ElementInstance(id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$archetypeReference_gt0003)
+      Number($gt0004count:intValue) from accumulate (
+            $count_archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1") and
+            $count_gt0004:ElementInstance(!predicate, dataValue!=null, id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$count_archetypeReference_gt0003),
+            count($count_gt0004))
+      eval($gt0009.hasNoValue("test_creation_and_order_1/gt0009"))
+      eval(($gt0004count>=1))
+then
+      $gt0009.setDataValue(new DvOrdinal(1,"Present","local","at0028"));$gt0009.setNullFlavour(null);$executionLogger.addLog(drools, $gt0009);
+      modify($gt0009){};
+      insert(new FiredRuleReference("test_creation_and_order_1", "gt0005"));
+end
+
+rule "test_creation_and_order_2/gt0002"
+salience $testcreationandorder2_salience - 1
+no-loop true
+when
+      $archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1")
+      $gt0004:ElementInstance(id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$archetypeReference_gt0003)
+      Number($gt0004count:intValue) from accumulate (
+            $count_archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1") and
+            $count_gt0004:ElementInstance(!predicate, dataValue!=null, id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$count_archetypeReference_gt0003),
+            count($count_gt0004))
+      eval(($gt0004count<1))
+then
+      ArchetypeReference newAR0 = new ArchetypeReference("CDS", "openEHR-EHR-OBSERVATION.chadsvas_score.v1",null);
+      insert(newAR0);
+      ElementInstance $ei0_0 = new ElementInstance("openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", null, newAR0, null, null);
+      $ei0_0.setDataValue(new DvCount(12));$ei0_0.setNullFlavour(null);$executionLogger.addLog(drools, $ei0_0);insert($ei0_0);
+      insert(new FiredRuleReference("test_creation_and_order_2", "gt0002"));
+end
+
+rule "test_creation_and_order_2/gt0005"
+salience $testcreationandorder2_salience - 2
+no-loop true
+when
+      $archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1")
+      $gt0004:ElementInstance(id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$archetypeReference_gt0003)
+      Number($gt0004count:intValue) from accumulate (
+            $count_archetypeReference_gt0003:ArchetypeReference(idDomain=="CDS", idArchetype=="openEHR-EHR-OBSERVATION.chadsvas_score.v1") and
+            $count_gt0004:ElementInstance(!predicate, dataValue!=null, id=="openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", archetypeReference==$count_archetypeReference_gt0003),
+            count($count_gt0004))
+      eval(($gt0004count<2))
+then
+      ArchetypeReference newAR1 = new ArchetypeReference("CDS", "openEHR-EHR-OBSERVATION.chadsvas_score.v1",null);
+      insert(newAR1);
+      ElementInstance $ei1_0 = new ElementInstance("openEHR-EHR-OBSERVATION.chadsvas_score.v1/data[at0002]/events[at0003]/data[at0001]/items[at0099]", null, newAR1, null, null);
+      $ei1_0.setDataValue(new DvCount(23));$ei1_0.setNullFlavour(null);$executionLogger.addLog(drools, $ei1_0);insert($ei1_0);
+      insert(new FiredRuleReference("test_creation_and_order_2", "gt0005"));
+end

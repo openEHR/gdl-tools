@@ -19,6 +19,7 @@ public class ArchetypeReferenceJsonSerializer implements JsonDeserializer<Archet
     public ArchetypeReferenceJsonSerializer() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(DataValue.class, new DataValueJsonSerializer())
+                .registerTypeAdapter(ElementInstance.class, new ElementInstanceJsonSerializer())
                 .create();
     }
 
