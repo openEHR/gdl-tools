@@ -11,9 +11,6 @@
 	<version>1.0.7-SNAPSHOT</version>
 	<name>Clinical Decision Support System</name>
 
-	<properties>
-        <drools.version>6.4.0.CR1</drools.version>
-	</properties>
     <scm>
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
         <developerConnection>scm:git:git@github.com:openEHR/gdl-tools.git</developerConnection>

@@ -2,12 +2,6 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieBuilder;
-import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.Message;
-import org.kie.api.io.Resource;
-import org.kie.internal.io.ResourceFactory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -16,49 +10,48 @@ import se.cambio.openehr.util.UserConfigurationManager;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 
 public class ConvertToDroolsTest {
 
-    @Before
+	@Before
 	public void setUp() throws Exception {
-        String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
+		String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
+		UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
 		parser = new GDLParser();
 		guide = null;
 	}
 
-    @Test
+	@Test
 	public void testConvertBSACalculationGuide() throws Exception {
 		parse("BSA_Calculation.v2.gdl");
 		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
-		//System.out.println(output);		
-		//System.out.println(serializer.toDADL(guide));		
 		compile(output);
 	}
 
-    @Test
+	@Test
 	public void shouldConvertTemporalGuide() throws Exception {
 		parse("temporal.gdl");
 		converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
 		String output = converter.convertToDrools();
-		//System.out.println(output);	
+		//System.out.println(output);
 		compile(output);
 	}
 
-    @Test
-    public void shouldTermBindingsExist() throws Exception {
+	@Test
+	public void shouldTermBindingsExist() throws Exception {
 		parse("CHADVAS_Score_ICD10_bindings.v1.gdl");
 		assertNotNull(guide.getOntology().getTermBindings());
 		assertEquals(1, guide.getOntology().getTermBindings().size());
 	}
 
-    @Test
-    public void shouldCompileTemporalGuide() throws Exception {
+	@Test
+	public void shouldCompileTemporalGuide() throws Exception {
 		String guide = readFile("temporal.drools");
 		//System.out.println(guide);
 		compile(guide);
@@ -68,11 +61,11 @@ public class ConvertToDroolsTest {
 		guide = parser.parse(load(input));
 		assertNotNull(guide);
 	}
-	
+
 	private InputStream load(String name) throws Exception {
 		return this.getClass().getClassLoader().getResourceAsStream(name);
 	}
-	
+
 	private String readFile(String name) throws Exception {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(load(name)));
 		StringBuffer buf = new StringBuffer();
@@ -87,23 +80,12 @@ public class ConvertToDroolsTest {
 
 	public byte[] compile(String guide) {
 		try {
-			final KieServices kieServices = KieServices.Factory.get();
-			final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-			Resource resource = ResourceFactory.newByteArrayResource(guide.getBytes("UTF8"));
-			if (resource != null) {
-				kieFileSystem.write("src/main/resources/test.drl", resource);
-			}
-			final KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
-			kieBuilder.buildAll();
-			if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
-				fail("failed to compile guide..");
-				throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
-			}
-		} catch (UnsupportedEncodingException e) {
+			return CompilationManager.compile(guide);
+		} catch (CompilationErrorException e) {
 			e.printStackTrace();
 			fail("failed to compile guide..");
+			return null;
 		}
-		return null;
 	}
 
 	private GDLParser parser;

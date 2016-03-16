@@ -91,15 +91,12 @@ public class BasicGDLTest extends GDLTestCase {
 
     @Test
     public void shouldCreateSeveralElements() {
-        RuleExecutionResult rer = null;
-        for (int i = 0; i < 200; i++) {
-            ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
-            Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
-            List<String> guideIds = new ArrayList<>();
-            guideIds.add("test_creation_and_order_1");
-            guideIds.add("test_creation_and_order_2");
-            rer = executeGuides(guideIds, elementInstances);
-        }
+        ArchetypeReference ar = generateOngoingMedicationArchetypeReference("A01AA01");
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        List<String> guideIds = new ArrayList<>();
+        guideIds.add("test_creation_and_order_1");
+        guideIds.add("test_creation_and_order_2");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         assertEquals(4, rer.getFiredRules().size());
         assertEquals(new RuleReference("test_creation_and_order_2", "gt0002"), rer.getFiredRules().get(0));
         assertEquals(new RuleReference("test_creation_and_order_1", "gt0005"), rer.getFiredRules().get(1));

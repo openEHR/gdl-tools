@@ -8,6 +8,11 @@
 	<artifactId>cds-engine-drools</artifactId>
 	<name>CDS Drools Engine</name>
 	<description>CDS Drools engine</description>
+
+	<properties>
+		<drools.version>5.6.0.Final</drools.version>
+	</properties>
+
 	<dependencies>
         <dependency>
             <groupId>se.cambio.cds</groupId>

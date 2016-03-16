@@ -29,10 +29,8 @@ import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,9 +86,9 @@ public abstract class GDLTestCase {
     public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code) {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.DIAGNOSIS_ARCHETYPE_ID, GDLTestCase.DIAGNOSIS_TEMPLATE_ID);
         DataValue dataValue = new DvCodedText(icd10Code, "ICD10", icd10Code);
-        new ElementInstance(GDLTestCase.DIAGNOSIS_CODE_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(GDLTestCase.DIAGNOSIS_CODE_ELEMENT_ID, dataValue, ar, null, null);
         dataValue = new DvDateTime(new DateTime().toString());
-        new ElementInstance(GDLTestCase.DIAGNOSIS_DATE_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(GDLTestCase.DIAGNOSIS_DATE_ELEMENT_ID, dataValue, ar, null, null);
         return ar;
     }
 
@@ -98,9 +96,9 @@ public abstract class GDLTestCase {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
         String localGenderCode = gender == Gender.FEMALE ? "at0006" : "at0005";
         DataValue dataValue = new DvCodedText(localGenderCode, "local", localGenderCode);
-        new ElementInstance(GENDER_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(GENDER_ELEMENT_ID, dataValue, ar, null, null);
         dataValue = new DvDateTime(new DateTime(birthdate.getTimeInMillis()).toString());
-        new ElementInstance(BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, null);
         return ar;
     }
 
@@ -108,11 +106,10 @@ public abstract class GDLTestCase {
     public static ArchetypeReference generateOngoingMedicationArchetypeReference(String atcCode) {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.MEDICATION_ARCHETYPE_ID, GDLTestCase.MEDICATION_TEMPLATE_ID);
         DataValue dataValue = new DvCodedText(atcCode, "ATC", atcCode);
-        new ElementInstance(GDLTestCase.MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(GDLTestCase.MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, null);
         dataValue = new DvDateTime(new DateTime().plus(-64000000L).toString());
-        new ElementInstance(GDLTestCase.MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
-        dataValue = null;
-        new ElementInstance(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(GDLTestCase.MEDICATION_DATE_INIT_ELEMENT_ID, dataValue, ar, null, null);
+        new ElementInstance(GDLTestCase.MEDICATION_DATE_END_ELEMENT_ID, null, ar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         return ar;
     }
 
@@ -122,12 +119,12 @@ public abstract class GDLTestCase {
             dateTime = new DateTime();
         }
         DataValue dataValue = new DvDateTime(dateTime.toString());
-        new ElementInstance(GDLTestCase.CONTACT_DATE_END_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
+        new ElementInstance(GDLTestCase.CONTACT_DATE_END_ELEMENT_ID, dataValue, ar, null, null);
         return ar;
     }
 
     public static Collection<ElementInstance> getElementInstances(Collection<ArchetypeReference> ars) {
-        Collection<ElementInstance> eis = new ArrayList<ElementInstance>();
+        Collection<ElementInstance> eis = new ArrayList<>();
         for (ArchetypeReference ar : ars) {
             eis.addAll(ar.getElementInstancesMap().values());
         }
@@ -142,11 +139,11 @@ public abstract class GDLTestCase {
     public RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances) {
         RuleExecutionResult rer = null;
         try {
-            StringBuffer guideIdsSB = new StringBuffer();
+            StringBuilder guideIdsSB = new StringBuilder();
             DroolsRuleEngineFacadeDelegate droolsREFD = new DroolsRuleEngineFacadeDelegate();
             String prefix = "";
             for (String guideId : guideIds) {
-                guideIdsSB.append(prefix + guideId);
+                guideIdsSB.append(prefix).append(guideId);
                 prefix = ", ";
             }
             GuideManager guideManager = generateGuideManager(guideIds);
@@ -161,21 +158,13 @@ public abstract class GDLTestCase {
             long execTime = (System.currentTimeMillis() - startTime);
             System.out.println("Executed in: " + execTime + " ms");
             System.out.println("Rules fired: " + rer.getFiredRules().size());
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
-        } catch (PatientNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return rer;
     }
 
-    private static InputStream load(String fileName) throws Exception {
-        return StressTest.class.getClassLoader().getResourceAsStream(fileName);
-    }
-
     public enum Gender {
-        MALE, FEMALE
+        FEMALE
     }
 }

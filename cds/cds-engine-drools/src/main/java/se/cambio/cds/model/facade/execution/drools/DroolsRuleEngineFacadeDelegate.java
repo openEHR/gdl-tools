@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.gdl.converters.drools.CompilationManager;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
@@ -18,11 +19,7 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Profile("rule-drools-engine")
@@ -80,7 +77,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
     public byte[] compile(Guide guide) throws InternalErrorException {
         try {
             String droolsGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
-            return droolsGuide.getBytes("UTF8");
+            return CompilationManager.compile(droolsGuide);
         } catch (Exception e) {
             throw new InternalErrorException(e);
         }

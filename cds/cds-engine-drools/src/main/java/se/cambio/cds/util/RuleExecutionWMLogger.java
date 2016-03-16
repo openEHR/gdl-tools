@@ -1,9 +1,7 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
-import org.drools.core.event.DefaultAgendaEventListener;
-import org.drools.core.reteoo.RuleTerminalNodeLeftTuple;
-import org.kie.api.event.rule.AfterMatchFiredEvent;
+import org.drools.event.rule.AfterActivationFiredEvent;
+import org.drools.event.rule.DefaultAgendaEventListener;
 
 import java.util.ArrayList;
 
@@ -11,18 +9,11 @@ import java.util.ArrayList;
 public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
 
     private ArrayList<String> _firedRules = null;
-    private Logger logger = Logger.getLogger(RuleExecutionWMLogger.class);
 
     @Override
-    public void afterMatchFired(AfterMatchFiredEvent event) {
-        String ruleName = event.getMatch().getRule().getName();
+    public void afterActivationFired(AfterActivationFiredEvent event) {
+        String ruleName = event.getActivation().getRule().getName();
         getFiredRules().add(ruleName);
-        int salience = 0;
-        if (event.getMatch() instanceof RuleTerminalNodeLeftTuple) {
-            RuleTerminalNodeLeftTuple match = (RuleTerminalNodeLeftTuple) event.getMatch();
-            salience = match.getSalience();
-        }
-        logger.debug("Executed " + ruleName + " with salience " + salience);
     }
 
     public ArrayList<String> getFiredRules(){
