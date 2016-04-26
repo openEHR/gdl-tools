@@ -169,11 +169,11 @@ public class DroolsExecutionManager {
         return knowledgeBase;
     }
 
-    private static KnowledgePackage getKnowledgePackage(byte[] guiaCompilada) {
-        if (guiaCompilada == null) {
+    private static KnowledgePackage getKnowledgePackage(byte[] compiledGuide) {
+        if (compiledGuide == null) {
             return null;
         }
-        ByteArrayInputStream bais = new ByteArrayInputStream(guiaCompilada);
+        ByteArrayInputStream bais = new ByteArrayInputStream(compiledGuide);
         ObjectInputStream objInput;
         KnowledgePackage knowledgePackage;
         try {

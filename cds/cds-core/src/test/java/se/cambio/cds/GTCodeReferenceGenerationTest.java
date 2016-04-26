@@ -1,3 +1,5 @@
+package se.cambio.cds;
+
 import org.junit.Test;
 import se.cambio.cds.controller.guide.SimpleGuideManager;
 import se.cambio.cds.controller.session.data.Guides;

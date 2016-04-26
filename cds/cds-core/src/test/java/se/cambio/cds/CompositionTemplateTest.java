@@ -1,4 +1,7 @@
+package se.cambio.cds;
+
 import org.junit.Test;
+import se.cambio.cds.GenericTestBase;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 

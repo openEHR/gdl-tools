@@ -1,3 +1,5 @@
+package se.cambio.cds;
+
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;

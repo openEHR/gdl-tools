@@ -271,11 +271,11 @@ public class GDLDroolsConverter {
     }
 
     private String getDefinitionForRule(Map<RefStat, Set<String>> ruleStats) {
-        Set<String> gtCodesRef = new HashSet<String>();
+        Set<String> gtCodesRef = new HashSet<>();
         gtCodesRef.addAll(ruleStats.get(RefStat.REFERENCE));
         gtCodesRef.addAll(preconditionStats.get(RefStat.REFERENCE));
         gtCodesRef.remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
-        Map<String, StringBuffer> archetypeDefinitions = new HashMap<String, StringBuffer>();
+        Map<String, StringBuffer> archetypeDefinitions = new HashMap<>();
         for (String elementGtCode : gtCodesRef) {
             String gtCodeArchetypeBinding = gtElementToArchetypeBindingGtCode.get(elementGtCode);
             if (gtCodeArchetypeBinding != null) {
@@ -289,6 +289,7 @@ public class GDLDroolsConverter {
                 definition.append("$").append(elementGtCode).append(":").append(_gtElementToDefinition.get(elementGtCode)).append("\n");
             }
         }
+
         StringBuilder resultSB = new StringBuilder();
         for (StringBuffer definition : archetypeDefinitions.values()) {
             resultSB.append(definition.toString());

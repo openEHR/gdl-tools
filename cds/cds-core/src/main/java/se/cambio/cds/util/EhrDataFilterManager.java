@@ -32,8 +32,6 @@ public class EhrDataFilterManager {
                 boolean useAR = true;
                 if (ehrDate != null) {
                     DateTime dateTime = dateTimeARFinder.getDateTime(archetypeReference);
-                    //DateFormat df2 = DateFormat.getDateTimeInstance();
-                    //Logger.getLogger(DashboardFetchPageExecutionThread.class).debug("Comparing '"+ehrId+"' with ehr date '"+df2.format(ehrDate.toDate())+"' to date '"+(dateTime==null?"null":df2.format(dateTime.toDate()))+"' eiId = '"+elementInstance.getId()+"'");
                     if (dateTime == null || dateTime.isAfter(ehrDate)) {
                         useAR = false;
                         DateFormat df = DateFormat.getDateTimeInstance();
@@ -56,5 +54,25 @@ public class EhrDataFilterManager {
             PredicateFilterUtil.filterByPredicates(queryARs, ehrIdARs, date);
         }
         return ehrIdARs;
+    }
+
+    public Set<ArchetypeReference> filterEHRData(DateTime startDateTime, DateTime endDateTime, Collection<ArchetypeReference> ehrData) {
+        Set<ArchetypeReference> ehrDataAux = new HashSet<>();
+        for (ArchetypeReference archetypeReference : ehrData) {
+            boolean useAR = true;
+            DateTime dateTime = dateTimeARFinder.getDateTime(archetypeReference);
+            if (dateTime == null ||
+                    endDateTime != null && dateTime.isAfter(endDateTime) ||
+                    startDateTime != null && dateTime.isBefore(startDateTime)) {
+                useAR = false;
+                if (dateTime == null) {
+                    Logger.getLogger(EhrDataFilterManager.class).warn("Date time for Archetype Reference " + archetypeReference.getIdArchetype() + " is null!");
+                }
+            }
+            if (useAR) {
+                ehrDataAux.add(archetypeReference);
+            }
+        }
+        return ehrDataAux;
     }
 }
