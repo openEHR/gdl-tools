@@ -15,7 +15,7 @@ public class QuantityConstant extends ConstantExpression {
 	}
 	
 	public DvQuantity getQuantity() {
-		return quantity;
+		return new DvQuantity(quantity.getUnits(), quantity.getMagnitude(), quantity.getPrecision());
 	}
 	
 	private DvQuantity quantity;
