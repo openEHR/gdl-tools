@@ -1,26 +1,24 @@
 package se.cambio.cds.gdl.model.expression;
 
-import org.openehr.rm.datatypes.text.CodePhrase;
-import org.openehr.rm.datatypes.text.DvCodedText;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
 
-public class CodedTextConstant extends ConstantExpression {
+public class QuantityConstant extends ConstantExpression {
 
 	/**
      * 
      */
     private static final long serialVersionUID = 1L;
 
-	public CodedTextConstant(String value, CodePhrase code) {
-		super(code.toString() + "|" + value + "|");
-		this.codedText = new DvCodedText(value, code);
-	}
-
-	public DvCodedText getCodedText() {
-		return new DvCodedText(this.codedText.getValue(),
-				this.codedText.getTerminologyId(), this.codedText.getCode());
+	public QuantityConstant(DvQuantity quantity) {
+		super(quantity.toString());
+		this.quantity = quantity;
 	}
 	
-	private DvCodedText codedText;
+	public DvQuantity getQuantity() {
+		return new DvQuantity(this.quantity.getUnits(), this.quantity.getMagnitude(), this.quantity.getPrecision());
+	}
+	
+	private DvQuantity quantity;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

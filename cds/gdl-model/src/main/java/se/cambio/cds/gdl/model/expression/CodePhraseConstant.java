@@ -14,7 +14,7 @@ public class CodePhraseConstant extends ConstantExpression {
 	}
 
 	public CodePhrase getCodePhrase() {
-		return codePhrase;
+		return new CodePhrase(this.codePhrase.getTerminologyId(), this.codePhrase.getCodeString());
 	}
 	private CodePhrase codePhrase;
 }
