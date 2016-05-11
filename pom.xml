@@ -11,7 +11,7 @@
     <version>1.0.4-SNAPSHOT</version>
     <name>GDL Tools</name>
     <properties>
-        <openehr-java-libs-version>1.0.17</openehr-java-libs-version>
+        <openehr-java-libs-version>1.0.22</openehr-java-libs-version>
         <adl2-core-version>1.0.0</adl2-core-version>
     </properties>
 

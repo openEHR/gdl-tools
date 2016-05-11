@@ -32,17 +32,17 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>openehr</groupId>
+			<groupId>se.cambio.cds</groupId>
 			<artifactId>mini-termserv</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>openehr</groupId>
+			<groupId>se.cambio.cds</groupId>
 			<artifactId>rm-builder</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>openehr</groupId>
+			<groupId>se.cambio.cds</groupId>
 			<artifactId>dadl-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
