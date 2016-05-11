@@ -200,9 +200,10 @@ public class GDLDroolsConverter {
             functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
             String functionExtraCode = getFunctionsExtraCode(functionsRefs);
             sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
-            String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
-            sb.append(SALIENCE + " ").append(guideSalienceId).append(" + ").append(rule.getPriority()).append("\n");
             sb.append(DEFAULT_CONFIG + "\n");
+            String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
+            int salienceModifier = guide.getDefinition().getRules().size() + 1 - rule.getPriority();
+            sb.append(SALIENCE).append(" ").append(guideSalienceId).append(" - ").append(salienceModifier).append("\n");
             sb.append(WHEN + "\n");
             sb.append(definition);
             if (functionExtraCode != null) {
@@ -270,11 +271,11 @@ public class GDLDroolsConverter {
     }
 
     private String getDefinitionForRule(Map<RefStat, Set<String>> ruleStats) {
-        Set<String> gtCodesRef = new HashSet<String>();
+        Set<String> gtCodesRef = new HashSet<>();
         gtCodesRef.addAll(ruleStats.get(RefStat.REFERENCE));
         gtCodesRef.addAll(preconditionStats.get(RefStat.REFERENCE));
         gtCodesRef.remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
-        Map<String, StringBuffer> archetypeDefinitions = new HashMap<String, StringBuffer>();
+        Map<String, StringBuffer> archetypeDefinitions = new HashMap<>();
         for (String elementGtCode : gtCodesRef) {
             String gtCodeArchetypeBinding = gtElementToArchetypeBindingGtCode.get(elementGtCode);
             if (gtCodeArchetypeBinding != null) {
@@ -288,6 +289,7 @@ public class GDLDroolsConverter {
                 definition.append("$").append(elementGtCode).append(":").append(_gtElementToDefinition.get(elementGtCode)).append("\n");
             }
         }
+
         StringBuilder resultSB = new StringBuilder();
         for (StringBuffer definition : archetypeDefinitions.values()) {
             resultSB.append(definition.toString());

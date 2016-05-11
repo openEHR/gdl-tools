@@ -3,17 +3,14 @@
     <parent>
         <groupId>se.cambio</groupId>
         <artifactId>gdl-tools</artifactId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.9-SNAPSHOT</version>
     </parent>
 	<groupId>se.cambio.cds</groupId>
 	<artifactId>cds</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<name>Clinical Decision Support System</name>
 
-	<properties>
-        <drools.version>6.3.0.Final</drools.version>
-	</properties>
     <scm>
         <connection>scm:git:git@github.com:openEHR/gdl-tools.git</connection>
         <developerConnection>scm:git:git@github.com:openEHR/gdl-tools.git</developerConnection>
@@ -22,37 +19,6 @@
   </scm>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-					<!-- <docletPath>/path/to/UmlGraph.jar</docletPath> -->
-					<docletArtifact>
-						<groupId>org.umlgraph</groupId>
-						<artifactId>umlgraph</artifactId>
-						<version>5.6</version>
-					</docletArtifact>
-					<additionalparam>
-						-inferrel -inferdep -quiet -hide java.*
-						-collpackages java.util.* -qualify
-						-postfixpackage -nodefontsize 9
-						-nodefontpackagesize 7
-						-edgefontname "Trebuchet MS"
-						-nodefontabstractname "Trebuchet MS"
-						-nodefontclassabstractname
-						"Trebuchet MS"
-						-nodefontclassname "Trebuchet MS"
-						-nodefontname
-						"Trebuchet MS"
-						-nodefontpackagename "Trebuchet MS"
-						-nodefonttagname
-						"Trebuchet MS"
-					</additionalparam>
-					<useStandardDocletOptions>true</useStandardDocletOptions>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.fusesource.mvnplugins</groupId>
 				<artifactId>maven-graph-plugin</artifactId>

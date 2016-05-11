@@ -1,0 +1,97 @@
+[
+  {
+    "idDomain": "EHR",
+    "idArchetype": "openEHR-EHR-OBSERVATION.basic_demographic.v1",
+    "elementInstancesMap": {
+      "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]": {
+        "id": "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]",
+        "dataValue": "DV_DATE_TIME,1925-11-12T00:00:00.000+01:00"
+      },
+      "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]": {
+        "id": "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]",
+        "dataValue": "DV_CODED_TEXT,local::at0006|Female|"
+      },
+      "openEHR-EHR-OBSERVATION.basic_demographic.v1/data/events/time": {
+        "id": "openEHR-EHR-OBSERVATION.basic_demographic.v1/data/events/time",
+        "dataValue": "DV_DATE_TIME,1927-12-11T00:00:00.000+01:00"
+      }
+    }
+  },
+  {
+    "idDomain": "EHR",
+    "idArchetype": "openEHR-EHR-EVALUATION.problem-diagnosis.v1",
+    "idTemplate": "diagnosis_icd10",
+    "elementInstancesMap": {
+      "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]": {
+        "id": "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]",
+        "dataValue": "DV_DATE_TIME,2016-03-01T13:45:00.000+01:00"
+      },
+      "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]": {
+        "id": "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]",
+        "dataValue": "DV_CODED_TEXT,ICD10::I48|*|"
+      }
+    }
+  },
+  {
+    "idDomain": "EHR",
+    "idArchetype": "openEHR-EHR-EVALUATION.problem-diagnosis.v1",
+    "idTemplate": "diagnosis_icd10",
+    "elementInstancesMap": {
+      "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]": {
+        "id": "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]",
+        "dataValue": "DV_DATE_TIME,2015-06-01T12:22:00.000+02:00"
+      },
+      "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]": {
+        "id": "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]",
+        "dataValue": "DV_CODED_TEXT,ICD10::I10|*|"
+      }
+    }
+  },
+  {
+    "idDomain": "EHR",
+    "idArchetype": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1",
+    "elementInstancesMap": {
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0040]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0040]",
+        "dataValue": "DV_ORDINAL,1|local::at0051|at0051|"
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0041]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0041]",
+        "dataValue": "DV_DATE_TIME,2016-02-03T09:31:32.000+01:00"
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0052]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0052]",
+        "nullFlavour": {
+          "definingCode": {
+            "terminologyId": {
+              "name": "openehr",
+              "value": "openehr"
+            },
+            "codeString": "271"
+          },
+          "value": "no information"
+        }
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0035]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0035]",
+        "dataValue": "DV_ORDINAL,1|local::at0051|at0051|"
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0037]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0037]",
+        "dataValue": "DV_ORDINAL,1|local::at0051|at0051|"
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0036]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0036]",
+        "dataValue": "DV_ORDINAL,0|local::at0050|at0050|"
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0039]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0039]",
+        "dataValue": "DV_ORDINAL,0|local::at0050|at0050|"
+      },
+      "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0038]": {
+        "id": "openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1/data[at0001]/items[at0038]",
+        "dataValue": "DV_ORDINAL,1|local::at0051|at0051|"
+      }
+    }
+  }
+]

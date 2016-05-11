@@ -21,7 +21,8 @@ public class OrdinalConstant extends ConstantExpression  {
 	}
 	
 	public DvOrdinal getOrdinal() {
-		return ordinal;
+		return new DvOrdinal(this.ordinal.getValue(), this.ordinal.getSymbol().getValue(),
+				this.ordinal.getTerminologyId(), this.ordinal.getSymbol().getCode());
 	}
 	
 	private DvOrdinal ordinal;

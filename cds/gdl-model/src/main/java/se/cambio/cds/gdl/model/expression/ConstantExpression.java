@@ -2,10 +2,7 @@ package se.cambio.cds.gdl.model.expression;
 
 public class ConstantExpression extends ExpressionItem {
 
-	/**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	public static ConstantExpression create(String value) {
 		return new ConstantExpression(value);
@@ -27,7 +24,7 @@ public class ConstantExpression extends ExpressionItem {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

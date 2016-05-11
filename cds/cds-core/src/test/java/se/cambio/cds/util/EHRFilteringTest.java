@@ -1,3 +1,5 @@
+package se.cambio.cds.util;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -6,14 +8,12 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.GenericTestBase;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.EhrDataFilterManager;
-import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 
@@ -31,7 +31,7 @@ public class EHRFilteringTest extends GenericTestBase {
     @Autowired
     EhrDataFilterManager ehrDataFilterManager;
 
-    private Collection<ArchetypeReference> generateArchetypeReference(){
+    private Collection<ArchetypeReference> generateArchetypeReferences(){
         Collection<ArchetypeReference> archetypeReferences = new ArrayList<ArchetypeReference>();
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         archetypeReferences.add(ar);
@@ -75,7 +75,7 @@ public class EHRFilteringTest extends GenericTestBase {
                 .setOperatorKind(OperatorKind.MIN)
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
-        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
+        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReferences();
         Set<ArchetypeReference> archetypeReferenceSet =
                 ehrDataFilterManager.filterEHRData ("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
 
@@ -99,7 +99,7 @@ public class EHRFilteringTest extends GenericTestBase {
                 .setOperatorKind(OperatorKind.MIN)
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
-        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
+        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReferences();
         Set<ArchetypeReference> archetypeReferenceSet =
                 ehrDataFilterManager.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(2, archetypeReferenceSet.size());
@@ -124,9 +124,63 @@ public class EHRFilteringTest extends GenericTestBase {
                 .setOperatorKind(OperatorKind.MIN)
                 .createPredicateGeneratedElementInstance();
         geic.add(gar);
-        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReference();
+        Collection<ArchetypeReference> archetypeReferences = generateArchetypeReferences();
         Set<ArchetypeReference> archetypeReferenceSet =
                 ehrDataFilterManager.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(2, archetypeReferenceSet.size());
+    }
+
+    @Test
+    public void shouldFilterOneArchetypeReferencesBeforeTimePeriod(){
+        DateTime startDateTime = new DateTime("2013-05-01");
+        DateTime endDateTime = new DateTime("2015-01-01");
+        Collection<ArchetypeReference> ehrData = generateArchetypeReferences();
+        Set<ArchetypeReference> filteredEhrARs = ehrDataFilterManager.filterEHRData(startDateTime, endDateTime, ehrData);
+        assertEquals(1, filteredEhrARs.size());
+    }
+
+    @Test
+    public void shouldFilterOneArchetypeReferencesAfterTimePeriod(){
+        DateTime startDateTime = new DateTime("2013-03-01");
+        DateTime endDateTime = new DateTime("2013-05-01");
+        Collection<ArchetypeReference> ehrData = generateArchetypeReferences();
+        Set<ArchetypeReference> filteredEhrARs = ehrDataFilterManager.filterEHRData(startDateTime, endDateTime, ehrData);
+        assertEquals(1, filteredEhrARs.size());
+    }
+
+    @Test
+    public void shouldFilterAllArchetypeReferencesAfterTimePeriod(){
+        DateTime startDateTime = new DateTime("2013-07-01");
+        DateTime endDateTime = null;
+        Collection<ArchetypeReference> ehrData = generateArchetypeReferences();
+        Set<ArchetypeReference> filteredEhrARs = ehrDataFilterManager.filterEHRData(startDateTime, endDateTime, ehrData);
+        assertEquals(0, filteredEhrARs.size());
+    }
+
+    @Test
+    public void shouldFilterAllArchetypeReferencesBeforeTimePeriod(){
+        DateTime startDateTime = null;
+        DateTime endDateTime = new DateTime("2013-03-01");
+        Collection<ArchetypeReference> ehrData = generateArchetypeReferences();
+        Set<ArchetypeReference> filteredEhrARs = ehrDataFilterManager.filterEHRData(startDateTime, endDateTime, ehrData);
+        assertEquals(0, filteredEhrARs.size());
+    }
+
+    @Test
+    public void shouldNotFilterAnyArchetypeReferencesNoEndDate(){
+        DateTime startDateTime = new DateTime("2013-03-01");
+        DateTime endDateTime = null;
+        Collection<ArchetypeReference> ehrData = generateArchetypeReferences();
+        Set<ArchetypeReference> filteredEhrARs = ehrDataFilterManager.filterEHRData(startDateTime, endDateTime, ehrData);
+        assertEquals(2, filteredEhrARs.size());
+    }
+
+    @Test
+    public void shouldNotFilterAnyArchetypeReferencesNoStartDate(){
+        DateTime startDateTime = null;
+        DateTime endDateTime = new DateTime("2013-07-01");
+        Collection<ArchetypeReference> ehrData = generateArchetypeReferences();
+        Set<ArchetypeReference> filteredEhrARs = ehrDataFilterManager.filterEHRData(startDateTime, endDateTime, ehrData);
+        assertEquals(2, filteredEhrARs.size());
     }
 }

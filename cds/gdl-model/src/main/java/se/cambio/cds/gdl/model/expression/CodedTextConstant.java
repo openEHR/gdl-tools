@@ -16,7 +16,8 @@ public class CodedTextConstant extends ConstantExpression {
 	}
 
 	public DvCodedText getCodedText() {
-		return codedText;
+		return new DvCodedText(this.codedText.getValue(),
+				this.codedText.getTerminologyId(), this.codedText.getCode());
 	}
 	
 	private DvCodedText codedText;
