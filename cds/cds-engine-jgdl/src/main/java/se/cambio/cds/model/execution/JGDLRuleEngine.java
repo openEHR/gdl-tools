@@ -1,4 +1,4 @@
-package se.cambio.cds.execution;
+package se.cambio.cds.model.execution;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
