@@ -1,4 +1,5 @@
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openehr.rm.datatypes.quantity.ProportionKind;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -28,6 +29,7 @@ public class RMElementsTest {
     }
 
     @Test
+    @Ignore
     public void shouldContainRMElementsForAllEntryArchetypes() throws InstanceNotFoundException, InternalErrorException {
         ArchetypeManager archetypeManager = ArchetypeManager.getInstance();
         Templates templates = archetypeManager.getTemplates();
