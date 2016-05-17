@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.openehr.utils</groupId>
 		<artifactId>openehr-utils</artifactId>
-		<version>1.0.10-SNAPSHOT</version>
+		<version>0-SNAPSHOT</version>
 	</parent>
 	<artifactId>openehr-utils-common</artifactId>
 	<name>OpenEHR utils common</name>
