@@ -5,10 +5,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
+import org.openehr.am.template.Flattener;
 import org.openehr.am.template.OETParser;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
-import se.cambio.openehr.util.TemplateFlattener;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -53,7 +53,7 @@ public class TemplateObjectBundleManager {
         try {
             TEMPLATE template = getParsedTemplate(templateDTO.getSource());
             templateDTO.setArchetypeId(template.getDefinition().getArchetypeId());
-            Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
+            Archetype ar = new Flattener().toFlattenedArchetype(template, archetypeMap);
             templateDTO.setAom(SerializationUtils.serialize(ar));
             GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
