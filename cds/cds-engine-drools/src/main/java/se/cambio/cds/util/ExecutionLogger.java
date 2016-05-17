@@ -50,7 +50,8 @@ public class ExecutionLogger {
                     int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
                     countMap.put(firedRule, count + 1);
                 }
-                for (String firedRule:countMap.keySet()){
+                for (Map.Entry<String, Integer> entry : countMap.entrySet()){
+                    String firedRule = entry.getKey();
                     Logger.getLogger(ExecutionLogger.class).info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
                 }
                 drools.halt();

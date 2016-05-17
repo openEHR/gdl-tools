@@ -88,7 +88,9 @@ public class DialogRuleExecutionList extends JDialog{
             rulesPanel.setLayout(new BoxLayout(rulesPanel, BoxLayout.Y_AXIS));
             Map<String, String> rulesMap = _rulesViewMap.get(getSelectedLanguage());
             int i = 0;
-            for (String ruleId : rulesMap.keySet()) {
+            String ruleId;
+            for (Map.Entry<String, String> entry : rulesMap.entrySet()) {
+                ruleId = entry.getKey();
                 CollapsablePanel collapsablePanel = new CollapsablePanel(ruleId);
                 collapsablePanel.getActionButton().addActionListener(new CollapsablePanelActionListener(collapsablePanel,i));
                 if (expandedRules.contains(i)){
