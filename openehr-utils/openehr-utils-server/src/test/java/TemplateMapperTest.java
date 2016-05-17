@@ -1,4 +1,5 @@
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
@@ -23,6 +24,7 @@ public class TemplateMapperTest {
     }
 
     @Test
+    @Ignore
     public void shouldMapTemplate() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = ArchetypeManager.getInstance().getTemplates().generateTemplateMap("medication_atc_indicator");
         assertEquals(templateMap.getElementMaps().size(), 38);
@@ -51,6 +53,7 @@ public class TemplateMapperTest {
     }
 
     @Test
+    @Ignore
     public void shouldMapTemplateForStrokeReview() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = ArchetypeManager.getInstance().getTemplates().generateTemplateMap("stroke_prevention_treatment_review");
         assertTrue(templateMap.getElementMaps().containsKey("diabetes"));
