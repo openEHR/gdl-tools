@@ -44,7 +44,6 @@ public class ArchetypeElementsTest {
     }
 
     @Test
-    @Ignore
     public void testArchetypeElementsLanguages(){
         ArchetypeManager archetypeManager = ArchetypeManager.getInstance();
         ArchetypeElements archetypeElements = archetypeManager.getArchetypeElements();

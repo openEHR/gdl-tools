@@ -29,7 +29,6 @@ public class RMElementsTest {
     }
 
     @Test
-    @Ignore
     public void shouldContainRMElementsForAllEntryArchetypes() throws InstanceNotFoundException, InternalErrorException {
         ArchetypeManager archetypeManager = ArchetypeManager.getInstance();
         Templates templates = archetypeManager.getTemplates();
