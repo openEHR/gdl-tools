@@ -23,12 +23,9 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CdsConfiguration.class)
+
 public class CDSManagerTest extends GenericTestBase {
 
-    @Autowired
-    CDSManager cdsManager;
 
     @Test
     public void shouldContainGeneratedElementInstances(){

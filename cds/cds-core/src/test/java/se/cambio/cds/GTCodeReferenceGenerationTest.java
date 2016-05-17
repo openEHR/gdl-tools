@@ -21,8 +21,6 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CmPersistenceConfig.class)
 public class GTCodeReferenceGenerationTest extends GenericTestBase {
 
     @Test
