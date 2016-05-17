@@ -13,7 +13,6 @@ import static org.junit.Assert.assertEquals;
 public class CompositionTemplateTest extends GenericTestBase {
 
     @Test
-    @Ignore
     public void shouldDetectProperNumberOfElementsInTemplate(){
         Collection<ArchetypeElementVO> archetypeElementVOCollection = ArchetypeManager.getInstance().getArchetypeElements().getArchetypeElementsVO("openEHR-EHR-COMPOSITION.encounter.v1", "diagnosis_list_test");
         assertEquals(7, archetypeElementVOCollection.size());
