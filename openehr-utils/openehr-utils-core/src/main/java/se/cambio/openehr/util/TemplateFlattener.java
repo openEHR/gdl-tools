@@ -42,10 +42,10 @@ public class TemplateFlattener {
     /**
      * Flatten given template only with archetypes
      *
-     * @param template
-     * @param archetypeMap
-     * @return
-     * @throws Exception
+     * @param template template to flatten
+     * @param archetypeMap maps of archetypes as input
+     * @return archetype representation of the flattened template
+     * @throws FlatteningException if any exception occurs
      */
     public Archetype toFlattenedArchetype(TEMPLATE template,
                                           Map<String, Archetype> archetypeMap) throws FlatteningException {
@@ -57,10 +57,10 @@ public class TemplateFlattener {
     /**
      * Flatten given template with referenced archetypes and sub-templates
      *
-     * @param template
+     * @param template template to flatten
      * @param archetypeMap    not null
      * @param templateMap   null if unspecified
-     * @return
+     * @return  archetype representation of the flattened template
      * @throws FlatteningException if null archetypeMap
      */
     public Archetype toFlattenedArchetype(TEMPLATE template,
@@ -100,20 +100,9 @@ public class TemplateFlattener {
         return flattended;
     }
 
-    /**
-     * Flattening entry point for root class archetyped
-     *
-     * @param parentArchetype provides the context of flattening, null for first
-     * entry of the recursive function
-     * @param definition
-     * @throws FlatteningException
-     */
     private Archetype flattenArchetyped(Archetyped definition) throws FlatteningException {
 
         log.debug("flattening archetyped on archetype: " + definition.getArchetypeId());
-
-        // TODO handle template_id
-
 
         if(definition instanceof COMPOSITION) {
 
@@ -173,7 +162,7 @@ public class TemplateFlattener {
             String path = "/" + CONTENT;
 
             if(contentAttribute == null) {
-                List<CObject> alternatives = new ArrayList<CObject>();
+                List<CObject> alternatives = new ArrayList<>();
                 contentAttribute = new CMultipleAttribute(path, CONTENT,
                         Existence.OPTIONAL,	Cardinality.LIST, alternatives);
                 archetype.getDefinition().addAttribute(contentAttribute);
@@ -203,7 +192,7 @@ public class TemplateFlattener {
         log.debug("flattening content_item on archetype: " +
                 definition.getArchetypeId() + " on path: " + definition.getPath());
 
-        Archetype archetype = null;
+        Archetype archetype;
         String templateId = definition.getTemplateId();
 
         if(templateId == null) {
@@ -315,10 +304,6 @@ public class TemplateFlattener {
         }
         cobj.setPath(path);
 
-        if(path.endsWith(VALUE)) {
-            //	log.debug("setPathPrefixOnCObjectTree - value path: " + path);
-        }
-
         if(cobj instanceof CComplexObject) {
             CComplexObject ccobj = (CComplexObject) cobj;
             for(CAttribute cattr : ccobj.getAttributes()) {
@@ -419,7 +404,7 @@ public class TemplateFlattener {
                 }
                 path += "/" + ITEMS;
 
-                List<CObject> alternatives = new ArrayList<CObject>();
+                List<CObject> alternatives = new ArrayList<>();
                 itemsAttribute = new CMultipleAttribute(path, ITEMS,
                         Existence.OPTIONAL,	Cardinality.LIST, alternatives);
                 root.addAttribute(itemsAttribute);
@@ -466,8 +451,8 @@ public class TemplateFlattener {
      * Overwrite recursively all the nodeIds in the given cobj tree with
      * incremental number starting with given count value
      *
-     * @param ccobj
-     * @param diff
+     * @param cobj input cobje
+     * @param count number to increment
      * @return total number of nodeIds adjusted, used to update nodeId counter
      */
     protected long adjustNodeIds(CObject cobj, long count)
@@ -804,8 +789,8 @@ public class TemplateFlattener {
      *   <Rule path="/items[at0001]" default="Ipren" />
      *   <Rule path="/items[at0001]" default="SNOMED-CT::258835005::mg/dygn" />	 *
      *
-     * @param constraint
-     * @param rule
+     * @param constraint    constraint to apply default value
+     * @param defaultValue  the default value to apply
      * @throws FlatteningException if rmType doesn't fit
      */
     protected void applyDefaultValueConstraint(ArchetypeConstraint constraint,

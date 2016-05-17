@@ -1,0 +1,121 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"FILTER-HF-heart_failure_diagnosis.v1">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"2015-03-11">
+				keywords = <"filter", "heart failure">
+				purpose = <"To filter patients by heart failure.">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"2015-03-11">
+				keywords = <"*(en) filter", "*(en) heart failure">
+				purpose = <"*(en) To filter patients by heart failure.">
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2015-03-11">
+			["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+			["name"] = <"Konstantinos Kalliamvakos">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_details = <
+			["references"] = <"">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+				>
+				template_id = <"diagnosis_icd10">
+			>
+		>
+		pre_conditions = <"($gt0003 is_a local::gt0004|Heart failure|)||(($gt0003 is_a local::gt0005|Hypertensive heart disease|)||(($gt0003 is_a local::gt0006|Dilated cardiomyopathy|)||($gt0003 is_a local::gt0007|Alcoholic cardiomyopathy|)))",...>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ICD10"] = (TERM_BINDING) <
+				bindings = <
+					["gt0004"] = (BINDING) <
+						codes = <[ICD10::I50],...>
+						uri = <"">
+					>
+					["gt0005"] = (BINDING) <
+						codes = <[ICD10::I110],...>
+						uri = <"">
+					>
+					["gt0006"] = (BINDING) <
+						codes = <[ICD10::I420],...>
+						uri = <"">
+					>
+					["gt0007"] = (BINDING) <
+						codes = <[ICD10::I426],...>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Medication in heart failure filter">
+						description = <"Filter guidelines for use in HF study.">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Diagnosis">
+						description = <"The index diagnosis">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Heart failure">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Hypertensive heart disease">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Dilated cardiomyopathy">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Alcoholic cardiomyopathy">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"*(en) Medication in heart failure filter">
+						description = <"*(en) Filter guidelines for use in HF study.">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Diagnos">
+						description = <"*(en) The index diagnosis">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Hjärtsvikt">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Hypertensiv hjärtsvikt">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Dilaterad kardiomyopati">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Alkoholorsakad kardiomyopati">
+					>
+				>
+			>
+		>
+	>
+>
