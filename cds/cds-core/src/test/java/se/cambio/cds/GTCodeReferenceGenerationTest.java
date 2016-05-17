@@ -1,6 +1,9 @@
 package se.cambio.cds;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.SimpleGuideManager;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
@@ -9,6 +12,7 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ElementInstanceCollection;
+import se.cambio.cm.model.configuration.CmPersistenceConfig;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -17,6 +21,8 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = CmPersistenceConfig.class)
 public class GTCodeReferenceGenerationTest extends GenericTestBase {
 
     @Test

@@ -14,8 +14,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CmPersistenceConfig.class)
+
 public class GenericTestBase {
 
     @Value("classpath:/archetypes")
