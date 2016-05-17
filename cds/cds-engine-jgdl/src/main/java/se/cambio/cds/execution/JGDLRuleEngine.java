@@ -2,10 +2,8 @@ package se.cambio.cds.execution;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
-import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
@@ -23,13 +21,12 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
 @Profile("rule-jgdl-engine")
-public class JGDLRuleExecution implements RuleEngineFacadeDelegate {
-    private static Logger LOGGER = Logger.getLogger(JGDLRuleExecution.class);
+public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
+    private static Logger LOGGER = Logger.getLogger(JGDLRuleEngine.class);
     private Map<String, Guide> guideCache = new HashMap<>();
     private boolean useCache;
     private GDLParser parser = new GDLParser();
