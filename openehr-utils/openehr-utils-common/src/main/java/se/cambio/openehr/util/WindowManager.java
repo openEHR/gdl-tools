@@ -94,6 +94,11 @@ public class WindowManager {
         });
     }
 
+    public static void changeLoadingTextNoSwing(final String progressKey, String description) {
+        getDelegate()._description = description;
+        getProgressManager(progressKey).changeLoadingText(getDelegate()._description);
+    }
+
     public void changeBusyText(String progressKey, String description) {
         getProgressManager(progressKey).changeLoadingText(description);
     }
