@@ -1,4 +1,4 @@
-package se.cambio.cds.execution;
+package se.cambio.cds.model.execution;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
@@ -22,23 +22,22 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Profile("rule-jgdl-engine")
 public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
     private static Logger LOGGER = Logger.getLogger(JGDLRuleEngine.class);
-    private Map<String, Guide> guideCache = new HashMap<>();
+    private Map<String, Guide> guideCache = new ConcurrentHashMap<>();
     private boolean useCache;
     private GDLParser parser = new GDLParser();
 
-    private List<Guide> compiledGuides;
-    private List<DataInstance> dataInstances;
 
     @Override
     public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) throws InternalErrorException, PatientNotFoundException {
         Interpreter interpreter = new Interpreter();
 
-        compiledGuides = new ArrayList<>();
+        List<Guide> compiledGuides = new ArrayList<>();
         try {
             for (GuideDTO guideDTO : guides) {
                 Guide guide = guideCache.get(guideDTO.getId());
@@ -54,7 +53,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
         }
 
 
-        dataInstances = toDataInstanceList(archetypeReferences);
+        List<DataInstance> dataInstances = toDataInstanceList(archetypeReferences);
         List<DataInstance> dataInstanceResults = interpreter.executeGuides(compiledGuides, dataInstances);
         return new RuleExecutionResult(
                 ehrId, date.getTime(),
@@ -106,8 +105,6 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
 
     @Override
     public void cancelExecution() {
-        compiledGuides.clear();
-        dataInstances.clear();
     }
 
     @Override

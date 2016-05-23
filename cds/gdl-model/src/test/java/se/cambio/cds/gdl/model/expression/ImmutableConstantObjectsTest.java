@@ -3,7 +3,6 @@ package se.cambio.cds.gdl.model.expression;
 import junit.framework.TestCase;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
-import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
@@ -40,5 +39,4 @@ public class ImmutableConstantObjectsTest extends TestCase {
         assertEquals("local", ordinalConstant.getOrdinal().getTerminologyId());
         assertEquals("gt0001", ordinalConstant.getOrdinal().getSymbol().getCode());
     }
-
 }
