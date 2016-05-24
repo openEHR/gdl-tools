@@ -1,0 +1,72 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"diagnosis_no_max_predicate_test">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0001"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0002"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0005|Atrial fibrillation diagnosis|", ...>
+				template_id = <"diagnosis_icd10">
+			>
+		>
+		rules = <
+            ["gt0004"] = (RULE) <
+                when = <"$gt0002!=null",...>
+                priority = <1>
+            >
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+        term_bindings = <
+            ["ICD10"] = (TERM_BINDING) <
+                bindings = <
+                    ["gt0005"] = (BINDING) <
+                        codes = <[ICD10::I48], [ICD10::Z951]>
+                        uri = <"">
+                    >
+                >
+            >
+        >
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"test2">
+					>
+					["gt0002"] = (TERM) <
+						text = <"test2">
+					>
+					["gt0003"] = (TERM) <
+						text = <"test2">
+					>
+					["gt0004"] = (TERM) <
+						text = <"test2">
+					>
+                    ["gt0005"] = (TERM) <
+                        text = <"test2">
+                    >
+				>
+			>
+		>
+	>
+>

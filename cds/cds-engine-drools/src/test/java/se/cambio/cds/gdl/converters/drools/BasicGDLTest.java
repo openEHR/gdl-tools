@@ -114,10 +114,26 @@ public class BasicGDLTest extends GDLTestCase {
         ar = generateICD10DiagnosisArchetypeReference("I481");
         ehrArs.add(ar);
 
-        Set<String> guideIds = Collections.singleton("CHA2DS2VASc_diagnosis_review.v1");
+        Set<String> guideIds = Collections.singleton("diagnosis_predicate_test");
         GuideManager guideManager = generateGuideManager(guideIds);
         Collection<ArchetypeReference> filteredEhrArs = ehrDataFilterManager.filterEHRDataByGuides("testEhrId", new DateTime(), guideManager.getAllGuides(), ehrArs);
         assertThat(filteredEhrArs.size(), equalTo(1));
+    }
+
+    @Test
+    public void shouldTestFilteringWithSeveralPredicatesInSeveralGuidelines() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        ArchetypeReference ar;
+
+        ar = generateICD10DiagnosisArchetypeReference("I48");
+        ehrArs.add(ar);
+        ar = generateICD10DiagnosisArchetypeReference("I481");
+        ehrArs.add(ar);
+
+        Collection<String> guideIds = Arrays.asList(new String[]{"diagnosis_predicate_test", "diagnosis_no_max_predicate_test"});
+        GuideManager guideManager = generateGuideManager(guideIds);
+        Collection<ArchetypeReference> filteredEhrArs = ehrDataFilterManager.filterEHRDataByGuides("testEhrId", new DateTime(), guideManager.getAllGuides(), ehrArs);
+        assertThat(filteredEhrArs.size(), equalTo(2));
     }
 
     @Test
