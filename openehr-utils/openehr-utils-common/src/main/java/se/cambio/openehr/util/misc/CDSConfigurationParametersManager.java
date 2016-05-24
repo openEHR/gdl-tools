@@ -45,7 +45,7 @@ public class CDSConfigurationParametersManager {
     }
 
     public Long getCdsExecutionTimeOut() {
-        return environment.getProperty(CDS_EXECUTION_TIMEOUT, Long.class, 10000L);
+        return environment.getProperty(CDS_EXECUTION_TIMEOUT, Long.class, 600000L);
     }
 
     public String getDbUrl() {

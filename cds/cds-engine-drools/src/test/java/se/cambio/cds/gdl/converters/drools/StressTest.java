@@ -40,7 +40,7 @@ public class StressTest {
             //Load KM
             UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
             UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-            UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates").toURI().getPath());
+            UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates1").toURI().getPath());
             new StressTest().stressTest2();
         } catch (URISyntaxException e) {
             e.printStackTrace();
