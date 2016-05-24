@@ -1,7 +1,9 @@
 package se.cambio.cds.controller.cds;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
@@ -12,11 +14,7 @@ import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.DVUtil;
-import se.cambio.cds.util.DateTimeARFinder;
-import se.cambio.cds.util.Domains;
-import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.cds.util.GeneratedElementInstanceCollection;
+import se.cambio.cds.util.*;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -26,11 +24,19 @@ import java.util.*;
 @Component
 public class CDSManager {
 
-    DateTimeARFinder dateTimeARFinder;
+    private DateTimeARFinder dateTimeARFinder;
+    private static final String CDS_FILTER_ARCHETYPE_REFERENCES = "cds-execution.filter.archetype-references";
+    private final Boolean filterArchetypeReferences;
+    private final EhrDataFilterManager ehrDataFilterManager;
 
     @Autowired
-    public CDSManager(DateTimeARFinder dateTimeARFinder) {
+    public CDSManager(
+            DateTimeARFinder dateTimeARFinder,
+            EhrDataFilterManager ehrDataFilterManager,
+            Environment environment) {
+        this.ehrDataFilterManager = ehrDataFilterManager;
         this.dateTimeARFinder = dateTimeARFinder;
+        this.filterArchetypeReferences = environment.getProperty(CDS_FILTER_ARCHETYPE_REFERENCES, Boolean.class, false);
     }
 
 
@@ -61,6 +67,9 @@ public class CDSManager {
                 Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
                 Map<String, Collection<ArchetypeReference>> ehrDataMap =
                         getEhrService().queryEHRElements(Collections.singleton(ehrId), ars, date);
+                if (filterArchetypeReferences) {
+                    ehrDataMap = getFilteredEhrDataMap(ehrDataMap, date, guideManager);
+                }
                 Collection<ArchetypeReference> archetypeReferences = ehrDataMap.get(ehrId);
                 if (archetypeReferences != null) {
                     eic.addAll(archetypeReferences, null);
@@ -70,36 +79,24 @@ public class CDSManager {
         return eic;
     }
 
+    private Map<String, Collection<ArchetypeReference>> getFilteredEhrDataMap(Map<String, Collection<ArchetypeReference>> ehrDataMap, Calendar date, GuideManager guideManager) {
+        Map<String, Collection<ArchetypeReference>> filteredEhrDataMap = new HashMap<>();
+        for (Map.Entry<String, Collection<ArchetypeReference>> entry : ehrDataMap.entrySet()) {
+            String ehrId = entry.getKey();
+            Collection<ArchetypeReference> archetypeReferences = entry.getValue();
+            DateTime ehrDate = new DateTime(date);
+            archetypeReferences = ehrDataFilterManager.filterEHRDataByGuides(ehrId, ehrDate, guideManager.getAllGuides(), archetypeReferences);
+            filteredEhrDataMap.put(ehrId, archetypeReferences);
+        }
+        return filteredEhrDataMap;
+    }
+
     private static EHRFacadeDelegate getEhrService() {
         return CDSSessionManager.getEHRFacadeDelegate();
     }
 
-    public Map<String, Collection<ArchetypeReference>> getElementInstancesForPopulation(
-            Collection<String> ehrIds,
-            Collection<String> guideIds,
-            GuideManager guideManager,
-            Calendar date) throws PatientNotFoundException, InternalErrorException {
-        GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
-        Collection<ArchetypeReference> ars = getEHRArchetypeReferences(completeEIC);
-        Map<String, Collection<ArchetypeReference>> ehrMap =
-                getEhrService().queryEHRElements(ehrIds, ars, date);
-        Map<String, Collection<ArchetypeReference>> cdsEIMap = new HashMap<String, Collection<ArchetypeReference>>();
-        for (String ehrId : ehrIds) {
-            ElementInstanceCollection eic = new ElementInstanceCollection();
-            //TODO If the data existed in ehrData, it should not query for it again to EHR
-            if (!ars.isEmpty()) {
-                Collection<ArchetypeReference> archetypeReferences = ehrMap.get(ehrId);
-                if (archetypeReferences != null) {
-                    eic.addAll(archetypeReferences, null);
-                }
-            }
-            cdsEIMap.put(ehrId, getArchetypeReferencesAndCheckMissing(eic, completeEIC, guideManager, date));
-        }
-        return cdsEIMap;
-    }
-
     public Collection<ArchetypeReference> getEHRArchetypeReferences(GeneratedElementInstanceCollection geic) {
-        Collection<ArchetypeReference> ars = new ArrayList<ArchetypeReference>();
+        Collection<ArchetypeReference> ars = new ArrayList<>();
         ars.addAll(geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID));
         ars.addAll(geic.getAllArchetypeReferencesByDomain(ElementInstanceCollection.EMPTY_CODE));
         return getCompressedQueryArchetypeReferences(ars);
