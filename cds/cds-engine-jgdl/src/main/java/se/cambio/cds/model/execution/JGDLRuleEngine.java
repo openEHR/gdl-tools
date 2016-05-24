@@ -8,6 +8,7 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
+import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -36,7 +37,12 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
     @Override
     public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) throws InternalErrorException, PatientNotFoundException {
         Interpreter interpreter = new Interpreter();
-
+        List<ArchetypeReference> nonGeneratedArchetypeReferences = new ArrayList<>();
+        for(ArchetypeReference archetypeReference: archetypeReferences) {
+            if(archetypeReference instanceof GeneratedArchetypeReference) {
+                nonGeneratedArchetypeReferences.add(archetypeReference);
+            }
+        }
         List<Guide> compiledGuides = new ArrayList<>();
         try {
             for (GuideDTO guideDTO : guides) {
@@ -53,7 +59,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
         }
 
 
-        List<DataInstance> dataInstances = toDataInstanceList(archetypeReferences);
+        List<DataInstance> dataInstances = toDataInstanceList(nonGeneratedArchetypeReferences);
         List<DataInstance> dataInstanceResults = interpreter.executeGuides(compiledGuides, dataInstances);
         return new RuleExecutionResult(
                 ehrId, date.getTime(),
