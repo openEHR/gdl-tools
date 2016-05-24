@@ -3,9 +3,10 @@ package se.cambio.cds.util;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class PredicateSorter implements Comparator<PredicateGeneratedElementInstance> {
+public class PredicateSorter implements Comparator<PredicateGeneratedElementInstance>, Serializable {
 
     private Integer getComparisonNumber(PredicateGeneratedElementInstance pred) {
         if (OperatorKind.IS_A.equals(pred.getOperatorKind())) {
