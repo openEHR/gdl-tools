@@ -23,25 +23,36 @@ import java.util.*;
 public class PredicateFilterManager {
 
     private TerminologyService terminologyService;
+    private RepeatedArchetypeReferencesFilter repeatedArchetypeReferencesFilter;
     private Logger logger = Logger.getLogger(PredicateFilterManager.class);
 
     @Autowired
-    public PredicateFilterManager(TerminologyService terminologyService) {
+    public PredicateFilterManager(
+            TerminologyService terminologyService,
+            RepeatedArchetypeReferencesFilter repeatedArchetypeReferencesFilter) {
         this.terminologyService = terminologyService;
+        this.repeatedArchetypeReferencesFilter = repeatedArchetypeReferencesFilter;
     }
 
     public void filterByPredicates(
             Collection<ArchetypeReference> definitionArchetypeReferences,
             Collection<ArchetypeReference> ehrArchetypeReferences, Calendar date) {
-        Map<ArchetypeReference, Collection<ArchetypeReference>> filteredEhrDatas = new HashMap<>();
+        boolean filterActive = true;
+        repeatedArchetypeReferencesFilter.filter(definitionArchetypeReferences);
+        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
         for (ArchetypeReference archetypeReference : definitionArchetypeReferences) {
             Collection<ArchetypeReference> ehrDataForArchetype = getEhrDataForArchetype(ehrArchetypeReferences, archetypeReference.getIdArchetype());
             Collection<ArchetypeReference> filteredEhrData = getFilteredEhrData(archetypeReference, date, ehrDataForArchetype);
-            filteredEhrDatas.put(archetypeReference, filteredEhrData);
+            if (filteredEhrData.size() == ehrArchetypeReferences.size()) {
+                filterActive = false;
+                break;
+            }
+            archetypeReferences.addAll(filteredEhrData);
         }
-        Collection<ArchetypeReference> archetypeReferences = mergeEhrData(filteredEhrDatas.values());
-        ehrArchetypeReferences.clear();
-        ehrArchetypeReferences.addAll(archetypeReferences);
+        if (filterActive) {
+            ehrArchetypeReferences.clear();
+            ehrArchetypeReferences.addAll(archetypeReferences);
+        }
     }
 
     private Collection<ArchetypeReference> getEhrDataForArchetype(Collection<ArchetypeReference> ehrArchetypeReferences, String idArchetype) {
@@ -230,13 +241,5 @@ public class PredicateFilterManager {
             filterEhrData(ehrData, date, predicate);
         }
         return ehrData;
-    }
-
-    private Collection<ArchetypeReference> mergeEhrData(Collection<Collection<ArchetypeReference>> filteredEhrDatas) {
-        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
-        for (Collection<ArchetypeReference> ehrData : filteredEhrDatas) {
-            archetypeReferences.addAll(ehrData);
-        }
-        return archetypeReferences;
     }
 }
