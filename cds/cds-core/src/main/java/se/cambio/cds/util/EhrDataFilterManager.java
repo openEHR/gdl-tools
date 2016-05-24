@@ -4,26 +4,40 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.instance.ArchetypeReference;
 
 import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class EhrDataFilterManager {
 
-    DateTimeARFinder dateTimeARFinder;
+    private DateTimeARFinder dateTimeARFinder;
+    private PredicateFilterManager predicateFilterManager;
 
     @Autowired
-    public EhrDataFilterManager(DateTimeARFinder dateTimeARFinder) {
+    public EhrDataFilterManager(DateTimeARFinder dateTimeARFinder, PredicateFilterManager predicateFilterManager) {
         this.dateTimeARFinder = dateTimeARFinder;
+        this.predicateFilterManager = predicateFilterManager;
+    }
+
+    public Set<ArchetypeReference> filterEHRDataByGuides(String ehrId, DateTime ehrDate, Collection<Guide> guides, Collection<ArchetypeReference> ehrData) {
+        Collection<ArchetypeReference> queryARs = new ArrayList<>();
+        for (Guide guide : guides) {
+            Collection<ArchetypeReference> archetypeReferences = GuideUtil.getArchetypeReferences(guide, ehrDate, true);
+            for (ArchetypeReference archetypeReference : archetypeReferences) {
+                if (Domains.EHR_ID.equals(archetypeReference.getIdDomain()) || archetypeReference.getIdDomain() == null) {
+                    queryARs.add(archetypeReference);
+                }
+            }
+        }
+        return filterEHRData(ehrId, ehrDate, queryARs, ehrData);
     }
 
     public Set<ArchetypeReference> filterEHRData(String ehrId, DateTime ehrDate, Collection<ArchetypeReference> queryARs, Collection<ArchetypeReference> ehrData) {
-        Set<ArchetypeReference> ehrIdARs = new HashSet<ArchetypeReference>();
+        Set<ArchetypeReference> ehrIdARs = new HashSet<>();
         if (ehrData == null) {
             Logger.getLogger(EhrDataFilterManager.class).warn("No ehrData found for ehrId '" + ehrId + "'");
         } else {
@@ -51,7 +65,7 @@ public class EhrDataFilterManager {
             if (ehrDate != null) {
                 date = ehrDate.toGregorianCalendar();
             }
-            PredicateFilterUtil.filterByPredicates(queryARs, ehrIdARs, date);
+            predicateFilterManager.filterByPredicates(queryARs, ehrIdARs, date);
         }
         return ehrIdARs;
     }

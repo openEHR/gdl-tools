@@ -48,7 +48,7 @@ public abstract class GDLTestCase {
     @Value("classpath:/archetypes")
     Resource archetypesResource;
 
-    @Value("classpath:/templates")
+    @Value("classpath:/templates1")
     Resource templatesResource;
 
     @Value("classpath:/terminologies")

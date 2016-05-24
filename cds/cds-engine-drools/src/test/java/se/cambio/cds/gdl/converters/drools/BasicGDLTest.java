@@ -9,8 +9,10 @@ import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -18,6 +20,9 @@ import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.Domains;
+import se.cambio.cds.util.EhrDataFilterManager;
+import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -32,6 +37,12 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {CdsConfiguration.class})
 public class BasicGDLTest extends GDLTestCase {
+
+    @Autowired
+    EhrDataFilterManager ehrDataFilterManager;
+
+    @Autowired
+    CDSManager cdsManager;
 
     public BasicGDLTest() {
         super();
@@ -74,6 +85,39 @@ public class BasicGDLTest extends GDLTestCase {
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0012")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0013")));
         assertTrue(rer.getFiredRules().contains(new RuleReference("test_or_predicates.v1", "gt0014")));
+    }
+
+    @Test
+    public void shouldTestFilteringWithOnePredicate() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        ArchetypeReference ar;
+
+        ar = generateOngoingMedicationArchetypeReference("B01AE07");
+        ehrArs.add(ar);
+        ar = generateOngoingMedicationArchetypeReference("A01AA02");
+        ehrArs.add(ar);
+
+        Set<String> guideIds = Collections.singleton("Stroke_prevention_compliance_checking_in_AF.v2");
+        GuideManager guideManager = generateGuideManager(guideIds);
+        Collection<ArchetypeReference> filteredEhrArs = ehrDataFilterManager.filterEHRDataByGuides("testEhrId", new DateTime(), guideManager.getAllGuides(), ehrArs);
+        assertThat(filteredEhrArs.size(), equalTo(1));
+    }
+
+
+    @Test
+    public void shouldTestFilteringWithSeveralPredicates() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        ArchetypeReference ar;
+
+        ar = generateICD10DiagnosisArchetypeReference("I48");
+        ehrArs.add(ar);
+        ar = generateICD10DiagnosisArchetypeReference("I481");
+        ehrArs.add(ar);
+
+        Set<String> guideIds = Collections.singleton("CHA2DS2VASc_diagnosis_review.v1");
+        GuideManager guideManager = generateGuideManager(guideIds);
+        Collection<ArchetypeReference> filteredEhrArs = ehrDataFilterManager.filterEHRDataByGuides("testEhrId", new DateTime(), guideManager.getAllGuides(), ehrArs);
+        assertThat(filteredEhrArs.size(), equalTo(1));
     }
 
     @Test

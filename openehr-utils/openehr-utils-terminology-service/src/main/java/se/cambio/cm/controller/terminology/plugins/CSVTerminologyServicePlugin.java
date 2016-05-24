@@ -208,7 +208,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     }
 
     protected boolean invalidCode(String code) {
-        return getDescriptionsMap().get(code) == null;
+        return false;//getDescriptionsMap().get(code) == null; //TODO Avoid errors with new terms
     }
 
     public Map<String, String> getDescriptionsMap() {

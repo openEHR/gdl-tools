@@ -96,7 +96,7 @@
 						path = <"/data[at0001]/items[at0003]">
 					>
 				>
-				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0149|Atrial fibrillation diagnosis|",...>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0149|Atrial fibrillation diagnosis|","max(/data[at0001]/items[at0003])">
 				template_id = <"diagnosis_icd10">
 			>
 			["gt0160"] = (ARCHETYPE_BINDING) <

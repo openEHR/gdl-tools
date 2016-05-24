@@ -72,6 +72,14 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
     public String toString(){
         return "(P)"+super.toString();
     }
+
+    public String getPredicateContent() {
+        return new StringBuilder()
+                .append(getId())
+                .append(getDataValue())
+                .append(getOperatorKind())
+                .append(getNullFlavour()).toString();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

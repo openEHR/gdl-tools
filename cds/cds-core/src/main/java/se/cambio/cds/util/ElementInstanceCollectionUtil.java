@@ -9,6 +9,8 @@ import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.openehr.rm.datatypes.text.Match;
+import org.openehr.rm.datatypes.text.TermMapping;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermBinding;
@@ -26,13 +28,7 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ElementInstanceCollectionUtil {
 
@@ -320,7 +316,11 @@ public class ElementInstanceCollectionUtil {
                     Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
                     if (binding != null && binding.getCodes() != null && !binding.getCodes().isEmpty()) {
                         CodePhrase cf = binding.getCodes().get(0);
-                        resolvedCodedText = new DvCodedText(dvCT.getValue(), cf);
+                        List<TermMapping> mappings = new ArrayList<>();
+                        for (CodePhrase codePhrase: binding.getCodes()) {
+                            mappings.add(new TermMapping(codePhrase, Match.EQUIVALENT, null, null));
+                        }
+                        resolvedCodedText = new DvCodedText(dvCT.getValue(), mappings, null, null, null, null, cf, null);
                     }
                 }
             }
