@@ -48,14 +48,18 @@ public class GuideUtil {
         Map<String, ArchetypeBinding> abs = guide.getDefinition().getArchetypeBindings();
         if (abs != null) {
             for (ArchetypeBinding archetypeBinding : abs.values()) {
-                ArchetypeReference ar = getGeneratedArchetypeReference(archetypeBinding, guide, dateTime, resolvePredicates);
+                ArchetypeReference ar = getGeneratedArchetypeReference(archetypeBinding, guide.getId(), guide, dateTime, resolvePredicates);
                 archetypeReferences.add(ar);
             }
         }
         return archetypeReferences;
     }
 
-    private static GeneratedArchetypeReference getGeneratedArchetypeReference(ArchetypeBinding archetypeBinding, Guide guide, DateTime dateTime, boolean resolvePredicates) {
+    public static GeneratedArchetypeReference getGeneratedArchetypeReference(ArchetypeBinding archetypeBinding, String guideId) {
+        return getGeneratedArchetypeReference(archetypeBinding, guideId, null, null, false);
+    }
+
+    private static GeneratedArchetypeReference getGeneratedArchetypeReference(ArchetypeBinding archetypeBinding, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates) {
         GeneratedArchetypeReference ar =
                 new GeneratedArchetypeReference(
                         archetypeBinding.getDomain(),
@@ -71,14 +75,14 @@ public class GuideUtil {
                         ar,
                         null,
                         NULL_FLAVOUR_CODE_NO_INFO);
-                gei.getRuleReferences().add(new RuleReference(guide.getId(), elementBinding.getId()));
+                gei.getRuleReferences().add(new RuleReference(guideId, elementBinding.getId()));
             }
         }
-        generatePredicateElements(archetypeBinding, ar, guide, dateTime, resolvePredicates);
+        generatePredicateElements(archetypeBinding, ar, guideId, guide, dateTime, resolvePredicates);
         return ar;
     }
 
-    public static void generatePredicateElements(ArchetypeBinding archetypeBinding, ArchetypeReference ar, Guide guide, DateTime dateTime, boolean resolvePredicates) {
+    public static void generatePredicateElements(ArchetypeBinding archetypeBinding, ArchetypeReference ar, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates) {
         if (archetypeBinding.getPredicateStatements() != null) {
             for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
                 if (expressionItem instanceof BinaryExpression) {
@@ -99,7 +103,7 @@ public class GuideUtil {
                             PredicateGeneratedElementInstance ei = generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv, guide, dateTime, resolvePredicates);
                             String gtCode = getGTCodeForPredicate(archetypeBinding, path, dv);
                             if (gtCode != null) {
-                                ei.getRuleReferences().add(new RuleReference(guide.getId(), gtCode));
+                                ei.getRuleReferences().add(new RuleReference(guideId, gtCode));
                             }
                         } else if (r instanceof ExpressionItem) {
                             String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
