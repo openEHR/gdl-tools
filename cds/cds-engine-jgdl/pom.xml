@@ -22,7 +22,7 @@
         <dependency>
             <groupId>se.cambio.cds</groupId>
             <artifactId>jgdl</artifactId>
-            <version>1.0.36</version>
+            <version>1.0.38</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
