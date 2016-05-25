@@ -61,6 +61,9 @@ public class CDSManager {
     private ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) throws InternalErrorException, PatientNotFoundException {
         ElementInstanceCollection eic = new ElementInstanceCollection();
         if (data != null) {
+            if (filterArchetypeReferences) {
+                data = filterEhrData(guideManager, ehrId, data, date);
+            }
             eic.addAll(data, guideManager);
         } else {
             if (ehrId != null) {
@@ -84,11 +87,15 @@ public class CDSManager {
         for (Map.Entry<String, Collection<ArchetypeReference>> entry : ehrDataMap.entrySet()) {
             String ehrId = entry.getKey();
             Collection<ArchetypeReference> archetypeReferences = entry.getValue();
-            DateTime ehrDate = new DateTime(date);
-            archetypeReferences = ehrDataFilterManager.filterEHRDataByGuides(ehrId, ehrDate, guideManager.getAllGuides(), archetypeReferences);
+            archetypeReferences = filterEhrData(guideManager, ehrId, archetypeReferences, date);
             filteredEhrDataMap.put(ehrId, archetypeReferences);
         }
         return filteredEhrDataMap;
+    }
+
+    private Set<ArchetypeReference> filterEhrData(GuideManager guideManager, String ehrId, Collection<ArchetypeReference> archetypeReferences, Calendar date) {
+        DateTime ehrDate = new DateTime(date);
+        return ehrDataFilterManager.filterEHRDataByGuides(ehrId, ehrDate, guideManager.getAllGuides(), archetypeReferences);
     }
 
     private static EHRFacadeDelegate getEhrService() {
