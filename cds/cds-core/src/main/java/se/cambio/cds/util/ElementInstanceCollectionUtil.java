@@ -308,24 +308,27 @@ public class ElementInstanceCollectionUtil {
     }
 
     private static DvCodedText getResolvedCodedText(DvCodedText dvCT, Guide guide) {
-        DvCodedText resolvedCodedText = null;
+        CodePhrase cf = null;
+        List<TermMapping> mappings = new ArrayList<>();
         if (guide.getOntology().getTermBindings() != null) {
-            for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
-                TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
+            for (Map.Entry<String, TermBinding> entry : guide.getOntology().getTermBindings().entrySet()) {
+                TermBinding termBinding = entry.getValue();
                 if (termBinding != null) {
                     Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
                     if (binding != null && binding.getCodes() != null && !binding.getCodes().isEmpty()) {
-                        CodePhrase cf = binding.getCodes().get(0);
-                        List<TermMapping> mappings = new ArrayList<>();
+                        cf = binding.getCodes().get(0);
                         for (CodePhrase codePhrase: binding.getCodes()) {
                             mappings.add(new TermMapping(codePhrase, Match.EQUIVALENT, null, null));
                         }
-                        resolvedCodedText = new DvCodedText(dvCT.getValue(), mappings, null, null, null, null, cf, null);
                     }
                 }
             }
         }
-        return resolvedCodedText;
+        if (!mappings.isEmpty() && cf != null) {
+            return new DvCodedText(dvCT.getValue(), mappings, null, null, null, null, cf, null);
+        } else {
+            return null;
+        }
     }
 }
 /*
