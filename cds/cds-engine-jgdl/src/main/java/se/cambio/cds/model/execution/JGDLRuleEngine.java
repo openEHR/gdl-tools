@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
     private static Logger LOGGER = Logger.getLogger(JGDLRuleEngine.class);
     private Map<String, Guide> guideCache = new ConcurrentHashMap<>();
-    private boolean useCache;
+    private boolean useCache = true;
     private GDLParser parser = new GDLParser();
 
 
