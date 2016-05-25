@@ -33,10 +33,17 @@ public class EhrDataFilterManager {
                 }
             }
         }
-        return filterEHRData(ehrId, ehrDate, queryARs, ehrData);
+        Set<ArchetypeReference> ehrIdARs = filterEHRData(ehrId, ehrDate, ehrData);
+        //Fill missing data
+        Calendar date = Calendar.getInstance();
+        if (ehrDate != null) {
+            date = ehrDate.toGregorianCalendar();
+        }
+        predicateFilterManager.filterByPredicates(queryARs, ehrIdARs, date);
+        return ehrIdARs;
     }
 
-    public Set<ArchetypeReference> filterEHRData(String ehrId, DateTime ehrDate, Collection<ArchetypeReference> queryARs, Collection<ArchetypeReference> ehrData) {
+    public Set<ArchetypeReference> filterEHRData(String ehrId, DateTime ehrDate, Collection<ArchetypeReference> ehrData) {
         Set<ArchetypeReference> ehrIdARs = new HashSet<>();
         if (ehrData == null) {
             Logger.getLogger(EhrDataFilterManager.class).warn("No ehrData found for ehrId '" + ehrId + "'");
@@ -60,12 +67,6 @@ public class EhrDataFilterManager {
                     ehrIdARs.add(archetypeReference);
                 }
             }
-            //Fill missing data
-            Calendar date = Calendar.getInstance();
-            if (ehrDate != null) {
-                date = ehrDate.toGregorianCalendar();
-            }
-            predicateFilterManager.filterByPredicates(queryARs, ehrIdARs, date);
         }
         return ehrIdARs;
     }
