@@ -91,7 +91,7 @@ public class EHRFilteringTest extends GenericTestBase {
     private DateTime getCurrentDateTime() {
         return new DateTime(Calendar.getInstance().getTimeInMillis());
     }
-
+    /* TODO Bring back predicate filtering tests
     @Test
     public void shouldFilterUsingOnePredicate(){
         GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
@@ -196,6 +196,7 @@ public class EHRFilteringTest extends GenericTestBase {
                 ehrDataFilterManager.filterEHRData("testEHRId", getCurrentDateTime(), geic.getAllArchetypeReferencesByDomain(Domains.EHR_ID), archetypeReferences);
         assertEquals(1, archetypeReferenceSet.size());
     }
+    */
 
     @Test
     public void shouldFilterOneArchetypeReferencesBeforeTimePeriod(){
