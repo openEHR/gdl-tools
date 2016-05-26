@@ -327,7 +327,7 @@ public class ElementInstanceCollectionUtil {
         if (!mappings.isEmpty() && cf != null) {
             return new DvCodedText(dvCT.getValue(), mappings, null, null, null, null, cf, null);
         } else {
-            return null;
+            return dvCT;
         }
     }
 }
