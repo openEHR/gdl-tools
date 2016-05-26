@@ -39,7 +39,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
         Interpreter interpreter = new Interpreter();
         List<ArchetypeReference> nonGeneratedArchetypeReferences = new ArrayList<>();
         for(ArchetypeReference archetypeReference: archetypeReferences) {
-            if(archetypeReference instanceof GeneratedArchetypeReference) {
+            if(!(archetypeReference instanceof GeneratedArchetypeReference)) {
                 nonGeneratedArchetypeReferences.add(archetypeReference);
             }
         }
