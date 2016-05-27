@@ -2,6 +2,7 @@ package se.cambio.cds.model.execution;
 
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.gdl.model.Guide;
@@ -32,11 +33,22 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
     private Map<String, Guide> guideCache = new ConcurrentHashMap<>();
     private boolean useCache = true;
     private GDLParser parser = new GDLParser();
-
+    private Interpreter interpreter = new Interpreter();
 
     @Override
     public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) throws InternalErrorException, PatientNotFoundException {
-        Interpreter interpreter = new Interpreter();
+        DvDateTime dateTime = new DvDateTime(
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH),
+                date.get(Calendar.HOUR),
+                date.get(Calendar.MINUTE),
+                date.get(Calendar.SECOND),
+                date.get(Calendar.MILLISECOND),
+                date.getTimeZone()
+        );
+        interpreter.setSystemParameter("currentDateTime", dateTime);
+
         List<ArchetypeReference> nonGeneratedArchetypeReferences = new ArrayList<>();
         for(ArchetypeReference archetypeReference: archetypeReferences) {
             if(!(archetypeReference instanceof GeneratedArchetypeReference)) {
