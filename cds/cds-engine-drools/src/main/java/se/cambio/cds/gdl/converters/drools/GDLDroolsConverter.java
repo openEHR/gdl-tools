@@ -478,7 +478,9 @@ public class GDLDroolsConverter {
                     String definition = _gtElementToWholeDefinition.get(code);
                     definition = getDefinitionsWithAnds(definition);
                     String defAux = definition
+                            .replace("$bindingMap", "#bindingMap")
                             .replace("$", "$count_")
+                            .replace("#bindingMap", "$bindingMap")
                             .replace("eval(DVUtil.equalDV(true, $count_predicate", "eval(DVUtil.equalDV(false, $count_predicate")
                             .replace("eval(DVUtil.isSubClassOf(true, $count_predicate", "eval(DVUtil.isSubClassOf(false, $count_predicate")
                             .replace("$count_" + code + ":ElementInstance(", "$count_" + code + ":ElementInstance(!predicate, dataValue!=null, ")
