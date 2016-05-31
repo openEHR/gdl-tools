@@ -467,7 +467,15 @@ ExpressionItem expression_node() :
       {
         op = OperatorKind.FIRED;
       }
-    | < SYM_EXCLAMATION > < SYM_FIRED > item = expression_leaf()
+    |
+      LOOKAHEAD(2)
+      < SYM_EXCLAMATION > item = expression_leaf()
+      {
+        op = OperatorKind.NOT;
+      }
+    |
+      LOOKAHEAD(2)
+      < SYM_EXCLAMATION > < SYM_FIRED > item = expression_leaf()
       {
         op = OperatorKind.NOT_FIRED;
       }
