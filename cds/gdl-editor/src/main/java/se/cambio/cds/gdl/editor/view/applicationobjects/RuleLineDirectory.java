@@ -45,6 +45,7 @@ public class RuleLineDirectory {
             getDelegate()._selectablePreconditions.add(new ElementAttributeComparisonConditionRuleLine());
             getDelegate()._selectablePreconditions.add(new ElementInitializedConditionRuleLine());
             getDelegate()._selectablePreconditions.add(new OrOperatorRuleLine());
+            getDelegate()._selectablePreconditions.add(new NotOperatorRuleLine());
         }
         return getDelegate()._selectablePreconditions;
     }
