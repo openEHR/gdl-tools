@@ -241,6 +241,18 @@ public class ArithmeticExpressionTest extends ExpressionTestBase {
 		parseSingleExpression(
 				"$gt0013.magnitude=($gt0005*(-3.0),d)");
 	}
+
+	public void test_can_parse_natural_logarithm_expression() throws Exception {
+		ExpressionItem expressionItem = Expressions.parse("ln($gt0001) ");
+		assertTrue(expressionItem instanceof UnaryExpression);
+		assertEquals(((UnaryExpression) expressionItem).getOperator(), OperatorKind.LN);
+	}
+
+	public void test_can_parse_base_10_logarithm_expression() throws Exception {
+		ExpressionItem expressionItem = Expressions.parse("log($gt0001) ");
+		assertTrue(expressionItem instanceof UnaryExpression);
+		assertEquals(((UnaryExpression) expressionItem).getOperator(), OperatorKind.LOG);
+	}
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

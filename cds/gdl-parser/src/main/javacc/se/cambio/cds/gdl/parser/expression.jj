@@ -122,6 +122,8 @@ TOKEN : /* SYMBOLS - common */
 | < SYM_FOR_ALL : "for_all" >
 | < SYM_MAX : "max" >
 | < SYM_MIN : "min" >
+| < SYM_LN : "ln" >
+| < SYM_LOG : "log" >
 | < SYM_FIRED : "fired" >
 | < SYM_CURRENT_DATETIME : "currentDateTime" >
 | < SYM_ASSIGNMENT : "=" >
@@ -466,6 +468,14 @@ ExpressionItem expression_node() :
     | < SYM_FIRED > item = expression_leaf()
       {
         op = OperatorKind.FIRED;
+      }
+    | < SYM_LN > item = expression_leaf()
+      {
+        op = OperatorKind.LN;
+      }
+    | < SYM_LOG > item = expression_leaf()
+      {
+        op = OperatorKind.LOG;
       }
     |
       LOOKAHEAD(2)
