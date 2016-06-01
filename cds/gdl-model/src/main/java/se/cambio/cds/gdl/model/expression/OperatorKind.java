@@ -10,8 +10,6 @@ public enum OperatorKind {
 	MULTIPLICATION("multiplication", "*"),
 	DIVISION("division", "/"),
 	EXPONENT("exponent", "^"),
-	LN("natural logarithm", "ln"),
-	LOG("base 10 logarithm", "log"),
 
 	/**
 	 * Logical operators

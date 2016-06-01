@@ -9,45 +9,40 @@ import java.util.*;
  * @author rong.chen
  */
 public class FunctionalExpression extends ExpressionItem {
-
-	/**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-	public static FunctionalExpression create(String function) {
+	private static final long serialVersionUID = 1L;
+	private Function function;
+	private List<ExpressionItem> items;
+	public static FunctionalExpression create(Function function) {
 		return new FunctionalExpression(function);
 	}
 	
-	public static FunctionalExpression create(String function, ExpressionItem item) {
+	public static FunctionalExpression create(Function function, ExpressionItem item) {
 		List<ExpressionItem> items = new ArrayList<ExpressionItem>();
 		items.add(item);
 		return new FunctionalExpression(function, items);
 	}
 	
-	public static FunctionalExpression create(String function, List<ExpressionItem> items) {
+	public static FunctionalExpression create(Function function, List<ExpressionItem> items) {
 		return new FunctionalExpression(function, items);
 	}
 	
-	public FunctionalExpression(String function) {
+	public FunctionalExpression(Function function) {
 		this(function, null);
 	}
-	public FunctionalExpression(String function, List<ExpressionItem> items) {
-		super();
-		
-		if(function == null || function.isEmpty()) {
-			throw new IllegalArgumentException("null or empty function name");
+	public FunctionalExpression(Function function, List<ExpressionItem> items) {
+		if(function == null) {
+			throw new IllegalArgumentException("null function");
 		}
 		this.function = function;
-		
 		if(items != null) {
-			this.items = new ArrayList<ExpressionItem>(items);
+			this.items = new ArrayList<>(items);
 		}
 	}
 
 	/**
 	 * @return the function
 	 */
-	public String getFunction() {
+	public Function getFunction() {
 		return function;
 	}
 	
@@ -130,9 +125,6 @@ public class FunctionalExpression extends ExpressionItem {
 			return false;
 		return true;
 	}
-
-	private String function;
-	private List<ExpressionItem> items;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -471,11 +471,11 @@ ExpressionItem expression_node() :
       }
     | < SYM_LN > item = expression_leaf()
       {
-        op = OperatorKind.LN;
+        return FunctionalExpression.create(Function.LN, item);
       }
     | < SYM_LOG > item = expression_leaf()
       {
-        op = OperatorKind.LOG;
+        return FunctionalExpression.create(Function.LOG, item);
       }
     |
       LOOKAHEAD(2)

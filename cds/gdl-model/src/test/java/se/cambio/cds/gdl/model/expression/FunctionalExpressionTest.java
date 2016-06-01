@@ -15,14 +15,14 @@ import junit.framework.TestCase;
 public class FunctionalExpressionTest extends TestCase {
 	
 	public void testCreateSimpleFunctionalExpression() {
-		FunctionalExpression fe = FunctionalExpression.create("today");
-		assertEquals("today()", fe.toString());
+		FunctionalExpression fe = FunctionalExpression.create(Function.LN);
+		assertEquals("ln()", fe.toString());
 	}
 	
 	public void testCreateSimpleFunctionalExpressionWithSingleVariable() {
-		FunctionalExpression fe = FunctionalExpression.create("sin",
+		FunctionalExpression fe = FunctionalExpression.create(Function.LOG,
 				ConstantExpression.create("180"));
-		assertEquals("sin(180)", fe.toString());
+		assertEquals("log(180)", fe.toString());
 	}
 	
 	public void testCreateFunctionalExpressionWithNestedVariables() {
@@ -33,7 +33,7 @@ public class FunctionalExpressionTest extends TestCase {
 				ConstantExpression.create("2"), 
 				OperatorKind.MULTIPLICATION);				
 		items.add(be1);
-		FunctionalExpression fe = FunctionalExpression.create("max",
+		FunctionalExpression fe = FunctionalExpression.create(Function.MAX,
 				items);
 		assertEquals("max(180,($gt0001*2))", fe.toString());
 	}
