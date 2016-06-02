@@ -175,6 +175,10 @@ public class GDLDroolsConverter {
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
             sb.append(definition);
+            String functionExtraCode = getFunctionExtraCode(ruleStats);
+            if (functionExtraCode != null) {
+                sb.append(functionExtraCode);
+            }
             sb.append(preconditionMVEL);
             appendFiredRuleCondition(sb, true, DEFAULT_RULE_CODE);
             sb.append(THEN + "\n");
@@ -194,11 +198,8 @@ public class GDLDroolsConverter {
             ruleStats.get(RefStat.ATT_SET_REF).remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
             String hasValueChecks =
                     getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
-            //Check if a function is used, add whatever extra code necessary for it (for now, just count)
-            Set<String> functionsRefs = new HashSet<String>();
-            functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
-            functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
-            String functionExtraCode = getFunctionsExtraCode(functionsRefs);
+            String functionExtraCode = getFunctionExtraCode(ruleStats);
+
             sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
             sb.append(DEFAULT_CONFIG + "\n");
             String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
@@ -219,6 +220,14 @@ public class GDLDroolsConverter {
             sb.append(getFiredRuleWMInsertion(rule.getId()));
             sb.append(END + "\n\n");
         }
+    }
+
+    private String getFunctionExtraCode(Map<RefStat, Set<String>> ruleStats) {
+        //Check if a function is used, add whatever extra code necessary for it (for now, just count)
+        Set<String> functionsRefs = new HashSet<String>();
+        functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
+        functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
+        return getFunctionsExtraCode(functionsRefs);
     }
 
     private String getFiredRuleWMInsertion(String ruleGtCode) {
