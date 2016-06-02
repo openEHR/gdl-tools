@@ -1,9 +1,13 @@
 package se.cambio.cds.gdl.parser;
 
+import se.cambio.cds.gdl.model.expression.ConstantExpression;
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 
 public class AssignmentExpressionTest extends ExpressionTestBase {
-	
+	private static final String COMPLEX =
+			"$gt0011|GFR|=(((1.23*(140-$gt0004|age|))*$gt0007|weight|)/$gt0009|creatine|)";
+
 	public void testIntegerAssignmentWithVariableAttribute() throws Exception {
 		parseSingleExpression("$gt0011.precision = 2");
 		check("gt0011", "/variable/code");
@@ -102,9 +106,6 @@ public class AssignmentExpressionTest extends ExpressionTestBase {
 		String actual = item.toString();
 		assertEquals(actual, COMPLEX);		
 	}
-	
-	private static final String COMPLEX = 
-		"$gt0011|GFR|=(((1.23*(140-$gt0004|age|))*$gt0007|weight|)/$gt0009|creatine|)";
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

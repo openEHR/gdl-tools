@@ -124,6 +124,7 @@ TOKEN : /* SYMBOLS - common */
 | < SYM_MIN : "min" >
 | < SYM_LN : "ln" >
 | < SYM_LOG : "log" >
+| < SYM_E : "e" >
 | < SYM_FIRED : "fired" >
 | < SYM_CURRENT_DATETIME : "currentDateTime" >
 | < SYM_ASSIGNMENT : "=" >
@@ -661,6 +662,11 @@ ConstantExpression constant_expression() :
 }
 {
   (
+    < SYM_E>
+    {
+      return MathConstant.create(Constant.E);
+    }
+  |
     t = < V_STRING >
     {
       String str = t.image;

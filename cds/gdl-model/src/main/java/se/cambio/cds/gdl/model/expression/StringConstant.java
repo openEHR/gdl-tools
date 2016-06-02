@@ -1,11 +1,8 @@
 package se.cambio.cds.gdl.model.expression;
 
 public class StringConstant extends ConstantExpression {
-
-	/**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
+	private String string;
 
 	public StringConstant(String string) {
 		super(string);
@@ -19,8 +16,6 @@ public class StringConstant extends ConstantExpression {
 	public String toString() {
 		return "'" + string + "'";
 	}
-	
-	private String string;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

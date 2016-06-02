@@ -14,6 +14,11 @@ public enum Function {
         this.description = description;
     }
 
+    public String description() {
+        return this.description;
+    }
+
+    @Override
     public String toString() {
         return this.name;
     }

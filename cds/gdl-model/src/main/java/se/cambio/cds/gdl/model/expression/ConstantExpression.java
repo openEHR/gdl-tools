@@ -1,9 +1,7 @@
 package se.cambio.cds.gdl.model.expression;
 
 public class ConstantExpression extends ExpressionItem {
-
 	private static final long serialVersionUID = 1L;
-
 	public static ConstantExpression create(String value) {
 		return new ConstantExpression(value);
 	}
@@ -22,11 +20,6 @@ public class ConstantExpression extends ExpressionItem {
 
 	private String value;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -35,11 +28,6 @@ public class ConstantExpression extends ExpressionItem {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

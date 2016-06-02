@@ -4,11 +4,8 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
 public class CodedTextConstant extends ConstantExpression {
-
-	/**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
+	private DvCodedText codedText;
 
 	public CodedTextConstant(String value, CodePhrase code) {
 		super(code.toString() + "|" + value + "|");
@@ -19,8 +16,6 @@ public class CodedTextConstant extends ConstantExpression {
 		return new DvCodedText(this.codedText.getValue(),
 				this.codedText.getTerminologyId(), this.codedText.getCode());
 	}
-	
-	private DvCodedText codedText;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
