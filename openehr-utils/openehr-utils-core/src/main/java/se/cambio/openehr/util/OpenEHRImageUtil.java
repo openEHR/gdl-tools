@@ -43,6 +43,7 @@ public class OpenEHRImageUtil {
 	public static final String DV_DATE_TIME_NAME = "datetime.png";
 	public static final String DV_BOOLEAN_NAME = "boolean.png";
 	public static final String DV_PROPORTION_NAME = "ratio.png";
+	public static final String DV_URI_NAME = "uri.png";
 
 	
 	public static final ImageIcon DV_TEXT_ICON = OpenEHRImageUtil.getIcon(DV_TEXT_NAME);
@@ -54,6 +55,7 @@ public class OpenEHRImageUtil {
 	public static final ImageIcon DV_DATE_TIME_ICON = OpenEHRImageUtil.getIcon(DV_DATE_TIME_NAME);
 	public static final ImageIcon DV_BOOLEAN_ICON = OpenEHRImageUtil.getIcon(DV_BOOLEAN_NAME);
 	public static final ImageIcon DV_PROPORTION_ICON = OpenEHRImageUtil.getIcon(DV_PROPORTION_NAME);
+	public static final ImageIcon DV_URI_ICON = OpenEHRImageUtil.getIcon(DV_URI_NAME);
 
 	public static final String SECTION_NAME = "section.png";
 	public static final String CLUSTER_NAME = "cluster.png";

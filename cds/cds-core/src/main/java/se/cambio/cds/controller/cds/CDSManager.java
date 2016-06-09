@@ -36,7 +36,7 @@ public class CDSManager {
             Environment environment) {
         this.ehrDataFilterManager = ehrDataFilterManager;
         this.dateTimeARFinder = dateTimeARFinder;
-        this.filterArchetypeReferences = environment.getProperty(CDS_FILTER_ARCHETYPE_REFERENCES, Boolean.class, false);
+        this.filterArchetypeReferences = environment.getProperty(CDS_FILTER_ARCHETYPE_REFERENCES, Boolean.class, true);
     }
 
 

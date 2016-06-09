@@ -136,7 +136,7 @@ public class PredicateFilterManager {
                 Logger.getLogger(PredicateFilterManager.class).warn("No Data Value returned after resolving predicate!");
             }
         }
-        final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<ArchetypeReference>();
+        final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
             ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get(elementId);
             if (elementInstance != null) {
@@ -181,9 +181,7 @@ public class PredicateFilterManager {
                 }
             }
             ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
-        } catch (InvalidCodeException e) {
-            logger.warn(e);
-        } catch (UnsupportedTerminologyException e) {
+        } catch (InvalidCodeException | UnsupportedTerminologyException e) {
             logger.warn(e);
         }
     }

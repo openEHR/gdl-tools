@@ -12,6 +12,7 @@ import org.openehr.rm.datatypes.quantity.datetime.DvTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
+import org.openehr.rm.datatypes.uri.DvURI;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -168,6 +169,14 @@ public class OpenEHRDataValuesUI {
                         OpenEHRDataValues.PRECISION_ATT});
         _openEHRDVClassName.put(OpenEHRDataValues.DV_PROPORTION, DvProportion.class.getSimpleName());
         _openEHRDVIconName.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRImageUtil.DV_PROPORTION_NAME);
+
+        _openEHRDVNames.put(OpenEHRDataValues.DV_URI, OpenEHRLanguageManager.getMessage("DataValueURI"));
+        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_URI, OpenEHRLanguageManager.getMessage("DataValueURIDesc"));
+        _openEHRDVIcons.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_ICON);
+        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_URI,
+                new String[]{OpenEHRDataValues.VALUE_ATT});
+        _openEHRDVClassName.put(OpenEHRDataValues.DV_URI, DvURI.class.getSimpleName());
+        _openEHRDVIconName.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_NAME);
     }
 
     public static String getName(String idDataValue){
