@@ -11,6 +11,11 @@ public class PredicateComparisonFunctionRuleLineElement extends AbstractComparis
         addOperator(OperatorKind.MAX);
         addOperator(OperatorKind.MIN);
     }
+
+    @Override
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#00803a'><b>" + getLabelText(lang) + "</b></font>";
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -63,6 +63,10 @@ public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLine
                     return OpenEHRLanguageManager.getMessageWithLanguage("IsARLE", language);
                 case IS_NOT_A:
                     return OpenEHRLanguageManager.getMessageWithLanguage("IsNotARLE", language);
+                case MAX:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("Max", language);
+                case MIN:
+                    return OpenEHRLanguageManager.getMessageWithLanguage("Min", language);
                 default:
                     return "??";
             }

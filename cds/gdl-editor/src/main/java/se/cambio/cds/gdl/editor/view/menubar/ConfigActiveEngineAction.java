@@ -1,36 +1,37 @@
-package se.cambio.cds.gdl.model.readable.rule.lines.elements;
+/*
+ * Created on 30-ago-2006
+ *
 
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-public class GTCodeRuleLineElement extends RuleLineElementWithValue<String> {
+ */
+package se.cambio.cds.gdl.editor.view.menubar;
 
-    public GTCodeRuleLineElement(RuleLine ruleLine) {
-        super(ruleLine, "Name");
+import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.dialog.DialogSetActiveEngine;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+public class ConfigActiveEngineAction extends AbstractAction {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3561842193285119707L;
+
+    public ConfigActiveEngineAction(){
+	super();
+	putValue(NAME, GDLEditorLanguageManager.getMessage("SetActiveEngine")+"...");
+	putValue(SMALL_ICON, null);
+	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
+	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
     }
 
-    @Override
-    public String getLabelDescription(String lang) {
-        return OpenEHRLanguageManager.getMessageWithLanguage("Name", lang);
-    }
-
-    @Override
-    public String getLabelText(String lang) {
-        if (getValue() != null) {
-            String name = getName(getValue(), lang);
-            if (name != null) {
-                return name;
-            } else {
-                return OpenEHRLanguageManager.getMessageWithLanguage("Name", lang);
-            }
-        } else {
-            return super.getLabelText(lang);
-        }
-    }
-
-    @Override
-    public String getLabelTextHTML(String lang) {
-        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+	new DialogSetActiveEngine().setVisible(true);
     }
 }
 /*

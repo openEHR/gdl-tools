@@ -210,6 +210,7 @@ public class MainMenuBar extends JMenuBar {
             configurationMenu.setText(GDLEditorLanguageManager.getMessage("Configuration"));
             configurationMenu.add(getConfigurationRepositoriesAction());
             configurationMenu.add(getCurrentDateAndTimeAction());
+            configurationMenu.add(new ConfigActiveEngineAction());
             configurationMenu.add(new ConfigLanguageAction());
         }
         return configurationMenu;

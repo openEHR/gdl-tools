@@ -24,6 +24,11 @@ public class ArchetypeReferenceRuleLineElement extends RuleLineElementWithValue<
         return OpenEHRLanguageManager.getMessageWithLanguage("Archetype", lang);
     }
 
+    @Override
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
+    }
+
     public String getDomainId() {
         return getArchetypeReference().getIdDomain();
     }

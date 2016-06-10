@@ -29,9 +29,11 @@ public class UserConfigurationManager {
     public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
     public static final String LANGUAGE = "Messages/Language";
     public static final String COUNTRY = "Messages/Country";
+    public static final String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
 
     public static final String DEFAULT_LANGUAGE = "en";
     public static final String DEFAULT_COUNTRY = "EN";
+    public static final String DEFAULT_ACTIVE_RULE_ENGINE = "rule-drools-engine";
 
     private static final String CONFIGURATION_FOLDER = "conf";
     private static final String USER_CONFIGURATION_FOLDER = ".gdleditor";
@@ -41,7 +43,7 @@ public class UserConfigurationManager {
     private static File _configFile = null;
 
     private static Map<String, String> _defaultValues = new HashMap<>();
-
+    public static List<String> SUPPORTED_RULE_ENGINES = Arrays.asList("rule-drools-engine","rule-jgdl-engine");
     static {
         _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");
         _defaultValues.put(TEMPLATES_FOLDER_KW, "templates");
@@ -52,6 +54,7 @@ public class UserConfigurationManager {
         _defaultValues.put(CURRENT_DATE_TIME_KW, null);
         _defaultValues.put(LANGUAGE, DEFAULT_LANGUAGE);
         _defaultValues.put(COUNTRY, DEFAULT_COUNTRY);
+        _defaultValues.put(ACTIVE_RULE_ENGINE, DEFAULT_ACTIVE_RULE_ENGINE);
 
 	/*         
      * We use a synchronized map because it will be filled by using a
@@ -251,6 +254,10 @@ public class UserConfigurationManager {
 
     public static void setParameterWithDefault(String keyword, String value) {
         setParameter(keyword, value);
+    }
+
+    public static String getActiveRuleEngine() {
+        return getParameterWithDefault(ACTIVE_RULE_ENGINE);
     }
 
     public static boolean saveConfig() {

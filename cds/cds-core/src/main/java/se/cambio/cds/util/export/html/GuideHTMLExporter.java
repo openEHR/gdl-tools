@@ -25,12 +25,13 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
         String lang = getLanguage();
         ReadableGuide readableGuide = new GuideImporter(getArchetypeManager()).importGuide(getEntity(), lang);
         Collection<String> htmlReadableRules = getHTMLReadableRules(readableGuide, lang);
+        Collection<String> definitionsHtml = getHTMLRuleLines(readableGuide.getDefinitionRuleLines().getRuleLines(), lang);
         Collection<String> preconditionsHtml = getHTMLRuleLines(readableGuide.getPreconditionRuleLines().getRuleLines(), lang);
         Collection<String> defaultActionsHtml = getHTMLRuleLines(readableGuide.getDefaultActions().getRuleLines(), lang);
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("guide", getEntity());
         objectMap.put("guide_details", getEntity().getDescription().getDetails().get(lang));
-        objectMap.put("guide_definitions", readableGuide);
+        objectMap.put("guide_definitions", definitionsHtml);
         objectMap.put("guide_preconditions", preconditionsHtml);
         objectMap.put("guide_default_actions", defaultActionsHtml);
         objectMap.put("guide_rules", htmlReadableRules);
@@ -58,6 +59,7 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
     public Map<String, String> getEntityTextMap() {
         HashMap<String, String> textsMap = new HashMap<String, String>();
         addText(textsMap, "GuideDetails");
+        addText(textsMap, "Definitions");
         addText(textsMap, "Preconditions");
         addText(textsMap, "Defaults");
         addText(textsMap, "RuleList");

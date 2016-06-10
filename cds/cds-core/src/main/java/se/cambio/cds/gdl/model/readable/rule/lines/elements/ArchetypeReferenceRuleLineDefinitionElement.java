@@ -37,6 +37,10 @@ public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElement
         }
     }
 
+    @Override
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
+    }
 
     @Override
     public String getLabelText(String lang) {

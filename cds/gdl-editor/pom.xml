@@ -194,5 +194,10 @@
             <artifactId>cds-engine-drools</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>cds-engine-jgdl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

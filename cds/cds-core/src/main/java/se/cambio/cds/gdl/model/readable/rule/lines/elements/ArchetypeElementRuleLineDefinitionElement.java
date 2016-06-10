@@ -44,6 +44,11 @@ public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWi
             return super.getLabelText(lang);
         }
     }
+
+    @Override
+    public String getLabelTextHTML(String lang) {
+        return "<font color='#4f81bd'><b>" + getLabelText(lang) + "</b></font>";
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

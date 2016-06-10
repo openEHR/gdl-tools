@@ -58,6 +58,21 @@ public class ArchetypeInstantiationRuleLine extends RuleLine implements Archetyp
     public void setGtCodeRuleLineElement(GTCodeRuleLineElement gtCodeRuleLineElement) {
         this.gtCodeRuleLineElement = gtCodeRuleLineElement;
     }
+    public String toHTMLString(int level, String lang){
+        StringBuffer sb = new StringBuffer();
+        sb.append(toHTMLStringSingle(level, lang) + "<br/>");
+        String prefix = "";
+        for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
+            sb.append(prefix);
+            sb.append(ruleLine.toHTMLString(level+1, lang));
+            prefix = "<br/>";
+        }
+        return sb.toString();
+    }
+
+    public String toHTMLStringSingle(int level, String lang){
+        return super.toHTMLString(level, lang);
+    }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

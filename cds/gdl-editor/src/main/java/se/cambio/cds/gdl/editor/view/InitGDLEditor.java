@@ -1,12 +1,15 @@
 package se.cambio.cds.gdl.editor.view;
 
 
+import org.springframework.core.env.ConfigurableEnvironment;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
+import se.cambio.openehr.util.BeanProvider;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.WindowManager;
 import se.cambio.openehr.view.dialogs.InfoDialog;
 
@@ -25,6 +28,11 @@ public class InitGDLEditor {
             //Try to open the GDL File
             new LoadGuideFromFileRSW(new File(args[0])).execute();
         }
+        ConfigurableEnvironment environment = BeanProvider.getBean(ConfigurableEnvironment.class);
+        String activeRuleEngine = UserConfigurationManager.getActiveRuleEngine();
+        environment.addActiveProfile(activeRuleEngine);
+        String[] activeProfiles = BeanProvider.getActiveProfiles();
+        BeanProvider.setActiveProfiles(activeProfiles);
         CDSSessionManager.getRuleEngineFacadeDelegate().setUseCache(false);
     }
 }
