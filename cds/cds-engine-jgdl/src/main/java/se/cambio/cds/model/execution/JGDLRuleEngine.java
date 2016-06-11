@@ -44,7 +44,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
                 date.get(Calendar.HOUR),
                 date.get(Calendar.MINUTE),
                 date.get(Calendar.SECOND),
-                date.get(Calendar.MILLISECOND),
+                date.get(Calendar.MILLISECOND) / 1000,
                 date.getTimeZone()
         );
         interpreter.setSystemParameter("currentDateTime", dateTime);
