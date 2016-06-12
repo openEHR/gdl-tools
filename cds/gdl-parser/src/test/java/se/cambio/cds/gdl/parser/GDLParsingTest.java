@@ -20,6 +20,11 @@ public class GDLParsingTest extends TestCase {
 		check("/data[at0002]/events[at0003]/data[at0001]/items[at0004]", 
 				"definition/archetypeBindings/gt0004/elements/gt0007/path");
 	}
+
+	public void test_can_parse_element_with_type() throws Exception {
+		parse("test_parse_element_with_type.gdl");
+		check("DV_QUANTITY", "definition/archetypeBindings/gt0002/elements/gt0003/type");
+	}
 	
 	public void testSetId() throws Exception {
 		parse("test001.dadl");

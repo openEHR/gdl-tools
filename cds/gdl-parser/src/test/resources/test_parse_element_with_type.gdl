@@ -1,0 +1,48 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_parse_element_with_type">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+						type = <"DV_QUANTITY">
+					>
+				>
+			>
+		>
+		default_actions = <"$gt0005=local::at0011|Present|",...>
+		pre_conditions = <"$gt0003==$gt0003",...>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0003"] = (TERM) <
+						text = <"Airway obstruction">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Ciprofloxacin prescription">
+						description = <"Study criteria: Age = 18-79, Urinary tract antibiotics prescription = Present">
+					>
+				>
+			>
+		>
+	>
+>

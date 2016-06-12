@@ -76,7 +76,7 @@ public class GDLParser {
 	}
 
 	private List<AssignmentExpression> toAssignments(List<ExpressionItem> items) {
-		List<AssignmentExpression> ret = new ArrayList<AssignmentExpression>();
+		List<AssignmentExpression> ret = new ArrayList<>();
 		if (items != null) {
 			for (ExpressionItem item : items) {
 				ret.add((AssignmentExpression) item);
@@ -90,7 +90,7 @@ public class GDLParser {
 		if (lines == null) {
             return null;
         }
-        List<ExpressionItem> items = new ArrayList<ExpressionItem>();
+        List<ExpressionItem> items = new ArrayList<>();
         for (String line : lines) {
             items.add(Expressions.parse(line));
         }
