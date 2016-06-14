@@ -48,15 +48,33 @@
     <br>
 </#if>
 
-<#if guide_definitions?has_content>
 <h2>${texts.Definitions?upper_case}</h2>
-    <#list guide_definitions as definitionRuleLine>
+<#if guide_definitions_ehr?has_content>
+    <h3>EHR</h3>
+    <#list guide_definitions_ehr as definitionRuleLine>
     <div class="bg-block">
     ${definitionRuleLine}
     </div>
     </#list>
-<br>
 </#if>
+<#if guide_definitions_cds?has_content>
+<h3>CDS</h3>
+    <#list guide_definitions_cds as definitionRuleLine>
+    <div class="bg-block">
+    ${definitionRuleLine}
+    </div>
+    </#list>
+</#if>
+<#if guide_definitions_any?has_content>
+<h3>ANY</h3>
+    <#list guide_definitions_any as definitionRuleLine>
+    <div class="bg-block">
+    ${definitionRuleLine}
+    </div>
+    </#list>
+</#if>
+
+<br>
 <#if guide_preconditions?has_content>
     <h2>${texts.Preconditions?upper_case}</h2>
         <#list guide_preconditions as preconditionRuleLine>

@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,11 @@ public abstract class GDLTestCase {
     public static String BIRTHDATE_DATE_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
     public static String GENDER_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]";
 
+    public static String WEIGHT_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.body_weight.v1";
+    public static String WEIGHT_ELEMENT_ID = "openEHR-EHR-OBSERVATION.body_weight.v1/data[at0002]/events[at0003]/data[at0001]/items[at0004]";
+    public static String WEIGHT_EVENT_TIME_ELEMENT_ID = "openEHR-EHR-OBSERVATION.body_weight.v1/data/events/time";
+
+
     public static String CONTACT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.contact.v1";
     public static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
 
@@ -99,6 +105,15 @@ public abstract class GDLTestCase {
         new ElementInstance(GENDER_ELEMENT_ID, dataValue, ar, null, null);
         dataValue = new DvDateTime(new DateTime(birthdate.getTimeInMillis()).toString());
         new ElementInstance(BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, null);
+        return ar;
+    }
+
+    public static ArchetypeReference generateWeightArchetypeReference(Calendar date, Double weightInKg) {
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.WEIGHT_ARCHETYPE_ID, null);
+        DataValue dataValue = new DvQuantity("kg", weightInKg, 2);
+        new ElementInstance(WEIGHT_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvDateTime(new DateTime(date.getTimeInMillis()).toString());
+        new ElementInstance(WEIGHT_EVENT_TIME_ELEMENT_ID, dataValue, ar, null, null);
         return ar;
     }
 

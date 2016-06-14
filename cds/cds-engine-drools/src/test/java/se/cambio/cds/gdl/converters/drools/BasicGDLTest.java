@@ -130,7 +130,7 @@ public class BasicGDLTest extends GDLTestCase {
         ar = generateICD10DiagnosisArchetypeReference("I481");
         ehrArs.add(ar);
 
-        Collection<String> guideIds = Arrays.asList(new String[]{"diagnosis_predicate_test", "diagnosis_no_max_predicate_test"});
+        Collection<String> guideIds = Arrays.asList("diagnosis_predicate_test", "diagnosis_no_max_predicate_test");
         GuideManager guideManager = generateGuideManager(guideIds);
         Collection<ArchetypeReference> filteredEhrArs = ehrDataFilterManager.filterEHRDataByGuides("testEhrId", new DateTime(), guideManager.getAllGuides(), ehrArs);
         assertThat(filteredEhrArs.size(), equalTo(2));
@@ -427,6 +427,24 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(new RuleReference("test_fired_rule_count_2", "gt0003"), rer.getFiredRules().get(1));
         assertEquals(new RuleReference("test_fired_rule_count_2", "gt0002"), rer.getFiredRules().get(2));
         assertEquals(new RuleReference("test_fired_rule_count_2", "gt0003"), rer.getFiredRules().get(3));
+    }
+
+    @Test
+    public void shouldTestSimplePatternMatching() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        ArchetypeReference ar;
+
+        Calendar date = Calendar.getInstance();
+        ar = generateWeightArchetypeReference(date, 40.0);
+        ehrArs.add(ar);
+        date = Calendar.getInstance();
+        date.add(Calendar.WEEK_OF_YEAR, -1);
+        ar = generateWeightArchetypeReference(date, 81.0);
+        ehrArs.add(ar);
+
+        List<String> guideIds = Arrays.asList("simple_pattern_matching");
+        RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(1));
     }
 }
 

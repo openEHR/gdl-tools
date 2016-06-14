@@ -4,15 +4,14 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
+import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
 
@@ -25,13 +24,18 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
         String lang = getLanguage();
         ReadableGuide readableGuide = new GuideImporter(getArchetypeManager()).importGuide(getEntity(), lang);
         Collection<String> htmlReadableRules = getHTMLReadableRules(readableGuide, lang);
-        Collection<String> definitionsHtml = getHTMLRuleLines(readableGuide.getDefinitionRuleLines().getRuleLines(), lang);
+        List<RuleLine> definitionRuleLines = readableGuide.getDefinitionRuleLines().getRuleLines();
+        Collection<String> definitionsHtmlEhr = getHTMLRuleLines(getDefinitionRuleLinesByDomainId(definitionRuleLines, Domains.EHR_ID), lang);
+        Collection<String> definitionsHtmlCds = getHTMLRuleLines(getDefinitionRuleLinesByDomainId(definitionRuleLines, Domains.CDS_ID), lang);
+        Collection<String> definitionsHtmlAny = getHTMLRuleLines(getDefinitionRuleLinesByDomainId(definitionRuleLines, null), lang);
         Collection<String> preconditionsHtml = getHTMLRuleLines(readableGuide.getPreconditionRuleLines().getRuleLines(), lang);
         Collection<String> defaultActionsHtml = getHTMLRuleLines(readableGuide.getDefaultActions().getRuleLines(), lang);
         Map<String, Object> objectMap = new HashMap<String, Object>();
         objectMap.put("guide", getEntity());
         objectMap.put("guide_details", getEntity().getDescription().getDetails().get(lang));
-        objectMap.put("guide_definitions", definitionsHtml);
+        objectMap.put("guide_definitions_ehr", definitionsHtmlEhr);
+        objectMap.put("guide_definitions_cds", definitionsHtmlCds);
+        objectMap.put("guide_definitions_any", definitionsHtmlAny);
         objectMap.put("guide_preconditions", preconditionsHtml);
         objectMap.put("guide_default_actions", defaultActionsHtml);
         objectMap.put("guide_rules", htmlReadableRules);
@@ -39,17 +43,30 @@ public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
         return objectMap;
     }
 
-    private static Collection<String> getHTMLReadableRules(ReadableGuide readableGuide, String lang){
+    private Collection<RuleLine> getDefinitionRuleLinesByDomainId(List<RuleLine> definitionRulelines, String domainId) {
+        List<RuleLine> ruleLines = new ArrayList<>();
+        for (RuleLine ruleLine : definitionRulelines) {
+            if (ruleLine instanceof ArchetypeReferenceRuleLine) {
+                String domainIdRuleLine = ((ArchetypeReferenceRuleLine) ruleLine).getArchetypeReference().getIdDomain();
+                if (domainId == null && domainIdRuleLine == null || (domainId != null && domainId.equals(domainIdRuleLine))) {
+                    ruleLines.add(ruleLine);
+                }
+            }
+        }
+        return ruleLines;
+    }
+
+    private static Collection<String> getHTMLReadableRules(ReadableGuide readableGuide, String lang) {
         Collection<String> htmlReadableRules = new ArrayList<String>();
-        for(ReadableRule readableRule: readableGuide.getReadableRules().values()){
+        for (ReadableRule readableRule : readableGuide.getReadableRules().values()) {
             htmlReadableRules.add(readableRule.toHTMLString(lang));
         }
         return htmlReadableRules;
     }
 
-    private static Collection<String> getHTMLRuleLines(Collection<RuleLine> ruleLines, String lang){
+    private static Collection<String> getHTMLRuleLines(Collection<RuleLine> ruleLines, String lang) {
         Collection<String> htmlRuleLine = new ArrayList<String>();
-        for(RuleLine ruleLine: ruleLines){
+        for (RuleLine ruleLine : ruleLines) {
             htmlRuleLine.add(ruleLine.toHTMLString(lang));
         }
         return htmlRuleLine;
