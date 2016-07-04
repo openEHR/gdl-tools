@@ -1,18 +1,24 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>se.cambio.cds</groupId>
-		<artifactId>cds</artifactId>
-		<version>0-SNAPSHOT</version>
-	</parent>
-	<artifactId>gdl-model</artifactId>
-	<name>GDL model</name>
-	<dependencies>
-		<dependency>
-			<groupId>se.cambio.cds</groupId>
-			<artifactId>openehr-rm-core</artifactId>
-			<version>${openehr-java-libs-version}</version>
-		</dependency>
-	</dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>se.cambio.cds</groupId>
+        <artifactId>cds</artifactId>
+        <version>0-SNAPSHOT</version>
+    </parent>
+    <artifactId>gdl-model</artifactId>
+    <name>GDL model</name>
+    <dependencies>
+        <dependency>
+            <groupId>se.cambio.cds</groupId>
+            <artifactId>openehr-rm-core</artifactId>
+            <version>${openehr-java-libs-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
