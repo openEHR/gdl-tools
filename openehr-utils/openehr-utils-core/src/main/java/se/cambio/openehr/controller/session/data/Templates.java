@@ -105,7 +105,7 @@ public class Templates extends AbstractCMManager<TemplateDTO>{
         String archetypeId = templateDTO.getArchetypeId();
         Collection<ArchetypeElementVO> archetypeElementVOs =
                 getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, templateId);
-        Map<String, TemplateElementMap> templateElementMaps = new HashMap<>();
+        Map<String, TemplateElementMap> templateElementMaps = new LinkedHashMap<>();
         TemplateMap templateMap = new TemplateMap(archetypeId, templateId, templateElementMaps);
         Collection<String> elementMapIds = new ArrayList<>();
         for(ArchetypeElementVO archetypeElementVO: archetypeElementVOs){

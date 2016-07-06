@@ -19,11 +19,7 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
@@ -186,7 +182,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
     public TemplateMap generateTemplateMap(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
         Collection<ArchetypeElementVO> archetypeElementVOs =
                 getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, null);
-        Map<String, TemplateElementMap> templateElementMaps = new HashMap<String, TemplateElementMap>();
+        Map<String, TemplateElementMap> templateElementMaps = new LinkedHashMap<>();
         TemplateMap templateMap = new TemplateMap(archetypeId, null, templateElementMaps);
         Collection<String> elementMapIds = new ArrayList<String>();
         for(ArchetypeElementVO archetypeElementVO: archetypeElementVOs){
