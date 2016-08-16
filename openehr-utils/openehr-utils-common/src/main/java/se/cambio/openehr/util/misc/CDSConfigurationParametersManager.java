@@ -27,15 +27,15 @@ public class CDSConfigurationParametersManager {
     }
 
     public String getKmUrl() {
-        return environment.getProperty(KM_SERVER_URL, "http://localhost:8080/km");
+        return environment.getProperty(KM_SERVER_URL);
     }
 
     public String getKmUser() {
-        return environment.getProperty(KM_SERVER_USER_LOGIN, "km");
+        return environment.getProperty(KM_SERVER_USER_LOGIN);
     }
 
     public String getKmPassword() {
-        return environment.getProperty(KM_SERVER_USER_PASSWD, "km");
+        return environment.getProperty(KM_SERVER_USER_PASSWD);
     }
 
     public Long getCdsExecutionTimeOut() {
