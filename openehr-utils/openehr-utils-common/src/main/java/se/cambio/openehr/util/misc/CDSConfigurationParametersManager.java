@@ -3,14 +3,10 @@ package se.cambio.openehr.util.misc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySources({
-        @PropertySource(value = "classpath:default-cds-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true),
-})
+@PropertySource(value = "file:conf/cds-config.properties", ignoreResourceNotFound = true)
 public class CDSConfigurationParametersManager {
     private static final String KM_SERVER_URL = "km-server.url";
     private static final String KM_SERVER_USER_LOGIN = "km-server.login";
@@ -27,15 +23,15 @@ public class CDSConfigurationParametersManager {
     }
 
     public String getKmUrl() {
-        return environment.getProperty(KM_SERVER_URL);
+        return environment.getProperty(KM_SERVER_URL, "http://localhost:8080/km");
     }
 
     public String getKmUser() {
-        return environment.getProperty(KM_SERVER_USER_LOGIN);
+        return environment.getProperty(KM_SERVER_USER_LOGIN, "km");
     }
 
     public String getKmPassword() {
-        return environment.getProperty(KM_SERVER_USER_PASSWD);
+        return environment.getProperty(KM_SERVER_USER_PASSWD, "cambio_123");
     }
 
     public Long getCdsExecutionTimeOut() {
