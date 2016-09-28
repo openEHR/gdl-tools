@@ -71,20 +71,22 @@ public class ElementInstanceCollectionUtil {
         if (!matches) {
             return false;
         }//else continue with the filling
-        //Set AR to empty elementInstances found
-        for (String idElement : ar1.getElementInstancesMap().keySet()) {
-            ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
-            ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
-            if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2 == null) {
-                ei2 = ei1.clone();
-                emptyElementInstances.add(ei2);
+        if (ar2 instanceof GeneratedArchetypeReference) {
+            //Set AR to empty elementInstances found
+            for (String idElement : ar1.getElementInstancesMap().keySet()) {
+                ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
+                ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
+                if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2 == null) {
+                    ei2 = ei1.clone();
+                    emptyElementInstances.add(ei2);
+                }
+                if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance) {
+                    ((GeneratedElementInstance) ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
+                }
             }
-            if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance) {
-                ((GeneratedElementInstance) ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
+            for (ElementInstance elementInstance : emptyElementInstances) {
+                elementInstance.setArchetypeReference(ar2);
             }
-        }
-        for (ElementInstance elementInstance : emptyElementInstances) {
-            elementInstance.setArchetypeReference(ar2);
         }
         return true;
     }
@@ -317,7 +319,7 @@ public class ElementInstanceCollectionUtil {
                     Binding binding = termBinding.getBindings().get(dvCT.getDefiningCode().getCodeString());
                     if (binding != null && binding.getCodes() != null && !binding.getCodes().isEmpty()) {
                         cf = binding.getCodes().get(0);
-                        for (CodePhrase codePhrase: binding.getCodes()) {
+                        for (CodePhrase codePhrase : binding.getCodes()) {
                             mappings.add(new TermMapping(codePhrase, Match.EQUIVALENT, null, null));
                         }
                     }
