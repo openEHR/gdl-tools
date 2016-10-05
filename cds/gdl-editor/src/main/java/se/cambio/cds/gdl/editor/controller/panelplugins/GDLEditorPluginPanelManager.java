@@ -21,7 +21,7 @@ public class GDLEditorPluginPanelManager {
     private GDLEditorPluginPanelManager() {
         GDLEditorConfig gdlEditorConfig = BeanProvider.getBean(GDLEditorConfig.class);
         String gdlEditorPlugins = gdlEditorConfig.getGdlEditorPlugins();
-        pluginPanelMap = new HashMap<String, AbstractPluginPanel>();
+        pluginPanelMap = new HashMap<>();
         if (gdlEditorPlugins != null && !gdlEditorPlugins.trim().isEmpty()) {
             try {
                 String[] gdlEditorPluginsClasses = gdlEditorPlugins.split(",");

@@ -8,7 +8,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySources({
-        @PropertySource(value = "classpath:default-default-gdl-editor-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "classpath:default-gdl-editor-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/gdl-editor-config.properties", ignoreResourceNotFound = true)
 })
 public class GDLEditorConfig {
