@@ -156,7 +156,7 @@ public class PredicateFilterManager {
     private boolean isMaxMin(ElementInstance elementInstance, ElementInstance maxElementInstance, boolean max) {
         int compare = DVUtil.compareDVs(elementInstance.getDataValue(), maxElementInstance.getDataValue());
         if (max) {
-            return compare > 0;
+            return compare >= 0;
         } else {
             return compare < 0;
         }
