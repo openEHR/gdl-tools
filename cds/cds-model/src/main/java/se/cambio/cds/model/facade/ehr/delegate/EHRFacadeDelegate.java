@@ -27,8 +27,8 @@ public interface EHRFacadeDelegate {
 		    throws InternalErrorException, PatientNotFoundException;
 
     List<String> fetchEhrIds(
-            DateTime fromTimestamp,
-            DateTime toTimestamp,
+            DateTime beforeTimestamp,
+            DateTime afterTimestamp,
             Collection<String> archetypeIds);
 }
 /*
