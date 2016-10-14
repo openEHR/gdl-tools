@@ -6,10 +6,7 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public interface EHRFacadeDelegate {
@@ -26,7 +23,7 @@ public interface EHRFacadeDelegate {
         Calendar date)
 		    throws InternalErrorException, PatientNotFoundException;
 
-    Collection<String> fetchEhrIds(
+    Set<String> fetchEhrIds(
             DateTime beforeTimestamp,
             DateTime afterTimestamp,
             Collection<String> archetypeIds);
