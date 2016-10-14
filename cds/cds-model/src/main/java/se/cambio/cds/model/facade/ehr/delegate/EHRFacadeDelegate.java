@@ -1,8 +1,7 @@
 package se.cambio.cds.model.facade.ehr.delegate;
 
+import org.joda.time.DateTime;
 import se.cambio.cds.model.facade.ehr.util.EHRDataStream;
-import se.cambio.cds.model.facade.ehr.vo.EHREventVO;
-import se.cambio.cds.model.facade.ehr.vo.EHRTriggerVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -15,41 +14,22 @@ import java.util.Map;
 
 public interface EHRFacadeDelegate {
 
-    String getServerHost();
-
-    Integer getServerPort();
-
-    Map<String,String> getEHRIds(Collection<String> externalEHRIds)
-	    throws InternalErrorException, PatientNotFoundException; 
-
-    Collection<String> queryForEHRIds(String aql)
-	    throws InternalErrorException;
-
-    List<List<Object>> query(String aql)
+    List<List<Object>> query(String sql)
             throws InternalErrorException;
 
-    EHRDataStream queryStream(String aql)
+    EHRDataStream queryStream(String sql)
             throws InternalErrorException;
 
     Map<String, Collection<ArchetypeReference>> queryEHRElements(
 	    Collection<String> ehrIds,
 	    Collection<ArchetypeReference> archetypeReferences,
         Calendar date)
-		    throws InternalErrorException, PatientNotFoundException;    
-   
-    boolean storeCDSResults(
-            String ehrId,
-            Collection<String> guideIds,
-            Collection<ArchetypeReference> archetypeReferences)
 		    throws InternalErrorException, PatientNotFoundException;
-    
-    void upsertEHRTriggerVO(EHRTriggerVO ehrTriggerVO)
-	    throws InternalErrorException;
 
-    EHREventVO getEHREventFromQueueMessage(Object message)
-        throws InternalErrorException;
-
-    String getEhrDataHashKey(String ehrId) throws InternalErrorException;
+    List<String> fetchEhrIds(
+            DateTime fromTimestamp,
+            DateTime toTimestamp,
+            Collection<String> archetypeIds);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
