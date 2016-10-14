@@ -26,7 +26,7 @@ public interface EHRFacadeDelegate {
         Calendar date)
 		    throws InternalErrorException, PatientNotFoundException;
 
-    List<String> fetchEhrIds(
+    Collection<String> fetchEhrIds(
             DateTime beforeTimestamp,
             DateTime afterTimestamp,
             Collection<String> archetypeIds);
