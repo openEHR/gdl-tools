@@ -239,7 +239,8 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     protected String retrieveTerm(String code, CodePhrase language)
             throws UnsupportedTerminologyException,
             UnsupportedLanguageException {
-        return getDescription(code);
+        String description = getDescription(code);
+        return description != null? description : "";
     }
 
     public Collection<String> getSupportedTerminologies() {

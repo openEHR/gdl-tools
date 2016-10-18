@@ -165,9 +165,10 @@ public class PredicateFilterManager {
     private void filterIsA(PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         final Set<CodePhrase> codePhrases = getCodePhrases(predicate);
+        ElementInstance elementInstance = null;
         try {
             for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
-                ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
+                elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
                 if (elementInstance != null && codePhrases != null) {
                     CodePhrase codePhrase = getCodePhrase(elementInstance);
                     if (codePhrase != null) {
@@ -182,6 +183,7 @@ public class PredicateFilterManager {
             }
             ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
         } catch (InvalidCodeException | UnsupportedTerminologyException e) {
+            archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
             logger.warn(e);
         }
     }
