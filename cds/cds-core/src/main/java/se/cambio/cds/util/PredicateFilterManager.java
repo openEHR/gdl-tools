@@ -165,11 +165,12 @@ public class PredicateFilterManager {
     private void filterIsA(PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         final Set<CodePhrase> codePhrases = getCodePhrases(predicate);
-        try {
-            for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
-                ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
-                if (elementInstance != null && codePhrases != null) {
-                    CodePhrase codePhrase = getCodePhrase(elementInstance);
+        ElementInstance elementInstance = null;
+        for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
+            elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
+            if (elementInstance != null && codePhrases != null) {
+                CodePhrase codePhrase = getCodePhrase(elementInstance);
+                try {
                     if (codePhrase != null) {
                         boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
                         if ((!isA && !negation) || (isA && negation)) {
@@ -178,12 +179,14 @@ public class PredicateFilterManager {
                     } else {
                         archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
                     }
+                } catch (InvalidCodeException | UnsupportedTerminologyException e) {
+                    archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
+                    logger.warn(e);
                 }
             }
-            ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
-        } catch (InvalidCodeException | UnsupportedTerminologyException e) {
-            logger.warn(e);
         }
+        ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
+
     }
 
     private CodePhrase getCodePhrase(ElementInstance elementInstance) {
