@@ -166,11 +166,11 @@ public class PredicateFilterManager {
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         final Set<CodePhrase> codePhrases = getCodePhrases(predicate);
         ElementInstance elementInstance = null;
-        try {
-            for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
-                elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
-                if (elementInstance != null && codePhrases != null) {
-                    CodePhrase codePhrase = getCodePhrase(elementInstance);
+        for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
+            elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
+            if (elementInstance != null && codePhrases != null) {
+                CodePhrase codePhrase = getCodePhrase(elementInstance);
+                try {
                     if (codePhrase != null) {
                         boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
                         if ((!isA && !negation) || (isA && negation)) {
@@ -179,13 +179,14 @@ public class PredicateFilterManager {
                     } else {
                         archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
                     }
+                } catch (InvalidCodeException | UnsupportedTerminologyException e) {
+                    archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
+                    logger.warn(e);
                 }
             }
-            ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
-        } catch (InvalidCodeException | UnsupportedTerminologyException e) {
-            archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
-            logger.warn(e);
         }
+        ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
+
     }
 
     private CodePhrase getCodePhrase(ElementInstance elementInstance) {
