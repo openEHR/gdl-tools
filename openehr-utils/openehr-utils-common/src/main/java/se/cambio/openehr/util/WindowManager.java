@@ -79,6 +79,10 @@ public class WindowManager {
         });
     }
 
+    public static void setFreeNow() {
+        getDefaultProgressManager().stop();
+    }
+
     public static void setBusy(String progressKey, String description) {
         getProgressManager(progressKey).changeLoadingText(description);
         getProgressManager(progressKey).start();
