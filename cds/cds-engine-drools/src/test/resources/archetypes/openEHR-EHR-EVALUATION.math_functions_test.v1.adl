@@ -1,0 +1,181 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.math_functions_test.v1
+
+concept
+	[at0000]
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"*(sv)">
+			use = <"*(sv)">
+			misuse = <"*(sv)">
+			copyright = <"*(sv)">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"CA39E9793DB8DC72E989CC4C90B3158A">
+	>
+
+definition
+	EVALUATION[at0000] matches {
+		data matches {
+			ITEM_TREE[at0000] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0001] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+                    ELEMENT[at0002] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+                    ELEMENT[at0003] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+                    ELEMENT[at0004] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+                    ELEMENT[at0005] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+                    ELEMENT[at0006] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+                    ELEMENT[at0007] occurrences matches {0..1} matches {
+						value matches {
+							C_DV_QUANTITY <
+                                property = <[openehr::349]>
+                                list = <
+                                    ["1"] = <
+                                        units = <"m">
+                                        magnitude = <|0.0..<1000.0|>
+                                        precision = <|1|>
+                                    >
+                                >
+                            >
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Math functions test">
+					description = <"">
+				>
+				["at0001"] = <
+					text = <"Log result">
+					description = <"">
+				>
+				["at0002"] = <
+					text = <"Log10 result">
+					description = <"">
+				>
+				["at0003"] = <
+					text = <"Sin result">
+					description = <"">
+				>
+				["at0004"] = <
+					text = <"Cos result">
+					description = <"">
+				>
+				["at0005"] = <
+					text = <"Sqrt">
+					description = <"">
+				>
+				["at0006"] = <
+					text = <"Round">
+					description = <"">
+				>
+				["at0007"] = <
+					text = <"toDegrees">
+					description = <"">
+				>
+			>
+		>
+	>

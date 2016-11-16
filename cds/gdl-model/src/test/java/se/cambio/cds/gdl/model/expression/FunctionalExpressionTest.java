@@ -1,39 +1,32 @@
 package se.cambio.cds.gdl.model.expression;
 
+import junit.framework.TestCase;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.FunctionalExpression;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.Variable;
-
-import junit.framework.TestCase;
 
 public class FunctionalExpressionTest extends TestCase {
 	
 	public void testCreateSimpleFunctionalExpression() {
-		FunctionalExpression fe = FunctionalExpression.create(Function.LN);
-		assertEquals("ln()", fe.toString());
+		FunctionalExpression fe = FunctionalExpression.create(new Function("log"));
+		assertEquals("log()", fe.toString());
 	}
 	
 	public void testCreateSimpleFunctionalExpressionWithSingleVariable() {
-		FunctionalExpression fe = FunctionalExpression.create(Function.LOG,
+		FunctionalExpression fe = FunctionalExpression.create(new Function("log"),
 				ConstantExpression.create("180"));
 		assertEquals("log(180)", fe.toString());
 	}
 	
 	public void testCreateFunctionalExpressionWithNestedVariables() {
-		List<ExpressionItem> items = new ArrayList<ExpressionItem>();
+		List<ExpressionItem> items = new ArrayList<>();
 		items.add(ConstantExpression.create("180"));
 		BinaryExpression be1 = BinaryExpression.create(
 				Variable.createByCode("gt0001"),
 				ConstantExpression.create("2"), 
 				OperatorKind.MULTIPLICATION);				
 		items.add(be1);
-		FunctionalExpression fe = FunctionalExpression.create(Function.MAX,
+		FunctionalExpression fe = FunctionalExpression.create(new Function("max"),
 				items);
 		assertEquals("max(180,($gt0001*2))", fe.toString());
 	}
