@@ -2,12 +2,7 @@ package se.cambio.cds.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.StringConstant;
-import se.cambio.cds.gdl.model.expression.Variable;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
@@ -56,8 +51,8 @@ public class ExpressionUtil {
                 rmName = OpenEHRDataValues.DV_DATE_TIME;
             } else {
                 ArchetypeElementVO aeVO = elementMap.get(var.getCode());
-                if (aeVO == null && !isFunction(var.getAttribute())){
-                    throw new InternalErrorException(new Exception("Archetype element not found for gtcode '"+var.getCode()+"'"));
+                if (aeVO == null && !isFunction(var.getAttribute())) {
+                    throw new InternalErrorException(new Exception("Archetype element not found for gtcode '" + var.getCode() + "'"));
                 }
                 if (aeVO != null) {
                     rmName = aeVO.getRMType();
@@ -66,7 +61,7 @@ public class ExpressionUtil {
             sb.append(getVariableWithAttributeStr(rmName, var));
             if (stats != null) {
                 if (isFunction(var.getAttribute())) {
-                    stats.get(RefStat.ATT_FUNCTIONS).add(var.getCode()+CODE_FUNCTION_SEPARATOR+var.getAttribute());
+                    stats.get(RefStat.ATT_FUNCTIONS).add(var.getCode() + CODE_FUNCTION_SEPARATOR + var.getAttribute());
                     stats.get(RefStat.ATT_FUNCTIONS_REF).add(var.getCode());
                 } else {
                     stats.get(RefStat.REFERENCE).add(var.getCode());
@@ -75,11 +70,21 @@ public class ExpressionUtil {
         } else if (expressionItem instanceof StringConstant) {
             String stringValue = expressionItem.toString();
             if (stringValue.startsWith("'") && stringValue.endsWith("'") && stringValue.length() > 1) {
-                stringValue = "\"" + stringValue.substring(1, stringValue.length()-1) + "\"";
+                stringValue = "\"" + stringValue.substring(1, stringValue.length() - 1) + "\"";
             }
             sb.append(stringValue);
         } else if (expressionItem instanceof ConstantExpression) {
             sb.append(formatConstantValue((ConstantExpression) expressionItem));
+        } else if (expressionItem instanceof FunctionalExpression) {
+            FunctionalExpression fe = (FunctionalExpression) expressionItem;
+            sb.append("Math." + fe.getFunction().toString()).append("(");
+            String postfix = "";
+            for (ExpressionItem feItem : fe.getItems()) {
+                sb.append(postfix);
+                sb.append(getArithmeticExpressionStr(elementMap, feItem, stats));
+                postfix = ", ";
+            }
+            sb.append(")");
         } else {
             throw new InternalErrorException(new Exception(
                     "Unknown expression '"
@@ -95,35 +100,35 @@ public class ExpressionUtil {
     public static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
         String value = exp.getValue();
         int i = value.indexOf(",");
-        if(i > 0 ){
+        if (i > 0) {
             //Convert time units to milliseconds
-            String units = value.substring(i+1).trim();
+            String units = value.substring(i + 1).trim();
             if (units.equals("a")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "31556926000L*" + d;
-            }else if (units.equals("mo")) {
+            } else if (units.equals("mo")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "2629743830L*" + d;
-            }else if (units.equals("wk")) {
+            } else if (units.equals("wk")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "604800000L*" + d;
-            }else if (units.equals("d")) {
+            } else if (units.equals("d")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "86400000L*" + d;
-            }else if (units.equals("h")) {
+            } else if (units.equals("h")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "3600000L*" + d;
-            }else if (units.equals("min")) {
+            } else if (units.equals("min")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "60000L*" + d;
-            }else if (units.equals("s")) {
+            } else if (units.equals("s")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "1000L*" + d;
             } else if (units.equals("S")) {
                 double d = Double.parseDouble(value.substring(0, i));
                 value = "" + d;
-            }else{
-                throw new InternalErrorException(new Exception("Unknown time units '"+units+"'"));
+            } else {
+                throw new InternalErrorException(new Exception("Unknown time units '" + units + "'"));
             }
         }
         return value;
@@ -137,9 +142,9 @@ public class ExpressionUtil {
             dvClassName = DVDefSerializer.getDVClassName(rmName);
         }
         // TODO fix setting currentDateTime
-        if(OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode()) && (var.getAttribute() == null || var.getAttribute().equals("value"))) {
+        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode()) && (var.getAttribute() == null || var.getAttribute().equals("value"))) {
             ret = "$" + OpenEHRConst.CURRENT_DATE_TIME_ID + ".getDateTime().getMillis()";
-        } else if("value".equals(var.getAttribute()) && ("DvDateTime".equals(dvClassName) || "DvDate".equals(dvClassName))) {
+        } else if ("value".equals(var.getAttribute()) && ("DvDateTime".equals(dvClassName) || "DvDate".equals(dvClassName))) {
             ret = "((" + dvClassName + ")$" + var.getCode() + getDataValueMethod(var.getCode()) + ").getDateTime().getMillis()";
         } else {
             if (isFunction(var.getAttribute())) {
@@ -147,7 +152,7 @@ public class ExpressionUtil {
                 if (OpenEHRDataValues.FUNCTION_COUNT.equals(var.getAttribute())) {
                     ret = "$" + var.getCode() + var.getAttribute();
                 }
-            }else{
+            } else {
                 //Attribute
                 ret = "((" + dvClassName + ")$" + var.getCode()
                         + getDataValueMethod(var.getCode()) + ").get"
@@ -165,7 +170,7 @@ public class ExpressionUtil {
         }
     }
 
-    public static boolean isFunction(String attribute){
+    public static boolean isFunction(String attribute) {
         return OpenEHRDataValuesUI.getFunctionNames().contains(attribute);
     }
 }
