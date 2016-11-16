@@ -122,7 +122,7 @@ TOKEN : /* SYMBOLS - common */
 | < SYM_FOR_ALL : "for_all" >
 | < SYM_MAX : "max" >
 | < SYM_MIN : "min" >
-| < SYM_MATH_FUNCTION : "abs" | "acos" | "asin" | "atan" | "cbrt" | "ceil" | "cos" | "cosh" | "exp" | "expml" | "floor" | "getExponent" | "log" | "log10" |  "log1p" | "nextUp" | "rint" | "round" |  "signum" |  "sin" | "sinh" |  "sqrt" |  "tan" | "tanh" | "toDegrees" | "toRadians" | "ulp">
+| < SYM_MATH_FUNCTION : "abs" | "ceil" | "exp" | "floor" | "log" | "log10" |  "log1p" | "round" | "sqrt">
 | < SYM_E : "e" >
 | < SYM_FIRED : "fired" >
 | < SYM_CURRENT_DATETIME : "currentDateTime" >
