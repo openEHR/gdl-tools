@@ -13,7 +13,7 @@ public enum Constant {
 
     @Override
     public String toString() {
-        return super.toString();
+        return this.name;
     }
 
     public String description() {
