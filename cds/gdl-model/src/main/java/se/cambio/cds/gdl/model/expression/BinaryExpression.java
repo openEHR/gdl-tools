@@ -65,7 +65,9 @@ public class BinaryExpression extends ExpressionItem {
 	
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		if(left instanceof BinaryExpression || left instanceof UnaryExpression) {
+		if(left instanceof BinaryExpression
+				|| left instanceof UnaryExpression
+				|| left instanceof FunctionalExpression) {
 			buf.append("(");
 			buf.append(left.toString());
 			buf.append(")");
@@ -88,8 +90,10 @@ public class BinaryExpression extends ExpressionItem {
 		if(OperatorKind.IS_A == operator) {
 			buf.append(" ");
 		}
-		
-		if(right instanceof BinaryExpression || right instanceof UnaryExpression) {
+
+		if(right instanceof BinaryExpression
+				|| right instanceof UnaryExpression
+				|| right instanceof FunctionalExpression) {
 			buf.append("(");
 			buf.append(right.toString());
 			buf.append(")");
@@ -102,7 +106,7 @@ public class BinaryExpression extends ExpressionItem {
 		}
 		return buf.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

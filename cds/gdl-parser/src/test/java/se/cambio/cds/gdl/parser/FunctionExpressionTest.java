@@ -6,15 +6,15 @@ import se.cambio.cds.gdl.model.expression.FunctionalExpression;
 
 public class FunctionExpressionTest extends ExpressionTestBase {
     public void test_can_parse_natural_logarithm_expression() throws Exception {
-        ExpressionItem expressionItem = Expressions.parse("ln($gt0001) ");
+        ExpressionItem expressionItem = Expressions.parse("log($gt0001) ");
         assertTrue("FunctionalExpression expected but got: " + expressionItem.getClass().getSimpleName(),
                 expressionItem instanceof FunctionalExpression);
-        assertEquals(((FunctionalExpression) expressionItem).getFunction(), Function.LN);
+        assertEquals(((FunctionalExpression) expressionItem).getFunction(), new Function("log"));
     }
 
     public void test_can_parse_base_10_logarithm_expression() throws Exception {
-        ExpressionItem expressionItem = Expressions.parse("log($gt0001) ");
+        ExpressionItem expressionItem = Expressions.parse("log10($gt0001) ");
         assertTrue(expressionItem instanceof FunctionalExpression);
-        assertEquals(((FunctionalExpression) expressionItem).getFunction(), Function.LOG);
+        assertEquals(((FunctionalExpression) expressionItem).getFunction(), new Function("log10"));
     }
 }

@@ -228,7 +228,7 @@ public class DialogExpressionEditor extends DialogEditor {
 
     public static ExpressionItem parse(String value) throws Exception {
         //This needs to be done to trick the parser to accept the expression "gtXXXX.attribute"
-        if (!value.endsWith(")")) {
+        if (!value.startsWith("(") || !value.endsWith(")")) {
             value = "(" + value + ")";
         }
         value = "$gt0001.value=" + value;

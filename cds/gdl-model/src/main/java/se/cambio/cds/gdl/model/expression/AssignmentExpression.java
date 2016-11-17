@@ -69,12 +69,12 @@ public class AssignmentExpression extends ExpressionItem {
 		StringBuffer buf = new StringBuffer();
 		buf.append(variable);
 		buf.append("=");
-		boolean isBinaryExpression = assignment instanceof BinaryExpression;
-		if(isBinaryExpression) {
+		boolean isComplexExpression = assignment instanceof BinaryExpression || assignment instanceof UnaryExpression || assignment instanceof FunctionalExpression;
+		if(isComplexExpression) {
 			buf.append("(");
 		}
 		buf.append(assignment);
-		if(isBinaryExpression) {
+		if(isComplexExpression) {
 			buf.append(")");
 		}
 		return buf.toString();
