@@ -56,6 +56,13 @@
 				<include>gdl.ico</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/target/generated-docs</directory>
+			<outputDirectory>docs</outputDirectory>
+			<includes>
+				<include>*.pdf</include>
+			</includes>
+		</fileSet>
 		<!-- add archetype folder 
 		<fileSet>
 			<directory>../cm/archetypes</directory>
