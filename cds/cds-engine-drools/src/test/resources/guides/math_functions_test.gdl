@@ -23,20 +23,11 @@
 					["gt0011"] = (ELEMENT_BINDING) <
 						path = <"/data[at0000]/items[at0002]">
 					>
-					["gt0012"] = (ELEMENT_BINDING) <
-						path = <"/data[at0000]/items[at0003]">
-					>
-					["gt0013"] = (ELEMENT_BINDING) <
-						path = <"/data[at0000]/items[at0004]">
-					>
 					["gt0014"] = (ELEMENT_BINDING) <
 						path = <"/data[at0000]/items[at0005]">
 					>
 					["gt0015"] = (ELEMENT_BINDING) <
 						path = <"/data[at0000]/items[at0006]">
-					>
-					["gt0016"] = (ELEMENT_BINDING) <
-						path = <"/data[at0000]/items[at0007]">
 					>
 				>
 			>
@@ -50,14 +41,6 @@
 				then = <"$gt0011.precision=3", "$gt0011.magnitude=(log10(3))">
 				priority = <6>
 			>
-			["gt0006"] = (RULE) <
-				then = <"$gt0012.precision=3", "$gt0012.magnitude=(sin(1))">
-				priority = <5>
-			>
-			["gt0007"] = (RULE) <
-				then = <"$gt0013.precision=3", "$gt0013.magnitude=(cos(1))">
-				priority = <4>
-			>
 			["gt0008"] = (RULE) <
 				then = <"$gt0014.precision=3", "$gt0014.magnitude=(sqrt(5))">
 				priority = <3>
@@ -65,10 +48,6 @@
 			["gt0009"] = (RULE) <
 				then = <"$gt0015.precision=3", "$gt0015.magnitude=(round(1.2))">
 				priority = <2>
-			>
-			["gt0010"] = (RULE) <
-				then = <"$gt0016.precision=3", "$gt0016.magnitude=(toDegrees(1))">
-				priority = <1>
 			>
 		>
 	>

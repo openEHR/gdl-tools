@@ -57,7 +57,7 @@ public class MathFunctionsTest extends GDLTestCase {
         List<String> guideIds = new ArrayList<>();
         guideIds.add("math_functions_test");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
-        assertEquals(7, rer.getFiredRules().size());
+        assertEquals(4, rer.getFiredRules().size());
         ArchetypeReference mathResultAR = null;
         for (ArchetypeReference ar : rer.getArchetypeReferences()) {
             if ("openEHR-EHR-EVALUATION.math_functions_test.v1". equals(ar.getIdArchetype())) {
@@ -71,21 +71,12 @@ public class MathFunctionsTest extends GDLTestCase {
         DataValue log10DV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-EVALUATION.math_functions_test.v1/data[at0000]/items[at0002]").getDataValue();
         assertThat(((DvQuantity) log10DV).getMagnitude(), closeTo(0.477, 0.001));
         assertThat(log10DV, instanceOf(DvQuantity.class));
-        DataValue sinDV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-EVALUATION.math_functions_test.v1/data[at0000]/items[at0003]").getDataValue();
-        assertThat(((DvQuantity) sinDV).getMagnitude(), closeTo(0.841, 0.001));
-        assertThat(sinDV, instanceOf(DvQuantity.class));
-        DataValue cosDV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-EVALUATION.math_functions_test.v1/data[at0000]/items[at0004]").getDataValue();
-        assertThat(((DvQuantity) cosDV).getMagnitude(), closeTo(0.540, 0.001));
-        assertThat(cosDV, instanceOf(DvQuantity.class));
         DataValue sqrtDV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-EVALUATION.math_functions_test.v1/data[at0000]/items[at0005]").getDataValue();
         assertThat(((DvQuantity) sqrtDV).getMagnitude(), closeTo(2.236, 0.001));
         assertThat(sqrtDV, instanceOf(DvQuantity.class));
         DataValue roundDV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-EVALUATION.math_functions_test.v1/data[at0000]/items[at0006]").getDataValue();
         assertThat(((DvQuantity) roundDV).getMagnitude(), closeTo(1.000, 0.001));
         assertThat(roundDV, instanceOf(DvQuantity.class));
-        DataValue toDegreesDV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-EVALUATION.math_functions_test.v1/data[at0000]/items[at0007]").getDataValue();
-        assertThat(((DvQuantity) toDegreesDV).getMagnitude(), closeTo(57.295, 0.001));
-        assertThat(toDegreesDV, instanceOf(DvQuantity.class));
     }
 }
 
