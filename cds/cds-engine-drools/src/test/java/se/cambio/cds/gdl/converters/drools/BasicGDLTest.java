@@ -446,6 +446,17 @@ public class BasicGDLTest extends GDLTestCase {
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
     }
+
+
+    @Test
+    public void shouldDetectConflictingPredicates() {
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.YEAR, -2);
+        ArchetypeReference ar = generateWeightArchetypeReference(date, 78.0);
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("conflicting_predicates"), elementInstances);
+        assertEquals(1, rer.getFiredRules().size());
+    }
 }
 
 

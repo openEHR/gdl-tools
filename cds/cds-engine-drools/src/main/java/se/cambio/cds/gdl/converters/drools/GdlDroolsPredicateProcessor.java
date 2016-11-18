@@ -77,9 +77,8 @@ public class GdlDroolsPredicateProcessor {
             stringBuffer.append("ElementInstance(id==\""
                     + idElement + "\", "
                     + predicateArchetypeRef
-                    + "DVUtil.areDomainsCompatible($" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ".getIdDomain(), archetypeReference.getIdDomain()),"
-                    + "DVUtil.checkMaxMin($predDV" + predicateCount + ", dataValue, \"" + op.getSymbol() + "\")"
-                    +"))\n");
+                    + "DVUtil.checkMaxMin($predDV" + predicateCount + ", dataValue, \"" + op.getSymbol() + "\", $" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ", archetypeReference)"
+                    + "))\n");
         }else{
             String guideId = gdlDroolsConverter.getGuide().getId();
             throw new CompilationErrorException("Guide=" + guideId + ", Element not found '" + idElement + "'");
