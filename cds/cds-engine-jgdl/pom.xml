@@ -11,8 +11,6 @@
     <artifactId>cds-engine-jgdl</artifactId>
     <name>CDS JGDL Engine</name>
     <description>CDS JGDL engine</description>
-
-
     <dependencies>
         <dependency>
             <groupId>se.cambio.cds</groupId>
@@ -22,7 +20,7 @@
         <dependency>
             <groupId>se.cambio.cds</groupId>
             <artifactId>jgdl</artifactId>
-            <version>1.0.87</version>
+            <version>1.0.1+build-99</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
