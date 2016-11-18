@@ -79,7 +79,7 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         }else{
             throw new IllegalStateException("No data value set");
         }
-        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         return new BinaryExpression(
                 new Variable(null,name, path),
                 constantExpression,
@@ -93,7 +93,7 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         if (aerlde!=null){
             ArchetypeElementVO archetypeElementVO = aerlde.getValue();
             if (archetypeElementVO!=null){
-                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
                 sb.append(name+"="+ DVDefSerializer.getReadableValue(getDataValueRuleLineElement().getValue(), null));
             }else{
                 Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");

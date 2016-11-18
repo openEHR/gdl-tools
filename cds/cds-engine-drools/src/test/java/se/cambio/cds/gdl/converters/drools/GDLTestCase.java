@@ -83,10 +83,10 @@ public abstract class GDLTestCase {
 
     @Before
     public void initializeCM() throws URISyntaxException, IOException {
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesResource.getFile().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidelinesResource.getFile().getPath());
+        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
+        UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
+        UserConfigurationManager.instance().setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
     }
 
     public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code) {

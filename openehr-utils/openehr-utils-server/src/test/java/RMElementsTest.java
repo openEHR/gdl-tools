@@ -1,5 +1,4 @@
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openehr.rm.datatypes.quantity.ProportionKind;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -24,8 +23,8 @@ public class RMElementsTest {
 
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, RMElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, RMElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
+        UserConfigurationManager.instance().setArchetypesFolderPath(RMElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+        UserConfigurationManager.instance().setTemplatesFolderPath(RMElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
     }
 
     @Test

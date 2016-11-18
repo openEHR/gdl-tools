@@ -30,7 +30,7 @@ public class PersistenceTest {
 
     @Test
     public void shouldAllowRoundTripForAllCMElements() throws InternalErrorException, InstanceNotFoundException, URISyntaxException {
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, PersistenceTest.class.getClassLoader().getResource("").toURI().getPath());
+        UserConfigurationManager.instance().setArchetypesFolderPath(PersistenceTest.class.getClassLoader().getResource("").toURI().getPath());
 
         ArchetypeDTO archetypeDTO =
                 new ArchetypeDTOBuilder()

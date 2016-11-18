@@ -1,291 +1,211 @@
 package se.cambio.openehr.util;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
-import javax.swing.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidParameterException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-//TODO use Spring
+import static java.lang.String.format;
+
+@Configuration
+@PropertySource(value = "file:conf/UserConfig.properties", ignoreResourceNotFound = true)
 public class UserConfigurationManager {
 
-    public static String ARCHETYPES_FOLDER_KW = "ArchetypesFolder";
-    public static String TEMPLATES_FOLDER_KW = "TemplatesFolder";
-    public static String GUIDES_FOLDER_KW = "GuidesFolder";
-    public static String TERMINOLOGIES_FOLDER_KW = "TerminologiesFolder";
-    public static String ONTOLOGIES_FOLDER_KW = "OntologiesFolder";
-    public static String DOCUMENTS_FOLDER_KW = "DocumentsFolder";
+    private static String ARCHETYPES_FOLDER = "ArchetypesFolder";
+    private static String TEMPLATES_FOLDER = "TemplatesFolder";
+    private static String GUIDELINES_FOLDER = "GuidesFolder";
+    private static String TERMINOLOGIES_FOLDER = "TerminologiesFolder";
+    private static String DOCUMENTS_FOLDER = "DocumentsFolder";
+    private static String CURRENT_DATE_TIME = "CurrentDateTime";
+    private static String LANGUAGE = "Messages/Language";
+    private static String COUNTRY = "Messages/Country";
+    private static String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
+    private static List<String> SUPPORTED_RULE_ENGINES = Arrays.asList("rule-drools-engine", "rule-jgdl-engine");
 
-    public static String CURRENT_DATE_TIME_KW = "CurrentDateTime";
-    public static final String LANGUAGE = "Messages/Language";
-    public static final String COUNTRY = "Messages/Country";
-    public static final String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
+    private Map<String, CmFolder> cmFolderMap = new HashMap<>();
+    private String activeRuleEngine;
+    private String language;
+    private String country;
+    private Date currentDateTime;
+    private boolean currentDateTimeChecked = false;
 
-    public static final String DEFAULT_LANGUAGE = "en";
-    public static final String DEFAULT_COUNTRY = "EN";
-    public static final String DEFAULT_ACTIVE_RULE_ENGINE = "rule-drools-engine";
+    private Logger logger = LogManager.getLogger(UserConfigurationManager.class);
 
-    private static final String CONFIGURATION_FOLDER = "conf";
-    private static final String USER_CONFIGURATION_FOLDER = ".gdleditor";
-    private static final String CONFIGURATION_FILE = "UserConfig.properties";
-    private static Map<Object, Object> parameters;
-    private static Map<String, CmFolder> cmFolderMap = new HashMap<>();
-    private static File _configFile = null;
+    private static UserConfigurationManager instance;
 
-    private static Map<String, String> _defaultValues = new HashMap<>();
-    public static List<String> SUPPORTED_RULE_ENGINES = Arrays.asList("rule-drools-engine","rule-jgdl-engine");
-    static {
-        _defaultValues.put(ARCHETYPES_FOLDER_KW, "archetypes");
-        _defaultValues.put(TEMPLATES_FOLDER_KW, "templates");
-        _defaultValues.put(GUIDES_FOLDER_KW, "guidelines");
-        _defaultValues.put(TERMINOLOGIES_FOLDER_KW, "terminologies");
-        _defaultValues.put(ONTOLOGIES_FOLDER_KW, "ontologies");
-        _defaultValues.put(DOCUMENTS_FOLDER_KW, "docs");
-        _defaultValues.put(CURRENT_DATE_TIME_KW, null);
-        _defaultValues.put(LANGUAGE, DEFAULT_LANGUAGE);
-        _defaultValues.put(COUNTRY, DEFAULT_COUNTRY);
-        _defaultValues.put(ACTIVE_RULE_ENGINE, DEFAULT_ACTIVE_RULE_ENGINE);
+    @Autowired
+    private Environment environment;
 
-	/*         
-     * We use a synchronized map because it will be filled by using a
-	 * lazy strategy.
-	 */
-        InputStream is = null;
-        parameters = Collections.synchronizedMap(new HashMap<>());
-        try {
-            _configFile = getConfigFile();
-            if (_configFile == null || !_configFile.exists()) {
-                //Read from jar
-                is = UserConfigurationManager.class.getClassLoader().getResourceAsStream(CONFIGURATION_FILE);
-                if (is == null) {
-                    //User user configuration directory
-                    String path = System.getProperty("user.home") + File.separator + USER_CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE;
-                    _configFile = new File(path);
-                    if (_configFile.exists()) {
-                        is = new FileInputStream(_configFile);
-                        Logger.getLogger(UserConfigurationManager.class).info("*** Using user home folder for '" + CONFIGURATION_FILE + "'");
-                    }
-                } else {
-                    Logger.getLogger(UserConfigurationManager.class).info("*** Using resource for '" + CONFIGURATION_FILE + "'");
-                }
+    public UserConfigurationManager() {
+    }
+
+    public CmFolder getArchetypeFolder() {
+        return getCmFolder(ARCHETYPES_FOLDER, "archetypes");
+    }
+
+    public CmFolder getTemplateFolder() {
+        return getCmFolder(TEMPLATES_FOLDER, "templates");
+    }
+
+    public CmFolder getGuidesFolder() {
+        return getCmFolder(GUIDELINES_FOLDER, "guidelines");
+    }
+
+    public CmFolder getTerminologiesFolder() {
+        return getCmFolder(TERMINOLOGIES_FOLDER, "terminologies");
+    }
+
+    public String getLanguage() {
+        if (language == null) {
+            language = environment.getProperty(LANGUAGE, "en");
+        }
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCountryCode() {
+        if (country == null) {
+            country = environment.getProperty(COUNTRY, "EN");
+        }
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getActiveRuleEngine() {
+        if (activeRuleEngine == null) {
+            activeRuleEngine = environment.getProperty(ACTIVE_RULE_ENGINE, "rule-drools-engine");
+        }
+        return activeRuleEngine;
+    }
+
+    public List<String> getSupportedRuleEngines() {
+        return SUPPORTED_RULE_ENGINES;
+    }
+
+    public void setActiveRuleEngine(String ruleEngine) {
+        this.activeRuleEngine = ruleEngine;
+    }
+
+    public File getDocumentsFolder() {
+        return new File(environment.getProperty(DOCUMENTS_FOLDER, "docs"));
+    }
+
+    public Date getCurrentDateTime() {
+        if (!currentDateTimeChecked) {
+            currentDateTimeChecked = true;
+            String currentDateStr = environment.getProperty(CURRENT_DATE_TIME, "");
+            if (currentDateStr.isEmpty()) {
+                return Calendar.getInstance().getTime();
             } else {
-                is = new FileInputStream(_configFile);
-                Logger.getLogger(UserConfigurationManager.class).info("*** Using '" + CONFIGURATION_FOLDER + "' folder for '" + CONFIGURATION_FILE + "'");
+                currentDateTime = new DateTime(currentDateStr).toDate();
             }
-            if (is != null) {
-                //We use an extended properties to be able to load paths defined with backslash (\)
-                PropertiesEx properties = new PropertiesEx();
-                properties.load(is);
-                is.close();
-                parameters.putAll(properties);
-            }
-
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
-        } finally {
-            IOUtils.closeQuietly(is);
         }
+        return currentDateTime;
     }
 
-    private static File getConfigFile() {
-        try {
-            File jarFile = new File(UserConfigurationManager.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            File parentFile = jarFile.getParentFile();
-            if(parentFile != null) {
-                File grandParentFile = parentFile.getParentFile();
-                if(grandParentFile != null) {
-                    File[] files = grandParentFile.listFiles();
-                    if(files != null) {
-                        for (File file : files) {
-                            if (file.isDirectory() && file.getName().equals(CONFIGURATION_FOLDER) && file.listFiles() != null) {
-                                File[] files2 = file.listFiles();
-                                if(files2 != null) {
-                                    for (File file2 : files2) {
-                                        if (file2.getName().equals(CONFIGURATION_FILE)) {
-                                            return file2;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-			}
-        } catch (Throwable t) {
-            //Problem finding config folder
-            //Loggr.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
-        }
-        try {
-            //Current folder
-            File file = new File(CONFIGURATION_FOLDER + File.separator + CONFIGURATION_FILE);
-            if (file.exists()) {
-                return file;
-            }
-
-        } catch (Throwable t2) {
-            //Problem finding config folder
-            //Logger.getLogger(UserConfigurationManager.class).warn("CONF Folder not found "+t.getMessage());
-        }
-        return null;
+    public void setCurrentDateTime(Date currentDateTime) {
+        this.currentDateTime = currentDateTime;
     }
 
-    private UserConfigurationManager() {
+    public boolean hasCustomCurrentDateTime() {
+        getCurrentDateTime();
+        return currentDateTime != null;
     }
 
-    public static String getParameter(String name)
-            throws MissingConfigurationParameterException {
-        String value = (String) parameters.get(name);
-        if (value == null) {
-            throw new MissingConfigurationParameterException(name);
-        }
-        return value;
-
+    public void setArchetypesFolderPath(String archetypesFolderPath) {
+        setCmFolder(ARCHETYPES_FOLDER, archetypesFolderPath);
     }
 
-    public static void loadParameters(Hashtable<Object, Object> usrConfig) {
-        parameters.putAll(usrConfig);
+    public void setTemplatesFolderPath(String archetypesFolderPath) {
+        setCmFolder(TEMPLATES_FOLDER, archetypesFolderPath);
     }
 
-    public static Object getObjectParameter(String name)
-            throws MissingConfigurationParameterException {
-        Object value = parameters.get(name);
-        if (value == null) {
-            throw new MissingConfigurationParameterException(name);
-        }
-        return value;
+    public void setTerminologiesFolderPath(String archetypesFolderPath) {
+        setCmFolder(TERMINOLOGIES_FOLDER, archetypesFolderPath);
     }
 
-    public static void setParameter(String name, String value) {
-        parameters.put(name, value);
+    public void setGuidelinesFolderPath(String archetypesFolderPath) {
+        setCmFolder(GUIDELINES_FOLDER, archetypesFolderPath);
     }
 
-    public static String getParameterWithDefault(String keyword) {
-        String value = null;
-        try {
-            value = getParameter(keyword);
-        } catch (MissingConfigurationParameterException e) {
-            //empty
-        }
-        if (value == null) {
-            return _defaultValues.get(keyword);
-        } else {
-            return value;
-        }
-    }
-
-    public static Date getCustomDate() {
-        try {
-            String value = getParameterWithDefault(CURRENT_DATE_TIME_KW);
-            if (value != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                return dateFormat.parse(value);
-            }
-        } catch (ParseException e) {
-            //empty
-        }
-        return null;
-    }
-
-    public static CmFolder getArchetypeFolder() {
-        return getCmFolder(ARCHETYPES_FOLDER_KW);
-    }
-
-    public static CmFolder getTemplateFolder() {
-        return getCmFolder(TEMPLATES_FOLDER_KW);
-    }
-
-    public static CmFolder getGuidesFolder() {
-        return getCmFolder(GUIDES_FOLDER_KW);
-    }
-
-    public static CmFolder getTerminologiesFolder() {
-        return getCmFolder(TERMINOLOGIES_FOLDER_KW);
-    }
-
-    public static CmFolder getOntologiesFolder() {
-        return getCmFolder(ONTOLOGIES_FOLDER_KW);
-    }
-
-    public static File getDocumentsFolder(){
-        String folderStr = getParameterWithDefault(DOCUMENTS_FOLDER_KW);
-        return new File(folderStr);
-    }
-
-    public static void setCmFolder(String parameter, String path) {
-        CmFolder cmFolder = getCmFolder(parameter);
+    private void setCmFolder(String parameter, String path) {
+        CmFolder cmFolder = getCmFolder(parameter, "");
         File folder = new File(path);
+        folder.mkdirs();
         if (!folder.exists() || !folder.isDirectory()) {
-            throw new InvalidParameterException("Invalid path '" + path + "' given. Trying to set parameter " + parameter);
+            InvalidParameterException invalidParameterException = new InvalidParameterException(format("Invalid path '%s' given. Trying to set parameter %s", path, parameter));
+            logger.error(invalidParameterException);
+            throw invalidParameterException;
         }
         cmFolder.setFolder(folder);
     }
 
-    public static CmFolder getCmFolder(String parameter) {
-        CmFolder cmFolder = cmFolderMap.get(parameter);
+    private CmFolder getCmFolder(String parameterName, String defaultValue) {
+        CmFolder cmFolder = cmFolderMap.get(parameterName);
         if (cmFolder == null) {
-            String path = getParameterWithDefault(parameter);
-            File folder = new File(".");
+            File folder = new File(System.getProperty("user.home"), defaultValue);
+            String path = environment.getProperty(parameterName, defaultValue);
             if (path != null) {
-                folder = new File(path);
+                File pathFile = new File(path);
+                if (pathFile.isDirectory()) {
+                    folder = pathFile;
+                } else {
+                    pathFile.mkdirs();
+                    folder = pathFile;
+                }
             }
             cmFolder = new CmFolder(folder);
-            cmFolderMap.put(parameter, cmFolder);
+            cmFolderMap.put(parameterName, cmFolder);
         }
         return cmFolder;
     }
 
-    public static String getLanguage() {
-        return getParameterWithDefault(LANGUAGE);
-    }
-
-    public static String getCountryCode() {
-        return getParameterWithDefault(COUNTRY);
-    }
-
-    public static void setParameterWithDefault(String keyword, String value) {
-        setParameter(keyword, value);
-    }
-
-    public static String getActiveRuleEngine() {
-        return getParameterWithDefault(ACTIVE_RULE_ENGINE);
-    }
-
-    public static boolean saveConfig() {
-        OutputStream out = null;
+    public void saveConfig() {
+        File configFile = new File("conf/UserConfig.properties");
+        configFile.getParentFile().mkdirs();
+        UserConfigurationManager instance = instance();
         try {
-            if (_configFile != null) {
-                _configFile.getParentFile().mkdirs();
-                _configFile.createNewFile();
-                out = new FileOutputStream(_configFile);
+            configFile.createNewFile();
+            try (OutputStream out = new FileOutputStream(configFile)) {
                 Properties properties = new Properties();
-                properties.putAll(parameters);
+                properties.put(ARCHETYPES_FOLDER, getArchetypeFolder().getFolder().getAbsolutePath());
+                properties.put(TEMPLATES_FOLDER, getTemplateFolder().getFolder().getAbsolutePath());
+                properties.put(GUIDELINES_FOLDER, getGuidesFolder().getFolder().getAbsolutePath());
+                properties.put(TERMINOLOGIES_FOLDER, getTerminologiesFolder().getFolder().getAbsolutePath());
+                properties.put(LANGUAGE, getLanguage());
+                properties.put(COUNTRY, getCountryCode());
+                if (hasCustomCurrentDateTime()) {
+                    properties.put(CURRENT_DATE_TIME, new DateTime(getCurrentDateTime()).toString());
+                }
+                properties.put(ACTIVE_RULE_ENGINE, getActiveRuleEngine());
                 properties.store(out, "User Config");
             }
-            return true;
-        } catch (IOException e) {
-            ExceptionHandler.handle(e);
-            JOptionPane.showMessageDialog(null, "Error saving config file", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    //empty
-                }
-            }
-
+        } catch (Exception e) {
+            logger.error(e);
+            throw new IllegalArgumentException(format("Error saving configuration file %s : %s", configFile.getAbsolutePath(), e.getMessage()));
         }
+    }
+
+    public static UserConfigurationManager instance() {
+        if (instance == null) {
+            instance = BeanProvider.getBean(UserConfigurationManager.class);
+        }
+        return instance;
     }
 }
 /*

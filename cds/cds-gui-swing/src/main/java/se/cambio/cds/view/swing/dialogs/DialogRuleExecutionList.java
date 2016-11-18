@@ -137,7 +137,7 @@ public class DialogRuleExecutionList extends JDialog{
             for (String lang : _rulesViewMap.keySet()) {
                 languageComboBox.addItem(lang);
             }
-            languageComboBox.setSelectedItem(UserConfigurationManager.getLanguage());
+            languageComboBox.setSelectedItem(UserConfigurationManager.instance().getLanguage());
             languageComboBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     refresh();

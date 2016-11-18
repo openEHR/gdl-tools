@@ -11,6 +11,6 @@ import se.cambio.openehr.util.UserConfigurationManager;
 public class FileGuideDAO extends FileGenericCMElementDAO<GuideDTO> {
 
     public FileGuideDAO() {
-        super(GuideDTO.class, UserConfigurationManager.getGuidesFolder());
+        super(GuideDTO.class, UserConfigurationManager.instance().getGuidesFolder());
     }
 }

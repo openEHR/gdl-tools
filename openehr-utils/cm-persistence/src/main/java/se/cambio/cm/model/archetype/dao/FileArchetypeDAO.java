@@ -11,6 +11,6 @@ import se.cambio.openehr.util.UserConfigurationManager;
 public class FileArchetypeDAO extends FileGenericCMElementDAO<ArchetypeDTO> {
 
     public FileArchetypeDAO() {
-        super(ArchetypeDTO.class, UserConfigurationManager.getArchetypeFolder());
+        super(ArchetypeDTO.class, UserConfigurationManager.instance().getArchetypeFolder());
     }
 }

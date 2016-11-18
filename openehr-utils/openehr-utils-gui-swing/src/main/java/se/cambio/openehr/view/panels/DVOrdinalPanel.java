@@ -16,7 +16,7 @@ public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
     public DVOrdinalPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
         super(idElement, idTemplate, allowNull, requestFocus);
         for (OrdinalVO ordinalVO : getOrdinals().getOrdinalVOs(idTemplate, idElement)) {
-            String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.getLanguage());
+            String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.instance().getLanguage());
             insertOption(ordinalVO.getCode(), ordinalVO.getValue() + " - " + name, ordinalVO.getDescription());
         }
     }
@@ -34,7 +34,7 @@ public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
     public DataValue getDataValue() {
         String ordinalKey = (String)getComboBox().getSelectedItem();
         OrdinalVO ordinalVO = getOrdinals().getOrdinalVO(getIdTemplate(), getIdElement(), ordinalKey);
-        String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.getLanguage());
+        String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.instance().getLanguage());
         return new DvOrdinal(ordinalVO.getValue(), name,ordinalVO.getTerminology(), ordinalVO.getCode());
     }
 

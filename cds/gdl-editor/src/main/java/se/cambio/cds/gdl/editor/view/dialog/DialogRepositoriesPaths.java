@@ -9,48 +9,31 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-/**
- * @author icorram
- *
 
+import static java.lang.String.format;
 
- */
 public class DialogRepositoriesPaths extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
     private JFileChooser _archetypesFolderChooser = null;
     private JFileChooser _templatesFolderChooser = null;
     private JFileChooser _terminologiesFolderChooser = null;
-    private JFileChooser _ontologiesFolderChooser = null;
     private JFileChooser _guidesFolderChooser = null;
 
     private FileSelectionPanel archetypesRepositoryFolderPanel = null;
     private FileSelectionPanel templatesRepositoryFolderPanel = null;
     private FileSelectionPanel terminologiesRepositoryFolderPanel = null;
-    private FileSelectionPanel ontologiesRepositoryFolderPanel = null;
     private FileSelectionPanel guidesRepositoryFolderPanel = null;
 
-    //private String _archetypeFolderStr = null;
-    //private String _templateFolderStr = null;
 
-    /**
-     * This is the default constructor
-     */
     public DialogRepositoriesPaths() {
         super(EditorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SelectRepositories"),
-                new Dimension(500, 380),true);
+                new Dimension(500, 380), true);
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void initialize() {
+    private void initialize() {
         getJPanel().setLayout(new BorderLayout());
         JPanel panelAux = new JPanel();
         panelAux.setLayout(new BoxLayout(panelAux, BoxLayout.Y_AXIS));
@@ -59,7 +42,6 @@ public class DialogRepositoriesPaths extends DialogEditor {
         panelAux.add(getArchetypeRepositoryFolderPanel());
         panelAux.add(getTemplateRepositoryFolderPanel());
         panelAux.add(getTerminologiesRepositoryFolderPanel());
-        panelAux.add(getOntologiesRepositoryFolderPanel());
         panelAux.add(getGuidesRepositoryFolderPanel());
         JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelAux2.add(getAcceptButton());
@@ -67,8 +49,8 @@ public class DialogRepositoriesPaths extends DialogEditor {
         getJPanel().add(panelAux2, BorderLayout.SOUTH);
     }
 
-    private FileSelectionPanel getArchetypeRepositoryFolderPanel(){
-        if (archetypesRepositoryFolderPanel==null){
+    private FileSelectionPanel getArchetypeRepositoryFolderPanel() {
+        if (archetypesRepositoryFolderPanel == null) {
             archetypesRepositoryFolderPanel = new FileSelectionPanel(getArchetypeFolderChooser());
             archetypesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ArchetypeRepository")));
@@ -77,19 +59,18 @@ public class DialogRepositoriesPaths extends DialogEditor {
         return archetypesRepositoryFolderPanel;
     }
 
-    public JFileChooser getArchetypeFolderChooser(){
-        if (_archetypesFolderChooser==null){
+    private JFileChooser getArchetypeFolderChooser() {
+        if (_archetypesFolderChooser == null) {
             _archetypesFolderChooser = new JFileChooser();
-            String path = UserConfigurationManager.getParameterWithDefault(UserConfigurationManager.ARCHETYPES_FOLDER_KW);
-            _archetypesFolderChooser.setSelectedFile(new File(path));
+            _archetypesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getArchetypeFolder().getFolder());
             _archetypesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             _archetypesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectArchetypeRepository"));
         }
         return _archetypesFolderChooser;
     }
 
-    private FileSelectionPanel getTemplateRepositoryFolderPanel(){
-        if (templatesRepositoryFolderPanel==null){
+    private FileSelectionPanel getTemplateRepositoryFolderPanel() {
+        if (templatesRepositoryFolderPanel == null) {
             templatesRepositoryFolderPanel = new FileSelectionPanel(getTemplateFolderChooser());
             templatesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("TemplateRepository")));
@@ -98,18 +79,18 @@ public class DialogRepositoriesPaths extends DialogEditor {
         return templatesRepositoryFolderPanel;
     }
 
-    public JFileChooser getTemplateFolderChooser(){
-        if (_templatesFolderChooser==null){
+    private JFileChooser getTemplateFolderChooser() {
+        if (_templatesFolderChooser == null) {
             _templatesFolderChooser = new JFileChooser();
-            _templatesFolderChooser.setSelectedFile(new File(UserConfigurationManager.getParameterWithDefault(UserConfigurationManager.TEMPLATES_FOLDER_KW)));
+            _templatesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getTemplateFolder().getFolder());
             _templatesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             _templatesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectTemplateRepository"));
         }
         return _templatesFolderChooser;
     }
 
-    private FileSelectionPanel getTerminologiesRepositoryFolderPanel(){
-        if (terminologiesRepositoryFolderPanel==null){
+    private FileSelectionPanel getTerminologiesRepositoryFolderPanel() {
+        if (terminologiesRepositoryFolderPanel == null) {
             terminologiesRepositoryFolderPanel = new FileSelectionPanel(getTerminologiesFolderChooser());
             terminologiesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("TerminologiesRepository")));
@@ -118,39 +99,18 @@ public class DialogRepositoriesPaths extends DialogEditor {
         return terminologiesRepositoryFolderPanel;
     }
 
-    public JFileChooser getTerminologiesFolderChooser(){
-        if (_terminologiesFolderChooser==null){
+    private JFileChooser getTerminologiesFolderChooser() {
+        if (_terminologiesFolderChooser == null) {
             _terminologiesFolderChooser = new JFileChooser();
-            String path = UserConfigurationManager.getParameterWithDefault(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW);
-            _terminologiesFolderChooser.setSelectedFile(new File(path));
+            _terminologiesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getTerminologiesFolder().getFolder());
             _terminologiesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             _terminologiesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectTerminologiesRepository"));
         }
         return _terminologiesFolderChooser;
     }
 
-    private FileSelectionPanel getOntologiesRepositoryFolderPanel(){
-        if (ontologiesRepositoryFolderPanel==null){
-            ontologiesRepositoryFolderPanel = new FileSelectionPanel(getOntologiesFolderChooser());
-            ontologiesRepositoryFolderPanel.setBorder(
-                    BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("OntologiesRepository")));
-
-        }
-        return ontologiesRepositoryFolderPanel;
-    }
-
-    public JFileChooser getOntologiesFolderChooser(){
-        if (_ontologiesFolderChooser==null){
-            _ontologiesFolderChooser = new JFileChooser();
-            _ontologiesFolderChooser.setSelectedFile(new File(UserConfigurationManager.getParameterWithDefault(UserConfigurationManager.ONTOLOGIES_FOLDER_KW)));
-            _ontologiesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            _ontologiesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectOntologiesRepository"));
-        }
-        return _ontologiesFolderChooser;
-    }
-
-    private FileSelectionPanel getGuidesRepositoryFolderPanel(){
-        if (guidesRepositoryFolderPanel==null){
+    private FileSelectionPanel getGuidesRepositoryFolderPanel() {
+        if (guidesRepositoryFolderPanel == null) {
             guidesRepositoryFolderPanel = new FileSelectionPanel(getGuidesFolderChooser());
             guidesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("GuidelinesRepository")));
@@ -159,10 +119,10 @@ public class DialogRepositoriesPaths extends DialogEditor {
         return guidesRepositoryFolderPanel;
     }
 
-    public JFileChooser getGuidesFolderChooser(){
-        if (_guidesFolderChooser==null){
+    private JFileChooser getGuidesFolderChooser() {
+        if (_guidesFolderChooser == null) {
             _guidesFolderChooser = new JFileChooser();
-            _guidesFolderChooser.setSelectedFile(new File(UserConfigurationManager.getParameterWithDefault(UserConfigurationManager.GUIDES_FOLDER_KW)));
+            _guidesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getGuidesFolder().getFolder());
             _guidesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             _guidesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectGuidesRepository"));
         }
@@ -170,19 +130,27 @@ public class DialogRepositoriesPaths extends DialogEditor {
     }
 
 
-    protected boolean acceptDialog(){
+    protected boolean acceptDialog() {
         String archetypeFolderStrSelected = getArchetypeRepositoryFolderPanel().getFileNameJTextField().getText();
         String templateFolderStrSelected = getTemplateRepositoryFolderPanel().getFileNameJTextField().getText();
         String terminologiesFolderStrSelected = getTerminologiesRepositoryFolderPanel().getFileNameJTextField().getText();
         String guidesFolderStrSelected = getGuidesRepositoryFolderPanel().getFileNameJTextField().getText();
-        String ontologiesFolderStrSelected = getOntologiesRepositoryFolderPanel().getFileNameJTextField().getText();
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypeFolderStrSelected);
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templateFolderStrSelected);
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesFolderStrSelected);
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.GUIDES_FOLDER_KW, guidesFolderStrSelected);
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ONTOLOGIES_FOLDER_KW, ontologiesFolderStrSelected);
-        JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
-        return UserConfigurationManager.saveConfig();
+        try {
+            UserConfigurationManager.instance().setArchetypesFolderPath(archetypeFolderStrSelected);
+            UserConfigurationManager.instance().setTemplatesFolderPath(templateFolderStrSelected);
+            UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesFolderStrSelected);
+            UserConfigurationManager.instance().setGuidelinesFolderPath(guidesFolderStrSelected);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), "ERROR : " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+             UserConfigurationManager.instance().saveConfig();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 } 
 

@@ -45,7 +45,7 @@ public class ArchetypeReferences {
                 if (!first){
                     sb.append(", ");
                 }
-                String name = ArchetypeManager.getInstance().getArchetypeElements().getText(ar.getIdTemplate(), elementInstance.getId(), UserConfigurationManager.getLanguage());
+                String name = ArchetypeManager.getInstance().getArchetypeElements().getText(ar.getIdTemplate(), elementInstance.getId(), UserConfigurationManager.instance().getLanguage());
                 if (name != null){
                     sb.append(name+"="+DVDefSerializer.getReadableValue(elementInstance.getDataValue(), null));
                     first = false;
@@ -105,8 +105,8 @@ public class ArchetypeReferences {
         }
         String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
 
-        String elementName = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
-        String elementDesc = ArchetypeManager.getInstance().getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String elementName = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
+        String elementDesc = ArchetypeManager.getInstance().getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
 
         String archetypeName = ArchetypeReferences.getName(ar)+(idDomain!=null?" ("+idDomain+")":"");
         String cardinalityStr = archetypeElementVO.getLowerCardinality()+"..."+(archetypeElementVO.getUpperCardinality()==null?"*":archetypeElementVO.getUpperCardinality());
@@ -136,7 +136,7 @@ public class ArchetypeReferences {
                 if (clusterVO!=null){
                     String name = null;
                     try {
-                        name = ArchetypeManager.getInstance().getClusters().getText(clusterVO, UserConfigurationManager.getLanguage());
+                        name = ArchetypeManager.getInstance().getClusters().getText(clusterVO, UserConfigurationManager.instance().getLanguage());
                     } catch (InternalErrorException e) {
                         ExceptionHandler.handle(e);
                     }

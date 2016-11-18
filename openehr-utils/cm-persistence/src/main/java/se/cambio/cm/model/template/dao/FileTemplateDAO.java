@@ -11,6 +11,6 @@ import se.cambio.openehr.util.UserConfigurationManager;
 public class FileTemplateDAO extends FileGenericCMElementDAO<TemplateDTO> {
 
     public FileTemplateDAO() {
-        super(TemplateDTO.class, UserConfigurationManager.getTemplateFolder());
+        super(TemplateDTO.class, UserConfigurationManager.instance().getTemplateFolder());
     }
 }

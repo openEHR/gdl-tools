@@ -31,7 +31,7 @@ public class ParsingTest {
 
     @Before
     public void initializeCM() throws URISyntaxException, IOException {
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesResource.getFile().getPath());
+        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
     }
 
     @Test

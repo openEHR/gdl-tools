@@ -348,7 +348,7 @@ public class GDLEditor implements EditorController<Guide> {
                             .createGuideDTO();
             FormGeneratorController formGenerator =
                     new FormGeneratorController(guideDTO, controller.getCurrentLanguageCode());
-            Date date = UserConfigurationManager.getCustomDate();
+            Date date = UserConfigurationManager.instance().getCurrentDateTime();
             if (date != null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date);
@@ -622,7 +622,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public String getCurrentLanguageCode() {
         if (_currentGuideLanguageCode == null) {
-            String editorLanguage = UserConfigurationManager.getLanguage();
+            String editorLanguage = UserConfigurationManager.instance().getLanguage();
             if (getSupportedLanguageCodes().contains(editorLanguage)) {
                 _currentGuideLanguageCode = editorLanguage;
             } else {
@@ -637,7 +637,7 @@ public class GDLEditor implements EditorController<Guide> {
         if (originalLanuageCodePhrase == null) {
             String LANGUAGE_TERMINOLOGY = "ISO_639-1";
             originalLanuageCodePhrase = new CodePhrase(
-                    LANGUAGE_TERMINOLOGY, UserConfigurationManager.getLanguage());
+                    LANGUAGE_TERMINOLOGY, UserConfigurationManager.instance().getLanguage());
             getLanguage().setOriginalLanguage(originalLanuageCodePhrase);
         }
         return getLanguage().getOriginalLanguage().getCodeString();

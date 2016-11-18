@@ -43,7 +43,7 @@ public class DVDialogEditor  extends JDialog {
     private JTextPane jTextPane;
 
     public DVDialogEditor(Window owner, ArchetypeElementVO archetypeElementVO, boolean allowNull, boolean enableUnits){
-        super(owner, getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage()), ModalityType.APPLICATION_MODAL);
+        super(owner, getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage()), ModalityType.APPLICATION_MODAL);
         _archetypeElementVO = archetypeElementVO;
         _allowNull = allowNull;
         _enableUnits = enableUnits;
@@ -67,7 +67,7 @@ public class DVDialogEditor  extends JDialog {
         if (mainPanel==null){
             mainPanel = new JPanel(new BorderLayout());
             JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            String name = getArchetypeElements().getText(_archetypeElementVO, UserConfigurationManager.getLanguage());
+            String name = getArchetypeElements().getText(_archetypeElementVO, UserConfigurationManager.instance().getLanguage());
             JLabel label = new JLabel(name+":");
             label.setIcon(OpenEHRDataValuesUI.getIcon(_archetypeElementVO.getRMType()));
             panelAux1.add(label);

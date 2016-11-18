@@ -19,8 +19,8 @@ public final class GDLEditorLanguageManager {
     public String _lng = null;
 
     private GDLEditorLanguageManager() {
-        _lng = UserConfigurationManager.getLanguage();
-        String country = UserConfigurationManager.getCountryCode();
+        _lng = UserConfigurationManager.instance().getLanguage();
+        String country = UserConfigurationManager.instance().getCountryCode();
         _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(_lng, country), new UTF8Control());
     }
 

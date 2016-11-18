@@ -214,7 +214,7 @@ public class DialogExpressionEditor extends DialogEditor {
             Logger.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + e.getMessage());
         }
         if (_expressionItem != null) {
-            String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem, UserConfigurationManager.getLanguage());
+            String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem, UserConfigurationManager.instance().getLanguage());
             getRenderedExpresionTextComponent().setText(htmlStr);
         } else {
             getRenderedExpresionTextComponent().setText("");

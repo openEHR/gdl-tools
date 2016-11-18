@@ -98,7 +98,7 @@ public class ReadableRuleLineFactory {
         String text;
         if (ruleLineElement instanceof ExpressionRuleLineElement){
             ExpressionRuleLineElement erli = (ExpressionRuleLineElement)ruleLineElement;
-            text = ExpressionUtil.convertToHTMLText(erli, erli.getValue(), UserConfigurationManager.getLanguage());
+            text = ExpressionUtil.convertToHTMLText(erli, erli.getValue(), UserConfigurationManager.instance().getLanguage());
         }else{
             text = ruleLineElement.getLabelText();
         }
