@@ -1,5 +1,4 @@
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +37,9 @@ public class ArchetypeElementsTest {
 
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, terminologiesResource.getFile().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesResource.getFile().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, templatesResource.getFile().getPath());
+        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
+        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
     }
 
     @Test

@@ -134,8 +134,8 @@ public class RuleElementEditor {
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
                         Term term = EditorManager.getActiveGDLEditor().getTerm(gtCode);
                         if (term.getText()==null || term.getText().isEmpty()){
-                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), UserConfigurationManager.getLanguage());
-                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), UserConfigurationManager.getLanguage());
+                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), UserConfigurationManager.instance().getLanguage());
+                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), UserConfigurationManager.instance().getLanguage());
                             term.setText(name);
                             term.setDescription(desc);
                         }

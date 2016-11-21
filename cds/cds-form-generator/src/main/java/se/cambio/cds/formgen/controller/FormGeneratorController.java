@@ -179,7 +179,7 @@ public class FormGeneratorController {
 
     public String getLanguage() {
         if (_lang == null) {
-            _lang = UserConfigurationManager.getLanguage();
+            _lang = UserConfigurationManager.instance().getLanguage();
         }
         return _lang;
     }

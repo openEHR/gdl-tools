@@ -36,7 +36,9 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
     private Interpreter interpreter = new Interpreter();
 
     @Override
-    public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) throws InternalErrorException, PatientNotFoundException {
+    public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides,
+                                       Collection<ArchetypeReference> archetypeReferences, Calendar date)
+            throws InternalErrorException, PatientNotFoundException {
         DvDateTime dateTime = new DvDateTime(
                 date.get(Calendar.YEAR),
                 date.get(Calendar.MONTH),
@@ -49,17 +51,11 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
         );
         interpreter.setSystemParameter("currentDateTime", dateTime);
 
-        List<ArchetypeReference> nonGeneratedArchetypeReferences = new ArrayList<>();
-        for(ArchetypeReference archetypeReference: archetypeReferences) {
-            if(!(archetypeReference instanceof GeneratedArchetypeReference)) {
-                nonGeneratedArchetypeReferences.add(archetypeReference);
-            }
-        }
         List<Guide> compiledGuides = new ArrayList<>();
         try {
             for (GuideDTO guideDTO : guides) {
                 Guide guide = guideCache.get(guideDTO.getId());
-                if(guide == null || !useCache) {
+                if (guide == null || !useCache) {
                     InputStream inputStream = new ByteArrayInputStream(guideDTO.getSource().getBytes(StandardCharsets.UTF_8));
                     guide = parser.parse(inputStream);
                     guideCache.put(guideDTO.getId(), guide);
@@ -70,26 +66,34 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
             LOGGER.error(e);
         }
 
-
-        List<DataInstance> dataInstances = toDataInstanceList(nonGeneratedArchetypeReferences);
+        List<DataInstance> dataInstances = toDataInstanceList(archetypeReferences);
+        Set<String> cdsDomainArchetypeIds = toCDSDomainArchetypeIds(archetypeReferences);
         List<DataInstance> dataInstanceResults = interpreter.executeGuides(compiledGuides, dataInstances);
         return new RuleExecutionResult(
                 ehrId, date.getTime(),
-                toArchetypeReferenceList(dataInstanceResults),
+                toCDSDomainArchetypeReferenceList(dataInstanceResults, cdsDomainArchetypeIds),
                 new ArrayList<ExecutionLog>(),
                 new ArrayList<RuleReference>());
     }
 
+    private Set<String> toCDSDomainArchetypeIds(Collection<ArchetypeReference> archetypeReferences) {
+        Set<String> refs = new HashSet<>();
+        for (ArchetypeReference archetypeReference : archetypeReferences) {
+            if ("CDS".equals(archetypeReference.getIdDomain())) {
+                refs.add(archetypeReference.getIdArchetype());
+            }
+        }
+        return refs;
+    }
 
     private String removeId(String path) {
         return path.substring(path.indexOf('/'), path.length());
     }
 
-
     private List<DataInstance> toDataInstanceList(Collection<ArchetypeReference> archetypeReferences) {
         List<DataInstance> ret = new ArrayList<>();
         for (ArchetypeReference archetypeReference : archetypeReferences) {
-            if(!archetypeReference.getIdDomain().equals("CDS")) {
+            if (!archetypeReference.getIdDomain().equals("CDS")) {
                 DataInstance instance = new DataInstance.Builder()
                         .archetypeId(archetypeReference.getIdArchetype())
                         .build();
@@ -98,7 +102,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
                         instance.setValue(removeId(entry.getKey()), entry.getValue().getDataValue());
                     }
                 }
-                if(!instance.values().isEmpty()) {
+                if (!instance.values().isEmpty()) {
                     ret.add(instance);
                 }
             }
@@ -106,18 +110,19 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
         return ret;
     }
 
-    private List<ArchetypeReference> toArchetypeReferenceList(List<DataInstance> dataInstance) {
+    private List<ArchetypeReference> toCDSDomainArchetypeReferenceList(List<DataInstance> dataInstance, Set<String> cdsDomainArchetypes) {
         List<ArchetypeReference> ret = new ArrayList<>();
         for (DataInstance instance : dataInstance) {
-            ArchetypeReference archetypeReference = new ArchetypeReference("CDS", instance.archetypeId(), null);
-            for (Map.Entry<String, DataValue> entry : instance.values().entrySet()) {
-                new ElementInstance(archetypeReference.getIdArchetype() + entry.getKey(), entry.getValue(), archetypeReference, null, null);
-            }
-            if(!archetypeReference.getElementInstancesMap().isEmpty()) {
-                ret.add(archetypeReference);
+            if (cdsDomainArchetypes.contains(instance.archetypeId())) {
+                ArchetypeReference archetypeReference = new ArchetypeReference("CDS", instance.archetypeId(), null);
+                for (Map.Entry<String, DataValue> entry : instance.values().entrySet()) {
+                    new ElementInstance(archetypeReference.getIdArchetype() + entry.getKey(), entry.getValue(), archetypeReference, null, null);
+                }
+                if (!archetypeReference.getElementInstancesMap().isEmpty()) {
+                    ret.add(archetypeReference);
+                }
             }
         }
-
         return ret;
     }
 

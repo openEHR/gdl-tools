@@ -20,8 +20,8 @@ public final class OpenEHRLanguageManager {
     private String country;
 
     private OpenEHRLanguageManager() {
-        language = UserConfigurationManager.getLanguage();
-        country = UserConfigurationManager.getCountryCode();
+        language = UserConfigurationManager.instance().getLanguage();
+        country = UserConfigurationManager.instance().getCountryCode();
         _resourceMap = new HashMap<String, ResourceBundle>();
     }
 

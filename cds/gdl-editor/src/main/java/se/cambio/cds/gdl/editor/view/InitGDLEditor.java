@@ -29,7 +29,7 @@ public class InitGDLEditor {
             new LoadGuideFromFileRSW(new File(args[0])).execute();
         }
         ConfigurableEnvironment environment = BeanProvider.getBean(ConfigurableEnvironment.class);
-        String activeRuleEngine = UserConfigurationManager.getActiveRuleEngine();
+        String activeRuleEngine = UserConfigurationManager.instance().getActiveRuleEngine();
         environment.addActiveProfile(activeRuleEngine);
         String[] activeProfiles = BeanProvider.getActiveProfiles();
         BeanProvider.setActiveProfiles(activeProfiles);

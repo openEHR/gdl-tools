@@ -38,9 +38,9 @@ public class StressTest {
     public static void main(String[] args) {
         try {
             //Load KM
-            UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-            UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-            UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, StressTest.class.getClassLoader().getResource("templates1").toURI().getPath());
+            UserConfigurationManager.instance().setTerminologiesFolderPath(StressTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
+            UserConfigurationManager.instance().setArchetypesFolderPath(StressTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+            UserConfigurationManager.instance().setTemplatesFolderPath(StressTest.class.getClassLoader().getResource("templates1").toURI().getPath());
             new StressTest().stressTest2();
         } catch (URISyntaxException e) {
             e.printStackTrace();

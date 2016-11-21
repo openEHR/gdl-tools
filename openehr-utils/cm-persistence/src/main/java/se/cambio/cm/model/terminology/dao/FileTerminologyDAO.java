@@ -11,6 +11,6 @@ import se.cambio.openehr.util.UserConfigurationManager;
 public class FileTerminologyDAO extends FileGenericCMElementDAO<TerminologyDTO> {
 
     public FileTerminologyDAO() {
-        super(TerminologyDTO.class, UserConfigurationManager.getTerminologiesFolder());
+        super(TerminologyDTO.class, UserConfigurationManager.instance().getTerminologiesFolder());
     }
 }

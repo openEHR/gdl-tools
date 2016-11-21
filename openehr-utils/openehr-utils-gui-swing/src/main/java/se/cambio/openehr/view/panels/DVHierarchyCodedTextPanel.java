@@ -57,7 +57,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
             selectedDvCodeTexts.add(selectedCodedText);
             CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodedText.getCode());
             if (codedTextVO!=null){
-                label = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
+                label = getCodedTexts().getText(codedTextVO, UserConfigurationManager.instance().getLanguage());
             }else{
                 //Asking directly to the terminology service for a description
                 //TODO Take it out and make it a generic call

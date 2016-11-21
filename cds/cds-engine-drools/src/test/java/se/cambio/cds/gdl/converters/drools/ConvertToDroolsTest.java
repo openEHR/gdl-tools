@@ -23,13 +23,13 @@ import static org.junit.Assert.*;
 
 public class ConvertToDroolsTest {
 
-    @Before
-    public void setUp() throws Exception {
-        String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
-        parser = new GDLParser();
-        guide = null;
-    }
+	@Before
+	public void setUp() throws Exception {
+		String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
+		UserConfigurationManager.instance().setArchetypesFolderPath(archetypesFolderPath);
+		parser = new GDLParser();
+		guide = null;
+	}
 
     @Test
     public void testConvertBSACalculationGuide() throws Exception {

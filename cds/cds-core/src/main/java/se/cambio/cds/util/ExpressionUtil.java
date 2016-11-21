@@ -130,6 +130,10 @@ public class ExpressionUtil {
             } else {
                 throw new InternalErrorException(new Exception("Unknown time units '" + units + "'"));
             }
+        } else if (exp instanceof MathConstant) {
+            if (Constant.E.equals(((MathConstant) exp).getConstant())) {
+                value = "" + Math.E;
+            }
         }
         return value;
     }

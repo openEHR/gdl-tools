@@ -1,5 +1,4 @@
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
@@ -18,9 +17,9 @@ public class TemplateMapperTest {
 
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TemplateMapperTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, TemplateMapperTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TEMPLATES_FOLDER_KW, TemplateMapperTest.class.getClassLoader().getResource("templates").toURI().getPath());
+        UserConfigurationManager.instance().setTerminologiesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
+        UserConfigurationManager.instance().setArchetypesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+        UserConfigurationManager.instance().setTemplatesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("templates").toURI().getPath());
     }
 
     @Test

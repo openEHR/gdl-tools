@@ -1,15 +1,10 @@
 package se.cambio.cds.gdl.editor.view.renderers;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleElement;
 import se.cambio.openehr.util.UserConfigurationManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class SingleSelectionRuleElementRenderer extends JLabel implements ListCellRenderer {
     private static final long serialVersionUID = 1L;
@@ -36,7 +31,7 @@ public class SingleSelectionRuleElementRenderer extends JLabel implements ListCe
 	}
 	String resolvedName = null;
 	if (value!=null){
-	    resolvedName = _singleSelectionRuleElement.getResolvedName(value, UserConfigurationManager.getLanguage());
+	    resolvedName = _singleSelectionRuleElement.getResolvedName(value, UserConfigurationManager.instance().getLanguage());
 	}
 	if (resolvedName != null){
 	    setText(resolvedName);

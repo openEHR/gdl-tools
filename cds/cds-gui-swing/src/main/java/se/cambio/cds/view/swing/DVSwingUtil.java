@@ -87,7 +87,7 @@ public class DVSwingUtil {
 
     public static JLabel createLabelForElement(ArchetypeElementVO archetypeElementVO) {
         JLabel label = null;
-        String name = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
         String tooltip = name;
 
         label = new JLabel(name);
@@ -105,7 +105,7 @@ public class DVSwingUtil {
                         elementInstance.getArchetypeReference().getIdTemplate(),
                         elementInstance.getId());
         JLabel label = null;
-        String name = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElement, UserConfigurationManager.getLanguage());
+        String name = ArchetypeManager.getInstance().getArchetypeElements().getText(archetypeElement, UserConfigurationManager.instance().getLanguage());
 
         if (elementInstance instanceof GeneratedElementInstance){
             GeneratedElementInstance elementInstancesWithGTCode = (GeneratedElementInstance) elementInstance;

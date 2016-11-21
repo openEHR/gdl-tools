@@ -17,7 +17,7 @@ public abstract class RuleLineElement {
     }
 
     public final String getLabelText() {
-        return getLabelText(UserConfigurationManager.getLanguage());
+        return getLabelText(getLanguage());
     }
 
     public String getLabelText(String lang) {
@@ -25,7 +25,7 @@ public abstract class RuleLineElement {
     }
 
     public final String getLabelDescription() {
-        return getLabelDescription(UserConfigurationManager.getLanguage());
+        return getLabelDescription(getLanguage());
     }
 
     public String getLabelDescription(String lang) {
@@ -42,6 +42,10 @@ public abstract class RuleLineElement {
 
     public ArchetypeManager getArchetypeManager() {
         return parentRuleLine.getReadableGuide().getArchetypeManager();
+    }
+
+    protected String getLanguage() {
+        return UserConfigurationManager.instance().getLanguage();
     }
 }
 /*

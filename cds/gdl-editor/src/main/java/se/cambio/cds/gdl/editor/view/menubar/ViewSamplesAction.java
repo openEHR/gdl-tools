@@ -6,16 +6,15 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 
 
@@ -40,7 +39,7 @@ public class ViewSamplesAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
 	try {
 	    String path = 
-		    UserConfigurationManager.getDocumentsFolder().getCanonicalPath()+
+		    UserConfigurationManager.instance().getDocumentsFolder().getCanonicalPath()+
 		    File.separator+
 		    "samples.pdf";
 	    File file = new File(path);

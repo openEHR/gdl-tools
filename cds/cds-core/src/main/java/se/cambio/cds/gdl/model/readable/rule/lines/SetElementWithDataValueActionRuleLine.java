@@ -13,7 +13,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionRuleLine implements ArchetypeElementRuleLine, ActionRuleLine{
@@ -57,7 +56,7 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
         if (archetypeElementVO==null){
             throw new IllegalStateException("No variable set");
         }
-        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         Variable var = new Variable(
                 archetypeElementRuleLineElement.getValue().getValue(),
                 null, name);
