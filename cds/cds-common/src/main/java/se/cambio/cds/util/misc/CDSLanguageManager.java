@@ -22,8 +22,8 @@ public final class CDSLanguageManager {
     private String country;
 
     private CDSLanguageManager() {
-        language = UserConfigurationManager.getLanguage();
-        country = UserConfigurationManager.getCountryCode();
+        language = UserConfigurationManager.instance().getLanguage();
+        country = UserConfigurationManager.instance().getCountryCode();
         _resourceMap = new HashMap<String, ResourceBundle>();
     }
 

@@ -38,7 +38,7 @@ public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWi
     @Override
     public String getLabelText(String lang) {
         if (getValue() != null) {
-            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), UserConfigurationManager.getLanguage());
+            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), getLanguage());
             return name;
         } else {
             return super.getLabelText(lang);

@@ -7,7 +7,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineEl
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class ElementInitializedConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine{
@@ -43,7 +42,7 @@ public class ElementInitializedConditionRuleLine extends ExpressionRuleLine impl
             if (operatorKind==null){
                 throw new IllegalStateException("No operator set");
             }
-            String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+            String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
             return new BinaryExpression(
                     new Variable(gtCode, null, name),
                     new ConstantExpression(NULL_STR),

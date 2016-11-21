@@ -45,7 +45,7 @@ public class OpenEHRConst {
     public static String NULL_FLAVOR_ATTRIBUTE = "null_flavor";
 
 
-    public static CodePhrase DEFAULT_LANGUAGE_CODE_PHRASE = new CodePhrase("ISO_639-1",  UserConfigurationManager.getLanguage());
+    public static CodePhrase DEFAULT_LANGUAGE_CODE_PHRASE = new CodePhrase("ISO_639-1",  "en");
 
 
     public static String CURRENT_DATE_TIME_ID = "currentDateTime";

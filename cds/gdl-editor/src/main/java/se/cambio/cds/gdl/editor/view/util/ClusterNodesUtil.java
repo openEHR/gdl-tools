@@ -1,9 +1,8 @@
 package se.cambio.cds.gdl.editor.view.util;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
-import se.cambio.openehr.util.ExceptionHandler;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -90,8 +89,8 @@ public class ClusterNodesUtil {
     public static SelectableNode<Object> createClusterNode(ClusterVO clusterVO, Object object, boolean singleSelection, ArchetypeManager archetypeMamager) throws InternalErrorException {
         String upperNumOcurrences =
                 (clusterVO.getUpperCardinality()==null?" [*]":clusterVO.getUpperCardinality()>1?" ["+clusterVO.getUpperCardinality()+"]":"");
-        String name = archetypeMamager.getClusters().getText(clusterVO, UserConfigurationManager.getLanguage());
-        String desc = archetypeMamager.getClusters().getDescription(clusterVO, UserConfigurationManager.getLanguage());
+        String name = archetypeMamager.getClusters().getText(clusterVO, UserConfigurationManager.instance().getLanguage());
+        String desc = archetypeMamager.getClusters().getDescription(clusterVO, UserConfigurationManager.instance().getLanguage());
         SelectableNode.SelectionMode selectionMode = singleSelection? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
         return new SelectableNodeBuilder<Object>()
                 .setName(name+upperNumOcurrences)

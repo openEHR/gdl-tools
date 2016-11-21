@@ -9,6 +9,8 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.lang.String.format;
+
 
 public class DialogSetActiveEngine extends DialogEditor {
 
@@ -41,11 +43,11 @@ public class DialogSetActiveEngine extends DialogEditor {
     private JComboBox getEngineComboBox(){
         if (engineComboBox ==null){
             engineComboBox = new JComboBox();
-            for (String ruleEngine: UserConfigurationManager.SUPPORTED_RULE_ENGINES) {
+            for (String ruleEngine: UserConfigurationManager.instance().getSupportedRuleEngines()) {
                 engineComboBox.addItem(ruleEngine);
             }
-            String activeRuleEngine = UserConfigurationManager.getActiveRuleEngine();
-            if (UserConfigurationManager.SUPPORTED_RULE_ENGINES.contains(activeRuleEngine)){
+            String activeRuleEngine = UserConfigurationManager.instance().getActiveRuleEngine();
+            if (UserConfigurationManager.instance().getSupportedRuleEngines().contains(activeRuleEngine)){
                 engineComboBox.setSelectedItem(activeRuleEngine);
             }
         }
@@ -55,9 +57,15 @@ public class DialogSetActiveEngine extends DialogEditor {
 
     protected boolean acceptDialog(){
         String activeRuleEngine = (String) getEngineComboBox().getSelectedItem();
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.ACTIVE_RULE_ENGINE, activeRuleEngine);
+        UserConfigurationManager.instance().setActiveRuleEngine(activeRuleEngine);
         JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
-        return UserConfigurationManager.saveConfig();
+        try {
+            UserConfigurationManager.instance().saveConfig();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 } 
 

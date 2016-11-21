@@ -22,7 +22,7 @@ public class PredicateArchetypeElementAttributeRuleLineElement extends RuleLineE
     @Override
     public String getLabelDescription(String lang) {
         if (getValue() != null) {
-            String elementDesc = getArchetypeManager().getArchetypeElements().getDescription(getValue(), UserConfigurationManager.getLanguage());
+            String elementDesc = getArchetypeManager().getArchetypeElements().getDescription(getValue(), getLanguage());
             return elementDesc;
         } else {
             return super.getLabelDescription(lang);

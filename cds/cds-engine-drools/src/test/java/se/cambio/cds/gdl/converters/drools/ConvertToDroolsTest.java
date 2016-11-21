@@ -21,7 +21,7 @@ public class ConvertToDroolsTest {
 	@Before
 	public void setUp() throws Exception {
 		String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
-		UserConfigurationManager.setCmFolder(UserConfigurationManager.ARCHETYPES_FOLDER_KW, archetypesFolderPath);
+		UserConfigurationManager.instance().setArchetypesFolderPath(archetypesFolderPath);
 		parser = new GDLParser();
 		guide = null;
 	}

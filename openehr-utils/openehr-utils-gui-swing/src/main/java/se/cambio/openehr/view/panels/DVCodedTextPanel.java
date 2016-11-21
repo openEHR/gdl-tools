@@ -36,7 +36,7 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                 for (CodedTextVO codedTextVO : codedTextsVO) {
                     getDVComboBoxPanel().insertOption(
                             codedTextVO.getCode(),
-                            getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage()),
+                            getCodedTexts().getText(codedTextVO, UserConfigurationManager.instance().getLanguage()),
                             codedTextVO.getDescription());
                 }
             }else{
@@ -65,7 +65,7 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                     String code = (String)getComboBox().getSelectedItem();
                     if (!code.trim().isEmpty()){
                         CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), code);
-                        String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.getLanguage());
+                        String name = getCodedTexts().getText(codedTextVO, UserConfigurationManager.instance().getLanguage());
                         return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
                     }else{
                         return null;

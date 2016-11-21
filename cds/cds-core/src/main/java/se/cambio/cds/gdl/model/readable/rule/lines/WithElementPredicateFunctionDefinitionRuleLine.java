@@ -63,7 +63,7 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         String path = archetypeElementVO.getPath();
         OperatorKind operatorKind =
                 getFunctionRuleLineElement().getValue();
-        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         return new UnaryExpression(
                 new Variable(null,name, path),
                 operatorKind);
@@ -76,7 +76,7 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         if (aerlde!=null){
             ArchetypeElementVO archetypeElementVO = aerlde.getValue();
             if (archetypeElementVO!=null){
-                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
                 sb.append(getFunctionRuleLineElement().getValue()+"("+name+")");
             }else{
                 Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");

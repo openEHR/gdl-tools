@@ -10,6 +10,9 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static java.lang.String.format;
+
 /**
  * @author icorram
  *
@@ -57,7 +60,7 @@ public class DialogSetLanguage extends DialogEditor {
         if (_languageSelection==null){
             _languageSelection = new JComboBox(Languages.getSupportedLanguages().toArray());
             _languageSelection.setRenderer(new LanguageRenderer());
-            String langCountryCode = UserConfigurationManager.getLanguage() + "_" + UserConfigurationManager.getCountryCode();
+            String langCountryCode = UserConfigurationManager.instance().getLanguage() + "_" + UserConfigurationManager.instance().getCountryCode();
             if (Languages.getSupportedLanguages().contains(langCountryCode)){
                 _languageSelection.setSelectedItem(langCountryCode);
             }
@@ -69,10 +72,16 @@ public class DialogSetLanguage extends DialogEditor {
     protected boolean acceptDialog(){
         String languageAndCountry = (String)getLanguageSelectorComboBox().getSelectedItem();
         String [] str = languageAndCountry.split("_");
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.LANGUAGE, str[0]);
-        UserConfigurationManager.setParameterWithDefault(UserConfigurationManager.COUNTRY, str[1]);
+        UserConfigurationManager.instance().setLanguage(str[0]);
+        UserConfigurationManager.instance().setCountry(str[1]);
+        try {
+            UserConfigurationManager.instance().saveConfig();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
-        return UserConfigurationManager.saveConfig();
+        return true;
     }
 } 
 

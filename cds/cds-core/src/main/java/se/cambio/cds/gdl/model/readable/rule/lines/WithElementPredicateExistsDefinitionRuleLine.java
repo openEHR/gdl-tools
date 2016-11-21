@@ -62,7 +62,7 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
             if (operatorKind==null){
                 throw new IllegalStateException("No operator set");
             }
-            String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+            String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
             return new BinaryExpression(
                     new Variable(null, name, path),
                     new ConstantExpression(NULL_STR),
@@ -84,7 +84,7 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
                 if (operator!=null){
                     opStr = operator.getSymbol();
                 }
-                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
                 sb.append(name+opStr+"null");
             }else{
                 Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");

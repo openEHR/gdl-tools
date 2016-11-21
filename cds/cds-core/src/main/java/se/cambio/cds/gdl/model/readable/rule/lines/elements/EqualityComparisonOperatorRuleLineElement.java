@@ -44,7 +44,7 @@ public class EqualityComparisonOperatorRuleLineElement extends RuleLineElementWi
 
     @Override
     public String toString() {
-        return getOperatorText(UserConfigurationManager.getLanguage());
+        return getOperatorText(getLanguage());
     }
 
     private String getOperatorText(String language) {

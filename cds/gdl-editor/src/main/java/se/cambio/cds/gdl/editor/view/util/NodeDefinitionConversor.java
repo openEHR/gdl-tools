@@ -247,8 +247,8 @@ public class NodeDefinitionConversor {
     }
 
     private static SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode, ArchetypeManager archetypeManager) {
-        String name = archetypeManager.getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
-        String desc = archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = archetypeManager.getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
+        String desc = archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
         return  new SelectableNodeBuilder<Object>()
                 .setName(name)
                 .setDescription(desc)

@@ -80,7 +80,7 @@ public class ReadableRule {
     }
 
     public String toString() {
-        return toHTMLString(UserConfigurationManager.getLanguage());
+        return toHTMLString(UserConfigurationManager.instance().getLanguage());
     }
 
     public String toHTMLString(String lang) {

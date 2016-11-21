@@ -166,7 +166,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     public String getDescription(RuleLineElementWithValue<?> ruleLineElementWithValue){
         if (ruleLineElementWithValue!=null){
-            return ruleLineElementWithValue.getLabelDescription(UserConfigurationManager.getLanguage());
+            return ruleLineElementWithValue.getLabelDescription(UserConfigurationManager.instance().getLanguage());
         }else{
             return null;
         }

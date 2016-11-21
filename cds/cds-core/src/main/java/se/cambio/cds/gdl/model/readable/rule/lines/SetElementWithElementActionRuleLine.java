@@ -33,7 +33,7 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
         if (archetypeElementVO==null){
             throw new IllegalStateException("No variable set");
         }
-        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         Variable var = new Variable(
                 archetypeElementRuleLineElement.getValue().getValue(),
                 null, name);

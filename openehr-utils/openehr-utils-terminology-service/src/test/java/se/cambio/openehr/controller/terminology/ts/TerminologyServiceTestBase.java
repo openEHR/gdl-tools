@@ -29,7 +29,7 @@ public class TerminologyServiceTestBase {
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         BeanProvider.setActiveProfiles("cm-admin-dummy-service", "cm-admin-file-dao");
-        UserConfigurationManager.setCmFolder(UserConfigurationManager.TERMINOLOGIES_FOLDER_KW, TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies1").toURI().getPath());
+        UserConfigurationManager.instance().setTerminologiesFolderPath(TerminologyServiceTestBase.class.getClassLoader().getResource("terminologies1").toURI().getPath());
     }
 }
 /*

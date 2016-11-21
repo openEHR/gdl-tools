@@ -72,7 +72,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
                 getExpressionRuleLineElement();
         OperatorKind operatorKind =
                 getComparisonOperatorRuleLineElement().getValue();
-        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+        String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         return new BinaryExpression(
                 new Variable(null, name, path),
                 expressionRuleLineElement.getValue(),
@@ -89,7 +89,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
             ArchetypeElementVO archetypeElementVO = paearle.getValue();
             String attribute = paearle.getAttribute();
             if (archetypeElementVO!=null && pacorl.getValue()!=null){
-                String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.getLanguage());
+                String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
                 sb.append(name+"."+attribute+" "+pacorl.getValue().getSymbol()+" "+ere.toString());
             }else{
                 Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+paearle.toString()+"'");

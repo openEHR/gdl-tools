@@ -44,7 +44,7 @@ public abstract class RuleLine {
     }
 
     public String toString() {
-        String language = UserConfigurationManager.getLanguage(); //TODO Remove
+        String language = getLanguage(); //TODO Remove
         StringBuffer sb = new StringBuffer();
         int i = 0;
         for (RuleLineElement ruleLineElement : ruleLineElements) {
@@ -135,6 +135,10 @@ public abstract class RuleLine {
 
     public ArchetypeManager getArchetypeManager() {
         return getReadableGuide().getArchetypeManager();
+    }
+
+    protected String getLanguage() {
+        return UserConfigurationManager.instance().getLanguage();
     }
 }
 /*

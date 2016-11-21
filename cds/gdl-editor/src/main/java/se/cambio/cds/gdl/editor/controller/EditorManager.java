@@ -100,7 +100,7 @@ public class EditorManager {
 
     public static File getLastFolderLoaded() {
         if (getDelegate()._lastFolderLoaded==null){
-            getDelegate()._lastFolderLoaded = UserConfigurationManager.getGuidesFolder().getFolder();
+            getDelegate()._lastFolderLoaded = UserConfigurationManager.instance().getGuidesFolder().getFolder();
         }
         return getDelegate()._lastFolderLoaded;
     }
