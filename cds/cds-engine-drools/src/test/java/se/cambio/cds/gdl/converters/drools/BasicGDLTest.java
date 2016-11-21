@@ -469,7 +469,7 @@ public class BasicGDLTest extends GDLTestCase {
         assertThat(elementInstance, notNullValue());
         assertThat(elementInstance.getDataValue(), instanceOf(DvQuantity.class));
         DvQuantity quantity = (DvQuantity)elementInstance.getDataValue();
-        //TODO Remove floor method once we have exact calculation of dates (should work)
+        //TODO Remove floor method once we have exact calculation of dates
         assertThat(floor(quantity.getMagnitude()), equalTo(2.0));
     }
 }
