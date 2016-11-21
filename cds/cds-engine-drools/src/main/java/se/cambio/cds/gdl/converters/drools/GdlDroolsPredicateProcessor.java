@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.converters.drools;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.gdl.model.ArchetypeBinding;
@@ -33,7 +34,7 @@ public class GdlDroolsPredicateProcessor {
                 if (expressionItem instanceof BinaryExpression) {
                     BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
                     processBinaryExpressionPredicate(binaryExpression);
-                }else if (expressionItem instanceof UnaryExpression) {
+                } else if (expressionItem instanceof UnaryExpression) {
                     UnaryExpression unaryExpression = (UnaryExpression) expressionItem;
                     processUnaryExpressionPredicate(unaryExpression);
                 }
@@ -64,12 +65,12 @@ public class GdlDroolsPredicateProcessor {
                 idElement);
         OperatorKind op = unaryExpression.getOperator();
         String opStr = getMaxMinOperator(op);
-        if (archetypeElement != null && opStr != null){
+        if (archetypeElement != null && opStr != null) {
             String predAuxDef = getComparisonPredicateChecks(archetypeBinding);
             String predicateArchetypeRef = "";
             stringBuffer.append(GdlDroolsConst.TAB);
             stringBuffer.append("not(");
-            if (predAuxDef != null){
+            if (predAuxDef != null) {
                 stringBuffer.append(predAuxDef);
                 predicateArchetypeRef = "archetypeReference==$archetypeReferencePredicate" + predicateCount + ",";
             }
@@ -79,8 +80,8 @@ public class GdlDroolsPredicateProcessor {
                     + predicateArchetypeRef
                     + "DVUtil.areDomainsCompatible($" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ".getIdDomain(), archetypeReference.getIdDomain()),"
                     + "DVUtil.checkMaxMin($predDV" + predicateCount + ", dataValue, \"" + op.getSymbol() + "\")"
-                    +"))\n");
-        }else{
+                    + "))\n");
+        } else {
             String guideId = gdlDroolsConverter.getGuide().getId();
             throw new CompilationErrorException("Guide=" + guideId + ", Element not found '" + idElement + "'");
         }
@@ -88,11 +89,11 @@ public class GdlDroolsPredicateProcessor {
 
     private String getMaxMinOperator(OperatorKind op) {
         String opStr = null;
-        if (OperatorKind.MAX.equals(op)){
+        if (OperatorKind.MAX.equals(op)) {
             opStr = ">";
-        }else if (OperatorKind.MIN.equals(op)){
+        } else if (OperatorKind.MIN.equals(op)) {
             opStr = "<";
-        }else{
+        } else {
             String guideId = gdlDroolsConverter.getGuide().getId();
             Logger.getLogger(GdlDroolsPredicateProcessor.class).warn("Guide=" + guideId + ", Operator for predicate '" + op + "' is not valid.");
         }
@@ -100,10 +101,10 @@ public class GdlDroolsPredicateProcessor {
     }
 
     private void processBinaryExpressionPredicate(BinaryExpression binaryExpression) throws InternalErrorException {
-        if (binaryExpression.getLeft() instanceof Variable){
+        if (binaryExpression.getLeft() instanceof Variable) {
             gdlDroolsConverter.increasePredicateCount();
             Variable variable = (Variable) binaryExpression.getLeft();
-            if (binaryExpression.getRight() instanceof ConstantExpression) {
+            if (!isVariableAttribute(variable) && binaryExpression.getRight() instanceof ConstantExpression) {
                 ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
                 processConstantExpressionInBinaryPredicate(constantExpression, variable, binaryExpression.getOperator());
             } else {
@@ -113,16 +114,20 @@ public class GdlDroolsPredicateProcessor {
         }
     }
 
+    private boolean isVariableAttribute(Variable variable) {
+        return variable.getPath().contains("/value/") && !StringUtils.substringAfterLast(variable.getPath(), "/value/").contains("/");
+    }
+
     private void processExpressionItemInBinaryPredicate(ExpressionItem expressionItem, Variable variable, OperatorKind operatorKind)
             throws InternalErrorException {
         String path = variable.getPath();
-        String attribute = path.substring(path.lastIndexOf("/value/")+7, path.length());
-        path = path.substring(0, path.length()-attribute.length()-7);
+        String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
+        path = path.substring(0, path.length() - attribute.length() - 7);
         String idElement = archetypeBinding.getArchetypeId() + path;
         stringBuffer.append(GdlDroolsConst.TAB);
         int predicateCount = gdlDroolsConverter.getPredicateCount();
         String predicateHandle = "predicate" + predicateCount;
-        stringBuffer.append("$"+predicateHandle);
+        stringBuffer.append("$" + predicateHandle);
         stringBuffer.append(":ElementInstance(id==\""
                 + idElement + "\", "
                 + "dataValue!=null, "
@@ -135,23 +140,23 @@ public class GdlDroolsPredicateProcessor {
             String rmName = archetypeElement.getRMType();
             String arithmeticExpressionStr = ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItem, null);
             arithmeticExpressionStr = //We cast it to long because all elements from CurrentTime fit into this class, but we must make it more generic (TODO)
-                    "((long)"+ arithmeticExpressionStr +")";
+                    "((long)" + arithmeticExpressionStr + ")";
             stringBuffer.append(GdlDroolsConst.TAB);
             stringBuffer.append("eval(");
             Variable var = new Variable(predicateHandle, predicateHandle, path, attribute);
-            String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName,var);
+            String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName, var);
             stringBuffer.append("(");
-            if (GDLDroolsConverter.isString(rmName, attribute)){
+            if (GDLDroolsConverter.isString(rmName, attribute)) {
                 stringBuffer.append(gdlDroolsConverter.getAttributeOperatorMVELLine(varCall, operatorKind, arithmeticExpressionStr));
-            }else{
+            } else {
                 stringBuffer.append(varCall);
                 stringBuffer.append(operatorKind.getSymbol());
                 stringBuffer.append(arithmeticExpressionStr);
             }
             stringBuffer.append("))\n");
-        }else{
+        } else {
             String guideId = gdlDroolsConverter.getGuide().getId();
-            throw new CompilationErrorException("Guide=" + guideId + ", Element not found '"+idElement+"'"+(archetypeBinding.getTemplateId()!=null?"("+archetypeBinding.getTemplateId()+")":""));
+            throw new CompilationErrorException("Guide=" + guideId + ", Element not found '" + idElement + "'" + (archetypeBinding.getTemplateId() != null ? "(" + archetypeBinding.getTemplateId() + ")" : ""));
         }
     }
 
@@ -159,12 +164,16 @@ public class GdlDroolsPredicateProcessor {
             throws CompilationErrorException {
         String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
         int predicateCount = gdlDroolsConverter.getPredicateCount();
-        stringBuffer.append(GdlDroolsConst.TAB);
-        stringBuffer.append("$predicate" + predicateCount);
-        stringBuffer.append(":ElementInstance(id==\""
-                + idElement
-                + "\", archetypeReference==$"
-                + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ")\n");
+        stringBuffer.append(GdlDroolsConst.TAB)
+                .append("$predicate")
+                .append(predicateCount)
+                .append(":ElementInstance(id==\"")
+                .append(idElement)
+                .append("\", archetypeReference==$")
+                .append(GdlDroolsConst.ARCHETYPE_REFERENCE_ID)
+                .append("_")
+                .append(archetypeBinding.getId())
+                .append(")\n");
         ArchetypeElementVO archetypeElement =
                 gdlDroolsConverter.getArchetypeManager().getArchetypeElements().getArchetypeElement(
                         archetypeBinding.getTemplateId(),
@@ -182,7 +191,7 @@ public class GdlDroolsPredicateProcessor {
         }
         String predicateVariableName = "$predicate" + gdlDroolsConverter.getPredicateCount();
         String operatorMVELLine = gdlDroolsConverter.getOperatorMVELLine(predicateVariableName, operatorKind, dvStr, true);
-        stringBuffer.append("eval(" + operatorMVELLine + ")\n");
+        stringBuffer.append("eval(").append(operatorMVELLine).append(")\n");
     }
 
 
@@ -202,18 +211,20 @@ public class GdlDroolsPredicateProcessor {
                     sb.append(predicateVariableName);
                     sb.append(":ElementInstance(id==\"");
                     sb.append(idElement);
-                    sb.append("\", archetypeReference==$archetypeReferencePredicate" + predicateCount + ") and \n");
+                    sb.append("\", archetypeReference==$archetypeReferencePredicate").append(predicateCount).append(") and \n");
                     ArchetypeElements archetypeElements = gdlDroolsConverter.getArchetypeManager().getArchetypeElements();
                     ArchetypeElementVO archetypeElement = archetypeElements.getArchetypeElement(archetypeBinding.getTemplateId(), idElement);
-                    if (archetypeElement != null){
+                    if (archetypeElement != null) {
                         String rmType = archetypeElement.getRMType();
                         String dvStr = "null";
-                        if (!"null".equals(constantExpression.getValue())){
-                            dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType+ "," + constantExpression.getValue()));
+                        if (!"null".equals(constantExpression.getValue())) {
+                            dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType + "," + constantExpression.getValue()));
                         }
                         sb.append(GdlDroolsConst.TAB);
                         String operatorMVELLine = gdlDroolsConverter.getOperatorMVELLine(predicateVariableName, binaryExpression.getOperator(), dvStr, true);
-                        sb.append("eval(" + operatorMVELLine + ") and \n");
+                        sb.append("eval(")
+                                .append(operatorMVELLine)
+                                .append(") and \n");
                     }
                 }
             }
@@ -222,10 +233,14 @@ public class GdlDroolsPredicateProcessor {
         if (!predicateDef.isEmpty()) {
             sb = new StringBuffer();
             sb.append(GdlDroolsConst.TAB);
-            sb.append("$archetypeReferencePredicate" + predicateCount + ":ArchetypeReference(idDomain==\"EHR\",");
-            sb.append("idArchetype==\"" + archetypeBinding.getArchetypeId() + "\") and \n");
+            sb.append("$archetypeReferencePredicate")
+                    .append(predicateCount)
+                    .append(":ArchetypeReference(idDomain==\"EHR\",");
+            sb.append("idArchetype==\"")
+                    .append(archetypeBinding.getArchetypeId())
+                    .append("\") and \n");
             return sb.toString() + predicateDef;
-        }else{
+        } else {
             return null;
         }
     }

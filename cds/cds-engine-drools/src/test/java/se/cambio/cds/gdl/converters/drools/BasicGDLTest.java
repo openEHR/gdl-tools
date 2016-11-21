@@ -446,6 +446,25 @@ public class BasicGDLTest extends GDLTestCase {
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
     }
+
+    @Test
+    public void shouldTestPredicateComparisonUsingAttributeAndConstant() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        Calendar date = Calendar.getInstance();
+        ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs.add(ar);
+
+        List<String> guideIds = Arrays.asList("test_attribute_predicate");
+        RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(1));
+
+        date.add(Calendar.YEAR, -1);
+        ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs = new ArrayList<>();
+        ehrArs.add(ar);
+        rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(0));
+    }
 }
 
 
