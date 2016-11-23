@@ -108,8 +108,7 @@ public class GuideUtil {
                         } else if (r instanceof ExpressionItem) {
                             String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
                             path = path.substring(0, path.length() - attribute.length() - 7);
-                            String idElement =
-                                    archetypeBinding.getArchetypeId() + path;
+                            String idElement = archetypeBinding.getArchetypeId() + path;
                             DataValue dv = new CurrentTimeExpressionDataValue(r, attribute);
                             generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv, guide, dateTime, resolvePredicates);
                             //TODO No rule references added (no gt codes)

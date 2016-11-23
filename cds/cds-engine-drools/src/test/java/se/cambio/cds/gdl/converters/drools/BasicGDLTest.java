@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -475,6 +476,22 @@ public class BasicGDLTest extends GDLTestCase {
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singletonList("conflicting_predicates"), elementInstances);
         assertEquals(1, rer.getFiredRules().size());
+    }
+
+    @Test
+    public void shouldAllowPredicatesWithUnits() {
+        Calendar date = Calendar.getInstance();
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.WEIGHT_ARCHETYPE_ID, null);
+        DataValue dataValue = new DvQuantity("kg", 90.0, 2);
+        ElementInstance elementInstance = new ElementInstance(WEIGHT_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvDateTime(new DateTime(date.getTimeInMillis()).toString());
+        new ElementInstance(WEIGHT_EVENT_TIME_ELEMENT_ID, dataValue, ar, null, null);
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
+        assertEquals(1, rer.getFiredRules().size());
+        elementInstance.setDataValue(new DvQuantity("lb", 90.0, 2));
+        rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
+        assertEquals(0, rer.getFiredRules().size());
     }
 }
 

@@ -138,8 +138,7 @@ public class GdlDroolsPredicateProcessor {
         if (archetypeElement != null) {
             String rmName = archetypeElement.getRMType();
             String arithmeticExpressionStr = ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItem, null);
-            arithmeticExpressionStr = //We cast it to long because all elements from CurrentTime fit into this class, but we must make it more generic (TODO)
-                    "((long)" + arithmeticExpressionStr + ")";
+            arithmeticExpressionStr = "(" + arithmeticExpressionStr + ")";
             stringBuffer.append(GdlDroolsConst.TAB);
             stringBuffer.append("eval(");
             Variable var = new Variable(predicateHandle, predicateHandle, path, attribute);
