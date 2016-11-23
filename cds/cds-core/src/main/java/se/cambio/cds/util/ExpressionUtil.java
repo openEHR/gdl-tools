@@ -135,7 +135,7 @@ public class ExpressionUtil {
                 value = "(double) " + Math.E;
             }
         }
-        return value;
+        return "(" + value + ")";
     }
 
     public static String getVariableWithAttributeStr(String rmName, Variable var) {
