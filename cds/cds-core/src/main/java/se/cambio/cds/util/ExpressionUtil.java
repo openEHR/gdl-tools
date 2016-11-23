@@ -13,6 +13,8 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.Map;
 import java.util.Set;
 
+import static java.lang.String.format;
+
 /**
  * User: iago.corbal
  * Date: 2013-12-11
@@ -97,38 +99,14 @@ public class ExpressionUtil {
     /*
      * Parse for units of hr and convert value to milliseconds
      */
-    public static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
+    private static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
         String value = exp.getValue();
-        int i = value.indexOf(",");
-        if (i > 0) {
-            //Convert time units to milliseconds
-            String units = value.substring(i + 1).trim();
-            if (units.equals("a")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "31556926000L*" + d;
-            } else if (units.equals("mo")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "2629743830L*" + d;
-            } else if (units.equals("wk")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "604800000L*" + d;
-            } else if (units.equals("d")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "86400000L*" + d;
-            } else if (units.equals("h")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "3600000L*" + d;
-            } else if (units.equals("min")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "60000L*" + d;
-            } else if (units.equals("s")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "1000L*" + d;
-            } else if (units.equals("S")) {
-                double d = Double.parseDouble(value.substring(0, i));
-                value = "" + d;
+        if (value.contains(",")) {
+            String units = StringUtils.substringAfter(value, ",");
+            if (isUcumTime(units)) {
+                value = "DVUtil.calculateDuration(\"" + value + "\",$" + OpenEHRConst.CURRENT_DATE_TIME_ID + ")";
             } else {
-                throw new InternalErrorException(new Exception("Unknown time units '" + units + "'"));
+                throw new IllegalArgumentException(format("Unknown time units in value '%s'", value));
             }
         } else if (exp instanceof MathConstant) {
             if (Constant.E.equals(((MathConstant) exp).getConstant())) {
@@ -136,6 +114,21 @@ public class ExpressionUtil {
             }
         }
         return "(" + value + ")";
+    }
+
+    private static boolean isUcumTime(String ucumUnits) {
+        if (ucumUnits.equals("a")
+                || ucumUnits.equals("mo")
+                || ucumUnits.equals("wk")
+                || ucumUnits.equals("d")
+                || ucumUnits.equals("h")
+                || ucumUnits.equals("min")
+                || ucumUnits.equals("s")
+                || ucumUnits.equals("S")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static String getVariableWithAttributeStr(String rmName, Variable var) {

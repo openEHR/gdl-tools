@@ -1,12 +1,10 @@
 package se.cambio.cds.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
-import org.openehr.rm.datatypes.quantity.DvCount;
-import org.openehr.rm.datatypes.quantity.DvOrdered;
-import org.openehr.rm.datatypes.quantity.DvOrdinal;
-import org.openehr.rm.datatypes.quantity.DvProportion;
-import org.openehr.rm.datatypes.quantity.DvQuantity;
+import org.openehr.rm.datatypes.quantity.*;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.quantity.datetime.DvDuration;
 import org.openehr.rm.datatypes.quantity.datetime.DvTemporal;
@@ -14,13 +12,7 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
 import org.openehr.rm.support.measurement.SimpleMeasurementService;
-import se.cambio.cds.gdl.model.expression.CodedTextConstant;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.DateTimeConstant;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.OrdinalConstant;
-import se.cambio.cds.gdl.model.expression.QuantityConstant;
-import se.cambio.cds.gdl.model.expression.StringConstant;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -32,10 +24,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -378,6 +367,38 @@ public class DVUtil {
             } else {
                 return domain1.equals(domain2);
             }
+        }
+    }
+
+    public static Long calculateDuration(String value, DvDateTime currentDateTime) {
+        String units = StringUtils.substringAfter(value, ",");
+        String amount = StringUtils.substringBefore(value, ",");
+        DateTime dateTime = currentDateTime.getDateTime();
+        Calendar resultDateTime = new DateTime(dateTime).toGregorianCalendar();
+        resultDateTime.add(ucumToCalendar(units), Integer.parseInt(amount));
+        return resultDateTime.getTimeInMillis() - dateTime.toGregorianCalendar().getTimeInMillis();
+    }
+
+    private static int ucumToCalendar(String ucumUnits) {
+        switch (ucumUnits) {
+            case "a":
+                return Calendar.YEAR;
+            case "mo":
+                return Calendar.MONTH;
+            case "wk":
+                return Calendar.WEEK_OF_YEAR;
+            case "d":
+                return Calendar.DAY_OF_YEAR;
+            case "h":
+                return Calendar.HOUR;
+            case "min":
+                return Calendar.MINUTE;
+            case "s":
+                return Calendar.SECOND;
+            case "S":
+                return Calendar.MILLISECOND;
+            default:
+                throw new IllegalArgumentException(format("Unknown time units '%s'", ucumUnits));
         }
     }
 }

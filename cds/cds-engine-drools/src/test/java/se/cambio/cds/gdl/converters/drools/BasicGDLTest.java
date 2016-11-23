@@ -446,7 +446,7 @@ public class BasicGDLTest extends GDLTestCase {
         ar = generateWeightArchetypeReference(date, 81.0);
         ehrArs.add(ar);
 
-        List<String> guideIds = Arrays.asList("simple_pattern_matching");
+        List<String> guideIds = Collections.singletonList("simple_pattern_matching");
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
     }
@@ -470,7 +470,7 @@ public class BasicGDLTest extends GDLTestCase {
         ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
         ehrArs.add(ar);
 
-        List<String> guideIds = Arrays.asList("TRI.v1.test");
+        List<String> guideIds = Collections.singletonList("TRI.v1.test");
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
         assertThat(rer.getArchetypeReferences().size(), equalTo(1));
@@ -480,8 +480,7 @@ public class BasicGDLTest extends GDLTestCase {
         assertThat(elementInstance, notNullValue());
         assertThat(elementInstance.getDataValue(), instanceOf(DvQuantity.class));
         DvQuantity quantity = (DvQuantity)elementInstance.getDataValue();
-        //TODO Remove floor method once we have exact calculation of dates
-        assertThat(floor(quantity.getMagnitude()), equalTo(2.0));
+        assertThat(quantity.getMagnitude(), equalTo(2.0));
     }
 }
 

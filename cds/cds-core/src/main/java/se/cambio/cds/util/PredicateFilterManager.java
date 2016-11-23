@@ -131,7 +131,8 @@ public class PredicateFilterManager {
             Collection<ArchetypeReference> ehrArchetypeReferences,
             boolean greaterThan, Calendar date) {
         if (dv instanceof CurrentTimeExpressionDataValue) {
-            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, OperatorKind.GREATER_THAN_OR_EQUAL, null, date);
+            OperatorKind operatorKind = greaterThan ? OperatorKind.GREATER_THAN_OR_EQUAL : OperatorKind.LESS_THAN_OR_EQUAL;
+            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, operatorKind, null, date);
             if (dv == null) {
                 Logger.getLogger(PredicateFilterManager.class).warn("No Data Value returned after resolving predicate!");
             }
