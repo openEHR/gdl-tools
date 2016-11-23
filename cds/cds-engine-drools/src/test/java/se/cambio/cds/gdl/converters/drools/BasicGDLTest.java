@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,10 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
+import static java.lang.Math.floor;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -456,6 +460,28 @@ public class BasicGDLTest extends GDLTestCase {
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singletonList("conflicting_predicates"), elementInstances);
         assertEquals(1, rer.getFiredRules().size());
+    }
+
+    @Test
+    public void shoudlEvaluateTimeExpressionCorrectly() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.YEAR, -20);
+        ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs.add(ar);
+
+        List<String> guideIds = Arrays.asList("TRI.v1.test");
+        RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(1));
+        assertThat(rer.getArchetypeReferences().size(), equalTo(1));
+        ArchetypeReference resultAr = rer.getArchetypeReferences().iterator().next();
+        assertThat(resultAr.getIdArchetype(), equalTo("openEHR-EHR-OBSERVATION.timi_risk_index.v1"));
+        ElementInstance elementInstance = resultAr.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.timi_risk_index.v1/data[at0001]/events[at0002]/data[at0003]/items[at0005]");
+        assertThat(elementInstance, notNullValue());
+        assertThat(elementInstance.getDataValue(), instanceOf(DvQuantity.class));
+        DvQuantity quantity = (DvQuantity)elementInstance.getDataValue();
+        //TODO Remove floor method once we have exact calculation of dates
+        assertThat(floor(quantity.getMagnitude()), equalTo(2.0));
     }
 }
 
