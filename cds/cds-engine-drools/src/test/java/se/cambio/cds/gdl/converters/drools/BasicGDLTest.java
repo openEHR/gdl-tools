@@ -463,7 +463,7 @@ public class BasicGDLTest extends GDLTestCase {
     }
 
     @Test
-    public void shoudlEvaluateTimeExpressionCorrectly() throws InstanceNotFoundException, InternalErrorException {
+    public void shouldEvaluateTimeExpressionCorrectly() throws InstanceNotFoundException, InternalErrorException {
         Collection<ArchetypeReference> ehrArs = new ArrayList<>();
         Calendar date = Calendar.getInstance();
         date.add(Calendar.YEAR, -20);
