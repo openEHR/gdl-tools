@@ -1,0 +1,51 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_predicate_expression_with_units">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units=='kg'",...>
+			>
+		>
+		rules = <
+			["gt0004"] = (RULE) <
+				when = <"$gt0003!=null",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0003"] = (TERM) <
+						text = <"Weight">
+						description = <"The weight of the individual.">
+					>
+					["gt0004"] = (TERM) <
+						text = <"test">
+					>
+				>
+			>
+		>
+	>
+>
