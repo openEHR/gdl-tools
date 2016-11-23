@@ -21,7 +21,9 @@ import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.expression.OrdinalConstant;
 import se.cambio.cds.gdl.model.expression.QuantityConstant;
 import se.cambio.cds.gdl.model.expression.StringConstant;
+import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
+import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -34,6 +36,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static java.lang.String.format;
 
 
 public class DVUtil {
@@ -317,19 +321,39 @@ public class DVUtil {
         }
     }
 
-    public static boolean checkMaxMin(DataValue predicateDV, DataValue dv, String opSymbol) throws InternalErrorException {
-        if (predicateDV instanceof DvOrdered && dv instanceof DvOrdered) {
-            int comp = ((DvOrdered) predicateDV).compareTo(dv);
-            if (OperatorKind.MAX.getSymbol().equals(opSymbol)) {
-                return comp < 0;
-            } else if (OperatorKind.MIN.getSymbol().equals(opSymbol)) {
-                return comp > 0;
-            } else {
-                throw new InternalErrorException(new Exception("Operator for predicate '" + opSymbol + "' is not valid."));
-            }
-        } else {
+    public static boolean checkMaxMin(DataValue originalDv, DataValue checkDv, String opSymbol, ArchetypeReference originalAr, ArchetypeReference checkAr) {
+        if (!(originalDv instanceof DvOrdered) || !(checkDv instanceof DvOrdered)) {
             return false;
         }
+        if (!areDomainsCompatible(originalAr.getIdDomain(), checkAr.getIdDomain())) {
+            return false;
+        }
+        if (comparingGeneratedArWithRealAr(originalAr, checkAr)) {
+            return true;
+        }
+        if (comparingRealArWithGeneratedAr(originalAr, checkAr)) {
+            return false;
+        }
+        int comp = compare(originalDv, checkDv);
+        if (OperatorKind.MAX.getSymbol().equals(opSymbol)) {
+            return comp < 0;
+        } else if (OperatorKind.MIN.getSymbol().equals(opSymbol)) {
+            return comp > 0;
+        } else {
+            throw new IllegalArgumentException(format("Operator for predicate '%s' is not valid.", opSymbol));
+        }
+    }
+
+    private static int compare(DataValue originalDv, DataValue checkDv) {
+        return ((DvOrdered) originalDv).compareTo(checkDv);
+    }
+
+    private static boolean comparingGeneratedArWithRealAr(ArchetypeReference originalAr, ArchetypeReference checkAr) {
+        return originalAr instanceof GeneratedArchetypeReference && !(checkAr instanceof GeneratedArchetypeReference);
+    }
+
+    private static boolean comparingRealArWithGeneratedAr(ArchetypeReference originalAr, ArchetypeReference checkAr) {
+        return !(originalAr instanceof GeneratedArchetypeReference) && checkAr instanceof GeneratedArchetypeReference;
     }
 
     private static String getDateTimeStrWithoutMillisAndTimezone(String dateTimeDVStr) {
