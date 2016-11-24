@@ -1,0 +1,76 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"time_evaluation_test4">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data/events/time">
+					>
+				>
+			>
+			["gt0006"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.height.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0008"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0004]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0004"] = (RULE) <
+				when = <"!fired($gt0004)",...>
+				then = <"$gt0003.value=($currentDateTime.value-6,mo)",...>
+				priority = <2>
+			>
+			["gt0005"] = (RULE) <
+				when = <"!fired($gt0005)",...>
+				then = <"$gt0008.precision=2", "$gt0008.magnitude=(($currentDateTime.value-$gt0003.value)/12,mo)">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0003"] = (TERM) <
+						text = <"weight time">
+						description = <"The weight of the individual.">
+					>
+					["gt0004"] = (TERM) <
+						text = <"test">
+					>
+					["gt0005"] = (TERM) <
+						text = <"test2">
+					>
+					["gt0007"] = (TERM) <
+						text = <"height time">
+						description = <"The exact time of a single timed event during the Observation. Can represent either a specific point-in-time or an interval event.">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Height/Length">
+						description = <"The length of the body from crown of head to sole of foot.">
+					>
+				>
+			>
+		>
+	>
+>

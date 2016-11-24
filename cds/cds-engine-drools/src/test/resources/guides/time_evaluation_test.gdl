@@ -1,0 +1,50 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"time_evaluation_test">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0003"] = (ELEMENT_BINDING) <
+						path = <"/data/events/time">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0004"] = (RULE) <
+				then = <"$gt0003.value=($currentDateTime.value-1,a)",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0003"] = (TERM) <
+						text = <"time">
+						description = <"The weight of the individual.">
+					>
+					["gt0004"] = (TERM) <
+						text = <"test">
+					>
+				>
+			>
+		>
+	>
+>

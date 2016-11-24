@@ -5,9 +5,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.*;
-import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
-import org.openehr.rm.datatypes.quantity.datetime.DvDuration;
-import org.openehr.rm.datatypes.quantity.datetime.DvTemporal;
+import org.openehr.rm.datatypes.quantity.datetime.*;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
@@ -67,15 +65,8 @@ public class DVUtil {
             DvTemporal dvTemporal2 = (DvTemporal) dv2;
             return dvTemporal1.getDateTime().getMillis() == dvTemporal2.getDateTime().getMillis();
         } else {
-            if (dv1 == null && dv2 == null) {
-                return true;
-            } else {
-                if (dv1 != null) {
-                    return dv1.equals(dv2);
-                } else {
-                    return false;
-                }
-            }
+            return dv1 == null && dv2 == null
+                    || dv1 != null && dv1.equals(dv2);
         }
     }
 
@@ -188,13 +179,12 @@ public class DVUtil {
         } else {
             CodePhrase a = getCodePhrase(ei.getDataValue());
             Set<CodePhrase> codePhrases = new HashSet<>();
-            for (int i = 0; i < dataValues.length; i++) {
-                codePhrases.add(getCodePhrase(dataValues[i]));
+            for (DataValue dataValue : dataValues) {
+                codePhrases.add(getCodePhrase(dataValue));
             }
             if (a != null && !codePhrases.isEmpty()) {
                 try {
-                    boolean result = OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
-                    return result;
+                    return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
                 } catch (InternalErrorException e) {
                     ExceptionHandler.handle(e);
                     return false;
@@ -221,8 +211,8 @@ public class DVUtil {
             //TODO Remove, exceptions should be handled
             CodePhrase a = getCodePhrase(ei.getDataValue());
             Set<CodePhrase> codePhrases = new HashSet<>();
-            for (int i = 0; i < dataValues.length; i++) {
-                codePhrases.add(getCodePhrase(dataValues[i]));
+            for (DataValue dataValue : dataValues) {
+                codePhrases.add(getCodePhrase(dataValue));
             }
             if (a != null && !codePhrases.isEmpty()) {
                 try {
@@ -269,19 +259,15 @@ public class DVUtil {
             } else {
                 return false;
             }
-        } else if (dv1 instanceof DvCount && dv2 instanceof DvCount) {
-            return true;
-        } else if (dv1 instanceof DvTemporal<?> && dv2 instanceof DvTemporal<?>) {
-            return true;
-        } else if (dv1 instanceof DvDuration && dv2 instanceof DvDuration) {
-            return true;
-        } else if (dv1 instanceof DvProportion && dv2 instanceof DvProportion) {
-            return true;
-        } else if (dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal) {
-            return true;
-        } else {
-            return false; //Comparison of DVText always incompatible (not for equals/unequals)
-        }
+        } else
+            return dv1 instanceof DvCount && dv2 instanceof DvCount
+                    || dv1 instanceof DvTemporal<?> && dv2 instanceof DvTemporal<?>
+                    || dv1 instanceof DvDuration && dv2 instanceof DvDuration
+                    || dv1 instanceof DvProportion && dv2 instanceof DvProportion
+                    || dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal;
+//Comparison of DVText always incompatible (not for equals/unequals)
+
+
     }
 
     public static double round(double unroundedDouble, int precision) {
@@ -358,25 +344,34 @@ public class DVUtil {
         }
     }
 
-    public static boolean areDomainsCompatible(String domain1, String domain2) {
-        if (domain1 == null) {
-            return true;
-        } else {
-            if (domain2 == null) {
-                return true;
-            } else {
-                return domain1.equals(domain2);
-            }
-        }
+    private static boolean areDomainsCompatible(String domain1, String domain2) {
+        return domain1 == null || domain2 == null || domain1.equals(domain2);
     }
 
-    public static Long calculateDuration(String value, DvDateTime currentDateTime) {
+    public static Double calculateDuration(String value, DataValue operationDateTime, String symbol) {
         String units = StringUtils.substringAfter(value, ",");
-        String amount = StringUtils.substringBefore(value, ",");
-        DateTime dateTime = currentDateTime.getDateTime();
+        String minusSignIfSubtraction = "-".equals(symbol) ? "-" : "";
+        String amount = minusSignIfSubtraction + StringUtils.substringBefore(value, ",");
+        DateTime dateTime = getDateTime(operationDateTime, value);
         Calendar resultDateTime = new DateTime(dateTime).toGregorianCalendar();
         resultDateTime.add(ucumToCalendar(units), Integer.parseInt(amount));
-        return resultDateTime.getTimeInMillis() - dateTime.toGregorianCalendar().getTimeInMillis();
+        return (double) Math.abs(resultDateTime.getTimeInMillis() - dateTime.toGregorianCalendar().getTimeInMillis());
+    }
+
+    private static DateTime getDateTime(DataValue operationDataValue, String value) {
+        if (operationDataValue instanceof DvDateTime) {
+            return ((DvDateTime) operationDataValue).getDateTime();
+        } else if (operationDataValue instanceof DvDate) {
+            return ((DvDate) operationDataValue).getDateTime();
+        } else if (operationDataValue instanceof DvTime) {
+            return ((DvTime) operationDataValue).getDateTime();
+        } else {
+            if (operationDataValue == null) {
+                throw new IllegalArgumentException(format("Cannot use null datavalue to evaluate expression %s", value));
+            } else {
+                throw new IllegalArgumentException(format("Cannot use datavalue with class %s to evaluate expression %s", operationDataValue.getClass().getName(), value));
+            }
+        }
     }
 
     private static int ucumToCalendar(String ucumUnits) {

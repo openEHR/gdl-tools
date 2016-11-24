@@ -15,11 +15,6 @@ import java.util.Set;
 
 import static java.lang.String.format;
 
-/**
- * User: iago.corbal
- * Date: 2013-12-11
- * Time: 17:23
- */
 public class ExpressionUtil {
 
     public static String CODE_FUNCTION_SEPARATOR = "#";
@@ -27,24 +22,30 @@ public class ExpressionUtil {
     public static String getArithmeticExpressionStr(
             Map<String, ArchetypeElementVO> elementMap,
             ExpressionItem expressionItem, Map<RefStat, Set<String>> stats) throws InternalErrorException {
-        StringBuffer sb = new StringBuffer();
+        return getArithmeticExpressionStr(elementMap, expressionItem, stats, null);
+    }
+
+    private static String getArithmeticExpressionStr(
+            Map<String, ArchetypeElementVO> elementMap,
+            ExpressionItem expressionItem, Map<RefStat, Set<String>> stats,
+            ExpressionItem parentExpressionItem) throws InternalErrorException {
+        StringBuilder sb = new StringBuilder();
         if (expressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
             if (OperatorKind.EXPONENT.equals(binaryExpression.getOperator())) {
                 sb.append("Math.pow(");
                 sb.append(getArithmeticExpressionStr(elementMap,
-                        binaryExpression.getLeft(), stats));
+                        binaryExpression.getLeft(), stats, binaryExpression));
                 sb.append(",");
                 sb.append(getArithmeticExpressionStr(elementMap,
-                        binaryExpression.getRight(), stats));
+                        binaryExpression.getRight(), stats, binaryExpression));
                 sb.append(")");
             } else {
-                sb.append("("
-                        + getArithmeticExpressionStr(elementMap,
-                        binaryExpression.getLeft(), stats));
+                sb.append("(")
+                        .append(getArithmeticExpressionStr(elementMap, binaryExpression.getLeft(), stats, binaryExpression));
                 sb.append(binaryExpression.getOperator().getSymbol());
-                sb.append(getArithmeticExpressionStr(elementMap,
-                        binaryExpression.getRight(), stats) + ")");
+                sb.append(getArithmeticExpressionStr(elementMap, binaryExpression.getRight(), stats, binaryExpression))
+                        .append(")");
             }
         } else if (expressionItem instanceof Variable) {
             Variable var = (Variable) expressionItem;
@@ -76,14 +77,16 @@ public class ExpressionUtil {
             }
             sb.append(stringValue);
         } else if (expressionItem instanceof ConstantExpression) {
-            sb.append(formatConstantValue((ConstantExpression) expressionItem));
+            sb.append(formatConstantValue((ConstantExpression) expressionItem, parentExpressionItem));
         } else if (expressionItem instanceof FunctionalExpression) {
             FunctionalExpression fe = (FunctionalExpression) expressionItem;
-            sb.append("Math." + fe.getFunction().toString()).append("(");
+            sb.append("Math.")
+                    .append(fe.getFunction().toString())
+                    .append("(");
             String postfix = "";
             for (ExpressionItem feItem : fe.getItems()) {
                 sb.append(postfix);
-                sb.append(getArithmeticExpressionStr(elementMap, feItem, stats));
+                sb.append(getArithmeticExpressionStr(elementMap, feItem, stats, expressionItem));
                 postfix = ", ";
             }
             sb.append(")");
@@ -99,12 +102,14 @@ public class ExpressionUtil {
     /*
      * Parse for units of hr and convert value to milliseconds
      */
-    private static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
+    private static String formatConstantValue(ConstantExpression exp, ExpressionItem parentExpressionItem) throws InternalErrorException {
         String value = exp.getValue();
         if (value.contains(",")) {
             String units = StringUtils.substringAfter(value, ",");
             if (isUcumTime(units)) {
-                value = "DVUtil.calculateDuration(\"" + value + "\",$" + OpenEHRConst.CURRENT_DATE_TIME_ID + ")";
+                String temporalVariableName = getTemporalVariableName(parentExpressionItem);
+                OperatorKind operatorKind = getOperatorKind(parentExpressionItem);
+                value = format("DVUtil.calculateDuration(\"%s\",$%s, \"%s\")", value, temporalVariableName, operatorKind.getSymbol());
             } else {
                 throw new IllegalArgumentException(format("Unknown time units in value '%s'", value));
             }
@@ -116,19 +121,37 @@ public class ExpressionUtil {
         return "(" + value + ")";
     }
 
+    private static OperatorKind getOperatorKind(ExpressionItem parentExpressionItem) {
+        if (parentExpressionItem instanceof BinaryExpression) {
+            return ((BinaryExpression) parentExpressionItem).getOperator();
+        } else {
+            return null;
+        }
+    }
+
+    private static String getTemporalVariableName(ExpressionItem parentExpressionItem) {
+        String variable = OpenEHRConst.CURRENT_DATE_TIME_ID;
+        if (parentExpressionItem instanceof BinaryExpression) {
+            ExpressionItem left = ((BinaryExpression) parentExpressionItem).getLeft();
+            if (left instanceof Variable) {
+                String code = ((Variable) left).getCode();
+                if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(code)) {
+                    variable = code + ".getDataValue()";
+                }
+            }
+        }
+        return variable;
+    }
+
     private static boolean isUcumTime(String ucumUnits) {
-        if (ucumUnits.equals("a")
+        return ucumUnits.equals("a")
                 || ucumUnits.equals("mo")
                 || ucumUnits.equals("wk")
                 || ucumUnits.equals("d")
                 || ucumUnits.equals("h")
                 || ucumUnits.equals("min")
                 || ucumUnits.equals("s")
-                || ucumUnits.equals("S")) {
-            return true;
-        } else {
-            return false;
-        }
+                || ucumUnits.equals("S");
     }
 
     public static String getVariableWithAttributeStr(String rmName, Variable var) {

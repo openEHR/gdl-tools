@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
-import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,7 @@ import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.EhrDataFilterManager;
-import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -32,10 +29,7 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
-import static java.lang.Math.floor;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -449,38 +443,6 @@ public class BasicGDLTest extends GDLTestCase {
         List<String> guideIds = Collections.singletonList("simple_pattern_matching");
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
-    }
-
-
-    @Test
-    public void shouldDetectConflictingPredicates() {
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.YEAR, -2);
-        ArchetypeReference ar = generateWeightArchetypeReference(date, 78.0);
-        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
-        RuleExecutionResult rer = executeGuides(Collections.singletonList("conflicting_predicates"), elementInstances);
-        assertEquals(1, rer.getFiredRules().size());
-    }
-
-    @Test
-    public void shouldEvaluateTimeExpressionCorrectly() throws InstanceNotFoundException, InternalErrorException {
-        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.YEAR, -20);
-        ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
-        ehrArs.add(ar);
-
-        List<String> guideIds = Collections.singletonList("TRI.v1.test");
-        RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
-        assertThat(rer.getFiredRules().size(), equalTo(1));
-        assertThat(rer.getArchetypeReferences().size(), equalTo(1));
-        ArchetypeReference resultAr = rer.getArchetypeReferences().iterator().next();
-        assertThat(resultAr.getIdArchetype(), equalTo("openEHR-EHR-OBSERVATION.timi_risk_index.v1"));
-        ElementInstance elementInstance = resultAr.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.timi_risk_index.v1/data[at0001]/events[at0002]/data[at0003]/items[at0005]");
-        assertThat(elementInstance, notNullValue());
-        assertThat(elementInstance.getDataValue(), instanceOf(DvQuantity.class));
-        DvQuantity quantity = (DvQuantity)elementInstance.getDataValue();
-        assertThat(quantity.getMagnitude(), equalTo(2.0));
     }
 }
 
