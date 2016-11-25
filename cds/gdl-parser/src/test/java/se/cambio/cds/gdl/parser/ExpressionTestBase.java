@@ -1,14 +1,13 @@
 package se.cambio.cds.gdl.parser;
 
+import junit.framework.TestCase;
+import org.apache.commons.jxpath.JXPathContext;
+import se.cambio.cds.gdl.model.expression.BinaryExpression;
+import se.cambio.cds.gdl.model.expression.ExpressionItem;
+
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
-
-import org.apache.commons.jxpath.JXPathContext;
-
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import junit.framework.TestCase;
 
 public class ExpressionTestBase extends TestCase {
 	public void setUp() {
@@ -23,8 +22,8 @@ public class ExpressionTestBase extends TestCase {
 		assertNotNull(items);
 		assertEquals(1, items.size());
 		item = items.get(0);
-		if(item instanceof BinaryExpression) {
-			be = (BinaryExpression) item;
+		if(item instanceof ExpressionItem) {
+			be = (ExpressionItem) item;
 		}
 	}
 
@@ -62,8 +61,8 @@ public class ExpressionTestBase extends TestCase {
 
 	List<ExpressionItem> items;
 	ExpressionItem item;
-	BinaryExpression be;
-	BinaryExpression expected;
+	ExpressionItem be;
+	ExpressionItem expected;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****
