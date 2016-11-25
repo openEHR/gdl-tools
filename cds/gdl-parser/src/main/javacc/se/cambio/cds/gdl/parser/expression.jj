@@ -469,7 +469,7 @@ ExpressionItem expression_node() :
       {
         op = OperatorKind.FIRED;
       }
-    | t = < SYM_MATH_FUNCTION > item = expression_leaf()
+    | t = < SYM_MATH_FUNCTION > < SYM_L_PARENTHESIS > item = expression_leaf() < SYM_R_PARENTHESIS >
       {
         return FunctionalExpression.create(new Function(t.image), item);
       }
