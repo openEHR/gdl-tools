@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.EhrDataFilterManager;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
@@ -443,6 +445,41 @@ public class BasicGDLTest extends GDLTestCase {
         List<String> guideIds = Collections.singletonList("simple_pattern_matching");
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
+    }
+
+    @Test
+    public void shouldTestPredicateComparisonUsingAttributeAndConstant() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        Calendar date = Calendar.getInstance();
+        ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs.add(ar);
+
+        List<String> guideIds = Arrays.asList("test_attribute_predicate");
+        RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(1));
+
+        date.add(Calendar.YEAR, -1);
+        ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs = new ArrayList<>();
+        ehrArs.add(ar);
+        rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(0));
+    }
+
+    @Test
+    public void shouldAllowPredicatesWithUnits() {
+        Calendar date = Calendar.getInstance();
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.WEIGHT_ARCHETYPE_ID, null);
+        DataValue dataValue = new DvQuantity("kg", 90.0, 2);
+        ElementInstance elementInstance = new ElementInstance(WEIGHT_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvDateTime(new DateTime(date.getTimeInMillis()).toString());
+        new ElementInstance(WEIGHT_EVENT_TIME_ELEMENT_ID, dataValue, ar, null, null);
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
+        assertEquals(1, rer.getFiredRules().size());
+        elementInstance.setDataValue(new DvQuantity("lb", 90.0, 2));
+        rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
+        assertEquals(0, rer.getFiredRules().size());
     }
 }
 

@@ -115,8 +115,13 @@ public class TimeExpressionGDLTest extends GDLTestCase {
         assertThat(rer.getFiredRules().size(), equalTo(2));
         assertThat(rer.getArchetypeReferences().size(), equalTo(2));
 
-        ArchetypeReference resultAr = rer.getArchetypeReferences().iterator().next();
-        assertThat(resultAr.getIdArchetype(), equalTo("openEHR-EHR-OBSERVATION.height.v1"));
+        ArchetypeReference resultAr = null;
+        for (ArchetypeReference ar : rer.getArchetypeReferences()) {
+            if (ar.getIdArchetype().equals("openEHR-EHR-OBSERVATION.height.v1")) {
+                resultAr = ar;
+            }
+        }
+        assertThat(resultAr, notNullValue());
         ElementInstance elementInstance = resultAr.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.height.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]");
         assertThat(elementInstance.getDataValue(), instanceOf(DvQuantity.class));
         DvQuantity quantity = (DvQuantity) elementInstance.getDataValue();

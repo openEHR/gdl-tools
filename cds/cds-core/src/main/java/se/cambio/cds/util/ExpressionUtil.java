@@ -33,7 +33,7 @@ public class ExpressionUtil {
         if (expressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
             if (OperatorKind.EXPONENT.equals(binaryExpression.getOperator())) {
-                sb.append("Math.pow(");
+                sb.append("(double) Math.pow(");
                 sb.append(getArithmeticExpressionStr(elementMap,
                         binaryExpression.getLeft(), stats, binaryExpression));
                 sb.append(",");
@@ -80,7 +80,7 @@ public class ExpressionUtil {
             sb.append(formatConstantValue((ConstantExpression) expressionItem, parentExpressionItem));
         } else if (expressionItem instanceof FunctionalExpression) {
             FunctionalExpression fe = (FunctionalExpression) expressionItem;
-            sb.append("Math.")
+            sb.append("(double)Math.")
                     .append(fe.getFunction().toString())
                     .append("(");
             String postfix = "";
@@ -115,7 +115,7 @@ public class ExpressionUtil {
             }
         } else if (exp instanceof MathConstant) {
             if (Constant.E.equals(((MathConstant) exp).getConstant())) {
-                value = "" + Math.E;
+                value = "(double) " + Math.E;
             }
         }
         return "(" + value + ")";
@@ -161,7 +161,6 @@ public class ExpressionUtil {
         if (rmName != null) {
             dvClassName = DVDefSerializer.getDVClassName(rmName);
         }
-        // TODO fix setting currentDateTime
         if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode()) && (var.getAttribute() == null || var.getAttribute().equals("value"))) {
             ret = "$" + OpenEHRConst.CURRENT_DATE_TIME_ID + ".getDateTime().getMillis()";
         } else if ("value".equals(var.getAttribute()) && ("DvDateTime".equals(dvClassName) || "DvDate".equals(dvClassName))) {
