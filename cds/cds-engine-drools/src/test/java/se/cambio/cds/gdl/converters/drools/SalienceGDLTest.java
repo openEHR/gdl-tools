@@ -51,7 +51,6 @@ public class SalienceGDLTest extends GDLTestCase {
         guideIds.add("Stroke_prevention_compliance_checking_in_AF.v2");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
         List<RuleReference> firedRules = rer.getFiredRules();
-        //assertEquals(16, firedRules.size());
         List<String> firedGuideIds = getCalledGuideIds(firedRules);
         int indexOfLastScoreCalc = firedGuideIds.lastIndexOf("CHA2DS2VASc_Score_calculation.v1.1");
         int indexOfLastMedRec = firedGuideIds.lastIndexOf("Stroke_prevention_compliance_checking_in_AF.v2");

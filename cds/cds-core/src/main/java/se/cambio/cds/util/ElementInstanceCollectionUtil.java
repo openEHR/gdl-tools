@@ -277,9 +277,14 @@ public class ElementInstanceCollectionUtil {
             date = (date != null ? date : Calendar.getInstance());
             DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
             JexlEngine engine = new JexlEngine();
+            engine.setStrict(true);
             Expression e = engine.createExpression(expStr);
             JexlContext context = new MapContext();
             context.set("$" + OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
+            context.set("DVUtil", new DVUtil());
+            context.set("Math", new MathFunctionProxy());
+            context.set("e", Math.E);
+            context.set("pi", Math.PI);
             Object obj = e.evaluate(context);
             if (obj instanceof Double) {
                 obj = ((Double) obj).longValue(); //In dates we never need double value

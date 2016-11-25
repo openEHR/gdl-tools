@@ -152,6 +152,10 @@ public abstract class GDLTestCase {
     }
 
     public RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances) {
+        return executeGuides(guideIds, elementInstances, Calendar.getInstance());
+    }
+
+    public RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances, Calendar cal) {
         RuleExecutionResult rer = null;
         try {
             StringBuilder guideIdsSB = new StringBuilder();
@@ -162,7 +166,6 @@ public abstract class GDLTestCase {
                 prefix = ", ";
             }
             GuideManager guideManager = generateGuideManager(guideIds);
-            Calendar cal = Calendar.getInstance();
             long startTime = System.currentTimeMillis();
             ElementInstanceCollection eic = new ElementInstanceCollection();
             eic.addAll(elementInstances);
