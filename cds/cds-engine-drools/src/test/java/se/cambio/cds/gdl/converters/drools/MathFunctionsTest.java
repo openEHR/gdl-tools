@@ -78,6 +78,25 @@ public class MathFunctionsTest extends GDLTestCase {
         assertThat(((DvQuantity) roundDV).getMagnitude(), closeTo(1.000, 0.001));
         assertThat(roundDV, instanceOf(DvQuantity.class));
     }
+
+    @Test
+    public void shouldTestConstantE() {
+        Collection<ElementInstance> elementInstances = new ArrayList<>();
+        List<String> guideIds = new ArrayList<>();
+        guideIds.add("test_e_number");
+        RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
+        assertEquals(1, rer.getFiredRules().size());
+        ArchetypeReference mathResultAR = null;
+        for (ArchetypeReference ar : rer.getArchetypeReferences()) {
+            if ("openEHR-EHR-OBSERVATION.body_weight.v1". equals(ar.getIdArchetype())) {
+                mathResultAR = ar;
+            }
+        }
+        assertThat(mathResultAR, notNullValue());
+        DataValue eDV = mathResultAR.getElementInstancesMap().get("openEHR-EHR-OBSERVATION.body_weight.v1/data[at0002]/events[at0003]/data[at0001]/items[at0004]").getDataValue();
+        assertThat(eDV, instanceOf(DvQuantity.class));
+        assertThat(((DvQuantity) eDV).getMagnitude(), closeTo(2.718, 0.001));
+    }
 }
 
 

@@ -1,0 +1,69 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"conflicting_predicates">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0007"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"max(/data/events/time)",...>
+			>
+			["gt0004"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0006"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+				predicates = <"/data/events/time/value/value>=($currentDateTime.value-1,a)",...>
+			>
+		>
+		rules = <
+			["gt0005"] = (RULE) <
+				when = <"$gt0007!=null",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0003"] = (TERM) <
+						text = <"Event time">
+						description = <"The exact time of a single timed event during the Observation. Can represent either a specific point-in-time or an interval event.">
+					>
+					["gt0005"] = (TERM) <
+						text = <"test">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Last years' Weight">
+						description = <"Peak systemic arterial blood pressure  - measured in systolic or contraction phase of the heart cycle.">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Latest Weight">
+						description = <"Peak systemic arterial blood pressure  - measured in systolic or contraction phase of the heart cycle.">
+					>
+				>
+			>
+		>
+	>
+>

@@ -5,23 +5,23 @@ import se.cambio.cds.gdl.model.expression.BinaryExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.expression.Variable;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateArchetypeElementAttributeRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.PredicateAttributeComparisonOperatorRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.PredicateRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 
-public class WithElementPredicateExpressionDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeReferenceRuleLine, DefinitionsRuleLine, PredicateRuleLine{
+public class WithElementPredicateExpressionDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeReferenceRuleLine, DefinitionsRuleLine, PredicateRuleLine {
 
     private PredicateArchetypeElementAttributeRuleLineElement archetypeElementAttributeRuleLineDefinitionElement = null;
     private PredicateAttributeComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
     private ExpressionRuleLineElement expressionRuleLineElement = null;
-
-    private ArchetypeElementRuleLineDefinitionElement _archetypeElementRuleLineDefinitionElement = null;
 
     public WithElementPredicateExpressionDefinitionRuleLine(
             ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine) {
@@ -31,7 +31,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
         comparisonOperatorRuleLineElement = new PredicateAttributeComparisonOperatorRuleLineElement(this);
         expressionRuleLineElement = new ExpressionRuleLineElement(this);
 
-        if (archetypeInstantiationRuleLine!=null){
+        if (archetypeInstantiationRuleLine != null) {
             archetypeInstantiationRuleLine.addChildRuleLine(this);
         }
 
@@ -49,7 +49,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
         return comparisonOperatorRuleLineElement;
     }
 
-    public ExpressionRuleLineElement getExpressionRuleLineElement(){
+    public ExpressionRuleLineElement getExpressionRuleLineElement() {
         return expressionRuleLineElement;
     }
 
@@ -60,14 +60,14 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
     }
 
     public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+        return (ArchetypeInstantiationRuleLine) getParentRuleLine();
     }
 
     @Override
     public ExpressionItem toExpressionItem() {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementAttributeRuleLineDefinitionElement().getValue();
         String attribute = getArchetypeElementAttributeRuleLineDefinitionElement().getAttribute();
-        String path =  archetypeElementVO.getPath()+"/value/"+attribute;
+        String path = archetypeElementVO.getPath() + "/value/" + attribute;
         ExpressionRuleLineElement expressionRuleLineElement =
                 getExpressionRuleLineElement();
         OperatorKind operatorKind =
@@ -85,14 +85,14 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
         PredicateArchetypeElementAttributeRuleLineElement paearle = getArchetypeElementAttributeRuleLineDefinitionElement();
         PredicateAttributeComparisonOperatorRuleLineElement pacorl = getComparisonOperatorRuleLineElement();
         ExpressionRuleLineElement ere = getExpressionRuleLineElement();
-        if (paearle!=null){
+        if (paearle != null) {
             ArchetypeElementVO archetypeElementVO = paearle.getValue();
             String attribute = paearle.getAttribute();
-            if (archetypeElementVO!=null && pacorl.getValue()!=null){
+            if (archetypeElementVO != null && pacorl.getValue() != null) {
                 String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
-                sb.append(name+"."+attribute+" "+pacorl.getValue().getSymbol()+" "+ere.toString());
-            }else{
-                Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+paearle.toString()+"'");
+                sb.append(name + "." + attribute + " " + pacorl.getValue().getSymbol() + " " + ere.toString());
+            } else {
+                Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + paearle.toString() + "'");
                 sb.append("*UNKNOWN PREDICATE*");
             }
         }
