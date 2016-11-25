@@ -1,0 +1,55 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_attribute_predicate">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.basic_demographic.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]">
+					>
+				>
+				predicates = <"/data[at0001]/events[at0002]/data[at0003]/items[at0008]/value/year==2016",...>
+			>
+		>
+		rules = <
+			["gt0003"] = (RULE) <
+				when = <"$gt0004!=null",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0003"] = (TERM) <
+						text = <"test">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Birthdate">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Event time">
+						description = <"The exact time of a single timed event during the Observation. Can represent either a specific point-in-time or an interval event.">
+					>
+				>
+			>
+		>
+	>
+>

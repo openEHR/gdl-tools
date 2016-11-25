@@ -1,0 +1,50 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"test_e_number">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0003"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-OBSERVATION.body_weight.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0004"] = (ELEMENT_BINDING) <
+						path = <"/data[at0002]/events[at0003]/data[at0001]/items[at0004]">
+					>
+				>
+			>
+		>
+		rules = <
+			["gt0002"] = (RULE) <
+				then = <"$gt0004.precision=3", "$gt0004.magnitude=e">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+					>
+					["gt0002"] = (TERM) <
+						text = <"test">
+					>
+					["gt0004"] = (TERM) <
+						text = <"Weight">
+						description = <"">
+					>
+				>
+			>
+		>
+	>
+>

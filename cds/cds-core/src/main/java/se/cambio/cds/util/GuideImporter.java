@@ -1,5 +1,6 @@
 package se.cambio.cds.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
@@ -97,15 +98,12 @@ public class GuideImporter {
         for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
             if (expressionItem instanceof BinaryExpression) {
                 BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
-                if (binaryExpression.getLeft() instanceof Variable &&
-                        binaryExpression.getRight() instanceof ConstantExpression) {
+                if (binaryExpression.getLeft() instanceof Variable
+                        && !isVariableAttribute((Variable)binaryExpression.getLeft())
+                        && binaryExpression.getRight() instanceof ConstantExpression) {
                     Variable variable = (Variable) binaryExpression.getLeft();
                     ConstantExpression constantExpression2 = (ConstantExpression) binaryExpression.getRight();
                     String path = variable.getPath();
-                    if ("/event/time".equals(path)) {
-                        //Old event time detected //TODO Remove later on
-                        path = OpenEHRRMUtil.EVENT_TIME_PATH;
-                    }
                     String dvStr = constantExpression2.getValue();
                     ArchetypeElementVO archetypeElementVO =
                             airl.getArchetypeManager().getArchetypeElements().getArchetypeElement(
@@ -132,18 +130,13 @@ public class GuideImporter {
                         wepedrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
                         wepedrl.getExistenceOperatorRuleLineElement().setValue(binaryExpression.getOperator().getSymbol() + "null");
                     }
-                } else if (binaryExpression.getLeft() instanceof Variable &&
-                        binaryExpression.getRight() instanceof ExpressionItem) {
+                } else if (binaryExpression.getLeft() instanceof Variable && binaryExpression.getRight() != null) {
                     Variable variable = (Variable) binaryExpression.getLeft();
                     ExpressionItem expressionItemAux = binaryExpression.getRight();
                     WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine(airl);
                     String path = variable.getPath();
-                    String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
-                    path = path.substring(0, path.length() - attribute.length() - 7);
-                    if ("/event/time".equals(path)) {
-                        //Old event time detected //TODO Remove later on
-                        path = OpenEHRRMUtil.EVENT_TIME_PATH;
-                    }
+                    String attribute = StringUtils.substringAfterLast(path, "/value/");
+                    path = StringUtils.substringBeforeLast(path, "/value/");
                     ArchetypeElementVO archetypeElementVO =
                             airl.getArchetypeManager().getArchetypeElements().getArchetypeElement(
                                     archetypeBinding.getTemplateId(),
@@ -162,10 +155,6 @@ public class GuideImporter {
                 Variable variable = (Variable) unaryExpression.getOperand();
                 airl.addChildRuleLine(wefd);
                 String path = variable.getPath();
-                if ("/event/time".equals(path)) {
-                    //Old event time detected //TODO Remove later on
-                    path = OpenEHRRMUtil.EVENT_TIME_PATH;
-                }
                 ArchetypeElementVO archetypeElementVO =
                         airl.getArchetypeManager().getArchetypeElements().getArchetypeElement(
                                 archetypeBinding.getTemplateId(),
@@ -177,6 +166,10 @@ public class GuideImporter {
                 wefd.getFunctionRuleLineElement().setValue(unaryExpression.getOperator());
             }
         }
+    }
+
+    private boolean isVariableAttribute(Variable variable) {
+        return variable.getPath().contains("/value/") && !StringUtils.substringAfterLast(variable.getPath(), "/value/").contains("/");
     }
 
     public static TermDefinition getTermDefinition(Guide guide, String lang) {

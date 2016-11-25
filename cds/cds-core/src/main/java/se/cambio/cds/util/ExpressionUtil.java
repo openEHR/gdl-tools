@@ -29,7 +29,7 @@ public class ExpressionUtil {
         if (expressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
             if (OperatorKind.EXPONENT.equals(binaryExpression.getOperator())) {
-                sb.append("Math.pow(");
+                sb.append("(double) Math.pow(");
                 sb.append(getArithmeticExpressionStr(elementMap,
                         binaryExpression.getLeft(), stats));
                 sb.append(",");
@@ -77,7 +77,7 @@ public class ExpressionUtil {
             sb.append(formatConstantValue((ConstantExpression) expressionItem));
         } else if (expressionItem instanceof FunctionalExpression) {
             FunctionalExpression fe = (FunctionalExpression) expressionItem;
-            sb.append("Math." + fe.getFunction().toString()).append("(");
+            sb.append("(double) Math." + fe.getFunction().toString()).append("(");
             String postfix = "";
             for (ExpressionItem feItem : fe.getItems()) {
                 sb.append(postfix);
@@ -97,7 +97,7 @@ public class ExpressionUtil {
     /*
      * Parse for units of hr and convert value to milliseconds
      */
-    public static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
+    private static String formatConstantValue(ConstantExpression exp) throws InternalErrorException {
         String value = exp.getValue();
         int i = value.indexOf(",");
         if (i > 0) {
@@ -126,13 +126,13 @@ public class ExpressionUtil {
                 value = "1000L*" + d;
             } else if (units.equals("S")) {
                 double d = Double.parseDouble(value.substring(0, i));
-                value = "" + d;
+                value = "(long) " + d;
             } else {
                 throw new InternalErrorException(new Exception("Unknown time units '" + units + "'"));
             }
         } else if (exp instanceof MathConstant) {
             if (Constant.E.equals(((MathConstant) exp).getConstant())) {
-                value = "" + Math.E;
+                value = "(double) " + Math.E;
             }
         }
         return "(" + value + ")";
@@ -145,7 +145,6 @@ public class ExpressionUtil {
         if (rmName != null) {
             dvClassName = DVDefSerializer.getDVClassName(rmName);
         }
-        // TODO fix setting currentDateTime
         if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode()) && (var.getAttribute() == null || var.getAttribute().equals("value"))) {
             ret = "$" + OpenEHRConst.CURRENT_DATE_TIME_ID + ".getDateTime().getMillis()";
         } else if ("value".equals(var.getAttribute()) && ("DvDateTime".equals(dvClassName) || "DvDate".equals(dvClassName))) {

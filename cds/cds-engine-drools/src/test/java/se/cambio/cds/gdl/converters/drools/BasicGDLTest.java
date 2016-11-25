@@ -451,6 +451,25 @@ public class BasicGDLTest extends GDLTestCase {
         assertThat(rer.getFiredRules().size(), equalTo(1));
     }
 
+    @Test
+    public void shouldTestPredicateComparisonUsingAttributeAndConstant() throws InstanceNotFoundException, InternalErrorException {
+        Collection<ArchetypeReference> ehrArs = new ArrayList<>();
+        Calendar date = Calendar.getInstance();
+        ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs.add(ar);
+
+        List<String> guideIds = Arrays.asList("test_attribute_predicate");
+        RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(1));
+
+        date.add(Calendar.YEAR, -1);
+        ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
+        ehrArs = new ArrayList<>();
+        ehrArs.add(ar);
+        rer = executeGuides(guideIds, getElementInstances(ehrArs));
+        assertThat(rer.getFiredRules().size(), equalTo(0));
+    }
+
 
     @Test
     public void shouldDetectConflictingPredicates() {
@@ -460,6 +479,22 @@ public class BasicGDLTest extends GDLTestCase {
         Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
         RuleExecutionResult rer = executeGuides(Collections.singletonList("conflicting_predicates"), elementInstances);
         assertEquals(1, rer.getFiredRules().size());
+    }
+
+    @Test
+    public void shouldAllowPredicatesWithUnits() {
+        Calendar date = Calendar.getInstance();
+        ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.WEIGHT_ARCHETYPE_ID, null);
+        DataValue dataValue = new DvQuantity("kg", 90.0, 2);
+        ElementInstance elementInstance = new ElementInstance(WEIGHT_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvDateTime(new DateTime(date.getTimeInMillis()).toString());
+        new ElementInstance(WEIGHT_EVENT_TIME_ELEMENT_ID, dataValue, ar, null, null);
+        Collection<ElementInstance> elementInstances = getElementInstances(Collections.singleton(ar));
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
+        assertEquals(1, rer.getFiredRules().size());
+        elementInstance.setDataValue(new DvQuantity("lb", 90.0, 2));
+        rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
+        assertEquals(0, rer.getFiredRules().size());
     }
 
     @Test
