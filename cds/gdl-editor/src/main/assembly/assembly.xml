@@ -31,6 +31,10 @@
 				<include>gdl-editor.exe</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/src/main/conf</directory>
+			<outputDirectory>conf</outputDirectory>
+		</fileSet>
 		<!-- adds jar package to the root directory of zip package -->
 		<fileSet>
 			<directory>${project.build.directory}</directory>
