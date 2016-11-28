@@ -41,6 +41,7 @@
         <module>openehr-utils</module>
         <module>cds</module>
     </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
