@@ -59,6 +59,7 @@ public class FunctionalExpression extends ExpressionItem {
 	 */
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
+		buf.append("(");
 		buf.append(function);
 		buf.append("(");
 		ExpressionItem item  = null;
@@ -77,7 +78,7 @@ public class FunctionalExpression extends ExpressionItem {
 				}
 			}
 		}
-		buf.append(")");
+		buf.append("))");
 		return buf.toString();
 	}
 
