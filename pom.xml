@@ -20,6 +20,7 @@
         <developerConnection>${scm.url}</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
     <build>
         <plugins>
             <plugin>
