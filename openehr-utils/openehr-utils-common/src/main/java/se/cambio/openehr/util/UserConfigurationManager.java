@@ -178,7 +178,6 @@ public class UserConfigurationManager {
     public void saveConfig() {
         File configFile = new File("conf/UserConfig.properties");
         configFile.getParentFile().mkdirs();
-        UserConfigurationManager instance = instance();
         try {
             configFile.createNewFile();
             try (OutputStream out = new FileOutputStream(configFile)) {

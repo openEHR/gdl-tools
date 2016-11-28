@@ -1,20 +1,13 @@
 package se.cambio.cds.gdl.model.readable.util;
 
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.StringConstant;
-import se.cambio.cds.gdl.model.expression.UnaryExpression;
-import se.cambio.cds.gdl.model.expression.Variable;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ExpressionUtil {
 
     public static String convertToHTMLText(RuleLineElementWithValue<ExpressionItem> ruleLineElement, ExpressionItem expressionItem, String language) {
         StringBuffer sb = new StringBuffer();
-        //sb.append("<HTML>");
         sb.append(toString(ruleLineElement, expressionItem, language));
-        //sb.append("</HTML>");
         return sb.toString();
     }
 
@@ -27,6 +20,16 @@ public class ExpressionUtil {
         } else if (expressionItem instanceof UnaryExpression) {
             UnaryExpression ue = (UnaryExpression) expressionItem;
             return ue.getOperator().getSymbol() + "(" + toString(ruleLineElement, ue.getOperand(), language) + ")";
+        } else if (expressionItem instanceof FunctionalExpression) {
+            FunctionalExpression fe = (FunctionalExpression) expressionItem;
+            StringBuilder sb = new StringBuilder();
+            String postFix = "";
+            for(ExpressionItem ei : fe.getItems()) {
+                sb.append(postFix)
+                        .append(toString(ruleLineElement, ei, language));
+                postFix = ",";
+            }
+            return fe.getFunction().toString() + "(" + sb.toString() + ")";
         } else if (expressionItem instanceof StringConstant) {
             return expressionItem.toString();
         } else {
@@ -54,6 +57,16 @@ public class ExpressionUtil {
         } else if (expressionItem instanceof UnaryExpression) {
             UnaryExpression ue = (UnaryExpression) expressionItem;
             return ue.getOperator().getSymbol() + "(" + getEditableExpressionString(ue.getOperand()) + ")";
+        } else if (expressionItem instanceof FunctionalExpression) {
+            FunctionalExpression fe = (FunctionalExpression) expressionItem;
+            StringBuilder sb = new StringBuilder();
+            String postFix = "";
+            for(ExpressionItem ei : fe.getItems()) {
+                sb.append(postFix)
+                        .append(getEditableExpressionString(ei));
+                postFix = ", ";
+            }
+            return fe.getFunction().toString() + "(" + sb.toString() + ")";
         } else {
             return expressionItem.toString();
         }

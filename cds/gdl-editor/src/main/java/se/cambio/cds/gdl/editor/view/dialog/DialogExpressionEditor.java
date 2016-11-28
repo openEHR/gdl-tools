@@ -33,7 +33,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Reader;
 import java.io.StringReader;
 
 /**
@@ -150,14 +149,14 @@ public class DialogExpressionEditor extends DialogEditor {
             renderedExpressionPanel = new JPanel(new BorderLayout());
             renderedExpressionPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionViewer")));
             JScrollPane jScrollPane = new JScrollPane();
-            jScrollPane.setViewportView(getRenderedExpresionTextComponent());
+            jScrollPane.setViewportView(getRenderedExpressionTextComponent());
             jScrollPane.setPreferredSize(new Dimension(300, 150));
             renderedExpressionPanel.add(jScrollPane, BorderLayout.CENTER);
         }
         return renderedExpressionPanel;
     }
 
-    public JEditorPane getRenderedExpresionTextComponent() {
+    public JEditorPane getRenderedExpressionTextComponent() {
         if (renderedExpressionTextComponent == null) {
             renderedExpressionTextComponent = new JEditorPane();
             renderedExpressionTextComponent.setEditorKit(new StyledEditorKit());
@@ -215,9 +214,9 @@ public class DialogExpressionEditor extends DialogEditor {
         }
         if (_expressionItem != null) {
             String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem, UserConfigurationManager.instance().getLanguage());
-            getRenderedExpresionTextComponent().setText(htmlStr);
+            getRenderedExpressionTextComponent().setText(htmlStr);
         } else {
-            getRenderedExpresionTextComponent().setText("");
+            getRenderedExpressionTextComponent().setText("");
         }
         getExpressionEditorTextComponent().requestFocus();
     }
@@ -228,16 +227,13 @@ public class DialogExpressionEditor extends DialogEditor {
 
     public static ExpressionItem parse(String value) throws Exception {
         //This needs to be done to trick the parser to accept the expression "gtXXXX.attribute"
+        value = value.trim();
         if (!value.startsWith("(") || !value.endsWith(")")) {
             value = "(" + value + ")";
         }
         value = "$gt0001.value=" + value;
-        ExpressionParser parser = new ExpressionParser(convert(value));
+        ExpressionParser parser = new ExpressionParser(new StringReader(value));
         return parser.parse();
-    }
-
-    private static Reader convert(String value) throws Exception {
-        return new StringReader(value);
     }
 
     protected JButton getAddElementButton() {
