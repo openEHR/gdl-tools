@@ -1,7 +1,7 @@
 package se.cambio.cds.util;
 
 import org.apache.log4j.Logger;
-import org.drools.core.spi.KnowledgeHelper;
+import org.drools.spi.KnowledgeHelper;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -50,7 +50,8 @@ public class ExecutionLogger {
                     int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
                     countMap.put(firedRule, count + 1);
                 }
-                for (String firedRule:countMap.keySet()){
+                for (Map.Entry<String, Integer> entry : countMap.entrySet()){
+                    String firedRule = entry.getKey();
                     Logger.getLogger(ExecutionLogger.class).info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
                 }
                 drools.halt();

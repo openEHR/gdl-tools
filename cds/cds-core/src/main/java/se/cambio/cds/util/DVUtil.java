@@ -348,34 +348,7 @@ public class DVUtil {
         return domain1 == null || domain2 == null || domain1.equals(domain2);
     }
 
-    public static Double calculateDuration(String value, DataValue operationDv, String symbol) {
-        if (operationDv instanceof DvQuantity) {
-            return calculateDurationAgainstQuantity(value, (DvQuantity) operationDv, symbol);
-        } else {
-            return calculateDurationAgainstDateTime(value, operationDv, symbol);
-        }
-    }
-
-
-    private static Double calculateDurationAgainstQuantity(String value, DvQuantity quantity, String symbol) {
-        switch (symbol) {
-            case "*":
-                return quantity.getMagnitude() * getAmountInMillisFromQuantityString(value);
-            case "/":
-                return quantity.getMagnitude() / getAmountInMillisFromQuantityString(value);
-            default:
-                throw new IllegalArgumentException(format("Unknown symbol '%s' for expression operation ", symbol));
-        }
-    }
-
-    private static double getAmountInMillisFromQuantityString(String value) {
-        String units = StringUtils.substringAfter(value, ",");
-        Double amount = Double.parseDouble(StringUtils.substringBefore(value, ","));
-        Double multiplier = getMillisMultiplierFromUcum(units);
-        return amount * multiplier;
-    }
-
-    private static Double calculateDurationAgainstDateTime(String value, DataValue operationDateTime, String symbol) {
+    public static Double calculateDuration(String value, DataValue operationDateTime, String symbol) {
         String units = StringUtils.substringAfter(value, ",");
         String minusSignIfSubtraction = "-".equals(symbol) ? "-" : "";
         String amount = minusSignIfSubtraction + StringUtils.substringBefore(value, ",");
@@ -394,51 +367,11 @@ public class DVUtil {
             return ((DvTime) operationDataValue).getDateTime();
         } else {
             if (operationDataValue == null) {
-                throw new IllegalArgumentException(format("Cannot use null data value to evaluate expression %s", value));
+                throw new IllegalArgumentException(format("Cannot use null datavalue to evaluate expression %s", value));
             } else {
-                throw new IllegalArgumentException(format("Cannot use data value with class %s to evaluate expression %s", operationDataValue.getClass().getName(), value));
+                throw new IllegalArgumentException(format("Cannot use datavalue with class %s to evaluate expression %s", operationDataValue.getClass().getName(), value));
             }
         }
-    }
-
-    public static Long ucumToMilliseconds(DvQuantity quantity) {
-        String units = quantity.getUnits();
-        Double magnitude = quantity.getMagnitude();
-        Double multiplier = getMillisMultiplierFromUcum(units);
-        return new Double(multiplier * magnitude).longValue();
-    }
-
-    private static Double getMillisMultiplierFromUcum(String units) {
-        Double multiplier;
-        switch (units) {
-            case "a":
-                multiplier = 31556926000.0;
-                break;
-            case "mo":
-                multiplier = 2629743830.0;
-                break;
-            case "wk":
-                multiplier = 604800000.0;
-                break;
-            case "d":
-                multiplier = 86400000.0;
-                break;
-            case "h":
-                multiplier = 3600000.0;
-                break;
-            case "min":
-                multiplier = 60000.0;
-                break;
-            case "s":
-                multiplier = 1000.0;
-                break;
-            case "S":
-                multiplier = 1.0;
-                break;
-            default:
-                throw new IllegalArgumentException(format("Unknown time units '%s'", units));
-        }
-        return multiplier;
     }
 
     private static int ucumToCalendar(String ucumUnits) {
