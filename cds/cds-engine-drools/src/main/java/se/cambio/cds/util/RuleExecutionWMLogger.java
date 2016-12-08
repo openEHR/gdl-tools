@@ -1,7 +1,7 @@
 package se.cambio.cds.util;
 
-import org.drools.event.rule.AfterActivationFiredEvent;
-import org.drools.event.rule.DefaultAgendaEventListener;
+import org.drools.core.event.DefaultAgendaEventListener;
+import org.kie.api.event.rule.AfterMatchFiredEvent;
 
 import java.util.ArrayList;
 
@@ -11,8 +11,8 @@ public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
     private ArrayList<String> _firedRules = null;
 
     @Override
-    public void afterActivationFired(AfterActivationFiredEvent event) {
-        String ruleName = event.getActivation().getRule().getName();
+    public void afterMatchFired(AfterMatchFiredEvent event) {
+        String ruleName = event.getMatch().getRule().getName();
         getFiredRules().add(ruleName);
     }
 

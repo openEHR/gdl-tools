@@ -8,6 +8,8 @@ import se.cambio.cds.util.exceptions.GuideCompilationException;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.io.UnsupportedEncodingException;
+
 @Component
 @Profile("rule-drools-engine")
 public class DroolsGuideExportPlugin implements GuideExportPlugin {
@@ -23,7 +25,11 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin {
 
     @Override
     public byte[] compile(Guide guide) throws InternalErrorException{
-        return CompilationManager.compile(getDroolsGuide(guide));
+        try {
+            return getDroolsGuide(guide).getBytes("UTF8");
+        } catch (UnsupportedEncodingException e) {
+            throw new InternalErrorException(e);
+        }
     }
 
     public static String getDroolsGuide(Guide guide) throws InternalErrorException {

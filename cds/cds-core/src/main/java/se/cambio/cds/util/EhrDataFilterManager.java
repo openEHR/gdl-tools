@@ -53,16 +53,16 @@ public class EhrDataFilterManager {
                 boolean useAR = true;
                 if (ehrDate != null) {
                     DateTime dateTime = dateTimeARFinder.getDateTime(archetypeReference);
-                    if (dateTime == null || dateTime.isAfter(ehrDate)) {
+                    if (dateTime == null) {
+                        Logger.getLogger(EhrDataFilterManager.class).debug("Date time for ehrId " + ehrId + " with AR " + archetypeReference.getIdArchetype() + " is null!");
+                    }
+                    if (dateTime != null && dateTime.isAfter(ehrDate)) {
                         useAR = false;
                         DateFormat df = DateFormat.getDateTimeInstance();
-                        if (dateTime == null) {
-                            Logger.getLogger(EhrDataFilterManager.class).warn("Date time for ehrId " + ehrId + " with AR " + archetypeReference.getIdArchetype() + " is null!");
-                        } else {
-                            Logger.getLogger(EhrDataFilterManager.class).debug(df.format(dateTime.toDate()) + " after " + df.format(ehrDate.toDate()));
-                        }
+                        Logger.getLogger(EhrDataFilterManager.class).debug(df.format(dateTime.toDate()) + " after " + df.format(ehrDate.toDate()));
                     }
                 }
+
                 if (useAR) {
                     ehrIdARs.add(archetypeReference);
                 }
