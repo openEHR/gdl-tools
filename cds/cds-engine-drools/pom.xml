@@ -10,7 +10,7 @@
 	<description>CDS Drools engine</description>
 
 	<properties>
-		<drools.version>6.5.0.Final</drools.version>
+		<drools.version>5.5.0.Final</drools.version>
 	</properties>
 
 	<dependencies>
