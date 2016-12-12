@@ -1,0 +1,205 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"Stroke_prevention_doctor_visit.v1.0.0">
+	concept = <"gt0001">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"Cambio Healthcare Systems">
+				keywords = <"CHA2DS2-VASc", "stroke", "prevention", "atrial fibrillation", "visit", "primary care">
+				misuse = <"Do not use with other stroke prevention studies other than STPrev-stroke_prevention_clinical_study.">
+				purpose = <"To detect patients that had visited a primary healthcare center  in 2016 and were attended by a doctor.">
+				use = <"Use to focus the accuracy of the stroke prevention treatment compliance indicator results in the stroke prevention clinical study.">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"Cambio Healthcare Systems">
+				keywords = <"CHA2DS2-VASc", "stroke", "profylax", "förmaksflimmer", "besök", "primärvård">
+				misuse = <"Används inte för andra studier för strokeprofylax än STPrev-stroke_prevention_clinical_study.">
+				purpose = <"För att detektera patienter som har besökt en primärvårdsenhet under 2016 och som träffade en läkare vid besöket.">
+				use = <"Används för att precisera indikatorn för förenlighet med strokeprofylaxbehandling i Strokeprofylax klinisk studie.">
+			>
+		>
+		original_author = <
+			["date"] = <"2016-11-16">
+			["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+			["name"] = <"Konstantinos Kalliamvakos">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0002"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.stroke_prevention_dashboard_utility.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0007"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0054]">
+					>
+				>
+			>
+			["gt0004"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.contact.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0005"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0011]">
+					>
+					["gt0009"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0015]==local::at0012|Absent|", "/data[at0001]/items[at0003]>=(2016-01-01T00:00:00)", "/data[at0001]/items[at0014]==local::at0013|Present|", "max(/data[at0001]/items[at0003])", "/data[at0001]/items[at0011]==local::at0013|Present|">
+			>
+		>
+		rules = <
+			["gt0021"] = (RULE) <
+				when = <"$gt0009!=null",...>
+				then = <"$gt0007=$gt0009",...>
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ATC"] = (TERM_BINDING) <
+				bindings = <
+					["gt0012"] = (BINDING) <
+						codes = <[ATC::B01AE07], [ATC::B01AA03], [ATC::B01AF02], [ATC::B01AF01]>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Stroke prevention doctor visit">
+						description = <"The guideline contains a set of rules which filter the results of the stroke prevention clinical study by patients who:
+
+- Had visited any of the clinical study primary healthcare centers
+.
+- The visit occured in 2016
+.
+- The patient was attended by a doctor during that visit.">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Doctor visit">
+						description = <"*">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Primary care visit attended by a doctor">
+						description = <"*">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Set doctor visit to present">
+					>
+					["gt0007"] = (TERM) <
+						text = <"Date/time of last doctor visit">
+						description = <"*">
+					>
+					["gt0008"] = (TERM) <
+						text = <"Set default date/time for last doctor vist">
+					>
+					["gt0009"] = (TERM) <
+						text = <"Contact start time">
+						description = <"*">
+					>
+					["gt0010"] = (TERM) <
+						text = <"Set latest doctor visit between two doctor visits">
+					>
+					["gt0012"] = (TERM) <
+						text = <"anticoagulation medication">
+						description = <"The generic name of the drug which is an alternative name to the name of medication">
+					>
+					["gt0013"] = (TERM) <
+						text = <"medication start">
+						description = <"The date and time (if required) the medication is/was first administered">
+					>
+					["gt0014"] = (TERM) <
+						text = <"medication end">
+						description = <"The date and time (if required) the medication is  to be administered for the last time">
+					>
+					["gt0015"] = (TERM) <
+						text = <"Set medication after a visit to present">
+					>
+					["gt0016"] = (TERM) <
+						text = <"Medication prescribed after visit">
+						description = <"*">
+					>
+					["gt0017"] = (TERM) <
+						text = <"Set medication after a visit to absent">
+					>
+					["gt0018"] = (TERM) <
+						text = <"Set medication before visit">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Medication before visit">
+						description = <"*">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Patients at risk">
+						description = <"*">
+					>
+					["gt0021"] = (TERM) <
+						text = <"Contact exists">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0001"] = (TERM) <
+						text = <"Strokeprofylax läkarbesök">
+						description = <"Riktlinjen innehåller en uppsättning regler som filtrerar resultatet av strokeprofylax klinisk studie enligt patienter som:
+
+- Har besökt någon av de primärvårdsenheter inkluderade i den kliniska studien.
+- Besöket skedde under 2016
+- Patienten träffade läkare vid besöket.">
+					>
+					["gt0003"] = (TERM) <
+						text = <"Läkarbesök">
+						description = <"*(en) *">
+					>
+					["gt0005"] = (TERM) <
+						text = <"Primärvårdsbesök till läkare">
+						description = <"*(en) *">
+					>
+					["gt0006"] = (TERM) <
+						text = <"Ange läkarbesök till Ja">
+					>
+					["gt0007"] = (TERM) <
+					>
+					["gt0008"] = (TERM) <
+					>
+					["gt0009"] = (TERM) <
+					>
+					["gt0010"] = (TERM) <
+					>
+					["gt0012"] = (TERM) <
+					>
+					["gt0013"] = (TERM) <
+					>
+					["gt0014"] = (TERM) <
+					>
+					["gt0015"] = (TERM) <
+					>
+					["gt0016"] = (TERM) <
+					>
+					["gt0017"] = (TERM) <
+					>
+					["gt0018"] = (TERM) <
+					>
+					["gt0019"] = (TERM) <
+					>
+					["gt0020"] = (TERM) <
+					>
+					["gt0021"] = (TERM) <
+					>
+				>
+			>
+		>
+	>
+>

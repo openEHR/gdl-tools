@@ -80,6 +80,10 @@ public abstract class GDLTestCase {
 
     public static String CONTACT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.contact.v1";
     public static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
+    public static String CONTACT_DATE_START_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]";
+    public static String CONTACT_PRIMARY_CARE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0011]";
+    public static String CONTACT_DOCTOR_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0014]";
+    public static String CONTACT_ADMINISTRATIVE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0015]";
 
     @Before
     public void initializeCM() throws URISyntaxException, IOException {
@@ -135,6 +139,20 @@ public abstract class GDLTestCase {
         }
         DataValue dataValue = new DvDateTime(dateTime.toString());
         new ElementInstance(GDLTestCase.CONTACT_DATE_END_ELEMENT_ID, dataValue, ar, null, null);
+        return ar;
+    }
+
+    public static ArchetypeReference generateContactArchetypeReference(DateTime startTime, DateTime endTime, boolean primaryCare, boolean doctor, boolean administrative) {
+        ArchetypeReference ar = generateContactArchetypeReference(endTime);
+        DataValue dataValue = new DvDateTime(startTime.toString());
+        new ElementInstance(GDLTestCase.CONTACT_DATE_START_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvCodedText(primaryCare ? "present" : "absent", "local", primaryCare ? "at0013" : "at0012");
+        new ElementInstance(GDLTestCase.CONTACT_PRIMARY_CARE_VISIT_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvCodedText(doctor ? "present" : "absent", "local", doctor ? "at0013" : "at0012");
+        new ElementInstance(GDLTestCase.CONTACT_DOCTOR_VISIT_ELEMENT_ID, dataValue, ar, null, null);
+        dataValue = new DvCodedText(administrative ? "present" : "absent", "local", administrative ? "at0013" : "at0012");
+        new ElementInstance(GDLTestCase.CONTACT_ADMINISTRATIVE_VISIT_ELEMENT_ID, dataValue, ar, null, null);
+
         return ar;
     }
 
