@@ -195,12 +195,14 @@ public class GdlDroolsPredicateProcessor {
 
     private String getComparisonPredicateChecks(ArchetypeBinding archetypeBinding) {
         StringBuffer sb = new StringBuffer();
-        int predicateCount = gdlDroolsConverter.getPredicateCount();
+        int archetypeReferencePredicateCount = gdlDroolsConverter.getPredicateCount();
         for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
             if (expressionItem instanceof BinaryExpression) {
                 BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
                 if (binaryExpression.getLeft() instanceof Variable
                         && binaryExpression.getRight() instanceof ConstantExpression) {
+                    gdlDroolsConverter.increasePredicateCount();
+                    int predicateCount = gdlDroolsConverter.getPredicateCount();
                     Variable variable = (Variable) binaryExpression.getLeft();
                     ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
                     String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
@@ -209,7 +211,7 @@ public class GdlDroolsPredicateProcessor {
                     sb.append(predicateVariableName);
                     sb.append(":ElementInstance(id==\"");
                     sb.append(idElement);
-                    sb.append("\", archetypeReference==$archetypeReferencePredicate").append(predicateCount).append(") and \n");
+                    sb.append("\", archetypeReference==$archetypeReferencePredicate").append(archetypeReferencePredicateCount).append(") and \n");
                     ArchetypeElements archetypeElements = gdlDroolsConverter.getArchetypeManager().getArchetypeElements();
                     ArchetypeElementVO archetypeElement = archetypeElements.getArchetypeElement(archetypeBinding.getTemplateId(), idElement);
                     if (archetypeElement != null) {
@@ -232,7 +234,7 @@ public class GdlDroolsPredicateProcessor {
             sb = new StringBuffer();
             sb.append(GdlDroolsConst.TAB);
             sb.append("$archetypeReferencePredicate")
-                    .append(predicateCount)
+                    .append(archetypeReferencePredicateCount)
                     .append(":ArchetypeReference(idDomain==\"EHR\",");
             sb.append("idArchetype==\"")
                     .append(archetypeBinding.getArchetypeId())

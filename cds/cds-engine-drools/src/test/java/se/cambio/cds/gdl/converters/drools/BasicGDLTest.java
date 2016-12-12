@@ -31,7 +31,7 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -481,6 +481,24 @@ public class BasicGDLTest extends GDLTestCase {
         rer = executeGuides(Collections.singletonList("test_predicate_expression_with_units"), elementInstances);
         assertEquals(0, rer.getFiredRules().size());
     }
+
+    @Test
+    public void shouldWorkWithComplexPredicates() {
+        ArchetypeReference ar1 = generateContactArchetypeReference(new DateTime("2016-01-01T00:00:00"), new DateTime(), true, true, false);
+        ArchetypeReference ar2 = generateContactArchetypeReference(new DateTime("2016-02-01T00:00:00"), new DateTime(), true, true, false);
+        ArchetypeReference ar3 = generateContactArchetypeReference(new DateTime("2016-03-01T00:00:00"), new DateTime(), true, true, true);
+        Collection<ElementInstance> elementInstances = getElementInstances(Arrays.asList(ar1, ar2, ar3));
+        RuleExecutionResult rer = executeGuides(Collections.singletonList("Stroke_prevention_doctor_visit.v1.0.0"), elementInstances);
+        assertEquals(1, rer.getFiredRules().size());
+        assertThat(rer.getArchetypeReferences().size(), is(1));
+        ArchetypeReference archetypeReference = rer.getArchetypeReferences().iterator().next();
+        ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get("openEHR-EHR-EVALUATION.stroke_prevention_dashboard_utility.v1/data[at0001]/items[at0054]");
+        assertThat(elementInstance, notNullValue());
+        DataValue dataValue = elementInstance.getDataValue();
+        assertThat(dataValue, instanceOf(DvDateTime.class));
+        assertThat(((DvDateTime) dataValue).getValue(), startsWith("2016-02-01T00:00:00"));
+    }
+
 }
 
 
