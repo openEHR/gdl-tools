@@ -72,7 +72,7 @@ public class DateTimeARFinder {
                 logger.warn("Element instance '" + ei.getId() + "' data value is not DVDateTime, '" + dvType + "' found instead.)");
             }
         } else {
-            logger.warn("Element instance null");
+            logger.debug("Element instance null");
         }
         return null;
     }
