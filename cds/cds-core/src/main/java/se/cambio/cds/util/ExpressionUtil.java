@@ -172,10 +172,15 @@ public class ExpressionUtil {
                     ret = "$" + var.getCode() + var.getAttribute();
                 }
             } else {
-                //Attribute
-                ret = "((" + dvClassName + ")$" + var.getCode()
-                        + getDataValueMethod(var.getCode()) + ").get"
-                        + StringUtils.capitalize(var.getAttribute()) + "()";
+                if (var.getAttribute() != null) {
+                    //Attribute
+                    ret = "((" + dvClassName + ")$" + var.getCode()
+                            + getDataValueMethod(var.getCode()) + ").get"
+                            + StringUtils.capitalize(var.getAttribute()) + "()";
+                } else {
+                    ret = "DVUtil.ucumToMilliseconds((" + dvClassName + ")$" + var.getCode()
+                            + getDataValueMethod(var.getCode()) + ")";
+                }
             }
         }
         return ret;
