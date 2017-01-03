@@ -1,7 +1,5 @@
 package se.cambio.cds.gdl.parser;
 
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 
 public class AssignmentExpressionTest extends ExpressionTestBase {
@@ -104,7 +102,7 @@ public class AssignmentExpressionTest extends ExpressionTestBase {
 	public void testComplexArithmeticAssignmentRoundTrip() throws Exception {
 		parseSingleExpression(COMPLEX);
 		String actual = item.toString();
-		assertEquals(actual, COMPLEX);		
+		assertEquals(COMPLEX, actual);
 	}
 }
 /*

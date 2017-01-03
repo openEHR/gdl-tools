@@ -29,7 +29,7 @@ public class ExpressionUtil {
                         .append(toString(ruleLineElement, ei, language));
                 postFix = ",";
             }
-            return fe.getFunction().toString() + "(" + sb.toString() + ")";
+            return "(" + fe.getFunction().toString() + "(" + sb.toString() + "))";
         } else if (expressionItem instanceof StringConstant) {
             return expressionItem.toString();
         } else {
@@ -66,7 +66,7 @@ public class ExpressionUtil {
                         .append(getEditableExpressionString(ei));
                 postFix = ", ";
             }
-            return fe.getFunction().toString() + "(" + sb.toString() + ")";
+            return "(" + fe.getFunction().toString() + "(" + sb.toString() + "))";
         } else {
             return expressionItem.toString();
         }

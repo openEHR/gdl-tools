@@ -9,13 +9,13 @@ public class FunctionalExpressionTest extends TestCase {
 	
 	public void testCreateSimpleFunctionalExpression() {
 		FunctionalExpression fe = FunctionalExpression.create(new Function("log"));
-		assertEquals("(log())", fe.toString());
+		assertEquals("log()", fe.toString());
 	}
 	
 	public void testCreateSimpleFunctionalExpressionWithSingleVariable() {
 		FunctionalExpression fe = FunctionalExpression.create(new Function("log"),
 				ConstantExpression.create("180"));
-		assertEquals("(log(180))", fe.toString());
+		assertEquals("log(180)", fe.toString());
 	}
 	
 	public void testCreateFunctionalExpressionWithNestedVariables() {
@@ -28,7 +28,7 @@ public class FunctionalExpressionTest extends TestCase {
 		items.add(be1);
 		FunctionalExpression fe = FunctionalExpression.create(new Function("max"),
 				items);
-		assertEquals("(max(180,($gt0001*2)))", fe.toString());
+		assertEquals("max(180,($gt0001*2))", fe.toString());
 	}
 }
 /*
