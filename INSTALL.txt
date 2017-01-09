@@ -1,6 +1,6 @@
 REQUIREMENTS:
 
-Java 1.6 or higher
+Java 1.8 or higher
 Maven 3.0.4 or higher
 
 INSTALATION INSTRUCTIONS:
