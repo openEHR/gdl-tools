@@ -450,7 +450,7 @@ public class BasicGDLTest extends GDLTestCase {
     @Test
     public void shouldTestPredicateComparisonUsingAttributeAndConstant() throws InstanceNotFoundException, InternalErrorException {
         Collection<ArchetypeReference> ehrArs = new ArrayList<>();
-        Calendar date = Calendar.getInstance();
+        Calendar date = new DateTime("2016-01-01T12:00:00").toGregorianCalendar();
         ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
         ehrArs.add(ar);
 
