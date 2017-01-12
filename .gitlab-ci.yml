@@ -2,7 +2,7 @@ image: java:8
 
 stages:
   - build
-  #- release
+  - release
 
 maven-build:
     image: maven:3-jdk-8
@@ -19,9 +19,8 @@ maven-build:
 
 release-to-nexus:
     image: maven:3-jdk-8
-    #stage: release
-    stage: build
-    #when: manual
+    stage: release
+    when: manual
     before_script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)
@@ -30,15 +29,14 @@ release-to-nexus:
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     script:
         - git config --global user.email teamcity@cambiocds.com
-        - git pull origin master
         - git checkout -b release-$CURRENT_VERSION
         - git push -u origin release-$CURRENT_VERSION
         - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
-        #- mvn versions:set -DnewVersion=$CURRENT_VERSION -P nexus
-        #- mvn clean deploy -Dmaven.test.skip=true -P nexus
+        - mvn versions:set -DnewVersion=$CURRENT_VERSION -P nexus
+        - mvn clean deploy -Dmaven.test.skip=true -P nexus
         - git commit -a -m "Changing to version "$CURRENT_VERSION
         - git tag v$CURRENT_VERSION
-        #- git push origin v$CURRENT_VERSION --tags
+        - git push origin v$CURRENT_VERSION --tags
         - git push origin --delete release-$CURRENT_VERSION
     only:
         - master
