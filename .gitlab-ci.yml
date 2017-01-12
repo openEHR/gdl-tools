@@ -27,7 +27,8 @@ release-to-nexus:
         - mkdir -p ~/.ssh
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     script:
-        - git config --global user.email teamcity@cambiocds.com
+        - git config --global user.email xxxx@xxxx.xx
+        - git remote set-url origin $(echo $CI_BUILD_REPO | perl -pe 's#.*@(.+?(\:\d+)?)/#git@\1:#')
         - git checkout -b release-$CURRENT_VERSION
         - git push -u origin release-$CURRENT_VERSION
         - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
