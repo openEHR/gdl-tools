@@ -7,7 +7,6 @@ stages:
 maven-build:
     image: maven:3-jdk-8
     stage: build
-    when: manual
     script:
         - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
         - mvn clean package -B -P nexus
