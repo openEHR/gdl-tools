@@ -28,7 +28,7 @@ release-to-nexus:
         - git config --global user.email xxxx@xxxx.xx
         - git checkout -b release-$CURRENT_VERSION && git push -u origin release-$CURRENT_VERSION
         - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
-        - mvn versions:set -DnewVersion=$CURRENT_VERSION
+        - mvn versions:set -DnewVersion=$CURRENT_VERSION -P nexus
         - mvn clean deploy -Dmaven.test.skip=true -P nexus
         - git commit -a -m "Changing to version "$CURRENT_VERSION
         - git tag v$CURRENT_VERSION
