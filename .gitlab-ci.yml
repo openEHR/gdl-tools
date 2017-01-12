@@ -35,8 +35,8 @@ release-to-nexus:
         - mvn versions:set -DnewVersion=$CURRENT_VERSION -P nexus
         - mvn clean deploy -Dmaven.test.skip=true -P nexus
         - git commit -a -m "Changing to version "$CURRENT_VERSION
-        - git tag v$CURRENT_VERSION
-        - git push origin v$CURRENT_VERSION --tags
+        - git tag $CURRENT_VERSION
+        - git push origin $CURRENT_VERSION --tags
         - git push origin --delete release-$CURRENT_VERSION
     only:
         - master
