@@ -40,3 +40,12 @@ release-to-nexus:
         - git push origin --delete release-$CURRENT_VERSION
     only:
         - master
+
+release-to-gdrive:
+    image: latest
+    stage: release
+    when: manual
+    script:
+        - gdrive --refresh-token $GDRIVE_TOKEN upload cds/gdl-editor/target/gdl-editor-$CURRENT_VERSION-bundle.zip -p $GDRIVE_FOLDER
+    only:
+        - master
