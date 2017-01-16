@@ -43,7 +43,7 @@ release-to-nexus:
         - master
 
 publish-to-gdrive:
-    image: latest
+    image: debian:latest
     stage: publish
     script:
         - gdrive --refresh-token $GDRIVE_TOKEN upload cds/gdl-editor/target/gdl-editor-$CURRENT_VERSION-bundle.zip -p $GDRIVE_FOLDER
