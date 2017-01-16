@@ -43,7 +43,7 @@ release-to-nexus:
         - master
 
 publish-to-gdrive:
-    image: debian:latest
+    image: docker:latest
     stage: publish
     script:
         - wget https://docs.google.com/uc?id=0B3X9GlR6EmbnQ0FtZmJJUXEyRTA -O /usr/bin/gdrive
