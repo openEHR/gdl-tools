@@ -3,7 +3,8 @@ image: java:8
 stages:
   - build
   - release
-
+  -publish
+  
 maven-build:
     image: maven:3-jdk-8
     stage: build
@@ -41,9 +42,9 @@ release-to-nexus:
     only:
         - master
 
-release-to-gdrive:
+publish-to-gdrive:
     image: latest
-    stage: release
+    stage: publish
     script:
         - gdrive --refresh-token $GDRIVE_TOKEN upload cds/gdl-editor/target/gdl-editor-$CURRENT_VERSION-bundle.zip -p $GDRIVE_FOLDER
     dependencies:
