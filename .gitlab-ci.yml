@@ -5,7 +5,7 @@ stages:
   - release
   - publish
   
-maven-build:
+maven-build-snapshot:
     image: maven:3-jdk-8
     stage: build
     script:
@@ -16,8 +16,21 @@ maven-build:
             - cds/gdl-editor/target/*.zip
     except:
         - /^release-.*$/
+        - tags
 
-release-to-nexus:
+maven-build-tag:
+    image: maven:3-jdk-8
+    stage: build
+    script:
+        - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
+        - mvn clean deploy -B -P nexus
+    artifacts:
+        paths:
+            - cds/gdl-editor/target/*.zip
+    only:
+        - tags
+
+release:
     image: maven:3-jdk-8
     stage: release
     when: manual
@@ -34,7 +47,6 @@ release-to-nexus:
         - git push -u origin release-$CURRENT_VERSION
         - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
         - mvn versions:set -DnewVersion=$CURRENT_VERSION -P nexus
-        - mvn clean deploy -Dmaven.test.skip=true -P nexus
         - git commit -a -m "Changing to version "$CURRENT_VERSION
         - git tag $CURRENT_VERSION
         - git push origin $CURRENT_VERSION --tags
@@ -43,11 +55,11 @@ release-to-nexus:
         - master
 
 publish-to-gdrive:
-    image: jasonhendry/gdrive
+    image: icorbal/docker-ant-gdrive
     stage: publish
     script:
         - gdrive --refresh-token $GDRIVE_TOKEN upload cds/gdl-editor/target/gdl-editor-$CURRENT_VERSION-bundle.zip -p $GDRIVE_FOLDER
     dependencies:
-        - maven-build
+        - maven-build-tag
     only:
         - tags
