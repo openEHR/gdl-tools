@@ -2,65 +2,77 @@ package se.cambio.openehr.controller.session.data;
 
 import se.cambio.cm.model.archetype.vo.UnitVO;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Units {
-    private Map<String, Collection<String>> _unitsByIdElement = null;
-    private Map<String, Map<String, Collection<String>>> _templateUnitsByTemplateIdAndId = null;
+    private Map<String, Set<String>> registeredUnitsByElement = null;
+    private Map<String, Map<String, Set<String>>> registeredUnitsByTemplate = null;
 
-    public Units(){
+    Units() {
         init();
     }
 
-    public void init(){
-        _unitsByIdElement = new HashMap<String, Collection<String>>();
-        _templateUnitsByTemplateIdAndId = new HashMap<String, Map<String,Collection<String>>>();
+    public void init() {
+        registeredUnitsByElement = new HashMap<>();
+        registeredUnitsByTemplate = new HashMap<>();
     }
 
-    public void loadUnits(Collection<UnitVO> unitVOs){
+    void loadUnits(Collection<UnitVO> unitVOs) {
         for (UnitVO unitVO : unitVOs) {
             registerUnit(unitVO);
         }
     }
 
-    public void registerUnit(UnitVO unitVO){
-        if (unitVO.getIdTemplate()==null){
-            getUnits(unitVO.getIdElement()).add(unitVO.getUnit());
-        }else{
-            getUnits(unitVO.getIdTemplate(), unitVO.getIdElement()).add(unitVO.getUnit());
+    private void registerUnit(UnitVO unitVO) {
+        if (unitVO.getIdTemplate() == null) {
+            registerUnitWithoutTemplate(unitVO);
+        } else {
+            registerUnitWithTemplate(unitVO);
         }
     }
 
-    private Map<String, Collection<String>> getUnitsInTemplate(String idTemplate){
-        Map<String, Collection<String>> map = _templateUnitsByTemplateIdAndId.get(idTemplate);
-        if (map==null){
-            map = new HashMap<String, Collection<String>>();
-            _templateUnitsByTemplateIdAndId.put(idTemplate, map);
-        }
-        return map;
+    private void registerUnitWithoutTemplate(UnitVO unitVO) {
+        Set<String> units = registeredUnitsByElement.computeIfAbsent(unitVO.getIdElement(), k -> new HashSet<>());
+        units.add(unitVO.getUnit());
     }
 
-    public Collection<String> getUnits(String idTemplate, String idElement){
-        if (idTemplate==null){
-            return getUnits(idElement);
-        }else{
-            Collection<String> units = getUnitsInTemplate(idTemplate).get(idElement);
-            if (units==null){
-                units = new ArrayList<String>();
-                getUnitsInTemplate(idTemplate).put(idElement, units);
+    private void registerUnitWithTemplate(UnitVO unitVO) {
+        Map<String, Set<String>> unitsByTemplate = registeredUnitsByTemplate.computeIfAbsent(unitVO.getIdTemplate(), k -> new HashMap<>());
+        Set<String> units = unitsByTemplate.computeIfAbsent(unitVO.getIdElement(), k -> new HashSet<>());
+        units.add(unitVO.getUnit());
+    }
+
+    public Collection<String> getUnits(String idTemplate, String idElement) {
+        Set<String> units;
+        if (idTemplate == null) {
+            units = getUnitsByTemplate(idElement);
+        } else {
+            units = getUnitsByElement(idTemplate, idElement);
+        }
+        return Collections.unmodifiableCollection(units);
+    }
+
+    private Set<String> getUnitsByTemplate(String idElement) {
+        Set<String> units;
+        if (registeredUnitsByElement.containsKey(idElement)) {
+            units = registeredUnitsByElement.get(idElement);
+        } else {
+            units = new HashSet<>();
+        }
+        return units;
+    }
+
+    private Set<String> getUnitsByElement(String templateId, String elementId) {
+        Set<String> units;
+        if (registeredUnitsByTemplate.containsKey(templateId)) {
+            Map<String, Set<String>> unitsByTemplate = registeredUnitsByTemplate.get(templateId);
+            if (unitsByTemplate.containsKey(elementId)) {
+                units = unitsByTemplate.get(elementId);
+            } else {
+                units = new HashSet<>();
             }
-            return units;
-        }
-    }
-
-    private Collection<String> getUnits(String idElement){
-        Collection<String> units = _unitsByIdElement.get(idElement);
-        if (units==null){
-            units = new ArrayList<String>();
-            _unitsByIdElement.put(idElement, units);
+        } else {
+            units = new HashSet<>();
         }
         return units;
     }
