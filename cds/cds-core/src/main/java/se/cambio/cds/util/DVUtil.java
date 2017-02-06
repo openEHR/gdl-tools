@@ -1,6 +1,7 @@
 package se.cambio.cds.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
@@ -25,9 +26,12 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.substringBefore;
 
 
 public class DVUtil {
+
+    private static Logger logger = LogManager.getLogger(DVUtil.class);
 
     public static DataValue createDV(ElementInstance elementInstance, String rmName, String attributeName, Object value) throws InternalErrorException {
         DataValue dv = elementInstance.getDataValue();
@@ -165,7 +169,7 @@ public class DVUtil {
                     return null;
                 }
             } catch (Exception e) {
-                Logger.getLogger(DVUtil.class).warn("Unable to get CodePhrase from text '" + dv.toString() + "'");
+                logger.warn("Unable to get CodePhrase from text '" + dv.toString() + "'");
                 return null;
             }
         } else {
@@ -249,11 +253,11 @@ public class DVUtil {
                 try {
                     compatible = SimpleMeasurementService.getInstance().unitsComparable(unit1, unit2);
                 } catch (IllegalArgumentException e) {
-                    Logger.getLogger(DVUtil.class).warn("Illegal argument comparing unit '" + unit1 + "' with '" + unit2 + "'");
+                    logger.warn("Illegal argument comparing unit '" + unit1 + "' with '" + unit2 + "'");
                     return false;
                 }
                 if (!compatible) {
-                    Logger.getLogger(DVUtil.class).warn("Comparing two elements with incompatible units '" + unit1 + "'!='" + unit2 + "'");
+                    logger.warn("Comparing two elements with incompatible units '" + unit1 + "'!='" + unit2 + "'");
                 }
                 return compatible;
             } else {
@@ -368,24 +372,28 @@ public class DVUtil {
         }
     }
 
-    private static double getAmountInMillisFromQuantityString(String value) {
+    static double getAmountInMillisFromQuantityString(String value) {
         String units = StringUtils.substringAfter(value, ",");
-        Double amount = Double.parseDouble(StringUtils.substringBefore(value, ","));
+        Double amount = Double.parseDouble(substringBefore(value, ","));
         Double multiplier = getMillisMultiplierFromUcum(units);
         return amount * multiplier;
     }
 
-    private static Double calculateDurationAgainstDateTime(String value, DataValue operationDateTime, String symbol) {
-        String units = StringUtils.substringAfter(value, ",");
+    static Double calculateDurationAgainstDateTime(String value, DataValue operationDateTime, String symbol) {
+        String units = StringUtils.substringAfter(value, ",").trim();
         String minusSignIfSubtraction = "-".equals(symbol) ? "-" : "";
-        String amount = minusSignIfSubtraction + StringUtils.substringBefore(value, ",");
+        String amount = minusSignIfSubtraction + substringBefore(value, ",");
         DateTime dateTime = getDateTime(operationDateTime, value);
         Calendar resultDateTime = new DateTime(dateTime).toGregorianCalendar();
+        if (amount.contains(".")) {
+            logger.warn(format("Invalid amount detected while doing date operations '%s'. Using double as integer.", amount));
+            amount = substringBefore(amount, ".");
+        }
         resultDateTime.add(ucumToCalendar(units), Integer.parseInt(amount));
         return (double) Math.abs(resultDateTime.getTimeInMillis() - dateTime.toGregorianCalendar().getTimeInMillis());
     }
 
-    private static DateTime getDateTime(DataValue operationDataValue, String value) {
+    static DateTime getDateTime(DataValue operationDataValue, String value) {
         if (operationDataValue instanceof DvDateTime) {
             return ((DvDateTime) operationDataValue).getDateTime();
         } else if (operationDataValue instanceof DvDate) {

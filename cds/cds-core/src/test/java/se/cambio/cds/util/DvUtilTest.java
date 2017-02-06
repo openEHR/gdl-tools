@@ -1,5 +1,8 @@
+package se.cambio.cds.util;
+
 import org.junit.Test;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.DVUtil;
@@ -8,9 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class DvUtilTerminologyResolutionCacheTest {
+public class DvUtilTest {
     @Test
     public void shouldCacheTerminologyResolution() {
         ElementInstance ei = new ElementInstance("testId1", new DvCodedText("test0", "ICD10", "I489"), null, null, null);
@@ -29,5 +34,17 @@ public class DvUtilTerminologyResolutionCacheTest {
         assertTrue(subClassOf);
         map = bindingsMap.get(ei);
         assertEquals(1, map.size());
+    }
+
+    @Test
+    public void shouldCalculateDurationAgainstDateTime() {
+        Double aDouble = DVUtil.calculateDurationAgainstDateTime("365, d", new DvDateTime("2016-01-01T12:00:00"), "-");
+        assertThat(aDouble, equalTo(3.1536E10));
+    }
+
+    @Test
+    public void shouldCalculateDurationAgainstDateTimeWithDouble() {
+        Double aDouble = DVUtil.calculateDurationAgainstDateTime("365.0,d", new DvDateTime("2016-01-01T12:00:00"), "-");
+        assertThat(aDouble, equalTo(3.1536E10));
     }
 }
