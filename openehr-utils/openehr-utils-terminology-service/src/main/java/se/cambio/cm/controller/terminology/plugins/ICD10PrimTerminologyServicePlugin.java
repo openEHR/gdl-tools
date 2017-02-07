@@ -8,7 +8,7 @@ import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 public class ICD10PrimTerminologyServicePlugin extends CSVTerminologyServicePlugin{
 
-    private static String TERMINOLOGY_ID = "ICD10prim";
+    private static String TERMINOLOGY_ID = "KSH97-P";
 
     public ICD10PrimTerminologyServicePlugin() {
         super(TERMINOLOGY_ID);
