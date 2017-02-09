@@ -12,13 +12,13 @@ import java.io.InputStream;
 import java.util.*;
 
 
-public class ICD10TerminologyServicePlugin extends CSVTerminologyServicePlugin{
+public class ICD10SETerminologyServicePlugin extends CSVTerminologyServicePlugin{
 
-    private static String TERMINOLOGY_ID = "ICD10";
+    private static String TERMINOLOGY_ID = "ICD-10-SE";
     private Map<String, TerminologyNodeVO> _allTerminologyNodeMap = null;
     private Map<String, TerminologyNodeVO> _parentsTerminologyNodeMap = null;
 
-    public ICD10TerminologyServicePlugin() {
+    public ICD10SETerminologyServicePlugin() {
         super(TERMINOLOGY_ID);
     }
 

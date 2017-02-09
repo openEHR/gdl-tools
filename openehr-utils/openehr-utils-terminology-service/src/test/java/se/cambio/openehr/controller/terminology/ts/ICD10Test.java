@@ -1,8 +1,9 @@
 package se.cambio.openehr.controller.terminology.ts;
 
-import org.junit.Test;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.testng.annotations.Test;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
+import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +19,9 @@ public class ICD10Test extends TerminologyServiceTestBase {
 
 	@Test
 	public void testICD10SupportedCodePhrase() {
-		CodePhrase cp = new CodePhrase("ICD10", "I64");
+		CodePhrase cp = new CodePhrase(ICD10, "I64");
 		assertTrue(terminologyService.isTerminologySupported(cp));
-		cp = new CodePhrase("ICD10", "I10X");
+		cp = new CodePhrase(ICD10, "I10X");
 		assertTrue(terminologyService.isTerminologySupported(cp));
 	}
 

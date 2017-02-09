@@ -6,11 +6,11 @@ import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
 import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 
-public class ICD10PrimTerminologyServicePlugin extends CSVTerminologyServicePlugin{
+public class KSH97TerminologyServicePlugin extends CSVTerminologyServicePlugin{
 
     private static String TERMINOLOGY_ID = "KSH97-P";
 
-    public ICD10PrimTerminologyServicePlugin() {
+    public KSH97TerminologyServicePlugin() {
         super(TERMINOLOGY_ID);
     }
 

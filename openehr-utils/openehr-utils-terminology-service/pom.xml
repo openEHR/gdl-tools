@@ -36,7 +36,7 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- TODO Bring back when starting Ontology development -->
+        <!-- TODO Bring back when starting Ontology development -->
 		<!-- dependency> <groupId>net.sourceforge.owlapi</groupId> <artifactId>owlapi-api</artifactId> 
 			<version>3.3</version> </dependency> <dependency> <groupId>net.sourceforge.owlapi</groupId> 
 			<artifactId>owlapi-apibinding</artifactId> <version>3.3</version> </dependency> 

@@ -1,7 +1,7 @@
 package se.cambio.openehr.controller.terminology.ts;
 
-import org.junit.Test;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.testng.annotations.Test;
 import se.cambio.openehr.util.exceptions.InvalidCodeException;
 
 import java.util.HashSet;
