@@ -216,7 +216,7 @@ TOKEN :
   < #HOUR_MINUTE: ["0"-"9"]["0"-"9"] ":" ["0"-"5"]["0"-"9"] >
 | < V_CODE_PHRASE : "[" (< LET_DIG_DUDSLR >)+ "::" (< LET_DIG_DUDS >)+ "]" >
 | < V_CODE_PHRASE_RAW : (< LET_DIG_DUDSLR >)+ "::" (< LET_DIG_DUDS >)+ >
-| < V_ORDINAL : < V_INTEGER > "|" < V_CODE_PHRASE_RAW > < V_LABEL > >
+| < V_ORDINAL : (["-"])? < V_INTEGER > "|" < V_CODE_PHRASE_RAW > < V_LABEL > >
 | < V_ATTRIBUTE_IDENTIFIER : [ "a"-"z" ] (< LET_DIG_U >)* >
 | < V_LABEL : "|" (~[ "|" ])* "|" >
 | < V_REAL :
