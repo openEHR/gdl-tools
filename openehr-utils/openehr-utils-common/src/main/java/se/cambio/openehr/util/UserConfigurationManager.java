@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -30,6 +31,7 @@ public class UserConfigurationManager {
     private static String COUNTRY = "Messages/Country";
     private static String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
     private static List<String> SUPPORTED_RULE_ENGINES = Arrays.asList("rule-drools-engine", "rule-jgdl-engine");
+    private static File DEFAULT_REPO_FOLDER = new File(System.getProperty("user.home"), "clinical-models");
 
     private Map<String, CmFolder> cmFolderMap = new HashMap<>();
     private String activeRuleEngine;
@@ -158,8 +160,8 @@ public class UserConfigurationManager {
     private CmFolder getCmFolder(String parameterName, String defaultValue) {
         CmFolder cmFolder = cmFolderMap.get(parameterName);
         if (cmFolder == null) {
-            File folder = new File(System.getProperty("user.home"), defaultValue);
-            String path = environment.getProperty(parameterName, defaultValue);
+            File folder;
+            String path = environment.getProperty(parameterName);
             if (path != null) {
                 File pathFile = new File(path);
                 if (pathFile.isDirectory()) {
@@ -168,6 +170,9 @@ public class UserConfigurationManager {
                     pathFile.mkdirs();
                     folder = pathFile;
                 }
+            } else {
+                folder = new File(DEFAULT_REPO_FOLDER, defaultValue);
+                folder.mkdirs();
             }
             cmFolder = new CmFolder(folder);
             cmFolderMap.put(parameterName, cmFolder);

@@ -6,18 +6,25 @@ import se.cambio.cds.util.misc.Version;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 
 public class SplashPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
+    private Image img;
 
-	public SplashPanel() {
-		JLabel label = new JLabel();
-		label.setIcon(GDLEditorImageUtil.SPLASH_IMAGE);
-		add(label);
+    public SplashPanel() {
+	    this.img = GDLEditorImageUtil.SPLASH_IMAGE.getImage();
 	}
 
-	public void paint(Graphics g) {
-		g.drawImage(GDLEditorImageUtil.SPLASH_IMAGE.getImage(), 0, 0, this);
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(img.getWidth(null), img.getHeight(null));
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		g.drawImage(img, 0, 0, this);
 		g.setColor(new Color(56,114,57));
 		g.setFont(new Font("Arial",Font.BOLD,17));
 		//g.drawString(LanguageManager.getMessage("ApplicationName"), 172, 104);
@@ -34,11 +41,6 @@ public class SplashPanel extends JPanel {
 		g.drawString(GDLEditorLanguageManager.getMessage("Developers")+": Iago Corbal, Rong Chen", 47, 297);
 		g.drawString(GDLEditorLanguageManager.getMessage("Contributors")+": Konstantinos Kalliamvakos, Mihindu Wijesena", 47, 313);
 		g.drawString(GDLEditorLanguageManager.getMessage("FundedBy")+": Cambio Healthcare Systems (cambio.se)", 47, 329);
-	
-	/*
-			g.drawString(LanguageManager.getMessage("HospitalCenterName")
-					+" ("+LanguageManager.getMessage("HospitalCenterWeb")+")", 140, 195);
-	 */
 	}
 }
 /*

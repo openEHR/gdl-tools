@@ -41,12 +41,12 @@ public class DialogSplash extends JDialog implements Observer{
         Dimension screenSize =
                 Toolkit.getDefaultToolkit().getScreenSize();
         Dimension labelSize = this.getSize();
+        this.setUndecorated(true);
         this.setSize(633, 416);
         int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
         int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
         this.setLocation(locx,locy);
         this.setContentPane(getJPanel1());
-        this.setUndecorated(true);
     }
 
     public void changeLoadingText(String description){
@@ -127,7 +127,10 @@ public class DialogSplash extends JDialog implements Observer{
         if (jPanel1 == null) {
             jPanel1 = new JPanel(new BorderLayout());
             jPanel1.setBackground(Color.WHITE);
-            jPanel1.add(new SplashPanel(), BorderLayout.CENTER);
+            Container container = this.getContentPane();
+            container.add(new SplashPanel());
+            pack();
+            jPanel1.add(container, BorderLayout.CENTER);
             JPanel panelAux = new JPanel(new BorderLayout(5,5));
             panelAux.setBackground(Color.WHITE);
             jPanel1.add(panelAux, BorderLayout.SOUTH);
