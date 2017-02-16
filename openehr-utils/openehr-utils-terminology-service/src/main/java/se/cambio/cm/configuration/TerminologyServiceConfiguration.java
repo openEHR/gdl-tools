@@ -2,19 +2,18 @@ package se.cambio.cm.configuration;
 
 
 import org.apache.log4j.Logger;
-import org.openehr.rm.datatypes.text.CodePhrase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import se.cambio.cm.controller.terminology.TerminologyService;
+import se.cambio.cm.controller.terminology.TerminologyServiceImpl;
+import se.cambio.cm.util.TerminologyConfigVO;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
+@Import(UserConfigurationManager.class)
 @Configuration
 @PropertySources({
         @PropertySource(value = "classpath:default-terminology-service-config.properties"),
@@ -22,53 +21,40 @@ import java.util.Set;
         @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
 })
-@ComponentScan("se.cambio.cm.controller.terminology")
 public class TerminologyServiceConfiguration {
 
-    private static TerminologyServiceConfiguration _delegate = null;
-    private Set<CodePhrase> supportedLanguages;
-    private Map<String, String> terminologyPluginSourcesClassMap;
-    private Map<String, String> terminologyURLs;
+    private Map<String, TerminologyConfigVO> terminologyConfigMap;
     private static Logger log = Logger.getLogger(TerminologyServiceConfiguration.class);
 
     @Autowired
-    Environment environment;
-    private static final String URL_POSTFIX = "-url";
-    private static final String PLUGIN_CLASS_POSTFIX = "-plugin.class";
+    private Environment environment;
+
+    private static final String TERMINOLOGY_PROPERTY_PREFIX = "terminologies.";
+    private static final String CLEAN_CODES_PROPERTY_POSTFIX = ".clean-codes";
+    private static final String SIMPLE_PARENT_CHECK_PROPERTY_POSTFIX = ".simple-parent-check";
+    private static final String CODE_EXISTENCE_CHECK_PROPERTY_POSTFIX = ".code-existence-check";
+    private static final String CLASS_PROPERTY_POSTFIX = ".class";
 
     public TerminologyServiceConfiguration() {
-        // TODO hardcoded language supports
-        this.supportedLanguages = new HashSet<CodePhrase>();
-        this.supportedLanguages.add(new CodePhrase("ISO_639-1", "en"));
-        this.supportedLanguages.add(new CodePhrase("ISO_639-1", "sv"));
-        this.supportedLanguages.add(new CodePhrase("ISO_639-1", "es"));
-        this.terminologyURLs = new HashMap<String, String>();
-        this.terminologyPluginSourcesClassMap = new HashMap<String, String>();
+        this.terminologyConfigMap = new HashMap<>();
     }
 
-    public boolean languageSupported(CodePhrase language) {
-        return supportedLanguages.contains(language);
+    public TerminologyConfigVO getTerminologyConfig(String terminologyId) {
+        return terminologyConfigMap.computeIfAbsent(terminologyId, this::getTerminologyConfigFromProperties);
     }
 
-    public String terminologyURL(String terminologyId) {
-        if (!terminologyURLs.containsKey(terminologyId)) {
-            loadFromProperties(terminologyId);
-        }
-        return terminologyURLs.get(terminologyId);
+    @Bean
+    public TerminologyService terminologyService() {
+        return new TerminologyServiceImpl(this);
     }
 
-    public String getPluginSourceClass(String terminologyId) {
-        if (!terminologyPluginSourcesClassMap.containsKey(terminologyId)) {
-            loadFromProperties(terminologyId);
-        }
-        return terminologyPluginSourcesClassMap.get(terminologyId);
-    }
-
-    private void loadFromProperties(String terminologyId) {
-        String url = environment.getProperty(terminologyId + URL_POSTFIX);
-        String pluginClass = environment.getProperty(terminologyId + PLUGIN_CLASS_POSTFIX);
-        terminologyURLs.put(terminologyId, url);
-        terminologyPluginSourcesClassMap.put(terminologyId, pluginClass);
+    private TerminologyConfigVO getTerminologyConfigFromProperties(String terminologyId) {
+        String terminologyPrefix = TERMINOLOGY_PROPERTY_PREFIX + terminologyId;
+        Boolean simpleParentCheck = environment.getProperty(terminologyPrefix + SIMPLE_PARENT_CHECK_PROPERTY_POSTFIX, Boolean.class, false);
+        Boolean codeExistenceCheck = environment.getProperty(terminologyPrefix + CODE_EXISTENCE_CHECK_PROPERTY_POSTFIX, Boolean.class, true);
+        Boolean cleanCodes = environment.getProperty(terminologyPrefix + CLEAN_CODES_PROPERTY_POSTFIX, Boolean.class, false);
+        String clazz = environment.getProperty(terminologyPrefix + CLASS_PROPERTY_POSTFIX);
+        return new TerminologyConfigVO(terminologyId, simpleParentCheck, codeExistenceCheck, cleanCodes, clazz);
     }
 }
 /*
