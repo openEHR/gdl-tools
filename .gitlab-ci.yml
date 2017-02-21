@@ -29,7 +29,7 @@ maven-build-tag:
         - tags
 
 release:
-    image: maven:3-jdk-8
+    image: gitlab.cambiocds.com:4567/tools/docker-builder
     stage: release
     when: manual
     script:
