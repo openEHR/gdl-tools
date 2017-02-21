@@ -352,12 +352,23 @@ public class DVUtil {
         return domain1 == null || domain2 == null || domain1.equals(domain2);
     }
 
-    public static Double calculateDuration(String value, DataValue operationDv, String symbol) {
-        if (operationDv instanceof DvQuantity) {
-            return calculateDurationAgainstQuantity(value, (DvQuantity) operationDv, symbol);
+    public static Double calculateDuration(String value, Object operationValue, String symbol) {
+        if (operationValue instanceof DvQuantity) {
+            return calculateDurationAgainstQuantity(value, (DvQuantity) operationValue, symbol);
+        } else if (operationValue instanceof Number) {
+            return calculateDurationAgainstNumber(value);
+        } else if (operationValue instanceof String) {
+            return calculateDurationAgainstStringDateTime(value, operationValue, symbol);
+        } else if (operationValue instanceof DvTemporal) {
+            return calculateDurationAgainstDvTemporal(value, (DvTemporal) operationValue, symbol);
         } else {
-            return calculateDurationAgainstDateTime(value, operationDv, symbol);
+            throw new RuntimeException(format("Invalid duration value '%s' used.", operationValue));
         }
+    }
+
+
+    private static Double calculateDurationAgainstNumber(String value) {
+        return getAmountInMillisFromQuantityString(value);
     }
 
 
@@ -379,27 +390,36 @@ public class DVUtil {
         return amount * multiplier;
     }
 
-    static Double calculateDurationAgainstDateTime(String value, DataValue operationDateTime, String symbol) {
+    private static Double calculateDurationAgainstStringDateTime(String value, Object dateTimeString, String symbol) {
+        DateTime dateTime = new DateTime(dateTimeString);
+        return calculateDurationAgainstDateTime(value, dateTime, symbol);
+    }
+
+    static Double calculateDurationAgainstDvTemporal(String value, DvTemporal operationTemporal, String symbol) {
+        DateTime dateTime = getDateTime(operationTemporal, value);
+        return calculateDurationAgainstDateTime(value, dateTime, symbol);
+    }
+
+    static Double calculateDurationAgainstDateTime(String value, DateTime operationDateTime, String symbol) {
         String units = StringUtils.substringAfter(value, ",").trim();
         String minusSignIfSubtraction = "-".equals(symbol) ? "-" : "";
         String amount = minusSignIfSubtraction + substringBefore(value, ",");
-        DateTime dateTime = getDateTime(operationDateTime, value);
-        Calendar resultDateTime = new DateTime(dateTime).toGregorianCalendar();
+        Calendar resultDateTime = new DateTime(operationDateTime).toGregorianCalendar();
         if (amount.contains(".")) {
             logger.warn(format("Invalid amount detected while doing date operations '%s'. Using double as integer.", amount));
             amount = substringBefore(amount, ".");
         }
         resultDateTime.add(ucumToCalendar(units), Integer.parseInt(amount));
-        return (double) Math.abs(resultDateTime.getTimeInMillis() - dateTime.toGregorianCalendar().getTimeInMillis());
+        return (double) Math.abs(resultDateTime.getTimeInMillis() - operationDateTime.toGregorianCalendar().getTimeInMillis());
     }
 
-    static DateTime getDateTime(DataValue operationDataValue, String value) {
+    static DateTime getDateTime(DvTemporal operationDataValue, String value) {
         if (operationDataValue instanceof DvDateTime) {
-            return ((DvDateTime) operationDataValue).getDateTime();
+            return operationDataValue.getDateTime();
         } else if (operationDataValue instanceof DvDate) {
-            return ((DvDate) operationDataValue).getDateTime();
+            return operationDataValue.getDateTime();
         } else if (operationDataValue instanceof DvTime) {
-            return ((DvTime) operationDataValue).getDateTime();
+            return operationDataValue.getDateTime();
         } else {
             if (operationDataValue == null) {
                 throw new IllegalArgumentException(format("Cannot use null data value to evaluate expression %s", value));

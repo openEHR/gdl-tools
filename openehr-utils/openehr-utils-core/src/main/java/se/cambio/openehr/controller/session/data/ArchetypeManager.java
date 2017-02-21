@@ -216,11 +216,14 @@ public class ArchetypeManager {
     private Map<String, TemplateAttributeMap> getCodedTextsAttributeMaps(ArchetypeElementVO archetypeElementVO) {
         Collection<CodedTextVO> codedTextVOs = getCodedTexts().getCodedTextVOs(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
         Map<String, TemplateAttributeMap> templateAttributeMaps = new HashMap<String, TemplateAttributeMap>();
+        Collection<String> previousHandles = new ArrayList<>();
         for (CodedTextVO codedTextVO : codedTextVOs) {
             if (!"local".equals(codedTextVO.getTerminology())) {
                 return null;
             }
-            String attributeId = getIdentifier(codedTextVO.getName(), 0);
+            String name = codedTextVO.getName();
+            String attributeId = getIdentifier(name, previousHandles);
+            previousHandles.add(attributeId);
             TemplateAttributeMap templateAttributeMap = getCodedTextAttributeMap(attributeId, codedTextVO);
             templateAttributeMaps.put(attributeId, templateAttributeMap);
         }
@@ -234,11 +237,14 @@ public class ArchetypeManager {
     private Map<String, TemplateAttributeMap> getOrdinalsAttributeMaps(ArchetypeElementVO archetypeElementVO) {
         Collection<OrdinalVO> ordinalVOs = getOrdinals().getOrdinalVOs(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId());
         Map<String, TemplateAttributeMap> templateAttributeMaps = new HashMap<String, TemplateAttributeMap>();
+        Collection<String> previousHandles = new ArrayList<>();
         for (OrdinalVO ordinalVO : ordinalVOs) {
             if (!"local".equals(ordinalVO.getTerminology())) {
                 return null;
             }
-            String attributeId = getIdentifier(ordinalVO.getName(), 0);
+            String name = ordinalVO.getName();
+            String attributeId = getIdentifier(name, previousHandles);
+            previousHandles.add(attributeId);
             TemplateAttributeMap templateAttributeMap = getOrdinalAttributeMap(attributeId, ordinalVO);
             templateAttributeMaps.put(attributeId, templateAttributeMap);
         }
@@ -250,12 +256,16 @@ public class ArchetypeManager {
     }
 
     public static String getElementMapId(String name, Collection<String> elementMapIds) {
+        return getIdentifier(name, elementMapIds);
+    }
+
+    public static String getIdentifier(String name, Collection<String> previousIds) {
         String elementMapId;
         int i = 0;
         do {
             elementMapId = getIdentifier(name, i++);
-        } while (elementMapIds.contains(elementMapId));
-        elementMapIds.add(elementMapId);
+        } while (previousIds.contains(elementMapId));
+        previousIds.add(elementMapId);
         return elementMapId;
     }
 
