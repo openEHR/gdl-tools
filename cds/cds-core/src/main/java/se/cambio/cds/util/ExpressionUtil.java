@@ -116,9 +116,13 @@ public class ExpressionUtil {
         if (value.contains(",")) {
             String units = StringUtils.substringAfter(value, ",");
             if (isUcumTime(units)) {
-                String temporalVariableName = getTemporalVariableName(elementMap, parentExpressionItem);
                 OperatorKind operatorKind = getOperatorKind(parentExpressionItem);
-                value = format("DVUtil.calculateDuration(\"%s\",%s, \"%s\")", value, temporalVariableName, operatorKind.getSymbol());
+                if (hasLeftVariableName(parentExpressionItem)) {
+                    String temporalVariableName = getLeftVariableName(elementMap, parentExpressionItem);
+                    value = format("DVUtil.calculateDuration(\"%s\",%s,\"%s\")", value, temporalVariableName, operatorKind.getSymbol());
+                } else {
+                    value = format("DVUtil.calculateDuration(\"%s\",\"%s\")", value, operatorKind.getSymbol());
+                }
             } else {
                 throw new IllegalArgumentException(format("Unknown time units in value '%s'", value));
             }
@@ -138,7 +142,13 @@ public class ExpressionUtil {
         }
     }
 
-    private static String getTemporalVariableName(
+    private static boolean hasLeftVariableName(
+            ExpressionItem parentExpressionItem) throws InternalErrorException {
+        return (parentExpressionItem instanceof BinaryExpression) &&
+                ((BinaryExpression) parentExpressionItem).getLeft() instanceof Variable;
+    }
+
+    private static String getLeftVariableName(
             Map<String, ArchetypeElementVO> elementMap,
             ExpressionItem parentExpressionItem) throws InternalErrorException {
         if (parentExpressionItem instanceof BinaryExpression) {

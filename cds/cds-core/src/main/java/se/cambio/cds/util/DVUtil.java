@@ -366,6 +366,10 @@ public class DVUtil {
         }
     }
 
+    public static Double calculateDuration(String value, String symbol) {
+        return calculateDurationAgainstDvTemporal(value, new DvDateTime(), symbol);
+    }
+
 
     private static Double calculateDurationAgainstNumber(String value) {
         return getAmountInMillisFromQuantityString(value);
