@@ -1,8 +1,9 @@
 package se.cambio.cm.configuration;
 
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class TerminologyServiceConfiguration {
     private Set<CodePhrase> supportedLanguages;
     private Map<String, String> terminologyPluginSourcesClassMap;
     private Map<String, String> terminologyURLs;
-    private static Logger log = Logger.getLogger(TerminologyServiceConfiguration.class);
+    private static Logger log = LoggerFactory.getLogger(TerminologyServiceConfiguration.class);
 
     @Autowired
     Environment environment;
