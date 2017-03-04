@@ -1,7 +1,7 @@
 package se.cambio.cds.controller.guide;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -81,7 +81,7 @@ public class SimpleGuideManager {
     public Collection<ElementInstance> getElementInstances(String idGuide) {
         ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
         if (eic == null) {
-            Logger.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
+            LoggerFactory.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
             return new ArrayList<>();
         } else {
             return eic.getAllElementInstances();
@@ -263,7 +263,7 @@ public class SimpleGuideManager {
     public Set<ElementInstance> getElementIdsCDSDomain(String idGuide) {
         ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
         if (eic == null) {
-            Logger.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
+            LoggerFactory.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
             return new HashSet<>();
         } else {
             return eic.getAllElementInstancesByDomain(Domains.CDS_ID);
@@ -273,7 +273,7 @@ public class SimpleGuideManager {
     public Set<ElementInstance> getElementIdsEHRDomain(String idGuide) {
         ElementInstanceCollection eic = _elementInstanceCollectionByIdGuideMap.get(idGuide);
         if (eic == null) {
-            Logger.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
+            LoggerFactory.getLogger(SimpleGuideManager.class).warn("Guide id '" + idGuide + "' not found!");
             return new HashSet<>();
         } else {
             return eic.getAllElementInstancesByDomain(Domains.EHR_ID);

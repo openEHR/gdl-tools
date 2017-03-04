@@ -1,6 +1,6 @@
 package se.cambio.cds.model.facade.execution.drools;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
@@ -18,11 +18,7 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Profile("rule-drools-engine")
@@ -42,7 +38,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
 
         final ExecutionLogger executionLogger = new ExecutionLogger();
         if (!guides.isEmpty()) {
-            Logger.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
+            LoggerFactory.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
             DroolsExecutionManager.executeGuides(
                     guides, date, workingMemoryObjects, executionLogger);
         }

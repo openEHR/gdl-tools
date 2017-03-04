@@ -1,7 +1,7 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.guide.GuideUtil;
@@ -46,7 +46,7 @@ public class EhrDataFilterManager {
     public Set<ArchetypeReference> filterEHRData(String ehrId, DateTime ehrDate, Collection<ArchetypeReference> ehrData) {
         Set<ArchetypeReference> ehrIdARs = new HashSet<>();
         if (ehrData == null) {
-            Logger.getLogger(EhrDataFilterManager.class).warn("No ehrData found for ehrId '" + ehrId + "'");
+            LoggerFactory.getLogger(EhrDataFilterManager.class).warn("No ehrData found for ehrId '" + ehrId + "'");
         } else {
             for (ArchetypeReference archetypeReference : ehrData) {
                 //If using time series comparison filter elements outside the range
@@ -54,12 +54,12 @@ public class EhrDataFilterManager {
                 if (ehrDate != null) {
                     DateTime dateTime = dateTimeARFinder.getDateTime(archetypeReference);
                     if (dateTime == null) {
-                        Logger.getLogger(EhrDataFilterManager.class).debug("Date time for ehrId " + ehrId + " with AR " + archetypeReference.getIdArchetype() + " is null!");
+                        LoggerFactory.getLogger(EhrDataFilterManager.class).debug("Date time for ehrId " + ehrId + " with AR " + archetypeReference.getIdArchetype() + " is null!");
                     }
                     if (dateTime != null && dateTime.isAfter(ehrDate)) {
                         useAR = false;
                         DateFormat df = DateFormat.getDateTimeInstance();
-                        Logger.getLogger(EhrDataFilterManager.class).debug(df.format(dateTime.toDate()) + " after " + df.format(ehrDate.toDate()));
+                        LoggerFactory.getLogger(EhrDataFilterManager.class).debug(df.format(dateTime.toDate()) + " after " + df.format(ehrDate.toDate()));
                     }
                 }
 
@@ -81,7 +81,7 @@ public class EhrDataFilterManager {
                     startDateTime != null && dateTime.isBefore(startDateTime)) {
                 useAR = false;
                 if (dateTime == null) {
-                    Logger.getLogger(EhrDataFilterManager.class).warn("Date time for Archetype Reference " + archetypeReference.getIdArchetype() + " is null!");
+                    LoggerFactory.getLogger(EhrDataFilterManager.class).warn("Date time for Archetype Reference " + archetypeReference.getIdArchetype() + " is null!");
                 }
             }
             if (useAR) {

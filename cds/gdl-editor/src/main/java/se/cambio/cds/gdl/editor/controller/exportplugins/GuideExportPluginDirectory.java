@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.editor.controller.exportplugins;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.converters.drools.DroolsGuideExportPlugin;
 import se.cambio.cds.gdl.model.Guide;
@@ -25,7 +25,7 @@ public class GuideExportPluginDirectory {
 
     public static byte[] compile(Guide guide) throws InternalErrorException{
         //TODO Should allow choosing...
-        Logger.getLogger(GuideExportPluginDirectory.class).info("Compiling ...");
+        LoggerFactory.getLogger(GuideExportPluginDirectory.class).info("Compiling ...");
         Collection<GuideExportPlugin> guideExportPlugins = getGuideExportPlugins();
         if(guideExportPlugins.iterator().hasNext()){
             return guideExportPlugins.iterator().next().compile(guide);

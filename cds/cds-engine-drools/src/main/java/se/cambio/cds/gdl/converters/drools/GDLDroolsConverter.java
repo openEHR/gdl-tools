@@ -1,20 +1,11 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
-import se.cambio.cds.gdl.model.ArchetypeBinding;
-import se.cambio.cds.gdl.model.Binding;
-import se.cambio.cds.gdl.model.ElementBinding;
-import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.Rule;
-import se.cambio.cds.gdl.model.TermBinding;
-import se.cambio.cds.gdl.model.expression.AssignmentExpression;
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.UnaryExpression;
-import se.cambio.cds.gdl.model.expression.Variable;
+import se.cambio.cds.gdl.model.*;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
@@ -25,12 +16,7 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GDLDroolsConverter {
 
@@ -46,7 +32,7 @@ public class GDLDroolsConverter {
     private static final String TAB = GdlDroolsConst.TAB;
     private static final String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
     private static final String DEFAULT_RULE_CODE = "default";
-    private static Logger log = Logger.getLogger(GDLDroolsConverter.class);
+    private static Logger log = LoggerFactory.getLogger(GDLDroolsConverter.class);
     private final ArchetypeManager archetypeManager;
     private Guide guide;
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
@@ -605,14 +591,14 @@ public class GDLDroolsConverter {
 
     private String getTermBindings(String value) {
         if (value.startsWith("$")) {
-            Logger.getLogger(GDLDroolsConverter.class).warn("Guide=" + guide.getId() + ", Subclass comparison between elements is not supported.");
+            LoggerFactory.getLogger(GDLDroolsConverter.class).warn("Guide=" + guide.getId() + ", Subclass comparison between elements is not supported.");
             //TODO Give support to subclass comparison between elements
             return "null";
         }
         Map<String, TermBinding> termBindings = guide.getOntology().getTermBindings();
         // TODO log.warn if gt code is unbound to terminologies
         if (termBindings == null) {
-            //Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
+            //LoggerFactory.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
             return value;
         }
         String code = parseCode(value);

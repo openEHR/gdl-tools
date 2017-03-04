@@ -1,6 +1,5 @@
 package se.cambio.cds.controller.execution;
 
-import org.apache.log4j.Logger;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
@@ -12,6 +11,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
@@ -119,7 +119,7 @@ public class DroolsExecutionManager {
                 //Remove oldest KB in cache
                 String oldestGuideIdsId = getDelegate()._knowledgeBaseCache.keySet().iterator().next();
                 getDelegate()._knowledgeBaseCache.remove(oldestGuideIdsId);
-                Logger.getLogger(DroolsExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
+                LoggerFactory.getLogger(DroolsExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
             }
         }
         return kb;
@@ -127,12 +127,12 @@ public class DroolsExecutionManager {
 
 
     public static void setUseCache(boolean useCache) {
-        Logger.getLogger(DroolsExecutionManager.class).warn("USE-CACHE on cds engine changed to '" + useCache + "'");
+        LoggerFactory.getLogger(DroolsExecutionManager.class).warn("USE-CACHE on cds engine changed to '" + useCache + "'");
         getDelegate()._useCache = useCache;
     }
 
     public static void clearCache() {
-        Logger.getLogger(DroolsExecutionManager.class).info("Clearing drools knowledge base cached.");
+        LoggerFactory.getLogger(DroolsExecutionManager.class).info("Clearing drools knowledge base cached.");
         getDelegate()._knowledgeBaseCache.clear();
     }
 
@@ -194,7 +194,7 @@ public class DroolsExecutionManager {
             try {
                 getDelegate()._timeOutInMillis = CdsConfigurationProvider.getCdsConfiguration().getCdsExecutionTimeOut();
             } catch (Exception e) {
-                Logger.getLogger(DroolsExecutionManager.class).info("No CDS execution timeout or errors found loading it. Timeout will be disabled.");
+                LoggerFactory.getLogger(DroolsExecutionManager.class).info("No CDS execution timeout or errors found loading it. Timeout will be disabled.");
             }
             if (getDelegate()._timeOutInMillis == null) {
                 getDelegate()._timeOutInMillis = Long.MAX_VALUE;

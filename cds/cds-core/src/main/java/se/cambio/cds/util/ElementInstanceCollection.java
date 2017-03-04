@@ -1,15 +1,11 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
-import se.cambio.cds.model.facade.execution.vo.RuleReference;
+import se.cambio.cds.model.facade.execution.vo.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 
@@ -97,7 +93,7 @@ public class ElementInstanceCollection {
         for (String guideId : guideIds) {
             Guide guide = guideManager.getGuide(guideId);
             if (guide == null) {
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '" + guideId + "'");
+                LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '" + guideId + "'");
             } else {
                 guides.add(guide);
             }
@@ -249,7 +245,7 @@ public class ElementInstanceCollection {
 
     private Set<ArchetypeReference> getArchetypeReferences(String idArchetype, String idDomain, String idAux) {
         if (idAux == null) {
-            Logger.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferences with idAux=='null'");
+            LoggerFactory.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferences with idAux=='null'");
         }
         Set<ArchetypeReference> archetypeReferences =
                 getArchetypeReferenceMap(idArchetype, idDomain).get(idAux);
@@ -262,7 +258,7 @@ public class ElementInstanceCollection {
 
     private Map<String, Set<ArchetypeReference>> getArchetypeReferenceMap(String idArchetype, String idDomain) {
         if (idDomain == null) {
-            Logger.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferenceMap with idDomain=='null'");
+            LoggerFactory.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferenceMap with idDomain=='null'");
         }
         Map<String, Set<ArchetypeReference>> archetypeReferenceMap =
                 getArchetypeReferenceMap(idArchetype).get(idDomain);

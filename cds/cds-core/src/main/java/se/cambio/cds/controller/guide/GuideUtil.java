@@ -1,6 +1,5 @@
 package se.cambio.cds.controller.guide;
 
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
@@ -11,6 +10,7 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
 import org.openehr.rm.support.terminology.TerminologyService;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.ArchetypeBinding;
 import se.cambio.cds.gdl.model.ElementBinding;
 import se.cambio.cds.gdl.model.Guide;
@@ -193,7 +193,7 @@ public class GuideUtil {
             int count = Integer.parseInt(e.getValue());
             return new DvCount(count);
         } else {
-            Logger.getLogger(GuideUtil.class).warn("Unknown data value for constant expression '" + e + "'");
+            LoggerFactory.getLogger(GuideUtil.class).warn("Unknown data value for constant expression '" + e + "'");
             return null; //TODO Proportion, date, time, count, etc
         }
     }

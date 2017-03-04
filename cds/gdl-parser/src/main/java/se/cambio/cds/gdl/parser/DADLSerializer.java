@@ -1,17 +1,10 @@
 package se.cambio.cds.gdl.parser;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
-import se.cambio.cds.gdl.model.ArchetypeBinding;
-import se.cambio.cds.gdl.model.Binding;
-import se.cambio.cds.gdl.model.ElementBinding;
-import se.cambio.cds.gdl.model.ResourceDescriptionItem;
-import se.cambio.cds.gdl.model.Rule;
-import se.cambio.cds.gdl.model.Term;
-import se.cambio.cds.gdl.model.TermBinding;
-import se.cambio.cds.gdl.model.TermDefinition;
-import se.cambio.cds.gdl.model.TranslationDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.cambio.cds.gdl.model.*;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -330,7 +323,7 @@ public class DADLSerializer {
 
 	private Map<String, List<String>> profile;
 	
-	private static Logger log = Logger.getLogger(DADLSerializer.class);
+	private static Logger log = LoggerFactory.getLogger(DADLSerializer.class);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

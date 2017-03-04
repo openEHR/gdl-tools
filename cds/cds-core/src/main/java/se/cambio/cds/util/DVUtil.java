@@ -1,8 +1,6 @@
 package se.cambio.cds.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.*;
@@ -11,6 +9,8 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
 import org.openehr.rm.support.measurement.SimpleMeasurementService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -31,7 +31,7 @@ import static org.apache.commons.lang.StringUtils.substringBefore;
 
 public class DVUtil {
 
-    private static Logger logger = LogManager.getLogger(DVUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(DVUtil.class);
 
     public static DataValue createDV(ElementInstance elementInstance, String rmName, String attributeName, Object value) throws InternalErrorException {
         DataValue dv = elementInstance.getDataValue();

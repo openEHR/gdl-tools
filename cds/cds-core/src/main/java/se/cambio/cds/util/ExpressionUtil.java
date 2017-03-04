@@ -1,7 +1,7 @@
 package se.cambio.cds.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -186,7 +186,7 @@ public class ExpressionUtil {
     }
 
     public static String getVariableWithAttributeStr(String rmName, Variable var) {
-        Logger.getLogger(DVUtil.class).debug("Var.code: " + var.getCode() + ", attr: " + var.getAttribute());
+        LoggerFactory.getLogger(DVUtil.class).debug("Var.code: " + var.getCode() + ", attr: " + var.getAttribute());
         String ret = null;
         String dvClassName = null;
         if (rmName != null) {

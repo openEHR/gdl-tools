@@ -1,20 +1,9 @@
 package se.cambio.openehr.view.util;
 
-import org.apache.log4j.Logger;
 
+import org.slf4j.LoggerFactory;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.view.panels.DVBooleanPanel;
-import se.cambio.openehr.view.panels.DVCodedTextPanel;
-import se.cambio.openehr.view.panels.DVCountPanel;
-import se.cambio.openehr.view.panels.DVDatePanel;
-import se.cambio.openehr.view.panels.DVDateTimePanel;
-import se.cambio.openehr.view.panels.DVDurationPanel;
-import se.cambio.openehr.view.panels.DVGenericPanel;
-import se.cambio.openehr.view.panels.DVOrdinalPanel;
-import se.cambio.openehr.view.panels.DVProportionPanel;
-import se.cambio.openehr.view.panels.DVQuantityPanel;
-import se.cambio.openehr.view.panels.DVTextPanel;
-import se.cambio.openehr.view.panels.DVTimePanel;
+import se.cambio.openehr.view.panels.*;
 
 public class DVPanelFactory {
 
@@ -43,7 +32,7 @@ public class DVPanelFactory {
             return new DVTextPanel(idElement, idTemplate, allowNull, requestFocus);
         }else{
             //TODO Types left ??
-            Logger.getLogger(DVPanelFactory.class).error("Unknown rmType '"+rmType+"'");
+            LoggerFactory.getLogger(DVPanelFactory.class).error("Unknown rmType '"+rmType+"'");
             return null;
         }
     }

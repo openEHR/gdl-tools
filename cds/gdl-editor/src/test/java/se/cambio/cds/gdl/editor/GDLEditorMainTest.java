@@ -1,10 +1,10 @@
 package se.cambio.cds.gdl.editor;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,11 +19,7 @@ import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URISyntaxException;
 
 import static junit.framework.Assert.assertNotNull;
@@ -67,7 +63,7 @@ public class GDLEditorMainTest {
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {
             if (file.getName().endsWith(".gdl")) {
-                Logger.getLogger(GDLEditorMainTest.class).info("Testing guideline '" + file.getName() + "'");
+                LoggerFactory.getLogger(GDLEditorMainTest.class).info("Testing guideline '" + file.getName() + "'");
                 String originalGuideStr = readGuideFile(file);
                 String output = parseAndReserializeGuide(originalGuideStr);
                 assertEquals(originalGuideStr, output);

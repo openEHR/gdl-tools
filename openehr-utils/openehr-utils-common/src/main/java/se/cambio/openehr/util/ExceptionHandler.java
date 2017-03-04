@@ -23,14 +23,14 @@ public class ExceptionHandler extends Observable{
 
     public static void handle(InternalErrorException e){
 	logger.warn(e.getMessage());
-	//if (Logger.getLogger(ExceptionHandler.class).isDebugEnabled()){
+	//if (LoggerFactory.getLogger(ExceptionHandler.class).isDebugEnabled()){
 	    e.printStackTrace();
 	//}
     }
 
     public static void handle(Throwable th){
 	logger.warn(th.getMessage());
-	//if (Logger.getLogger(ExceptionHandler.class).isDebugEnabled()){
+	//if (LoggerFactory.getLogger(ExceptionHandler.class).isDebugEnabled()){
 	    th.printStackTrace();
 	//}
     }

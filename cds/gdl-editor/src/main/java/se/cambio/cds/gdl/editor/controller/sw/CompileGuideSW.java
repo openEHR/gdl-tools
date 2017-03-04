@@ -1,7 +1,7 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
-import org.apache.log4j.Logger;
 
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
@@ -29,7 +29,7 @@ public class CompileGuideSW extends CDSSwingWorker {
             }
         }catch(Throwable e){
             _errorMsg = e.getMessage();
-            Logger.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getEntity().getId()+"': "+e.getMessage());
+            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getEntity().getId()+"': "+e.getMessage());
             ExceptionHandler.handle(e);
         }
     }
