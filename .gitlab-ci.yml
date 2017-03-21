@@ -9,7 +9,7 @@ maven-build-snapshot:
     image: gitlab.cambiocds.com:4567/tools/docker-builder
     stage: build
     script:
-        - mvn clean package
+        - mvn clean package sonar:sonar -P sonar
     artifacts:
         paths:
             - cds/gdl-editor/target/*.zip
