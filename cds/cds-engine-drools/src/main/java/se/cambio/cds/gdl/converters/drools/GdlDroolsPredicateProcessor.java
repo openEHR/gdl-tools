@@ -1,15 +1,10 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.ArchetypeBinding;
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.UnaryExpression;
-import se.cambio.cds.gdl.model.expression.Variable;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -96,7 +91,7 @@ public class GdlDroolsPredicateProcessor {
             opStr = "<";
         } else {
             String guideId = gdlDroolsConverter.getGuide().getId();
-            Logger.getLogger(GdlDroolsPredicateProcessor.class).warn("Guide=" + guideId + ", Operator for predicate '" + op + "' is not valid.");
+            LoggerFactory.getLogger(GdlDroolsPredicateProcessor.class).warn("Guide=" + guideId + ", Operator for predicate '" + op + "' is not valid.");
         }
         return opStr;
     }

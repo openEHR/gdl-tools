@@ -1,8 +1,8 @@
 package se.cambio.cds.view.swing;
 
 import com.toedter.calendar.JDateChooser;
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.controller.session.data.ArchetypeReferences;
 import se.cambio.cds.gdl.model.Term;
@@ -13,9 +13,9 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 import se.cambio.openehr.view.util.DVPanelFactory;
@@ -80,7 +80,7 @@ public class DVSwingUtil {
         }
         ArchetypeElementVO ae = ArchetypeManager.getInstance().getArchetypeElements().getArchetypeElement(idTemplate, elementInstance.getId());
         if (ae==null){
-            Logger.getLogger(DVSwingUtil.class).warn("Archetype element '"+elementInstance.getId()+"' not found.");
+            LoggerFactory.getLogger(DVSwingUtil.class).warn("Archetype element '"+elementInstance.getId()+"' not found.");
         }
         return ae;
     }
@@ -122,7 +122,7 @@ public class DVSwingUtil {
                 if (term!=null){
                     name =  term.getText();
                 }else{
-                    Logger.getLogger(DVSwingUtil.class).warn("Term translation not found for '"+elementInstance.getId()+"'");
+                    LoggerFactory.getLogger(DVSwingUtil.class).warn("Term translation not found for '"+elementInstance.getId()+"'");
                 }
             }
         }
@@ -240,7 +240,7 @@ public class DVSwingUtil {
             disable(jDateChooser.getDateEditor().getUiComponent());
             jDateChooser.getCalendarButton().setVisible(false);
         }else{
-            Logger.getLogger(DVSwingUtil.class).warn("Element '"+jComponent.getClass().getName()+"' has not been disabled");
+            LoggerFactory.getLogger(DVSwingUtil.class).warn("Element '"+jComponent.getClass().getName()+"' has not been disabled");
         }
     }
 
@@ -269,7 +269,7 @@ public class DVSwingUtil {
             enable(jDateChooser.getDateEditor().getUiComponent());
             jDateChooser.getCalendarButton().setVisible(true);
         }else{
-            Logger.getLogger(DVSwingUtil.class).warn("Element '"+jComponent.getClass().getName()+"' has not been disabled");
+            LoggerFactory.getLogger(DVSwingUtil.class).warn("Element '"+jComponent.getClass().getName()+"' has not been disabled");
         }
     }
 

@@ -1,8 +1,8 @@
 package se.cambio.cds.model.facade.execution.vo;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
@@ -36,7 +36,7 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
      * Do not use inside core (unless totally necessary)
      */
     public void setDataValue(DataValue dataValue) {
-        Logger.getLogger(PredicateGeneratedElementInstance.class).warn("Attempt to change data value of generated element (from '"+getDataValue()+"' to '"+dataValue+"')");
+        LoggerFactory.getLogger(PredicateGeneratedElementInstance.class).warn("Attempt to change data value of generated element (from '"+getDataValue()+"' to '"+dataValue+"')");
     }
 
     public PredicateGeneratedElementInstance clone(){

@@ -4,7 +4,8 @@
  */
 package se.cambio.openehr.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Observable;
@@ -13,21 +14,23 @@ import java.util.Observable;
 public class ExceptionHandler extends Observable{
 
     private static ExceptionHandler _instance = null;
+    private static Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
+
 
     private ExceptionHandler(){
 
     }
 
     public static void handle(InternalErrorException e){
-	Logger.getLogger(ExceptionHandler.class).warn(e.getMessage());
-	//if (Logger.getLogger(ExceptionHandler.class).isDebugEnabled()){
+	logger.warn(e.getMessage());
+	//if (LoggerFactory.getLogger(ExceptionHandler.class).isDebugEnabled()){
 	    e.printStackTrace();
 	//}
     }
 
     public static void handle(Throwable th){
-	Logger.getLogger(ExceptionHandler.class).warn(th.getMessage());
-	//if (Logger.getLogger(ExceptionHandler.class).isDebugEnabled()){
+	logger.warn(th.getMessage());
+	//if (LoggerFactory.getLogger(ExceptionHandler.class).isDebugEnabled()){
 	    th.printStackTrace();
 	//}
     }

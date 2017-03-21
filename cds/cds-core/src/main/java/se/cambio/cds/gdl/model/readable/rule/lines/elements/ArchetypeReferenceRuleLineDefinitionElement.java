@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -57,7 +57,7 @@ public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElement
             if (archetypeVO != null) {
                 return archetypeVO.getId();
             } else {
-                Logger.getLogger(this.getClass()).error("Archetype not found! (" + idArchetype + ")");
+                LoggerFactory.getLogger(this.getClass()).error("Archetype not found! (" + idArchetype + ")");
                 return "";
             }
         } else {

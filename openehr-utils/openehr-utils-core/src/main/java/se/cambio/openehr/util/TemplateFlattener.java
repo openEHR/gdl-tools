@@ -1,7 +1,6 @@
 package se.cambio.openehr.util;
 
 import openEHR.v1.template.*;
-import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.constraintmodel.*;
 import org.openehr.am.archetype.constraintmodel.CAttribute.Existence;
@@ -16,6 +15,8 @@ import org.openehr.am.template.UnknownTemplateException;
 import org.openehr.rm.common.archetyped.Locatable;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.support.basic.Interval;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -1635,7 +1636,7 @@ public class TemplateFlattener {
         format.setMaximumIntegerDigits(8);
     }
 
-    private static Logger log = Logger.getLogger(TemplateFlattener.class);
+    private static Logger log = LoggerFactory.getLogger(TemplateFlattener.class);
 
     /* fields */
     private Map<String, Archetype> archetypeMap;

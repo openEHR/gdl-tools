@@ -1,12 +1,7 @@
 package se.cambio.openehr.controller;
 
-import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.am.archetype.constraintmodel.ArchetypeSlot;
-import org.openehr.am.archetype.constraintmodel.CAttribute;
-import org.openehr.am.archetype.constraintmodel.CComplexObject;
-import org.openehr.am.archetype.constraintmodel.CObject;
-import org.openehr.am.archetype.constraintmodel.CPrimitiveObject;
+import org.openehr.am.archetype.constraintmodel.*;
 import org.openehr.am.archetype.constraintmodel.primitive.CInteger;
 import org.openehr.am.archetype.constraintmodel.primitive.CPrimitive;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
@@ -17,21 +12,14 @@ import org.openehr.am.openehrprofile.datatypes.quantity.Ordinal;
 import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GenericObjectBundleADLManager {
     private static String SECTION_NAME = "name/value='";
@@ -341,7 +329,7 @@ public class GenericObjectBundleADLManager {
                                 new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
                                 OpenEHRDataValuesUI.getLanguageCodePhrase());
                 if (node == null) {
-                    Logger.getLogger(GenericObjectBundleADLManager.class).warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
+                    LoggerFactory.getLogger(GenericObjectBundleADLManager.class).warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
                     return;
                 }
                 DvCodedText ct = node.getValue();
@@ -404,7 +392,7 @@ public class GenericObjectBundleADLManager {
                         text = getText(ar, codedStr, language);
                         desc = getDescription(ar, codedStr, language);
                     } else {
-                        Logger.getLogger(GenericObjectBundleADLManager.class).error("Unkown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
+                        LoggerFactory.getLogger(GenericObjectBundleADLManager.class).error("Unkown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
                         //TODO TERMINOLOGY SERVICE
                     }
                     ordinalVOs.add(

@@ -1,6 +1,8 @@
 package se.cambio.openehr.util;
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +12,14 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 public class WindowManager {
-    public static WindowManager _delegate = null;
-    public Window _mainWindow = null;
-    public Map<String, ProgressManager> _progressManagerMap = null;
+    private static WindowManager _delegate = null;
+    private Window _mainWindow = null;
+    private Map<String, ProgressManager> _progressManagerMap = null;
     private String _description = null;
 
-    public static String DEFAULT_PROGRESS_MANAGER_KEY = "default";
+    private static String DEFAULT_PROGRESS_MANAGER_KEY = "default";
+    private static Logger logger = LoggerFactory.getLogger(WindowManager.class);
+
 
     private WindowManager() {
 
@@ -126,7 +130,7 @@ public class WindowManager {
     private static ProgressManager getProgressManager(String progressKey) {
         ProgressManager progressManager = getProgressManagerMap().get(progressKey);
         if (progressManager == null) {
-            Logger.getLogger(WindowManager.class).warn("Progress Manager not found for '" + progressKey + "' using default.");
+            logger.warn("Progress Manager not found for '" + progressKey + "' using default.");
             progressManager = new DefaultProgressManager(progressKey);
             getProgressManagerMap().put(progressKey, progressManager);
         }

@@ -1,7 +1,7 @@
 package se.cambio.cds.controller.session.data;
 
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
@@ -43,18 +43,18 @@ public class Guides extends AbstractCMManager<GuideDTO> {
     public void processGuide(GuideDTO guideDTO) {
         try {
             if (!hasGuideObject(guideDTO)) {
-                Logger.getLogger(Guides.class).info("Parsing guideline '" + guideDTO.getId() + "'...");
+                LoggerFactory.getLogger(Guides.class).info("Parsing guideline '" + guideDTO.getId() + "'...");
                 long startTime = System.currentTimeMillis();
                 parseGuide(guideDTO);
                 long endTime = System.currentTimeMillis();
-                Logger.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
+                LoggerFactory.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
             }
             if (!isCompiled(guideDTO)) {
-                Logger.getLogger(Guides.class).info("Compiling guideline '" + guideDTO.getId() + "'...");
+                LoggerFactory.getLogger(Guides.class).info("Compiling guideline '" + guideDTO.getId() + "'...");
                 long startTime = System.currentTimeMillis();
                 compileGuide(guideDTO);
                 long endTime = System.currentTimeMillis();
-                Logger.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
+                LoggerFactory.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
             }
         } catch (InternalErrorException e){
             ExceptionHandler.handle(e);

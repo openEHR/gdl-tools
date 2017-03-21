@@ -1,8 +1,9 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -22,7 +23,7 @@ import se.cambio.openehr.util.OpenEHRConst;
 })
 public class DateTimeARFinder {
 
-    private Logger logger = Logger.getLogger(DateTimeARFinder.class);
+    private Logger logger = LoggerFactory.getLogger(DateTimeARFinder.class);
 
     @Autowired
     Environment environment;

@@ -1,8 +1,8 @@
 package se.cambio.openehr.util;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -11,7 +11,6 @@ import org.springframework.core.env.Environment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -40,7 +39,7 @@ public class UserConfigurationManager {
     private Date currentDateTime;
     private boolean currentDateTimeChecked = false;
 
-    private Logger logger = LogManager.getLogger(UserConfigurationManager.class);
+    private Logger logger = LoggerFactory.getLogger(UserConfigurationManager.class);
 
     private static UserConfigurationManager instance;
 
@@ -151,7 +150,7 @@ public class UserConfigurationManager {
         folder.mkdirs();
         if (!folder.exists() || !folder.isDirectory()) {
             InvalidParameterException invalidParameterException = new InvalidParameterException(format("Invalid path '%s' given. Trying to set parameter %s", path, parameter));
-            logger.error(invalidParameterException);
+            logger.error("Error setting cm folder", invalidParameterException);
             throw invalidParameterException;
         }
         cmFolder.setFolder(folder);
@@ -200,7 +199,7 @@ public class UserConfigurationManager {
                 properties.store(out, "User Config");
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("Error saving", e);
             throw new IllegalArgumentException(format("Error saving configuration file %s : %s", configFile.getAbsolutePath(), e.getMessage()));
         }
     }

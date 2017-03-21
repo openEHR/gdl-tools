@@ -1,7 +1,8 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
 import org.drools.core.spi.KnowledgeHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -17,6 +18,8 @@ public class ExecutionLogger {
     private boolean _halt = false;
     private Set<ElementInstance> _elementInstancesSet = null;
     private long _startTime = 0;
+    private static Logger logger = LoggerFactory.getLogger(ExecutionLogger.class);
+
 
     public ExecutionLogger() {
         _startTime = System.currentTimeMillis();
@@ -43,7 +46,7 @@ public class ExecutionLogger {
                 _executionTimedOut = executionTime > DroolsExecutionManager.DEFAULT_TIMEOUT;
             }
             if (_executionCanceled || _executionTimedOut) {
-                Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out! (executionTime= " + executionTime + " ms)");
+                logger.warn("Execution canceled or timed out! (executionTime= "+executionTime+" ms)");
                 Map<String, Integer> countMap = new HashMap<String, Integer>();
                 for (ExecutionLog logLine : getLog()) {
                     String firedRule = logLine.getFiredRule();
@@ -51,7 +54,7 @@ public class ExecutionLogger {
                     countMap.put(firedRule, count + 1);
                 }
                 for (String firedRule : countMap.keySet()) {
-                    Logger.getLogger(ExecutionLogger.class).info("Executed " + firedRule + " (" + countMap.get(firedRule) + ")");
+                    logger.info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
                 }
                 drools.halt();
                 _halt = true;

@@ -1,7 +1,7 @@
 
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
@@ -16,7 +16,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineEl
 import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
 import se.cambio.cds.gdl.parser.ExpressionParser;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.dialogs.DialogEditor;
 import se.cambio.openehr.view.panels.SelectionPanel;
@@ -29,8 +28,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.StyledEditorKit;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.StringReader;
@@ -210,7 +207,7 @@ public class DialogExpressionEditor extends DialogEditor {
         try {
             _expressionItem = ((AssignmentExpression) parse(expression)).getAssignment();
         } catch (Throwable e) {
-            Logger.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + e.getMessage());
+            LoggerFactory.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + e.getMessage());
         }
         if (_expressionItem != null) {
             String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem, UserConfigurationManager.instance().getLanguage());

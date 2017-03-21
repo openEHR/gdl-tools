@@ -1,7 +1,7 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ConstantExpression;
 import se.cambio.cds.gdl.model.expression.Variable;
@@ -53,7 +53,7 @@ public class SetElementWithNullValueActionRuleLine extends AssignmentExpressionR
 	    throw new IllegalStateException("No null value set");
 	}
 	String dataValueStr = nullValue.toString();
-	Logger.getLogger(SetElementAttributeActionRuleLine.class).debug("dataValueStr: " + dataValueStr);
+	LoggerFactory.getLogger(SetElementAttributeActionRuleLine.class).debug("dataValueStr: " + dataValueStr);
 	return new AssignmentExpression(
 		var, 
 		new ConstantExpression(dataValueStr));

@@ -13,26 +13,14 @@
  */
 package se.cambio.cds.gdl.parser;
 
+import org.openehr.am.parser.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import org.apache.log4j.Logger;
-import org.openehr.am.parser.AttributeValue;
-import org.openehr.am.parser.ComplexObjectBlock;
-import org.openehr.am.parser.ContentObject;
-import org.openehr.am.parser.KeyedObject;
-import org.openehr.am.parser.MultipleAttributeObjectBlock;
-import org.openehr.am.parser.ObjectBlock;
-import org.openehr.am.parser.PrimitiveObjectBlock;
-import org.openehr.am.parser.SimpleValue;
-import org.openehr.am.parser.SingleAttributeObjectBlock;
-import org.openehr.rm.support.basic.Interval;
+import java.util.*;
 
 /**
  * Utility class that binds data in DADL format to openEHR RM
@@ -227,7 +215,7 @@ public class GDLBinding {
 		}
 	}	
 
-	private static Logger log = Logger.getLogger(GDLBinding.class);
+	private static Logger log = LoggerFactory.getLogger(GDLBinding.class);
 	private static final String MODEL_PACKAGE = "se.cambio.cds.gdl.model.";	
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

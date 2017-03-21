@@ -1,6 +1,8 @@
 package se.cambio.openehr.util;
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Future;
 
@@ -9,6 +11,8 @@ public class DefaultProgressManager implements ProgressManager {
     private String message = "";
     private double progress = 0.0;
     private String id;
+    private static Logger logger = LoggerFactory.getLogger(DefaultProgressManager.class);
+
 
     public DefaultProgressManager(String id) {
         this.id = id;
@@ -17,12 +21,12 @@ public class DefaultProgressManager implements ProgressManager {
     @Override
     public void changeLoadingText(String description) {
         message = description;
-        Logger.getLogger(DefaultProgressManager.class).info("DPM: " + description);
+        logger.info("DPM: " + description);
     }
 
     @Override
     public void start() {
-        Logger.getLogger(DefaultProgressManager.class).info("DPM: Starting");
+        logger.info("DPM: Starting");
     }
 
     @Override
@@ -30,7 +34,7 @@ public class DefaultProgressManager implements ProgressManager {
         message = null;
         progress = 0.0;
         lastUpdatedProgress = 0.0;
-        Logger.getLogger(DefaultProgressManager.class).info("DPM: Stopping");
+        logger.info("DPM: Stopping");
     }
 
     @Override
@@ -38,7 +42,7 @@ public class DefaultProgressManager implements ProgressManager {
         this.message = msg;
         this.progress = progress;
         if (Math.abs(lastUpdatedProgress - progress) >= 0.2) {
-            Logger.getLogger(DefaultProgressManager.class).info("DPM: " + msg + "(progress=" + progress + ")");
+            logger.info("DPM: " + msg + "(progress=" + progress + ")");
             lastUpdatedProgress = progress;
         }
     }

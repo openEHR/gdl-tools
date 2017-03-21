@@ -12,7 +12,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
-import org.springframework.stereotype.Component;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
@@ -119,7 +119,7 @@ public class DroolsExecutionManager {
                 //Remove oldest KB in cache
                 String oldestGuideIdsId = getDelegate()._knowledgeBaseCache.keySet().iterator().next();
                 getDelegate()._knowledgeBaseCache.remove(oldestGuideIdsId);
-                Logger.getLogger(DroolsExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
+                LoggerFactory.getLogger(DroolsExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
             }
         }
         return kb;

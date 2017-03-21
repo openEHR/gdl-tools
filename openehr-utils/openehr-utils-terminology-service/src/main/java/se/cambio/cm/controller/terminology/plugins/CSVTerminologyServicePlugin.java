@@ -1,10 +1,10 @@
 package se.cambio.cm.controller.terminology.plugins;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.cm.controller.terminology.TerminologyServiceImpl;
 import se.cambio.openehr.util.exceptions.*;
 import se.cambio.openehr.util.misc.CSVReader;
 
@@ -19,7 +19,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     private Map<String, ArrayList<String>> _parentsMap = null;
     private Map<String, ArrayList<String>> _childrenMap = null;
     private Map<String, String> _descriptionsMap = null;
-    private static Logger log = Logger.getLogger(CSVTerminologyServicePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(CSVTerminologyServicePlugin.class);
 
     public CSVTerminologyServicePlugin(String terminologyId){
         _terminologyId = terminologyId;
@@ -61,7 +61,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             }
             log.debug("Total " + getDescriptionsMap().size() + " term(s) loaded..");
         } catch (Exception e) {
-            Logger.getLogger(TerminologyServiceImpl.class).warn("Failed to initialize the terminology service '" + _terminologyId + "'", e);
+            log.warn("Failed to initialize the terminology service '" + _terminologyId + "'", e);
             throw new InternalErrorException(e);
         }
     }
@@ -92,7 +92,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
                     break;
                 }
             }catch(InvalidCodeException e){
-                Logger.getLogger(CSVTerminologyServicePlugin.class).warn("InvalidCodeException: checkSubclassOf('" + code + "','" + cp.getCodeString() + "') ignored. " + e.getMessage());
+                log.warn("InvalidCodeException: checkSubclassOf('" + code + "','" + cp.getCodeString() + "') ignored. " + e.getMessage());
             }
         }
         return ret;

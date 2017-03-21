@@ -6,17 +6,13 @@
  */
 package se.cambio.openehr.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 
-/**
- * @author icorram
- *
-
-
- */
 public class ErrLog {
 
     //private static String LOGGIN_PROPPERTIES_FILE = "loggin.properties";
@@ -28,7 +24,7 @@ public class ErrLog {
     private String _logFileName = null;
 
     private ErrLog(){
-	_logger = Logger.getLogger(ErrLog.class);
+	_logger = LoggerFactory.getLogger(ErrLog.class);
 	/*TODO Create error log
 	try {
 	    Class<ErrLog> SisLog = ErrLog.class;

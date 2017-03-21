@@ -1,20 +1,10 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
-import se.cambio.cds.controller.execution.DroolsExecutionManager;
-import se.cambio.cds.gdl.model.ArchetypeBinding;
-import se.cambio.cds.gdl.model.Binding;
-import se.cambio.cds.gdl.model.ElementBinding;
-import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.model.Rule;
-import se.cambio.cds.gdl.model.TermBinding;
-import se.cambio.cds.gdl.model.expression.AssignmentExpression;
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.UnaryExpression;
-import se.cambio.cds.gdl.model.expression.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.cambio.cds.gdl.model.*;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
@@ -25,33 +15,24 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GDLDroolsConverter {
 
-
-    // Drools keywords
     private static final String RULE = "rule";
     private static final String WHEN = "when";
     private static final String THEN = "then";
     private static final String END = "end";
     private static final String DEFAULT_CONFIG = "no-loop true";
-    private static final String AGENDA_GROUP = "agenda-group";
     private static final String SALIENCE = "salience";
     private static final String ARCHETYPE_REFERENCE_ID = "archetypeReference";
     private static final String TAB = "\t";
-    private static final String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
     private static final String DEFAULT_RULE_CODE = "default";
-    private static Logger log = Logger.getLogger(GDLDroolsConverter.class);
+    private static Logger log = LoggerFactory.getLogger(GDLDroolsConverter.class);
     private final ArchetypeManager archetypeManager;
     private Guide guide;
-    private Map<String, String> _gtElementToWholeDefinition = new HashMap<String, String>();
-    private Map<String, String> _gtElementToDefinition = new HashMap<String, String>();
+    private Map<String, String> _gtElementToWholeDefinition = new HashMap<>();
+    private Map<String, String> _gtElementToDefinition = new HashMap<>();
     private Map<String, ArchetypeReference> archetypeReferenceMap;
     private Map<String, ArchetypeElementVO> elementMap;
     private Map<String, String> archetypeBindingGtCodeToDefinition;
@@ -68,7 +49,7 @@ public class GDLDroolsConverter {
         init();
     }
 
-    public static String getAttributeSettingStr(String gtCode, String rmName, String attributeName, String setStr) {
+    static String getAttributeSettingStr(String gtCode, String rmName, String attributeName, String setStr) {
         return "setDataValue(DVUtil.createDV($" + gtCode + ",\"" + rmName + "\",\"" + attributeName + "\"," + setStr + "))";
     }
 
@@ -88,7 +69,7 @@ public class GDLDroolsConverter {
         }
     }
 
-    protected static boolean isString(String rmName, String attribute) {
+    static boolean isString(String rmName, String attribute) {
         return (OpenEHRDataValues.DV_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
                 (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
                 OpenEHRDataValues.UNITS_ATT.equals(attribute) ||
@@ -100,36 +81,36 @@ public class GDLDroolsConverter {
         return guide;
     }
 
-    protected ArchetypeManager getArchetypeManager() {
+    ArchetypeManager getArchetypeManager() {
         return archetypeManager;
     }
 
-    protected int getPredicateCount() {
+    int getPredicateCount() {
         return predicateCount;
     }
 
-    protected void increasePredicateCount() {
+    void increasePredicateCount() {
         predicateCount++;
     }
 
-    public int getCreationIndex() {
+    int getCreationIndex() {
         return creationIndex;
     }
 
-    public void increaseCreationIndex() {
+    void increaseCreationIndex() {
         creationIndex++;
     }
 
-    protected Map<String, ArchetypeElementVO> getElementMap() {
+    Map<String, ArchetypeElementVO> getElementMap() {
         if (elementMap == null) {
-            elementMap = new HashMap<String, ArchetypeElementVO>();
+            elementMap = new HashMap<>();
         }
         return elementMap;
     }
 
-    public Map<String, ArchetypeReference> getArchetypeReferenceMap() {
+    Map<String, ArchetypeReference> getArchetypeReferenceMap() {
         if (archetypeReferenceMap == null) {
-            archetypeReferenceMap = new HashMap<String, ArchetypeReference>();
+            archetypeReferenceMap = new HashMap<>();
         }
         return archetypeReferenceMap;
     }
@@ -137,8 +118,8 @@ public class GDLDroolsConverter {
     private void init() {
         // Add currentTime
         getElementMap().put(OpenEHRConst.CURRENT_DATE_TIME_ID, ArchetypeElements.CURRENT_DATE_TIME);
-        archetypeBindingGtCodeToDefinition = new HashMap<String, String>();
-        gtElementToArchetypeBindingGtCode = new HashMap<String, String>();
+        archetypeBindingGtCodeToDefinition = new HashMap<>();
+        gtElementToArchetypeBindingGtCode = new HashMap<>();
         preconditionStats = initStats();
         predicateCount = 0;
         creationIndex = 0;
@@ -228,8 +209,7 @@ public class GDLDroolsConverter {
     }
 
     private String getFunctionExtraCode(Map<RefStat, Set<String>> ruleStats) {
-        //Check if a function is used, add whatever extra code necessary for it (for now, just count)
-        Set<String> functionsRefs = new HashSet<String>();
+        Set<String> functionsRefs = new HashSet<>();
         functionsRefs.addAll(ruleStats.get(RefStat.ATT_FUNCTIONS));
         functionsRefs.addAll(preconditionStats.get(RefStat.ATT_FUNCTIONS));
         return getFunctionsExtraCode(functionsRefs);
@@ -323,10 +303,10 @@ public class GDLDroolsConverter {
         return resultSB.toString();
     }
 
-    protected Map<RefStat, Set<String>> initStats() {
-        Map<RefStat, Set<String>> stats = new HashMap<RefStat, Set<String>>();
+    Map<RefStat, Set<String>> initStats() {
+        Map<RefStat, Set<String>> stats = new HashMap<>();
         for (RefStat refStat : RefStat.values()) {
-            stats.put(refStat, new HashSet<String>());
+            stats.put(refStat, new HashSet<>());
         }
         return stats;
     }
@@ -363,9 +343,9 @@ public class GDLDroolsConverter {
         return sb.toString();
     }
 
-    protected void processExpressionItem(StringBuffer sb,
-                                         ExpressionItem expressionItem,
-                                         Map<RefStat, Set<String>> stats) throws InternalErrorException {
+    private void processExpressionItem(StringBuffer sb,
+                                       ExpressionItem expressionItem,
+                                       Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (expressionItem instanceof AssignmentExpression) {
             processAssignmentExpression(sb, (AssignmentExpression) expressionItem, stats);
         } else if (expressionItem instanceof BinaryExpression) {
@@ -377,16 +357,16 @@ public class GDLDroolsConverter {
         }
     }
 
-    protected void processAssignmentExpression(StringBuffer sb,
-                                               AssignmentExpression assignmentExpression,
-                                               Map<RefStat, Set<String>> stats) throws InternalErrorException {
+    private void processAssignmentExpression(StringBuffer sb,
+                                             AssignmentExpression assignmentExpression,
+                                             Map<RefStat, Set<String>> stats) throws InternalErrorException {
         GdlDroolsAssignmentExpressionProcessor gdlDroolsAssignmentExpressionProcessor = new GdlDroolsAssignmentExpressionProcessor(this, assignmentExpression, stats);
         sb.append(gdlDroolsAssignmentExpressionProcessor.process());
     }
 
-    protected void processBinaryExpression(StringBuffer sb,
-                                           BinaryExpression binaryExpression,
-                                           Map<RefStat, Set<String>> stats) throws InternalErrorException {
+    private void processBinaryExpression(StringBuffer sb,
+                                         BinaryExpression binaryExpression,
+                                         Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (OperatorKind.OR.equals(binaryExpression.getOperator())) {
             sb.append("(");
             processExpressionItem(sb, binaryExpression.getLeft(), stats);
@@ -414,9 +394,9 @@ public class GDLDroolsConverter {
 
     }
 
-    protected void processUnaryExpression(StringBuffer sb,
-                                          UnaryExpression unaryExpression,
-                                          Map<RefStat, Set<String>> stats) throws InternalErrorException {
+    private void processUnaryExpression(StringBuffer sb,
+                                        UnaryExpression unaryExpression,
+                                        Map<RefStat, Set<String>> stats) throws InternalErrorException {
         if (OperatorKind.NOT.equals(unaryExpression.getOperator())) {
             sb.append("not(");
             processExpressionItem(sb, unaryExpression.getOperand(), stats);
@@ -455,9 +435,9 @@ public class GDLDroolsConverter {
         sb.append("\n");
     }
 
-    protected void processComparisonExpression(StringBuffer sb,
-                                               BinaryExpression binaryExpression,
-                                               Map<RefStat, Set<String>> stats) throws InternalErrorException {
+    private void processComparisonExpression(StringBuffer sb,
+                                             BinaryExpression binaryExpression,
+                                             Map<RefStat, Set<String>> stats) throws InternalErrorException {
         GdlDroolsBinaryComparisonExpressionProcessor gdlDroolsBinaryComparisonExpressionProcessor = new GdlDroolsBinaryComparisonExpressionProcessor(this, binaryExpression, stats);
         sb.append(gdlDroolsBinaryComparisonExpressionProcessor.process());
     }
@@ -525,11 +505,11 @@ public class GDLDroolsConverter {
         return definition;
     }
 
-    protected String getOperatorMVELLine(String handle, OperatorKind ok, String value) {
+    String getOperatorMVELLine(String handle, OperatorKind ok, String value) {
         return getOperatorMVELLine(handle, ok, value, false);
     }
 
-    protected String getOperatorMVELLine(
+    String getOperatorMVELLine(
             String handle, OperatorKind ok,
             String value, boolean inPredicate) {
         if (OperatorKind.EQUALITY.equals(ok)) {
@@ -555,7 +535,7 @@ public class GDLDroolsConverter {
         }
     }
 
-    protected String getAttributeOperatorMVELLine(
+    String getAttributeOperatorMVELLine(
             String handle,
             OperatorKind ok,
             String value) throws CompilationErrorException {
@@ -578,7 +558,7 @@ public class GDLDroolsConverter {
      * 2. new DvText("local::gt0100")
      * 2. new DvText("local::gt0100|Hypertension|")
      */
-    protected String parseCode(String value) {
+    String parseCode(String value) {
         int i = value.indexOf("local");
 
         log.debug("value after IS_A: " + value);
@@ -610,14 +590,14 @@ public class GDLDroolsConverter {
 
     private String getTermBindings(String value) {
         if (value.startsWith("$")) {
-            Logger.getLogger(GDLDroolsConverter.class).warn("Guide=" + guide.getId() + ", Subclass comparison between elements is not supported.");
+            LoggerFactory.getLogger(GDLDroolsConverter.class).warn("Guide=" + guide.getId() + ", Subclass comparison between elements is not supported.");
             //TODO Give support to subclass comparison between elements
             return "null";
         }
         Map<String, TermBinding> termBindings = guide.getOntology().getTermBindings();
         // TODO log.warn if gt code is unbound to terminologies
         if (termBindings == null) {
-            //Logger.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
+            //LoggerFactory.getLogger(GDLDroolsConverter.class).warn("Guide="+guide.getId()+", Needed terminology binding not found on guide.");
             return value;
         }
         String code = parseCode(value);

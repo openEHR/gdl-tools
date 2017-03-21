@@ -1,8 +1,9 @@
 package se.cambio.cm.controller.terminology;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
@@ -13,22 +14,11 @@ import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
-import se.cambio.openehr.util.exceptions.UnknownPropertyException;
-import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+import se.cambio.openehr.util.exceptions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class TerminologyServiceImpl implements TerminologyService {
@@ -39,7 +29,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     private Set<String> _supportedTerminologies = null;
     private static TerminologyServiceImpl soleInstance;
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
-    private static Logger log = Logger.getLogger(TerminologyServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(TerminologyServiceImpl.class);
 
     @Autowired
     public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration){
@@ -56,7 +46,7 @@ public class TerminologyServiceImpl implements TerminologyService {
                 try {
                     terminologyServicePlugin = (TerminologyServicePlugin)Class.forName(clazz).newInstance();
                 } catch (Exception e) {
-                    Logger.getLogger(TerminologyServiceImpl.class).error("ERROR instantiating class '"+clazz+"'");
+                    log.error("ERROR instantiating class '"+clazz+"'");
                 }
             } else {
                 terminologyServicePlugin =

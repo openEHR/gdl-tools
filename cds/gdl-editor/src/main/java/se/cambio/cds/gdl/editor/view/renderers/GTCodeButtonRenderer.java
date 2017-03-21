@@ -1,7 +1,7 @@
 
 package se.cambio.cds.gdl.editor.view.renderers;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
@@ -41,7 +41,7 @@ public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
 	    }else{
 		setText(gtCode);
 		setToolTipText("*UNKNOWN*");
-		Logger.getLogger(GTCodeButtonRenderer.class).warn("GTCode '"+gtCode+"' not found!");
+		LoggerFactory.getLogger(GTCodeButtonRenderer.class).warn("GTCode '"+gtCode+"' not found!");
 	    }
 	}
 	return this;

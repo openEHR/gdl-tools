@@ -4,13 +4,13 @@ import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.MapContext;
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.Match;
 import org.openehr.rm.datatypes.text.TermMapping;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.TermBinding;
@@ -134,7 +134,7 @@ public class ElementInstanceCollectionUtil {
             for (RuleReference ruleReference : pgei.getRuleReferences()) {
                 Guide guide = guideMap.get(ruleReference.getGuideId());
                 if (guide == null) {
-                    Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '" + ruleReference + "'");
+                    LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn("Null guideline for rule reference '" + ruleReference + "'");
                 } else {
                     localGuideIds.add(guide.getId());
                 }
@@ -173,7 +173,7 @@ public class ElementInstanceCollectionUtil {
                                 return false;
                             }
                         } catch (Exception e) {
-                            Logger.getLogger(ElementInstanceCollectionUtil.class).warn(e.getMessage());
+                            LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn(e.getMessage());
                             return false;
                         }
                     }
@@ -258,7 +258,7 @@ public class ElementInstanceCollectionUtil {
             if (dv instanceof DvCodedText) {
                 return getResolvedCodedText(dv, guides);
             } else {
-                Logger.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '" + dv + "'");
+                LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '" + dv + "'");
                 return null;
             }
         } else if (dv instanceof CurrentTimeExpressionDataValue) {
@@ -310,7 +310,7 @@ public class ElementInstanceCollectionUtil {
         //If reaches here, no terminology was found (problem)
         String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
         //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
-        Logger.getLogger(ElementInstanceCollectionUtil.class).warn(message);
+        LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn(message);
         return null;
     }
 

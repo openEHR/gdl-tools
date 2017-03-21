@@ -5,8 +5,8 @@ import difflib.DiffUtils;
 import difflib.Patch;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.view.dialog.CDSFormGenDialog;
@@ -26,15 +26,7 @@ import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.AssignmentExpressionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.ExpressionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateAttributeDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExistsDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateExpressionDefinitionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.WithElementPredicateFunctionDefinitionRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.GuideImporter;
@@ -56,11 +48,7 @@ import se.cambio.openehr.view.util.ImportUtils;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -157,7 +145,7 @@ public class GDLEditor implements EditorController<Guide> {
                 TermDefinition td = langCode.getValue();
                 for (String gtCode : originalTermDefinition.getTerms().keySet()) {
                     if (!td.getTerms().containsKey(gtCode)) {
-                        Logger.getLogger(GDLEditor.class).warn(
+                        LoggerFactory.getLogger(GDLEditor.class).warn(
                                 "Language '" + langCode
                                         + "' does not contain gt code '"
                                         + gtCode + "'. Will be added...");
@@ -691,7 +679,7 @@ public class GDLEditor implements EditorController<Guide> {
                         termCount = codeNum;
                     }
                 } catch (Exception e) {
-                    Logger.getLogger(this.getClass()).warn("Unable to parse code '" + gtCode + "'");
+                    LoggerFactory.getLogger(this.getClass()).warn("Unable to parse code '" + gtCode + "'");
                 }
             }
         }
