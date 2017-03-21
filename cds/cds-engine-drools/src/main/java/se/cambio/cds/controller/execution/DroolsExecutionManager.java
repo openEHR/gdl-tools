@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.execution;
 
+import org.apache.log4j.Logger;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
@@ -21,7 +22,6 @@ import se.cambio.cds.util.RuleExecutionWMLogger;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.misc.CdsConfigurationProvider;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.io.UnsupportedEncodingException;
@@ -29,18 +29,18 @@ import java.util.*;
 
 public class DroolsExecutionManager {
 
-    public Map<String, KieBase> _knowledgeBaseCache = null;
+    private Map<String, KieBase> _knowledgeBaseCache = null;
     private static DroolsExecutionManager _instance = null;
     private static final short MAX_KNOWLEDGE_BASE_CACHE = 10;
     private boolean _useCache = true;
     private ExecutionLogger _logger = null;
-    private Long _timeOutInMillis = null;
+    public static final Long DEFAULT_TIMEOUT = 30000L;
 
-    private DroolsExecutionManager() {
+    public DroolsExecutionManager() {
         _knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
     }
 
-    public static void executeGuides(
+    public void executeGuides(
             List<GuideDTO> guideDTOs,
             Calendar date,
             Collection<Object> workingMemoryObjects,
@@ -60,7 +60,7 @@ public class DroolsExecutionManager {
     }
 
 
-    private static void executeGuides(
+    private void executeGuides(
             List<String> guideIds,
             KieBase knowledgeBase,
             Calendar date,
@@ -83,7 +83,7 @@ public class DroolsExecutionManager {
             session.setGlobal("$execute", true);
             int initSalience = 0;
 
-            List<String> reverseGuideIds = new ArrayList<String>(guideIds);
+            List<String> reverseGuideIds = new ArrayList<>(guideIds);
             Collections.reverse(reverseGuideIds);
             for (String guideId : reverseGuideIds) {
                 session.setGlobal(getGuideSalienceId(guideId), initSalience);
@@ -97,7 +97,7 @@ public class DroolsExecutionManager {
         }
     }
 
-    public static void cancelCurrentExecution() {
+    public void cancelCurrentExecution() {
         if (getDelegate()._logger != null) {
             //TODO Cancel current execution is done through the logger... should change this behaviour
             getDelegate()._logger.cancelExecution();
@@ -105,7 +105,7 @@ public class DroolsExecutionManager {
     }
 
 
-    private static KieBase getKnowledgeBase(Collection<GuideDTO> guideDTOs)
+    private KieBase getKnowledgeBase(Collection<GuideDTO> guideDTOs)
             throws InternalErrorException {
         if (guideDTOs == null || guideDTOs.isEmpty()) {
             return null;
@@ -113,7 +113,7 @@ public class DroolsExecutionManager {
         String guideIdsId = getGuideIdsId(guideDTOs);
         KieBase kb = getDelegate()._knowledgeBaseCache.get(guideIdsId);
         if (kb == null) {
-            kb = DroolsExecutionManager.generateKnowledgeBase(guideDTOs);
+            kb = generateKnowledgeBase(guideDTOs);
             getDelegate()._knowledgeBaseCache.put(guideIdsId, kb);
             if (getDelegate()._knowledgeBaseCache.size() > MAX_KNOWLEDGE_BASE_CACHE) {
                 //Remove oldest KB in cache
@@ -126,30 +126,30 @@ public class DroolsExecutionManager {
     }
 
 
-    public static void setUseCache(boolean useCache) {
-        LoggerFactory.getLogger(DroolsExecutionManager.class).warn("USE-CACHE on cds engine changed to '" + useCache + "'");
+    public void setUseCache(boolean useCache) {
+        Logger.getLogger(DroolsExecutionManager.class).warn("USE-CACHE on cds engine changed to '" + useCache + "'");
         getDelegate()._useCache = useCache;
     }
 
-    public static void clearCache() {
-        LoggerFactory.getLogger(DroolsExecutionManager.class).info("Clearing drools knowledge base cached.");
+    public void clearCache() {
+        Logger.getLogger(DroolsExecutionManager.class).info("Clearing drools knowledge base cached.");
         getDelegate()._knowledgeBaseCache.clear();
     }
 
-    private static String getGuideIdsId(Collection<GuideDTO> guideDTOs) {
-        List<String> guideIdsIdList = new ArrayList<String>();
+    private String getGuideIdsId(Collection<GuideDTO> guideDTOs) {
+        List<String> guideIdsIdList = new ArrayList<>();
         for (GuideDTO guideDTO : guideDTOs) {
             guideIdsIdList.add(guideDTO.getId());
         }
         Collections.sort(guideIdsIdList);
-        StringBuffer guideIdsIdSB = new StringBuffer();
+        StringBuilder guideIdsIdSB = new StringBuilder();
         for (String guideId : guideIdsIdList) {
             guideIdsIdSB.append(guideId);
         }
         return guideIdsIdSB.toString();
     }
 
-    private static KieBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) throws InternalErrorException {
+    private KieBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) throws InternalErrorException {
         final KieServices kieServices = KieServices.Factory.get();
         final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         final KieRepository kr = kieServices.getRepository();
@@ -170,7 +170,7 @@ public class DroolsExecutionManager {
         return kContainer.getKieBase();
     }
 
-    private static Resource getResource(Guide guide) throws InternalErrorException {
+    private Resource getResource(Guide guide) throws InternalErrorException {
         if (guide == null) {
             return null;
         }
@@ -182,28 +182,14 @@ public class DroolsExecutionManager {
         }
     }
 
-    public static DroolsExecutionManager getDelegate() {
+    public DroolsExecutionManager getDelegate() {
         if (_instance == null) {
             _instance = new DroolsExecutionManager();
         }
         return _instance;
     }
 
-    public static Long getExecutionTimeOut() {
-        if (getDelegate()._timeOutInMillis == null) {
-            try {
-                getDelegate()._timeOutInMillis = CdsConfigurationProvider.getCdsConfiguration().getCdsExecutionTimeOut();
-            } catch (Exception e) {
-                LoggerFactory.getLogger(DroolsExecutionManager.class).info("No CDS execution timeout or errors found loading it. Timeout will be disabled.");
-            }
-            if (getDelegate()._timeOutInMillis == null) {
-                getDelegate()._timeOutInMillis = Long.MAX_VALUE;
-            }
-        }
-        return getDelegate()._timeOutInMillis;
-    }
-
-    public static String getGuideSalienceId(String guideId) {
+    private String getGuideSalienceId(String guideId) {
         return "$" + guideId.replaceAll("[^a-zA-Z0-9]+", "") + "_salience";
     }
 }

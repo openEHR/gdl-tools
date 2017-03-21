@@ -21,39 +21,39 @@ public class ExecutionLogger {
     private static Logger logger = LoggerFactory.getLogger(ExecutionLogger.class);
 
 
-    public ExecutionLogger(){
+    public ExecutionLogger() {
         _startTime = System.currentTimeMillis();
     }
 
 
-    public void addLog(KnowledgeHelper drools, ElementInstance elementInstance){
+    public void addLog(KnowledgeHelper drools, ElementInstance elementInstance) {
         getElementInstancesSet().add(elementInstance);
         final ExecutionLog executionLog =
                 new ExecutionLog(
                         drools.getRule().getName(),
                         elementInstance.getArchetypeReference().getIdTemplate(),
                         elementInstance.getId(),
-                        elementInstance.getDataValue()!=null?elementInstance.getDataValue().serialise():null);
+                        elementInstance.getDataValue() != null ? elementInstance.getDataValue().serialise() : null);
         getLog().add(executionLog);
         //TODO This should not be done in the logger
         checkForExecutionTimeout(drools);
     }
 
     private void checkForExecutionTimeout(KnowledgeHelper drools) {
-        if (!_halt){
-            long executionTime = (System.currentTimeMillis()-_startTime);
+        if (!_halt) {
+            long executionTime = (System.currentTimeMillis() - _startTime);
             if (!_executionTimedOut) {
-                _executionTimedOut = executionTime> DroolsExecutionManager.getExecutionTimeOut();
+                _executionTimedOut = executionTime > DroolsExecutionManager.DEFAULT_TIMEOUT;
             }
             if (_executionCanceled || _executionTimedOut) {
                 logger.warn("Execution canceled or timed out! (executionTime= "+executionTime+" ms)");
                 Map<String, Integer> countMap = new HashMap<String, Integer>();
-                for (ExecutionLog logLine : getLog()){
+                for (ExecutionLog logLine : getLog()) {
                     String firedRule = logLine.getFiredRule();
                     int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
                     countMap.put(firedRule, count + 1);
                 }
-                for (String firedRule:countMap.keySet()){
+                for (String firedRule : countMap.keySet()) {
                     logger.info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
                 }
                 drools.halt();
@@ -62,36 +62,36 @@ public class ExecutionLogger {
         }
     }
 
-    public List<ExecutionLog> getLog(){
-        if (_log == null){
-            _log = new ArrayList<ExecutionLog>();
+    public List<ExecutionLog> getLog() {
+        if (_log == null) {
+            _log = new ArrayList<>();
         }
         return _log;
     }
 
-    public void setFiredRules(List<String> firedRules){
+    public void setFiredRules(List<String> firedRules) {
         _firedRules = firedRules;
     }
 
-    public List<String> getFiredRules(){
+    public List<String> getFiredRules() {
         return _firedRules;
     }
 
-    public void cancelExecution(){
+    public void cancelExecution() {
         _executionCanceled = true;
     }
 
-    public boolean executionCanceled(){
+    public boolean executionCanceled() {
         return _executionCanceled;
     }
 
-    public boolean executionTimedOut(){
+    public boolean executionTimedOut() {
         return _executionTimedOut;
     }
 
-    public Set<ElementInstance> getElementInstancesSet(){
-        if (_elementInstancesSet==null){
-            _elementInstancesSet = new HashSet<ElementInstance>();
+    public Set<ElementInstance> getElementInstancesSet() {
+        if (_elementInstancesSet == null) {
+            _elementInstancesSet = new HashSet<>();
         }
         return _elementInstancesSet;
     }

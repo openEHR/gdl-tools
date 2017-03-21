@@ -12,12 +12,12 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 public class WindowManager {
-    public static WindowManager _delegate = null;
-    public Window _mainWindow = null;
-    public Map<String, ProgressManager> _progressManagerMap = null;
+    private static WindowManager _delegate = null;
+    private Window _mainWindow = null;
+    private Map<String, ProgressManager> _progressManagerMap = null;
     private String _description = null;
 
-    public static String DEFAULT_PROGRESS_MANAGER_KEY = "default";
+    private static String DEFAULT_PROGRESS_MANAGER_KEY = "default";
     private static Logger logger = LoggerFactory.getLogger(WindowManager.class);
 
 

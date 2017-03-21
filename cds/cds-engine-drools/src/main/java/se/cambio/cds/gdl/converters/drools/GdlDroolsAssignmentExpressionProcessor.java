@@ -26,6 +26,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
     private final AssignmentExpression assignmentExpression;
     private final Map<RefStat, Set<String>> stats;
     private StringBuffer stringBuffer;
+    private static final String TAB = "\t";
 
     public GdlDroolsAssignmentExpressionProcessor(GDLDroolsConverter gdlDroolsConverter, AssignmentExpression assignmentExpression, Map<RefStat, Set<String>> stats) {
         this.gdlDroolsConverter = gdlDroolsConverter;
@@ -87,7 +88,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 int creationIndex = gdlDroolsConverter.getCreationIndex();
                 String arId = "newAR" + creationIndex;
                 stringBuffer.append("ArchetypeReference " + arId + " = new ArchetypeReference(\"CDS\", \"" + ar.getIdArchetype() + "\"," + (ar.getIdTemplate() != null ? "\"" + ar.getIdTemplate() + "\"" : "null") + ");\n");
-                stringBuffer.append(GdlDroolsConst.TAB);
+                stringBuffer.append(TAB);
                 stringBuffer.append("insert(" + arId + ");\n");
                 insertAssignments(arId, expressionItemAux, stats);
                 gdlDroolsConverter.increaseCreationIndex();
@@ -136,12 +137,12 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 int creationIndex = gdlDroolsConverter.getCreationIndex();
                 eiId = "ei" + creationIndex + "_" + i;
                 elementIdsMap.put(elementId, eiId);
-                stringBuffer.append(GdlDroolsConst.TAB);
+                stringBuffer.append(TAB);
                 stringBuffer.append("ElementInstance $" + eiId + " = new ElementInstance(\"" + elementId + "\", null, " + arId + ", null, null);\n");
             } else {
                 stringBuffer.append("\n");
             }
-            stringBuffer.append(GdlDroolsConst.TAB);
+            stringBuffer.append(TAB);
             String attribute = assignmentExpressionAux.getVariable().getAttribute();
             processAssignmentExpression(gtCode, eiId, attribute, assignmentExpressionAux.getAssignment(), true);
             stringBuffer.append("insert($" + eiId + ");");
