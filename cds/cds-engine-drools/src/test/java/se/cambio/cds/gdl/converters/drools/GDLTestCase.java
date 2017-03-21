@@ -58,6 +58,9 @@ public abstract class GDLTestCase {
     @Value("classpath:/guides")
     Resource guidelinesResource;
 
+    @Autowired
+    DroolsRuleEngineFacadeDelegate droolsRuleEngineFacadeDelegate;
+
     public static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
     public static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
     public static String DIAGNOSIS_CODE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]";
@@ -177,7 +180,6 @@ public abstract class GDLTestCase {
         RuleExecutionResult rer = null;
         try {
             StringBuilder guideIdsSB = new StringBuilder();
-            DroolsRuleEngineFacadeDelegate droolsREFD = new DroolsRuleEngineFacadeDelegate();
             String prefix = "";
             for (String guideId : guideIds) {
                 guideIdsSB.append(prefix).append(guideId);
@@ -190,7 +192,7 @@ public abstract class GDLTestCase {
             cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
             Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();
             System.out.println("Executing : " + guideIdsSB.toString());
-            rer = droolsREFD.execute(null, guideManager.getAllGuidesDTO(), archetypeReferences, cal);
+            rer = droolsRuleEngineFacadeDelegate.execute(null, guideManager.getAllGuidesDTO(), archetypeReferences, cal);
             long execTime = (System.currentTimeMillis() - startTime);
             System.out.println("Executed in: " + execTime + " ms");
             System.out.println("Rules fired: " + rer.getFiredRules().size());

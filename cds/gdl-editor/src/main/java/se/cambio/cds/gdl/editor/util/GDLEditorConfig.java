@@ -2,15 +2,18 @@ package se.cambio.cds.gdl.editor.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
+import se.cambio.cds.configuration.DroolsConfiguration;
 
 @Configuration
 @PropertySources({
         @PropertySource(value = "classpath:default-gdl-editor-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/gdl-editor-config.properties", ignoreResourceNotFound = true)
 })
+@Import(DroolsConfiguration.class)
 public class GDLEditorConfig {
 
     private final String GDL_PLUGINS_KEY = "gdl-editor.plugins";

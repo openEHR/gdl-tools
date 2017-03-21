@@ -16,11 +16,15 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import static java.lang.String.format;
+
 public class GdlDroolsPredicateProcessor {
 
     private GDLDroolsConverter gdlDroolsConverter;
     private ArchetypeBinding archetypeBinding;
     private StringBuffer stringBuffer;
+    private static final String TAB = "\t";
+    private static final String ARCHETYPE_REFERENCE_ID = "archetypeReference";
 
     public GdlDroolsPredicateProcessor(GDLDroolsConverter gdlDroolsConverter, ArchetypeBinding archetypeBinding) {
         this.gdlDroolsConverter = gdlDroolsConverter;
@@ -52,11 +56,11 @@ public class GdlDroolsPredicateProcessor {
         }
         Variable variable = (Variable) unaryExpression.getOperand();
         String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
-        stringBuffer.append(GdlDroolsConst.TAB);
+        stringBuffer.append(TAB);
         stringBuffer.append("ElementInstance(id==\""
                 + idElement
                 + "\", archetypeReference==$"
-                + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ", "
+                + ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ", "
                 + "predicate || dataValue instanceof Comparable, "
                 + "$predDV" + predicateCount + ":dataValue"
                 + ")\n");
@@ -68,19 +72,17 @@ public class GdlDroolsPredicateProcessor {
         if (archetypeElement != null && opStr != null) {
             String predAuxDef = getComparisonPredicateChecks(archetypeBinding);
             String predicateArchetypeRef = "";
-            stringBuffer.append(GdlDroolsConst.TAB);
+            stringBuffer.append(TAB);
             stringBuffer.append("not(");
             if (predAuxDef != null) {
                 stringBuffer.append(predAuxDef);
                 predicateArchetypeRef = "archetypeReference==$archetypeReferencePredicate" + predicateCount + ",";
             }
-            stringBuffer.append(GdlDroolsConst.TAB);
-            stringBuffer.append("ElementInstance(id==\""
-                    + idElement + "\", "
-                    + predicateArchetypeRef
-                    + "DVUtil.checkMaxMin($predDV" + predicateCount + ", dataValue, \"" + op.getSymbol() + "\", $" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ", archetypeReference)"
-                    + "))\n");
-        }else{
+            stringBuffer.append(TAB);
+            stringBuffer.append(
+                    format("ElementInstance(id==\"%s\", %sDVUtil.checkMaxMin($predDV%s, dataValue, \"%s\", $%s_%s, archetypeReference)))\n",
+                            idElement, predicateArchetypeRef, predicateCount, op.getSymbol(), ARCHETYPE_REFERENCE_ID, archetypeBinding.getId()));
+        } else {
             String guideId = gdlDroolsConverter.getGuide().getId();
             throw new CompilationErrorException("Guide=" + guideId + ", Element not found '" + idElement + "'");
         }
@@ -123,7 +125,7 @@ public class GdlDroolsPredicateProcessor {
         String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
         path = path.substring(0, path.length() - attribute.length() - 7);
         String idElement = archetypeBinding.getArchetypeId() + path;
-        stringBuffer.append(GdlDroolsConst.TAB);
+        stringBuffer.append(TAB);
         int predicateCount = gdlDroolsConverter.getPredicateCount();
         String predicateHandle = "predicate" + predicateCount;
         stringBuffer.append("$" + predicateHandle);
@@ -131,7 +133,7 @@ public class GdlDroolsPredicateProcessor {
                 + idElement + "\", "
                 + "dataValue!=null, "
                 + "archetypeReference==$"
-                + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ")\n");
+                + ARCHETYPE_REFERENCE_ID + "_" + archetypeBinding.getId() + ")\n");
         ArchetypeElementVO archetypeElement = gdlDroolsConverter.getArchetypeManager().getArchetypeElements().getArchetypeElement(
                 archetypeBinding.getTemplateId(),
                 idElement);
@@ -139,7 +141,7 @@ public class GdlDroolsPredicateProcessor {
             String rmName = archetypeElement.getRMType();
             String arithmeticExpressionStr = ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItem, null);
             arithmeticExpressionStr = "(" + arithmeticExpressionStr + ")";
-            stringBuffer.append(GdlDroolsConst.TAB);
+            stringBuffer.append(TAB);
             stringBuffer.append("eval(");
             Variable var = new Variable(predicateHandle, predicateHandle, path, attribute);
             String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName, var);
@@ -162,13 +164,13 @@ public class GdlDroolsPredicateProcessor {
             throws CompilationErrorException {
         String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
         int predicateCount = gdlDroolsConverter.getPredicateCount();
-        stringBuffer.append(GdlDroolsConst.TAB)
+        stringBuffer.append(TAB)
                 .append("$predicate")
                 .append(predicateCount)
                 .append(":ElementInstance(id==\"")
                 .append(idElement)
                 .append("\", archetypeReference==$")
-                .append(GdlDroolsConst.ARCHETYPE_REFERENCE_ID)
+                .append(ARCHETYPE_REFERENCE_ID)
                 .append("_")
                 .append(archetypeBinding.getId())
                 .append(")\n");
@@ -182,7 +184,7 @@ public class GdlDroolsPredicateProcessor {
             throw new CompilationErrorException("Guide=" + guideId + ", Element not found '" + idElement + "'" + templateId);
         }
         String rmType = archetypeElement.getRMType();
-        stringBuffer.append(GdlDroolsConst.TAB);
+        stringBuffer.append(TAB);
         String dvStr = "null";
         if (!constantExpression.getValue().equals("null")) {
             dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType + "," + constantExpression.getValue()));
@@ -206,7 +208,7 @@ public class GdlDroolsPredicateProcessor {
                     Variable variable = (Variable) binaryExpression.getLeft();
                     ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
                     String idElement = archetypeBinding.getArchetypeId() + variable.getPath();
-                    sb.append(GdlDroolsConst.TAB);
+                    sb.append(TAB);
                     String predicateVariableName = "$predicateAux" + predicateCount;
                     sb.append(predicateVariableName);
                     sb.append(":ElementInstance(id==\"");
@@ -217,10 +219,10 @@ public class GdlDroolsPredicateProcessor {
                     if (archetypeElement != null) {
                         String rmType = archetypeElement.getRMType();
                         String dvStr = "null";
-                        if (!"null".equals(constantExpression.getValue())) {
+                        if (!"null" .equals(constantExpression.getValue())) {
                             dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType + "," + constantExpression.getValue()));
                         }
-                        sb.append(GdlDroolsConst.TAB);
+                        sb.append(TAB);
                         String operatorMVELLine = gdlDroolsConverter.getOperatorMVELLine(predicateVariableName, binaryExpression.getOperator(), dvStr, true);
                         sb.append("eval(")
                                 .append(operatorMVELLine)
@@ -232,7 +234,7 @@ public class GdlDroolsPredicateProcessor {
         String predicateDef = sb.toString();
         if (!predicateDef.isEmpty()) {
             sb = new StringBuffer();
-            sb.append(GdlDroolsConst.TAB);
+            sb.append(TAB);
             sb.append("$archetypeReferencePredicate")
                     .append(archetypeReferencePredicateCount)
                     .append(":ArchetypeReference(idDomain==\"EHR\",");

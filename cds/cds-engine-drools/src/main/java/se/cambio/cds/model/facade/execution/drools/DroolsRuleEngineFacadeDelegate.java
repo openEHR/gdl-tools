@@ -1,6 +1,7 @@
 package se.cambio.cds.model.facade.execution.drools;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
@@ -24,9 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Component
-@Profile("rule-drools-engine")
 public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
+
+    private DroolsExecutionManager droolsExecutionManager;
+
+    public DroolsRuleEngineFacadeDelegate(DroolsExecutionManager droolsExecutionManager) {
+        this.droolsExecutionManager = droolsExecutionManager;
+    }
 
     public RuleExecutionResult execute(
             String ehrId,
@@ -43,7 +48,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
         final ExecutionLogger executionLogger = new ExecutionLogger();
         if (!guides.isEmpty()) {
             Logger.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
-            DroolsExecutionManager.executeGuides(
+            droolsExecutionManager.executeGuides(
                     guides, date, workingMemoryObjects, executionLogger);
         }
         final Set<ArchetypeReference> modifiedArhetypeReferences = new HashSet<ArchetypeReference>();
@@ -64,17 +69,17 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
 
     @Override
     public void cancelExecution() {
-        DroolsExecutionManager.cancelCurrentExecution();
+        droolsExecutionManager.cancelCurrentExecution();
     }
 
     @Override
     public void clearCache() {
-        DroolsExecutionManager.clearCache();
+        droolsExecutionManager.clearCache();
     }
 
     @Override
     public void setUseCache(boolean useCache) {
-        DroolsExecutionManager.setUseCache(useCache);
+        droolsExecutionManager.setUseCache(useCache);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.exceptions.GuideCompilationException;
@@ -10,13 +8,10 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.UnsupportedEncodingException;
 
-@Component
-@Profile("rule-drools-engine")
 public class DroolsGuideExportPlugin implements GuideExportPlugin {
 
     public DroolsGuideExportPlugin(){
     }
-
 
     @Override
     public String getPluginName() {

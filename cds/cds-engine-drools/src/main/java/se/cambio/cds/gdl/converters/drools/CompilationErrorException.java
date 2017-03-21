@@ -6,7 +6,6 @@ public class CompilationErrorException extends InternalErrorException {
 
     private static final long serialVersionUID = 1L;
 
-
     public CompilationErrorException(Exception e) {
 	super(e);
     }

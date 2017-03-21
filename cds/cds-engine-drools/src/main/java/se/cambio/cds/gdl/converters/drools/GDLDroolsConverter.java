@@ -43,7 +43,8 @@ public class GDLDroolsConverter {
     private static final String DEFAULT_CONFIG = "no-loop true";
     private static final String AGENDA_GROUP = "agenda-group";
     private static final String SALIENCE = "salience";
-    private static final String TAB = GdlDroolsConst.TAB;
+    private static final String ARCHETYPE_REFERENCE_ID = "archetypeReference";
+    private static final String TAB = "\t";
     private static final String AGENDA_GROUP_LINK_ID = "*agenda-group-link";
     private static final String DEFAULT_RULE_CODE = "default";
     private static Logger log = Logger.getLogger(GDLDroolsConverter.class);
@@ -170,7 +171,7 @@ public class GDLDroolsConverter {
             String defaultActionsStr = convertAssignmentExpressionsToMVEL(defaultActions, ruleStats);
             String definition = getDefinitionForRule(ruleStats);
             sb.append(RULE + " \"").append(guide.getId()).append("/").append(DEFAULT_RULE_CODE).append("\"\n");
-            String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
+            String guideSalienceId = getGuideSalienceId(guide.getId());
             sb.append(SALIENCE + " ").append(guideSalienceId).append(" + 9999\n");
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
@@ -188,6 +189,10 @@ public class GDLDroolsConverter {
         }
     }
 
+    private String getGuideSalienceId(String guideId) {
+        return "$" + guideId.replaceAll("[^a-zA-Z0-9]+", "") + "_salience";
+    }
+
     private void insertRules() throws InternalErrorException {
         String preconditionStr = preconditionMVEL;
         for (Rule rule : guide.getDefinition().getRules().values()) {
@@ -202,7 +207,7 @@ public class GDLDroolsConverter {
 
             sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
             sb.append(DEFAULT_CONFIG + "\n");
-            String guideSalienceId = DroolsExecutionManager.getGuideSalienceId(guide.getId());
+            String guideSalienceId = getGuideSalienceId(guide.getId());
             int salienceModifier = guide.getDefinition().getRules().size() + 1 - rule.getPriority();
             sb.append(SALIENCE).append(" ").append(guideSalienceId).append(" - ").append(salienceModifier).append("\n");
             sb.append(WHEN + "\n");
@@ -239,7 +244,7 @@ public class GDLDroolsConverter {
             StringBuffer archetypeBindingMVELSB = new StringBuffer();
             String gtCodeArchetypeReference = archetypeBinding.getId();
             archetypeBindingMVELSB.append(TAB);
-            archetypeBindingMVELSB.append("$" + GdlDroolsConst.ARCHETYPE_REFERENCE_ID + "_").append(gtCodeArchetypeReference);
+            archetypeBindingMVELSB.append("$" + ARCHETYPE_REFERENCE_ID + "_").append(gtCodeArchetypeReference);
             String idDomain = archetypeBinding.getDomain();
             archetypeBindingMVELSB.append(":ArchetypeReference");
             archetypeBindingMVELSB.append("(");
@@ -266,7 +271,7 @@ public class GDLDroolsConverter {
                 ArchetypeElementVO value = archetypeManager.getArchetypeElements().getArchetypeElement(
                         archetypeBinding.getTemplateId(), idElement);
                 getElementMap().put(element.getId(), value);
-                elementDefinitionSB.append("ElementInstance(id==\"").append(idElement).append("\", archetypeReference==$").append(GdlDroolsConst.ARCHETYPE_REFERENCE_ID).append("_").append(archetypeReferenceGTCode).append(")");
+                elementDefinitionSB.append("ElementInstance(id==\"").append(idElement).append("\", archetypeReference==$").append(ARCHETYPE_REFERENCE_ID).append("_").append(archetypeReferenceGTCode).append(")");
                 _gtElementToDefinition.put(element.getId(), elementDefinitionSB.toString());
                 gtElementToArchetypeBindingGtCode.put(element.getId(), archetypeReferenceGTCode);
             }
@@ -671,7 +676,7 @@ public class GDLDroolsConverter {
                 + "global org.openehr.rm.datatypes.basic.DataValue $auxDV;\n"
                 + "global org.openehr.rm.datatypes.quantity.datetime.DvDateTime $" + OpenEHRConst.CURRENT_DATE_TIME_ID + ";\n"
                 + "global java.util.Map<se.cambio.cds.model.instance.ElementInstance, java.util.Map<String, Boolean>> $bindingMap;\n"
-                + "global java.lang.Integer " + DroolsExecutionManager.getGuideSalienceId(guide.getId()) + ";\n"
+                + "global java.lang.Integer " + getGuideSalienceId(guide.getId()) + ";\n"
                 + "\n";
     }
 }
