@@ -51,49 +51,21 @@ public interface TerminologyService {
 	TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
 			throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;	
 	
-	
-	List<TerminologyNodeVO> retrieve(String expression, CodePhrase language)  
-			throws UnsupportedTerminologyException, UnsupportedLanguageException;	
-	
-	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)  
+	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
 		throws UnsupportedTerminologyException, UnsupportedLanguageException;	
 	
 	/**
-	 * Checks if given concept has a named attribute of given value
-	 * 
-	 * @param concept
-	 * @param property
-	 * @param value
-	 * @return true if the property has value
-	 */
-	boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property, 
-			CodePhrase value) throws UnsupportedTerminologyException, 
-			UnknownPropertyException;
-	
-	/**
 	 * Retrieves the term of a given concept in given language
-	 * 
+	 *
 	 * @param concept
 	 * @param language
-	 * @return the term 
+	 * @return the term
 	 * @throws UnsupportedTerminologyException
 	 * @throws UnsupportedLanguageException
 	 */
-	String retrieveTerm(CodePhrase concept, CodePhrase language) 
+	String retrieveTerm(CodePhrase concept, CodePhrase language)
 			throws UnsupportedTerminologyException, UnsupportedLanguageException;
-	
-	
-	/**
-	 * Retrieves all possible values of given attribute with labels in specified language
-	 * 
-	 * @param property
-	 * @param language
-	 * @return a list of coded texts
-	 */
-	List<DvCodedText> retrieveAllPossibleValues(CodePhrase property, 
-			CodePhrase language) throws UnsupportedTerminologyException, 
-			UnknownPropertyException, UnsupportedLanguageException;
-	
+
 	boolean isTerminologySupported(String terminologyId);
 	boolean isValidCodePhrase(CodePhrase codePhrase);
 	

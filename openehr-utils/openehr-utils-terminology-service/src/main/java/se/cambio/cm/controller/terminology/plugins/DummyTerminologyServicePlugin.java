@@ -18,158 +18,158 @@ public class DummyTerminologyServicePlugin implements TerminologyServicePlugin {
     private Map<String, String> _descriptionsMap = null;
 
     public DummyTerminologyServicePlugin(String terminologyId, int maxCodeSize) {
-	_terminologyId = terminologyId;
-	_maxCodeSize = maxCodeSize;
+        _terminologyId = terminologyId;
+        _maxCodeSize = maxCodeSize;
     }
 
     public String getTerminologyId() {
-	return _terminologyId;
+        return _terminologyId;
     }
 
     public boolean isSubclassOf(CodePhrase a, CodePhrase b)
-	    throws UnsupportedTerminologyException, InvalidCodeException {
-	checkTerminologySupported(a);
-	checkTerminologySupported(b);
-	return checkSubclassOf(a, b);
+            throws UnsupportedTerminologyException, InvalidCodeException {
+        checkTerminologySupported(a);
+        checkTerminologySupported(b);
+        return checkSubclassOf(a, b);
     }
 
     public boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes)
-	    throws UnsupportedTerminologyException, InvalidCodeException {
+            throws UnsupportedTerminologyException, InvalidCodeException {
 
-	checkTerminologySupported(code);
-	for (CodePhrase cp : codes) {
-	    checkTerminologySupported(cp);
-	}
-	boolean ret = false;
-	for (CodePhrase cp : codes) {
-	    if (checkSubclassOf(code, cp)) {
-		ret = true;
-		break;
-	    }
-	}
-	return ret;
+        checkTerminologySupported(code);
+        for (CodePhrase cp : codes) {
+            checkTerminologySupported(cp);
+        }
+        boolean ret = false;
+        for (CodePhrase cp : codes) {
+            if (checkSubclassOf(code, cp)) {
+                ret = true;
+                break;
+            }
+        }
+        return ret;
     }
 
     public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
-	    throws UnsupportedTerminologyException,
-	    UnsupportedLanguageException, InvalidCodeException {
-	String desc = getDescription(concept.getCodeString());
-	if (desc == null) {
-	    desc = concept.toString();
-	}
-	return new TerminologyNodeVO(new DvCodedText(desc, concept));
+            throws UnsupportedTerminologyException,
+            UnsupportedLanguageException, InvalidCodeException {
+        String desc = getDescription(concept.getCodeString());
+        if (desc == null) {
+            desc = concept.toString();
+        }
+        return new TerminologyNodeVO(new DvCodedText(desc, concept));
     }
 
     public List<TerminologyNodeVO> retrieve(String expression, CodePhrase language)
-	    throws UnsupportedTerminologyException,
-	    UnsupportedLanguageException {
-	// TODO Auto-generated method stub
-	return null;
+            throws UnsupportedTerminologyException,
+            UnsupportedLanguageException {
+        // TODO Auto-generated method stub
+        return null;
     }
-    
+
     public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
-	    throws UnsupportedTerminologyException,
-	    UnsupportedLanguageException {
-	return new ArrayList<TerminologyNodeVO>();
+            throws UnsupportedTerminologyException,
+            UnsupportedLanguageException {
+        return new ArrayList<TerminologyNodeVO>();
     }
 
     public boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property,
-	    CodePhrase value) throws UnsupportedTerminologyException,
-	    UnknownPropertyException {
-	// TODO Auto-generated method stub
-	return false;
+                                      CodePhrase value) throws UnsupportedTerminologyException,
+            UnknownPropertyException {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     public List<DvCodedText> retrieveAllPossibleValues(CodePhrase property,
-	    CodePhrase language) throws UnsupportedTerminologyException,
-	    UnknownPropertyException, UnsupportedLanguageException {
-	// TODO Auto-generated method stub
-	return null;
+                                                       CodePhrase language) throws UnsupportedTerminologyException,
+            UnknownPropertyException, UnsupportedLanguageException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public boolean isTerminologySupported(String terminologyId) {
-	return _terminologyId.equalsIgnoreCase(terminologyId);
+        return _terminologyId.equalsIgnoreCase(terminologyId);
     }
 
     private boolean checkSubclassOf(CodePhrase a, CodePhrase b)
-	    throws UnsupportedTerminologyException, InvalidCodeException {
-	if (isValidTerminologyCode(a) && isValidTerminologyCode(b)) {
-	    String as = a.getCodeString();
-	    if (invalidCode(as)) {
-		throw new InvalidCodeException("Invalid " + _terminologyId
-			+ " code: " + as);
-	    }
-	    as = cleanUpCode(as);
+            throws UnsupportedTerminologyException, InvalidCodeException {
+        if (isValidTerminologyCode(a) && isValidTerminologyCode(b)) {
+            String as = a.getCodeString();
+            if (invalidCode(as)) {
+                throw new InvalidCodeException("Invalid " + _terminologyId
+                        + " code: " + as);
+            }
+            as = cleanUpCode(as);
 
-	    String bs = b.getCodeString();
-	    bs = bs.replace(".", "");
+            String bs = b.getCodeString();
+            bs = bs.replace(".", "");
 
-	    // I73.9 => I739
-	    if (bs.length() == _maxCodeSize) {
-		return bs.equals(as);
-	    } else if (bs.length() < _maxCodeSize) {
-		return as.indexOf(bs) == 0;
-	    } else {
-		throw new UnsupportedTerminologyException("Unsupported "
-			+ _terminologyId + " code: " + b);
-	    }
-	} else {
-	    throw new UnsupportedTerminologyException(a.getTerminologyId()
-		    + " not supported");
-	}
+            // I73.9 => I739
+            if (bs.length() == _maxCodeSize) {
+                return bs.equals(as);
+            } else if (bs.length() < _maxCodeSize) {
+                return as.indexOf(bs) == 0;
+            } else {
+                throw new UnsupportedTerminologyException("Unsupported "
+                        + _terminologyId + " code: " + b);
+            }
+        } else {
+            throw new UnsupportedTerminologyException(a.getTerminologyId()
+                    + " not supported");
+        }
     }
 
     private void checkTerminologySupported(CodePhrase code)
-	    throws UnsupportedTerminologyException {
-	checkTerminologySupported(code.getTerminologyId().getValue());
+            throws UnsupportedTerminologyException {
+        checkTerminologySupported(code.getTerminologyId().getValue());
     }
 
     private void checkTerminologySupported(String terminology)
-	    throws UnsupportedTerminologyException {
-	if (!isTerminologySupported(terminology)) {
-	    throw new UnsupportedTerminologyException(terminology
-		    + " not supported");
-	}
+            throws UnsupportedTerminologyException {
+        if (!isTerminologySupported(terminology)) {
+            throw new UnsupportedTerminologyException(terminology
+                    + " not supported");
+        }
     }
 
     // return null if not good
     private String cleanUpCode(String code) {
-	if (code.length() > _maxCodeSize) {
-	    code = code.substring(0, _maxCodeSize);
-	}
-	code = code.replace("-", "");
-	code = code.replace(".", "");
-	return code;
+        if (code.length() > _maxCodeSize) {
+            code = code.substring(0, _maxCodeSize);
+        }
+        code = code.replace("-", "");
+        code = code.replace(".", "");
+        return code;
     }
 
     private boolean invalidCode(String code) {
-	return code == null || code.length() < 3;
+        return code == null || code.length() < 3;
     }
 
     private Map<String, String> getDescriptionsMap() {
-	if (_descriptionsMap == null) {
-	    _descriptionsMap = new HashMap<String, String>();
-	}
-	return _descriptionsMap;
+        if (_descriptionsMap == null) {
+            _descriptionsMap = new HashMap<String, String>();
+        }
+        return _descriptionsMap;
     }
 
     public void registerDescription(String code, String description) {
-	getDescriptionsMap().put(code, description);
+        getDescriptionsMap().put(code, description);
     }
 
     private String getDescription(String code) {
-	return getDescriptionsMap().get(code);
+        return getDescriptionsMap().get(code);
     }
 
     private boolean isValidTerminologyCode(CodePhrase code) {
-	return isTerminologySupported(code.getTerminologyId().getValue());
+        return isTerminologySupported(code.getTerminologyId().getValue());
     }
 
     public String retrieveTerm(CodePhrase concept, CodePhrase language)
-	    throws UnsupportedTerminologyException,
-	    UnsupportedLanguageException {
-	// TODO Auto-generated method stub
-	return null;
+            throws UnsupportedTerminologyException,
+            UnsupportedLanguageException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public void init(InputStream br) {
@@ -177,13 +177,13 @@ public class DummyTerminologyServicePlugin implements TerminologyServicePlugin {
     }
 
     public Collection<String> getSupportedTerminologies() {
-	Collection<String> supportedTerminologies = new ArrayList<String>();
-	supportedTerminologies.add(_terminologyId);
-	return supportedTerminologies;
+        Collection<String> supportedTerminologies = new ArrayList<String>();
+        supportedTerminologies.add(_terminologyId);
+        return supportedTerminologies;
     }
 
     public boolean isValidCodePhrase(CodePhrase codePhrase) {
-	return true;
+        return true;
     }
 }
 /*
