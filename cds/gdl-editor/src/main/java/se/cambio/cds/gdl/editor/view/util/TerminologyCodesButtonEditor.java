@@ -20,22 +20,19 @@ import java.util.Collection;
 public class TerminologyCodesButtonEditor extends DefaultCellEditor implements TerminologyCodesManager {
 
     private static final long serialVersionUID = 4720175033111295429L;
-    private BindingTable _bt = null;
-    private TerminologyCodesWithButtonPanel _panel = null;
-    private int _row = 0;
+    private BindingTable bindingTable = null;
+    private TerminologyCodesWithButtonPanel panel = null;
+    private int row = 0;
 
     public TerminologyCodesButtonEditor(BindingTable bt) {
         super(new JTextField());
-        _bt = bt;
-        _panel = new TerminologyCodesWithButtonPanel();
-        _panel.getTextField().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                _bt.getModel().setValueAt(_panel.getTextField().getText(), _row, 1);
-                _bt.updateResults();
-            }
+        bindingTable = bt;
+        panel = new TerminologyCodesWithButtonPanel();
+        panel.getTextField().addActionListener(e -> {
+            bindingTable.getModel().setValueAt(panel.getTextField().getText(), row, 1);
+            bindingTable.updateResults();
         });
-        _panel.getTextField().addFocusListener(new FocusListener() {
+        panel.getTextField().addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
                 update();
@@ -45,17 +42,17 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
             public void focusGained(FocusEvent e) { }
         });
 
-        _panel.getSearchButton().addActionListener(new SearchCodesActionListener());
+        panel.getSearchButton().addActionListener(new SearchCodesActionListener());
     }
 
     public void update(){
-        _bt.getModel().setValueAt(_panel.getTextField().getText(), _row, 1);
-        _bt.updateResults();
+        bindingTable.getModel().setValueAt(panel.getTextField().getText(), row, 1);
+        bindingTable.updateResults();
     }
 
     @Override
     public void setSelectedTerminologyCodes(Collection<String> terminologyCodes) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (String terminologyCode : terminologyCodes) {
             if (!first){
@@ -67,25 +64,25 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
 
         }
         String terminologyCodesStr = sb.toString();
-        _panel.getTextField().setText(terminologyCodesStr);
+        panel.getTextField().setText(terminologyCodesStr);
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value,
                                                  boolean isSelected, int row, int column) {
-        _panel.getTextField().setText((String)value);
-        _row = row;
-        return _panel;
+        panel.getTextField().setText((String)value);
+        this.row = row;
+        return panel;
     }
 
-    public TerminologyCodesManager getTerminologyCodesManager(){
+    private TerminologyCodesManager getTerminologyCodesManager(){
         return this;
     }
 
     private class SearchCodesActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String terminologyCodes = _panel.getTextField().getText();
-            Collection<String> selectedCodes = new ArrayList<String>();
+            String terminologyCodes = panel.getTextField().getText();
+            Collection<String> selectedCodes = new ArrayList<>();
             if (!terminologyCodes.isEmpty()){
                 String[] codes = terminologyCodes.split(",");
                 for (String code : codes) {
@@ -95,7 +92,7 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
             new LoadTerminologyViewerRSW(
                     EditorManager.getActiveEditorWindow(),
                     getTerminologyCodesManager(),
-                    _bt.getTerminologyId(),
+                    bindingTable.getTerminologyId(),
                     selectedCodes,
                     SelectableNode.SelectionMode.MULTIPLE).execute();
         }
@@ -103,7 +100,7 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
 
     @Override
     public Object getCellEditorValue() {
-        return _panel.getTextField().getText();
+        return panel.getTextField().getText();
     }
 }
 /*

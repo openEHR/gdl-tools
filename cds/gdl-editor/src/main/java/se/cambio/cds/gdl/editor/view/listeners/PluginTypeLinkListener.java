@@ -10,30 +10,30 @@ import java.awt.event.ActionListener;
 
 public class PluginTypeLinkListener implements ActionListener {
 
-	private RuleLinesPanel _ruleLinesPanel = null;
+    private RuleLinesPanel ruleLinesPanel = null;
 
-	public PluginTypeLinkListener(RuleLinesPanel ruleLinesPanel){
-		_ruleLinesPanel = ruleLinesPanel;
-	}
+    public PluginTypeLinkListener(RuleLinesPanel ruleLinesPanel) {
+        this.ruleLinesPanel = ruleLinesPanel;
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		JLinkRuleElementLabel linkRuleLabel = (JLinkRuleElementLabel)e.getSource();
-		RuleLineElementWithValue<?> ruleLineElementWithValue = linkRuleLabel.getRuleLineElementWithValue();
-		if (ruleLineElementWithValue != null){
-			if (JLinkRuleElementLabel.ACTION_RIGHT_CLICK.equals(e.getActionCommand())){
-				/*Rename element*/
-				if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineElement){
-					ArchetypeElementRuleLineElement archetypeElementRuleLineElement = (ArchetypeElementRuleLineElement)ruleLineElementWithValue;
-					_ruleLinesPanel.getController().editRuleElement(archetypeElementRuleLineElement.getValue());
+    public void actionPerformed(ActionEvent e) {
+        JLinkRuleElementLabel linkRuleLabel = (JLinkRuleElementLabel) e.getSource();
+        RuleLineElementWithValue<?> ruleLineElementWithValue = linkRuleLabel.getRuleLineElementWithValue();
+        if (ruleLineElementWithValue != null) {
+            if (JLinkRuleElementLabel.ACTION_RIGHT_CLICK.equals(e.getActionCommand())) {
+                /*Rename element*/
+                if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineElement) {
+                    ArchetypeElementRuleLineElement archetypeElementRuleLineElement = (ArchetypeElementRuleLineElement) ruleLineElementWithValue;
+                    ruleLinesPanel.getController().editRuleElement(archetypeElementRuleLineElement.getValue());
 
-				}
-			}else{
-				/* Edit object*/
-				_ruleLinesPanel.getController().editRuleElement(ruleLineElementWithValue);
-				_ruleLinesPanel.refresh();
-			}
-		}
-	}
+                }
+            } else {
+                /* Edit object*/
+                ruleLinesPanel.getController().editRuleElement(ruleLineElementWithValue);
+                ruleLinesPanel.refresh();
+            }
+        }
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

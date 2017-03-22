@@ -16,37 +16,28 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
-/**
- * @author icorram
- *
+public class FileSelectionAction extends AbstractAction {
 
-
- */
-public class FileSelectionAction extends AbstractAction{ 
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -2323804790429232264L;
-    private JFileChooser _fileChooser = null;
-    private JTextField _textField = null;
+    private JFileChooser fileChooser = null;
+    private JTextField textField = null;
 
-    public FileSelectionAction(JFileChooser fileChooser, JTextField textField){ 
-	_fileChooser = fileChooser;
-	_textField = textField;
-	putValue(NAME, GDLEditorLanguageManager.getMessage("SelectFolder"));
-	putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderD"));
-	this.setEnabled(true);
-    } 
+    public FileSelectionAction(JFileChooser fileChooser, JTextField textField) {
+        this.fileChooser = fileChooser;
+        this.textField = textField;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SelectFolder"));
+        putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderD"));
+        this.setEnabled(true);
+    }
 
-    public void actionPerformed(ActionEvent e){ 
-	int response = _fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
-	if (response == JFileChooser.APPROVE_OPTION){
-	    _textField.setText(_fileChooser.getSelectedFile().getAbsolutePath());
-	}
-    } 
+    public void actionPerformed(ActionEvent e) {
+        int response = fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
+        if (response == JFileChooser.APPROVE_OPTION) {
+            textField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+        }
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

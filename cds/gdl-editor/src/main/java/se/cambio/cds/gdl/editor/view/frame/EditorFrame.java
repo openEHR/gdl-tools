@@ -13,33 +13,18 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-
-/**
- * @author iago.corbal
- *
- */
-
-public class EditorFrame extends JFrame implements EditorViewer{
+public class EditorFrame extends JFrame implements EditorViewer {
 
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private MainMenuBar principalMenuBar;
 
-    /**
-     * This is the default constructor
-     */
     public EditorFrame() {
         super();
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void initialize() {
+    private void initialize() {
         setTooltipDelay();
         setPositionAndDimension();
         this.setResizable(true);
@@ -53,9 +38,9 @@ public class EditorFrame extends JFrame implements EditorViewer{
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension labelSize = this.getSize();
         this.setSize(new Dimension(1000, 600));
-        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-        this.setLocation(locx,locy);
+        int locx = (screenSize.width / 2) - (labelSize.width / 2) - (this.getWidth() / 2);
+        int locy = (screenSize.height / 2) - (labelSize.height / 2) - (this.getHeight() / 2);
+        this.setLocation(locx, locy);
     }
 
     private void setTooltipDelay() {
@@ -63,7 +48,7 @@ public class EditorFrame extends JFrame implements EditorViewer{
     }
 
 
-    protected class WindowListener extends WindowAdapter{
+    protected class WindowListener extends WindowAdapter {
         public void windowClosing(WindowEvent we) {
             EditorManager.requestFocusInWindow();
             EditorManager.closeEditor();
@@ -72,7 +57,7 @@ public class EditorFrame extends JFrame implements EditorViewer{
 
     public void initController(EditorController controller) {
         String buildNum = Version.getBuildNum();
-        setTitle(controller.getTitle()+(buildNum!=null?" - ("+buildNum+")":""));
+        setTitle(controller.getTitle() + (buildNum != null ? " - (" + buildNum + ")" : ""));
         controller.init();
     }
 

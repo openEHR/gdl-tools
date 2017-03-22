@@ -2,7 +2,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable;
@@ -12,19 +12,14 @@ import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class TerminologyPanel extends JPanel implements RefreshablePanel{
+public class TerminologyPanel extends JPanel implements RefreshablePanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private EditorController _controller = null;
-    private JXPathContext _context = null;
+    private GDLEditor controller = null;
+    private JXPathContext context = null;
     private JScrollPane terminologyScrollPanel;
     private TerminologyTable terminologyTable;
     private JButton addTermBtn = null;
@@ -33,12 +28,12 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
     private JPanel mainPanel;
     private JPanel editButtonPanel;
 
-    public TerminologyPanel(EditorController controller){
-        _controller = controller;
+    TerminologyPanel(GDLEditor controller) {
+        this.controller = controller;
         init();
     }
 
-    public void init(){
+    public void init() {
         this.setLayout(new BorderLayout());
         this.add(getEditButtonPanel(), BorderLayout.EAST);
         this.add(getMainPanel(), BorderLayout.CENTER);
@@ -46,43 +41,43 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
         refresh();
     }
 
-    private JScrollPane getTerminologyScrollPanel(){
-        if (terminologyScrollPanel==null){
+    private JScrollPane getTerminologyScrollPanel() {
+        if (terminologyScrollPanel == null) {
             terminologyScrollPanel = new JScrollPane();
             terminologyScrollPanel.setViewportView(getTerminologyTable());
         }
         return terminologyScrollPanel;
     }
 
-    private TerminologyTable getTerminologyTable(){
-        if (terminologyTable==null){
-            terminologyTable = new TerminologyTable(_context);
+    private TerminologyTable getTerminologyTable() {
+        if (terminologyTable == null) {
+            terminologyTable = new TerminologyTable(context);
         }
         return terminologyTable;
     }
 
-    private JPanel getMainPanel(){
-        if (mainPanel==null){
+    private JPanel getMainPanel() {
+        if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
         }
         return mainPanel;
     }
 
-    public void refresh(){
+    public void refresh() {
         getMainPanel().removeAll();
         terminologyScrollPanel = null;
         terminologyTable = null;
-        _context = JXPathContext.newContext(_controller.getCurrentTermsMap());
+        context = JXPathContext.newContext(controller.getCurrentTermsMap());
         getMainPanel().add(getTerminologyScrollPanel(), BorderLayout.CENTER);
         getMainPanel().add(getAddDeleteButtonPanel(), BorderLayout.WEST);
         TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
-        Map<String, Term> termMap = _controller.getCurrentTermsMap();
+        Map<String, Term> termMap = controller.getCurrentTermsMap();
         List<String> gtCodes =
-                new ArrayList<String>(termMap.keySet());
+                new ArrayList<>(termMap.keySet());
         Collections.sort(gtCodes);
         for (String gtCode : gtCodes) {
             Term term = termMap.get(gtCode);
-            Vector<String> v = new Vector<String>();
+            Vector<String> v = new Vector<>();
             v.add(term.getId());
             v.add(term.getText());
             v.add(term.getDescription());
@@ -92,8 +87,8 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
         getMainPanel().repaint();
     }
 
-    private JPanel getAddDeleteButtonPanel(){
-        if (addDeleteButtonPanel==null){
+    private JPanel getAddDeleteButtonPanel() {
+        if (addDeleteButtonPanel == null) {
             addDeleteButtonPanel = new JPanel();
             addDeleteButtonPanel.setLayout(new BoxLayout(addDeleteButtonPanel, BoxLayout.Y_AXIS));
             addDeleteButtonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -109,20 +104,16 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
             addTermBtn.setIcon(GDLEditorImageUtil.ADD_ICON);
             addTermBtn.setToolTipText(GDLEditorLanguageManager.getMessage("AddLocalTerm"));
             addTermBtn.setContentAreaFilled(false);
-            addTermBtn.setPreferredSize(new Dimension(16,16));
+            addTermBtn.setPreferredSize(new Dimension(16, 16));
             addTermBtn.setBorderPainted(false);
-            addTermBtn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    addTermDefinitionInModel();
-                }
-            });
+            addTermBtn.addActionListener(e -> addTermDefinitionInModel());
         }
         return addTermBtn;
     }
 
     private void addTermDefinitionInModel() {
-        Vector<String> v = new Vector<String>();
-        v.add(_controller.createNextLocalCode());
+        Vector<String> v = new Vector<>();
+        v.add(controller.createNextLocalCode());
         v.add("");
         v.add("");
         getTerminologyTable().getTerminologyTableModel().addRow(v);
@@ -134,23 +125,18 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
             deleteBtn.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteLocalTerm"));
             deleteBtn.setIcon(GDLEditorImageUtil.DELETE_ICON);
             deleteBtn.setContentAreaFilled(false);
-            deleteBtn.setPreferredSize(new Dimension(16,16));
+            deleteBtn.setPreferredSize(new Dimension(16, 16));
             deleteBtn.setBorderPainted(false);
-            deleteBtn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    deleteTermDefinitionInModel();
-                }
-            });
+            deleteBtn.addActionListener(e -> deleteTermDefinitionInModel());
         }
         return deleteBtn;
     }
 
     private void deleteTermDefinitionInModel() {
-        TerminologyTableModel ttm = null;
-        //Look for referenced codes
-        Collection<String> gtCodesUsed = _controller.getUsedCodes();
+        TerminologyTableModel ttm;
+        Collection<String> gtCodesUsed = controller.getUsedCodes();
         for (String gtCode : getSelectedGTCodes()) {
-            if (gtCodesUsed.contains(gtCode)){
+            if (gtCodesUsed.contains(gtCode)) {
                 JOptionPane.showMessageDialog(
                         EditorManager.getActiveEditorWindow(),
                         GDLEditorLanguageManager.getMessage("ReferenceBeingUsedMsg"),
@@ -180,14 +166,14 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
         }
     }
 
-    public Collection<String> getSelectedGTCodes(){
-        Collection<String> gtCodes = new ArrayList<String>();
+    private Collection<String> getSelectedGTCodes() {
+        Collection<String> gtCodes = new ArrayList<>();
         TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
         int rows[] = getTerminologyTable().getSelectedRows();
         if (ttm != null) {
             if (rows.length > 0) {
                 for (int i = rows.length - 1; i >= 0; i--) {
-                    gtCodes.add((String)ttm.getValueAt(rows[i], 0));
+                    gtCodes.add((String) ttm.getValueAt(rows[i], 0));
                 }
             }
         }
@@ -195,17 +181,17 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel{
     }
 
     private void updateResults() {
-        _controller.getCurrentTermsMap().clear();
+        controller.getCurrentTermsMap().clear();
         int numRows = getTerminologyTable().getRowCount();
         for (int i = 0; i < numRows; i++) {
             Term term = new Term();
-            String gtCode = (String)getTerminologyTable().getValueAt(i, 0);
-            String text = (String)getTerminologyTable().getValueAt(i, 1);
-            String desc = (String)getTerminologyTable().getValueAt(i, 2);
+            String gtCode = (String) getTerminologyTable().getValueAt(i, 0);
+            String text = (String) getTerminologyTable().getValueAt(i, 1);
+            String desc = (String) getTerminologyTable().getValueAt(i, 2);
             term.setId(gtCode);
             term.setText(text);
             term.setDescription(desc);
-            _controller.getCurrentTermsMap().put(gtCode, term);
+            controller.getCurrentTermsMap().put(gtCode, term);
         }
     }
 

@@ -18,27 +18,24 @@ import java.io.UnsupportedEncodingException;
 public class CheckForChangesOnGuideSW extends CDSSwingWorker {
     private GDLEditor controller = null;
 
-    public CheckForChangesOnGuideSW(GDLEditor controller){
+    public CheckForChangesOnGuideSW(GDLEditor controller) {
         this.controller = controller;
     }
 
     @Override
-    protected void executeCDSSW() throws InternalErrorException{
+    protected void executeCDSSW() throws InternalErrorException {
         try {
             while (EditorManager.getActiveEditorController().equals(controller)) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            checkGuideConsistency();
-                        } catch (UnsupportedEncodingException e) {
-                            ExceptionHandler.handle(e);
-                        }
-                        JButton saveButton = controller.getEditorPanel().getSaveButton();
-                        saveButton.setEnabled(controller.isModified());
-                        saveButton.repaint();
-                        saveButton.revalidate();
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        checkGuideConsistency();
+                    } catch (UnsupportedEncodingException e) {
+                        ExceptionHandler.handle(e);
                     }
+                    JButton saveButton = controller.getEditorPanel().getSaveButton();
+                    saveButton.setEnabled(controller.isModified());
+                    saveButton.repaint();
+                    saveButton.revalidate();
                 });
                 Thread.sleep(1000);
             }

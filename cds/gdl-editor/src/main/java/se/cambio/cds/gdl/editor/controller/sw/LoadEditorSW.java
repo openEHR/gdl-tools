@@ -15,10 +15,10 @@ import java.util.Collection;
 
 public class LoadEditorSW extends CDSSwingWorker {
 
-    private DialogSplash _dialog = null;
+    private DialogSplash dialog = null;
 
-    public LoadEditorSW(DialogSplash dialog){
-        _dialog = dialog;
+    public LoadEditorSW(DialogSplash dialog) {
+        this.dialog = dialog;
     }
 
     @Override
@@ -29,13 +29,13 @@ public class LoadEditorSW extends CDSSwingWorker {
         try {
             GDLEditor controller = new GDLEditor(new Guide());
             EditorManager.initController(controller);
-            _dialog.stop();
+            dialog.stop();
             Collection<InternalErrorException> internalErrorExceptions =
                     InitialLoadingObservable.getLoadingExceptions();
-            if (!internalErrorExceptions.isEmpty()){
-                StringBuffer errorsSB = new StringBuffer();
+            if (!internalErrorExceptions.isEmpty()) {
+                StringBuilder errorsSB = new StringBuilder();
                 for (InternalErrorException internalErrorException : internalErrorExceptions) {
-                    errorsSB.append(internalErrorException.toString()+"\n");
+                    errorsSB.append(internalErrorException.toString()).append("\n");
                 }
                 DialogLongMessageNotice dialog =
                         new DialogLongMessageNotice(

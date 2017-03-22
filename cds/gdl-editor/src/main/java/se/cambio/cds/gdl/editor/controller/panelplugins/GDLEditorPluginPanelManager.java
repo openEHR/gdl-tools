@@ -9,11 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-07-02
- * Time: 11:22
- */
 public class GDLEditorPluginPanelManager {
     private static GDLEditorPluginPanelManager _instance;
     private Map<String, AbstractPluginPanel> pluginPanelMap = null;
@@ -41,7 +36,7 @@ public class GDLEditorPluginPanelManager {
         return getDelegate().pluginPanelMap.values();
     }
 
-    public static GDLEditorPluginPanelManager getDelegate() {
+    private static GDLEditorPluginPanelManager getDelegate() {
         if (_instance == null) {
             _instance = new GDLEditorPluginPanelManager();
         }

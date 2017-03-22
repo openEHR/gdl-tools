@@ -10,26 +10,16 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 import static java.lang.String.format;
 
-/**
- * @author icorram
- *
 
-
- */
 public class DialogSetLanguage extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
-    private JComboBox _languageSelection = null;
+    private JComboBox<String> languageSelection = null;
 
-    /**
-     * This is the default constructor
-     */
     public DialogSetLanguage() {
         super(EditorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SetEditorLanguage"),
@@ -37,9 +27,6 @@ public class DialogSetLanguage extends DialogEditor {
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
     private  void initialize() {
         getJPanel().setLayout(new BorderLayout());
         JPanel panelAux = new JPanel(new BorderLayout());
@@ -57,15 +44,16 @@ public class DialogSetLanguage extends DialogEditor {
     }
 
     private JComboBox getLanguageSelectorComboBox(){
-        if (_languageSelection==null){
-            _languageSelection = new JComboBox(Languages.getSupportedLanguages().toArray());
-            _languageSelection.setRenderer(new LanguageRenderer());
+        if (languageSelection ==null){
+            Set<String> supportedLanguages = Languages.getSupportedLanguages();
+            languageSelection = new JComboBox<>(supportedLanguages.toArray(new String[supportedLanguages.size()]));
+            languageSelection.setRenderer(new LanguageRenderer());
             String langCountryCode = UserConfigurationManager.instance().getLanguage() + "_" + UserConfigurationManager.instance().getCountryCode();
-            if (Languages.getSupportedLanguages().contains(langCountryCode)){
-                _languageSelection.setSelectedItem(langCountryCode);
+            if (supportedLanguages.contains(langCountryCode)){
+                languageSelection.setSelectedItem(langCountryCode);
             }
         }
-        return _languageSelection;
+        return languageSelection;
     }
 
 

@@ -12,57 +12,56 @@ import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 
 import java.util.Map;
 
-public class ClusterNodesUtil {
+class ClusterNodesUtil {
 
-    public static SelectableNode<Object> getClusterNode(
+    static SelectableNode<Object> getClusterNode(
             String idTemplate, String idCluster,
             SelectableNode<Object> rootNode,
             Map<Object, SelectableNode<Object>> clusters,
             boolean singleSelection,
             boolean simplifiedTree,
             ArchetypeManager archetypeManager) throws InternalErrorException {
-        if (idCluster!=null && !idCluster.endsWith("/")){
+        if (idCluster != null && !idCluster.endsWith("/")) {
             ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(idTemplate, idCluster);
-            if (clusterVO!=null){
+            if (clusterVO != null) {
                 if ((simplifiedTree &&
                         !OpenEHRConst.SECTION.equals(clusterVO.getRMType()) &&
-                        !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))){
-                    //Skip node
+                        !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))) {
                     return getClusterNode(idTemplate, clusterVO.getParentId(),
-                            rootNode, clusters, singleSelection, simplifiedTree, archetypeManager);
+                            rootNode, clusters, singleSelection, true, archetypeManager);
                 }
-            }else{
+            } else {
                 return rootNode;
             }
             SelectableNode<Object> clusterNode = clusters.get(idCluster);
-            if(clusterNode==null){
+            if (clusterNode == null) {
 
                 SelectableNode<Object> parentNode =
                         getClusterNode(idTemplate, clusterVO.getParentId(),
                                 rootNode, clusters, singleSelection, simplifiedTree, archetypeManager);
-                clusterNode = createClusterNode(clusterVO, null, singleSelection, archetypeManager);
+                clusterNode = createClusterNode(clusterVO, singleSelection, archetypeManager);
                 clusters.put(idCluster, clusterNode);
                 parentNode.add(clusterNode);
 
             }
             return clusterNode;
-        } else{
+        } else {
             return rootNode;
         }
     }
 
-    public static SelectableNode<Object> getRMNode(
-            SelectableNode <Object> rootNode,
+    static SelectableNode<Object> getRMNode(
+            SelectableNode<Object> rootNode,
             Map<String, SelectableNode<Object>> rmNodes,
-            String path){
+            String path) {
         String idRMClassifier = getIdRMClassifier(path);
-        if (idRMClassifier.contains("/")){
-            rootNode = getRMNode(rootNode, rmNodes, "/"+idRMClassifier.substring(0, idRMClassifier.lastIndexOf("/")));
-            idRMClassifier = idRMClassifier.substring(idRMClassifier.lastIndexOf("/")+1, idRMClassifier.length());
+        if (idRMClassifier.contains("/")) {
+            rootNode = getRMNode(rootNode, rmNodes, "/" + idRMClassifier.substring(0, idRMClassifier.lastIndexOf("/")));
+            idRMClassifier = idRMClassifier.substring(idRMClassifier.lastIndexOf("/") + 1, idRMClassifier.length());
         }
         SelectableNode<Object> rmNode = rmNodes.get(idRMClassifier);
-        if (rmNode==null){
-            rmNode = new SelectableNodeBuilder<Object>()
+        if (rmNode == null) {
+            rmNode = new SelectableNodeBuilder<>()
                     .setName(idRMClassifier)
                     .setIcon(GDLEditorImageUtil.OBJECT_ICON)
                     .createSelectableNode();
@@ -72,32 +71,35 @@ public class ClusterNodesUtil {
         return rmNode;
     }
 
-    public static String getIdRMClassifier(String path){
+    private static String getIdRMClassifier(String path) {
         int index = path.indexOf("[", 1);
-        if (index>0){
+        if (index > 0) {
             return path.substring(1, index);
-        }else{
+        } else {
             index = path.indexOf("/", 1);
-            if (index>0){
+            if (index > 0) {
                 return path.substring(1, index);
-            }else{
+            } else {
                 return path.substring(1, path.length());
             }
         }
     }
 
-    public static SelectableNode<Object> createClusterNode(ClusterVO clusterVO, Object object, boolean singleSelection, ArchetypeManager archetypeMamager) throws InternalErrorException {
+    private static SelectableNode<Object> createClusterNode(
+            ClusterVO clusterVO,
+            boolean singleSelection,
+            ArchetypeManager archetypeManager) throws InternalErrorException {
         String upperNumOcurrences =
-                (clusterVO.getUpperCardinality()==null?" [*]":clusterVO.getUpperCardinality()>1?" ["+clusterVO.getUpperCardinality()+"]":"");
-        String name = archetypeMamager.getClusters().getText(clusterVO, UserConfigurationManager.instance().getLanguage());
-        String desc = archetypeMamager.getClusters().getDescription(clusterVO, UserConfigurationManager.instance().getLanguage());
-        SelectableNode.SelectionMode selectionMode = singleSelection? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
-        return new SelectableNodeBuilder<Object>()
-                .setName(name+upperNumOcurrences)
+                (clusterVO.getUpperCardinality() == null ? " [*]" : clusterVO.getUpperCardinality() > 1 ? " [" + clusterVO.getUpperCardinality() + "]" : "");
+        String name = archetypeManager.getClusters().getText(clusterVO, UserConfigurationManager.instance().getLanguage());
+        String desc = archetypeManager.getClusters().getDescription(clusterVO, UserConfigurationManager.instance().getLanguage());
+        SelectableNode.SelectionMode selectionMode = singleSelection ? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
+        return new SelectableNodeBuilder<>()
+                .setName(name + upperNumOcurrences)
                 .setDescription(desc)
                 .setSelectionMode(selectionMode)
                 .setIcon(OpenEHRConstUI.getIcon(clusterVO.getRMType()))
-                .setObject(object)
+                .setObject(null)
                 .createSelectableNode();
     }
 }

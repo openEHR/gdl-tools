@@ -11,47 +11,47 @@ import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CompileGuideSW extends CDSSwingWorker {
-    private String _errorMsg = null;
-    private byte[] _compiledGuide = null;
-    private Guide _guide = null;
-    private GDLEditor _controller = null;
+    private String errorMsg = null;
+    private byte[] compiledGuide = null;
+    private Guide guide = null;
+    private GDLEditor controller = null;
 
-    public CompileGuideSW(){
-        _controller = EditorManager.getActiveGDLEditor();
+    public CompileGuideSW() {
+        controller = EditorManager.getActiveGDLEditor();
     }
 
     @Override
-    protected void executeCDSSW() throws InternalErrorException{
-        try{
-            _guide = _controller.getEntity();
-            if (_guide != null){
-                _compiledGuide = GuideExportPluginDirectory.compile(_guide);
+    protected void executeCDSSW() throws InternalErrorException {
+        try {
+            guide = controller.getEntity();
+            if (guide != null) {
+                compiledGuide = GuideExportPluginDirectory.compile(guide);
             }
-        }catch(Throwable e){
-            _errorMsg = e.getMessage();
-            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getEntity().getId()+"': "+e.getMessage());
+        } catch (Throwable e) {
+            errorMsg = e.getMessage();
+            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '" + controller.getEntity().getId() + "': " + e.getMessage());
             ExceptionHandler.handle(e);
         }
     }
 
-    public byte[] getCompiledGuide(){
-        return _compiledGuide;
+    protected byte[] getCompiledGuide() {
+        return compiledGuide;
     }
 
-    public Guide getGuide(){
-        return _guide;
+    public Guide getGuide() {
+        return guide;
     }
 
-    public String getErrorMsg(){
-        return _errorMsg;
+    protected String getErrorMsg() {
+        return errorMsg;
     }
 
-    public GDLEditor getController(){
-        return _controller;
+    public GDLEditor getController() {
+        return controller;
     }
 
     protected void done() {
-        _controller.compilationFinished(_errorMsg);
+        controller.compilationFinished(errorMsg);
     }
 }
 /*

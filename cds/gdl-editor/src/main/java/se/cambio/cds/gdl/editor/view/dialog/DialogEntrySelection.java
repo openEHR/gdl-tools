@@ -8,14 +8,9 @@ import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class DialogEntrySelection extends DialogSelection{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
     private GDLEditor _controller = null;
@@ -40,20 +35,17 @@ public class DialogEntrySelection extends DialogSelection{
         }
     }
 
-    public JButton getAddArchetypeReferenceButton() {
+    private JButton getAddArchetypeReferenceButton() {
         if (addArchetypeReferenceButton == null) {
             addArchetypeReferenceButton = new JButton();
             addArchetypeReferenceButton.setText(GDLEditorLanguageManager.getMessage("AddArchetype"));
             addArchetypeReferenceButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddArchetypeD"));
             addArchetypeReferenceButton.setIcon(GDLEditorImageUtil.ADD_ICON);
             addArchetypeReferenceButton.setEnabled(true);
-            addArchetypeReferenceButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    accept();
-                    _selectedObject =
-                            _controller.addArchetypeReference(_onlyCDSDomain);
-                }
+            addArchetypeReferenceButton.addActionListener(e -> {
+                accept();
+                _selectedObject =
+                        _controller.addArchetypeReference(_onlyCDSDomain);
             });
         }
         return addArchetypeReferenceButton;

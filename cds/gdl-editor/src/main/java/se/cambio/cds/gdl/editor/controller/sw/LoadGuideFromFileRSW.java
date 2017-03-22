@@ -19,9 +19,9 @@ import java.io.FileInputStream;
 
 public class LoadGuideFromFileRSW extends CDSSwingWorker {
 
-    private File _guideFile = null;
-    private GDLEditor _editor = null;
-    private String _guideStr = null;
+    private File guideFile = null;
+    private GDLEditor editor = null;
+    private String guideStr = null;
 
     public LoadGuideFromFileRSW() {
         super();
@@ -30,59 +30,59 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
 
     public LoadGuideFromFileRSW(File guideFile) {
         super();
-        _guideFile = guideFile;
+        this.guideFile = guideFile;
         init();
     }
 
-    private void init(){
-        if (_guideFile==null){
+    private void init() {
+        if (guideFile == null) {
             JFileChooser fileChooser = new JFileChooser(EditorManager.getLastFolderLoaded());
             FileNameExtensionFilter filter = new FileNameExtensionFilter(
                     GDLEditorLanguageManager.getMessage("Guide"), "gdl");
             fileChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("LoadGuide"));
             fileChooser.setFileFilter(filter);
             int result = fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
-            if (result != JFileChooser.CANCEL_OPTION){
-                _guideFile = fileChooser.getSelectedFile();
+            if (result != JFileChooser.CANCEL_OPTION) {
+                guideFile = fileChooser.getSelectedFile();
                 WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
             }
         }
     }
 
     protected void executeCDSSW() throws InternalErrorException {
-        try{
-            if (_guideFile!=null){
-                FileInputStream fis = new FileInputStream(_guideFile);
-                _guideStr = IOUtils.toString(fis, "UTF8");
-                Guide guide = GDLEditor.parseGuide(new ByteArrayInputStream(_guideStr.getBytes("UTF8")));
-                if (guide!=null){
-                    _editor = new GDLEditor(guide);
+        try {
+            if (guideFile != null) {
+                FileInputStream fis = new FileInputStream(guideFile);
+                guideStr = IOUtils.toString(fis, "UTF8");
+                Guide guide = GDLEditor.parseGuide(new ByteArrayInputStream(guideStr.getBytes("UTF8")));
+                if (guide != null) {
+                    editor = new GDLEditor(guide);
                 }
-            }else{
+            } else {
                 this.cancel(true);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             ExceptionHandler.handle(e);
         }
     }
 
 
     protected void done() {
-        try{
-            if (_editor!=null){
-                if (GDLEditor.checkParsedGuide(_guideStr, _editor.getEntity())){
-                    EditorManager.setLastFileLoaded(_guideFile);
-                    EditorManager.setLastFolderLoaded(_guideFile.getParentFile());
+        try {
+            if (editor != null) {
+                if (GDLEditor.checkParsedGuide(guideStr, editor.getEntity())) {
+                    EditorManager.setLastFileLoaded(guideFile);
+                    EditorManager.setLastFolderLoaded(guideFile.getParentFile());
                     try {
-                        EditorManager.initController(_editor);
+                        EditorManager.initController(editor);
                     } catch (InternalErrorException e) {
                         ExceptionHandler.handle(e);
                     }
                 }
             }
-        }catch (Throwable th){
+        } catch (Throwable th) {
             ExceptionHandler.handle(th);
-        }finally{
+        } finally {
             WindowManager.setFree();
         }
     }

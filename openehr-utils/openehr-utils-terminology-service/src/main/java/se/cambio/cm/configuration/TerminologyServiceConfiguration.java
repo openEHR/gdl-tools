@@ -25,9 +25,6 @@ import java.util.Map;
 public class TerminologyServiceConfiguration {
 
     private Map<String, TerminologyConfigVO> terminologyConfigMap;
-    private static Logger log = LoggerFactory.getLogger(TerminologyServiceConfiguration.class);
-
-    @Autowired
     private Environment environment;
 
     private static final String TERMINOLOGY_PROPERTY_PREFIX = "terminologies.";
@@ -36,7 +33,9 @@ public class TerminologyServiceConfiguration {
     private static final String CODE_EXISTENCE_CHECK_PROPERTY_POSTFIX = ".code-existence-check";
     private static final String CLASS_PROPERTY_POSTFIX = ".class";
 
-    public TerminologyServiceConfiguration() {
+    @Autowired
+    public TerminologyServiceConfiguration(Environment environment) {
+        this.environment = environment;
         this.terminologyConfigMap = new HashMap<>();
     }
 

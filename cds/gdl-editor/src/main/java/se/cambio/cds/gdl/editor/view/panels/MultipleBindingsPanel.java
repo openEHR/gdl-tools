@@ -4,7 +4,6 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogTerminologyIdSelection;
-import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.view.swing.panel.interfaces.ClosableTabbebPane;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
@@ -14,27 +13,20 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
-public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableTabbebPane{
+public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, ClosableTabbebPane{
     private static final long serialVersionUID = 8349466066595869612L;
-    private GDLEditor _controller;
+    private GDLEditor controller;
     private JTabbedPane termsTabPane = null;
-    private ArrayList<BindingPanel> bindingPanels = new ArrayList<BindingPanel>();
+    private ArrayList<BindingPanel> bindingPanels = new ArrayList<>();
 
-    public BindingsPanel(GDLEditor controller){
-        _controller = controller;
+    MultipleBindingsPanel(GDLEditor controller){
+        this.controller = controller;
         init();
     }
 
-    /**
-     * This method initializes this
-     */
     private void init() {
         this.setLayout(new BorderLayout());
         this.setFocusable(true);
@@ -45,7 +37,7 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
         this.removeAll();
         termsTabPane = null;
         bindingPanels.clear();
-        if (_controller.getTermBindings().isEmpty()){
+        if (controller.getTermBindings().isEmpty()){
             this.setBorder(new EmptyBorder(10, 10, 10, 10));
             this.add(new JLabel(GDLEditorLanguageManager.getMessage("NoBindingsYetUseAddBindingButtonMsg")), BorderLayout.NORTH);
         }else{
@@ -61,8 +53,8 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
             termsTabPane = new JTabbedPane();
             termsTabPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
 
-            Set<String> bindingsCodes = _controller.getTermBindings().keySet();
-            if (bindingsCodes != null && bindingsCodes.size() > 0) {
+            Set<String> bindingsCodes = controller.getTermBindings().keySet();
+            if (bindingsCodes.size() > 0) {
                 int i = 0;
                 for (String tabName: bindingsCodes) {
                     termsTabPane.addTab(tabName, null,getNewBindingPanel(tabName));
@@ -75,12 +67,12 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
     }
 
     private BindingPanel getNewBindingPanel(String tabId){
-        BindingPanel newBindingPanel = new BindingPanel(_controller, tabId);
+        BindingPanel newBindingPanel = new BindingPanel(controller, tabId);
         bindingPanels.add(newBindingPanel);
         return newBindingPanel;
     }
 
-    public void addTermTab() throws InternalErrorException {
+    void addTermTab() throws InternalErrorException {
         String terminologyId = createNewTerminologyBinding();
         if (terminologyId != null){
             refresh();
@@ -88,33 +80,31 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
         }
     }
 
-    public String createNewTerminologyBinding() throws InternalErrorException {
+    private String createNewTerminologyBinding() throws InternalErrorException {
         List<String> terminologyIds = getTerminologyIdsAvailable();
         DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(EditorManager.getActiveEditorWindow(), terminologyIds);
         dialog.setVisible(true);
         String terminologyId = dialog.getSelectedObject();
         Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
         if (terminologyId != null && !terminologyIdsUsed.contains(terminologyId)) {
-            _controller.getTermBindings().put(
+            controller.getTermBindings().put(
                     terminologyId,
                     new TermBinding(terminologyId,
-                            new HashMap<String, Binding>()));
+                            new HashMap<>()));
         }
         return terminologyId;
     }
 
     private void selectTerminologyId(String terminologyId) {
-        Iterator<BindingPanel> i = bindingPanels.iterator();
-        while(i.hasNext()){
-            BindingPanel bp = i.next();
-            if (terminologyId.equals(bp.getOwnerTabName())){
+        for (BindingPanel bp : bindingPanels) {
+            if (terminologyId.equals(bp.getOwnerTabName())) {
                 getTabbedPane().setSelectedComponent(bp);
             }
         }
     }
 
     private Collection<String> getTerminologyIdsUsed(){
-        Collection<String> terminologyIdsUsed = new ArrayList<String>();
+        Collection<String> terminologyIdsUsed = new ArrayList<>();
         for (BindingPanel bindingPanel: bindingPanels) {
             terminologyIdsUsed.add(bindingPanel.getOwnerTabName());
         }
@@ -134,8 +124,6 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
                     getTabbedPane().setSelectedIndex(index - 1);
                 } else if (index == 0 && getTabbedPane().getTabCount() > 1) {
                     getTabbedPane().setSelectedIndex(index);
-                } else if (getTabbedPane().getTabCount() == 0) {
-                    //hidePanel(false);
                 }
                 removeReference(titleRef);
             }
@@ -144,11 +132,11 @@ public class BindingsPanel extends JPanel implements RefreshablePanel, ClosableT
 
 
     private void removeReference(String removeRef){
-        _controller.getTermBindings().remove(removeRef);
+        controller.getTermBindings().remove(removeRef);
     }
 
-    public List<String> getTerminologyIdsAvailable() throws InternalErrorException {
-        List<String> terminologyIdsAvailable = new ArrayList<String>();
+    private List<String> getTerminologyIdsAvailable() throws InternalErrorException {
+        List<String> terminologyIdsAvailable = new ArrayList<>();
         Collection<String> supportedTerminologiesIds = OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies();
         Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
         for(String terminologyId: supportedTerminologiesIds){

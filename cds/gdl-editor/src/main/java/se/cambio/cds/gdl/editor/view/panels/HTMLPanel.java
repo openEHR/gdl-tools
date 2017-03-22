@@ -10,52 +10,50 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import javax.swing.*;
 import java.awt.*;
 
-public class HTMLPanel extends JPanel implements RefreshablePanel{
+public class HTMLPanel extends JPanel implements RefreshablePanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JScrollPane mainScrollPanel;
     private JEditorPane editorPanel;
-    private GDLEditor _controller = null;
-    public HTMLPanel(GDLEditor controller){
-        _controller = controller;
+    private GDLEditor controller = null;
+
+    HTMLPanel(GDLEditor controller) {
+        this.controller = controller;
         init();
     }
 
-    public void init(){
+    public void init() {
         this.setLayout(new BorderLayout());
         refresh();
     }
 
-    private JScrollPane getMainScrollPanel(){
-        if (mainScrollPanel==null){
+    private JScrollPane getMainScrollPanel() {
+        if (mainScrollPanel == null) {
             mainScrollPanel = new JScrollPane();
             mainScrollPanel.setViewportView(getEditorPanel());
         }
         return mainScrollPanel;
     }
 
-    private JEditorPane getEditorPanel(){
-        if (editorPanel==null){
+    private JEditorPane getEditorPanel() {
+        if (editorPanel == null) {
             editorPanel = new JEditorPane();
             editorPanel.setContentType("text/html");
             editorPanel.setEditable(false);
-            try{
-                String html = new GuideHTMLExporter(ArchetypeManager.getInstance()).convertToHTML(_controller.getEntity(), _controller.getCurrentLanguageCode());
-                if (html!=null){
+            try {
+                String html = new GuideHTMLExporter(ArchetypeManager.getInstance()).convertToHTML(controller.getEntity(), controller.getCurrentLanguageCode());
+                if (html != null) {
                     editorPanel.setText(html);
                 }
-            }catch(InternalErrorException e){
+            } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
             }
         }
         return editorPanel;
     }
 
-    public void refresh(){
-        if (mainScrollPanel!=null){
+    public void refresh() {
+        if (mainScrollPanel != null) {
             remove(mainScrollPanel);
             mainScrollPanel = null;
             editorPanel = null;
@@ -63,12 +61,7 @@ public class HTMLPanel extends JPanel implements RefreshablePanel{
         this.add(getMainScrollPanel());
         this.revalidate();
         this.repaint();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                getMainScrollPanel().getVerticalScrollBar().setValue(0);
-            }
-        });
+        SwingUtilities.invokeLater(() -> getMainScrollPanel().getVerticalScrollBar().setValue(0));
     }
 }
 /*

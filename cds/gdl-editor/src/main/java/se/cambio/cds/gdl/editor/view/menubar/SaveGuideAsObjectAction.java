@@ -17,12 +17,9 @@ import java.awt.event.KeyEvent;
 
 public class SaveGuideAsObjectAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public SaveGuideAsObjectAction(){
+    SaveGuideAsObjectAction(){
         super();
         putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAsObject")+"...");
         putValue(SMALL_ICON, null);
@@ -31,9 +28,6 @@ public class SaveGuideAsObjectAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK+ActionEvent.ALT_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         CompileGuideSW sw = new CompileGuideSW(){
@@ -45,6 +39,7 @@ public class SaveGuideAsObjectAction extends AbstractAction {
             }
         };
         sw.execute();
+        assert controller != null;
         controller.setBusy(GDLEditorLanguageManager.getMessage("Compiling")+"...");
     }
 }

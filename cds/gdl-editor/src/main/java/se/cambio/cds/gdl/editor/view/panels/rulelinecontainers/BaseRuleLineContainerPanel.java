@@ -8,25 +8,22 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import javax.swing.*;
 import java.awt.*;
 
-public class BaseRuleLineContainerPanel extends RuleLineContainerPanel{
+public class BaseRuleLineContainerPanel extends RuleLineContainerPanel {
 
-    /**
-     *
-     */
     private JPanel ruleLineListPanel = null;
 
     private static final long serialVersionUID = 1L;
 
-    private RuleLinesPanel _ruleLinesPanel =null;
+    private RuleLinesPanel _ruleLinesPanel = null;
     private RuleLineCollection _ruleLines = null;
 
-    public BaseRuleLineContainerPanel(RuleLinesPanel ruleLinesPanel, RuleLineCollection ruleLines){
+    public BaseRuleLineContainerPanel(RuleLinesPanel ruleLinesPanel, RuleLineCollection ruleLines) {
         _ruleLinesPanel = ruleLinesPanel;
         _ruleLines = ruleLines;
         init();
     }
 
-    private void init(){
+    private void init() {
         this.setLayout(new BorderLayout());
         this.add(getRuleLineListPanel(), BorderLayout.NORTH);
         for (RuleLine ruleLine : _ruleLines.getRuleLines()) {
@@ -35,12 +32,12 @@ public class BaseRuleLineContainerPanel extends RuleLineContainerPanel{
         }
     }
 
-    public void addRuleLine(RuleLineContainerPanel ruleLineContainerPanel){
+    public void addRuleLine(RuleLineContainerPanel ruleLineContainerPanel) {
         getRuleLineListPanel().add(ruleLineContainerPanel);
     }
 
-    private JPanel getRuleLineListPanel(){
-        if (ruleLineListPanel==null){
+    private JPanel getRuleLineListPanel() {
+        if (ruleLineListPanel == null) {
             ruleLineListPanel = new JPanel();
             ruleLineListPanel.setLayout(new BoxLayout(ruleLineListPanel, BoxLayout.Y_AXIS));
         }

@@ -15,24 +15,18 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogRepositoriesPaths;
 
 public class ConfigRepositoriesAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ConfigRepositoriesAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("Repositories")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
+    ConfigRepositoriesAction() {
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("Repositories") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogRepositoriesPaths().setVisible(true);
+        new DialogRepositoriesPaths().setVisible(true);
     }
 }
 /*

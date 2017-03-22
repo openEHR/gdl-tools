@@ -8,20 +8,19 @@ import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import java.awt.*;
 
-public class DialogRuleSelection extends DialogSelection{
+public class DialogRuleSelection extends DialogSelection {
 
     private static final long serialVersionUID = 1L;
-    private Object _selectedObject = null;
 
     public DialogRuleSelection(Window owner, GDLEditor controller) {
         super(owner,
                 GDLEditorLanguageManager.getMessage("SelectRule"),
                 NodeDefinitionConversor.getGTCodeRuleLineElementNodes(controller.getRenderableRules(), false),
                 true,
-                new Dimension(500,500));
+                new Dimension(500, 500));
     }
 
-    public GTCodeRuleLineElement getSelectedGTCodeRuleLineElement(){
+    public GTCodeRuleLineElement getSelectedGTCodeRuleLineElement() {
         return (GTCodeRuleLineElement) super.getSelectedObject();
     }
 }

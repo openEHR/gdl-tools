@@ -16,12 +16,13 @@ import se.cambio.cds.configuration.DroolsConfiguration;
 @Import(DroolsConfiguration.class)
 public class GDLEditorConfig {
 
-    private final String GDL_PLUGINS_KEY = "gdl-editor.plugins";
+    private static final String GDL_PLUGINS_KEY = "gdl-editor.plugins";
 
-    @Autowired
     private Environment environment;
 
-    public GDLEditorConfig() {
+    @Autowired
+    public GDLEditorConfig(Environment environment) {
+        this.environment = environment;
     }
 
     public String getGdlEditorPlugins() {

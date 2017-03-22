@@ -51,8 +51,7 @@ public class TemplateFlattener {
     public Archetype toFlattenedArchetype(TEMPLATE template,
                                           Map<String, Archetype> archetypeMap) throws FlatteningException {
 
-        return toFlattenedArchetype(template, archetypeMap,
-                new HashMap<String, TEMPLATE>());
+        return toFlattenedArchetype(template, archetypeMap, new HashMap<>());
     }
 
     /**
@@ -504,8 +503,7 @@ public class TemplateFlattener {
         fillArchetypeSlot(parentArchetype, archetype, path, definition.getName());
 
         // common part for all entries
-        ENTRY entry = (ENTRY) definition;
-        ITEM[] items = entry.getItemsArray();
+        ITEM[] items = definition.getItemsArray();
         if(items != null) {
             for(ITEM item : items) {
                 flattenItem(archetype, item);
@@ -708,8 +706,6 @@ public class TemplateFlattener {
             }
         }
 
-        // rewrite rule path for named nodes
-        // ASUMMING order is respected!!
         for(Statement rule : rules) {
             if(name != null && rule.getPath().startsWith(leadingPath)
                     && rule.getPath().length() > leadingPath.length()) {
@@ -720,7 +716,7 @@ public class TemplateFlattener {
 
                 rule.setPath(path);
 
-                log.debug("rewrote path with named node: " + path);
+                log.debug("rewrote path with named node: {}", path);
             }
             applyRule(archetype, rule);
         }

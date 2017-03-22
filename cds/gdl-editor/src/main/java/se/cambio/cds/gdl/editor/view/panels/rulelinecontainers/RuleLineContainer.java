@@ -5,7 +5,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
 public interface RuleLineContainer {
 
-    public RuleLine getRuleLine();
+    RuleLine getRuleLine();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

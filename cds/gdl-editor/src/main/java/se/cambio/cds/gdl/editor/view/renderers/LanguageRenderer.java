@@ -5,17 +5,18 @@ import se.cambio.cds.gdl.editor.view.applicationobjects.Languages;
 import javax.swing.*;
 import java.awt.*;
 
-public class LanguageRenderer extends JLabel implements ListCellRenderer {
+public class LanguageRenderer extends JLabel implements ListCellRenderer<String> {
     private static final long serialVersionUID = 1L;
 
-    public LanguageRenderer(){
+    public LanguageRenderer() {
         setOpaque(true);
         setHorizontalAlignment(LEFT);
         setVerticalAlignment(CENTER);
     }
 
-    public Component getListCellRendererComponent(JList list, Object value,
-                                                  int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList list, String value,
+                                                  int index, boolean isSelected,
+                                                  boolean cellHasFocus) {
         if (isSelected) {
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
@@ -23,12 +24,12 @@ public class LanguageRenderer extends JLabel implements ListCellRenderer {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        if (value!=null){
-            String name = Languages.getLanguageName(((String)value).split("_")[0]);
-            setText(value +" - "+name);
-            setToolTipText(value +" - "+name);
+        if (value != null) {
+            String name = Languages.getLanguageName(value.split("_")[0]);
+            setText(value + " - " + name);
+            setToolTipText(value + " - " + name);
             setBorder(null);
-        }else{
+        } else {
             setText(" ");
             setToolTipText("");
             setBorder(BorderFactory.createLineBorder(Color.RED));

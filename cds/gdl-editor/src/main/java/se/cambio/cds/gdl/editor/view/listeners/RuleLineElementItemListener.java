@@ -6,15 +6,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class RuleLineElementItemListener<E> implements ItemListener {
-    private RuleLineElementWithValue<E> _ruleLineElementWithValue = null;
+    private RuleLineElementWithValue<E> ruleLineElementWithValue = null;
 
     public RuleLineElementItemListener(RuleLineElementWithValue<E> ruleLineElementWithValue) {
-        _ruleLineElementWithValue = ruleLineElementWithValue;
+        this.ruleLineElementWithValue = ruleLineElementWithValue;
     }
 
     @SuppressWarnings("unchecked")
     public void itemStateChanged(ItemEvent e) {
-        _ruleLineElementWithValue.setValue((E) e.getItem());
+        ruleLineElementWithValue.setValue((E) e.getItem());
     }
 
 }

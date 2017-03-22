@@ -14,24 +14,18 @@ import java.awt.event.ActionEvent;
 
 public class ConfigActiveEngineAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ConfigActiveEngineAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("SetActiveEngine")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
+    ConfigActiveEngineAction() {
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SetActiveEngine") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogSetActiveEngine().setVisible(true);
+        new DialogSetActiveEngine().setVisible(true);
     }
 }
 /*

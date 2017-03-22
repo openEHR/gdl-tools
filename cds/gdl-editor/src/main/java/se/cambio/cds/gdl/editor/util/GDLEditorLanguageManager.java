@@ -12,26 +12,20 @@ import java.util.ResourceBundle;
 public final class GDLEditorLanguageManager {
 
 
-    private static GDLEditorLanguageManager _instance;
+    private static GDLEditorLanguageManager instance;
 
-    private ResourceBundle _resource = null;
-    public static final String MESSAGES_BUNDLE = "se.cambio.cds.gdl.editor.view.messages.Messages";
-    public String _lng = null;
+    private ResourceBundle resource = null;
+    private static final String MESSAGES_BUNDLE = "se.cambio.cds.gdl.editor.view.messages.Messages";
 
     private GDLEditorLanguageManager() {
-        _lng = UserConfigurationManager.instance().getLanguage();
+        String language = UserConfigurationManager.instance().getLanguage();
         String country = UserConfigurationManager.instance().getCountryCode();
-        _resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(_lng, country), new UTF8Control());
-    }
-
-    public static void refreshConfig() {
-        _instance = null;
-        getDelegate();
+        resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());
     }
 
     public static String getMessage(String key) {
         try {
-            return getDelegate()._resource.getString(key);
+            return getDelegate().resource.getString(key);
         } catch (MissingResourceException e) {
             ExceptionHandler.handle(e);
             return "ERROR: Text not Found!";
@@ -39,7 +33,7 @@ public final class GDLEditorLanguageManager {
     }
 
     public static String getMessage(String key, String data1) {
-        String s = getDelegate()._resource.getString(key);
+        String s = getDelegate().resource.getString(key);
         int i = s.indexOf("$0");
         if (i >= 0 && i < s.length()) {
             String s1 = s.substring(0, i);
@@ -49,7 +43,7 @@ public final class GDLEditorLanguageManager {
     }
 
     public static String getMessage(String key, String[] data) {
-        String s = getDelegate()._resource.getString(key);
+        String s = getDelegate().resource.getString(key);
         for (int i = 0; i < data.length && i < 10; i++) {
             int index = s.indexOf("$" + i);
             String s1 = s.substring(0, index);
@@ -60,10 +54,10 @@ public final class GDLEditorLanguageManager {
     }
 
     private static GDLEditorLanguageManager getDelegate() {
-        if (_instance == null) {
-            _instance = new GDLEditorLanguageManager();
+        if (instance == null) {
+            instance = new GDLEditorLanguageManager();
         }
-        return _instance;
+        return instance;
     }
 
 }

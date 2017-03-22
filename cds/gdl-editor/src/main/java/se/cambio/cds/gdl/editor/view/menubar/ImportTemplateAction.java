@@ -19,12 +19,9 @@ import java.awt.event.KeyEvent;
 
 public class ImportTemplateAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ImportTemplateAction(){
+    ImportTemplateAction(){
         super();
         putValue(NAME, GDLEditorLanguageManager.getMessage("ImportTemplate"));
         putValue(SMALL_ICON, null);
@@ -33,9 +30,6 @@ public class ImportTemplateAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         try {
             ImportUtils.showImportTemplateDialog(EditorManager.getActiveEditorWindow(), null);

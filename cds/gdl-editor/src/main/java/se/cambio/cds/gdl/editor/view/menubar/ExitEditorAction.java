@@ -17,25 +17,19 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 public class ExitEditorAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ExitEditorAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("ExitEditor"));
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
-	putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+    ExitEditorAction() {
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("ExitEditor"));
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	EditorManager.closeEditor();
+        EditorManager.closeEditor();
     }
 }
 /*

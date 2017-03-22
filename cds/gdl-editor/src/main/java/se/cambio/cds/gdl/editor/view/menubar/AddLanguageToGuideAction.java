@@ -14,37 +14,31 @@ import java.awt.event.ActionEvent;
 
 public class AddLanguageToGuideAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public AddLanguageToGuideAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("AddLanguageToGuide")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideD"));
+    AddLanguageToGuideAction() {
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("AddLanguageToGuide") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	boolean invalidCode = true;
-	while (invalidCode){
-	    String lang = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));
-	    if (lang!=null){
-		if (lang.length()==2 && Character.isLetter(lang.charAt(0)) && Character.isLetter(lang.charAt(1))){
-		    invalidCode = false;
-		    EditorManager.getActiveEditorController().changeLanguage(lang);
-		}else{
-		    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("InvalidLanguageCode", lang));
-		}
-	    }else{
-		break;
-	    }
-	}
+        boolean invalidCode = true;
+        while (invalidCode) {
+            String lang = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));
+            if (lang != null) {
+                if (lang.length() == 2 && Character.isLetter(lang.charAt(0)) && Character.isLetter(lang.charAt(1))) {
+                    invalidCode = false;
+                    EditorManager.getActiveEditorController().changeLanguage(lang);
+                } else {
+                    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("InvalidLanguageCode", lang));
+                }
+            } else {
+                break;
+            }
+        }
     }
 }
 /*

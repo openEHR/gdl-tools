@@ -23,7 +23,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	private RuleDropPanel ruleListDropPanel;
 	private GDLEditor _controller;
 
-	public RulesPanel(GDLEditor controller){
+	RulesPanel(GDLEditor controller){
 		_controller = controller;
 		init();
 	}
@@ -41,7 +41,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 		return ruleListPanel;
 	}
 
-	public void addRule(){
+	void addRule(){
 		ReadableRule rule =_controller.createNewRule();
 		if (rule!=null){
 			refresh();
@@ -66,7 +66,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 		this.validate();
 	}
 
-	public void updateList(ArrayList<ReadableRule> rules){
+	void updateList(ArrayList<ReadableRule> rules){
 		_controller.getRenderableRules().clear();
 		for (ReadableRule readableRule : rules) {
 			_controller.getRenderableRules().put(readableRule.getGTCode(), readableRule);
@@ -81,7 +81,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 		return ruleListDropPanel;
 	}
 
-	public JPanel createRulePanel(ReadableRule rule){
+	private JPanel createRulePanel(ReadableRule rule){
 		JPanel rulePanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
 		JLinkLabel linkLabel = new JLinkLabel();
 		linkLabel.setText(_controller.getGTName(rule.getGTCode()));
@@ -98,7 +98,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 		return rulePanel;
 	}
 
-	public JButton createCommentButton(ReadableRule rule){
+	private JButton createCommentButton(ReadableRule rule){
 		JButton button = createGenericButton();
 		button.setAction(new ChangeCommentAction(rule));
 		if (rule.isCommented()){
@@ -113,7 +113,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	private class ChangeCommentAction extends AbstractAction{
 		private static final long serialVersionUID = 1L;
 		private ReadableRule _rule = null;
-		public ChangeCommentAction(ReadableRule rule){
+		ChangeCommentAction(ReadableRule rule){
 			_rule = rule;
 		}
 		public void actionPerformed(ActionEvent e) {
@@ -133,7 +133,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	private class DeleteRuleAction extends AbstractAction{
 		private static final long serialVersionUID = 1L;
 		private ReadableRule _rule = null;
-		public DeleteRuleAction(ReadableRule rule){
+		DeleteRuleAction(ReadableRule rule){
 			_rule = rule;
 		}
 		public void actionPerformed(ActionEvent e) {
@@ -149,7 +149,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 		}
 	}
 
-	public JButton createEditNameButton(ReadableRule rule){
+	private JButton createEditNameButton(ReadableRule rule){
 		JButton button = createGenericButton();
 		button.setAction(new EditRuleNameAction(rule));
 		button.setIcon(GDLEditorImageUtil.EDIT_ICON);
@@ -160,7 +160,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	private class EditRuleNameAction extends AbstractAction{
 		private static final long serialVersionUID = 1L;
 		private ReadableRule _rule = null;
-		public EditRuleNameAction(ReadableRule rule){
+		EditRuleNameAction(ReadableRule rule){
 			_rule = rule;
 		}
 		public void actionPerformed(ActionEvent e) {
@@ -175,7 +175,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 		}
 	}
 
-	public JButton createGenericButton(){
+	private JButton createGenericButton(){
 		JButton button =  new JButton();
 		button.setBorder(BorderFactory.createEmptyBorder());
 		button.setContentAreaFilled(false);
@@ -186,7 +186,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel{
 	private class LoadRuleAction extends AbstractAction{
 		private static final long serialVersionUID = 1L;
 		private ReadableRule _rule = null;
-		public LoadRuleAction(ReadableRule rule){
+		LoadRuleAction(ReadableRule rule){
 			_rule = rule;
 		}
 		public void actionPerformed(ActionEvent e) {

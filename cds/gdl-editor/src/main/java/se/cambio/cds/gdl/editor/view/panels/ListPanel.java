@@ -8,35 +8,30 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPanel extends JPanel{
+class ListPanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private String _title;
-    private String _xPath;
-    private JXPathContext _context;
+    private String title;
+    private String xPath;
+    private JXPathContext context;
     private JList<String> jList;
 
-    public ListPanel(String title, String xPath, JXPathContext context){
-        _title = title;
-        _xPath = xPath;
-        _context = context;
+    ListPanel(String title, String xPath, JXPathContext context) {
+        this.title = title;
+        this.xPath = xPath;
+        this.context = context;
         Object obj = context.getValue(xPath);
-        if (obj instanceof List){
-            DefaultListModel<String> dlm = ((DefaultListModel<String>)getJList().getModel());
-            for (Object objAux : (List<?>)obj) {
-                String value = (String)objAux;
-                if (value!=null){
-                    value = value.replace("\\\"","\"");
+        if (obj instanceof List) {
+            DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
+            for (Object objAux : (List<?>) obj) {
+                String value = (String) objAux;
+                if (value != null) {
+                    value = value.replace("\\\"", "\"");
                 }
                 dlm.addElement(value);
             }
@@ -44,9 +39,9 @@ public class ListPanel extends JPanel{
         init();
     }
 
-    private void init(){
+    private void init() {
         this.setLayout(new BorderLayout());
-        this.setBorder(BorderFactory.createTitledBorder(_title));
+        this.setBorder(BorderFactory.createTitledBorder(title));
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         JButton addButton = generateAddButton();
@@ -64,14 +59,12 @@ public class ListPanel extends JPanel{
         addButton.setContentAreaFilled(false);
         addButton.setPreferredSize(new Dimension(16, 16));
         addButton.setBorderPainted(false);
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String value = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), _title, "");
-                if (value != null) {
-                    DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
-                    dlm.addElement(value);
-                    updateListModel(dlm);
-                }
+        addButton.addActionListener(e -> {
+            String value = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), title, "");
+            if (value != null) {
+                DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
+                dlm.addElement(value);
+                updateListModel(dlm);
             }
         });
         return addButton;
@@ -82,14 +75,12 @@ public class ListPanel extends JPanel{
         deleteButton.setContentAreaFilled(false);
         deleteButton.setPreferredSize(new Dimension(16, 16));
         deleteButton.setBorderPainted(false);
-        deleteButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int index = getJList().getSelectedIndex();
-                if(index >= 0) {
-                    DefaultListModel dlm = ((DefaultListModel)getJList().getModel());
-                    dlm.removeElementAt(index);
-                    updateListModel(dlm);
-                }
+        deleteButton.addActionListener(e -> {
+            int index = getJList().getSelectedIndex();
+            if (index >= 0) {
+                DefaultListModel dlm = ((DefaultListModel) getJList().getModel());
+                dlm.removeElementAt(index);
+                updateListModel(dlm);
             }
         });
         return deleteButton;
@@ -101,12 +92,10 @@ public class ListPanel extends JPanel{
         editButton.setPreferredSize(new Dimension(16, 16));
         editButton.setBorderPainted(false);
         editButton.setToolTipText(GDLEditorLanguageManager.getMessage("EditKeyword"));
-        editButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int index = getJList().getSelectedIndex();
-                if (index >= 0) {
-                    editItem(index);
-                }
+        editButton.addActionListener(e -> {
+            int index = getJList().getSelectedIndex();
+            if (index >= 0) {
+                editItem(index);
             }
         });
         return editButton;
@@ -124,14 +113,14 @@ public class ListPanel extends JPanel{
     }
 
     private JList<String> getJList() {
-        if(jList == null) {
-            jList = new JList<String>(new DefaultListModel<String>());
+        if (jList == null) {
+            jList = new JList<>(new DefaultListModel<String>());
             jList.setBorder(BorderFactory.createEtchedBorder());
             jList.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() >= 2) {
-                       editItem(getJList().getSelectedIndex());
+                        editItem(getJList().getSelectedIndex());
                     }
                 }
             });
@@ -139,16 +128,16 @@ public class ListPanel extends JPanel{
         return jList;
     }
 
-    private void updateListModel(DefaultListModel dlm){
-        List<String> elements = new ArrayList<String>();
-        for (int i=0; i<dlm.getSize(); i++) {
-            String value = (String)dlm.getElementAt(i);
-            if (value!=null){
-                value = value.replace("\"","\\\"");
+    private void updateListModel(DefaultListModel dlm) {
+        List<String> elements = new ArrayList<>();
+        for (int i = 0; i < dlm.getSize(); i++) {
+            String value = (String) dlm.getElementAt(i);
+            if (value != null) {
+                value = value.replace("\"", "\\\"");
             }
             elements.add(value);
         }
-        _context.setValue(_xPath, elements);
+        context.setValue(xPath, elements);
     }
 }
 /*

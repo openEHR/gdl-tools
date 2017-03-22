@@ -15,24 +15,18 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogSetLanguage;
 
 public class ConfigLanguageAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ConfigLanguageAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("SetEditorLanguage")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageD"));
+    ConfigLanguageAction() {
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SetEditorLanguage") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogSetLanguage().setVisible(true);
+        new DialogSetLanguage().setVisible(true);
     }
 }
 /*

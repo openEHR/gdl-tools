@@ -7,18 +7,18 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
 public class DraggableSelectableRuleLinePanel extends JLabel {
     private static final long serialVersionUID = 1L;
-    private RuleLine _ruleLine = null;
-    
-    public DraggableSelectableRuleLinePanel(RuleLine ruleLine) {
-	super();
-	this.setText(ruleLine.getName());
-	this.setIcon(RuleLineDirectory.getIconForRuleLine(ruleLine));
-	this.setToolTipText(ruleLine.getDescription());
-	_ruleLine = ruleLine;
+    private RuleLine ruleLine = null;
+
+    DraggableSelectableRuleLinePanel(RuleLine ruleLine) {
+        super();
+        this.setText(ruleLine.getName());
+        this.setIcon(RuleLineDirectory.getIconForRuleLine(ruleLine));
+        this.setToolTipText(ruleLine.getDescription());
+        this.ruleLine = ruleLine;
     }
-    
-    public RuleLine getRuleLine(){
-	return _ruleLine;
+
+    public RuleLine getRuleLine() {
+        return ruleLine;
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

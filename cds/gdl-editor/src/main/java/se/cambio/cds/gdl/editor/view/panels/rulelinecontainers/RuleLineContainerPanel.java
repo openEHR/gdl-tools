@@ -8,21 +8,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 public abstract class RuleLineContainerPanel extends JPanel implements RuleLineContainer{
     private static final long serialVersionUID = 1L;
 
-    public void ruleLineAdded(RuleLine ruleLine){
-	/* AUTOMATIC DIALOG OPENER (disabled for now)
-	RuleLineElementWithValue<?> rlewv = null;
-	Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
-	while(i.hasNext()){
-	    RuleLineElement rle = i.next();
-	    if (rle instanceof RuleLineElementWithValue<?>){
-		rlewv = (RuleLineElementWithValue<?>)rle;
-		break;
-	    }
-	}
-	if (rlewv!=null && rlewv.getValue()==null){
-	    RuleElementEditor.edit(rlewv);
-	}
-	*/
+    void ruleLineAdded(){
     }
 }
 /*

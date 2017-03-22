@@ -6,17 +6,12 @@ import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class GuidePanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private GDLEditor _controller;
+    private GDLEditor controller;
     private JTabbedPane guideEditorTabPane = null;
     private JPanel descriptionPanel;
     private RulesPanel rulesPanel;
@@ -24,18 +19,15 @@ public class GuidePanel extends JPanel {
     private RuleLinesPanel defaultActionsPanel;
     private RuleLinesPanel definitionsPanel;
     private TerminologyPanel terminologyPanel;
-    private BindingsPanel bindingTabPanel;
+    private MultipleBindingsPanel bindingTabPanel;
     private GDLPanel gdlPanel;
     private HTMLPanel htmlPanel;
 
-    public GuidePanel(GDLEditor controller){
-        _controller = controller;
+    GuidePanel(GDLEditor controller){
+        this.controller = controller;
         init();
     }
 
-    /**
-     * This method initializes this
-     */
     private  void init() {
         this.setLayout(new BorderLayout());
         this.add(getGuideEditorTabPane());
@@ -82,7 +74,7 @@ public class GuidePanel extends JPanel {
                     getHTMLPanel());
             guideEditorTabPane.setFocusable(true);
             for (AbstractPluginPanel abstractPluginPanel : GDLEditorPluginPanelManager.getPluginPanels()) {
-                abstractPluginPanel.setGdlEditor(_controller);
+                abstractPluginPanel.setGdlEditor(controller);
                 guideEditorTabPane.addTab(
                         abstractPluginPanel.getPluginName(),
                         abstractPluginPanel.getPluginIcon(),
@@ -90,12 +82,10 @@ public class GuidePanel extends JPanel {
                 );
             }
 
-            guideEditorTabPane.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    if (e.getSource() instanceof JTabbedPane){
-                        final Component comp = ((JTabbedPane)e.getSource()).getSelectedComponent();
-                        _controller.tabChanged(comp);
-                    }
+            guideEditorTabPane.addChangeListener(e -> {
+                if (e.getSource() instanceof JTabbedPane){
+                    final Component comp = ((JTabbedPane)e.getSource()).getSelectedComponent();
+                    controller.tabChanged(comp);
                 }
             });
         }
@@ -104,63 +94,63 @@ public class GuidePanel extends JPanel {
 
     private JPanel getRefreshableDescriptionPanel(){
         if (descriptionPanel==null){
-            descriptionPanel = new RefreshableDescriptionPanel(_controller);
+            descriptionPanel = new RefreshableDescriptionPanel(controller);
         }
         return descriptionPanel;
     }
 
-    public RulesPanel getRulesPanel(){
+    RulesPanel getRulesPanel(){
         if (rulesPanel==null){
-            rulesPanel = new RulesPanel(_controller);
+            rulesPanel = new RulesPanel(controller);
         }
         return rulesPanel;
     }
 
     private RuleLinesPanel getPreconditionsPanel(){
         if (preconditionsPanel==null){
-            preconditionsPanel = new PreconditionRuleLinesPanel(_controller);
+            preconditionsPanel = new PreconditionRuleLinesPanel(controller);
         }
         return preconditionsPanel;
     }
 
     private RuleLinesPanel getDefaultActionsPanel(){
         if (defaultActionsPanel ==null){
-            defaultActionsPanel = new DefaultActionsPanel(_controller);
+            defaultActionsPanel = new DefaultActionsPanel(controller);
         }
         return defaultActionsPanel;
     }
 
     private RuleLinesPanel getDefinitionsPanel(){
         if (definitionsPanel==null){
-            definitionsPanel = new DefinitionRuleLinesPanel( _controller);
+            definitionsPanel = new DefinitionRuleLinesPanel(controller);
         }
         return definitionsPanel;
     }
 
     private TerminologyPanel getTerminologyPanel(){
         if (terminologyPanel ==null){
-            terminologyPanel = new TerminologyPanel(_controller);
+            terminologyPanel = new TerminologyPanel(controller);
         }
         return terminologyPanel;
     }
 
-    public BindingsPanel getBindingPanel(){
+    MultipleBindingsPanel getBindingPanel(){
         if (bindingTabPanel==null){
-            bindingTabPanel = new BindingsPanel(_controller);
+            bindingTabPanel = new MultipleBindingsPanel(controller);
         }
         return bindingTabPanel;
     }
 
     private GDLPanel getGDLPanel(){
         if (gdlPanel==null){
-            gdlPanel = new GDLPanel(_controller);
+            gdlPanel = new GDLPanel(controller);
         }
         return gdlPanel;
     }
 
     private HTMLPanel getHTMLPanel(){
         if (htmlPanel==null){
-            htmlPanel = new HTMLPanel(_controller);
+            htmlPanel = new HTMLPanel(controller);
         }
         return htmlPanel;
     }

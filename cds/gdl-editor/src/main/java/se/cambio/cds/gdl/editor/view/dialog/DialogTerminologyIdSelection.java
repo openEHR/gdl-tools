@@ -12,12 +12,10 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class DialogTerminologyIdSelection extends DialogSelection{
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 1L;
     private JButton addTerminologyButton;
-    private String _terminologyIdCreated = null;
+    private String terminologyIdCreated = null;
 
     public DialogTerminologyIdSelection(Window owner, List<String> terminologyIds) {
         super(
@@ -39,14 +37,14 @@ public class DialogTerminologyIdSelection extends DialogSelection{
     }
 
     public String getSelectedObject(){
-        if (_terminologyIdCreated!=null){
-            return _terminologyIdCreated;
+        if (terminologyIdCreated !=null){
+            return terminologyIdCreated;
         }else{
             return (String)super.getSelectedObject();
         }
     }
 
-    public boolean isValidTerminologyId(String value) {
+    private boolean isValidTerminologyId(String value) {
         if (value.isEmpty()) {
             return false;
         }
@@ -60,7 +58,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
 
     private class AddTerminologyActionListener implements ActionListener{
         private JDialog _dialog = null;
-        public AddTerminologyActionListener(JDialog dialog){
+        AddTerminologyActionListener(JDialog dialog){
             _dialog = dialog;
         }
 
@@ -73,7 +71,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
                     String value = dialog.getValue();
                     correctName = isValidTerminologyId(value);
                     if (correctName) {
-                        _terminologyIdCreated = value;
+                        terminologyIdCreated = value;
                         accept();
                     } else {
                         JOptionPane.showMessageDialog(_dialog, GDLEditorLanguageManager.getMessage("InvalidId"), GDLEditorLanguageManager.getMessage("InvalidId"), JOptionPane.ERROR_MESSAGE);

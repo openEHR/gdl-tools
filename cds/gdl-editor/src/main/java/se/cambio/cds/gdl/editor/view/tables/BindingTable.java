@@ -26,7 +26,7 @@ public class BindingTable extends JTable {
         _terminologyId = terminologyId;
         _bindings = bindings;
         this.setModel(new BindingTableModel());
-        Vector<String> columnIdentifiers = new Vector<String>();
+        Vector<String> columnIdentifiers = new Vector<>();
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("LocalTerms"));
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("TerminologyCodes"));
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Uri"));
@@ -65,9 +65,9 @@ public class BindingTable extends JTable {
         int numRows = getRowCount();
         for (int i = 0; i < numRows; i++) {
             Binding binding = new Binding();
-            String gtCode = (String)getBindingTableModel().getValueAt(i, 0);
-            String codes = (String)getBindingTableModel().getValueAt(i, 1);
-            String uri = (String)getBindingTableModel().getValueAt(i, 2);
+            String gtCode = (String) getBindingTableModel().getValueAt(i, 0);
+            String codes = (String) getBindingTableModel().getValueAt(i, 1);
+            String uri = (String) getBindingTableModel().getValueAt(i, 2);
             binding.setId(gtCode);
             binding.setCodes(getCodePhrases(codes));
             binding.setUri(uri);
@@ -75,18 +75,18 @@ public class BindingTable extends JTable {
         }
     }
 
-    public String getTerminologyId(){
+    public String getTerminologyId() {
         return _terminologyId;
     }
 
-    private List<CodePhrase> getCodePhrases(String value){
-        List<CodePhrase> codePhrases = new ArrayList<CodePhrase>();
+    private List<CodePhrase> getCodePhrases(String value) {
+        List<CodePhrase> codePhrases = new ArrayList<>();
         String[] multipleDataCodePhrase = value.split(",");
-        for (int i = 0; i < multipleDataCodePhrase.length; i++) {
-            if (!multipleDataCodePhrase[i].trim().isEmpty()){
+        for (String aMultipleDataCodePhrase : multipleDataCodePhrase) {
+            if (!aMultipleDataCodePhrase.trim().isEmpty()) {
                 CodePhrase phrase = new CodePhrase(
                         _terminologyId,
-                        multipleDataCodePhrase[i].trim());
+                        aMultipleDataCodePhrase.trim());
                 codePhrases.add(phrase);
             }
         }

@@ -1,21 +1,22 @@
 package se.cambio.cds.gdl.editor.view.panels;
+
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 
 import javax.swing.*;
 
 
 public class DraggableRulePanel extends DraggablePanel {
-	private static final long serialVersionUID = 1L;
-	private ReadableRule _rule = null;
-	
-	public DraggableRulePanel(JComponent component, ReadableRule rule) {
-		super(component);
-		_rule = rule;
-	}
+    private static final long serialVersionUID = 1L;
+    private ReadableRule _rule = null;
 
-	public ReadableRule getRule(){
-		return _rule;
-	}
+    DraggableRulePanel(JComponent component, ReadableRule rule) {
+        super(component);
+        _rule = rule;
+    }
+
+    public ReadableRule getRule() {
+        return _rule;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

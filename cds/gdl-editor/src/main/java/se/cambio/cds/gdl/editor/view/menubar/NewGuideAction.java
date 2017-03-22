@@ -21,12 +21,9 @@ import java.awt.event.KeyEvent;
 
 public class NewGuideAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public NewGuideAction(){
+    NewGuideAction(){
         super();
         putValue(NAME, GDLEditorLanguageManager.getMessage("CreateNewGuide"));
         putValue(SMALL_ICON, null);
@@ -35,21 +32,15 @@ public class NewGuideAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         EditorManager.runIfOkWithCurrentEditor(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        GDLEditor controller = new GDLEditor(new Guide());
-                        EditorManager.setLastFileLoaded(null);
-                        try {
-                            EditorManager.initController(controller);
-                        } catch (InternalErrorException e1) {
-                            ExceptionHandler.handle(e1);
-                        }
+                () -> {
+                    GDLEditor controller = new GDLEditor(new Guide());
+                    EditorManager.setLastFileLoaded(null);
+                    try {
+                        EditorManager.initController(controller);
+                    } catch (InternalErrorException e1) {
+                        ExceptionHandler.handle(e1);
                     }
                 });
     }

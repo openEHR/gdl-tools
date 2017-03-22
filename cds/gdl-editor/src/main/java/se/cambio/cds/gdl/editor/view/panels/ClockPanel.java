@@ -9,141 +9,76 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public final class ClockPanel extends JPanel{
+public final class ClockPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JPanel show_date_time = new JPanel();
-    private JLabel show_time = new JLabel("Show Time");
+    private JLabel showTime = new JLabel("Show Time");
 
-    private DateFormat dateFormat2 = 
-	    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");      
+    private DateFormat dateFormat2 =
+            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private java.util.Date date2;
-    private JLabel label;
     private JPanel panel;
     private boolean on = true;
 
-    public ClockPanel(){        
+    public ClockPanel() {
 
-	this.setLayout(new BorderLayout());
-	this.add(show_Time_date());
-    }    
-
-    public JPanel show_Time_date(){
-
-	getShow_date_time().setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-	setShow_time(new JLabel(""));
-
-	updateDateTime();
-
-	//getShow_time().setFont(f);
-	getShow_date_time().add(getShow_time());
-
-	return getShow_date_time();
+        this.setLayout(new BorderLayout());
+        this.add(show_Time_date());
     }
 
-    public void updateDateTime()
-    {
-	Thread th = new Thread(new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		while(on)
-		{
-		    date2 = new java.util.Date();
-		    final String dateTime = dateFormat2.format(date2);
-		    /*
-		     * Any updates to the GUI, must also be done
-		     * on the EDT - Event Dispatch Thread.
-		     */
-		    SwingUtilities.invokeLater(new Runnable()
-		    {
-			public void run(){
-			    getShow_time().setText(dateTime);
-			}
-		    });
-		    try {
-			Thread.sleep(1000);
-		    } catch (InterruptedException e) {
-			e.printStackTrace();
-		    }
-		}
-	    }
-	});
-	th.start();
+    private JPanel show_Time_date() {
+
+        getShow_date_time().setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+        setShowTime(new JLabel(""));
+
+        updateDateTime();
+
+        getShow_date_time().add(getShowTime());
+
+        return getShow_date_time();
     }
 
-    /**
-     * @return the show_time
-     */
-    public JLabel getShow_time() {
-
-	return show_time;
+    private void updateDateTime() {
+        Thread th = new Thread(() -> {
+            while (on) {
+                date2 = new java.util.Date();
+                final String dateTime = dateFormat2.format(date2);
+                SwingUtilities.invokeLater(() -> getShowTime().setText(dateTime));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        th.start();
     }
 
-    /**
-     * @param show_time the show_time to set
-     */
-    public void setShow_time(JLabel show_time) {
-	this.show_time = show_time;
+    private JLabel getShowTime() {
+
+        return showTime;
     }
 
-    /**
-     * @return the show_date_time
-     */
-    public JPanel getShow_date_time() {
-	return show_date_time;
+    private void setShowTime(JLabel showTime) {
+        this.showTime = showTime;
     }
 
-    /**
-     * @param show_date_time the show_date_time to set
-     */
-    public void setShow_date_time(JPanel show_date_time) {
-	this.show_date_time = show_date_time;
+    private JPanel getShow_date_time() {
+        return show_date_time;
     }
 
-    /**
-     * @return the label1
-     */
-
-
-    /**
-     * @param label1 the label1 to set
-     */
-
-
-    /**
-     * @return the label
-     */
-    public JLabel getLabel() {
-
-	return label;
-    }
-
-    /**
-     * @param label the label to set
-     */
-    public void setLabel(JLabel label) {
-	this.label = label;
-    }
-
-    /**
-     * @return the panel
-     */
     public JPanel getPanel() {
-	return panel;
+        return panel;
     }
 
-    /**
-     * @param panel the panel to set
-     */
     public void setPanel(JPanel panel) {
-	this.panel = panel;
+        this.panel = panel;
     }
 
-    public void setOff(){
-	on = false;
+    public void setOff() {
+        on = false;
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

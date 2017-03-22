@@ -8,50 +8,47 @@ import java.awt.*;
 
 public class ConditionsAndActionsPanel extends JPanel implements RefreshablePanel {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-    private JSplitPane condsAndConsqsSplitPane = null;
+    private JSplitPane conditionsAndActionsSplitPane = null;
     private RuleLinesPanel conditionsPanel = null;
     private RuleLinesPanel consequencesPanel = null;
-    
+
     public GDLEditor _controller = null;
-    
-    public ConditionsAndActionsPanel(GDLEditor controller){
-	_controller = controller;
-	init();
+
+    ConditionsAndActionsPanel(GDLEditor controller) {
+        _controller = controller;
+        init();
     }
-    
-    public void init(){
-	this.setLayout(new BorderLayout());
-	this.add(getCondsAndConsqsSplitPane());
+
+    public void init() {
+        this.setLayout(new BorderLayout());
+        this.add(getConditionsAndActionsSplitPane());
     }
-    
-    public JSplitPane getCondsAndConsqsSplitPane(){
-	if (condsAndConsqsSplitPane==null){
-	    condsAndConsqsSplitPane = new JSplitPane();
-	    condsAndConsqsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-	    condsAndConsqsSplitPane.setOneTouchExpandable(true);
-	    condsAndConsqsSplitPane.setResizeWeight(0.5);
-	    condsAndConsqsSplitPane.setTopComponent(getConditionsPanel());
-	    condsAndConsqsSplitPane.setBottomComponent(getConsequencesPanel());
-	}
-	return condsAndConsqsSplitPane;
+
+    private JSplitPane getConditionsAndActionsSplitPane() {
+        if (conditionsAndActionsSplitPane == null) {
+            conditionsAndActionsSplitPane = new JSplitPane();
+            conditionsAndActionsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+            conditionsAndActionsSplitPane.setOneTouchExpandable(true);
+            conditionsAndActionsSplitPane.setResizeWeight(0.5);
+            conditionsAndActionsSplitPane.setTopComponent(getConditionsPanel());
+            conditionsAndActionsSplitPane.setBottomComponent(getConsequencesPanel());
+        }
+        return conditionsAndActionsSplitPane;
     }
-    
-    private RuleLinesPanel getConditionsPanel(){
-	if (conditionsPanel==null){
-	    conditionsPanel = new ConditionRuleLinesPanel(_controller);
-	}
-	return conditionsPanel;
+
+    private RuleLinesPanel getConditionsPanel() {
+        if (conditionsPanel == null) {
+            conditionsPanel = new ConditionRuleLinesPanel(_controller);
+        }
+        return conditionsPanel;
     }
-    
-    private RuleLinesPanel getConsequencesPanel(){
-	if (consequencesPanel==null){
-	    consequencesPanel = new ActionRuleLinesPanel(_controller);
-	}
-	return consequencesPanel;
+
+    private RuleLinesPanel getConsequencesPanel() {
+        if (consequencesPanel == null) {
+            consequencesPanel = new ActionRuleLinesPanel(_controller);
+        }
+        return consequencesPanel;
     }
 
     @Override

@@ -6,6 +6,7 @@ import difflib.Patch;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
@@ -54,7 +55,7 @@ import java.util.List;
 
 public class GDLEditor implements EditorController<Guide> {
 
-    private static String UNKOWN_GUIDE_ID = "unknown";
+    private static String UNKNOWN_GUIDE_ID = "unknown";
     private static String GT_HEADER = "gt";
     private GDLEditorMainPanel _gdlEditorMainPanel = null;
     private ResourceDescription _resourceDescription = null;
@@ -69,11 +70,12 @@ public class GDLEditor implements EditorController<Guide> {
     private Map<String, ResourceDescriptionItem> _details;
     private Map<String, String> _otherDetails;
     private InfoDialog _infoDialog;
-    private String _idGuide = UNKOWN_GUIDE_ID;
-    private String _conceptGTCode;
-    private String _currentGuideLanguageCode = null;
-    private String _originalGuide = null;
+    private String guideId = UNKNOWN_GUIDE_ID;
+    private String conceptGTCode;
+    private String currentGuideLanguageCode = null;
+    private String originalGuide = null;
     private RefreshablePanel _lastRefreshedPanel = null;
+    private Logger logger = LoggerFactory.getLogger(GDLEditor.class);
 
     public GDLEditor() {
     }
@@ -105,7 +107,7 @@ public class GDLEditor implements EditorController<Guide> {
         return newTerm;
     }
 
-    public static String serializeGuide(Guide guide) {
+    private static String serializeGuide(Guide guide) {
         try {
             return GuideUtil.serializeGuide(guide);
         } catch (Exception e) {
@@ -135,9 +137,7 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    // Check if all elements inside map have the same amount of gtcodes as the
-    // ones in the original language, if not, add them
-    private static void check(String originalLang, Map<String, TermDefinition> termDefinitionMap) {
+    private void check(String originalLang, Map<String, TermDefinition> termDefinitionMap) {
         TermDefinition originalTermDefinition =
                 termDefinitionMap.get(originalLang);
         for (Map.Entry<String, TermDefinition> langCode : termDefinitionMap.entrySet()) {
@@ -145,7 +145,7 @@ public class GDLEditor implements EditorController<Guide> {
                 TermDefinition td = langCode.getValue();
                 for (String gtCode : originalTermDefinition.getTerms().keySet()) {
                     if (!td.getTerms().containsKey(gtCode)) {
-                        LoggerFactory.getLogger(GDLEditor.class).warn(
+                        logger.warn(
                                 "Language '" + langCode
                                         + "' does not contain gt code '"
                                         + gtCode + "'. Will be added...");
@@ -190,7 +190,7 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     private static List<String> stringToLines(String str) {
-        final List<String> lines = new ArrayList<String>();
+        final List<String> lines = new ArrayList<>();
         for (String string : str.split("\n")) {
             lines.add(string.trim());
         }
@@ -266,12 +266,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public void saveAs() {
         _gdlEditorMainPanel.requestFocus();
-        runIfOkWithEditorState(new Runnable() {
-            @Override
-            public void run() {
-                new SaveGuideOnFileRSW(null).execute();
-            }
-        });
+        runIfOkWithEditorState(() -> new SaveGuideOnFileRSW(null).execute());
     }
 
     @Override
@@ -282,40 +277,32 @@ public class GDLEditor implements EditorController<Guide> {
 
     public void save() {
         _gdlEditorMainPanel.requestFocus();
-        runIfOkWithEditorState(new Runnable() {
-            @Override
-            public void run() {
-                new SaveGuideOnFileRSW(EditorManager.getLastFileLoaded()).execute();
-            }
-        });
+        runIfOkWithEditorState(() -> new SaveGuideOnFileRSW(EditorManager.getLastFileLoaded()).execute());
     }
 
     public void generateForm() {
         _gdlEditorMainPanel.requestFocus();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!hasActiveRules()) {
-                    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"), GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                String gdlGuide = getSerializedEntity();
-                if (gdlGuide != null) {
-                    CompileGuideSW sw = new CompileGuideSW() {
-                        protected void done() {
-                            getController().compilationFinished(getErrorMsg());
-                            if (getErrorMsg() == null) {
-                                try {
-                                    generateDialogForm(getCompiledGuide(), getGuide());
-                                } catch (InternalErrorException e) {
-                                    ExceptionHandler.handle(e);
-                                }
+        Runnable runnable = () -> {
+            if (!hasActiveRules()) {
+                JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"), GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String gdlGuide = getSerializedEntity();
+            if (gdlGuide != null) {
+                CompileGuideSW sw = new CompileGuideSW() {
+                    protected void done() {
+                        getController().compilationFinished(getErrorMsg());
+                        if (getErrorMsg() == null) {
+                            try {
+                                generateDialogForm(getCompiledGuide(), getGuide());
+                            } catch (InternalErrorException e) {
+                                ExceptionHandler.handle(e);
                             }
                         }
-                    };
-                    sw.execute();
-                    setBusy(GDLEditorLanguageManager.getMessage("Compiling") + "...");
-                }
+                    }
+                };
+                sw.execute();
+                setBusy(GDLEditorLanguageManager.getMessage("Compiling") + "...");
             }
         };
         runIfOkWithEditorState(runnable);
@@ -346,11 +333,6 @@ public class GDLEditor implements EditorController<Guide> {
             dialog.setFormGeneratorController(formGenerator);
             dialog.setVisible(true);
         }
-    }
-
-    public void compile() {
-        new CompileGuideSW().execute();
-        setBusy(GDLEditorLanguageManager.getMessage("Compiling"));
     }
 
     public void compilationFinished(String msg) {
@@ -386,7 +368,7 @@ public class GDLEditor implements EditorController<Guide> {
         return getReadableGuide().getReadableRules();
     }
 
-    public boolean hasActiveRules() {
+    private boolean hasActiveRules() {
         boolean hasActiveRules = false;
         Iterator<ReadableRule> i = getRenderableRules().values().iterator();
         while (i.hasNext() && !hasActiveRules) {
@@ -421,17 +403,17 @@ public class GDLEditor implements EditorController<Guide> {
         getKeywords();
     }
 
-    public Map<String, String> getOriginalAuthor() {
+    private Map<String, String> getOriginalAuthor() {
         if (_originalAuthor == null) {
-            _originalAuthor = new HashMap<String, String>();
+            _originalAuthor = new HashMap<>();
             getResourceDescription().setOriginalAuthor(_originalAuthor);
         }
         return _originalAuthor;
     }
 
-    public List<String> getOtherContributors() {
+    private List<String> getOtherContributors() {
         if (_otherContributors == null) {
-            _otherContributors = new ArrayList<String>();
+            _otherContributors = new ArrayList<>();
             getResourceDescription().setOtherContributors(_otherContributors);
         }
         return _otherContributors;
@@ -439,7 +421,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public Map<String, ResourceDescriptionItem> getDetails() {
         if (_details == null) {
-            _details = new HashMap<String, ResourceDescriptionItem>();
+            _details = new HashMap<>();
             getResourceDescription().setDetails(_details);
         }
         return _details;
@@ -458,29 +440,23 @@ public class GDLEditor implements EditorController<Guide> {
         return resourceDescriptionItem;
     }
 
-    public Map<String, String> getOtherDetails() {
+    private Map<String, String> getOtherDetails() {
         if (_otherDetails == null) {
-            _otherDetails = new HashMap<String, String>();
+            _otherDetails = new HashMap<>();
             getResourceDescription().setOtherDetails(_otherDetails);
         }
         return _otherDetails;
     }
 
-    public ResourceDescriptionItem getResourceDescriptionItem() {
-        ResourceDescriptionItem resourceDescriptionItem =
-                getResourceDescription().getDetails().get(getCurrentLanguageCode());
-        if (resourceDescriptionItem == null) {
-            resourceDescriptionItem = new ResourceDescriptionItem();
-            getResourceDescription().getDetails().put(
-                    getCurrentLanguageCode(), resourceDescriptionItem);
-        }
-        return resourceDescriptionItem;
+    private ResourceDescriptionItem getResourceDescriptionItem() {
+        return getResourceDescription().getDetails()
+                .computeIfAbsent(getCurrentLanguageCode(), k -> new ResourceDescriptionItem());
     }
 
     public List<String> getKeywords() {
         List<String> keywords = getResourceDescriptionItem().getKeywords();
         if (keywords == null) {
-            keywords = new ArrayList<String>();
+            keywords = new ArrayList<>();
             getResourceDescriptionItem().setKeywords(keywords);
         }
         return keywords;
@@ -566,10 +542,10 @@ public class GDLEditor implements EditorController<Guide> {
 
     private Map<String, TermDefinition> getTermDefinitions() {
         if (_termDefinitions == null) {
-            _termDefinitions = new HashMap<String, TermDefinition>();
+            _termDefinitions = new HashMap<>();
             String lang = getOriginalLanguageCode();
             TermDefinition td = new TermDefinition();
-            td.setTerms(new HashMap<String, Term>());
+            td.setTerms(new HashMap<>());
             _termDefinitions.put(lang, td);
         }
         return _termDefinitions;
@@ -577,7 +553,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public Map<String, TermBinding> getTermBindings() {
         if (_termBindings == null) {
-            _termBindings = new HashMap<String, TermBinding>();
+            _termBindings = new HashMap<>();
         }
         return _termBindings;
     }
@@ -591,7 +567,7 @@ public class GDLEditor implements EditorController<Guide> {
         if (termDefinition == null) {
             termDefinition = new TermDefinition();
             termDefinition.setId(language);
-            termDefinition.setTerms(new HashMap<String, Term>());
+            termDefinition.setTerms(new HashMap<>());
             getTermDefinitions().put(language, termDefinition);
         }
         return termDefinition;
@@ -609,18 +585,18 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public String getCurrentLanguageCode() {
-        if (_currentGuideLanguageCode == null) {
+        if (currentGuideLanguageCode == null) {
             String editorLanguage = UserConfigurationManager.instance().getLanguage();
             if (getSupportedLanguageCodes().contains(editorLanguage)) {
-                _currentGuideLanguageCode = editorLanguage;
+                currentGuideLanguageCode = editorLanguage;
             } else {
-                _currentGuideLanguageCode = getOriginalLanguageCode();
+                currentGuideLanguageCode = getOriginalLanguageCode();
             }
         }
-        return _currentGuideLanguageCode;
+        return currentGuideLanguageCode;
     }
 
-    public String getOriginalLanguageCode() {
+    private String getOriginalLanguageCode() {
         CodePhrase originalLanuageCodePhrase = getLanguage().getOriginalLanguage();
         if (originalLanuageCodePhrase == null) {
             String LANGUAGE_TERMINOLOGY = "ISO_639-1";
@@ -631,15 +607,11 @@ public class GDLEditor implements EditorController<Guide> {
         return getLanguage().getOriginalLanguage().getCodeString();
     }
 
-    public void setCurrentGuideLanguageCode(String languageCode) {
-        _currentGuideLanguageCode = languageCode;
-    }
-
     public String createNextLocalCode() {
         return createNextGTCode(true);
     }
 
-    public String createNextGTCode(boolean generateTerm) {
+    String createNextGTCode(boolean generateTerm) {
         String gtCode = generateNextGTCode(generateTerm);
         if (generateTerm) {
             getTerm(gtCode).setText(null);
@@ -652,7 +624,6 @@ public class GDLEditor implements EditorController<Guide> {
         String nextGTCode = GT_HEADER
                 + StringUtils.leftPad("" + (getNextTermNumber()), 4, "0");
         if (generateTerm) {
-            // Generate codes for all terminologies
             for (String langCode : getTermDefinitions().keySet()) {
                 getTerm(langCode, nextGTCode);
             }
@@ -665,7 +636,7 @@ public class GDLEditor implements EditorController<Guide> {
                 .getOriginalLanguage().getCodeString());
         int termCount = 0;
         if (termDefinition.getTerms() != null) {
-            Set<String> gtCodes = new HashSet<String>();
+            Set<String> gtCodes = new HashSet<>();
             gtCodes.addAll(termDefinition.getTerms().keySet());
             for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()) {
                 if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
@@ -679,18 +650,18 @@ public class GDLEditor implements EditorController<Guide> {
                         termCount = codeNum;
                     }
                 } catch (Exception e) {
-                    LoggerFactory.getLogger(this.getClass()).warn("Unable to parse code '" + gtCode + "'");
+                    logger.warn("Unable to parse code '{}'", gtCode);
                 }
             }
         }
         return ++termCount;
     }
 
-    public String getConceptGTCode() {
-        if (_conceptGTCode == null) {
-            _conceptGTCode = createNextLocalCode();
+    private String getConceptGTCode() {
+        if (conceptGTCode == null) {
+            conceptGTCode = createNextLocalCode();
         }
-        return _conceptGTCode;
+        return conceptGTCode;
     }
 
     public Map<String, Term> getCurrentTermsMap() {
@@ -698,32 +669,27 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     @Override
-    public void updateTerm(Term term) {
-        getTermsMap(getCurrentLanguageCode()).put(term.getId(), term);
-    }
-
-    @Override
     public Collection<String> getUsedCodes() {
-        Collection<String> gtCodesUsed = new ArrayList<String>();
+        Collection<String> gtCodesUsed = new ArrayList<>();
         gtCodesUsed.addAll(getGTCodesUsedInDefinitions());
         gtCodesUsed.addAll(getGTCodesUsedInBindings());
         return gtCodesUsed;
     }
 
-    public Map<String, Term> getTermsMap(String langCode) {
+    private Map<String, Term> getTermsMap(String langCode) {
         Map<String, Term> terms = getTermDefinition(langCode).getTerms();
         if (terms == null) {
-            terms = new HashMap<String, Term>();
+            terms = new HashMap<>();
             getTermDefinition(langCode).setTerms(terms);
         }
         return terms;
     }
 
-    public Term getTerm(String gtCode) {
+    Term getTerm(String gtCode) {
         return getTerm(getCurrentLanguageCode(), gtCode);
     }
 
-    public Term getTerm(String langCode, String gtCode) {
+    private Term getTerm(String langCode, String gtCode) {
         Term term = getCurrentTermsMap().get(gtCode);
         if (term == null) {
             Term originalTerm = getTermDefinition(getOriginalLanguageCode())
@@ -746,10 +712,6 @@ public class GDLEditor implements EditorController<Guide> {
     public void setGTName(String gtCode, String text) {
         Term term = getTerm(gtCode);
         term.setText(text);
-    }
-
-    public String getGTDescription(String gtCode) {
-        return getTerm(gtCode).getDescription();
     }
 
     private Guide constructCurrentGuide() throws IllegalStateException {
@@ -775,8 +737,8 @@ public class GDLEditor implements EditorController<Guide> {
             ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) ruleLine;
             ArchetypeReference ar = airl.getArchetypeReference();
             if (ar != null) {
-                Map<String, ElementBinding> elementMap = new HashMap<String, ElementBinding>();
-                List<ExpressionItem> predicateStatements = new ArrayList<ExpressionItem>();
+                Map<String, ElementBinding> elementMap = new HashMap<>();
+                List<ExpressionItem> predicateStatements = new ArrayList<>();
                 for (RuleLine ruleLineAux : airl.getChildrenRuleLines().getRuleLines()) {
                     if (!ruleLineAux.isCommented()) {
                         insertElementInstantiationRuleLinesAndPredicates(elementMap, predicateStatements, ruleLineAux);
@@ -893,7 +855,7 @@ public class GDLEditor implements EditorController<Guide> {
         }
         initGuideVars();
         if (guide.getId() != null) {
-            _idGuide = guide.getId();
+            guideId = guide.getId();
         }
         _resourceDescription = guide.getDescription();
         if (_resourceDescription != null) {
@@ -903,17 +865,17 @@ public class GDLEditor implements EditorController<Guide> {
             _otherDetails = _resourceDescription.getOtherDetails();
         }
         _language = guide.getLanguage();
-        _conceptGTCode = guide.getConcept();
+        conceptGTCode = guide.getConcept();
         _guideOntology = guide.getOntology();
         _termDefinitions = getGuideOntology().getTermDefinitions();
         if (_termDefinitions == null) {
-            _termDefinitions = new HashMap<String, TermDefinition>();
+            _termDefinitions = new HashMap<>();
         } else {
             check(getOriginalLanguageCode(), getTermDefinitions());
         }
         _termBindings = getGuideOntology().getTermBindings();
         if (_termBindings == null) {
-            _termBindings = new HashMap<String, TermBinding>();
+            _termBindings = new HashMap<>();
         }
         _guideOntology.setTermDefinitions(_termDefinitions);
         _guideOntology.setTermBindings(_termBindings);
@@ -936,14 +898,13 @@ public class GDLEditor implements EditorController<Guide> {
         Set<String> codesStringSet = getTermBindings().keySet();
         for (String codeString : codesStringSet) {
             if (getTermBindings().get(codeString).getBindings() == null) {
-                getTermBindings().get(codeString).setBindings(
-                        new HashMap<String, Binding>());
+                getTermBindings().get(codeString).setBindings(new HashMap<>());
             }
         }
     }
 
-    public void updateOriginal() {
-        _originalGuide = getSerializedEntity();
+    private void updateOriginal() {
+        originalGuide = getSerializedEntity();
     }
 
     public String getSerializedEntity() {
@@ -955,24 +916,9 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    @Override
-    public Guide parseEntity(InputStream is) {
-        return parseGuide(is);
-    }
-
-    @Override
-    public String getEntityName() {
-        return GDLEditorLanguageManager.getMessage("Guide");
-    }
-
-    @Override
-    public Collection<String> getSupportedEntityExtensions() {
-        return Collections.singleton("gdl");
-    }
-
-    public List<ExpressionItem> convertToExpressionItems(
+    private List<ExpressionItem> convertToExpressionItems(
             Collection<RuleLine> ruleLines) {
-        List<ExpressionItem> list = new ArrayList<ExpressionItem>();
+        List<ExpressionItem> list = new ArrayList<>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {
                 ExpressionItem ei = ((ExpressionRuleLine) ruleLine).toExpressionItem();
@@ -984,8 +930,8 @@ public class GDLEditor implements EditorController<Guide> {
         return list;
     }
 
-    public List<AssignmentExpression> convertToAssignmentExpressionItems(Collection<RuleLine> ruleLines) {
-        List<AssignmentExpression> list = new ArrayList<AssignmentExpression>();
+    private List<AssignmentExpression> convertToAssignmentExpressionItems(Collection<RuleLine> ruleLines) {
+        List<AssignmentExpression> list = new ArrayList<>();
         for (RuleLine ruleLine : ruleLines) {
             if (!ruleLine.isCommented()) {
                 AssignmentExpression assignmentExpression =
@@ -998,12 +944,12 @@ public class GDLEditor implements EditorController<Guide> {
 
     @Override
     public String getEntityId() {
-        return _idGuide;
+        return guideId;
     }
 
     @Override
     public void setEntityId(String idGuide) {
-        _idGuide = idGuide;
+        guideId = idGuide;
     }
 
     public void changeLanguage(String language) {
@@ -1023,12 +969,12 @@ public class GDLEditor implements EditorController<Guide> {
                 if (term == null || term.getText() == null) {
                     term = getTermToDifferentLanguage(
                             gtCode,
-                            getTermDefinition(_currentGuideLanguageCode).getTerms().get(gtCode),
-                            _currentGuideLanguageCode);
+                            getTermDefinition(currentGuideLanguageCode).getTerms().get(gtCode),
+                            currentGuideLanguageCode);
                     termDefinition.getTerms().put(gtCode, term);
                 }
             }
-            _currentGuideLanguageCode = language;
+            currentGuideLanguageCode = language;
             getResourceDescriptionItem(language);
             EditorManager.getMainMenuBar().refreshLanguageMenu();
             updateReadableGuide(guide);
@@ -1067,7 +1013,7 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    public void refreshCurrentTab() {
+    private void refreshCurrentTab() {
         getEditorPanel().refresh();
     }
 
@@ -1078,17 +1024,7 @@ public class GDLEditor implements EditorController<Guide> {
         } else {
             refreshablePanel = null;
         }
-        runIfOkWithEditorState(comp, new Runnable() {
-            @Override
-            public void run() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshPanel(refreshablePanel);
-                    }
-                });
-            }
-        });
+        runIfOkWithEditorState(comp, () -> SwingUtilities.invokeLater(() -> refreshPanel(refreshablePanel)));
     }
 
     private void refreshPanel(RefreshablePanel refreshablePanel) {
@@ -1110,7 +1046,6 @@ public class GDLEditor implements EditorController<Guide> {
 
     private void runIfOkWithEditorState(Component currentPanel, Runnable pendingRunnable) {
         if (_lastRefreshedPanel instanceof GDLPanel) {
-            //Take care of possible changes made
             GDLPanel gdlPanel = (GDLPanel) _lastRefreshedPanel;
             String guideStr = gdlPanel.getGuideStr();
             new CheckGuideSW(this, guideStr, pendingRunnable).execute();
@@ -1127,7 +1062,6 @@ public class GDLEditor implements EditorController<Guide> {
                     loadLastTab();
                 }
             } catch (Exception e) {
-                //Errors found serializing/parsing/compiling guide, so we do not load the source view
                 loadLastTab();
             }
         } else {
@@ -1162,9 +1096,9 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public void updateGuide(Guide guide) {
-        String auxOriginalGuide = _originalGuide;
+        String auxOriginalGuide = originalGuide;
         setEntity(guide);
-        _originalGuide = auxOriginalGuide;
+        originalGuide = auxOriginalGuide;
     }
 
     private void loadLastTab() {
@@ -1173,14 +1107,14 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     private void initGuideVars() {
-        _idGuide = UNKOWN_GUIDE_ID;
+        guideId = UNKNOWN_GUIDE_ID;
         _resourceDescription = null;
         _originalAuthor = null;
         _details = null;
         _otherContributors = null;
         _otherDetails = null;
         _language = null;
-        _conceptGTCode = null;
+        conceptGTCode = null;
         _guideOntology = null;
         _termDefinitions = null;
         _termBindings = null;
@@ -1189,9 +1123,8 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     private void generateGTCodesForArchetypeBindings(Guide guide) {
-        //Generate gt codes for archetype bindings (if missing)
         if (guide.getDefinition() != null && guide.getDefinition().getArchetypeBindings() != null) {
-            List<String> abCodes = new ArrayList<String>();
+            List<String> abCodes = new ArrayList<>();
             abCodes.addAll(guide.getDefinition().getArchetypeBindings().keySet());
             Collections.sort(abCodes);
             int gtNum = getNextTermNumber();
@@ -1212,16 +1145,16 @@ public class GDLEditor implements EditorController<Guide> {
         try {
             Guide guide = constructCurrentGuide();
             serializedGuide = GuideUtil.serializeGuide(guide);
-        } catch (Exception e) {
-            //Error parsing/serializing guideline
+        } catch (Exception exception) {
+            logger.error("Guideline not serializable while checking for modifications.", exception);
         }
-        return _originalGuide != null && !_originalGuide.equals(serializedGuide);
+        return originalGuide != null && !originalGuide.equals(serializedGuide);
     }
 
-    public void cleanRedundantTerms() {
+    private void cleanRedundantTerms() {
         Collection<String> gtCodesUsed = getGTCodesUsedInGuide();
         for (TermDefinition termDefinition : getTermDefinitions().values()) {
-            Collection<Term> terms = new ArrayList<Term>(termDefinition
+            Collection<Term> terms = new ArrayList<>(termDefinition
                     .getTerms().values());
             for (Term term : terms) {
                 if (!gtCodesUsed.contains(term.getId())) {
@@ -1231,7 +1164,7 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    public Collection<String> getGTCodesUsedInGuide() {
+    private Collection<String> getGTCodesUsedInGuide() {
         TermDefinition td =
                 getTermDefinitions().get(getCurrentLanguageCode());
         if (td != null) {
@@ -1242,14 +1175,14 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public Collection<String> getGTCodesUsedInDefinitions() {
-        Collection<String> gtCodes = new ArrayList<String>();
+        Collection<String> gtCodes = new ArrayList<>();
         gtCodes.add(getConceptGTCode());
         gtCodes.addAll(getRenderableRules().keySet());
         return gtCodes;
     }
 
-    public Collection<String> getGTCodesUsedInBindings() {
-        Collection<String> gtCodes = new HashSet<String>();
+    private Collection<String> getGTCodesUsedInBindings() {
+        Collection<String> gtCodes = new HashSet<>();
         for (TermBinding termBinding : getTermBindings().values()) {
             gtCodes.addAll(termBinding.getBindings().keySet());
         }
@@ -1293,13 +1226,10 @@ public class GDLEditor implements EditorController<Guide> {
                                         .setCompiledGuide(compiledGuide)
                                         .setLastUpdate(Calendar.getInstance().getTime())
                                         .createGuideDTO();
-                        ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)));
-                        try {
+                        try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)))) {
                             output.writeObject(guideDTO);
                         } catch (Exception e) {
                             ExceptionHandler.handle(e);
-                        } finally {
-                            output.close();
                         }
                     }
                 }
@@ -1324,17 +1254,6 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    private Collection<String> getArchetypeBindingCodesUsed() {
-        ArrayList<String> archetypeBindingCodesUsed = new ArrayList<String>();
-        for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()) {
-            if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
-                ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine = (ArchetypeInstantiationRuleLine) ruleLine;
-                archetypeBindingCodesUsed.add(archetypeInstantiationRuleLine.getGTCode());
-            }
-        }
-        return archetypeBindingCodesUsed;
-    }
-
     public ArchetypeElementInstantiationRuleLine addArchetypeElement(
             ArchetypeInstantiationRuleLine airl) {
         ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(airl);
@@ -1349,13 +1268,8 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public void setBusy(String description) {
-        // getEditorPanel().setBusy(true);
         getInfoDialog().changeLoadingText(description);
         getInfoDialog().start();
-    }
-
-    public void changeBusyText(String description) {
-        getInfoDialog().changeLoadingText(description);
     }
 
     private InfoDialog getInfoDialog() {
@@ -1365,7 +1279,7 @@ public class GDLEditor implements EditorController<Guide> {
         return _infoDialog;
     }
 
-    public void setFree() {
+    private void setFree() {
         getInfoDialog().stop();
     }
 

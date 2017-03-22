@@ -7,11 +7,6 @@ import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
 import javax.swing.*;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-07-02
- * Time: 11:15
- */
 public abstract class AbstractPluginPanel extends JPanel implements PluginPanelI, RefreshablePanel {
 
     private GDLEditor gdlEditor;
@@ -20,7 +15,7 @@ public abstract class AbstractPluginPanel extends JPanel implements PluginPanelI
 
     }
 
-    public void setGdlEditor(GDLEditor gdlEditor) {
+    void setGdlEditor(GDLEditor gdlEditor) {
         this.gdlEditor = gdlEditor;
     }
 

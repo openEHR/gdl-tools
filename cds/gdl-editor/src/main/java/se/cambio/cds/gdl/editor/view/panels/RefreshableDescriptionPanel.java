@@ -8,15 +8,12 @@ import java.awt.*;
 
 public class RefreshableDescriptionPanel extends JPanel implements RefreshablePanel{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     private EditorController _controller = null;
     private DescriptionPanel descriptionPanel = null;
 
-    public RefreshableDescriptionPanel(EditorController controller){
+    RefreshableDescriptionPanel(EditorController controller){
         _controller = controller;
         init();
     }

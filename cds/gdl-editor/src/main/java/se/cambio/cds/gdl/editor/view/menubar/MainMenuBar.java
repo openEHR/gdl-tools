@@ -2,7 +2,7 @@
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 import javax.swing.*;
@@ -10,18 +10,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author iago.corbal
- *
-
-
- */
 public class MainMenuBar extends JMenuBar {
 
-
-    /**
-     * Comentario para <code>serialVersionUID</code>
-     */
     private static final long serialVersionUID = 1L;
     private JMenu fileMenu;
     private Action loadGuideAction;
@@ -52,9 +42,6 @@ public class MainMenuBar extends JMenuBar {
     }
 
 
-    /**
-     * This method initializes this
-     */
     private void initialize() {
         this.add(getFileMenu());
         this.add(getLanguageMenu());
@@ -62,7 +49,7 @@ public class MainMenuBar extends JMenuBar {
         this.add(getHelpMenu());
     }
 
-    public JMenu getFileMenu() {
+    private JMenu getFileMenu() {
         if (fileMenu == null) {
             fileMenu = new JMenu();
             fileMenu.setText(GDLEditorLanguageManager.getMessage("File"));
@@ -77,7 +64,7 @@ public class MainMenuBar extends JMenuBar {
         return fileMenu;
     }
 
-    public JMenu getImportMenu(){
+    private JMenu getImportMenu(){
         if (importMenu ==null){
             importMenu = new JMenu(GDLEditorLanguageManager.getMessage("Import"));
             importMenu.add(getImportArchetypeAction());
@@ -86,7 +73,7 @@ public class MainMenuBar extends JMenuBar {
         return importMenu;
     }
 
-    public JMenu getExportMenu(){
+    private JMenu getExportMenu(){
         if (exportMenu ==null){
             exportMenu = new JMenu(GDLEditorLanguageManager.getMessage("Export"));
             exportMenu.add(getSaveGuideAsObjectAction());
@@ -95,56 +82,56 @@ public class MainMenuBar extends JMenuBar {
         return exportMenu;
     }
 
-    public Action getCreateNewGuideAction(){
+    private Action getCreateNewGuideAction(){
         if (createNewGuideAction ==null){
             createNewGuideAction = new NewGuideAction();
         }
         return createNewGuideAction;
     }
 
-    public Action getLoadGuideAction(){
+    private Action getLoadGuideAction(){
         if (loadGuideAction ==null){
             loadGuideAction = new LoadGuideAction();
         }
         return loadGuideAction;
     }
 
-    public Action getSaveGuideAction(){
+    private Action getSaveGuideAction(){
         if (saveGuideAction ==null){
             saveGuideAction = new SaveGuideAction();
         }
         return saveGuideAction;
     }
 
-    public Action getSaveGuideAsAction(){
+    private Action getSaveGuideAsAction(){
         if (saveGuideAsAction ==null){
             saveGuideAsAction = new SaveGuideAsAction();
         }
         return saveGuideAsAction;
     }
 
-    public Action getSaveGuideAsObjectAction(){
+    private Action getSaveGuideAsObjectAction(){
         if (saveGuideAsObjectAction ==null){
             saveGuideAsObjectAction = new SaveGuideAsObjectAction();
         }
         return saveGuideAsObjectAction;
     }
 
-    public Action getExitEditorAction(){
+    private Action getExitEditorAction(){
         if (exitEditorAction ==null){
             exitEditorAction = new ExitEditorAction();
         }
         return exitEditorAction;
     }
 
-    public Action getImportArchetypeAction(){
+    private Action getImportArchetypeAction(){
         if (importArchetypeAction ==null){
             importArchetypeAction = new ImportArchetypeAction();
         }
         return importArchetypeAction;
     }
 
-    public Action getImportTemplateAction(){
+    private Action getImportTemplateAction(){
         if (importTemplateAction ==null){
             importTemplateAction = new ImportTemplateAction();
         }
@@ -152,14 +139,14 @@ public class MainMenuBar extends JMenuBar {
     }
 
 
-    public Action getExportToHTMLAction(){
+    private Action getExportToHTMLAction(){
         if (exportToHTMLAction ==null){
             exportToHTMLAction = new ExportToHTMLAction();
         }
         return exportToHTMLAction;
     }
 
-    public JMenu getLanguageMenu() {
+    private JMenu getLanguageMenu() {
         if (languageMenu == null) {
             languageMenu = new JMenu();
             languageMenu.setText(GDLEditorLanguageManager.getMessage("Language"));
@@ -170,7 +157,8 @@ public class MainMenuBar extends JMenuBar {
     public void refreshLanguageMenu(){
         getLanguageMenu().removeAll();
         ButtonGroup itemGroup = new ButtonGroup();
-        EditorController controller = EditorManager.getActiveEditorController();
+        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        assert controller != null;
         String currentLang= controller.getCurrentLanguageCode();
         Collection<String> supportedLanguageCodes = controller.getSupportedLanguageCodes();
         for (String languageCode : supportedLanguageCodes) {
@@ -188,23 +176,19 @@ public class MainMenuBar extends JMenuBar {
 
     private Map<String, JRadioButtonMenuItem> getLanguageRadioButtonMenuItemsMap(){
         if (_languageRadioButtonMenuItems==null){
-            _languageRadioButtonMenuItems = new HashMap<String, JRadioButtonMenuItem>();
+            _languageRadioButtonMenuItems = new HashMap<>();
         }
         return _languageRadioButtonMenuItems;
     }
 
-    public JRadioButtonMenuItem getLanguageRadioButtonMenuItem(String lang){
-        return getLanguageRadioButtonMenuItemsMap().get(lang);
-    }
-
-    public Action getAddLanguageToGuideAction(){
+    private Action getAddLanguageToGuideAction(){
         if (addLanguageToGuideAction ==null){
             addLanguageToGuideAction = new AddLanguageToGuideAction();
         }
         return addLanguageToGuideAction;
     }
 
-    public JMenu getConfigurationMenu() {
+    private JMenu getConfigurationMenu() {
         if (configurationMenu == null) {
             configurationMenu = new JMenu();
             configurationMenu.setText(GDLEditorLanguageManager.getMessage("Configuration"));
@@ -216,14 +200,14 @@ public class MainMenuBar extends JMenuBar {
         return configurationMenu;
     }
 
-    public Action getConfigurationRepositoriesAction(){
+    private Action getConfigurationRepositoriesAction(){
         if (configRepositoriesAction ==null){
             configRepositoriesAction = new ConfigRepositoriesAction();
         }
         return configRepositoriesAction;
     }
 
-    public Action getCurrentDateAndTimeAction(){
+    private Action getCurrentDateAndTimeAction(){
         if (currentDateAndTimeAction ==null){
             currentDateAndTimeAction = new CurrentDateAndTimeAction();
         }
@@ -243,21 +227,21 @@ public class MainMenuBar extends JMenuBar {
         return helpMenu;
     }
 
-    public Action getViewUserManualAction(){
+    private Action getViewUserManualAction(){
         if (viewUserManualAction ==null){
             viewUserManualAction = new ViewUserManualAction();
         }
         return viewUserManualAction;
     }
 
-    public Action getViewSamplesAction(){
+    private Action getViewSamplesAction(){
         if (viewSamplesAction ==null){
             viewSamplesAction = new ViewSamplesAction();
         }
         return viewSamplesAction;
     }
 
-    public Action getReleaseNotesAction(){
+    private Action getReleaseNotesAction(){
         if (releaseNotesAction ==null){
             releaseNotesAction = new ViewReleaseNotesMenuAction();
         }
@@ -265,7 +249,7 @@ public class MainMenuBar extends JMenuBar {
     }
 
 
-    public Action getAboutGDLEditorAction(){
+    private Action getAboutGDLEditorAction(){
         if (aboutGDLEditorAction ==null){
             aboutGDLEditorAction = new AboutGDLEditorMenuAction();
         }

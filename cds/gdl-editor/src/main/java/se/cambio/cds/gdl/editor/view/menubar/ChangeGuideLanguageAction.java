@@ -13,13 +13,10 @@ import java.awt.event.ActionEvent;
 
 public class ChangeGuideLanguageAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
     private String _language = null;
 
-    public ChangeGuideLanguageAction(String language){
+    ChangeGuideLanguageAction(String language) {
         super();
         _language = language;
         putValue(NAME, _language);
@@ -28,9 +25,6 @@ public class ChangeGuideLanguageAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, _language/*TODO Add desc*/);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         EditorManager.getActiveEditorController().changeLanguage(_language);
     }

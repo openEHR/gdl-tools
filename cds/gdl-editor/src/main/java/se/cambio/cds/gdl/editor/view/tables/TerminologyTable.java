@@ -12,16 +12,13 @@ import java.util.Vector;
 
 public class TerminologyTable extends JTable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JXPathContext _context = null;
 
     public TerminologyTable(JXPathContext context){
         _context = context;
         this.setModel(new TerminologyTableModel());
-        Vector<String> columnIdentifiers = new Vector<String>();
+        Vector<String> columnIdentifiers = new Vector<>();
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Code"));
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Text"));
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Description"));
@@ -32,14 +29,6 @@ public class TerminologyTable extends JTable {
         this.getColumnModel().getColumn(1).setCellEditor(cellEditor);
         this.getColumnModel().getColumn(2).setCellEditor(cellEditor);
         this.putClientProperty("terminateEditOnFocusLost", true);
-        /*
-        this.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                super.focusLost(e);
-                cellEditor.stopCellEditing();
-            }
-        });*/
     }
 
     public TerminologyTableModel getTerminologyTableModel(){
@@ -48,18 +37,14 @@ public class TerminologyTable extends JTable {
 
 
     public boolean isCellEditable(int row, int column) {
-        if (column==0){
-            return false;
-        }else{
-            return true;
-        }
+        return column != 0;
     }
 
     public class TerminologyTableModel extends DefaultTableModel{
         private static final long serialVersionUID = 1L;
     }
 
-    public void updateResults(TerminologyTableCellEditor otce){
+    private void updateResults(TerminologyTableCellEditor otce){
         String value = (String)otce.getCellEditorValue();
         int row = otce.getRow();
         int column = otce.getColumn();
@@ -72,7 +57,7 @@ public class TerminologyTable extends JTable {
         private int _row;
         private int _column;
 
-        public TerminologyTableCellEditor() {
+        TerminologyTableCellEditor() {
             super(new JTextField());
             this.addCellEditorListener(new CellEditorListener() {
                 public void editingStopped(ChangeEvent e) {
@@ -89,7 +74,7 @@ public class TerminologyTable extends JTable {
         public int getRow(){
             return _row;
         }
-        public int getColumn(){
+        int getColumn(){
             return _column;
         }
         public Component getTableCellEditorComponent(JTable table, Object value,

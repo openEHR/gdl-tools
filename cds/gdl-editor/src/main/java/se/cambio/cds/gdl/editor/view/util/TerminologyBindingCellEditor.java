@@ -9,18 +9,19 @@ import se.cambio.cds.gdl.editor.view.tables.BindingTable;
 
 public class TerminologyBindingCellEditor extends DefaultCellEditor {
 
-    private BindingTable _bt = null;
+    private BindingTable bindingTable = null;
 
     public TerminologyBindingCellEditor(BindingTable bt) {
-	super(new JTextField());
-	_bt = bt;
-	this.addCellEditorListener(new CellEditorListener() {
-	    public void editingStopped(ChangeEvent e) {
-		_bt.updateResults();
-	    }
-	    public void editingCanceled(ChangeEvent e) {
-	    }
-	});
+        super(new JTextField());
+        bindingTable = bt;
+        this.addCellEditorListener(new CellEditorListener() {
+            public void editingStopped(ChangeEvent e) {
+                bindingTable.updateResults();
+            }
+
+            public void editingCanceled(ChangeEvent e) {
+            }
+        });
     }
 
     private static final long serialVersionUID = 1L;

@@ -11,34 +11,33 @@ import java.util.Collection;
 
 public class GuideExportPluginDirectory {
 
-    private static GuideExportPluginDirectory _instance;
-    public Collection<GuideExportPlugin> _guideExportPlugins = null;
+    private static GuideExportPluginDirectory instance;
+    private Collection<GuideExportPlugin> guideExportPlugins = null;
 
-    private GuideExportPluginDirectory(){
-        _guideExportPlugins = new ArrayList<GuideExportPlugin>();
-        _guideExportPlugins.add(new DroolsGuideExportPlugin());
+    private GuideExportPluginDirectory() {
+        guideExportPlugins = new ArrayList<>();
+        guideExportPlugins.add(new DroolsGuideExportPlugin());
     }
 
-    public static Collection<GuideExportPlugin> getGuideExportPlugins(){
-        return getDelegate()._guideExportPlugins;
+    private static Collection<GuideExportPlugin> getGuideExportPlugins() {
+        return getDelegate().guideExportPlugins;
     }
 
-    public static byte[] compile(Guide guide) throws InternalErrorException{
-        //TODO Should allow choosing...
+    public static byte[] compile(Guide guide) throws InternalErrorException {
         LoggerFactory.getLogger(GuideExportPluginDirectory.class).info("Compiling ...");
         Collection<GuideExportPlugin> guideExportPlugins = getGuideExportPlugins();
-        if(guideExportPlugins.iterator().hasNext()){
+        if (guideExportPlugins.iterator().hasNext()) {
             return guideExportPlugins.iterator().next().compile(guide);
-        }else{
+        } else {
             return null;
         }
     }
 
-    public static GuideExportPluginDirectory getDelegate(){
-        if (_instance==null){
-            _instance = new GuideExportPluginDirectory();
+    private static GuideExportPluginDirectory getDelegate() {
+        if (instance == null) {
+            instance = new GuideExportPluginDirectory();
         }
-        return _instance;
+        return instance;
     }
 
 }

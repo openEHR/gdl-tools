@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -8,22 +7,18 @@ import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import java.awt.*;
 
-public class DialogPredicateElementAttributeInstanceSelection extends DialogSelection{
+public class DialogPredicateElementAttributeInstanceSelection extends DialogSelection {
 
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 1L;
-    private GDLEditor _controller = null;
 
-    public DialogPredicateElementAttributeInstanceSelection(Window owner, GDLEditor controller, String archetypeId, String templateId) {
+    public DialogPredicateElementAttributeInstanceSelection(Window owner, String archetypeId, String templateId) {
         super(
                 owner,
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
                 NodeDefinitionConversor.getNodeAttributesAndFunctions(archetypeId, templateId, ArchetypeManager.getInstance()),
                 true,
-                new Dimension(500,500));
-        _controller = controller;
+                new Dimension(500, 500));
     }
 }
 /*

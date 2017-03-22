@@ -11,42 +11,29 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
-/**
- * @author icorram
- *
 
-
- */
 public class DialogComboBoxInsert extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
-    private JComboBox comboBox = null;
+    private JComboBox<String> comboBox = null;
 
-    /**
-     * This is the default constructor
-     */
+
     public DialogComboBoxInsert(Window owner, String title, String oldValue, Collection<String> options) {
         super(owner, title, new Dimension(250, 100), true);
         for (String option : options) {
             getComboBox().addItem(option);
         }
-        if (oldValue!=null){
+        if (oldValue != null) {
             getComboBox().setSelectedItem(oldValue);
         }
         initialize();
     }
-    /**
-     * This method initializes this
 
-     */
-    private  void initialize() {
+    private void initialize() {
         registerComponentWithFirstFocus(getComboBox());
         getJPanel().setLayout(new BorderLayout());
         JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        jPanel1.add(new JLabel(getTitle()+": "));
+        jPanel1.add(new JLabel(getTitle() + ": "));
         jPanel1.add(getComboBox());
         getJPanel().add(jPanel1, BorderLayout.CENTER);
         JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -55,13 +42,13 @@ public class DialogComboBoxInsert extends DialogEditor {
         getJPanel().add(jPanel2, BorderLayout.SOUTH);
     }
 
-    public String getSelectedItem(){
+    public String getSelectedItem() {
         return getComboBox().getSelectedItem().toString();
     }
 
-    private JComboBox getComboBox(){
-        if (comboBox==null){
-            comboBox = new JComboBox();
+    private JComboBox<String> getComboBox() {
+        if (comboBox == null) {
+            comboBox = new JComboBox<>();
         }
         return comboBox;
     }

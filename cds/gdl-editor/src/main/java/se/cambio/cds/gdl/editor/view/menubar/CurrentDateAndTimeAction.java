@@ -15,24 +15,18 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogCurrentTimeSelection;
 
 public class CurrentDateAndTimeAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public CurrentDateAndTimeAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("DefaultDateTime")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeD"));
+    CurrentDateAndTimeAction() {
+        super();
+        putValue(NAME, GDLEditorLanguageManager.getMessage("DefaultDateTime") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogCurrentTimeSelection().setVisible(true);
+        new DialogCurrentTimeSelection().setVisible(true);
     }
 }
 /*

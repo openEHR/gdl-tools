@@ -19,12 +19,9 @@ import java.awt.event.KeyEvent;
 
 public class ImportArchetypeAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ImportArchetypeAction(){
+    ImportArchetypeAction(){
         super();
         putValue(NAME, GDLEditorLanguageManager.getMessage("ImportArchetype"));
         putValue(SMALL_ICON, null);
@@ -33,9 +30,6 @@ public class ImportArchetypeAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         try {
             ImportUtils.showImportArchetypeDialogAndAddToRepo(EditorManager.getActiveEditorWindow(), null);

@@ -8,7 +8,6 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Map;
 import java.util.Set;
@@ -115,8 +114,11 @@ public class ExpressionUtil {
             String units = StringUtils.substringAfter(value, ",");
             if (isUcumTime(units)) {
                 OperatorKind operatorKind = getOperatorKind(parentExpressionItem);
+                if (operatorKind == null) {
+                    throw new RuntimeException(format("Operator kind not defined in expression : %s", parentExpressionItem));
+                }
                 if (hasLeftVariableName(parentExpressionItem)) {
-                    String temporalVariableName = getLeftVariableName(elementMap, parentExpressionItem);
+                    String temporalVariableName = getLeftVariableNameFromExpression(elementMap, parentExpressionItem);
                     value = format("DVUtil.calculateDuration(\"%s\",%s,\"%s\")", value, temporalVariableName, operatorKind.getSymbol());
                 } else {
                     value = format("DVUtil.calculateDuration(\"%s\",\"%s\")", value, operatorKind.getSymbol());
@@ -146,30 +148,33 @@ public class ExpressionUtil {
                 ((BinaryExpression) parentExpressionItem).getLeft() instanceof Variable;
     }
 
-    private static String getLeftVariableName(
+    private static String getLeftVariableNameFromExpression(
             Map<String, ArchetypeElementVO> elementMap,
             ExpressionItem parentExpressionItem) {
         if (parentExpressionItem instanceof BinaryExpression) {
             ExpressionItem left = ((BinaryExpression) parentExpressionItem).getLeft();
             if (left instanceof Variable) {
-                Variable var = (Variable) left;
-                String code = var.getCode();
-                if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(code)) {
-                    return "$" + OpenEHRConst.CURRENT_DATE_TIME_ID;
-                } else {
-                    String rmName = getRMName(elementMap, var);
-                    String dvClassName = DVDefSerializer.getDVClassName(rmName);
-                    String variableExp = "$" + code + ".getDataValue()";
-                    if (var.getAttribute() != null) {
-                        variableExp = "((" + dvClassName + ")$" + var.getCode()
-                                + getDataValueMethod(var.getCode()) + ").get"
-                                + capitalize(var.getAttribute()) + "()";
-                    }
-                    return variableExp;
-                }
+                return getLeftVariable(elementMap, (Variable) left);
             }
         }
         throw new RuntimeException(format("Invalid expression %s", parentExpressionItem));
+    }
+
+    private static String getLeftVariable(Map<String, ArchetypeElementVO> elementMap, Variable leftVariable) {
+        String code = leftVariable.getCode();
+        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(code)) {
+            return "$" + OpenEHRConst.CURRENT_DATE_TIME_ID;
+        } else {
+            String rmName = getRMName(elementMap, leftVariable);
+            String dvClassName = DVDefSerializer.getDVClassName(rmName);
+            String variableExp = "$" + code + ".getDataValue()";
+            if (leftVariable.getAttribute() != null) {
+                variableExp = "((" + dvClassName + ")$" + leftVariable.getCode()
+                        + getDataValueMethod(leftVariable.getCode()) + ").get"
+                        + capitalize(leftVariable.getAttribute()) + "()";
+            }
+            return variableExp;
+        }
     }
 
     private static boolean isUcumTime(String ucumUnits) {

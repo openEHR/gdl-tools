@@ -4,23 +4,19 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable.BindingTableModel;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.TermBinding;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class BindingPanel  extends JPanel implements RefreshablePanel {
-    /**
-     *
-     */
+public class BindingPanel extends JPanel implements RefreshablePanel {
+
     private static final long serialVersionUID = 1L;
     private GDLEditor _controller = null;
     private JScrollPane mainScrollPanel;
@@ -30,27 +26,27 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
     private JButton deleteBtn = null;
     private JPanel buttonPanel;
 
-    public BindingPanel(GDLEditor gdlEditor, String terminologyId){
+    BindingPanel(GDLEditor gdlEditor, String terminologyId) {
         _controller = gdlEditor;
         _terminologyId = terminologyId;
         init();
     }
 
-    public void init(){
+    public void init() {
         this.setLayout(new BorderLayout());
         refresh();
     }
 
-    private JScrollPane getMainScrollPanel(){
-        if (mainScrollPanel==null){
+    private JScrollPane getMainScrollPanel() {
+        if (mainScrollPanel == null) {
             mainScrollPanel = new JScrollPane();
             mainScrollPanel.setViewportView(getBindingTable());
         }
         return mainScrollPanel;
     }
 
-    public BindingTable getBindingTable(){
-        if (bindingTable==null){
+    private BindingTable getBindingTable() {
+        if (bindingTable == null) {
             bindingTable =
                     new BindingTable(
                             _controller.getTermBindings().get(_terminologyId).getBindings(),
@@ -59,8 +55,8 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
         return bindingTable;
     }
 
-    public void refresh(){
-        if (mainScrollPanel!=null){
+    public void refresh() {
+        if (mainScrollPanel != null) {
             remove(getMainScrollPanel());
             mainScrollPanel = null;
             bindingTable = null;
@@ -77,25 +73,24 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
 
         Set<String> gtCodes = mapBind.keySet();
 
-        List<String> gtCodesList = new ArrayList<String>();
+        List<String> gtCodesList = new ArrayList<>();
         gtCodesList.addAll(gtCodes);
 
         Collections.sort(gtCodesList);
 
-        for (Iterator<String> iterator = gtCodesList.iterator(); iterator.hasNext();) {
-            String gtCodeString = iterator.next();
+        for (String gtCodeString : gtCodesList) {
             Binding bind = mapBind.get(gtCodeString);
-            Vector<String> v = new Vector<String>();
+            Vector<String> v = new Vector<>();
             v.add(gtCodeString);
             v.add(getCodesCommaSeperated(bind));
-            v.add(bind.getUri()!=null?bind.getUri():"");
+            v.add(bind.getUri() != null ? bind.getUri() : "");
             otm.addRow(v);
 
         }
     }
 
-    private JPanel getButtonPanel(){
-        if (buttonPanel==null){
+    private JPanel getButtonPanel() {
+        if (buttonPanel == null) {
             buttonPanel = new JPanel();
             buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
             buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -111,20 +106,16 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
             addTermBtn.setIcon(GDLEditorImageUtil.ADD_ICON);
             addTermBtn.setToolTipText(GDLEditorLanguageManager.getMessage("AddBinding"));
             addTermBtn.setContentAreaFilled(false);
-            addTermBtn.setPreferredSize(new Dimension(16,16));
+            addTermBtn.setPreferredSize(new Dimension(16, 16));
             addTermBtn.setBorderPainted(false);
-            addTermBtn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    addTermDefinitionInModel();
-                }
-            });
+            addTermBtn.addActionListener(e -> addTermDefinitionInModel());
         }
         return addTermBtn;
     }
 
     private void addTermDefinitionInModel() {
-        if(validCheck(this)){
-            Vector<String> v = new Vector<String>();
+        if (validCheck(this)) {
+            Vector<String> v = new Vector<>();
             v.add("");
             v.add("");
             v.add("");
@@ -138,24 +129,20 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
             deleteBtn.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteBinding"));
             deleteBtn.setIcon(GDLEditorImageUtil.DELETE_ICON);
             deleteBtn.setContentAreaFilled(false);
-            deleteBtn.setPreferredSize(new Dimension(16,16));
+            deleteBtn.setPreferredSize(new Dimension(16, 16));
             deleteBtn.setBorderPainted(false);
-            deleteBtn.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    deleteTermDefinitionInModel();
-                }
-            });
+            deleteBtn.addActionListener(e -> deleteTermDefinitionInModel());
         }
         return deleteBtn;
     }
 
     private void deleteTermDefinitionInModel() {
         Set<String> bindingsCodes = _controller.getTermBindings().keySet();
-        if (bindingsCodes == null || bindingsCodes.size() == 0) {
+        if (bindingsCodes.size() == 0) {
             JOptionPane.showMessageDialog(this,
                     GDLEditorLanguageManager.getMessage("ErrorMessageDeleteTermData"));
         } else {
-            BindingTableModel otm = null;
+            BindingTableModel otm;
             int selection = JOptionPane.showConfirmDialog(this,
                     GDLEditorLanguageManager.getMessage("DeleteTerminologyMessage"),
                     GDLEditorLanguageManager.getMessage("DeleteTermPopupTitle"),
@@ -178,90 +165,52 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
         }
     }
 
-    public boolean validCheck(BindingPanel pannel) {
+    private boolean validCheck(BindingPanel pannel) {
 
-        List<String> emptyCellCheck = null;
-        List<String> gtdoceDuplicateCheck = null;
-        if(pannel.getBindingTable().getRowCount() == 0){
+        List<String> gtdoceDuplicateCheck;
+        if (pannel.getBindingTable().getRowCount() == 0) {
             return true;
         }
         if (pannel.getBindingTable().getCellEditor() != null) {
             pannel.getBindingTable().getCellEditor().stopCellEditing();
         }
-        gtdoceDuplicateCheck = new ArrayList<String>();
+        gtdoceDuplicateCheck = new ArrayList<>();
         for (int i = 0; i < pannel.getBindingTable().getRowCount(); i++) {
             String om = pannel.getBindingTable().getValueAt(i, 0).toString();
 
-           /* if (om.trim().length() == 0) {
-                JOptionPane.showMessageDialog(this,
-                        "Code column cannot be empty");
-                return false;
-            }else {*/
-            if (!om.isEmpty()){
+            if (!om.isEmpty()) {
                 gtdoceDuplicateCheck.add(om);
             }
-            //}
         }
 
-        Set<String> set = new HashSet<String>(gtdoceDuplicateCheck);
-        if(set.size() < gtdoceDuplicateCheck.size()){
+        Set<String> set = new HashSet<>(gtdoceDuplicateCheck);
+        if (set.size() < gtdoceDuplicateCheck.size()) {
             JOptionPane.showMessageDialog(this,
                     "Cannot have duplicate Codes");
             return false;
         }
-
-
-        for (int i = 0; i < pannel.getBindingTable().getRowCount(); i++) {
-            emptyCellCheck = new ArrayList<String>();
-            for (int j = 1; j < pannel.getBindingTable().getColumnCount(); j++) {
-                if (pannel.getBindingTable().getColumnCount() >= j) {
-                    String om = pannel.getBindingTable().getValueAt(i, j)
-                            .toString();
-                    if (om.trim().length() == 0) {
-                        emptyCellCheck.add(null);
-                    } else {
-                        emptyCellCheck.add(om);
-                    }
-                }
-            }
-
-            int nullindex = 0;
-            for (String nullcheck : emptyCellCheck) {
-                if (nullcheck == null) {
-                    nullindex++;
-                }
-            }
-            /*
-            if (nullindex > 1) {
-                JOptionPane.showMessageDialog(this,
-                        "Terminology code or Uri both cannot be empty values");
-                return false;
-            } */
-        }
         return true;
     }
 
-    private String getCodesCommaSeperated(Binding binding)
-    {
+    private String getCodesCommaSeperated(Binding binding) {
         List<CodePhrase> phraselist = binding.getCodes();
 
-        List<CodePhrase> newList = new ArrayList<CodePhrase>();
-        if (phraselist!=null) {
+        List<CodePhrase> newList = new ArrayList<>();
+        if (phraselist != null) {
             boolean firstIter = true;
             String returnString = "";
 
-            Set<String> codeSet = new HashSet<String>();
+            Set<String> codeSet = new HashSet<>();
 
 
             for (CodePhrase codePhrase : phraselist) {
-                if(codeSet.add(codePhrase.getCodeString()))
-                {
+                if (codeSet.add(codePhrase.getCodeString())) {
                     newList.add(codePhrase);
 
                 }
             }
 
-            for (Iterator<String> iterSet = codeSet.iterator();iterSet.hasNext();) {
+            for (Iterator<String> iterSet = codeSet.iterator(); iterSet.hasNext(); ) {
                 if (firstIter) {
                     returnString = iterSet.next();
                     firstIter = false;
@@ -274,19 +223,13 @@ public class BindingPanel  extends JPanel implements RefreshablePanel {
             binding.setCodes(newList);
 
             return returnString;
-        }
-        else
-        {
+        } else {
             return "";
         }
     }
 
-    public String getOwnerTabName() {
+    String getOwnerTabName() {
         return _terminologyId;
-    }
-
-    public void setOwnerTabName(String ownerTabName) {
-        this._terminologyId = ownerTabName;
     }
 
 

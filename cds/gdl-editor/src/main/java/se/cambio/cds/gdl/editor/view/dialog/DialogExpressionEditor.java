@@ -32,18 +32,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.StringReader;
 
-/**
- * @author icorram
- */
 public class DialogExpressionEditor extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -2770907170844293126L;
     private JPanel buttonsPanel = null;
     private JPanel mainPanel;
-    private ExpressionRuleLineElement _expressionRuleLineElement = null;
+    private ExpressionRuleLineElement expressionRuleLineElement = null;
     private SelectionPanel selectionPanel;
     private JPanel expressionEditorPanel;
     private JPanel renderedExpressionPanel;
@@ -51,28 +45,21 @@ public class DialogExpressionEditor extends DialogEditor {
     private JTextArea expressionEditorTextComponent;
     private ExpressionItem _expressionItem = null;
     private JButton addElementButton;
-    private boolean _inPredicate;
-    private ArchetypeReference _ar;
+    private boolean inPredicate;
+    private ArchetypeReference archetypeReference;
 
-    /**
-     * This is the default constructor
-     */
     public DialogExpressionEditor(Window owner, ExpressionRuleLineElement expressionRuleLineElement, boolean inPredicate, ArchetypeReference ar) {
         super(owner, GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700, 400), true, true);
-        _expressionRuleLineElement = expressionRuleLineElement;
-        if (_expressionRuleLineElement.getValue() != null) {
-            _expressionItem = _expressionRuleLineElement.getValue();
+        this.expressionRuleLineElement = expressionRuleLineElement;
+        if (this.expressionRuleLineElement.getValue() != null) {
+            _expressionItem = this.expressionRuleLineElement.getValue();
             getExpressionEditorTextComponent().setText(ExpressionUtil.getEditableExpressionString(_expressionItem));
         }
-        _inPredicate = inPredicate;
-        _ar = ar;
+        this.inPredicate = inPredicate;
+        archetypeReference = ar;
         initialize();
     }
 
-
-    /**
-     * This method initializes this
-     */
     private void initialize() {
         getJPanel().setLayout(new BorderLayout());
         getJPanel().add(getMainPanel(), BorderLayout.CENTER);
@@ -87,7 +74,7 @@ public class DialogExpressionEditor extends DialogEditor {
             panelAux.add(getAcceptButton());
             panelAux.add(getCancelButton());
             buttonsPanel.add(panelAux, BorderLayout.CENTER);
-            if (!_inPredicate) {
+            if (!inPredicate) {
                 panelAux = new JPanel(new FlowLayout(FlowLayout.CENTER));
                 panelAux.add(getAddElementButton());
                 buttonsPanel.add(panelAux, BorderLayout.EAST);
@@ -119,10 +106,10 @@ public class DialogExpressionEditor extends DialogEditor {
 
     private void updateSelectionPanel() {
         SelectableNode<Object> node;
-        if (_inPredicate) {
+        if (inPredicate) {
             node = NodeDefinitionConversor.getNodeAttributesAndFunctionsPredicate();
         } else {
-            node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor(), false, _ar);
+            node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor(), false, archetypeReference);
         }
         selectionPanel.changeRootNode(node);
         selectionPanel.getJTree().expand(node);
@@ -210,7 +197,7 @@ public class DialogExpressionEditor extends DialogEditor {
             LoggerFactory.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + e.getMessage());
         }
         if (_expressionItem != null) {
-            String htmlStr = ExpressionUtil.convertToHTMLText(_expressionRuleLineElement, _expressionItem, UserConfigurationManager.instance().getLanguage());
+            String htmlStr = ExpressionUtil.convertToHTMLText(expressionRuleLineElement, _expressionItem, UserConfigurationManager.instance().getLanguage());
             getRenderedExpressionTextComponent().setText(htmlStr);
         } else {
             getRenderedExpressionTextComponent().setText("");
@@ -223,7 +210,6 @@ public class DialogExpressionEditor extends DialogEditor {
     }
 
     private static ExpressionItem parse(String value) throws Exception {
-        //This needs to be done to trick the parser to accept the expression "gtXXXX.attribute"
         value = value.trim();
         if (!value.startsWith("(") || !value.endsWith(")")) {
             value = "(" + value + ")";
@@ -248,7 +234,7 @@ public class DialogExpressionEditor extends DialogEditor {
     private void addElement() {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         DialogElementInstanceSelection dialog =
-                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false, _ar);
+                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false, archetypeReference);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             Object selectedObject = dialog.getSelectedObject();

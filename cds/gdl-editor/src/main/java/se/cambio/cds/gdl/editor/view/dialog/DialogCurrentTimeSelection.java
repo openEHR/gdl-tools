@@ -1,6 +1,8 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import com.toedter.calendar.JDateChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.ClockPanel;
@@ -14,25 +16,16 @@ import java.util.Date;
 
 import static java.lang.String.format;
 
-/**
- * @author icorram
- */
 public class DialogCurrentTimeSelection extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
     private ClockPanel _clockPanel = null;
     private JRadioButton radioButtonDefault = null;
     private JRadioButton radioButtonCustom = null;
     private JDateChooser dateChooser;
-    private static String DEFAULT_VALUE = "default";
     private static String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    private Logger logger = LoggerFactory.getLogger(DialogCurrentTimeSelection.class);
 
-    /**
-     * This is the default constructor
-     */
     public DialogCurrentTimeSelection() {
         super(EditorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("DefaultDateTime"),
@@ -40,9 +33,6 @@ public class DialogCurrentTimeSelection extends DialogEditor {
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
     private void initialize() {
         getJPanel().setLayout(new BorderLayout());
         JPanel panelAux = new JPanel(new BorderLayout());
@@ -123,14 +113,14 @@ public class DialogCurrentTimeSelection extends DialogEditor {
         try {
             UserConfigurationManager.instance().saveConfig();
         } catch (Exception e) {
+            logger.error("Error saving config file", e);
             JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
 
-}  //  @jve:decl-index=0:visual-constraint="124,21"
-
+}
 
 /*
  *  ***** BEGIN LICENSE BLOCK *****

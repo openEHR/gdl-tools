@@ -27,12 +27,9 @@ import java.io.IOException;
 
 public class ExportToHTMLAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
 
-    public ExportToHTMLAction(){
+    ExportToHTMLAction(){
         super();
         putValue(NAME, GDLEditorLanguageManager.getMessage("ExportToHTML")+"...");
         putValue(SMALL_ICON, null);
@@ -40,9 +37,6 @@ public class ExportToHTMLAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         GDLEditor controller = EditorManager.getActiveGDLEditor();
         Guide guide = controller.getEntity();
@@ -50,7 +44,7 @@ public class ExportToHTMLAction extends AbstractAction {
         exportToHTML(EditorManager.getActiveEditorWindow(), guide, controller.getCurrentLanguageCode(), guideHTMLExporter);
     }
 
-    public void exportToHTML(Window owner, Guide guide, String lang,GuideHTMLExporter guideHTMLExporter){
+    private void exportToHTML(Window owner, Guide guide, String lang, GuideHTMLExporter guideHTMLExporter){
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("HTML",new String[]{"html"});
         fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));

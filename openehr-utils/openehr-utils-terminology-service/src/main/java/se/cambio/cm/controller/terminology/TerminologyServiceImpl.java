@@ -1,11 +1,8 @@
 package se.cambio.cm.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
-import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.cm.controller.terminology.plugins.TerminologyServicePlugin;
@@ -21,17 +18,15 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-@Component
 public class TerminologyServiceImpl implements TerminologyService {
 
     private Long lastUpdate = null;
-    private static long MAX_INTERVAL_BEFORE_UPLOAD = 5000;
+    private static final long MAX_INTERVAL_BEFORE_UPLOAD = 5000;
     private Map<String, TerminologyService> terminologyPlugins;
     private Set<String> supportedTerminologies = null;
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
     private static Logger log = LoggerFactory.getLogger(TerminologyServiceImpl.class);
 
-    @Autowired
     public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration) {
         this.terminologyServiceConfiguration = terminologyServiceConfiguration;
     }

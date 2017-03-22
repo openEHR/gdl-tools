@@ -269,9 +269,6 @@ public class DVUtil {
                     || dv1 instanceof DvDuration && dv2 instanceof DvDuration
                     || dv1 instanceof DvProportion && dv2 instanceof DvProportion
                     || dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal;
-//Comparison of DVText always incompatible (not for equals/unequals)
-
-
     }
 
     public static double round(double unroundedDouble, int precision) {
