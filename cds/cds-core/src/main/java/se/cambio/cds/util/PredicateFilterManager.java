@@ -1,11 +1,12 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.TermMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -24,7 +25,7 @@ public class PredicateFilterManager {
 
     private TerminologyService terminologyService;
     private RepeatedArchetypeReferencesFilter repeatedArchetypeReferencesFilter;
-    private Logger logger = Logger.getLogger(PredicateFilterManager.class);
+    private Logger logger = LoggerFactory.getLogger(PredicateFilterManager.class);
 
     @Autowired
     public PredicateFilterManager(
@@ -134,7 +135,7 @@ public class PredicateFilterManager {
             OperatorKind operatorKind = greaterThan ? OperatorKind.GREATER_THAN_OR_EQUAL : OperatorKind.LESS_THAN_OR_EQUAL;
             dv = ElementInstanceCollectionUtil.resolvePredicate(dv, operatorKind, null, date);
             if (dv == null) {
-                Logger.getLogger(PredicateFilterManager.class).warn("No Data Value returned after resolving predicate!");
+                LoggerFactory.getLogger(PredicateFilterManager.class).warn("No Data Value returned after resolving predicate!");
             }
         }
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
@@ -182,7 +183,7 @@ public class PredicateFilterManager {
                     }
                 } catch (InvalidCodeException | UnsupportedTerminologyException e) {
                     archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
-                    logger.warn(e);
+                    logger.warn("Filter isA ", e);
                 }
             }
         }

@@ -1,7 +1,7 @@
 package se.cambio.cds.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.lang.String.format;
+import static org.springframework.util.StringUtils.capitalize;
 
 public class ExpressionUtil {
 
@@ -49,18 +50,7 @@ public class ExpressionUtil {
             }
         } else if (expressionItem instanceof Variable) {
             Variable var = (Variable) expressionItem;
-            String rmName = null;
-            if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())) {
-                rmName = OpenEHRDataValues.DV_DATE_TIME;
-            } else {
-                ArchetypeElementVO aeVO = elementMap.get(var.getCode());
-                if (aeVO == null && !isFunction(var.getAttribute())) {
-                    throw new InternalErrorException(new Exception("Archetype element not found for gtcode '" + var.getCode() + "'"));
-                }
-                if (aeVO != null) {
-                    rmName = aeVO.getRMType();
-                }
-            }
+            String rmName = getRMName(elementMap, var);
             sb.append(getVariableWithAttributeStr(rmName, var));
             if (stats != null) {
                 if (isFunction(var.getAttribute())) {
@@ -77,7 +67,7 @@ public class ExpressionUtil {
             }
             sb.append(stringValue);
         } else if (expressionItem instanceof ConstantExpression) {
-            sb.append(formatConstantValue((ConstantExpression) expressionItem, parentExpressionItem));
+            sb.append(formatConstantValue(elementMap, (ConstantExpression) expressionItem, parentExpressionItem));
         } else if (expressionItem instanceof FunctionalExpression) {
             FunctionalExpression fe = (FunctionalExpression) expressionItem;
             sb.append("(double)Math.")
@@ -98,18 +88,41 @@ public class ExpressionUtil {
         return sb.toString();
     }
 
+    private static String getRMName(Map<String, ArchetypeElementVO> elementMap, Variable var) throws InternalErrorException {
+        String rmName = null;
+        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())) {
+            rmName = OpenEHRDataValues.DV_DATE_TIME;
+        } else {
+            ArchetypeElementVO aeVO = elementMap.get(var.getCode());
+            if (aeVO == null && !isFunction(var.getAttribute())) {
+                throw new InternalErrorException(new Exception("Archetype element not found for gtcode '" + var.getCode() + "'"));
+            }
+            if (aeVO != null) {
+                rmName = aeVO.getRMType();
+            }
+        }
+        return rmName;
+    }
+
 
     /*
      * Parse for units of hr and convert value to milliseconds
      */
-    private static String formatConstantValue(ConstantExpression exp, ExpressionItem parentExpressionItem) throws InternalErrorException {
+    private static String formatConstantValue(
+            Map<String, ArchetypeElementVO> elementMap,
+            ConstantExpression exp,
+            ExpressionItem parentExpressionItem) throws InternalErrorException {
         String value = exp.getValue();
         if (value.contains(",")) {
             String units = StringUtils.substringAfter(value, ",");
             if (isUcumTime(units)) {
-                String temporalVariableName = getTemporalVariableName(parentExpressionItem);
                 OperatorKind operatorKind = getOperatorKind(parentExpressionItem);
-                value = format("DVUtil.calculateDuration(\"%s\",$%s, \"%s\")", value, temporalVariableName, operatorKind.getSymbol());
+                if (hasLeftVariableName(parentExpressionItem)) {
+                    String temporalVariableName = getLeftVariableName(elementMap, parentExpressionItem);
+                    value = format("DVUtil.calculateDuration(\"%s\",%s,\"%s\")", value, temporalVariableName, operatorKind.getSymbol());
+                } else {
+                    value = format("DVUtil.calculateDuration(\"%s\",\"%s\")", value, operatorKind.getSymbol());
+                }
             } else {
                 throw new IllegalArgumentException(format("Unknown time units in value '%s'", value));
             }
@@ -129,18 +142,36 @@ public class ExpressionUtil {
         }
     }
 
-    private static String getTemporalVariableName(ExpressionItem parentExpressionItem) {
-        String variable = OpenEHRConst.CURRENT_DATE_TIME_ID;
+    private static boolean hasLeftVariableName(
+            ExpressionItem parentExpressionItem) throws InternalErrorException {
+        return (parentExpressionItem instanceof BinaryExpression) &&
+                ((BinaryExpression) parentExpressionItem).getLeft() instanceof Variable;
+    }
+
+    private static String getLeftVariableName(
+            Map<String, ArchetypeElementVO> elementMap,
+            ExpressionItem parentExpressionItem) throws InternalErrorException {
         if (parentExpressionItem instanceof BinaryExpression) {
             ExpressionItem left = ((BinaryExpression) parentExpressionItem).getLeft();
             if (left instanceof Variable) {
-                String code = ((Variable) left).getCode();
-                if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(code)) {
-                    variable = code + ".getDataValue()";
+                Variable var = (Variable) left;
+                String code = var.getCode();
+                if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(code)) {
+                    return "$" + OpenEHRConst.CURRENT_DATE_TIME_ID;
+                } else {
+                    String rmName = getRMName(elementMap, var);
+                    String dvClassName = DVDefSerializer.getDVClassName(rmName);
+                    String variableExp = "$" + code + ".getDataValue()";
+                    if (var.getAttribute() != null) {
+                        variableExp = "((" + dvClassName + ")$" + var.getCode()
+                                + getDataValueMethod(var.getCode()) + ").get"
+                                + capitalize(var.getAttribute()) + "()";
+                    }
+                    return variableExp;
                 }
             }
         }
-        return variable;
+        throw new RuntimeException(format("Invalid expression %s", parentExpressionItem));
     }
 
     private static boolean isUcumTime(String ucumUnits) {
@@ -155,7 +186,7 @@ public class ExpressionUtil {
     }
 
     public static String getVariableWithAttributeStr(String rmName, Variable var) {
-        Logger.getLogger(DVUtil.class).debug("Var.code: " + var.getCode() + ", attr: " + var.getAttribute());
+        LoggerFactory.getLogger(DVUtil.class).debug("Var.code: " + var.getCode() + ", attr: " + var.getAttribute());
         String ret = null;
         String dvClassName = null;
         if (rmName != null) {

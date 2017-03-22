@@ -1,9 +1,7 @@
 package se.cambio.cds.model.facade.execution.drools;
 
-import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
@@ -18,15 +16,15 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-@Component
-@Profile("rule-drools-engine")
 public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
+
+    private DroolsExecutionManager droolsExecutionManager;
+
+    public DroolsRuleEngineFacadeDelegate(DroolsExecutionManager droolsExecutionManager) {
+        this.droolsExecutionManager = droolsExecutionManager;
+    }
 
     public RuleExecutionResult execute(
             String ehrId,
@@ -34,7 +32,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
             Collection<ArchetypeReference> archetypeReferences,
             Calendar date)
             throws InternalErrorException, PatientNotFoundException {
-        final HashSet<Object> workingMemoryObjects = new HashSet<Object>();
+        final HashSet<Object> workingMemoryObjects = new HashSet<>();
         for (ArchetypeReference archetypeReference : archetypeReferences) {
             workingMemoryObjects.addAll(archetypeReference.getElementInstancesMap().values());
             workingMemoryObjects.add(archetypeReference);
@@ -42,11 +40,11 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
 
         final ExecutionLogger executionLogger = new ExecutionLogger();
         if (!guides.isEmpty()) {
-            Logger.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
-            DroolsExecutionManager.executeGuides(
+            LoggerFactory.getLogger(DroolsRuleEngineFacadeDelegate.class).debug("Executing " + guides.size() + " guides using " + workingMemoryObjects.size() + " objects.");
+            droolsExecutionManager.executeGuides(
                     guides, date, workingMemoryObjects, executionLogger);
         }
-        final Set<ArchetypeReference> modifiedArhetypeReferences = new HashSet<ArchetypeReference>();
+        final Set<ArchetypeReference> modifiedArhetypeReferences = new HashSet<>();
         //Search for modified elements
         for (ElementInstance elementInstance : executionLogger.getElementInstancesSet()) {
             modifiedArhetypeReferences.add(elementInstance.getArchetypeReference());
@@ -64,17 +62,17 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
 
     @Override
     public void cancelExecution() {
-        DroolsExecutionManager.cancelCurrentExecution();
+        droolsExecutionManager.cancelCurrentExecution();
     }
 
     @Override
     public void clearCache() {
-        DroolsExecutionManager.clearCache();
+        droolsExecutionManager.clearCache();
     }
 
     @Override
     public void setUseCache(boolean useCache) {
-        DroolsExecutionManager.setUseCache(useCache);
+        droolsExecutionManager.setUseCache(useCache);
     }
 
     @Override

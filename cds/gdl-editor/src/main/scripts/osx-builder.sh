@@ -1,15 +1,17 @@
 #Expected input parameter: the release zip file (format gdl-editor-{VERSION}-bundle.zip)
 #i.e. ./osx-builder.sh ../../../target/gdl-editor-1.2.3-bundle.zip
+#More info: http://centerkey.com/mac/java/
 
 FOLDERNAME=$(basename "$1")
 FOLDERNAME="${FOLDERNAME%-*}"
 VERSION="${FOLDERNAME##*-}"
 BIN_NAME="GDLEditor"
+INIT_CLASS=se.cambio.cds.gdl.editor.view.InitGDLEditor
 unzip $1
 mkdir -p package/macosx
-cp ../resources/img/GDLEditor.icns package/macosx
+cp ../resources/img/$BIN_NAME.icns package/macosx
 $JAVA_HOME/bin/javapackager -deploy -native dmg \
--srcFiles $FOLDERNAME -appclass se.cambio.cds.gdl.editor.view.InitGDLEditor -name $BIN_NAME \
+-srcFiles $FOLDERNAME -appclass $INIT_CLASS -name $BIN_NAME \
 -outdir deploy -outfile $BIN_NAME -v
 rm -r package
 rm -r $FOLDERNAME

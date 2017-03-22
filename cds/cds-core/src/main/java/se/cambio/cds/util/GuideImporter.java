@@ -1,10 +1,11 @@
 package se.cambio.cds.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
@@ -19,10 +20,10 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 import se.cambio.cds.gdl.model.readable.util.RulePriorityComparator;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -34,14 +35,14 @@ public class GuideImporter {
     private TermDefinition termDefinition;
     private ArchetypeManager archetypeManager;
     private Map<String, GTCodeDefiner> gtCodeElementMap;
-    private static Logger log = Logger.getLogger(GuideImporter.class);
+    private static Logger log = LoggerFactory.getLogger(GuideImporter.class);
 
     public GuideImporter(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
     }
 
     public ReadableGuide importGuide(Guide guide, String language) throws InternalErrorException {
-        Logger.getLogger(GuideImporter.class).debug("Importing guide: " + guide.getId() + ", lang=" + language);
+        LoggerFactory.getLogger(GuideImporter.class).debug("Importing guide: " + guide.getId() + ", lang=" + language);
         GuideDefinition guideDefinition = guide.getDefinition();
         termDefinition = getTermDefinition(guide, language);
         readableGuide = new ReadableGuide(termDefinition, archetypeManager);

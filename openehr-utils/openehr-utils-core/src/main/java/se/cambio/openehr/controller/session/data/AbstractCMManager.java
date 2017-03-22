@@ -1,6 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.CMElementComparator;
@@ -12,18 +13,13 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractCMManager<E extends CMElement> {
 
     private Map<String, E> cmElementMap;
     private boolean useCache = true;
-    private Logger logger = Logger.getLogger(AbstractCMManager.class);
+    private Logger logger = LoggerFactory.getLogger(AbstractCMManager.class);
     private CachedCMManager cachedCMManager;
 
     public AbstractCMManager() {

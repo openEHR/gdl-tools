@@ -1,15 +1,15 @@
 package se.cambio.cds.model.execution;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
-import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @Profile("rule-jgdl-engine")
 public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
-    private static Logger LOGGER = Logger.getLogger(JGDLRuleEngine.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(JGDLRuleEngine.class);
     private Map<String, Guide> guideCache = new ConcurrentHashMap<>();
     private boolean useCache = true;
     private GDLParser parser = new GDLParser();
@@ -63,7 +63,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
                 compiledGuides.add(guide);
             }
         } catch (Exception e) {
-            LOGGER.error(e);
+            LOGGER.error("Error during execution ", e);
         }
 
         List<DataInstance> dataInstances = toDataInstanceList(archetypeReferences);

@@ -1,8 +1,9 @@
 package se.cambio.cm.controller.terminology.plugins;
 
-import org.apache.log4j.Logger;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.openehr.util.exceptions.*;
@@ -22,11 +23,10 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     private Map<String, ArrayList<String>> parentsMap = null;
     private Map<String, ArrayList<String>> childrenMap = null;
     private Map<String, String> descriptionsMap = null;
-    private static Logger log = Logger.getLogger(CSVTerminologyServicePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(CSVTerminologyServicePlugin.class);
     private TerminologyConfigVO terminologyConfig;
 
-    public CSVTerminologyServicePlugin(
-            TerminologyConfigVO terminologyConfig) {
+    public CSVTerminologyServicePlugin(TerminologyConfigVO terminologyConfig) {
         this.terminologyConfig = terminologyConfig;
     }
 

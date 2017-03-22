@@ -1,9 +1,9 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.jaxb.am.FlatArchetype;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
@@ -128,7 +128,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
 
     public Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO) throws InternalErrorException {
         if (!CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())){
-            Logger.getLogger(Archetypes.class).warn("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'");
+            LoggerFactory.getLogger(Archetypes.class).warn("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'");
             return null;
         }
         if (archetypeDTO.getAom() == null){

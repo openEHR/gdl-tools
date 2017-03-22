@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.model.readable.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.PredicateRuleLine;
@@ -33,7 +33,7 @@ public class ReadableArchetypeReferencesUtil {
                 return name;
             }
         }
-        Logger.getLogger(ArchetypeReference.class).warn("Unknown name for AR '"+airl+"'");
+        LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown name for AR '"+airl+"'");
         return "*UNKNOWN*";
     }
 

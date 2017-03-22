@@ -38,13 +38,26 @@ public class DvUtilTest {
 
     @Test
     public void shouldCalculateDurationAgainstDateTime() {
-        Double aDouble = DVUtil.calculateDurationAgainstDateTime("365, d", new DvDateTime("2016-01-01T12:00:00"), "-");
+        Double aDouble = DVUtil.calculateDurationAgainstDvTemporal("365, d", new DvDateTime("2016-01-01T12:00:00"), "-");
         assertThat(aDouble, equalTo(3.1536E10));
     }
 
     @Test
     public void shouldCalculateDurationAgainstDateTimeWithDouble() {
-        Double aDouble = DVUtil.calculateDurationAgainstDateTime("365.0,d", new DvDateTime("2016-01-01T12:00:00"), "-");
+        Double aDouble = DVUtil.calculateDurationAgainstDvTemporal("365.0,d", new DvDateTime("2016-01-01T12:00:00"), "-");
         assertThat(aDouble, equalTo(3.1536E10));
+    }
+
+    @Test
+    public void shouldCalculateDurationAgainstStringDateTime() {
+        Double aDouble = DVUtil.calculateDuration("1,d", "2016-01-01T12:00:00", "-");
+        Double bDouble = DVUtil.calculateDurationAgainstDvTemporal("1, d", new DvDateTime("2016-01-01T12:00:00"), "-");
+        assertThat(aDouble, equalTo(bDouble));
+    }
+
+    @Test
+    public void shouldCalculateDurationAgainstDoubleValue() {
+        Double aDouble = DVUtil.calculateDuration("1,d", 1, "-");
+        assertThat(aDouble, equalTo(8.64E7));
     }
 }

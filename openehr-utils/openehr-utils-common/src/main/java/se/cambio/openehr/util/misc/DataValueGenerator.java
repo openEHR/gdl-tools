@@ -1,7 +1,6 @@
 package se.cambio.openehr.util.misc;
 
 import com.rits.cloning.Cloner;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
@@ -14,6 +13,8 @@ import org.openehr.rm.datatypes.quantity.datetime.DvTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.DvText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -22,14 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-/**
- * User: iago.corbal
- * Date: 2013-11-29
- * Time: 08:52
- */
+
 public class DataValueGenerator {
 
     private final static Map<String, DataValue> dataValueMap;
+
+    private static Logger logger = LoggerFactory.getLogger(DataValueGenerator.class);
+
 
     /*
      * Initiate the mapping between ReferenceModelName and concrete dataValue
@@ -127,7 +127,7 @@ public class DataValueGenerator {
             }else if ("value".equals(attributeName) && value instanceof Double){
                 cal.setTimeInMillis(((Double)value).longValue());
             }else{
-                Logger.getLogger(DataValueGenerator.class).warn("Wrong attribute name or class creating DvDateTime with value = '"+value+"'");
+                logger.warn("Wrong attribute name or class creating DvDateTime with value = '"+value+"'");
             }
         }
         return toDvDateTime(cal);
@@ -156,7 +156,7 @@ public class DataValueGenerator {
             }else if (value instanceof Double){
                 magnitude = ((Double)value).intValue();
             }else{
-                Logger.getLogger(DataValueGenerator.class).warn("Unkown class for count: "+value.getClass().getName());
+                logger.warn("Unkown class for count: "+value.getClass().getName());
             }
         }
         return new DvCount(magnitude);

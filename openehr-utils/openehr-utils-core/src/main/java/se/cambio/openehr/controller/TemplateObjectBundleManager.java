@@ -3,9 +3,9 @@ package se.cambio.openehr.controller;
 import openEHR.v1.template.TEMPLATE;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.log4j.Logger;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.template.OETParser;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.TemplateFlattener;
@@ -31,7 +31,7 @@ public class TemplateObjectBundleManager {
             obj = SerializationUtils.deserialize(templateDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)){
-            Logger.getLogger(TemplateObjectBundleManager.class).info("Parsing template '"+templateDTO.getId()+"'...");
+            LoggerFactory.getLogger(TemplateObjectBundleManager.class).info("Parsing template '"+templateDTO.getId()+"'...");
             long startTime = System.currentTimeMillis();
             try{
                 generateTemplateData();
@@ -42,7 +42,7 @@ public class TemplateObjectBundleManager {
                 throw new InternalErrorException(new Exception("Failed to parse template '"+templateDTO.getId()+"'", e));
             }
             long endTime = System.currentTimeMillis();
-            Logger.getLogger(TemplateObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
+            LoggerFactory.getLogger(TemplateObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
         }else{
             correctlyParsed = true;
         }

@@ -1,7 +1,6 @@
 package se.cambio.openehr.controller;
 
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.log4j.Logger;
 import org.openehr.adl.flattener.ArchetypeFlattener;
 import org.openehr.adl.parser.AdlDeserializer;
 import org.openehr.adl.rm.OpenEhrRmModel;
@@ -9,6 +8,7 @@ import org.openehr.am.archetype.Archetype;
 import org.openehr.jaxb.am.DifferentialArchetype;
 import org.openehr.jaxb.am.FlatArchetype;
 import org.openehr.jaxb.rm.ArchetypeId;
+import org.slf4j.LoggerFactory;
 import se.acode.openehr.parser.ADLParser;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
@@ -33,7 +33,7 @@ public class ArchetypeObjectBundleManager {
             obj = SerializationUtils.deserialize(archetypeDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)) {
-            Logger.getLogger(ArchetypeObjectBundleManager.class).info("Parsing archetype '" + archetypeDTO.getId() + "'...");
+            LoggerFactory.getLogger(ArchetypeObjectBundleManager.class).info("Parsing archetype '" + archetypeDTO.getId() + "'...");
             long startTime = System.currentTimeMillis();
             try {
                 if (CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
@@ -48,7 +48,7 @@ public class ArchetypeObjectBundleManager {
                 throw new InternalErrorException(new Exception("Failed to parse archetype '" + archetypeDTO.getId() + "'", e));
             }
             long endTime = System.currentTimeMillis();
-            Logger.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
+            LoggerFactory.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
         } else {
             correctlyParsed = true;
         }

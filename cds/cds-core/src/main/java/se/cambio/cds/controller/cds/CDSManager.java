@@ -1,7 +1,7 @@
 package se.cambio.cds.controller.cds;
 
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -261,11 +261,11 @@ public class CDSManager {
             if (eventTimePath != null) {
                 String eventTimeElementId = archetypeReference.getIdArchetype() + eventTimePath;
                 if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)) {
-                    Logger.getLogger(CDSManager.class).info("Adding event path '" + eventTimeElementId + "' for archetype '" + archetypeReference.getIdArchetype() + "'!");
+                    LoggerFactory.getLogger(CDSManager.class).info("Adding event path '" + eventTimeElementId + "' for archetype '" + archetypeReference.getIdArchetype() + "'!");
                     new GeneratedElementInstance(eventTimeElementId, null, archetypeReference, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 }
             } else {
-                Logger.getLogger(CDSManager.class).warn("Could not find event path for archetype '" + archetypeReference.getIdArchetype() + "'!");
+                LoggerFactory.getLogger(CDSManager.class).warn("Could not find event path for archetype '" + archetypeReference.getIdArchetype() + "'!");
             }
         }
     }

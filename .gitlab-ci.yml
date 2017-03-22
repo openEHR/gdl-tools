@@ -6,11 +6,10 @@ stages:
   - publish
   
 maven-build-snapshot:
-    image: maven:3-jdk-8
+    image: gitlab.cambiocds.com:4567/tools/docker-builder
     stage: build
     script:
-        - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
-        - mvn clean package -B -P nexus
+        - mvn clean package sonar:sonar -P sonar
     artifacts:
         paths:
             - cds/gdl-editor/target/*.zip
@@ -19,11 +18,10 @@ maven-build-snapshot:
         - tags
 
 maven-build-tag:
-    image: maven:3-jdk-8
+    image: gitlab.cambiocds.com:4567/tools/docker-builder
     stage: build
     script:
-        - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
-        - mvn clean deploy -B -P nexus
+        - mvn clean deploy
     artifacts:
         paths:
             - cds/gdl-editor/target/*.zip
@@ -31,22 +29,14 @@ maven-build-tag:
         - tags
 
 release:
-    image: maven:3-jdk-8
+    image: gitlab.cambiocds.com:4567/tools/docker-builder
     stage: release
     when: manual
-    before_script:
-        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-        - eval $(ssh-agent -s)
-        - ssh-add <(echo "$SSH_PRIVATE_KEY")
-        - mkdir -p ~/.ssh
-        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     script:
-        - git config --global user.email xxxx@xxxx.xx
-        - git remote set-url origin $(echo $CI_BUILD_REPO | perl -pe 's#.*@(.+?(\:\d+)?)/#git@\1:#')
+        - git remote set-url origin $(echo $CI_BUILD_REPO | sed -e 's/[^@]\+@\([^\/]\+\)\//git@\1\:/')
         - git checkout -b release-$CURRENT_VERSION
         - git push -u origin release-$CURRENT_VERSION
-        - echo $MAVEN_SETTINGS > $HOME/.m2/settings.xml
-        - mvn versions:set -DnewVersion=$CURRENT_VERSION -P nexus
+        - mvn versions:set -DnewVersion=$CURRENT_VERSION
         - git commit -a -m "Changing to version "$CURRENT_VERSION
         - git tag $CURRENT_VERSION
         - git push origin $CURRENT_VERSION --tags

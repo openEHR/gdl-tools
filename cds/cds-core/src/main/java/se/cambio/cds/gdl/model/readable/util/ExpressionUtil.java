@@ -50,7 +50,8 @@ public class ExpressionUtil {
     public static String getEditableExpressionString(ExpressionItem expressionItem) {
         if (expressionItem instanceof Variable) {
             Variable var = (Variable) expressionItem;
-            return "$" + var.getCode() + "." + var.getAttribute();
+            String attributePostfix = var.getAttribute() != null ? "." + var.getAttribute() : "";
+            return "$" + var.getCode() + attributePostfix;
         } else if (expressionItem instanceof BinaryExpression) {
             BinaryExpression be = (BinaryExpression) expressionItem;
             return "(" + getEditableExpressionString(be.getLeft()) + " " + be.getOperator().getSymbol() + " " + getEditableExpressionString(be.getRight()) + ")";

@@ -379,7 +379,7 @@ public class RuleElementEditor {
             }
             ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
             DialogExpressionEditor dialog =
-                    new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), archetypeElementVO, arle, inPredicate, ar);
+                    new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), arle, inPredicate, ar);
             dialog.setVisible(true);
             if (dialog.getAnswer()){
                 ExpressionItem expressionItem = dialog.getExpressionItem();

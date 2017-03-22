@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.BinaryExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -92,7 +92,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
                 String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
                 sb.append(name + "." + attribute + " " + pacorl.getValue().getSymbol() + " " + ere.toString());
             } else {
-                Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + paearle.toString() + "'");
+                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + paearle.toString() + "'");
                 sb.append("*UNKNOWN PREDICATE*");
             }
         }

@@ -1,7 +1,8 @@
 package se.cambio.cds.util;
 
-import org.apache.log4j.Logger;
 import org.drools.core.spi.KnowledgeHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -17,41 +18,43 @@ public class ExecutionLogger {
     private boolean _halt = false;
     private Set<ElementInstance> _elementInstancesSet = null;
     private long _startTime = 0;
+    private static Logger logger = LoggerFactory.getLogger(ExecutionLogger.class);
 
-    public ExecutionLogger(){
+
+    public ExecutionLogger() {
         _startTime = System.currentTimeMillis();
     }
 
 
-    public void addLog(KnowledgeHelper drools, ElementInstance elementInstance){
+    public void addLog(KnowledgeHelper drools, ElementInstance elementInstance) {
         getElementInstancesSet().add(elementInstance);
         final ExecutionLog executionLog =
                 new ExecutionLog(
                         drools.getRule().getName(),
                         elementInstance.getArchetypeReference().getIdTemplate(),
                         elementInstance.getId(),
-                        elementInstance.getDataValue()!=null?elementInstance.getDataValue().serialise():null);
+                        elementInstance.getDataValue() != null ? elementInstance.getDataValue().serialise() : null);
         getLog().add(executionLog);
         //TODO This should not be done in the logger
         checkForExecutionTimeout(drools);
     }
 
     private void checkForExecutionTimeout(KnowledgeHelper drools) {
-        if (!_halt){
-            long executionTime = (System.currentTimeMillis()-_startTime);
+        if (!_halt) {
+            long executionTime = (System.currentTimeMillis() - _startTime);
             if (!_executionTimedOut) {
-                _executionTimedOut = executionTime> DroolsExecutionManager.getExecutionTimeOut();
+                _executionTimedOut = executionTime > DroolsExecutionManager.DEFAULT_TIMEOUT;
             }
             if (_executionCanceled || _executionTimedOut) {
-                Logger.getLogger(ExecutionLogger.class).warn("Execution canceled or timed out! (executionTime= "+executionTime+" ms)");
+                logger.warn("Execution canceled or timed out! (executionTime= "+executionTime+" ms)");
                 Map<String, Integer> countMap = new HashMap<String, Integer>();
-                for (ExecutionLog logLine : getLog()){
+                for (ExecutionLog logLine : getLog()) {
                     String firedRule = logLine.getFiredRule();
                     int count = countMap.containsKey(firedRule) ? countMap.get(firedRule) : 0;
                     countMap.put(firedRule, count + 1);
                 }
-                for (String firedRule:countMap.keySet()){
-                    Logger.getLogger(ExecutionLogger.class).info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
+                for (String firedRule : countMap.keySet()) {
+                    logger.info("Executed "+firedRule+" ("+countMap.get(firedRule)+")");
                 }
                 drools.halt();
                 _halt = true;
@@ -59,36 +62,36 @@ public class ExecutionLogger {
         }
     }
 
-    public List<ExecutionLog> getLog(){
-        if (_log == null){
-            _log = new ArrayList<ExecutionLog>();
+    public List<ExecutionLog> getLog() {
+        if (_log == null) {
+            _log = new ArrayList<>();
         }
         return _log;
     }
 
-    public void setFiredRules(List<String> firedRules){
+    public void setFiredRules(List<String> firedRules) {
         _firedRules = firedRules;
     }
 
-    public List<String> getFiredRules(){
+    public List<String> getFiredRules() {
         return _firedRules;
     }
 
-    public void cancelExecution(){
+    public void cancelExecution() {
         _executionCanceled = true;
     }
 
-    public boolean executionCanceled(){
+    public boolean executionCanceled() {
         return _executionCanceled;
     }
 
-    public boolean executionTimedOut(){
+    public boolean executionTimedOut() {
         return _executionTimedOut;
     }
 
-    public Set<ElementInstance> getElementInstancesSet(){
-        if (_elementInstancesSet==null){
-            _elementInstancesSet = new HashSet<ElementInstance>();
+    public Set<ElementInstance> getElementInstancesSet() {
+        if (_elementInstancesSet == null) {
+            _elementInstancesSet = new HashSet<>();
         }
         return _elementInstancesSet;
     }

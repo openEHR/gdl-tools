@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.BinaryExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -27,7 +27,7 @@ public abstract class ExpressionRuleLine extends RuleLine{
                 }
             }
         }
-        Logger.getLogger(ElementAttributeComparisonConditionRuleLine.class).warn("Element instance not found for"+ this.toString());
+        LoggerFactory.getLogger(ElementAttributeComparisonConditionRuleLine.class).warn("Element instance not found for"+ this.toString());
         return null;
 
     }

@@ -1,7 +1,8 @@
 package se.cambio.cm.configuration;
 
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class TerminologyServiceConfiguration {
 
     private Map<String, TerminologyConfigVO> terminologyConfigMap;
-    private static Logger log = Logger.getLogger(TerminologyServiceConfiguration.class);
+    private static Logger log = LoggerFactory.getLogger(TerminologyServiceConfiguration.class);
 
     @Autowired
     private Environment environment;

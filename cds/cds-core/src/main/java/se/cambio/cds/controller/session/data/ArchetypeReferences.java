@@ -1,14 +1,15 @@
 package se.cambio.cds.controller.session.data;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.export.DVDefSerializer;
-import se.cambio.openehr.controller.session.data.*;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -50,7 +51,7 @@ public class ArchetypeReferences {
                     sb.append(name+"="+DVDefSerializer.getReadableValue(elementInstance.getDataValue(), null));
                     first = false;
                 }else{
-                    Logger.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+ar.toString()+"'");
+                    LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+ar.toString()+"'");
                     sb.append("*UNKNOWN PREDICATE*");
                 }
             }

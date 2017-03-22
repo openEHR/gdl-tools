@@ -1,26 +1,23 @@
 package se.cambio.openehr.controller;
 
-import org.apache.log4j.Logger;
 import org.openehr.jaxb.am.*;
 import org.openehr.jaxb.rm.CodePhrase;
 import org.openehr.jaxb.rm.DvOrdinal;
 import org.openehr.jaxb.rm.TranslationDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.vo.*;
+import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ArchetypeTermMapGenerator;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.ArchetypeProcessingException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GenericObjectBundleADLSManager {
     private final ArchetypeManager archetypeManager;
@@ -33,7 +30,7 @@ public class GenericObjectBundleADLSManager {
     private Collection<UnitVO> unitVOs;
     private Collection<ProportionTypeVO> proportionTypeVOs;
     private Map<String, Map<String, String>> termDefinitionsArchetypeTermMap;
-    private Logger logger = Logger.getLogger(GenericObjectBundleADLSManager.class);
+    private Logger logger = LoggerFactory.getLogger(GenericObjectBundleADLSManager.class);
     private Map<String, List<String>> valueSetsMap;
 
     public GenericObjectBundleADLSManager(FlatArchetype ar, ArchetypeManager archetypeManager){

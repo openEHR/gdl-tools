@@ -1,6 +1,6 @@
 package se.cambio.openehr.view.panels;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.ProgressManager;
@@ -142,7 +142,7 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
                     if (_currentThread != null) {
                         _currentThread.cancel(true);
                     } else {
-                        Logger.getLogger(ProgressBarPanel.class).warn("Stopping progress, but currentThread is not set!");
+                        LoggerFactory.getLogger(ProgressBarPanel.class).warn("Stopping progress, but currentThread is not set!");
                     }
                     stop();
                 }
