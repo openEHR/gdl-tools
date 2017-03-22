@@ -5,71 +5,63 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.openehr.util.exceptions.*;
 import se.cambio.openehr.util.misc.CSVReader;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
-    private String _terminologyId = null;
-    private Map<String, ArrayList<String>> _parentsMap = null;
-    private Map<String, ArrayList<String>> _childrenMap = null;
-    private Map<String, String> _descriptionsMap = null;
+    private Map<String, ArrayList<String>> parentsMap = null;
+    private Map<String, ArrayList<String>> childrenMap = null;
+    private Map<String, String> descriptionsMap = null;
     private static Logger log = LoggerFactory.getLogger(CSVTerminologyServicePlugin.class);
+    private TerminologyConfigVO terminologyConfig;
 
-    public CSVTerminologyServicePlugin(String terminologyId){
-        _terminologyId = terminologyId;
+    public CSVTerminologyServicePlugin(TerminologyConfigVO terminologyConfig) {
+        this.terminologyConfig = terminologyConfig;
     }
 
-    public void init(InputStream is) throws InternalErrorException{
+    @Override
+    public void init(InputStream is) {
         try {
             CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(is, "UTF-8")));
-            _parentsMap = new HashMap<String, ArrayList<String>>();
-            _childrenMap = new HashMap<String, ArrayList<String>>();
-            getDescriptionsMap().clear();
+            parentsMap = new HashMap<>();
+            childrenMap = new HashMap<>();
+            descriptionsMap = new HashMap<>();
             csvReader.readHeaders();
-            while (csvReader.readRecord()) {
-                String id = csvReader.get("id");
-                String description = csvReader.get("text");
-                String parent = csvReader.get("parent");
-                log.debug("id: " + id + ", description: " + description);
-                if (id != null && !id.isEmpty() && description != null
-                        && !description.isEmpty()) {
-                    getDescriptionsMap().put(id, description);
-                    if (parent != null && !parent.isEmpty()) {
-                        // Add parent
-                        ArrayList<String> parents = new ArrayList<String>();
-                        parents.add(parent);
-                        ArrayList<String> hierarchy = _parentsMap.get(parent);
-                        if (hierarchy != null) {
-                            parents.addAll(hierarchy);
-                        }
-                        _parentsMap.put(id, parents);
-                        // Add child to parent
-                        ArrayList<String> children = _childrenMap.get(parent);
-                        if (children == null) {
-                            children = new ArrayList<String>();
-                            _childrenMap.put(parent, children);
-                        }
-                        children.add(id);
-                    }
-                }
-            }
-            log.debug("Total " + getDescriptionsMap().size() + " term(s) loaded..");
+            processCSV(csvReader);
         } catch (Exception e) {
-            log.warn("Failed to initialize the terminology service '" + _terminologyId + "'", e);
-            throw new InternalErrorException(e);
+            String message = format("Failed to initialize the terminology service '%s'", terminologyConfig.getTerminologyId());
+            throw new RuntimeException(message, e);
         }
     }
 
-    public String getTerminologyId() {
-        return _terminologyId;
+    private void processCSV(CSVReader csvReader) throws IOException {
+        while (csvReader.readRecord()) {
+            String id = csvReader.get("id");
+            String description = csvReader.get("text");
+            String parent = csvReader.get("parent");
+            log.debug("id: " + id + ", description: " + description);
+            addTerm(id, description, parent);
+        }
+        log.debug("Total " + descriptionsMap.size() + " term(s) loaded..");
     }
 
+    @Override
+    public String getTerminologyId() {
+        return terminologyConfig.getTerminologyId();
+    }
+
+    @Override
     public boolean isSubclassOf(CodePhrase a, CodePhrase b)
             throws UnsupportedTerminologyException, InvalidCodeException {
         checkTerminologySupported(a);
@@ -77,27 +69,28 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return checkSubclassOf(a, b);
     }
 
+    @Override
     public boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes)
             throws UnsupportedTerminologyException, InvalidCodeException {
         checkTerminologySupported(code);
         boolean ret = false;
         for (CodePhrase cp : codes) {
-            if(!code.getTerminologyId().equals(cp.getTerminologyId())) {
-                // simply ignore instead of stopping the rest codes
+            if (!code.getTerminologyId().equals(cp.getTerminologyId())) {
                 continue;
             }
-            try{
+            try {
                 if (checkSubclassOf(code, cp)) {
                     ret = true;
                     break;
                 }
-            }catch(InvalidCodeException e){
-                log.warn("InvalidCodeException: checkSubclassOf('" + code + "','" + cp.getCodeString() + "') ignored. " + e.getMessage());
+            } catch (InvalidCodeException e) {
+                log.warn(format("InvalidCodeException: checkSubclassOf('%s','%s') ignored. Message: %s", code, cp.getCodeString(), e.getMessage()));
             }
         }
         return ret;
     }
 
+    @Override
     public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
             throws UnsupportedTerminologyException,
             UnsupportedLanguageException, InvalidCodeException {
@@ -105,11 +98,62 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return retrieveAllSubclasses(code, language);
     }
 
+    @Override
+    public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language) throws UnsupportedTerminologyException, UnsupportedLanguageException {
+        return null;
+    }
+
+    @Override
+    public boolean isTerminologySupported(String terminologyId) {
+        return this.terminologyConfig.getTerminologyId().equalsIgnoreCase(terminologyId);
+    }
+
+    @Override
+    public String retrieveTerm(CodePhrase concept, CodePhrase language)
+            throws UnsupportedTerminologyException,
+            UnsupportedLanguageException {
+        String code = cleanUpCode(concept.getCodeString());
+        return retrieveTerm(code, language);
+    }
+
+    @Override
+    public Collection<String> getSupportedTerminologies() {
+        Collection<String> supportedTerminologies = new ArrayList<>();
+        supportedTerminologies.add(terminologyConfig.getTerminologyId());
+        return supportedTerminologies;
+    }
+
+    @Override
+    public boolean isValidCodePhrase(CodePhrase codePhrase) {
+        return isValidTerminologyCode(codePhrase) && !invalidCode(codePhrase.getCodeString());
+    }
+
+    private void addTerm(String id, String description, String parent) {
+        if (!isEmpty(id) && !isEmpty(description)) {
+            descriptionsMap.put(id, description);
+            addParent(id, parent);
+        }
+    }
+
+    private void addParent(String id, String parent) {
+        if (!isEmpty(parent)) {
+            ArrayList<String> parents = new ArrayList<>();
+            parents.add(parent);
+            ArrayList<String> hierarchy = parentsMap.get(parent);
+            if (hierarchy != null) {
+                parents.addAll(hierarchy);
+            }
+            parentsMap.put(id, parents);
+            ArrayList<String> children = childrenMap.computeIfAbsent(parent, k -> new ArrayList<>());
+            children.add(id);
+        }
+    }
+
     private TerminologyNodeVO retrieveAllSubclasses(String code, CodePhrase language)
             throws UnsupportedTerminologyException, UnsupportedLanguageException {
-        //TODO Memory eater!VVVV
-        TerminologyNodeVO node = getNodeForCode(code, language);
-        ArrayList<String> children = _childrenMap.get(code);
+        String cleanCode = cleanUpCode(code);
+        TerminologyNodeVO node = getNodeForCode(cleanCode, language);
+        ArrayList<String> children = childrenMap.get(cleanCode);
         if (children != null) {
             for (String childCode : children) {
                 TerminologyNodeVO nodeAux = retrieveAllSubclasses(childCode, language);
@@ -121,77 +165,46 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return node;
     }
 
-    public List<TerminologyNodeVO> retrieve(String expression, CodePhrase language)
-            throws UnsupportedTerminologyException,
-            UnsupportedLanguageException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
-            throws UnsupportedTerminologyException,
-            UnsupportedLanguageException {
-        if (_terminologyId.equals(terminologyId)){
-            ArrayList<TerminologyNodeVO> allNodes = new ArrayList<TerminologyNodeVO>();
-            for (String code : _descriptionsMap.keySet()) {
-                if (!code.isEmpty() && _parentsMap.get(code)==null){
-                    TerminologyNodeVO node = retrieveAllSubclasses(code, language);
-                    allNodes.add(node);
-                }
-            }
-            return allNodes;
-        }else{
-            throw new UnsupportedTerminologyException(terminologyId+ " not supported");
-        }
-    }
-
     private TerminologyNodeVO getNodeForCode(String code, CodePhrase language)
-            throws UnsupportedTerminologyException, UnsupportedLanguageException{
+            throws UnsupportedTerminologyException, UnsupportedLanguageException {
         String desc = retrieveTerm(code, language);
         if (desc == null) {
             desc = code;
         }
-        return new TerminologyNodeVO(new DvCodedText(desc, new CodePhrase(_terminologyId, code)));
+        return new TerminologyNodeVO(new DvCodedText(desc, new CodePhrase(terminologyConfig.getTerminologyId(), code)));
     }
 
-    public boolean hasPropertyOfValue(CodePhrase concept, CodePhrase property, CodePhrase value)
-            throws UnsupportedTerminologyException, UnknownPropertyException {
-        return false;
-    }
-
-    public List<DvCodedText> retrieveAllPossibleValues(CodePhrase property, CodePhrase language)
-            throws UnsupportedTerminologyException, UnknownPropertyException, UnsupportedLanguageException {
-        return null;
-    }
-
-    public boolean isTerminologySupported(String terminologyId) {
-        return _terminologyId.equalsIgnoreCase(terminologyId);
-    }
 
     private boolean checkSubclassOf(CodePhrase a, CodePhrase b)
             throws UnsupportedTerminologyException, InvalidCodeException {
         if (isValidTerminologyCode(a) && isValidTerminologyCode(b)) {
             String as = a.getCodeString();
             String bs = b.getCodeString();
-            return checkSubclassOf(as,bs);
+            return checkSubclassOf(as, bs);
         } else {
             throw new UnsupportedTerminologyException(a.getTerminologyId() + " not supported");
         }
     }
 
-    protected boolean checkSubclassOf(String as, String bs)
+    private boolean checkSubclassOf(String as, String bs)
             throws UnsupportedTerminologyException, InvalidCodeException {
-        if (invalidCode(as)) {
-            throw new InvalidCodeException("Invalid " + _terminologyId + " code: " + as);
+        String cleanAS = cleanUpCode(as);
+        if (invalidCode(cleanAS)) {
+            throw new InvalidCodeException("Invalid " + terminologyConfig.getTerminologyId() + " code: " + as);
         }
-        if (invalidCode(bs)) {
-            throw new InvalidCodeException("Invalid " + _terminologyId  + " code: " + bs);
+        String cleanBS = cleanUpCode(bs);
+        if (invalidCode(cleanBS)) {
+            throw new InvalidCodeException("Invalid " + terminologyConfig.getTerminologyId() + " code: " + bs);
         }
-        if (as.equals(bs)) {
-            return true;
+        if (terminologyConfig.isSimpleParentCheck()) {
+            return cleanAS.startsWith(cleanBS);
         } else {
-            ArrayList<String> parents = _parentsMap.get(as);
-            return (parents != null && parents.contains(bs));
+            if (cleanAS.equals(cleanBS)) {
+                return true;
+            } else {
+                ArrayList<String> parents = parentsMap.get(cleanAS);
+                return (parents != null && parents.contains(cleanBS));
+            }
         }
     }
 
@@ -207,50 +220,34 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         }
     }
 
-    protected boolean invalidCode(String code) {
-        return false;//getDescriptionsMap().get(code) == null; //TODO Avoid errors with new terms
-    }
-
-    public Map<String, String> getDescriptionsMap() {
-        if (_descriptionsMap == null) {
-            _descriptionsMap = new HashMap<String, String>();
+    boolean invalidCode(String code) {
+        if (terminologyConfig.isCodeExistenceCheck()) {
+            String cleanCode = cleanUpCode(code);
+            return descriptionsMap.get(cleanCode) == null;
+        } else {
+            return false;
         }
-        return _descriptionsMap;
-    }
-
-    public void registerDescription(String code, String description) {
-        getDescriptionsMap().put(code, description);
-    }
-
-    protected String getDescription(String code) {
-        return getDescriptionsMap().get(code);
     }
 
     private boolean isValidTerminologyCode(CodePhrase code) {
         return isTerminologySupported(code.getTerminologyId().getValue());
     }
 
-    public String retrieveTerm(CodePhrase concept, CodePhrase language)
-            throws UnsupportedTerminologyException,
-            UnsupportedLanguageException {
-        return retrieveTerm(concept.getCodeString(), language);
+    protected String retrieveTerm(String code, CodePhrase language) {
+        String cleanCode = cleanUpCode(code);
+        String description = descriptionsMap.get(cleanCode);
+        return description != null ? description : "";
     }
 
-    protected String retrieveTerm(String code, CodePhrase language)
-            throws UnsupportedTerminologyException,
-            UnsupportedLanguageException {
-        String description = getDescription(code);
-        return description != null? description : "";
-    }
-
-    public Collection<String> getSupportedTerminologies() {
-        Collection<String> supportedTerminologies = new ArrayList<String>();
-        supportedTerminologies.add(_terminologyId);
-        return supportedTerminologies;
-    }
-
-    public boolean isValidCodePhrase(CodePhrase codePhrase) {
-        return isValidTerminologyCode(codePhrase) && !invalidCode(codePhrase.getCodeString());
+    private String cleanUpCode(String code) {
+        if (terminologyConfig.isCleanCodes()) {
+            code = code.replace("-", "");
+            code = code.replace(".", "");
+            while (code.length() > 1 && invalidCode(code)) {
+                code = code.substring(0, code.length() - 1);
+            }
+        }
+        return code;
     }
 }
 /*
