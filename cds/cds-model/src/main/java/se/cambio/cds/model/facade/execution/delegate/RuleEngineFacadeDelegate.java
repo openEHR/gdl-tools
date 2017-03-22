@@ -21,7 +21,7 @@ public interface RuleEngineFacadeDelegate {
             String ehrId,
             List<GuideDTO> guides,
             Collection<ArchetypeReference> archetypeReferences,
-            Calendar date) throws InternalErrorException, PatientNotFoundException;
+            Calendar date);
 
     void cancelExecution();
 
@@ -29,7 +29,7 @@ public interface RuleEngineFacadeDelegate {
 
     void setUseCache(boolean useCache);
 
-    byte[] compile(Guide guide) throws InternalErrorException;
+    byte[] compile(Guide guide);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

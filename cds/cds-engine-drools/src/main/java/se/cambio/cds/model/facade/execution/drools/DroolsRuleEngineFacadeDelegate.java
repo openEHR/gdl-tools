@@ -16,7 +16,10 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
+
+import static java.lang.String.format;
 
 public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
 
@@ -30,8 +33,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
             String ehrId,
             List<GuideDTO> guides,
             Collection<ArchetypeReference> archetypeReferences,
-            Calendar date)
-            throws InternalErrorException, PatientNotFoundException {
+            Calendar date) {
         final HashSet<Object> workingMemoryObjects = new HashSet<>();
         for (ArchetypeReference archetypeReference : archetypeReferences) {
             workingMemoryObjects.addAll(archetypeReference.getElementInstancesMap().values());
@@ -76,12 +78,12 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
     }
 
     @Override
-    public byte[] compile(Guide guide) throws InternalErrorException {
+    public byte[] compile(Guide guide) {
+        String droolsGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
         try {
-            String droolsGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
             return droolsGuide.getBytes("UTF8");
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+        } catch (UnsupportedEncodingException exception) {
+            throw new RuntimeException(format("Error compiling guide '%s'", guide.getId()), exception);
         }
     }
 

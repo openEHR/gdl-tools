@@ -17,6 +17,8 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
+import static java.lang.String.format;
+
 public class GDLDroolsConverter {
 
     private static final String RULE = "rule";
@@ -126,7 +128,7 @@ public class GDLDroolsConverter {
         sb = new StringBuffer();
     }
 
-    public String convertToDrools() throws InternalErrorException {
+    public String convertToDrools() {
         createHeader();
         fillDefinitions();
         initPreconditions();
@@ -140,12 +142,12 @@ public class GDLDroolsConverter {
         sb.append(guideHeader);
     }
 
-    private void initPreconditions() throws InternalErrorException {
+    private void initPreconditions() {
         List<ExpressionItem> preConditionExpressions = guide.getDefinition().getPreConditionExpressions();
         preconditionMVEL = convertExpressionsToMVEL(preConditionExpressions, preconditionStats);
     }
 
-    private void insertDefaultActionsRule() throws InternalErrorException {
+    private void insertDefaultActionsRule() {
         List<AssignmentExpression> defaultActions = guide.getDefinition().getDefaultActionExpressions();
         if (!defaultActions.isEmpty()) {
             Map<RefStat, Set<String>> ruleStats = initStats();
@@ -174,7 +176,7 @@ public class GDLDroolsConverter {
         return "$" + guideId.replaceAll("[^a-zA-Z0-9]+", "") + "_salience";
     }
 
-    private void insertRules() throws InternalErrorException {
+    private void insertRules() {
         String preconditionStr = preconditionMVEL;
         for (Rule rule : guide.getDefinition().getRules().values()) {
             Map<RefStat, Set<String>> ruleStats = initStats();
@@ -219,7 +221,7 @@ public class GDLDroolsConverter {
         return TAB + "insert(new FiredRuleReference(\"" + guide.getId() + "\", \"" + ruleGtCode + "\"));\n";
     }
 
-    private void fillDefinitions() throws InternalErrorException {
+    private void fillDefinitions() {
         for (ArchetypeBinding archetypeBinding : guide.getDefinition().getArchetypeBindings().values()) {
             StringBuffer archetypeBindingMVELSB = new StringBuffer();
             String gtCodeArchetypeReference = archetypeBinding.getId();
@@ -258,7 +260,7 @@ public class GDLDroolsConverter {
         }
     }
 
-    private void processPredicates(ArchetypeBinding archetypeBinding, StringBuffer archetypeBindingMVELSB) throws InternalErrorException {
+    private void processPredicates(ArchetypeBinding archetypeBinding, StringBuffer archetypeBindingMVELSB) {
         GdlDroolsPredicateProcessor gdlDroolsPredicateProcessor = new GdlDroolsPredicateProcessor(this, archetypeBinding);
         String predicateDefinition = gdlDroolsPredicateProcessor.process();
         archetypeBindingMVELSB.append(predicateDefinition);
@@ -313,7 +315,7 @@ public class GDLDroolsConverter {
 
     private String convertExpressionsToMVEL(
             Collection<ExpressionItem> expressionItems,
-            Map<RefStat, Set<String>> stats) throws InternalErrorException {
+            Map<RefStat, Set<String>> stats) {
         StringBuffer sb = new StringBuffer();
         if (expressionItems != null) {
             for (ExpressionItem expressionItem : expressionItems) {
@@ -327,7 +329,7 @@ public class GDLDroolsConverter {
 
     private String convertAssignmentExpressionsToMVEL(
             Collection<AssignmentExpression> expressionItems,
-            Map<RefStat, Set<String>> stats) throws InternalErrorException {
+            Map<RefStat, Set<String>> stats) {
         StringBuffer sb = new StringBuffer();
         if (expressionItems != null) {
             for (ExpressionItem expressionItem : expressionItems) {
@@ -345,7 +347,7 @@ public class GDLDroolsConverter {
 
     private void processExpressionItem(StringBuffer sb,
                                        ExpressionItem expressionItem,
-                                       Map<RefStat, Set<String>> stats) throws InternalErrorException {
+                                       Map<RefStat, Set<String>> stats) {
         if (expressionItem instanceof AssignmentExpression) {
             processAssignmentExpression(sb, (AssignmentExpression) expressionItem, stats);
         } else if (expressionItem instanceof BinaryExpression) {
@@ -353,20 +355,20 @@ public class GDLDroolsConverter {
         } else if (expressionItem instanceof UnaryExpression) {
             processUnaryExpression(sb, (UnaryExpression) expressionItem, stats);
         } else {
-            throw new InternalErrorException(new Exception("Unknown expression '" + expressionItem.getClass().getName() + "'"));
+            throw new RuntimeException(format("Unknown expression '%s'", expressionItem.getClass().getName()));
         }
     }
 
     private void processAssignmentExpression(StringBuffer sb,
                                              AssignmentExpression assignmentExpression,
-                                             Map<RefStat, Set<String>> stats) throws InternalErrorException {
+                                             Map<RefStat, Set<String>> stats) {
         GdlDroolsAssignmentExpressionProcessor gdlDroolsAssignmentExpressionProcessor = new GdlDroolsAssignmentExpressionProcessor(this, assignmentExpression, stats);
         sb.append(gdlDroolsAssignmentExpressionProcessor.process());
     }
 
     private void processBinaryExpression(StringBuffer sb,
                                          BinaryExpression binaryExpression,
-                                         Map<RefStat, Set<String>> stats) throws InternalErrorException {
+                                         Map<RefStat, Set<String>> stats) {
         if (OperatorKind.OR.equals(binaryExpression.getOperator())) {
             sb.append("(");
             processExpressionItem(sb, binaryExpression.getLeft(), stats);
@@ -389,14 +391,14 @@ public class GDLDroolsConverter {
                 || OperatorKind.LESS_THAN_OR_EQUAL.equals(binaryExpression.getOperator())) {
             processComparisonExpression(sb, binaryExpression, stats);
         } else {
-            throw new CompilationErrorException("Unknown operator '" + binaryExpression.getOperator() + "'");
+            throw new RuntimeException(format("Unknown operator '%s'", binaryExpression.getOperator()));
         }
 
     }
 
     private void processUnaryExpression(StringBuffer sb,
                                         UnaryExpression unaryExpression,
-                                        Map<RefStat, Set<String>> stats) throws InternalErrorException {
+                                        Map<RefStat, Set<String>> stats) {
         if (OperatorKind.NOT.equals(unaryExpression.getOperator())) {
             sb.append("not(");
             processExpressionItem(sb, unaryExpression.getOperand(), stats);
@@ -408,14 +410,13 @@ public class GDLDroolsConverter {
         } else if (OperatorKind.FIRED.equals(unaryExpression.getOperator()) ||
                 OperatorKind.NOT_FIRED.equals(unaryExpression.getOperator())) {
             if (!(unaryExpression.getOperand() instanceof Variable)) {
-                throw new CompilationErrorException("Expected variable inside fired() operation. Instead got '" + unaryExpression.getOperand().getClass().getSimpleName() + "'");
+                throw new RuntimeException(format("Expected variable inside fired() operation. Instead got '%s'", unaryExpression.getOperand().getClass().getSimpleName()));
             }
             boolean negated = OperatorKind.NOT_FIRED.equals(unaryExpression.getOperator());
             String gtCode = ((Variable) unaryExpression.getOperand()).getCode();
             appendFiredRuleCondition(sb, negated, gtCode);
         } else {
-            throw new InternalErrorException(new Exception(
-                    "Unknown operator '" + unaryExpression.getOperator() + "'"));
+            throw new RuntimeException(format("Unknown operator '%s'", unaryExpression.getOperator()));
         }
     }
 
@@ -437,7 +438,7 @@ public class GDLDroolsConverter {
 
     private void processComparisonExpression(StringBuffer sb,
                                              BinaryExpression binaryExpression,
-                                             Map<RefStat, Set<String>> stats) throws InternalErrorException {
+                                             Map<RefStat, Set<String>> stats) {
         GdlDroolsBinaryComparisonExpressionProcessor gdlDroolsBinaryComparisonExpressionProcessor = new GdlDroolsBinaryComparisonExpressionProcessor(this, binaryExpression, stats);
         sb.append(gdlDroolsBinaryComparisonExpressionProcessor.process());
     }
@@ -538,14 +539,14 @@ public class GDLDroolsConverter {
     String getAttributeOperatorMVELLine(
             String handle,
             OperatorKind ok,
-            String value) throws CompilationErrorException {
+            String value) {
         if (OperatorKind.EQUALITY.equals(ok)) {
             return handle + ".equals(" + value + ")";
         } else if (OperatorKind.INEQUAL.equals(ok)) {
             return "!" + handle + ".equals(" + value + ")";
         } else {
             String guideId = guide.getId();
-            throw new CompilationErrorException("Guide=" + guideId + ", Illegal operator '" + ok.getSymbol() + "' used in handle '" + handle + "'.");
+            throw new RuntimeException(format("Guide=%s, Illegal operator '%s' used in handle '%s'.", guideId, ok.getSymbol(), handle));
         }
     }
 

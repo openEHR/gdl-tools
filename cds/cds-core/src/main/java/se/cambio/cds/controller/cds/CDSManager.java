@@ -52,13 +52,18 @@ public class CDSManager {
         return getArchetypeReferencesAndCheckMissing(eic, completeEIC, guideManager, date);
     }
 
-    public Collection<ElementInstance> getElementInstancesWithoutMissing(String ehrId, Collection<String> guideIds, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date) throws InternalErrorException, PatientNotFoundException {
+    public Collection<ElementInstance> getElementInstancesWithoutMissing(
+            String ehrId,
+            Collection<String> guideIds,
+            Collection<ArchetypeReference> data,
+            GuideManager guideManager,
+            Calendar date) {
         GeneratedElementInstanceCollection completeEIC = guideManager.getElementInstanceCollection(guideIds);
         ElementInstanceCollection eic = queryEHRForElements(ehrId, data, guideManager, date, completeEIC);
         return eic.getAllElementInstances();
     }
 
-    private ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) throws InternalErrorException, PatientNotFoundException {
+    private ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) {
         ElementInstanceCollection eic = new ElementInstanceCollection();
         if (data != null) {
             if (filterArchetypeReferences) {
@@ -111,12 +116,11 @@ public class CDSManager {
 
     public Collection<ArchetypeReference> getEHRArchetypeReferencesWithEventTimeElements(GeneratedElementInstanceCollection eic) {
         Collection<ArchetypeReference> ars = getEHRArchetypeReferences(eic);
-        addEventTimeElements(ars); //We add all the event time elements if they are not defined
+        addEventTimeElements(ars);
         return ars;
     }
 
-    private Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date)
-            throws InternalErrorException {
+    private Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date) {
         checkForMissingElements(eic, completeEIC, guideManager, date);
         return eic.getAllArchetypeReferences();
     }
@@ -127,7 +131,7 @@ public class CDSManager {
             GuideManager guideManager,
             Calendar date) {
         checkForWholeMissingElements(ehrEIC, generatedEIC, guideManager, date);
-        checkForMissingPathsInEHR(ehrEIC, generatedEIC, date);
+        checkForMissingPathsInEHR(ehrEIC, generatedEIC);
     }
 
     private static void checkForWholeMissingElements(
@@ -135,9 +139,8 @@ public class CDSManager {
             ElementInstanceCollection generatedEIC,
             GuideManager guideManager,
             Calendar date) {
-        //Check for guide elements, if not present, create archetype reference
-        List<ArchetypeReference> guideArchetypeReferences = new ArrayList<ArchetypeReference>(generatedEIC.getAllArchetypeReferences());
-        Collections.sort(guideArchetypeReferences, new ARNonEmptyPredicateComparator());
+        List<ArchetypeReference> guideArchetypeReferences = new ArrayList<>(generatedEIC.getAllArchetypeReferences());
+        guideArchetypeReferences.sort(new ARNonEmptyPredicateComparator());
         for (ArchetypeReference archetypeReference : guideArchetypeReferences) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference) archetypeReference;
             boolean matches = eic.matches(gar, guideManager.getAllGuidesMap(), date);
@@ -149,9 +152,7 @@ public class CDSManager {
 
     private static void checkForMissingPathsInEHR(
             ElementInstanceCollection ehrEIC,
-            ElementInstanceCollection generatedEIC,
-            Calendar date) {
-        //Add missing elements (as null) to the ehr data
+            ElementInstanceCollection generatedEIC) {
         Map<String, ArchetypeReference> compressedARsMap = getCompressedQueryArchetypeReferencesMap(generatedEIC.getAllArchetypeReferences());
         for (ArchetypeReference ar : ehrEIC.getAllArchetypeReferences()) {
             ArchetypeReference compressedAR = compressedARsMap.get(ar.getIdArchetype());
@@ -166,12 +167,11 @@ public class CDSManager {
     }
 
     private static Collection<ArchetypeReference> getCompressedQueryArchetypeReferences(Collection<ArchetypeReference> generatedArchetypeReferences) {
-        return new ArrayList<ArchetypeReference>(getCompressedQueryArchetypeReferencesMap(generatedArchetypeReferences).values());
+        return new ArrayList<>(getCompressedQueryArchetypeReferencesMap(generatedArchetypeReferences).values());
     }
 
     private static Map<String, ArchetypeReference> getCompressedQueryArchetypeReferencesMap(Collection<ArchetypeReference> generatedArchetypeReferences) {
-        final Map<String, ArchetypeReference> archetypeReferencesMap = new HashMap<String, ArchetypeReference>();
-        //Compress Archetype References with same archetype id
+        final Map<String, ArchetypeReference> archetypeReferencesMap = new HashMap<>();
         for (ArchetypeReference arNew : generatedArchetypeReferences) {
             GeneratedArchetypeReference gar = (GeneratedArchetypeReference) arNew;
             ArchetypeReference arPrev = archetypeReferencesMap.get(arNew.getIdArchetype());
@@ -189,7 +189,6 @@ public class CDSManager {
         for (ElementInstance newEI : arNew.getElementInstancesMap().values()) {
             ElementInstance eiAux = arPrev.getElementInstancesMap().get(newEI.getId());
             if (eiAux == null) {
-                //Missing elements
                 cloneElementInstanceWithGTCodes(newEI, arPrev, false);
             } else {
                 if (newEI instanceof PredicateGeneratedElementInstance) {

@@ -18,7 +18,7 @@ import java.util.List;
 @Profile("rule-dummy-engine")
 public class DummyRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
     @Override
-    public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) throws InternalErrorException, PatientNotFoundException {
+    public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides, Collection<ArchetypeReference> archetypeReferences, Calendar date) {
         return null;
     }
 
@@ -35,7 +35,7 @@ public class DummyRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate {
     }
 
     @Override
-    public byte[] compile(Guide guide) throws InternalErrorException {
+    public byte[] compile(Guide guide) {
         return new byte[0];
     }
 }

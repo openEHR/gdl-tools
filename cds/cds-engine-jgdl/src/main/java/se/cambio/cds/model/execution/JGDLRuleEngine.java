@@ -37,8 +37,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
 
     @Override
     public RuleExecutionResult execute(String ehrId, List<GuideDTO> guides,
-                                       Collection<ArchetypeReference> archetypeReferences, Calendar date)
-            throws InternalErrorException, PatientNotFoundException {
+                                       Collection<ArchetypeReference> archetypeReferences, Calendar date) {
         DvDateTime dateTime = new DvDateTime(
                 date.get(Calendar.YEAR),
                 date.get(Calendar.MONTH) + 1,
@@ -141,7 +140,7 @@ public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
     }
 
     @Override
-    public byte[] compile(Guide guide) throws InternalErrorException {
+    public byte[] compile(Guide guide) {
         return new byte[0];
     }
 }

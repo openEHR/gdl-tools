@@ -21,7 +21,6 @@ import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.io.UnsupportedEncodingException;
@@ -44,8 +43,7 @@ public class DroolsExecutionManager {
             List<GuideDTO> guideDTOs,
             Calendar date,
             Collection<Object> workingMemoryObjects,
-            ExecutionLogger executionLogger)
-            throws InternalErrorException {
+            ExecutionLogger executionLogger) {
         KieBase kb;
         if (getDelegate()._useCache) {
             kb = getKnowledgeBase(guideDTOs);
@@ -65,36 +63,30 @@ public class DroolsExecutionManager {
             KieBase knowledgeBase,
             Calendar date,
             Collection<Object> workingMemoryObjects,
-            ExecutionLogger executionLogger)
-            throws InternalErrorException {
-        try {
-            final StatelessKieSession session = knowledgeBase.newStatelessKieSession();
+            ExecutionLogger executionLogger) {
+        final StatelessKieSession session = knowledgeBase.newStatelessKieSession();
 
-            final RuleExecutionWMLogger ruleExecutionWMLogger = new RuleExecutionWMLogger();
-            session.addEventListener(ruleExecutionWMLogger);
-            if (date == null) {
-                date = Calendar.getInstance();
-            }
-            final DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
-            session.setGlobal("$currentDateTime", currentDateTime);
-            getDelegate()._logger = executionLogger;
-            session.setGlobal("$executionLogger", executionLogger);
-            session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
-            session.setGlobal("$execute", true);
-            int initSalience = 0;
-
-            List<String> reverseGuideIds = new ArrayList<>(guideIds);
-            Collections.reverse(reverseGuideIds);
-            for (String guideId : reverseGuideIds) {
-                session.setGlobal(getGuideSalienceId(guideId), initSalience);
-                initSalience = initSalience + 1000;
-            }
-            session.execute(workingMemoryObjects);
-            executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalErrorException(e);
+        final RuleExecutionWMLogger ruleExecutionWMLogger = new RuleExecutionWMLogger();
+        session.addEventListener(ruleExecutionWMLogger);
+        if (date == null) {
+            date = Calendar.getInstance();
         }
+        final DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
+        session.setGlobal("$currentDateTime", currentDateTime);
+        getDelegate()._logger = executionLogger;
+        session.setGlobal("$executionLogger", executionLogger);
+        session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
+        session.setGlobal("$execute", true);
+        int initSalience = 0;
+
+        List<String> reverseGuideIds = new ArrayList<>(guideIds);
+        Collections.reverse(reverseGuideIds);
+        for (String guideId : reverseGuideIds) {
+            session.setGlobal(getGuideSalienceId(guideId), initSalience);
+            initSalience = initSalience + 1000;
+        }
+        session.execute(workingMemoryObjects);
+        executionLogger.setFiredRules(ruleExecutionWMLogger.getFiredRules());
     }
 
     public void cancelCurrentExecution() {
@@ -105,8 +97,7 @@ public class DroolsExecutionManager {
     }
 
 
-    private KieBase getKnowledgeBase(Collection<GuideDTO> guideDTOs)
-            throws InternalErrorException {
+    private KieBase getKnowledgeBase(Collection<GuideDTO> guideDTOs) {
         if (guideDTOs == null || guideDTOs.isEmpty()) {
             return null;
         }
@@ -149,7 +140,7 @@ public class DroolsExecutionManager {
         return guideIdsIdSB.toString();
     }
 
-    private KieBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) throws InternalErrorException {
+    private KieBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) {
         final KieServices kieServices = KieServices.Factory.get();
         final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         final KieRepository kr = kieServices.getRepository();
@@ -170,15 +161,15 @@ public class DroolsExecutionManager {
         return kContainer.getKieBase();
     }
 
-    private Resource getResource(Guide guide) throws InternalErrorException {
+    private Resource getResource(Guide guide) {
         if (guide == null) {
             return null;
         }
         String compiledGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
         try {
             return ResourceFactory.newByteArrayResource(compiledGuide.getBytes("UTF8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new InternalErrorException(e);
+        } catch (UnsupportedEncodingException exception) {
+            throw new RuntimeException(exception);
         }
     }
 

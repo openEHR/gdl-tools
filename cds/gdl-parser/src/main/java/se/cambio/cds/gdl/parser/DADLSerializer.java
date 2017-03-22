@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.*;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -25,13 +26,12 @@ public class DADLSerializer {
 	 * @return List of serialized strings 
 	 * @throws Exception
 	 */
-	public List<String> toDADL(Object obj) throws Exception {
+	public List<String> toDADL(Object obj) {
 		List<String> lines = new ArrayList<String>();
 		return toDADL(obj, 1, lines);
 	}
 
-	private List<String> toDADL(Object obj, int indent, List<String> lines)
-			throws Exception {
+	private List<String> toDADL(Object obj, int indent, List<String> lines) {
 
 		log.debug("toDADL on obj.getClass: "
 				+ obj.getClass().getCanonicalName() + ", indent: " + indent
@@ -84,7 +84,11 @@ public class DADLSerializer {
 
 			Method getter = getter(name, obj.getClass());
 			if (getter != null) {
-				value = getter.invoke(obj, null);
+				try {
+					value = getter.invoke(obj, null);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					throw new RuntimeException(e);
+				}
 				buf = new StringBuffer();
 				if (value != null) {
 					for (int i = 0; i < indent; i++) {

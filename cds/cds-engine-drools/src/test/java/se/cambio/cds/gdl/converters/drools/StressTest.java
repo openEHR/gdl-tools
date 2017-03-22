@@ -85,10 +85,6 @@ public class StressTest {
                 total += execTime;
             }
             System.out.println("Executed in: " + (total / numExec) + " ms");
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
-        } catch (PatientNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -158,10 +154,6 @@ public class StressTest {
                 total += execTime;
             }
             System.out.println("Avg (" + numExec + ") executed in: " + (total / numExec) + " ms");
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
-        } catch (PatientNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

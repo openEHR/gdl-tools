@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.parser;
 
-import org.openehr.am.parser.ContentObject;
-import org.openehr.am.parser.DADLParser;
+import org.openehr.am.parser.*;
 import se.cambio.cds.gdl.model.ArchetypeBinding;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.model.GuideDefinition;
@@ -18,84 +17,88 @@ import java.util.Map;
 
 public class GDLParser {
 
-	public Guide parse(InputStream input) throws Exception {
-		DADLParser parser = new DADLParser(input, "UTF-8");
-		ContentObject content = parser.parse();
-		GDLBinding binding = new GDLBinding();
-		
-		Object obj = binding.bind(content);
-		Guide guide = (Guide) obj;
-		bindExpressions(guide);
-		return guide;
-	}
+    public Guide parse(InputStream input) {
+        DADLParser parser = new DADLParser(input, "UTF-8");
+        try {
+            ContentObject content = parser.parse();
+            GDLBinding binding = new GDLBinding();
 
-	public Guide parse(Reader input) throws Exception {
-		DADLParser parser = new DADLParser(input);
-		ContentObject content = parser.parse();
-		GDLBinding binding = new GDLBinding();
-		Object obj = binding.bind(content);
-		Guide guide = (Guide) obj;
-		bindExpressions(guide);
-		return guide;
-	}
+            Object obj = binding.bind(content);
+            Guide guide = (Guide) obj;
+            bindExpressions(guide);
+            return guide;
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
-	/*
-	 * List of expressions in GDL 1. guide definition pre-conditions 2.
-	 * archetype binding predicates 3. rule when statements 4. rule then
-	 * statements
-	 */
-	private void bindExpressions(Guide guide) throws Exception {
-		List<String> preConditions = guide.getDefinition().getPreConditions();
-		List<ExpressionItem> preConditionExpressions = parseExpressions(preConditions);
-		guide.getDefinition().setPreConditionExpressions(preConditionExpressions);
+    public Guide parse(Reader input) throws Exception {
+        DADLParser parser = new DADLParser(input);
+        ContentObject content = parser.parse();
+        GDLBinding binding = new GDLBinding();
+        Object obj = binding.bind(content);
+        Guide guide = (Guide) obj;
+        bindExpressions(guide);
+        return guide;
+    }
 
-		List<String> defaultActions = guide.getDefinition().getDefaultActions();
-		List<ExpressionItem> expressionItems = parseExpressions(defaultActions);
-		List<AssignmentExpression> defaultActionExpressions = toAssignments(expressionItems);
-		guide.getDefinition().setDefaultActionExpressions(defaultActionExpressions);
+    /*
+     * List of expressions in GDL 1. guide definition pre-conditions 2.
+     * archetype binding predicates 3. rule when statements 4. rule then
+     * statements
+     */
+    private void bindExpressions(Guide guide) throws Exception {
+        List<String> preConditions = guide.getDefinition().getPreConditions();
+        List<ExpressionItem> preConditionExpressions = parseExpressions(preConditions);
+        guide.getDefinition().setPreConditionExpressions(preConditionExpressions);
 
-		GuideDefinition definition = guide.getDefinition();
-		if (definition.getArchetypeBindings() != null) {
+        List<String> defaultActions = guide.getDefinition().getDefaultActions();
+        List<ExpressionItem> expressionItems = parseExpressions(defaultActions);
+        List<AssignmentExpression> defaultActionExpressions = toAssignments(expressionItems);
+        guide.getDefinition().setDefaultActionExpressions(defaultActionExpressions);
+
+        GuideDefinition definition = guide.getDefinition();
+        if (definition.getArchetypeBindings() != null) {
             Map<String, ArchetypeBinding> bindings = definition
-					.getArchetypeBindings();
-			for (ArchetypeBinding binding : bindings.values()) {
-				List<ExpressionItem> predicateStatements = parseExpressions(binding.getPredicates());
-				binding.setPredicateStatements(predicateStatements);
-			}
-			if (definition.getRules() != null) {
-				Collection<Rule> rules = definition.getRules().values();
-				for (Rule rule : rules) {
-					List<ExpressionItem> whenStatements = parseExpressions(rule.getWhen());
-					rule.setWhenStatements(whenStatements);
-					List<ExpressionItem> thenExpressionItems = parseExpressions(rule.getThen());
-					List<AssignmentExpression> thenStatements = toAssignments(thenExpressionItems);
-					rule.setThenStatements(thenStatements);
-				}
-			}
-		}
-	}
+                    .getArchetypeBindings();
+            for (ArchetypeBinding binding : bindings.values()) {
+                List<ExpressionItem> predicateStatements = parseExpressions(binding.getPredicates());
+                binding.setPredicateStatements(predicateStatements);
+            }
+            if (definition.getRules() != null) {
+                Collection<Rule> rules = definition.getRules().values();
+                for (Rule rule : rules) {
+                    List<ExpressionItem> whenStatements = parseExpressions(rule.getWhen());
+                    rule.setWhenStatements(whenStatements);
+                    List<ExpressionItem> thenExpressionItems = parseExpressions(rule.getThen());
+                    List<AssignmentExpression> thenStatements = toAssignments(thenExpressionItems);
+                    rule.setThenStatements(thenStatements);
+                }
+            }
+        }
+    }
 
-	private List<AssignmentExpression> toAssignments(List<ExpressionItem> items) {
-		List<AssignmentExpression> ret = new ArrayList<>();
-		if (items != null) {
-			for (ExpressionItem item : items) {
-				ret.add((AssignmentExpression) item);
-			}
-		}
-		return ret;
-	}
+    private List<AssignmentExpression> toAssignments(List<ExpressionItem> items) {
+        List<AssignmentExpression> ret = new ArrayList<>();
+        if (items != null) {
+            for (ExpressionItem item : items) {
+                ret.add((AssignmentExpression) item);
+            }
+        }
+        return ret;
+    }
 
-	private List<ExpressionItem> parseExpressions(List<String> lines)
-			throws Exception {
-		if (lines == null) {
+    private List<ExpressionItem> parseExpressions(List<String> lines)
+            throws Exception {
+        if (lines == null) {
             return null;
         }
         List<ExpressionItem> items = new ArrayList<>();
         for (String line : lines) {
             items.add(Expressions.parse(line));
         }
-		return items;
-	}
+        return items;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

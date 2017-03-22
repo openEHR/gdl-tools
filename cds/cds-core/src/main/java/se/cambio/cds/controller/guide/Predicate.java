@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
@@ -20,72 +21,83 @@ public class Predicate {
     private DataValue dataValue = null;
 
     public Predicate(OperatorKind operatorKind, DataValue dataValue) {
-	super();
-	this.operatorKind = operatorKind;
-	this.dataValue = dataValue;
+        super();
+        this.operatorKind = operatorKind;
+        this.dataValue = dataValue;
     }
 
     public OperatorKind getOperatorKind() {
-	return operatorKind;
+        return operatorKind;
     }
+
     public void setOperatorKind(OperatorKind operatorKind) {
-	this.operatorKind = operatorKind;
+        this.operatorKind = operatorKind;
     }
+
     public DataValue getDataValue() {
-	return dataValue;
+        return dataValue;
     }
+
     public void setDataValue(DataValue dataValue) {
-	this.dataValue = dataValue;
+        this.dataValue = dataValue;
     }
 
-    public boolean matches(DataValue dv, String guideId, GuideManager guideManager){
-	if (OperatorKind.IS_A.equals(operatorKind)){
-	    if (dv instanceof DvCodedText && getDataValue() instanceof DvCodedText){
-		CodePhrase elementCodePhrase = ((DvCodedText)dv).getDefiningCode();
-		CodePhrase predicateCodePhrase = ((DvCodedText)getDataValue()).getDefiningCode();
-		Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
-		if (guideManager!=null){
-		    Guide guide = guideManager.getGuide(guideId);
-		    if (guide!=null){
-			if (guide.getOntology().getTermBindings()!=null){
-			    for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
-				TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
-				if (termBinding!=null){
-				    Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
-				    if (binding!=null && binding.getCodes()!=null){
-					codePhrases.addAll(binding.getCodes());
-				    }
-				}
-			    }
-			}
-		    }
-		}else{
-		    codePhrases.add(predicateCodePhrase);
-		}
-		if (!codePhrases.isEmpty()){
-		    try{
-			return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
-		    }catch(Exception e){
-			ExceptionHandler.handle(e);
-		    }
-		}else{
-		    return false;
-		}
-	    }
-
-	}else {
-		return dataValue == null || DVUtil.equalDVs(getDataValue(), dv);
-	}
-	return false;
+    public boolean matches(DataValue dv, String guideId, GuideManager guideManager) {
+        if (OperatorKind.IS_A.equals(operatorKind)) {
+            if (dv instanceof DvCodedText && getDataValue() instanceof DvCodedText) {
+                return matchesDvCodedText((DvCodedText) dv, guideId, guideManager);
+            } else {
+                return false;
+            }
+        } else {
+            return dataValue == null || DVUtil.equalDVs(getDataValue(), dv);
+        }
     }
 
-    public int hashCode(){
-	return operatorKind.hashCode()+(dataValue!=null?dataValue.hashCode():0);
+    private boolean matchesDvCodedText(DvCodedText dv, String guideId, GuideManager guideManager) {
+        CodePhrase elementCodePhrase = dv.getDefiningCode();
+        CodePhrase predicateCodePhrase = ((DvCodedText) getDataValue()).getDefiningCode();
+        Set<CodePhrase> codePhrases = getCodePhrasesInBindings(guideId, guideManager, predicateCodePhrase);
+        if (!codePhrases.isEmpty()) {
+            try {
+                return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(elementCodePhrase, codePhrases);
+            } catch (Exception e) {
+                ExceptionHandler.handle(e);
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
-    public String toString(){
-		return "OP=" + operatorKind + ", " + (dataValue != null ? dataValue.toString() : "NULL_DV");
-	}
+    private Set<CodePhrase> getCodePhrasesInBindings(String guideId, GuideManager guideManager, CodePhrase predicateCodePhrase) {
+        Set<CodePhrase> codePhrases = new HashSet<>();
+        if (guideManager != null) {
+            Guide guide = guideManager.getGuide(guideId);
+            if (guide != null && guide.getOntology().getTermBindings() != null){
+                for (String terminologyId : guide.getOntology().getTermBindings().keySet()) {
+                    TermBinding termBinding = guide.getOntology().getTermBindings().get(terminologyId);
+                    if (termBinding != null) {
+                        Binding binding = termBinding.getBindings().get(predicateCodePhrase.getCodeString());
+                        if (binding != null && binding.getCodes() != null) {
+                            codePhrases.addAll(binding.getCodes());
+                        }
+                    }
+                }
+            }
+        } else {
+            codePhrases.add(predicateCodePhrase);
+        }
+        return codePhrases;
+    }
+
+    public int hashCode() {
+        return operatorKind.hashCode() + (dataValue != null ? dataValue.hashCode() : 0);
+    }
+
+    public String toString() {
+        return "OP=" + operatorKind + ", " + (dataValue != null ? dataValue.toString() : "NULL_DV");
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

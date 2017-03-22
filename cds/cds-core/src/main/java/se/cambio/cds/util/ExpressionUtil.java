@@ -22,14 +22,14 @@ public class ExpressionUtil {
 
     public static String getArithmeticExpressionStr(
             Map<String, ArchetypeElementVO> elementMap,
-            ExpressionItem expressionItem, Map<RefStat, Set<String>> stats) throws InternalErrorException {
+            ExpressionItem expressionItem, Map<RefStat, Set<String>> stats) {
         return getArithmeticExpressionStr(elementMap, expressionItem, stats, null);
     }
 
     private static String getArithmeticExpressionStr(
             Map<String, ArchetypeElementVO> elementMap,
             ExpressionItem expressionItem, Map<RefStat, Set<String>> stats,
-            ExpressionItem parentExpressionItem) throws InternalErrorException {
+            ExpressionItem parentExpressionItem) {
         StringBuilder sb = new StringBuilder();
         if (expressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
@@ -81,21 +81,19 @@ public class ExpressionUtil {
             }
             sb.append(")");
         } else {
-            throw new InternalErrorException(new Exception(
-                    "Unknown expression '"
-                            + expressionItem.getClass().getName() + "'"));
+            throw new RuntimeException(format("Unknown expression '%s'", expressionItem.getClass().getName()));
         }
         return sb.toString();
     }
 
-    private static String getRMName(Map<String, ArchetypeElementVO> elementMap, Variable var) throws InternalErrorException {
+    private static String getRMName(Map<String, ArchetypeElementVO> elementMap, Variable var) {
         String rmName = null;
         if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())) {
             rmName = OpenEHRDataValues.DV_DATE_TIME;
         } else {
             ArchetypeElementVO aeVO = elementMap.get(var.getCode());
             if (aeVO == null && !isFunction(var.getAttribute())) {
-                throw new InternalErrorException(new Exception("Archetype element not found for gtcode '" + var.getCode() + "'"));
+                throw new RuntimeException(format("Archetype element not found for gtcode '%s'", var.getCode()));
             }
             if (aeVO != null) {
                 rmName = aeVO.getRMType();
@@ -111,7 +109,7 @@ public class ExpressionUtil {
     private static String formatConstantValue(
             Map<String, ArchetypeElementVO> elementMap,
             ConstantExpression exp,
-            ExpressionItem parentExpressionItem) throws InternalErrorException {
+            ExpressionItem parentExpressionItem) {
         String value = exp.getValue();
         if (value.contains(",")) {
             String units = StringUtils.substringAfter(value, ",");
@@ -143,14 +141,14 @@ public class ExpressionUtil {
     }
 
     private static boolean hasLeftVariableName(
-            ExpressionItem parentExpressionItem) throws InternalErrorException {
+            ExpressionItem parentExpressionItem) {
         return (parentExpressionItem instanceof BinaryExpression) &&
                 ((BinaryExpression) parentExpressionItem).getLeft() instanceof Variable;
     }
 
     private static String getLeftVariableName(
             Map<String, ArchetypeElementVO> elementMap,
-            ExpressionItem parentExpressionItem) throws InternalErrorException {
+            ExpressionItem parentExpressionItem) {
         if (parentExpressionItem instanceof BinaryExpression) {
             ExpressionItem left = ((BinaryExpression) parentExpressionItem).getLeft();
             if (left instanceof Variable) {

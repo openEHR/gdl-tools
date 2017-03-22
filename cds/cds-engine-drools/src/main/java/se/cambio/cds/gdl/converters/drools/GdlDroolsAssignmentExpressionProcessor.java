@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static java.lang.String.format;
+
 public class GdlDroolsAssignmentExpressionProcessor {
 
     private final GDLDroolsConverter gdlDroolsConverter;
@@ -35,7 +37,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
         stringBuffer = new StringBuffer();
     }
 
-    public String process() throws InternalErrorException {
+    public String process() {
         String gtCode = assignmentExpression.getVariable().getCode();
         Variable var = assignmentExpression.getVariable();
         String attribute = var.getAttribute();
@@ -44,11 +46,11 @@ public class GdlDroolsAssignmentExpressionProcessor {
     }
 
     private void processAssignmentExpression(String gtCode,
-                                               String eiId,
-                                               String attribute,
-                                               ExpressionItem expressionItemAux,
-                                               boolean creatingInstance) throws InternalErrorException {
-        if (!CreateInstanceExpression.FUNCTION_CREATE_NAME.equals(attribute) && !creatingInstance){
+                                             String eiId,
+                                             String attribute,
+                                             ExpressionItem expressionItemAux,
+                                             boolean creatingInstance) {
+        if (!CreateInstanceExpression.FUNCTION_CREATE_NAME.equals(attribute) && !creatingInstance) {
             stats.get(RefStat.REFERENCE).add(gtCode);
             stats.get(RefStat.SET).add(gtCode);
         }
@@ -57,46 +59,46 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 Variable var2 = (Variable) expressionItemAux;
                 String gtCodeAux = var2.getCode();
                 stats.get(RefStat.REFERENCE).add(gtCodeAux);
-                stringBuffer.append("$" + eiId + ".setDataValue($" + gtCodeAux + ExpressionUtil.getDataValueMethod(gtCode) + ");");
-                stringBuffer.append("$" + eiId + ".setNullFlavour(null);");
-                stringBuffer.append("$executionLogger.addLog(drools, $" + eiId + ");");
+                stringBuffer.append("$").append(eiId).append(".setDataValue($").append(gtCodeAux).append(ExpressionUtil.getDataValueMethod(gtCode)).append(");");
+                stringBuffer.append("$").append(eiId).append(".setNullFlavour(null);");
+                stringBuffer.append("$executionLogger.addLog(drools, $").append(eiId).append(");");
             } else if (expressionItemAux instanceof ConstantExpression) {
                 String dvStr = ((ConstantExpression) expressionItemAux).getValue();
                 ArchetypeElementVO archetypeElementVO = gdlDroolsConverter.getElementMap().get(gtCode);
-                if (archetypeElementVO == null){
+                if (archetypeElementVO == null) {
                     String guideId = gdlDroolsConverter.getGuide().getId();
-                    throw new CompilationErrorException("Guide=" + guideId + ", Unknown element for gtCode '" + gtCode + "'");
+                    throw new RuntimeException(format("Guide=%s, Unknown element for gtCode '%s'", guideId, gtCode));
                 }
                 String rmType = archetypeElementVO.getRMType();
                 DataValue dv = DataValue.parseValue(rmType + "," + dvStr);
-                stringBuffer.append("$"+eiId+".setDataValue(" + DVDefSerializer.getDVInstantiation(dv) + ");");
-                stringBuffer.append("$"+eiId+".setNullFlavour(null);");
-                stringBuffer.append("$executionLogger.addLog(drools, $" + eiId +");");
+                stringBuffer.append("$").append(eiId).append(".setDataValue(").append(DVDefSerializer.getDVInstantiation(dv)).append(");");
+                stringBuffer.append("$").append(eiId).append(".setNullFlavour(null);");
+                stringBuffer.append("$executionLogger.addLog(drools, $").append(eiId).append(");");
             } else {
                 String guideId = gdlDroolsConverter.getGuide().getId();
-                throw new CompilationErrorException("Guide=" + guideId + ", Unknown expression '" + expressionItemAux + "'");
+                throw new RuntimeException(format("Guide=%s, Unknown expression '%s'", guideId, expressionItemAux));
             }
         } else {
-            if (attribute.equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)){
+            if (attribute.equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)) {
                 String dvStr = ((ConstantExpression) expressionItemAux).getValue();
                 DataValue dv = DataValue.parseValue(OpenEHRDataValues.DV_CODED_TEXT + "," + dvStr);
                 stringBuffer.append("$" + eiId + ".setDataValue(null);");
                 stringBuffer.append("$" + eiId + ".setNullFlavour(" + DVDefSerializer.getDVInstantiation(dv) + ");");
                 stringBuffer.append("$executionLogger.addLog(drools, $" + eiId + ");");
-            }else if (attribute.equals(CreateInstanceExpression.FUNCTION_CREATE_NAME)) {
+            } else if (attribute.equals(CreateInstanceExpression.FUNCTION_CREATE_NAME)) {
                 ArchetypeReference ar = gdlDroolsConverter.getArchetypeReferenceMap().get(gtCode);
                 int creationIndex = gdlDroolsConverter.getCreationIndex();
                 String arId = "newAR" + creationIndex;
                 stringBuffer.append("ArchetypeReference " + arId + " = new ArchetypeReference(\"CDS\", \"" + ar.getIdArchetype() + "\"," + (ar.getIdTemplate() != null ? "\"" + ar.getIdTemplate() + "\"" : "null") + ");\n");
                 stringBuffer.append(TAB);
                 stringBuffer.append("insert(" + arId + ");\n");
-                insertAssignments(arId, expressionItemAux, stats);
+                insertAssignments(arId, expressionItemAux);
                 gdlDroolsConverter.increaseCreationIndex();
-            }else{
+            } else {
                 ArchetypeElementVO archetypeElementVO = gdlDroolsConverter.getElementMap().get(gtCode);
-                if (archetypeElementVO==null){
+                if (archetypeElementVO == null) {
                     String guideId = gdlDroolsConverter.getGuide().getId();
-                    throw new CompilationErrorException("GTCode '" + gtCode + "' not found. (guideId='" + guideId + "')");
+                    throw new RuntimeException(format("GTCode '%s' not found. (guideId='%s')", gtCode, guideId));
                 }
                 String rmName = archetypeElementVO.getRMType();
                 Map<RefStat, Set<String>> statsAux = gdlDroolsConverter.initStats();
@@ -106,7 +108,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 stats.get(RefStat.REFERENCE).addAll(statsAux.get(RefStat.ATT_FUNCTIONS_REF));
                 stats.get(RefStat.ATT_SET_REF).addAll(statsAux.get(RefStat.REFERENCE));
                 stats.get(RefStat.ATT_FUNCTIONS).addAll(statsAux.get(RefStat.ATT_FUNCTIONS));
-                stringBuffer.append("$" + eiId + "."+ GDLDroolsConverter.getAttributeSettingStr(eiId, rmName, attribute, arithmeticExpStr)+ ";");
+                stringBuffer.append("$" + eiId + "." + GDLDroolsConverter.getAttributeSettingStr(eiId, rmName, attribute, arithmeticExpStr) + ";");
                 stringBuffer.append("$" + eiId + ".setNullFlavour(null);");
                 stringBuffer.append("$executionLogger.addLog(drools, $" + eiId + ");");
             }
@@ -115,21 +117,20 @@ public class GdlDroolsAssignmentExpressionProcessor {
 
     private void insertAssignments(
             String arId,
-            ExpressionItem expressionItem,
-            Map<RefStat, Set<String>> stats) throws InternalErrorException {
+            ExpressionItem expressionItem) {
         if (!(expressionItem instanceof MultipleAssignmentExpression)) {
             String guideId = gdlDroolsConverter.getGuide().getId();
-            throw new CompilationErrorException(new Exception("Guide=" + guideId + ", Incorrect expression inside creation expression '" + expressionItem + "'"));
+            throw new RuntimeException(format("Guide=%s, Incorrect expression inside creation expression '%s'", guideId, expressionItem));
         }
-        MultipleAssignmentExpression multipleAssignmentExpression = (MultipleAssignmentExpression)expressionItem;
+        MultipleAssignmentExpression multipleAssignmentExpression = (MultipleAssignmentExpression) expressionItem;
         int i = 0;
-        Map<String, String> elementIdsMap = new HashMap<String, String>();
-        for(AssignmentExpression assignmentExpressionAux: multipleAssignmentExpression.getAssignmentExpressions()){
+        Map<String, String> elementIdsMap = new HashMap<>();
+        for (AssignmentExpression assignmentExpressionAux : multipleAssignmentExpression.getAssignmentExpressions()) {
             String gtCode = assignmentExpressionAux.getVariable().getCode();
             ArchetypeElementVO archetypeElementVO = gdlDroolsConverter.getElementMap().get(gtCode);
-            if (archetypeElementVO == null){
+            if (archetypeElementVO == null) {
                 String guideId = gdlDroolsConverter.getGuide().getId();
-                throw new CompilationErrorException("GTCode '" + gtCode + "' not found. (guideId='" + guideId + "')");
+                throw new RuntimeException(format("GTCode '%s' not found. (guideId='%s')", gtCode, guideId));
             }
             String elementId = archetypeElementVO.getId();
             String eiId = elementIdsMap.get(elementId);
@@ -138,14 +139,14 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 eiId = "ei" + creationIndex + "_" + i;
                 elementIdsMap.put(elementId, eiId);
                 stringBuffer.append(TAB);
-                stringBuffer.append("ElementInstance $" + eiId + " = new ElementInstance(\"" + elementId + "\", null, " + arId + ", null, null);\n");
+                stringBuffer.append(format("ElementInstance $%s = new ElementInstance(\"%s\", null, %s, null, null);\n", eiId, elementId, arId));
             } else {
                 stringBuffer.append("\n");
             }
             stringBuffer.append(TAB);
             String attribute = assignmentExpressionAux.getVariable().getAttribute();
             processAssignmentExpression(gtCode, eiId, attribute, assignmentExpressionAux.getAssignment(), true);
-            stringBuffer.append("insert($" + eiId + ");");
+            stringBuffer.append("insert($").append(eiId).append(");");
             i++;
         }
     }

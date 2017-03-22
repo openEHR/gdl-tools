@@ -12,19 +12,20 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class Guides extends AbstractCMManager<GuideDTO> {
-    private static Guides _instance = null;
+    private static Guides instance = null;
 
-    public Guides(){
+    public Guides() {
     }
 
     @Override
-    public void registerCMElementsInCache(Collection<GuideDTO> guideDTOs){
+    public void registerCMElementsInCache(Collection<GuideDTO> guideDTOs) {
         super.registerCMElementsInCache(guideDTOs);
         processGuides(guideDTOs);
     }
@@ -35,52 +36,44 @@ public class Guides extends AbstractCMManager<GuideDTO> {
     }
 
     public void processGuides(Collection<GuideDTO> guideDTOs) {
-        for (GuideDTO guideDTO: guideDTOs){
+        for (GuideDTO guideDTO : guideDTOs) {
             processGuide(guideDTO);
         }
     }
 
     public void processGuide(GuideDTO guideDTO) {
-        try {
-            if (!hasGuideObject(guideDTO)) {
-                LoggerFactory.getLogger(Guides.class).info("Parsing guideline '" + guideDTO.getId() + "'...");
-                long startTime = System.currentTimeMillis();
-                parseGuide(guideDTO);
-                long endTime = System.currentTimeMillis();
-                LoggerFactory.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
-            }
-            if (!isCompiled(guideDTO)) {
-                LoggerFactory.getLogger(Guides.class).info("Compiling guideline '" + guideDTO.getId() + "'...");
-                long startTime = System.currentTimeMillis();
-                compileGuide(guideDTO);
-                long endTime = System.currentTimeMillis();
-                LoggerFactory.getLogger(Guides.class).info("Done (" + (endTime - startTime) + " ms)");
-            }
-        } catch (InternalErrorException e){
-            ExceptionHandler.handle(e);
+        if (!hasGuideObject(guideDTO)) {
+            LoggerFactory.getLogger(Guides.class).info("Parsing guideline '{}'...", guideDTO.getId());
+            long startTime = System.currentTimeMillis();
+            parseGuide(guideDTO);
+            long endTime = System.currentTimeMillis();
+            LoggerFactory.getLogger(Guides.class).info("Done ({} ms)", (endTime - startTime));
+        }
+        if (!isCompiled(guideDTO)) {
+            LoggerFactory.getLogger(Guides.class).info("Compiling guideline '{}'...", guideDTO.getId());
+            long startTime = System.currentTimeMillis();
+            compileGuide(guideDTO);
+            long endTime = System.currentTimeMillis();
+            LoggerFactory.getLogger(Guides.class).info("Done ({} ms)", (endTime - startTime));
         }
     }
 
-    public static void parseGuide(GuideDTO guideDTO) throws InternalErrorException {
+    public static void parseGuide(GuideDTO guideDTO) {
         try {
             Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
             guideDTO.setGuideObject(SerializationUtils.serialize(guide));
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static void compileGuide(GuideDTO guideDTO) throws InternalErrorException {
-        try {
-            if (!hasGuideObject(guideDTO)){
-                parseGuide(guideDTO);
-            }
-            Guide guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
-            byte[] compiledGuide = CDSSessionManager.getRuleEngineFacadeDelegate().compile(guide);
-            guideDTO.setCompiledGuide(compiledGuide);
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+    public static void compileGuide(GuideDTO guideDTO) {
+        if (!hasGuideObject(guideDTO)) {
+            parseGuide(guideDTO);
         }
+        Guide guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
+        byte[] compiledGuide = CDSSessionManager.getRuleEngineFacadeDelegate().compile(guide);
+        guideDTO.setCompiledGuide(compiledGuide);
     }
 
     public Guide getGuide(String guideId) throws InternalErrorException, InstanceNotFoundException {
@@ -88,38 +81,38 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         return getGuide(guideDTO);
     }
 
-    public Guide getGuide(GuideDTO guideDTO) throws InternalErrorException {
-        if (guideDTO != null){
-            if (!hasGuideObject(guideDTO)){
+    public Guide getGuide(GuideDTO guideDTO) {
+        if (guideDTO != null) {
+            if (!hasGuideObject(guideDTO)) {
                 parseGuide(guideDTO);
             }
             return (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
-        }else{
+        } else {
             return null;
         }
     }
 
     public Map<String, Guide> getGuidesMap(Collection<String> guideIds) throws InstanceNotFoundException, InternalErrorException {
         Map<String, Guide> guideMap = new HashMap<String, Guide>();
-        for(String guideId: guideIds){
+        for (String guideId : guideIds) {
             guideMap.put(guideId, getGuide(guideId));
         }
         return guideMap;
     }
 
-    public static boolean hasGuideObject(GuideDTO guideDTO){
+    public static boolean hasGuideObject(GuideDTO guideDTO) {
         return guideDTO.getGuideObject() != null;
     }
 
-    public static boolean isCompiled(GuideDTO guideDTO){
+    public static boolean isCompiled(GuideDTO guideDTO) {
         return guideDTO.getCompiledGuide() != null;
     }
 
-    public static Guides getInstance(){
-        if (_instance ==null){
-            _instance = new Guides();
+    public static Guides getInstance() {
+        if (instance == null) {
+            instance = new Guides();
         }
-        return _instance;
+        return instance;
     }
 }
 /*

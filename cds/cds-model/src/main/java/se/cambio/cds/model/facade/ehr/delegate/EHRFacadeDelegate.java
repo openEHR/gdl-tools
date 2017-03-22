@@ -11,17 +11,14 @@ import java.util.*;
 
 public interface EHRFacadeDelegate {
 
-    List<List<Object>> query(String sql)
-            throws InternalErrorException;
+    List<List<Object>> query(String sql);
 
-    EHRDataStream queryStream(String sql)
-            throws InternalErrorException;
+    EHRDataStream queryStream(String sql);
 
     Map<String, Collection<ArchetypeReference>> queryEHRElements(
 	    Collection<String> ehrIds,
 	    Collection<ArchetypeReference> archetypeReferences,
-        Calendar date)
-		    throws InternalErrorException, PatientNotFoundException;
+        Calendar date);
 
     Set<String> fetchEhrIds(
             DateTime beforeTimestamp,
