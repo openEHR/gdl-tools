@@ -2,9 +2,7 @@ package se.cambio.cds.gdl.editor.controller.sw;
 
 
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -14,22 +12,22 @@ public class CompileGuideSW extends CDSSwingWorker {
     private String errorMsg = null;
     private byte[] compiledGuide = null;
     private Guide guide = null;
-    private GDLEditor controller = null;
+    private GDLEditor gdlEditor;
 
-    public CompileGuideSW() {
-        controller = EditorManager.getActiveGDLEditor();
+    protected CompileGuideSW(GDLEditor gdlEditor) {
+        this.gdlEditor = gdlEditor;
     }
 
     @Override
     protected void executeCDSSW() throws InternalErrorException {
         try {
-            guide = controller.getEntity();
+            guide = gdlEditor.getEntity();
             if (guide != null) {
-                compiledGuide = GuideExportPluginDirectory.compile(guide);
+                compiledGuide = gdlEditor.getGuideExportPluginDirectory().compile(guide);
             }
         } catch (Throwable e) {
             errorMsg = e.getMessage();
-            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '" + controller.getEntity().getId() + "': " + e.getMessage());
+            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '" + gdlEditor.getEntity().getId() + "': " + e.getMessage());
             ExceptionHandler.handle(e);
         }
     }
@@ -47,11 +45,11 @@ public class CompileGuideSW extends CDSSwingWorker {
     }
 
     public GDLEditor getController() {
-        return controller;
+        return gdlEditor;
     }
 
     protected void done() {
-        controller.compilationFinished(errorMsg);
+        gdlEditor.compilationFinished(errorMsg);
     }
 }
 /*

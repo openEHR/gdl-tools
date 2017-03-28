@@ -2,6 +2,7 @@ package se.cambio.cds.gdl.editor.controller.sw;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.model.Guide;
@@ -16,9 +17,13 @@ import java.util.Collection;
 public class LoadEditorSW extends CDSSwingWorker {
 
     private DialogSplash dialog = null;
+    private GdlEditorFactory gdlEditorFactory;
+    private EditorManager editorManager;
 
-    public LoadEditorSW(DialogSplash dialog) {
+    public LoadEditorSW(DialogSplash dialog, GdlEditorFactory gdlEditorFactory, EditorManager editorManager) {
         this.dialog = dialog;
+        this.gdlEditorFactory = gdlEditorFactory;
+        this.editorManager = editorManager;
     }
 
     @Override
@@ -27,8 +32,10 @@ public class LoadEditorSW extends CDSSwingWorker {
 
     protected void done() {
         try {
-            GDLEditor controller = new GDLEditor(new Guide());
-            EditorManager.initController(controller);
+            GDLEditor controller = gdlEditorFactory.createGdlEditor(
+                    new Guide(),
+                    editorManager.getActiveEditorViewer());
+            editorManager.initController(controller);
             dialog.stop();
             Collection<InternalErrorException> internalErrorExceptions =
                     InitialLoadingObservable.getLoadingExceptions();
@@ -39,13 +46,13 @@ public class LoadEditorSW extends CDSSwingWorker {
                 }
                 DialogLongMessageNotice dialog =
                         new DialogLongMessageNotice(
-                                EditorManager.getActiveEditorWindow(),
+                                editorManager.getActiveEditorWindow(),
                                 GDLEditorLanguageManager.getMessage("ErrorsFoundLoading"),
                                 GDLEditorLanguageManager.getMessage("ErrorsFoundLoadingD"),
                                 errorsSB.toString(), MessageType.ERROR);
                 dialog.setVisible(true);
             }
-            EditorManager.getActiveEditorWindow().setVisible(true);
+            editorManager.getActiveEditorWindow().setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

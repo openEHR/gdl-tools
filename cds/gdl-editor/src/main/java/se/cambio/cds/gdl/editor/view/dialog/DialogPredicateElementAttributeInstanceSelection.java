@@ -1,9 +1,10 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.view.dialogs.DialogSelection;
+import se.cambio.openehr.view.util.WindowManager;
 
 import java.awt.*;
 
@@ -12,13 +13,13 @@ public class DialogPredicateElementAttributeInstanceSelection extends DialogSele
 
     private static final long serialVersionUID = 1L;
 
-    public DialogPredicateElementAttributeInstanceSelection(Window owner, String archetypeId, String templateId) {
+    public DialogPredicateElementAttributeInstanceSelection(WindowManager windowManager, String archetypeId, String templateId, ArchetypeManager archetypeManager) {
         super(
-                owner,
+                windowManager.getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getNodeAttributesAndFunctions(archetypeId, templateId, ArchetypeManager.getInstance()),
+                NodeDefinitionManager.getNodeAttributesAndFunctions(archetypeId, templateId, archetypeManager),
                 true,
-                new Dimension(500, 500));
+                new Dimension(500, 500), windowManager);
     }
 }
 /*

@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable;
 
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
@@ -13,16 +14,25 @@ public class ReadableGuide {
     private RuleLineCollection preconditionRuleLines = null;
     private RuleLineCollection defaultActions = null;
     private TermDefinition _termDefinition = null;
+    private ArchetypeReferencesManager archetypeReferencesManager;
     private ArchetypeManager archetypeManager;
 
-    public ReadableGuide(TermDefinition termDefinition, ArchetypeManager archetypeManager){
+    public ReadableGuide(
+            TermDefinition termDefinition,
+            ArchetypeManager archetypeManager,
+            ArchetypeReferencesManager archetypeReferencesManager){
         _termDefinition = termDefinition;
-        renderableRules = new LinkedHashMap<String, ReadableRule>();
+        this.archetypeReferencesManager = archetypeReferencesManager;
+        renderableRules = new LinkedHashMap<>();
         this.archetypeManager = archetypeManager;
     }
 
     public ArchetypeManager getArchetypeManager() {
         return archetypeManager;
+    }
+
+    public ArchetypeReferencesManager getArchetypeReferencesManager() {
+        return archetypeReferencesManager;
     }
 
     public String getLanguage(){

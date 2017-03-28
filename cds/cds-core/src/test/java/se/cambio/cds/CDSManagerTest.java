@@ -1,12 +1,7 @@
 package se.cambio.cds;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cds.GenericTestBase;
-import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.GeneratedElementInstance;
@@ -14,9 +9,9 @@ import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,9 +22,12 @@ import static org.junit.Assert.*;
 public class CDSManagerTest extends GenericTestBase {
 
 
+    @Autowired
+    ElementInstanceCollectionManager elementInstanceCollectionManager;
+
     @Test
     public void shouldContainGeneratedElementInstances(){
-        GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
+        GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection(elementInstanceCollectionManager);
 
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new GeneratedElementInstance("openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0006]", null, gar, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
@@ -50,7 +48,7 @@ public class CDSManagerTest extends GenericTestBase {
 
     @Test
     public void shouldContainPredicateGeneratedElementInstances(){
-        GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection();
+        GeneratedElementInstanceCollection geic = new GeneratedElementInstanceCollection(elementInstanceCollectionManager);
 
         GeneratedArchetypeReference gar = new GeneratedArchetypeReference(Domains.EHR_ID, "openEHR-EHR-EVALUATION.contact.v1", null);
         new PredicateGeneratedElementInstanceBuilder()

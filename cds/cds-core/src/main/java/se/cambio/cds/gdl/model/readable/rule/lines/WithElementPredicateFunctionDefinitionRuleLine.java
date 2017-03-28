@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import org.slf4j.LoggerFactory;
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.expression.UnaryExpression;
@@ -16,7 +17,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine{
+public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine {
 
     private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
     private PredicateComparisonFunctionRuleLineElement functionRuleLineElement = null;
@@ -52,8 +53,8 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         return functionRuleLineElement;
     }
 
-    public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+    private ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
+        return (ArchetypeInstantiationRuleLine) getParentRuleLine();
     }
 
     @Override
@@ -64,21 +65,21 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
                 getFunctionRuleLineElement().getValue();
         String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         return new UnaryExpression(
-                new Variable(null,name, path),
+                new Variable(null, name, path),
                 operatorKind);
     }
 
     @Override
     public String getPredicateDescription() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         ArchetypeElementRuleLineDefinitionElement aerlde = getArchetypeElementRuleLineDefinitionElement();
-        if (aerlde!=null){
+        if (aerlde != null) {
             ArchetypeElementVO archetypeElementVO = aerlde.getValue();
-            if (archetypeElementVO!=null){
+            if (archetypeElementVO != null) {
                 String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
-                sb.append(getFunctionRuleLineElement().getValue()+"("+name+")");
-            }else{
-                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                sb.append(getFunctionRuleLineElement().getValue()).append("(").append(name).append(")");
+            } else {
+                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + aerlde.toString() + "'");
                 sb.append("*UNKNOWN PREDICATE*");
             }
         }

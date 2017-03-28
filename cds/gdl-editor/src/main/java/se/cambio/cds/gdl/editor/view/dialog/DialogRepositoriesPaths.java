@@ -27,11 +27,13 @@ public class DialogRepositoriesPaths extends DialogEditor {
     private FileSelectionPanel terminologiesRepositoryFolderPanel = null;
     private FileSelectionPanel guidesRepositoryFolderPanel = null;
     private Logger logger = LoggerFactory.getLogger(DialogRepositoriesPaths.class);
+    private EditorManager editorManager;
 
-    public DialogRepositoriesPaths() {
-        super(EditorManager.getActiveEditorWindow(),
+    public DialogRepositoriesPaths(EditorManager editorManager) {
+        super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SelectRepositories"),
                 new Dimension(500, 380), true);
+        this.editorManager = editorManager;
         initialize();
     }
 
@@ -53,7 +55,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
 
     private FileSelectionPanel getArchetypeRepositoryFolderPanel() {
         if (archetypesRepositoryFolderPanel == null) {
-            archetypesRepositoryFolderPanel = new FileSelectionPanel(getArchetypeFolderChooser());
+            archetypesRepositoryFolderPanel = new FileSelectionPanel(getArchetypeFolderChooser(), editorManager);
             archetypesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ArchetypeRepository")));
 
@@ -73,7 +75,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
 
     private FileSelectionPanel getTemplateRepositoryFolderPanel() {
         if (templatesRepositoryFolderPanel == null) {
-            templatesRepositoryFolderPanel = new FileSelectionPanel(getTemplateFolderChooser());
+            templatesRepositoryFolderPanel = new FileSelectionPanel(getTemplateFolderChooser(), editorManager);
             templatesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("TemplateRepository")));
 
@@ -93,7 +95,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
 
     private FileSelectionPanel getTerminologiesRepositoryFolderPanel() {
         if (terminologiesRepositoryFolderPanel == null) {
-            terminologiesRepositoryFolderPanel = new FileSelectionPanel(getTerminologiesFolderChooser());
+            terminologiesRepositoryFolderPanel = new FileSelectionPanel(getTerminologiesFolderChooser(), editorManager);
             terminologiesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("TerminologiesRepository")));
 
@@ -113,7 +115,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
 
     private FileSelectionPanel getGuidesRepositoryFolderPanel() {
         if (guidesRepositoryFolderPanel == null) {
-            guidesRepositoryFolderPanel = new FileSelectionPanel(getGuidesFolderChooser());
+            guidesRepositoryFolderPanel = new FileSelectionPanel(getGuidesFolderChooser(), editorManager);
             guidesRepositoryFolderPanel.setBorder(
                     BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("GuidelinesRepository")));
 
@@ -143,7 +145,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
             UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesFolderStrSelected);
             UserConfigurationManager.instance().setGuidelinesFolderPath(guidesFolderStrSelected);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), "ERROR : " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), "ERROR : " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {

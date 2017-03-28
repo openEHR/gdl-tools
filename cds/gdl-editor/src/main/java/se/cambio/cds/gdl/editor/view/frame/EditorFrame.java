@@ -17,10 +17,13 @@ public class EditorFrame extends JFrame implements EditorViewer {
 
 
     private static final long serialVersionUID = 1L;
-    private MainMenuBar principalMenuBar;
+    private EditorManager editorManager;
+    private MainMenuBar mainMenuBar;
 
-    public EditorFrame() {
+    public EditorFrame(EditorManager editorManager, MainMenuBar mainMenuBar) {
         super();
+        this.editorManager = editorManager;
+        this.mainMenuBar = mainMenuBar;
         initialize();
     }
 
@@ -29,7 +32,7 @@ public class EditorFrame extends JFrame implements EditorViewer {
         setPositionAndDimension();
         this.setResizable(true);
         this.addWindowListener(new WindowListener());
-        this.setJMenuBar(getMainMenuBar());
+        this.setJMenuBar(mainMenuBar);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setIconImage(GDLEditorImageUtil.LOGO.getImage());
     }
@@ -50,8 +53,8 @@ public class EditorFrame extends JFrame implements EditorViewer {
 
     protected class WindowListener extends WindowAdapter {
         public void windowClosing(WindowEvent we) {
-            EditorManager.requestFocusInWindow();
-            EditorManager.closeEditor();
+            editorManager.requestFocusInWindow();
+            editorManager.closeEditor();
         }
     }
 
@@ -59,13 +62,6 @@ public class EditorFrame extends JFrame implements EditorViewer {
         String buildNum = Version.getBuildNum();
         setTitle(controller.getTitle() + (buildNum != null ? " - (" + buildNum + ")" : ""));
         controller.init();
-    }
-
-    public MainMenuBar getMainMenuBar() {
-        if (principalMenuBar == null) {
-            principalMenuBar = new MainMenuBar();
-        }
-        return principalMenuBar;
     }
 
     public void setContent(JPanel panel) {

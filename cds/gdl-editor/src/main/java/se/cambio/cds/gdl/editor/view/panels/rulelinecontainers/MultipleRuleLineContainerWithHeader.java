@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
@@ -9,14 +10,16 @@ import java.awt.*;
 public class MultipleRuleLineContainerWithHeader extends MultipleRuleLinePanel {
 
     private static final long serialVersionUID = 1L;
+    private GDLEditor gdlEditor;
 
-    public MultipleRuleLineContainerWithHeader(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine) {
-        super(ruleLinesPanel, ruleLine);
+    public MultipleRuleLineContainerWithHeader(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
+        super(ruleLinesPanel, ruleLine, gdlEditor);
+        this.gdlEditor = gdlEditor;
         init();
     }
 
     private void init() {
-        getMainPanel().add(ReadableRuleLineFactory.createRuleLinePanel(getRuleLinesPanel(), getRuleLine()), BorderLayout.NORTH);
+        getMainPanel().add(ReadableRuleLineFactory.createRuleLinePanel(getRuleLinesPanel(), getRuleLine(), gdlEditor), BorderLayout.NORTH);
     }
 }
 /*

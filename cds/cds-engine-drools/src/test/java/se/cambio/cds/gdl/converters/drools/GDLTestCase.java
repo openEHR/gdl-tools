@@ -13,6 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.configuration.DroolsConfiguration;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.controller.session.data.Guides;
@@ -22,12 +23,10 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.cm.configuration.TerminologyServiceConfiguration;
-import se.cambio.cm.model.configuration.CmPersistenceConfig;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -39,57 +38,63 @@ import java.util.Collection;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CmPersistenceConfig.class, TerminologyServiceConfiguration.class, CdsConfiguration.class})
+@ContextConfiguration(classes = DroolsConfiguration.class)
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public abstract class GDLTestCase {
 
     @Autowired
-    CDSManager cdsManager;
+    private CDSManager cdsManager;
 
     @Value("classpath:/archetypes")
-    Resource archetypesResource;
+    private Resource archetypesResource;
 
     @Value("classpath:/templates1")
-    Resource templatesResource;
+    private Resource templatesResource;
 
     @Value("classpath:/terminologies")
-    Resource terminologiesResource;
+    private Resource terminologiesResource;
 
     @Value("classpath:/guides")
-    Resource guidelinesResource;
+    private Resource guidelinesResource;
 
     @Autowired
-    DroolsRuleEngineFacadeDelegate droolsRuleEngineFacadeDelegate;
+    private DroolsRuleEngineFacadeDelegate droolsRuleEngineFacadeDelegate;
 
-    public static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
-    public static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
-    public static String DIAGNOSIS_CODE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]";
-    public static String DIAGNOSIS_DATE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]";
+    @Autowired
+    private Guides guides;
 
-    public static String MEDICATION_ARCHETYPE_ID = "openEHR-EHR-INSTRUCTION.medication.v1";
-    public static String MEDICATION_TEMPLATE_ID = "medication_atc_indicator";
-    public static String MEDICATION_CODE_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]";
-    public static String MEDICATION_DATE_INIT_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]";
-    public static String MEDICATION_DATE_END_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]";
+    @Autowired
+    private ElementInstanceCollectionManager elementInstanceCollectionManager;
 
-    public static String BASIC_DEMOGRAPHICS_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1";
-    public static String BIRTHDATE_DATE_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
-    public static String GENDER_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]";
+    static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
+    static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
+    static String DIAGNOSIS_CODE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0002.1]";
+    static String DIAGNOSIS_DATE_ELEMENT_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1/data[at0001]/items[at0003]";
 
-    public static String WEIGHT_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.body_weight.v1";
-    public static String WEIGHT_ELEMENT_ID = "openEHR-EHR-OBSERVATION.body_weight.v1/data[at0002]/events[at0003]/data[at0001]/items[at0004]";
-    public static String WEIGHT_EVENT_TIME_ELEMENT_ID = "openEHR-EHR-OBSERVATION.body_weight.v1/data/events/time";
+    static String MEDICATION_ARCHETYPE_ID = "openEHR-EHR-INSTRUCTION.medication.v1";
+    static String MEDICATION_TEMPLATE_ID = "medication_atc_indicator";
+    static String MEDICATION_CODE_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0012]";
+    static String MEDICATION_DATE_INIT_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0019]";
+    static String MEDICATION_DATE_END_ELEMENT_ID = "openEHR-EHR-INSTRUCTION.medication.v1/activities[at0001]/description[openEHR-EHR-ITEM_TREE.medication.v1]/items[at0018]/items[at0032]";
+
+    static String BASIC_DEMOGRAPHICS_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1";
+    static String BIRTHDATE_DATE_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0008]";
+    static String GENDER_ELEMENT_ID = "openEHR-EHR-OBSERVATION.basic_demographic.v1/data[at0001]/events[at0002]/data[at0003]/items[at0004]";
+
+    static String WEIGHT_ARCHETYPE_ID = "openEHR-EHR-OBSERVATION.body_weight.v1";
+    static String WEIGHT_ELEMENT_ID = "openEHR-EHR-OBSERVATION.body_weight.v1/data[at0002]/events[at0003]/data[at0001]/items[at0004]";
+    static String WEIGHT_EVENT_TIME_ELEMENT_ID = "openEHR-EHR-OBSERVATION.body_weight.v1/data/events/time";
 
 
-    public static String CONTACT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.contact.v1";
-    public static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
-    public static String CONTACT_DATE_START_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]";
-    public static String CONTACT_PRIMARY_CARE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0011]";
-    public static String CONTACT_DOCTOR_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0014]";
-    public static String CONTACT_ADMINISTRATIVE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0015]";
+    static String CONTACT_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.contact.v1";
+    static String CONTACT_DATE_END_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0004]";
+    static String CONTACT_DATE_START_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0003]";
+    static String CONTACT_PRIMARY_CARE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0011]";
+    static String CONTACT_DOCTOR_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0014]";
+    static String CONTACT_ADMINISTRATIVE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0015]";
 
     @Before
-    public void initializeCM() throws URISyntaxException, IOException {
+    void initializeCM() throws URISyntaxException, IOException {
         UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
         UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
         UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
@@ -105,7 +110,7 @@ public abstract class GDLTestCase {
         return ar;
     }
 
-    public static ArchetypeReference generateBasicDemographicsArchetypeReference(Calendar birthdate, Gender gender) {
+    static ArchetypeReference generateBasicDemographicsArchetypeReference(Calendar birthdate, Gender gender) {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.BASIC_DEMOGRAPHICS_ARCHETYPE_ID, null);
         String localGenderCode = gender == Gender.FEMALE ? "at0006" : "at0005";
         DataValue dataValue = new DvCodedText(localGenderCode, "local", localGenderCode);
@@ -115,7 +120,7 @@ public abstract class GDLTestCase {
         return ar;
     }
 
-    public static ArchetypeReference generateWeightArchetypeReference(Calendar date, Double weightInKg) {
+    static ArchetypeReference generateWeightArchetypeReference(Calendar date, Double weightInKg) {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.WEIGHT_ARCHETYPE_ID, null);
         DataValue dataValue = new DvQuantity("kg", weightInKg, 2);
         new ElementInstance(WEIGHT_ELEMENT_ID, dataValue, ar, null, null);
@@ -125,7 +130,7 @@ public abstract class GDLTestCase {
     }
 
 
-    public static ArchetypeReference generateOngoingMedicationArchetypeReference(String atcCode) {
+    static ArchetypeReference generateOngoingMedicationArchetypeReference(String atcCode) {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.MEDICATION_ARCHETYPE_ID, GDLTestCase.MEDICATION_TEMPLATE_ID);
         DataValue dataValue = new DvCodedText(atcCode, "ATC", atcCode);
         new ElementInstance(GDLTestCase.MEDICATION_CODE_ELEMENT_ID, dataValue, ar, null, null);
@@ -135,7 +140,7 @@ public abstract class GDLTestCase {
         return ar;
     }
 
-    public static ArchetypeReference generateContactArchetypeReference(DateTime dateTime) {
+    static ArchetypeReference generateContactArchetypeReference(DateTime dateTime) {
         ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.CONTACT_ARCHETYPE_ID, null);
         if (dateTime == null) {
             dateTime = new DateTime();
@@ -145,7 +150,7 @@ public abstract class GDLTestCase {
         return ar;
     }
 
-    public static ArchetypeReference generateContactArchetypeReference(DateTime startTime, DateTime endTime, boolean primaryCare, boolean doctor, boolean administrative) {
+    static ArchetypeReference generateContactArchetypeReference(DateTime startTime, DateTime endTime, boolean primaryCare, boolean doctor, boolean administrative) {
         ArchetypeReference ar = generateContactArchetypeReference(endTime);
         DataValue dataValue = new DvDateTime(startTime.toString());
         new ElementInstance(GDLTestCase.CONTACT_DATE_START_ELEMENT_ID, dataValue, ar, null, null);
@@ -159,7 +164,7 @@ public abstract class GDLTestCase {
         return ar;
     }
 
-    public static Collection<ElementInstance> getElementInstances(Collection<ArchetypeReference> ars) {
+    static Collection<ElementInstance> getElementInstances(Collection<ArchetypeReference> ars) {
         Collection<ElementInstance> eis = new ArrayList<>();
         for (ArchetypeReference ar : ars) {
             eis.addAll(ar.getElementInstancesMap().values());
@@ -167,16 +172,16 @@ public abstract class GDLTestCase {
         return eis;
     }
 
-    public static GuideManager generateGuideManager(Collection<String> guideIds) throws InternalErrorException, InstanceNotFoundException {
-        Collection<GuideDTO> guideDTOs = Guides.getInstance().getCMElementByIds(guideIds);
-        return new GuideManager(guideDTOs);
+    GuideManager generateGuideManager(Collection<String> guideIds) throws InternalErrorException, InstanceNotFoundException {
+        Collection<GuideDTO> guideDTOs = guides.getCMElementByIds(guideIds);
+        return new GuideManager(guideDTOs, elementInstanceCollectionManager);
     }
 
-    public RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances) {
+    RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances) {
         return executeGuides(guideIds, elementInstances, Calendar.getInstance());
     }
 
-    public RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances, Calendar cal) {
+    RuleExecutionResult executeGuides(List<String> guideIds, Collection<ElementInstance> elementInstances, Calendar cal) {
         RuleExecutionResult rer = null;
         try {
             StringBuilder guideIdsSB = new StringBuilder();
@@ -187,7 +192,7 @@ public abstract class GDLTestCase {
             }
             GuideManager guideManager = generateGuideManager(guideIds);
             long startTime = System.currentTimeMillis();
-            ElementInstanceCollection eic = new ElementInstanceCollection();
+            ElementInstanceCollection eic = new ElementInstanceCollection(elementInstanceCollectionManager);
             eic.addAll(elementInstances);
             cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
             Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();

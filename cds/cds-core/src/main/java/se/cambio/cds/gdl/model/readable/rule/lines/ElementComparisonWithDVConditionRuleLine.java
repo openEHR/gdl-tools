@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import org.openehr.rm.datatypes.basic.DataValue;
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
@@ -64,7 +65,7 @@ public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine
                     getArchetypeElementRuleLineElement().getValue().getValue();
             DataValue dataValue =
                     getArchetypeDataValueRuleLineElement().getValue();
-            ConstantExpression constantExpression = null;
+            ConstantExpression constantExpression;
             if (dataValue!=null){
                 constantExpression = DVUtil.convertToExpression(dataValue);
             }else{

@@ -1,12 +1,11 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
-import se.cambio.cds.controller.session.data.ArchetypeReferences;
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeElementVO> {
 
@@ -27,7 +26,7 @@ public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWi
         if (getValue() == null) {
             return OpenEHRLanguageManager.getMessageWithLanguage("Element", lang);
         } else {
-            return ArchetypeReferences.getHTMLTooltip(getValue(), getArchetypeReference());
+            return getArchetypeReferencesManager().getHTMLTooltip(getValue(), getArchetypeReference());
         }
     }
 
@@ -38,8 +37,7 @@ public class ArchetypeElementRuleLineDefinitionElement extends RuleLineElementWi
     @Override
     public String getLabelText(String lang) {
         if (getValue() != null) {
-            String name = getArchetypeManager().getArchetypeElements().getText(getValue(), getLanguage());
-            return name;
+            return getArchetypeManager().getArchetypeElements().getText(getValue(), getLanguage());
         } else {
             return super.getLabelText(lang);
         }

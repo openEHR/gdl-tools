@@ -13,6 +13,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.configuration.DroolsConfiguration;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -24,7 +25,6 @@ import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.EhrDataFilterManager;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -35,14 +35,14 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CdsConfiguration.class})
+@ContextConfiguration(classes = {DroolsConfiguration.class})
 public class BasicGDLTest extends GDLTestCase {
 
     @Autowired
-    EhrDataFilterManager ehrDataFilterManager;
+    private EhrDataFilterManager ehrDataFilterManager;
 
     @Autowired
-    CDSManager cdsManager;
+    private CDSManager cdsManager;
 
     public BasicGDLTest() {
         super();
@@ -392,7 +392,7 @@ public class BasicGDLTest extends GDLTestCase {
 
     @Test
     public void shouldAllowFiredRulesConditions() {
-        Collection<ElementInstance> elementInstances = getElementInstances(new ArrayList<ArchetypeReference>());
+        Collection<ElementInstance> elementInstances = getElementInstances(new ArrayList<>());
         List<String> guideIds = new ArrayList<>();
         guideIds.add("fired_rule_test");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
@@ -454,7 +454,7 @@ public class BasicGDLTest extends GDLTestCase {
         ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
         ehrArs.add(ar);
 
-        List<String> guideIds = Arrays.asList("test_attribute_predicate");
+        List<String> guideIds = Collections.singletonList("test_attribute_predicate");
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
 

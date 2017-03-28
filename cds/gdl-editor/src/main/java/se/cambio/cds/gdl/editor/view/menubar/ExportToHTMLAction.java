@@ -11,7 +11,6 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -28,40 +27,43 @@ import java.io.IOException;
 public class ExportToHTMLAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private GuideHTMLExporter guideHTMLExporter;
+    private EditorManager editorManager;
 
-    ExportToHTMLAction(){
+    ExportToHTMLAction(GuideHTMLExporter guideHTMLExporter, EditorManager editorManager) {
         super();
-        putValue(NAME, GDLEditorLanguageManager.getMessage("ExportToHTML")+"...");
+        this.guideHTMLExporter = guideHTMLExporter;
+        this.editorManager = editorManager;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("ExportToHTML") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
     }
 
     public void actionPerformed(ActionEvent e) {
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
+        GDLEditor controller = editorManager.getActiveGDLEditor();
         Guide guide = controller.getEntity();
-        GuideHTMLExporter guideHTMLExporter = new GuideHTMLExporter(ArchetypeManager.getInstance());
-        exportToHTML(EditorManager.getActiveEditorWindow(), guide, controller.getCurrentLanguageCode(), guideHTMLExporter);
+        exportToHTML(editorManager.getActiveEditorWindow(), guide, controller.getCurrentLanguageCode(), guideHTMLExporter);
     }
 
-    private void exportToHTML(Window owner, Guide guide, String lang, GuideHTMLExporter guideHTMLExporter){
+    private void exportToHTML(Window owner, Guide guide, String lang, GuideHTMLExporter guideHTMLExporter) {
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("HTML",new String[]{"html"});
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("HTML", "html");
         fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ExportToHTML"));
         fileChooser.setFileFilter(filter);
-        File selectedFile = new File(guide.getId()+".html");
+        File selectedFile = new File(guide.getId() + ".html");
         fileChooser.setSelectedFile(selectedFile);
         int result = fileChooser.showSaveDialog(owner);
-        if (result != JFileChooser.CANCEL_OPTION){
-            try{
+        if (result != JFileChooser.CANCEL_OPTION) {
+            try {
                 selectedFile = fileChooser.getSelectedFile();
                 FileWriter fstream = new FileWriter(selectedFile);
                 BufferedWriter out = new BufferedWriter(fstream);
                 out.write(guideHTMLExporter.convertToHTML(guide, lang));
                 out.close();
-            }catch(IOException e){
+            } catch (IOException e) {
                 ExceptionHandler.handle(e);
-            }catch(InternalErrorException e){
+            } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
             }
         }

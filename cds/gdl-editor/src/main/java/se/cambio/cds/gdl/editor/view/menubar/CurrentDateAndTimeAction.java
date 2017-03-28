@@ -10,15 +10,18 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogCurrentTimeSelection;
 
 public class CurrentDateAndTimeAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
 
-    CurrentDateAndTimeAction() {
+    CurrentDateAndTimeAction(EditorManager editorManager) {
         super();
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("DefaultDateTime") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeSD"));
@@ -26,7 +29,7 @@ public class CurrentDateAndTimeAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        new DialogCurrentTimeSelection().setVisible(true);
+        new DialogCurrentTimeSelection(editorManager).setVisible(true);
     }
 }
 /*

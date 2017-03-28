@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.view.listeners;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.panels.DraggableSelectableRuleLinePanel;
@@ -19,9 +20,11 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
     private RuleLinesPanel ruleLinesPanel = null;
     private RuleLineContainerPanel draggedPanel = null;
     private RuleLineContainerPanel backUpRLC = null;
+    private GDLEditor gdlEditor;
 
-    public SelectableRuleLineDragMouseListener(RuleLinesPanel ruleLinesPanel) {
+    public SelectableRuleLineDragMouseListener(RuleLinesPanel ruleLinesPanel, GDLEditor gdlEditor) {
         this.ruleLinesPanel = ruleLinesPanel;
+        this.gdlEditor = gdlEditor;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
         p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
         if (clickedJComponent instanceof DraggableSelectableRuleLinePanel) {
             ruleLine = ((DraggableSelectableRuleLinePanel) clickedJComponent).getRuleLine();
-            draggedPanel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine);
+            draggedPanel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
         } else {
             //Component component = ruleLinesPanel.findComponentAt(p);
             draggedPanel = getRuleLineContainer(clickedJComponent);

@@ -1,48 +1,46 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElement;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DialogElementAttributeFunctionInstanceSelection extends DialogSelection{
+public class DialogElementAttributeFunctionInstanceSelection extends DialogSelection {
 
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
     private GDLEditor controller = null;
     private Object selectedObject = null;
+    private final NodeDefinitionManager nodeDefinitionManager;
     private boolean onlyCDSDomain;
     private JButton addElementButton;
     private ArchetypeReference archetypeReference;
 
-    public DialogElementAttributeFunctionInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain, ArchetypeReference ar) {
+    public DialogElementAttributeFunctionInstanceSelection(GDLEditor controller, NodeDefinitionManager nodeDefinitionManager, boolean onlyCDSDomain, ArchetypeReference ar) {
         super(
-                owner,
+                controller.getWindowManager().getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getNodeAttributesAndFunctions(controller, onlyCDSDomain, ar),
+                nodeDefinitionManager.getNodeAttributesAndFunctions(controller, onlyCDSDomain, ar),
                 true,
-                new Dimension(500,500));
+                new Dimension(500, 500), controller.getWindowManager());
         this.controller = controller;
+        this.nodeDefinitionManager = nodeDefinitionManager;
         this.onlyCDSDomain = onlyCDSDomain;
         archetypeReference = ar;
         initButtons();
     }
 
-    private void initButtons(){
+    private void initButtons() {
         getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());
         getSelectionPanel().getFilterPanel().add(getAddElementButton());
     }
@@ -58,10 +56,10 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
                 accept();
                 ArchetypeInstantiationRuleLine airl =
                         controller.addArchetypeReference(onlyCDSDomain);
-                if (airl!=null){
+                if (airl != null) {
                     ArchetypeElementInstantiationRuleLine aeirl =
                             controller.addArchetypeElement(airl);
-                    if (aeirl!=null){
+                    if (aeirl != null) {
                         selectAttributeFromGTCodeRLE(aeirl);
                     }
                 }
@@ -82,51 +80,47 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
         return addElementButton;
     }
 
-    private void addElement(){
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
+    private void addElement() {
         DialogElementInstanceSelection dialog =
-                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false, archetypeReference);
+                new DialogElementInstanceSelection(
+                        controller,
+                        nodeDefinitionManager,
+                        false, archetypeReference);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             Object selectedObject = dialog.getSelectedObject();
-            if (selectedObject instanceof ArchetypeInstantiationRuleLine){
-                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
+            if (selectedObject instanceof ArchetypeInstantiationRuleLine) {
+                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) selectedObject;
                 assert controller != null;
                 ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
-                if (aeirl!=null){
+                if (aeirl != null) {
                     selectAttributeFromGTCodeRLE(aeirl);
                 }
-            }else if (selectedObject instanceof GTCodeRuleLineElement){
-                GTCodeRuleLineElement gtCodeRLE = (GTCodeRuleLineElement)selectedObject;
-                selectAttributeFromGTCodeRLE((ArchetypeElementInstantiationRuleLine)gtCodeRLE.getParentRuleLine());
+            } else if (selectedObject instanceof GTCodeRuleLineElement) {
+                GTCodeRuleLineElement gtCodeRLE = (GTCodeRuleLineElement) selectedObject;
+                selectAttributeFromGTCodeRLE((ArchetypeElementInstantiationRuleLine) gtCodeRLE.getParentRuleLine());
             }
         }
     }
 
-    private void selectAttributeFromGTCodeRLE(ArchetypeElementInstantiationRuleLine aeirl){
+    private void selectAttributeFromGTCodeRLE(ArchetypeElementInstantiationRuleLine aeirl) {
         RuleLineCollection definitionRuleLines = new RuleLineCollection(aeirl.getReadableGuide());
         definitionRuleLines.add(aeirl);
-        SelectableNode<Object> rootNode = NodeDefinitionConversor.getSingleNodeAttributesAndFunctions();
-        try {
-            NodeDefinitionConversor.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, onlyCDSDomain, archetypeReference);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        SelectableNode<Object> rootNode = NodeDefinitionManager.getSingleNodeAttributesAndFunctions();
+        nodeDefinitionManager.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, onlyCDSDomain, archetypeReference);
         DialogSelection dialog =
-                new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode);
+                new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode, controller.getWindowManager());
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             selectedObject = dialog.getSelectedObject();
             accept();
         }
     }
 
-    public Object getSelectedObject(){
-        if (selectedObject !=null){
+    public Object getSelectedObject() {
+        if (selectedObject != null) {
             return selectedObject;
-        }else{
+        } else {
             return super.getSelectedObject();
         }
     }

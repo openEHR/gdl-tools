@@ -18,9 +18,11 @@ import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 public class AboutGDLEditorMenuAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
 
-    AboutGDLEditorMenuAction() {
+    AboutGDLEditorMenuAction(EditorManager editorManager) {
         super();
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("AboutGDLEditor") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("AboutGDLEditorD"));
@@ -28,7 +30,7 @@ public class AboutGDLEditorMenuAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        new DialogSplash(EditorManager.getActiveEditorWindow(), false).setVisible(true);
+        new DialogSplash(editorManager.getActiveEditorWindow(), false).setVisible(true);
     }
 }
 /*

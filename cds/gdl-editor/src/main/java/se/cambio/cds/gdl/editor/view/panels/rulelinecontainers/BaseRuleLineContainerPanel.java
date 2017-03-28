@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
@@ -14,26 +15,24 @@ public class BaseRuleLineContainerPanel extends RuleLineContainerPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private RuleLinesPanel _ruleLinesPanel = null;
-    private RuleLineCollection _ruleLines = null;
+    private RuleLinesPanel ruleLinesPanel = null;
+    private RuleLineCollection ruleLines = null;
+    private GDLEditor gdlEditor;
 
-    public BaseRuleLineContainerPanel(RuleLinesPanel ruleLinesPanel, RuleLineCollection ruleLines) {
-        _ruleLinesPanel = ruleLinesPanel;
-        _ruleLines = ruleLines;
+    public BaseRuleLineContainerPanel(RuleLinesPanel ruleLinesPanel, RuleLineCollection ruleLines, GDLEditor gdlEditor) {
+        this.ruleLinesPanel = ruleLinesPanel;
+        this.ruleLines = ruleLines;
+        this.gdlEditor = gdlEditor;
         init();
     }
 
     private void init() {
         this.setLayout(new BorderLayout());
         this.add(getRuleLineListPanel(), BorderLayout.NORTH);
-        for (RuleLine ruleLine : _ruleLines.getRuleLines()) {
-            JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
+        for (RuleLine ruleLine : ruleLines.getRuleLines()) {
+            JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
             getRuleLineListPanel().add(panel);
         }
-    }
-
-    public void addRuleLine(RuleLineContainerPanel ruleLineContainerPanel) {
-        getRuleLineListPanel().add(ruleLineContainerPanel);
     }
 
     private JPanel getRuleLineListPanel() {

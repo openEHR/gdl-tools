@@ -4,6 +4,7 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.panelplugins.GDLEditorPluginPanelManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.util.export.html.GuideHTMLExporter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,19 +23,21 @@ public class GuidePanel extends JPanel {
     private MultipleBindingsPanel bindingTabPanel;
     private GDLPanel gdlPanel;
     private HTMLPanel htmlPanel;
+    private GuideHTMLExporter guideHtmlExporter;
 
-    GuidePanel(GDLEditor controller){
+    GuidePanel(GDLEditor controller, GuideHTMLExporter guideHtmlExporter) {
         this.controller = controller;
+        this.guideHtmlExporter = guideHtmlExporter;
         init();
     }
 
-    private  void init() {
+    private void init() {
         this.setLayout(new BorderLayout());
         this.add(getGuideEditorTabPane());
     }
 
-    public JTabbedPane getGuideEditorTabPane(){
-        if ( guideEditorTabPane == null){
+    public JTabbedPane getGuideEditorTabPane() {
+        if (guideEditorTabPane == null) {
             guideEditorTabPane = new JTabbedPane();
             guideEditorTabPane.addTab(
                     GDLEditorLanguageManager.getMessage("Description"),
@@ -83,8 +86,8 @@ public class GuidePanel extends JPanel {
             }
 
             guideEditorTabPane.addChangeListener(e -> {
-                if (e.getSource() instanceof JTabbedPane){
-                    final Component comp = ((JTabbedPane)e.getSource()).getSelectedComponent();
+                if (e.getSource() instanceof JTabbedPane) {
+                    final Component comp = ((JTabbedPane) e.getSource()).getSelectedComponent();
                     controller.tabChanged(comp);
                 }
             });
@@ -92,65 +95,65 @@ public class GuidePanel extends JPanel {
         return guideEditorTabPane;
     }
 
-    private JPanel getRefreshableDescriptionPanel(){
-        if (descriptionPanel==null){
-            descriptionPanel = new RefreshableDescriptionPanel(controller);
+    private JPanel getRefreshableDescriptionPanel() {
+        if (descriptionPanel == null) {
+            descriptionPanel = new RefreshableDescriptionPanel(controller, controller.getEditorWindow());
         }
         return descriptionPanel;
     }
 
-    RulesPanel getRulesPanel(){
-        if (rulesPanel==null){
+    RulesPanel getRulesPanel() {
+        if (rulesPanel == null) {
             rulesPanel = new RulesPanel(controller);
         }
         return rulesPanel;
     }
 
-    private RuleLinesPanel getPreconditionsPanel(){
-        if (preconditionsPanel==null){
+    private RuleLinesPanel getPreconditionsPanel() {
+        if (preconditionsPanel == null) {
             preconditionsPanel = new PreconditionRuleLinesPanel(controller);
         }
         return preconditionsPanel;
     }
 
-    private RuleLinesPanel getDefaultActionsPanel(){
-        if (defaultActionsPanel ==null){
+    private RuleLinesPanel getDefaultActionsPanel() {
+        if (defaultActionsPanel == null) {
             defaultActionsPanel = new DefaultActionsPanel(controller);
         }
         return defaultActionsPanel;
     }
 
-    private RuleLinesPanel getDefinitionsPanel(){
-        if (definitionsPanel==null){
+    private RuleLinesPanel getDefinitionsPanel() {
+        if (definitionsPanel == null) {
             definitionsPanel = new DefinitionRuleLinesPanel(controller);
         }
         return definitionsPanel;
     }
 
-    private TerminologyPanel getTerminologyPanel(){
-        if (terminologyPanel ==null){
+    private TerminologyPanel getTerminologyPanel() {
+        if (terminologyPanel == null) {
             terminologyPanel = new TerminologyPanel(controller);
         }
         return terminologyPanel;
     }
 
-    MultipleBindingsPanel getBindingPanel(){
-        if (bindingTabPanel==null){
+    MultipleBindingsPanel getBindingPanel() {
+        if (bindingTabPanel == null) {
             bindingTabPanel = new MultipleBindingsPanel(controller);
         }
         return bindingTabPanel;
     }
 
-    private GDLPanel getGDLPanel(){
-        if (gdlPanel==null){
+    private GDLPanel getGDLPanel() {
+        if (gdlPanel == null) {
             gdlPanel = new GDLPanel(controller);
         }
         return gdlPanel;
     }
 
-    private HTMLPanel getHTMLPanel(){
-        if (htmlPanel==null){
-            htmlPanel = new HTMLPanel(controller);
+    private HTMLPanel getHTMLPanel() {
+        if (htmlPanel == null) {
+            htmlPanel = new HTMLPanel(controller, guideHtmlExporter);
         }
         return htmlPanel;
     }

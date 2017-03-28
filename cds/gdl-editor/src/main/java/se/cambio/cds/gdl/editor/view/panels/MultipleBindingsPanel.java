@@ -1,13 +1,11 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogTerminologyIdSelection;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.view.swing.panel.interfaces.ClosableTabbebPane;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
@@ -82,7 +80,7 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
 
     private String createNewTerminologyBinding() throws InternalErrorException {
         List<String> terminologyIds = getTerminologyIdsAvailable();
-        DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(EditorManager.getActiveEditorWindow(), terminologyIds);
+        DialogTerminologyIdSelection dialog = new DialogTerminologyIdSelection(controller.getWindowManager(), terminologyIds);
         dialog.setVisible(true);
         String terminologyId = dialog.getSelectedObject();
         Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
@@ -137,7 +135,7 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
 
     private List<String> getTerminologyIdsAvailable() throws InternalErrorException {
         List<String> terminologyIdsAvailable = new ArrayList<>();
-        Collection<String> supportedTerminologiesIds = OpenEHRSessionManager.getTerminologyFacadeDelegate().getSupportedTerminologies();
+        Collection<String> supportedTerminologiesIds = controller.getTerminologyService().getSupportedTerminologies();
         Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
         for(String terminologyId: supportedTerminologiesIds){
             if (!terminologyIdsUsed.contains(terminologyId)){

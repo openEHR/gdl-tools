@@ -1,0 +1,165 @@
+package se.cambio.cds.gdl.editor.configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
+import se.cambio.cds.configuration.DroolsConfiguration;
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
+import se.cambio.cds.gdl.converters.drools.DroolsGuideExportPlugin;
+import se.cambio.cds.gdl.editor.controller.*;
+import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
+import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
+import se.cambio.cds.util.GuideImporter;
+import se.cambio.cds.util.export.html.GuideHTMLExporter;
+import se.cambio.cds.view.swing.DvSwingManager;
+import se.cambio.cm.controller.terminology.TerminologyService;
+import se.cambio.openehr.configuration.OpenEhrSwingConfiguration;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.TerminologyDialogManager;
+import se.cambio.openehr.view.util.DVPanelFactory;
+import se.cambio.openehr.view.util.ImportManager;
+import se.cambio.openehr.view.util.WindowManager;
+
+@Configuration
+@PropertySources({
+        @PropertySource(value = "classpath:default-gdl-editor-config.properties", ignoreResourceNotFound = true),
+        @PropertySource(value = "file:conf/gdl-editor-config.properties", ignoreResourceNotFound = true)
+})
+@Import({DroolsConfiguration.class, OpenEhrSwingConfiguration.class})
+public class GDLEditorConfiguration {
+
+    private static final String GDL_PLUGINS_KEY = "gdl-editor.plugins";
+
+    private Environment environment;
+
+    @Autowired
+    public GDLEditorConfiguration(Environment environment) {
+        this.environment = environment;
+    }
+
+    public String getGdlEditorPlugins() {
+        return environment.getProperty(GDL_PLUGINS_KEY, "");
+    }
+
+    @Bean
+    GdlEditorFactory gdlEditorFactory(
+            WindowManager windowManager,
+            ArchetypeManager archetypeManager,
+            TerminologyService terminologyService,
+            GuideImporter guideImporter,
+            ElementInstanceCollectionManager elementInstanceCollectionManager,
+            DvSwingManager dvSwingManager,
+            ArchetypeReferencesManager archetypeReferencesManager,
+            ImportManager importManager,
+            TerminologyDialogManager terminologyDialogManager,
+            GuideExportPluginDirectory guideExportPluginDirectory,
+            GuidelineEditorManager guidelineEditorManager,
+            GuideHTMLExporter guideHTMLExporter,
+            EditorFileManager editorFileManager,
+            DVPanelFactory dvPanelFactory,
+            GuidelineLoadManager guidelineLoadManager) {
+        return new GdlEditorFactory(
+                windowManager,
+                archetypeManager,
+                terminologyService,
+                guideImporter,
+                elementInstanceCollectionManager,
+                dvSwingManager,
+                archetypeReferencesManager,
+                importManager,
+                terminologyDialogManager,
+                guideExportPluginDirectory,
+                guidelineEditorManager,
+                guideHTMLExporter,
+                editorFileManager,
+                dvPanelFactory,
+                guidelineLoadManager);
+    }
+
+    @Bean
+    MainMenuBar mainMenuBar(
+            ImportManager importManager,
+            EditorManager editorManager,
+            GuideHTMLExporter guideHTMLExporter,
+            GdlEditorFactory gdlEditorFactory,
+            EditorFileManager editorFileManager,
+            GuidelineLoadManager guidelineLoadManager) {
+        return new MainMenuBar(
+                importManager,
+                guideHTMLExporter,
+                editorManager,
+                gdlEditorFactory,
+                editorFileManager,
+                guidelineLoadManager);
+    }
+
+    @Bean
+    EditorManager editorManager(WindowManager windowManager) {
+        return new EditorManager(windowManager);
+    }
+
+    @Bean
+    GuidelineEditorManager guidelineEditorManager(WindowManager windowManager) {
+        return new GuidelineEditorManager(windowManager);
+    }
+
+    @Bean
+    EditorInitializer editorInitializer(EditorManager editorManager, MainMenuBar mainMenuBar) {
+        return new EditorInitializer(editorManager, mainMenuBar);
+    }
+
+    @Bean
+    GuideExportPluginDirectory guideExportPluginDirectory(DroolsGuideExportPlugin droolsGuideExportPlugin) {
+        return new GuideExportPluginDirectory(droolsGuideExportPlugin);
+    }
+
+    @Bean
+    EditorFileManager editorFileManager() {
+        return new EditorFileManager();
+    }
+
+    @Bean
+    GuidelineLoadManager guidelineLoadManager(
+            WindowManager windowManager,
+            EditorManager editorManager,
+            EditorFileManager editorFileManager,
+            GuidelineEditorManager guidelineEditorManager,
+            ApplicationContext applicationContext) {
+        return new GuidelineLoadManager(
+                windowManager,
+                editorManager,
+                editorFileManager,
+                guidelineEditorManager,
+                applicationContext);
+    }
+}
+/*
+ *  ***** BEGIN LICENSE BLOCK *****
+ *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
+ *
+ *  The contents of this file are subject to the Mozilla Public License Version
+ *  2.0 (the 'License'); you may not use this file except in compliance with
+ *  the License. You may obtain a copy of the License at
+ *  http://www.mozilla.org/MPL/
+ *
+ *  Software distributed under the License is distributed on an 'AS IS' basis,
+ *  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing rights and limitations under the
+ *  License.
+ *
+ *
+ *  The Initial Developers of the Original Code are Iago Corbal and Rong Chen.
+ *  Portions created by the Initial Developer are Copyright (C) 2012-2013
+ *  the Initial Developer. All Rights Reserved.
+ *
+ *  Contributor(s):
+ *
+ * Software distributed under the License is distributed on an 'AS IS' basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ *  ***** END LICENSE BLOCK *****
+ */

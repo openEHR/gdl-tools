@@ -15,8 +15,10 @@ import java.util.Map;
 public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
 
     private static final long serialVersionUID = 3687161456388975032L;
+    private GDLEditor gdlEditor;
 
-    public GTCodeButtonRenderer() {
+    public GTCodeButtonRenderer(GDLEditor gdlEditor) {
+        this.gdlEditor = gdlEditor;
         setOpaque(true);
         setHorizontalAlignment(JLabel.LEFT);
     }
@@ -34,9 +36,7 @@ public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
             setText(GDLEditorLanguageManager.getMessage("Select"));
         } else {
             String gtCode = (String) value;
-            GDLEditor activeGDLEditor = EditorManager.getActiveGDLEditor();
-            assert activeGDLEditor != null;
-            Map<String, Term> currentTermsMap = activeGDLEditor.getCurrentTermsMap();
+            Map<String, Term> currentTermsMap = gdlEditor.getCurrentTermsMap();
             Term term = currentTermsMap.get(gtCode);
             if (term != null && term.getText() != null) {
                 setText(gtCode + " - " + term.getText());

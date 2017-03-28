@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
-import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
@@ -15,14 +15,16 @@ public class MultipleRuleLinePanel extends RuleLineContainerPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private RuleLinesPanel _ruleLinesPanel = null;
-    private RuleLine _ruleLine = null;
+    private RuleLinesPanel ruleLinesPanel = null;
+    private RuleLine ruleLine = null;
+    private GDLEditor gdlEditor;
 
     private JPanel mainPanel;
 
-    MultipleRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine) {
-        _ruleLinesPanel = ruleLinesPanel;
-        _ruleLine = ruleLine;
+    MultipleRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
+        this.ruleLinesPanel = ruleLinesPanel;
+        this.ruleLine = ruleLine;
+        this.gdlEditor = gdlEditor;
         init();
     }
 
@@ -34,20 +36,20 @@ public class MultipleRuleLinePanel extends RuleLineContainerPanel {
     JPanel getMainPanel() {
         if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout(0, 0));
-            RuleLine ruleLineCheck = _ruleLinesPanel.getRuleLineCheck();
+            RuleLine ruleLineCheck = ruleLinesPanel.getRuleLineCheck();
             if (ruleLineCheck != null) {
-                if (RuleLineDirectory.checkRuleLineCompatibility(ruleLineCheck, _ruleLine)) {
+                if (RuleLineDirectory.checkRuleLineCompatibility(ruleLineCheck, ruleLine)) {
                     mainPanel.setBorder(BorderFactory.createEtchedBorder());
                 }
             }
             JPanel aux = new JPanel(new BorderLayout(0, 0));
             mainPanel.add(aux, BorderLayout.CENTER);
             aux.add(getRuleLineListPanel(), BorderLayout.NORTH);
-            if (_ruleLine.getChildrenRuleLines().getRuleLines().isEmpty()) {
+            if (ruleLine.getChildrenRuleLines().getRuleLines().isEmpty()) {
                 getRuleLineListPanel().add(Box.createRigidArea(new Dimension(50, 20)));
             } else {
-                for (RuleLine ruleLine : _ruleLine.getChildrenRuleLines().getRuleLines()) {
-                    JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
+                for (RuleLine ruleLine : ruleLine.getChildrenRuleLines().getRuleLines()) {
+                    JPanel panel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
                     JPanel auxLine = new JPanel(new BorderLayout(0, 0));
                     auxLine.add(Box.createHorizontalStrut(16), BorderLayout.WEST);
                     auxLine.add(panel, BorderLayout.CENTER);
@@ -60,9 +62,9 @@ public class MultipleRuleLinePanel extends RuleLineContainerPanel {
 
     public void addRuleLine(RuleLine ruleLine) {
         if (RuleLineDirectory.isDirectoryRuleLine(ruleLine)) {
-            ruleLine = RuleLineCloner.clone(ruleLine);
+            ruleLine = gdlEditor.cloneRuleLine(ruleLine);
         }
-        _ruleLine.addChildRuleLine(ruleLine);
+        this.ruleLine.addChildRuleLine(ruleLine);
         ruleLineAdded();
     }
 
@@ -75,11 +77,11 @@ public class MultipleRuleLinePanel extends RuleLineContainerPanel {
     }
 
     public RuleLine getRuleLine() {
-        return _ruleLine;
+        return ruleLine;
     }
 
     RuleLinesPanel getRuleLinesPanel() {
-        return _ruleLinesPanel;
+        return ruleLinesPanel;
     }
 }
 /*

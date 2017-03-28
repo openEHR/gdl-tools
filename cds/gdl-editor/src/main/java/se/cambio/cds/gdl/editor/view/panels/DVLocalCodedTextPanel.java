@@ -2,7 +2,6 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.dialog.DialogGTCodeSelection;
 import se.cambio.cds.gdl.model.Term;
@@ -21,11 +20,11 @@ public class DVLocalCodedTextPanel extends DVGenericPanel {
     private static final long serialVersionUID = 1L;
     private String _selectedCode = null;
     private JButton codedTextButton = null;
-    private GDLEditor _controller = null;
+    private GDLEditor controller = null;
 
     public DVLocalCodedTextPanel(GDLEditor controller) {
         super(null, null, false, false);
-        _controller = controller;
+        this.controller = controller;
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
         this.add(getCodedTextButton());
     }
@@ -34,8 +33,7 @@ public class DVLocalCodedTextPanel extends DVGenericPanel {
         if (codedTextButton == null) {
             codedTextButton = new JButton(OpenEHRLanguageManager.getMessage("SelectTerm"), OpenEHRImageUtil.DV_CODED_TEXT_ICON);
             codedTextButton.addActionListener(e -> {
-                DialogGTCodeSelection dialog =
-                        new DialogGTCodeSelection(EditorManager.getActiveEditorWindow(), _controller);
+                DialogGTCodeSelection dialog = new DialogGTCodeSelection(controller);
                 dialog.setVisible(true);
                 if (dialog.getAnswer()) {
                     setSelection(dialog.getSelectedObject());
@@ -57,7 +55,7 @@ public class DVLocalCodedTextPanel extends DVGenericPanel {
         _selectedCode = selectedCode;
         Term term = null;
         if (_selectedCode != null) {
-            term = _controller.getCurrentTermDefinition().getTerms().get(selectedCode);
+            term = controller.getCurrentTermDefinition().getTerms().get(selectedCode);
             if (term != null) {
                 getCodedTextButton().setText(term.getText());
                 getCodedTextButton().setToolTipText(term.getDescription());
@@ -72,7 +70,7 @@ public class DVLocalCodedTextPanel extends DVGenericPanel {
 
     public DataValue getDataValue() {
         if (_selectedCode != null) {
-            Term term = _controller.getCurrentTermDefinition().getTerms().get(_selectedCode);
+            Term term = controller.getCurrentTermDefinition().getTerms().get(_selectedCode);
             return new DvCodedText(term.getText(), OpenEHRConst.LOCAL, _selectedCode);
         } else {
             return null;

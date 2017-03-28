@@ -8,37 +8,24 @@ import com.rits.cloning.Cloner;
 
 public class RuleLineCloner {
 
-    private static RuleLineCloner _instance = null;
-    private Cloner _cloner = null;
+    private Cloner cloner;
+    private GDLEditor gdlEditor;
 
-    private RuleLineCloner(){
+    public RuleLineCloner(GDLEditor gdlEditor){
+        this.gdlEditor = gdlEditor;
+        this.cloner = new Cloner();
     }
 
-    private static Cloner getCloner(){
-        if (getDelegate()._cloner==null){
-            getDelegate()._cloner = new Cloner();
-        }
-        return getDelegate()._cloner;
-    }
-
-    public static RuleLine clone(RuleLine ruleLine){
-        RuleLine clonedRuleLine = RuleLineCloner.getCloner().deepClone(ruleLine);
+    public RuleLine clone(RuleLine ruleLine){
+        RuleLine clonedRuleLine = cloner.deepClone(ruleLine);
         if (ruleLine instanceof GTCodeDefiner){
             GTCodeDefiner tdRuleLine = (GTCodeDefiner)clonedRuleLine;
             boolean generateTerm = !(ruleLine instanceof ArchetypeInstantiationRuleLine);
-            String gtCode = EditorManager.getActiveGDLEditor().createNextGTCode(generateTerm);
+            String gtCode = gdlEditor.createNextGTCode(generateTerm);
             tdRuleLine.setGTCode(gtCode);
         }
         return clonedRuleLine;
     }
-
-    public static RuleLineCloner getDelegate(){
-        if (_instance==null){
-            _instance = new RuleLineCloner();
-        }
-        return _instance;
-    }
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

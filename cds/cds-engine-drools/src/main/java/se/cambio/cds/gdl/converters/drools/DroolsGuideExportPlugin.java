@@ -10,7 +10,10 @@ import java.io.UnsupportedEncodingException;
 
 public class DroolsGuideExportPlugin implements GuideExportPlugin {
 
-    public DroolsGuideExportPlugin() {
+    private ArchetypeManager archetypeManager;
+
+    public DroolsGuideExportPlugin(ArchetypeManager archetypeManager) {
+        this.archetypeManager = archetypeManager;
     }
 
     @Override
@@ -27,8 +30,8 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin {
         }
     }
 
-    public static String getDroolsGuide(Guide guide) throws InternalErrorException {
-        return new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
+    private String getDroolsGuide(Guide guide) throws InternalErrorException {
+        return new GDLDroolsConverter(guide, archetypeManager).convertToDrools();
     }
 }
 /*

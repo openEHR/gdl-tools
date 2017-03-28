@@ -3,14 +3,17 @@ package se.cambio.cds.gdl.editor.view;
 
 import org.springframework.core.env.ConfigurableEnvironment;
 import se.cambio.cds.controller.CDSSessionManager;
+import se.cambio.cds.gdl.editor.controller.EditorInitializer;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
+import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
 import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.WindowManager;
+import se.cambio.openehr.view.util.WindowManager;
 import se.cambio.openehr.view.dialogs.InfoDialog;
 
 import java.io.File;
@@ -18,20 +21,30 @@ import java.io.File;
 public class InitGDLEditor {
 
     public static void main(String[] args) {
-        EditorFrame ef = EditorManager.createEditorFrame();
-        DialogSplash dialog = new DialogSplash(ef, true);
-        WindowManager.registerMainWindow(ef);
-        WindowManager.registerProgressManager(new InfoDialog(ef));
-        new LoadEditorSW(dialog).execute();
-        dialog.setVisible(true);
-        if (args.length > 0) {
-            new LoadGuideFromFileRSW(new File(args[0])).execute();
-        }
+
         ConfigurableEnvironment environment = BeanProvider.getBean(ConfigurableEnvironment.class);
         String activeRuleEngine = UserConfigurationManager.instance().getActiveRuleEngine();
         environment.addActiveProfile(activeRuleEngine);
         String[] activeProfiles = BeanProvider.getActiveProfiles();
         BeanProvider.setActiveProfiles(activeProfiles);
+
+        EditorInitializer editorInitializer = BeanProvider.getBean(EditorInitializer.class);
+        EditorFrame ef = editorInitializer.createEditorFrame();
+        DialogSplash dialog = new DialogSplash(ef, true);
+
+        WindowManager windowManager = BeanProvider.getBean(WindowManager.class);
+        windowManager.registerMainWindow(ef);
+        windowManager.registerProgressManager(new InfoDialog(ef));
+
+
+        GdlEditorFactory gdlEditorFactory = BeanProvider.getBean(GdlEditorFactory.class);
+        EditorManager editorManager = BeanProvider.getBean(EditorManager.class);
+        new LoadEditorSW(dialog, gdlEditorFactory, editorManager).execute();
+        dialog.setVisible(true);
+        if (args.length > 0) {
+            GuidelineLoadManager guidelineLoadManager = BeanProvider.getBean(GuidelineLoadManager.class);
+            guidelineLoadManager.loadGuide(new File(args[0]));
+        }
         CDSSessionManager.getRuleEngineFacadeDelegate().setUseCache(false);
     }
 }

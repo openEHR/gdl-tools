@@ -21,10 +21,12 @@ public class FileSelectionAction extends AbstractAction {
     private static final long serialVersionUID = -2323804790429232264L;
     private JFileChooser fileChooser = null;
     private JTextField textField = null;
+    private EditorManager editorManager;
 
-    public FileSelectionAction(JFileChooser fileChooser, JTextField textField) {
+    public FileSelectionAction(JFileChooser fileChooser, JTextField textField, EditorManager editorManager) {
         this.fileChooser = fileChooser;
         this.textField = textField;
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("SelectFolder"));
         putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SelectFolderSD"));
@@ -33,7 +35,7 @@ public class FileSelectionAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        int response = fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
+        int response = fileChooser.showOpenDialog(editorManager.getActiveEditorWindow());
         if (response == JFileChooser.APPROVE_OPTION) {
             textField.setText(fileChooser.getSelectedFile().getAbsolutePath());
         }

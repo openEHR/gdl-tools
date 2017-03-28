@@ -6,6 +6,7 @@ import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
@@ -34,18 +35,20 @@ public class GuideImporter {
     private ReadableGuide readableGuide;
     private TermDefinition termDefinition;
     private ArchetypeManager archetypeManager;
+    private ArchetypeReferencesManager archetypeReferencesManager;
     private Map<String, GTCodeDefiner> gtCodeElementMap;
     private static Logger log = LoggerFactory.getLogger(GuideImporter.class);
 
-    public GuideImporter(ArchetypeManager archetypeManager) {
+    public GuideImporter(ArchetypeManager archetypeManager, ArchetypeReferencesManager archetypeReferencesManager) {
         this.archetypeManager = archetypeManager;
+        this.archetypeReferencesManager = archetypeReferencesManager;
     }
 
     public ReadableGuide importGuide(Guide guide, String language) throws InternalErrorException {
         LoggerFactory.getLogger(GuideImporter.class).debug("Importing guide: " + guide.getId() + ", lang=" + language);
         GuideDefinition guideDefinition = guide.getDefinition();
         termDefinition = getTermDefinition(guide, language);
-        readableGuide = new ReadableGuide(termDefinition, archetypeManager);
+        readableGuide = new ReadableGuide(termDefinition, archetypeManager, archetypeReferencesManager);
         generateGTCodeElementMap(guide);
         if (guideDefinition != null) {
             Map<String, ArchetypeBinding> archetypeBindings = guideDefinition.getArchetypeBindings();

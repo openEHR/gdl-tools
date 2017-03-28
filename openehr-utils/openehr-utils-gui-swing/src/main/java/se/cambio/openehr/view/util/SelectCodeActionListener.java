@@ -1,6 +1,7 @@
 package se.cambio.openehr.view.util;
 
 import se.cambio.openehr.controller.sw.LoadTerminologyViewerRSW;
+import se.cambio.openehr.util.TerminologyDialogManager;
 import se.cambio.openehr.view.panels.DVHierarchyCodedTextPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
 
@@ -9,22 +10,32 @@ import java.awt.event.ActionListener;
 
 public class SelectCodeActionListener implements ActionListener {
 
-    private boolean _enable = true;
-    private DVHierarchyCodedTextPanel _panel = null;
+    private boolean enable = true;
+    private DVHierarchyCodedTextPanel panel = null;
+    private TerminologyDialogManager terminologyDialogManager;
+    private WindowManager windowManager;
 
-    public SelectCodeActionListener(DVHierarchyCodedTextPanel panel){
-        _panel = panel;
+    public SelectCodeActionListener(
+            WindowManager windowManager,
+            DVHierarchyCodedTextPanel panel,
+            TerminologyDialogManager terminologyDialogManager){
+        this.windowManager = windowManager;
+        this.panel = panel;
+        this.terminologyDialogManager = terminologyDialogManager;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (_enable){
-            new LoadTerminologyViewerRSW(null, _panel, _panel.getTerminologyId(), null, SelectableNode.SelectionMode.SINGLE).execute();
+        if (enable){
+            new LoadTerminologyViewerRSW(
+                    windowManager, panel, panel.getTerminologyId(),
+                    null, SelectableNode.SelectionMode.SINGLE,
+                    terminologyDialogManager).execute();
         }
     }
 
     public void setEnable(boolean enable){
-        _enable = enable;
+        this.enable = enable;
     }
 }
 /*

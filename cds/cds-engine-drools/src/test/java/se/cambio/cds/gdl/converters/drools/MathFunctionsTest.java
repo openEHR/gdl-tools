@@ -1,44 +1,31 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import com.google.gson.Gson;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
-import org.openehr.rm.datatypes.quantity.DvCount;
-import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
-import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
-import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.configuration.DroolsConfiguration;
 import se.cambio.cds.controller.cds.CDSManager;
-import se.cambio.cds.controller.guide.GuideManager;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
-import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.EhrDataFilterManager;
-import se.cambio.cds.util.export.CdsGsonBuilderFactory;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.closeTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CdsConfiguration.class})
+@ContextConfiguration(classes = {DroolsConfiguration.class})
 public class MathFunctionsTest extends GDLTestCase {
 
     @Autowired

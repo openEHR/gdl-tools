@@ -6,6 +6,7 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSetActiveEngine;
 
@@ -15,9 +16,11 @@ import java.awt.event.ActionEvent;
 public class ConfigActiveEngineAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
 
-    ConfigActiveEngineAction() {
+    ConfigActiveEngineAction(EditorManager editorManager) {
         super();
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("SetActiveEngine") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
@@ -25,7 +28,7 @@ public class ConfigActiveEngineAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        new DialogSetActiveEngine().setVisible(true);
+        new DialogSetActiveEngine(editorManager).setVisible(true);
     }
 }
 /*

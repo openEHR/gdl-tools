@@ -15,9 +15,13 @@ import java.awt.event.ActionEvent;
 public class AddLanguageToGuideAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private MainMenuBar mainMenuBar;
+    private EditorManager editorManager;
 
-    AddLanguageToGuideAction() {
+    AddLanguageToGuideAction(MainMenuBar mainMenuBar, EditorManager editorManager) {
         super();
+        this.mainMenuBar = mainMenuBar;
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("AddLanguageToGuide") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideSD"));
@@ -27,13 +31,14 @@ public class AddLanguageToGuideAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         boolean invalidCode = true;
         while (invalidCode) {
-            String lang = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));
+            String lang = JOptionPane.showInputDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));
             if (lang != null) {
                 if (lang.length() == 2 && Character.isLetter(lang.charAt(0)) && Character.isLetter(lang.charAt(1))) {
                     invalidCode = false;
-                    EditorManager.getActiveEditorController().changeLanguage(lang);
+                    editorManager.getActiveEditorController().changeLanguage(lang);
+                    mainMenuBar.refreshLanguageMenu();
                 } else {
-                    JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("InvalidLanguageCode", lang));
+                    JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("InvalidLanguageCode", lang));
                 }
             } else {
                 break;

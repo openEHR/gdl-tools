@@ -19,11 +19,13 @@ public class DialogSetActiveEngine extends DialogEditor {
     private static final long serialVersionUID = 2562412853124970610L;
     private JComboBox<String> engineComboBox = null;
     private Logger logger = LoggerFactory.getLogger(DialogSetActiveEngine.class);
+    private EditorManager editorManager;
 
-    public DialogSetActiveEngine() {
-        super(EditorManager.getActiveEditorWindow(),
+    public DialogSetActiveEngine(EditorManager editorManager) {
+        super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SetActiveEngine"),
                 new Dimension(300, 110), true);
+        this.editorManager = editorManager;
         initialize();
     }
 
@@ -61,7 +63,7 @@ public class DialogSetActiveEngine extends DialogEditor {
     protected boolean acceptDialog() {
         String activeRuleEngine = (String) getEngineComboBox().getSelectedItem();
         UserConfigurationManager.instance().setActiveRuleEngine(activeRuleEngine);
-        JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
+        JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
         try {
             UserConfigurationManager.instance().saveConfig();
         } catch (Exception e) {

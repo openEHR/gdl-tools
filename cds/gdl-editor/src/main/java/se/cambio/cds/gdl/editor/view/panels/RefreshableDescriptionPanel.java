@@ -10,11 +10,13 @@ public class RefreshableDescriptionPanel extends JPanel implements RefreshablePa
 
     private static final long serialVersionUID = 1L;
 
-    private EditorController _controller = null;
+    private EditorController controller = null;
+    private Window window;
     private DescriptionPanel descriptionPanel = null;
 
-    RefreshableDescriptionPanel(EditorController controller){
-        _controller = controller;
+    RefreshableDescriptionPanel(EditorController controller, Window window){
+        this.controller = controller;
+        this.window = window;
         init();
     }
 
@@ -34,7 +36,7 @@ public class RefreshableDescriptionPanel extends JPanel implements RefreshablePa
 
     private DescriptionPanel getDescriptionPanel(){
         if (descriptionPanel==null){
-            descriptionPanel = new DescriptionPanel(_controller);
+            descriptionPanel = new DescriptionPanel(controller, window);
         }
         return descriptionPanel;
     }

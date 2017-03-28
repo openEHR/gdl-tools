@@ -2,12 +2,11 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.AttributeFunctionContainerNode;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
@@ -22,6 +21,7 @@ import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 import se.cambio.openehr.view.util.NodeConversor;
+import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -38,6 +38,8 @@ public class DialogExpressionEditor extends DialogEditor {
     private JPanel buttonsPanel = null;
     private JPanel mainPanel;
     private ExpressionRuleLineElement expressionRuleLineElement = null;
+    private GDLEditor gdlEditor;
+    private NodeDefinitionManager nodeDefinitionManager;
     private SelectionPanel selectionPanel;
     private JPanel expressionEditorPanel;
     private JPanel renderedExpressionPanel;
@@ -47,10 +49,19 @@ public class DialogExpressionEditor extends DialogEditor {
     private JButton addElementButton;
     private boolean inPredicate;
     private ArchetypeReference archetypeReference;
+    private WindowManager windowManager;
 
-    public DialogExpressionEditor(Window owner, ExpressionRuleLineElement expressionRuleLineElement, boolean inPredicate, ArchetypeReference ar) {
-        super(owner, GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700, 400), true, true);
+    public DialogExpressionEditor(
+            WindowManager windowManager,
+            ExpressionRuleLineElement expressionRuleLineElement,
+            boolean inPredicate, ArchetypeReference ar,
+            GDLEditor gdlEditor,
+            NodeDefinitionManager nodeDefinitionManager) {
+        super(gdlEditor.getEditorWindow(), GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700, 400), true, true);
+        this.windowManager = windowManager;
         this.expressionRuleLineElement = expressionRuleLineElement;
+        this.gdlEditor = gdlEditor;
+        this.nodeDefinitionManager = nodeDefinitionManager;
         if (this.expressionRuleLineElement.getValue() != null) {
             _expressionItem = this.expressionRuleLineElement.getValue();
             getExpressionEditorTextComponent().setText(ExpressionUtil.getEditableExpressionString(_expressionItem));
@@ -97,7 +108,7 @@ public class DialogExpressionEditor extends DialogEditor {
 
     private SelectionPanel getSelectionPanel() {
         if (selectionPanel == null) {
-            selectionPanel = new SelectionPanel(new SelectableNodeBuilder().createSelectableNode());
+            selectionPanel = new SelectionPanel(windowManager, new SelectableNodeBuilder().createSelectableNode());
             selectionPanel.setPreferredSize(new Dimension(300, 600));
             updateSelectionPanel();
         }
@@ -107,9 +118,9 @@ public class DialogExpressionEditor extends DialogEditor {
     private void updateSelectionPanel() {
         SelectableNode<Object> node;
         if (inPredicate) {
-            node = NodeDefinitionConversor.getNodeAttributesAndFunctionsPredicate();
+            node = NodeDefinitionManager.getNodeAttributesAndFunctionsPredicate();
         } else {
-            node = NodeDefinitionConversor.getNodeAttributesAndFunctions(EditorManager.getActiveGDLEditor(), false, archetypeReference);
+            node = nodeDefinitionManager.getNodeAttributesAndFunctions(gdlEditor, false, archetypeReference);
         }
         selectionPanel.changeRootNode(node);
         selectionPanel.getJTree().expand(node);
@@ -232,16 +243,18 @@ public class DialogExpressionEditor extends DialogEditor {
     }
 
     private void addElement() {
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
         DialogElementInstanceSelection dialog =
-                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, false, archetypeReference);
+                new DialogElementInstanceSelection(
+                        gdlEditor,
+                        nodeDefinitionManager,
+                        false,
+                        archetypeReference);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             Object selectedObject = dialog.getSelectedObject();
             if (selectedObject instanceof ArchetypeInstantiationRuleLine) {
                 ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) selectedObject;
-                assert controller != null;
-                ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
+                ArchetypeElementInstantiationRuleLine aeirl = gdlEditor.addArchetypeElement(airl);
                 if (aeirl != null) {
                     updateSelectionPanel();
                 }

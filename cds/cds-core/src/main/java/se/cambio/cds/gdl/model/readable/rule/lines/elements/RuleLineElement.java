@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -10,7 +11,7 @@ public abstract class RuleLineElement {
     private String labelDescriptionId = null;
     private RuleLine parentRuleLine = null;
 
-    public RuleLineElement(RuleLine ruleLine, String text) {
+    RuleLineElement(RuleLine ruleLine, String text) {
         this.labelTextId = text;
         labelDescriptionId = text;
         this.parentRuleLine = ruleLine;
@@ -42,6 +43,10 @@ public abstract class RuleLineElement {
 
     public ArchetypeManager getArchetypeManager() {
         return parentRuleLine.getReadableGuide().getArchetypeManager();
+    }
+
+    public ArchetypeReferencesManager getArchetypeReferencesManager() {
+        return parentRuleLine.getReadableGuide().getArchetypeReferencesManager();
     }
 
     protected String getLanguage() {

@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.listeners.SelectableRuleLineDragMouseListener;
 import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineContainerPanel;
@@ -88,7 +87,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
     public SelectableRuleLineDragMouseListener getSelectableRuleLineDragMouseListener(){
         if (selectableRuleLineDragMouseListener==null){
             selectableRuleLineDragMouseListener =
-                    new SelectableRuleLineDragMouseListener(this);
+                    new SelectableRuleLineDragMouseListener(this, controller);
         }
         return selectableRuleLineDragMouseListener;
     }
@@ -97,7 +96,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     public void addRuleLine(RuleLine ruleLine){
         if (RuleLineDirectory.isDirectoryRuleLine(ruleLine)){
-            ruleLine = RuleLineCloner.clone(ruleLine);
+            ruleLine = controller.cloneRuleLine(ruleLine);
         }
         getRuleLines().add(0, ruleLine);
     }
@@ -116,7 +115,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     public BaseRuleLineContainerPanel getBaseRuleLinePanel(){
         if (baseRuleLinePanel ==null){
-            baseRuleLinePanel = new BaseRuleLineContainerPanel(this, getRuleLines());
+            baseRuleLinePanel = new BaseRuleLineContainerPanel(this, getRuleLines(), controller);
             baseRuleLinePanel.setBorder(BorderFactory.createTitledBorder(title));
         }
         return baseRuleLinePanel;

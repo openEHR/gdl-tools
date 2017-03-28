@@ -15,14 +15,17 @@ import java.util.*;
 
 public class GuideHTMLExporter extends ClinicalModelHTMLExporter<Guide> {
 
-    public GuideHTMLExporter(ArchetypeManager archetypeManager) {
+    private final GuideImporter guideImporter;
+
+    public GuideHTMLExporter(ArchetypeManager archetypeManager, GuideImporter guideImporter) {
         super(archetypeManager);
+        this.guideImporter = guideImporter;
     }
 
     @Override
     public Map<String, Object> getEntityObjectsMap() throws InternalErrorException {
         String lang = getLanguage();
-        ReadableGuide readableGuide = new GuideImporter(getArchetypeManager()).importGuide(getEntity(), lang);
+        ReadableGuide readableGuide = guideImporter.importGuide(getEntity(), lang);
         Collection<String> htmlReadableRules = getHTMLReadableRules(readableGuide, lang);
         List<RuleLine> definitionRuleLines = readableGuide.getDefinitionRuleLines().getRuleLines();
         Collection<String> definitionsHtmlEhr = getHTMLRuleLines(getDefinitionRuleLinesByDomainId(definitionRuleLines, Domains.EHR_ID), lang);

@@ -2,19 +2,17 @@ package se.cambio.openehr.controller.terminology.ts;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
+import se.cambio.cm.configuration.CmPersistenceConfig;
 import se.cambio.cm.configuration.CmServiceConfiguration;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.TerminologyServiceImpl;
-import se.cambio.cm.model.configuration.CmPersistenceConfig;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.facade.administration.plain.PlainCMAdministrationFacadeDelegate;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -23,10 +21,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 @ContextConfiguration
+@ActiveProfiles("cm-admin-file-dao")
 public class TerminologyServiceTestBase extends AbstractTestNGSpringContextTests {
 
     protected static final String ICD10 = "ICD10";
-    protected static final String TEST_TERMINOLOGY = "TEST-TERMINOLOGY";
+    static final String TEST_TERMINOLOGY = "TEST-TERMINOLOGY";
 
     @Autowired
     TerminologyServiceImpl terminologyService;
@@ -35,7 +34,7 @@ public class TerminologyServiceTestBase extends AbstractTestNGSpringContextTests
     UserConfigurationManager userConfigurationManager;
 
     @Value("classpath:/terminologies")
-    Resource terminologies;
+    private Resource terminologies;
 
     @BeforeClass
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
@@ -46,10 +45,6 @@ public class TerminologyServiceTestBase extends AbstractTestNGSpringContextTests
     @Configuration
     @Import({CmPersistenceConfig.class, CmServiceConfiguration.class, TerminologyServiceConfiguration.class})
     static class Config {
-        @Bean
-        public CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate() {
-            return new PlainCMAdministrationFacadeDelegate();
-        }
     }
 }
 /*

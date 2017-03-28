@@ -1,9 +1,10 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.dialogs.DialogSelection;
+import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +18,13 @@ public class DialogTerminologyIdSelection extends DialogSelection{
     private JButton addTerminologyButton;
     private String terminologyIdCreated = null;
 
-    public DialogTerminologyIdSelection(Window owner, List<String> terminologyIds) {
+    public DialogTerminologyIdSelection(WindowManager windowManager, List<String> terminologyIds) {
         super(
-                owner,
+                windowManager.getMainWindow(),
                 GDLEditorLanguageManager.getMessage("AddTerminologyDesc"),
-                NodeDefinitionConversor.getNodeTerminologyIds(terminologyIds),
+                NodeDefinitionManager.getNodeTerminologyIds(terminologyIds),
                 true,
-                new Dimension(500,500));
+                new Dimension(500,500), windowManager);
         getSelectionPanel().getFilterPanel().add(getAddTerminologyButton());
     }
 

@@ -28,15 +28,22 @@ import java.util.*;
 
 public class DroolsExecutionManager {
 
-    private Map<String, KieBase> _knowledgeBaseCache = null;
-    private static DroolsExecutionManager _instance = null;
+    private Map<String, KieBase> knowledgeBaseCache = null;
     private static final short MAX_KNOWLEDGE_BASE_CACHE = 10;
-    private boolean _useCache = true;
-    private ExecutionLogger _logger = null;
+    private boolean useCache = true;
+    private ExecutionLogger logger = null;
     public static final Long DEFAULT_TIMEOUT = 30000L;
+    private Guides guides;
+    private ArchetypeManager archetypeManager;
 
-    public DroolsExecutionManager() {
-        _knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
+    public DroolsExecutionManager(Guides guides, ArchetypeManager archetypeManager) {
+        this.guides = guides;
+        this.archetypeManager = archetypeManager;
+        knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
+    }
+
+    public ArchetypeManager getArchetypeManager() {
+        return archetypeManager;
     }
 
     public void executeGuides(
@@ -45,7 +52,7 @@ public class DroolsExecutionManager {
             Collection<Object> workingMemoryObjects,
             ExecutionLogger executionLogger) {
         KieBase kb;
-        if (getDelegate()._useCache) {
+        if (useCache) {
             kb = getKnowledgeBase(guideDTOs);
         } else {
             kb = generateKnowledgeBase(guideDTOs);
@@ -73,7 +80,7 @@ public class DroolsExecutionManager {
         }
         final DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
         session.setGlobal("$currentDateTime", currentDateTime);
-        getDelegate()._logger = executionLogger;
+        logger = executionLogger;
         session.setGlobal("$executionLogger", executionLogger);
         session.setGlobal("$bindingMap", new HashMap<ElementInstance, Map<String, Boolean>>());
         session.setGlobal("$execute", true);
@@ -90,9 +97,9 @@ public class DroolsExecutionManager {
     }
 
     public void cancelCurrentExecution() {
-        if (getDelegate()._logger != null) {
+        if (logger != null) {
             //TODO Cancel current execution is done through the logger... should change this behaviour
-            getDelegate()._logger.cancelExecution();
+            logger.cancelExecution();
         }
     }
 
@@ -102,14 +109,14 @@ public class DroolsExecutionManager {
             return null;
         }
         String guideIdsId = getGuideIdsId(guideDTOs);
-        KieBase kb = getDelegate()._knowledgeBaseCache.get(guideIdsId);
+        KieBase kb = knowledgeBaseCache.get(guideIdsId);
         if (kb == null) {
             kb = generateKnowledgeBase(guideDTOs);
-            getDelegate()._knowledgeBaseCache.put(guideIdsId, kb);
-            if (getDelegate()._knowledgeBaseCache.size() > MAX_KNOWLEDGE_BASE_CACHE) {
+            knowledgeBaseCache.put(guideIdsId, kb);
+            if (knowledgeBaseCache.size() > MAX_KNOWLEDGE_BASE_CACHE) {
                 //Remove oldest KB in cache
-                String oldestGuideIdsId = getDelegate()._knowledgeBaseCache.keySet().iterator().next();
-                getDelegate()._knowledgeBaseCache.remove(oldestGuideIdsId);
+                String oldestGuideIdsId = knowledgeBaseCache.keySet().iterator().next();
+                knowledgeBaseCache.remove(oldestGuideIdsId);
                 LoggerFactory.getLogger(DroolsExecutionManager.class).warn("KnowledgeBase cache full. Removing oldest KB: " + guideIdsId);
             }
         }
@@ -119,12 +126,12 @@ public class DroolsExecutionManager {
 
     public void setUseCache(boolean useCache) {
         Logger.getLogger(DroolsExecutionManager.class).warn("USE-CACHE on cds engine changed to '" + useCache + "'");
-        getDelegate()._useCache = useCache;
+        this.useCache = useCache;
     }
 
     public void clearCache() {
         Logger.getLogger(DroolsExecutionManager.class).info("Clearing drools knowledge base cached.");
-        getDelegate()._knowledgeBaseCache.clear();
+        knowledgeBaseCache.clear();
     }
 
     private String getGuideIdsId(Collection<GuideDTO> guideDTOs) {
@@ -145,7 +152,7 @@ public class DroolsExecutionManager {
         final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         final KieRepository kr = kieServices.getRepository();
         for (GuideDTO guideDTO : guideDTOs) {
-            Guide guide = Guides.getInstance().getGuide(guideDTO);
+            Guide guide = guides.getGuide(guideDTO);
             Resource resource = getResource(guide);
             if (resource != null) {
                 kieFileSystem.write("src/main/resources/" + guideDTO.getId() + ".drl", resource);
@@ -165,19 +172,12 @@ public class DroolsExecutionManager {
         if (guide == null) {
             return null;
         }
-        String compiledGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
+        String compiledGuide = new GDLDroolsConverter(guide, archetypeManager).convertToDrools();
         try {
             return ResourceFactory.newByteArrayResource(compiledGuide.getBytes("UTF8"));
         } catch (UnsupportedEncodingException exception) {
             throw new RuntimeException(exception);
         }
-    }
-
-    public DroolsExecutionManager getDelegate() {
-        if (_instance == null) {
-            _instance = new DroolsExecutionManager();
-        }
-        return _instance;
     }
 
     private String getGuideSalienceId(String guideId) {

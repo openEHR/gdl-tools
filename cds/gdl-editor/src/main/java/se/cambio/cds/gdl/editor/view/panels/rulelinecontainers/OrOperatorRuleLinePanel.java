@@ -7,6 +7,7 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
@@ -20,7 +21,7 @@ public class OrOperatorRuleLinePanel extends RuleLineContainerPanel {
 
     private static final long serialVersionUID = 1L;
 
-    public OrOperatorRuleLinePanel(RuleLinesPanel ruleLinesPanel, OrOperatorRuleLine ruleLine) {
+    public OrOperatorRuleLinePanel(RuleLinesPanel ruleLinesPanel, OrOperatorRuleLine ruleLine, GDLEditor gdlEditor) {
         this.ruleLine = ruleLine;
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JPanel orMainPanel = new JPanel(new BorderLayout(0, 0));
@@ -36,12 +37,12 @@ public class OrOperatorRuleLinePanel extends RuleLineContainerPanel {
         }
         iconPanel.add(ReadableRuleLineFactory.createCommentButton(ruleLine, ruleLinesPanel));
         iconPanel.add(Box.createHorizontalStrut(2));
-        iconPanel.add(ReadableRuleLineFactory.createDeleteButton(ruleLine, ruleLinesPanel));
+        iconPanel.add(ReadableRuleLineFactory.createDeleteButton(ruleLine, ruleLinesPanel, gdlEditor));
 
         orMainPanel.add(iconPanel, BorderLayout.NORTH);
         JPanel leftPanel = new JPanel(new BorderLayout(0, 0));
         leftPanel.add(Box.createHorizontalStrut(19), BorderLayout.WEST);
-        leftPanel.add(new MultipleRuleLinePanel(ruleLinesPanel, ruleLine.getLeftRuleLineBranch()), BorderLayout.CENTER);
+        leftPanel.add(new MultipleRuleLinePanel(ruleLinesPanel, ruleLine.getLeftRuleLineBranch(), gdlEditor), BorderLayout.CENTER);
         orMainPanel.add(leftPanel, BorderLayout.CENTER);
         JPanel aux = new JPanel(new BorderLayout(0, 0));
         orMainPanel.add(aux, BorderLayout.SOUTH);
@@ -55,7 +56,7 @@ public class OrOperatorRuleLinePanel extends RuleLineContainerPanel {
         aux.add(orPanel, BorderLayout.NORTH);
         JPanel rightPanel = new JPanel(new BorderLayout(0, 0));
         rightPanel.add(Box.createHorizontalStrut(19), BorderLayout.WEST);
-        rightPanel.add(new MultipleRuleLinePanel(ruleLinesPanel, ruleLine.getRightRuleLineBranch()), BorderLayout.CENTER);
+        rightPanel.add(new MultipleRuleLinePanel(ruleLinesPanel, ruleLine.getRightRuleLineBranch(), gdlEditor), BorderLayout.CENTER);
         aux.add(rightPanel, BorderLayout.CENTER);
         JPanel closurePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         //closurePanel.add(Box.createHorizontalStrut(19));

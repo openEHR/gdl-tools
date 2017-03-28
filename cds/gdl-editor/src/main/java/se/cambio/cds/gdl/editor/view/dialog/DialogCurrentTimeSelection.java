@@ -23,11 +23,11 @@ public class DialogCurrentTimeSelection extends DialogEditor {
     private JRadioButton radioButtonDefault = null;
     private JRadioButton radioButtonCustom = null;
     private JDateChooser dateChooser;
-    private static String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    private static final String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
     private Logger logger = LoggerFactory.getLogger(DialogCurrentTimeSelection.class);
 
-    public DialogCurrentTimeSelection() {
-        super(EditorManager.getActiveEditorWindow(),
+    public DialogCurrentTimeSelection(EditorManager editorManager) {
+        super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("DefaultDateTime"),
                 new Dimension(500, 180), true);
         initialize();
@@ -86,7 +86,7 @@ public class DialogCurrentTimeSelection extends DialogEditor {
         return _clockPanel;
     }
 
-    public JDateChooser getDateChooser() {
+    private JDateChooser getDateChooser() {
         if (dateChooser == null) {
             dateChooser = new JDateChooser(DEFAULT_FORMAT, "##/##/#### ##:##:##", '_');
             dateChooser.setIcon(OpenEHRImageUtil.CALENDAR_ICON);

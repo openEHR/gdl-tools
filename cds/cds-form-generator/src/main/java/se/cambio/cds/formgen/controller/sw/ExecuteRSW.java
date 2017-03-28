@@ -16,7 +16,6 @@ import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
-import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,38 +25,30 @@ import java.util.Set;
 
 public class ExecuteRSW extends SwingWorker<Object, Object> {
 
-    //private long _executionTime = 0;
     private RuleExecutionResult _result = null;
-    private FormGeneratorController _controller = null;
+    private FormGeneratorController controller = null;
     private RuleEngineFacadeDelegate _refd = null;
     private CDSManager cdsManager = BeanProvider.getBean(CDSManager.class);
 
     public ExecuteRSW(FormGeneratorController controller) {
         super();
-        _controller = controller;
+        this.controller = controller;
     }
 
-    public ExecuteRSW(File file) {
-        super();
-    }
     protected Object doInBackground() {
-        _result = executeGuides(_controller);
+        _result = executeGuides(controller);
         return null;
     }
 
 
-    public RuleExecutionResult executeGuides(FormGeneratorController controller) {
-        //Long executionTime = null;
-        try{
-            //Calendar timeStart = Calendar.getInstance();
-            //Execute
-            //timeStart= Calendar.getInstance();
+    private RuleExecutionResult executeGuides(FormGeneratorController controller) {
+        try {
             Collection<String> guideIds = controller.getGuideManager().getAllGuideIds();
-            Set<ArchetypeReference> archetypeReferences = new HashSet<ArchetypeReference>();
+            Set<ArchetypeReference> archetypeReferences = new HashSet<>();
             for (ElementInstance elementInstance : controller.getAllElementInstances()) {
                 ArchetypeReference ar = elementInstance.getArchetypeReference();
                 archetypeReferences.add(ar);
-                if (Domains.CDS_ID.equals(ar.getIdDomain()) && !(elementInstance instanceof PredicateGeneratedElementInstance)){
+                if (Domains.CDS_ID.equals(ar.getIdDomain()) && !(elementInstance instanceof PredicateGeneratedElementInstance)) {
                     elementInstance.setDataValue(null);
                     elementInstance.setNullFlavour(GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
                 }
@@ -65,32 +56,30 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
 
             List<GuideDTO> guideDTOs = Collections.singletonList(controller.getGuideDTO());
             Calendar currentDateTime = controller.getCurrentDate();
-            if (currentDateTime==null){
+            if (currentDateTime == null) {
                 currentDateTime = Calendar.getInstance();
             }
-            GuideManager guideManager = new GuideManager(guideDTOs);
+            GuideManager guideManager = new GuideManager(guideDTOs, this.controller.getElementInstanceCollectionManager());
             Collection<ArchetypeReference> ehrArchetypeReferences =
                     cdsManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
             _refd = CDSSessionManager.getRuleEngineFacadeDelegate();
-            RuleExecutionResult result = _refd.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
-            //executionTime = Calendar.getInstance().getTimeInMillis()-timeStart.getTimeInMillis();
-            return result;
-        }catch(Throwable e){
+            return _refd.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
+        } catch (Throwable e) {
             ExceptionHandler.handle(e);
             return null;
         }
     }
 
-    public FormGeneratorController getController(){
-        return _controller;
+    public FormGeneratorController getController() {
+        return controller;
     }
 
     protected void done() {
-        if (isCancelled()){
+        if (isCancelled()) {
             _refd.cancelExecution();
         }
-        _controller.getViewer().setFree();
-        _controller.updateResults(_result);
+        controller.getViewer().setFree();
+        controller.updateResults(_result);
 
     }
 }

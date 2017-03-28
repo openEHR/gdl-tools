@@ -24,8 +24,9 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
 
     @Override
     protected void executeCDSSW() throws InternalErrorException {
+        /*
         try {
-            while (EditorManager.getActiveEditorController().equals(controller)) {
+            while (controller.getEditorManager().getActiveEditorController().equals(controller)) {
                 SwingUtilities.invokeLater(() -> {
                     try {
                         checkGuideConsistency();
@@ -42,6 +43,7 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
         } catch (InterruptedException e) {
             throw new InternalErrorException(e);
         }
+        */
     }
 
     private void checkGuideConsistency() throws UnsupportedEncodingException {

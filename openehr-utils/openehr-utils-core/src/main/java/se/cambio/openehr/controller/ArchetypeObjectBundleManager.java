@@ -20,7 +20,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 public class ArchetypeObjectBundleManager {
     private final ArchetypeManager archetypeManager;
     private ArchetypeDTO archetypeDTO = null;
-    protected boolean correctlyParsed = false;
 
     public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO, ArchetypeManager archetypeManager) {
         this.archetypeDTO = archetypeDTO;
@@ -41,7 +40,6 @@ public class ArchetypeObjectBundleManager {
                 } else if (CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
                     generateArchetype20Data();
                 }
-                correctlyParsed = true;
             } catch (InternalErrorException e) {
                 throw e;
             } catch (Error | Exception e) {
@@ -49,8 +47,6 @@ public class ArchetypeObjectBundleManager {
             }
             long endTime = System.currentTimeMillis();
             LoggerFactory.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
-        } else {
-            correctlyParsed = true;
         }
     }
 
@@ -61,7 +57,8 @@ public class ArchetypeObjectBundleManager {
             ADLParser adlParser = new ADLParser(archetypeDTO.getSource());
             Archetype ar = adlParser.parse();
             archetypeDTO.setAom(SerializationUtils.serialize(ar));
-            GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, archetypeManager.getArchetypes().getArchetypeMap());
+            GenericObjectBundleADLManager genericObjectBundleADLManager =
+                    new GenericObjectBundleADLManager(ar, archetypeManager.getArchetypes().getArchetypeMap(), archetypeManager.getTerminologyService());
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
         } catch (Exception e) {
@@ -85,8 +82,8 @@ public class ArchetypeObjectBundleManager {
         }
     }
 
-    protected FlatArchetype parseAndFlattenArchetype(DifferentialArchetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {
-        ArchetypeFlattener flattener = new ArchetypeFlattener(new OpenEhrRmModel());
+    private FlatArchetype parseAndFlattenArchetype(DifferentialArchetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {
+        ArchetypeFlattener archetypeFlattener = new ArchetypeFlattener(new OpenEhrRmModel());
         FlatArchetype parent;
         ArchetypeId parentArchetypeId = differentialArchetype.getParentArchetypeId();
         if (parentArchetypeId != null) {
@@ -94,6 +91,6 @@ public class ArchetypeObjectBundleManager {
         } else {
             parent = null;
         }
-        return flattener.flatten(parent, differentialArchetype);
+        return archetypeFlattener.flatten(parent, differentialArchetype);
     }
 }

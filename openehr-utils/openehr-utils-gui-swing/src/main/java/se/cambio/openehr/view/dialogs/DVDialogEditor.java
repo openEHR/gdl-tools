@@ -22,13 +22,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class DVDialogEditor  extends JDialog {
+public class DVDialogEditor extends JDialog {
 
-    /**
-     * Comentario para <code>serialVersionUID</code>
-     */
     private static final long serialVersionUID = 1L;
-    private AceptarCambiosAction acceptChangesAction = null;
+    private AcceptChangesAction acceptChangesAction = null;
     private CancelChangesAction cancelChangesAction = null;
     private DVGenericPanel dvGenericPanel = null;
     private boolean _respuesta = false;
@@ -37,52 +34,63 @@ public class DVDialogEditor  extends JDialog {
     private JPanel mainPanel = null;
     private boolean _allowNull = false;
     private boolean _enableUnits = false;
+    private final DVPanelFactory dvPanelFactory;
+    private final ArchetypeManager archetypeManager;
     private JPanel bottonPanel;
     private JButton acceptButton;
     private JButton cancelButton;
     private JTextPane jTextPane;
 
-    public DVDialogEditor(Window owner, ArchetypeElementVO archetypeElementVO, boolean allowNull, boolean enableUnits){
-        super(owner, getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage()), ModalityType.APPLICATION_MODAL);
+    public DVDialogEditor(
+            Window owner, ArchetypeElementVO archetypeElementVO,
+            boolean allowNull, boolean enableUnits,
+            DVPanelFactory dvPanelFactory, ArchetypeManager archetypeManager) {
+        super(owner,
+                archetypeManager.getArchetypeElements().getText(
+                        archetypeElementVO,
+                        UserConfigurationManager.instance().getLanguage()),
+                ModalityType.APPLICATION_MODAL);
         _archetypeElementVO = archetypeElementVO;
         _allowNull = allowNull;
         _enableUnits = enableUnits;
-        init(new Dimension(450,150));
+        this.dvPanelFactory = dvPanelFactory;
+        this.archetypeManager = archetypeManager;
+        init(new Dimension(450, 150));
     }
 
-    private void init(Dimension size){
+    private void init(Dimension size) {
         this.setSize(size);
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         this.setResizable(true);
         this.addWindowListener(getCancelChangesAction());
         this.setContentPane(getMainPanel());
-	/* Enter KeyStroke */
-        KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
+    /* Enter KeyStroke */
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
         getDVGenericPanel().registerKeyboardAction(getAcceptChangesAction(), enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        KeyStroke esc = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE,0,true);
+        KeyStroke esc = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true);
         getDVGenericPanel().registerKeyboardAction(getCancelChangesAction(), esc, JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    private JPanel getMainPanel(){
-        if (mainPanel==null){
+    private JPanel getMainPanel() {
+        if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
             JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
             String name = getArchetypeElements().getText(_archetypeElementVO, UserConfigurationManager.instance().getLanguage());
-            JLabel label = new JLabel(name+":");
+            JLabel label = new JLabel(name + ":");
             label.setIcon(OpenEHRDataValuesUI.getIcon(_archetypeElementVO.getRMType()));
             panelAux1.add(label);
             panelAux1.add(getDVGenericPanel());
             JPanel panelAux2 = new JPanel(new BorderLayout());
             panelAux2.add(getTextPane(), BorderLayout.CENTER);
             panelAux2.add(panelAux1, BorderLayout.SOUTH);
-            mainPanel.add(panelAux2,BorderLayout.CENTER);
-            mainPanel.add(getBottonPanel(),BorderLayout.SOUTH);
+            mainPanel.add(panelAux2, BorderLayout.CENTER);
+            mainPanel.add(getBottonPanel(), BorderLayout.SOUTH);
         }
         return mainPanel;
     }
 
-    private JTextPane getTextPane(){
-        if (jTextPane == null){
+    private JTextPane getTextPane() {
+        if (jTextPane == null) {
             jTextPane = new JTextPane();
             StyledEditorKit m_kit = new StyledEditorKit();
             jTextPane.setEditorKit(m_kit);
@@ -91,15 +99,15 @@ public class DVDialogEditor  extends JDialog {
             jTextPane.setText(_archetypeElementVO.getDescription());
             jTextPane.setEditable(false);
             jTextPane.setBackground(null);
-            jTextPane.setPreferredSize(new java.awt.Dimension(250,70));
+            jTextPane.setPreferredSize(new java.awt.Dimension(250, 70));
         }
         return jTextPane;
     }
 
     public DVGenericPanel getDVGenericPanel() {
-        if (dvGenericPanel==null){
+        if (dvGenericPanel == null) {
             dvGenericPanel =
-                    DVPanelFactory.createDVPanel(
+                    dvPanelFactory.createDVPanel(
                             _archetypeElementVO.getId(),
                             _archetypeElementVO.getIdTemplate(),
                             _archetypeElementVO.getRMType(),
@@ -117,18 +125,19 @@ public class DVDialogEditor  extends JDialog {
         this.setContentPane(getMainPanel());
     }
 
-    public DataValue getDataValue(){
+    public DataValue getDataValue() {
         return getDVGenericPanel().getDataValue();
     }
 
-    private JPanel getBottonPanel(){
-        if (bottonPanel==null){
+    private JPanel getBottonPanel() {
+        if (bottonPanel == null) {
             bottonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             bottonPanel.add(getAcceptButton());
             bottonPanel.add(getCancelButton());
         }
         return bottonPanel;
     }
+
     private JButton getAcceptButton() {
         if (acceptButton == null) {
             acceptButton = new JButton();
@@ -141,11 +150,6 @@ public class DVDialogEditor  extends JDialog {
         return acceptButton;
     }
 
-    /**
-     * This method initializes cancelButton	
-     *
-     * @return javax.swing.JButton
-     */
     private JButton getCancelButton() {
         if (cancelButton == null) {
             cancelButton = new JButton();
@@ -157,24 +161,24 @@ public class DVDialogEditor  extends JDialog {
         return cancelButton;
     }
 
-    protected AceptarCambiosAction getAcceptChangesAction(){
-        if (acceptChangesAction == null){
-            acceptChangesAction = new AceptarCambiosAction();
+    private AcceptChangesAction getAcceptChangesAction() {
+        if (acceptChangesAction == null) {
+            acceptChangesAction = new AcceptChangesAction();
         }
         return acceptChangesAction;
     }
 
-    protected CancelChangesAction getCancelChangesAction(){
-        if (cancelChangesAction == null){
+    private CancelChangesAction getCancelChangesAction() {
+        if (cancelChangesAction == null) {
             cancelChangesAction = new CancelChangesAction();
         }
         return cancelChangesAction;
     }
 
-    protected class CancelChangesAction extends WindowAdapter implements ActionListener{
+    protected class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e){
-            if (_componentWithFirstFocus!=null){
+        public void windowOpened(WindowEvent e) {
+            if (_componentWithFirstFocus != null) {
                 _componentWithFirstFocus.requestFocus();
             }
         }
@@ -188,7 +192,7 @@ public class DVDialogEditor  extends JDialog {
         }
     }
 
-    public class AceptarCambiosAction extends AbstractAction{
+    public class AcceptChangesAction extends AbstractAction {
 
         /**
          * Comentario para <code>serialVersionUID</code>
@@ -200,42 +204,22 @@ public class DVDialogEditor  extends JDialog {
         }
     }
 
-    protected final void accept(){
-        if (acceptDialog()){
-            _respuesta = true;
-            setVisible(false);
-        }
+    protected final void accept() {
+        _respuesta = true;
+        setVisible(false);
     }
 
-    protected final void exit(){
-        if (cancelDialog()){
-            _respuesta = false;
-            setVisible(false);
-        }
+    private void exit() {
+        _respuesta = false;
+        setVisible(false);
     }
 
-    public final boolean getAnswer(){
-        return  _respuesta;
+    public final boolean getAnswer() {
+        return _respuesta;
     }
 
-    protected void registerComponentWithFirstFocus(JComponent componentWithFirstFocus){
-        _componentWithFirstFocus = componentWithFirstFocus;
-    }
-
-    protected final void setRespuesta(boolean respuesta){
-        _respuesta = respuesta;
-    }
-
-    protected boolean cancelDialog(){
-        return true;
-    }
-
-    protected boolean acceptDialog(){
-        return true;
-    }
-
-    public static ArchetypeElements getArchetypeElements(){
-        return ArchetypeManager.getInstance().getArchetypeElements();
+    private ArchetypeElements getArchetypeElements() {
+        return archetypeManager.getArchetypeElements();
     }
 }
 /*

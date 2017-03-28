@@ -22,9 +22,8 @@ import se.cambio.cds.model.facade.execution.vo.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.CurrentTimeExpressionDataValue;
-import se.cambio.cds.util.ElementInstanceCollectionUtil;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
 import java.util.*;
@@ -171,7 +170,7 @@ public class GuideUtil {
             previousRuleReferences.addAll(generatedElementInstance.getRuleReferences());
         }
         if (dv != null && guide != null && dateTime != null && resolvePredicates) {
-            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, op, Collections.singleton(guide), dateTime.toCalendar(Locale.getDefault()));
+            dv = ElementInstanceCollectionManager.resolvePredicate(dv, op, Collections.singleton(guide), dateTime.toCalendar(Locale.getDefault()));
         }
         PredicateGeneratedElementInstance predicateGeneratedElementInstance = new PredicateGeneratedElementInstanceBuilder()
                 .setId(idElement)

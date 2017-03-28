@@ -16,24 +16,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 
-
 public class SaveGuideAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
+    private GDLEditor gdlEditor;
 
-    public SaveGuideAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuide"));
-	putValue(SMALL_ICON, GDLEditorImageUtil.SAVE_ICON);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideD"));
+    SaveGuideAction(EditorManager editorManager) {
+        super();
+        this.editorManager = editorManager;
+        init();
+    }
+
+    public SaveGuideAction(GDLEditor gdlEditor) {
+        super();
+        this.gdlEditor = gdlEditor;
+        init();
+    }
+
+    private void init() {
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuide"));
+        putValue(SMALL_ICON, GDLEditorImageUtil.SAVE_ICON);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
     }
 
     public void actionPerformed(ActionEvent e) {
-        GDLEditor activeGDLEditor = EditorManager.getActiveGDLEditor();
-        assert activeGDLEditor != null;
-        activeGDLEditor.save();
+        if (gdlEditor == null) {
+            gdlEditor = editorManager.getActiveGDLEditor();
+        }
+        gdlEditor.save();
     }
 }
 /*

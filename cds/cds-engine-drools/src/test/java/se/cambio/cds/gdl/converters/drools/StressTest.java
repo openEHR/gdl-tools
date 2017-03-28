@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.configuration.DroolsConfiguration;
 import se.cambio.cds.controller.cds.CDSManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.controller.session.data.Guides;
@@ -18,15 +19,11 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
-import se.cambio.cm.configuration.TerminologyServiceConfiguration;
-import se.cambio.cm.model.configuration.CmPersistenceConfig;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CmPersistenceConfig.class, TerminologyServiceConfiguration.class, CdsConfiguration.class})
+@ContextConfiguration(classes = DroolsConfiguration.class)
 @ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
 public class StressTest {
 
@@ -47,6 +44,12 @@ public class StressTest {
 
     @Autowired
     DroolsRuleEngineFacadeDelegate droolsRuleEngineFacadeDelegate;
+
+    @Autowired
+    Guides guides;
+
+    @Autowired
+    ElementInstanceCollectionManager elementInstanceCollectionManager;
 
     public static void main(String[] args) {
         try {
@@ -64,17 +67,17 @@ public class StressTest {
         Collection<ElementInstance> elementInstances = getGeneratedElementInstancesICD10();
         List<GuideDTO> guideDTOs = new ArrayList<>();
         try {
-            guideDTOs.add(Guides.getInstance().getCMElement("CHA2DS2VASc_diagnosis_review.v1"));
-            guideDTOs.add(Guides.getInstance().getCMElement("Stroke_prevention_dashboard_case.v1"));
-            guideDTOs.add(Guides.getInstance().getCMElement("MIE_Medication_in_elderly.v1"));
+            guideDTOs.add(guides.getCMElement("CHA2DS2VASc_diagnosis_review.v1"));
+            guideDTOs.add(guides.getCMElement("Stroke_prevention_dashboard_case.v1"));
+            guideDTOs.add(guides.getCMElement("MIE_Medication_in_elderly.v1"));
 
-            GuideManager guideManager = new GuideManager(guideDTOs);
+            GuideManager guideManager = new GuideManager(guideDTOs, elementInstanceCollectionManager);
             Calendar cal = Calendar.getInstance();
-            droolsRuleEngineFacadeDelegate.execute(null, guideDTOs, new ArrayList<ArchetypeReference>(), null); //WARM UP THE ENGINE
+            droolsRuleEngineFacadeDelegate.execute(null, guideDTOs, new ArrayList<>(), null); //WARM UP THE ENGINE
             long total = 0;
             int numExec = 15;
             for (int i = 0; i < numExec; i++) {
-                ElementInstanceCollection eic = new ElementInstanceCollection();
+                ElementInstanceCollection eic = new ElementInstanceCollection(elementInstanceCollectionManager);
                 eic.addAll(elementInstances);
                 cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
                 long startTime = System.currentTimeMillis();
@@ -91,7 +94,7 @@ public class StressTest {
     }
 
     private static Collection<ElementInstance> getGeneratedElementInstancesICD10() {
-        Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
+        Collection<ElementInstance> elementInstances = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (String icd10Code : ICD10_CODES) {
                 ArchetypeReference ar = new ArchetypeReference(Domains.EHR_ID, GDLTestCase.DIAGNOSIS_ARCHETYPE_ID, GDLTestCase.DIAGNOSIS_TEMPLATE_ID);
@@ -133,17 +136,17 @@ public class StressTest {
         DataValue dataValue = new DvDateTime("1900-01-01T12:00");
         ElementInstance eiBirthdateDate = new ElementInstance(GDLTestCase.BIRTHDATE_DATE_ELEMENT_ID, dataValue, ar, null, dataValue != null ? null : OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
         elementInstances.add(eiBirthdateDate);
-        List<GuideDTO> guideDTOs = new ArrayList<GuideDTO>();
+        List<GuideDTO> guideDTOs = new ArrayList<>();
         try {
-            guideDTOs.add(Guides.getInstance().getCMElement("guides/MIE_Medication_in_elderly.v1"));
-            GuideManager guideManager = new GuideManager(guideDTOs);
+            guideDTOs.add(guides.getCMElement("guides/MIE_Medication_in_elderly.v1"));
+            GuideManager guideManager = new GuideManager(guideDTOs, elementInstanceCollectionManager);
             Calendar cal = Calendar.getInstance();
-            droolsRuleEngineFacadeDelegate.execute(null, guideDTOs, new ArrayList<ArchetypeReference>(), null); //WARM UP THE ENGINE
+            droolsRuleEngineFacadeDelegate.execute(null, guideDTOs, new ArrayList<>(), null);
             long total = 0;
             int numExec = 15;
             for (int i = 0; i < numExec; i++) {
                 long startTime = System.currentTimeMillis();
-                ElementInstanceCollection eic = new ElementInstanceCollection();
+                ElementInstanceCollection eic = new ElementInstanceCollection(elementInstanceCollectionManager);
                 eic.addAll(elementInstances);
                 cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
                 Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();

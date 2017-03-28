@@ -2,9 +2,7 @@ package se.cambio.cds.controller.cds;
 
 import org.joda.time.DateTime;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.ehr.delegate.EHRFacadeDelegate;
@@ -21,22 +19,22 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
-@Component
 public class CDSManager {
 
     private DateTimeARFinder dateTimeARFinder;
-    private static final String CDS_FILTER_ARCHETYPE_REFERENCES = "cds-execution.filter.archetype-references";
-    private final Boolean filterArchetypeReferences;
+    private Boolean filterArchetypeReferences;
+    private ElementInstanceCollectionManager elementInstanceCollectionManager;
     private final EhrDataFilterManager ehrDataFilterManager;
 
-    @Autowired
     public CDSManager(
             DateTimeARFinder dateTimeARFinder,
             EhrDataFilterManager ehrDataFilterManager,
-            Environment environment) {
+            boolean filterArchetypeReferences,
+            ElementInstanceCollectionManager elementInstanceCollectionManager) {
         this.ehrDataFilterManager = ehrDataFilterManager;
         this.dateTimeARFinder = dateTimeARFinder;
-        this.filterArchetypeReferences = environment.getProperty(CDS_FILTER_ARCHETYPE_REFERENCES, Boolean.class, true);
+        this.filterArchetypeReferences = filterArchetypeReferences;
+        this.elementInstanceCollectionManager = elementInstanceCollectionManager;
     }
 
 
@@ -64,7 +62,7 @@ public class CDSManager {
     }
 
     private ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) {
-        ElementInstanceCollection eic = new ElementInstanceCollection();
+        ElementInstanceCollection eic = new ElementInstanceCollection(elementInstanceCollectionManager);
         if (data != null) {
             if (filterArchetypeReferences) {
                 data = filterEhrData(guideManager, ehrId, data, date);

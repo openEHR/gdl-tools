@@ -3,10 +3,12 @@ package se.cambio.openehr.controller.session.data;
 import org.apache.commons.lang.StringUtils;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.cm.model.archetype.vo.OrdinalVO;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.util.TemplateAttributeMap;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -22,7 +24,6 @@ import java.util.Map;
 
 public class ArchetypeManager {
 
-    private static ArchetypeManager instance;
     private ArchetypeElements archetypeElements = null;
     private Clusters clusters = null;
     private CodedTexts codedTexts = null;
@@ -32,11 +33,25 @@ public class ArchetypeManager {
     private ArchetypeTerms archetypeTerms = null;
     private Archetypes archetypes;
     private Templates templates;
+    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
+    private TerminologyService terminologyService;
 
-    public ArchetypeManager() {
+    public ArchetypeManager(
+            CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate,
+            TerminologyService terminologyService) {
+        this.cmAdministrationFacadeDelegate = cmAdministrationFacadeDelegate;
+        this.terminologyService = terminologyService;
     }
 
-    public void registerArchetypeObjectBundle(
+    public CMAdministrationFacadeDelegate getCmAdministrationFacadeDelegate() {
+        return cmAdministrationFacadeDelegate;
+    }
+
+    public TerminologyService getTerminologyService() {
+        return terminologyService;
+    }
+
+    void registerArchetypeObjectBundle(
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO,
             Archetype archetype) {
         getArchetypeElements().loadArchetypeElements(archetypeObjectBundleCustomVO.getArchetypeElementVOs());
@@ -150,7 +165,7 @@ public class ArchetypeManager {
         if (idTemplate == null) {
             archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
         } else {
-            Collection<String> archetypeIds = new ArrayList<String>();
+            Collection<String> archetypeIds = new ArrayList<>();
             try {
                 archetypeIds.addAll(this.getArchetypes().getAllIdsInCache());
             } catch (InternalErrorException e) {
@@ -285,12 +300,5 @@ public class ArchetypeManager {
             sb.append(i);
         }
         return sb.toString();
-    }
-
-    public static ArchetypeManager getInstance() {
-        if (instance == null) {
-            instance = new ArchetypeManager();
-        }
-        return instance;
     }
 }

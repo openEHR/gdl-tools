@@ -2,12 +2,14 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cm.configuration.CmServiceConfiguration;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -23,11 +25,14 @@ import java.util.Calendar;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CmServiceConfiguration.class)
+@ContextConfiguration(classes = {CmServiceConfiguration.class, ClinicalModelsAdministrationConfiguration.class})
 public class ParsingTest {
 
     @Value("classpath:/archetypes")
-    Resource archetypesResource;
+    private Resource archetypesResource;
+
+    @Autowired
+    ArchetypeManager archetypeManager;
 
     @Before
     public void initializeCM() throws URISyntaxException, IOException {
@@ -41,7 +46,7 @@ public class ParsingTest {
         FileInputStream fis = new FileInputStream(archetypeFile);
         String source = IOUtils.toString(fis);
         ArchetypeDTO archetypeDTO = new ArchetypeDTO(archetypeId, "adl", source, null, null, Calendar.getInstance().getTime());
-        new ArchetypeObjectBundleManager(archetypeDTO, new ArchetypeManager()).buildArchetypeObjectBundleCustomVO();
+        new ArchetypeObjectBundleManager(archetypeDTO, archetypeManager).buildArchetypeObjectBundleCustomVO();
         assertNotNull(archetypeDTO.getAom());
     }
 }

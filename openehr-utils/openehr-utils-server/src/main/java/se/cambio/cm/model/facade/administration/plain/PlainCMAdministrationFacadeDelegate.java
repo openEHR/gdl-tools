@@ -7,25 +7,19 @@ import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeD
 import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMElementDAOFactory;
-import se.cambio.openehr.controller.session.data.AbstractCMManager;
+import se.cambio.cm.model.util.CheckSumManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-@Component
-@Profile("cm-admin-plain-service")
 public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFacadeDelegate {
 
-    @Autowired
     private CMElementDAOFactory cmElementDAOFactory;
     private Map<Class, GenericCMElementDAO<? extends CMElement>> cmElementDAOMap;
 
-    public PlainCMAdministrationFacadeDelegate() {
+    public PlainCMAdministrationFacadeDelegate(CMElementDAOFactory cmElementDAOFactory) {
+        this.cmElementDAOFactory = cmElementDAOFactory;
         cmElementDAOMap = Collections.synchronizedMap(new HashMap<Class, GenericCMElementDAO<? extends CMElement>>());
     }
 
@@ -72,7 +66,7 @@ public class PlainCMAdministrationFacadeDelegate implements CMAdministrationFaca
     @Override
     public <E extends CMElement> String getChecksumForCMElements(Class<E> cmElementClass) throws InternalErrorException {
         GenericCMElementDAO<E> dao = getCmElementDAO(cmElementClass);
-        return AbstractCMManager.generateChecksum(dao.searchAll());
+        return CheckSumManager.generateChecksum(dao.searchAll());
     }
 
     @Override

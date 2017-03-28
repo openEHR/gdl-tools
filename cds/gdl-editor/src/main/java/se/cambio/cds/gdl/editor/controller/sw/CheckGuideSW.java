@@ -1,11 +1,8 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.cds.util.GuideImporter;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -19,7 +16,8 @@ public class CheckGuideSW extends CDSSwingWorker {
     private boolean checkOk = false;
     private Runnable pendingRunnable = null;
 
-    public CheckGuideSW(GDLEditor controller, String guideStr, Runnable pendingRunnable){
+    public CheckGuideSW(
+            GDLEditor controller, String guideStr, Runnable pendingRunnable){
         this.controller = controller;
         this.guideStr = guideStr;
         this.pendingRunnable = pendingRunnable;
@@ -29,11 +27,10 @@ public class CheckGuideSW extends CDSSwingWorker {
     protected void executeCDSSW() throws InternalErrorException{
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(guideStr.getBytes("UTF-8"));
-            guide = GDLEditor.parseGuide(bais);
+            guide = controller.getGuidelineEditorManager().parseGuide(bais);
             if (guide !=null){
-                GuideImporter guideImporter = new GuideImporter(ArchetypeManager.getInstance());
-                guideImporter.importGuide(guide, controller.getCurrentLanguageCode());
-                GuideExportPluginDirectory.compile(guide);
+                controller.getGuideImporter().importGuide(guide, controller.getCurrentLanguageCode());
+                controller.getGuideExportPluginDirectory().compile(guide);
                 checkOk = true;
             }
         }catch(Exception e){

@@ -5,23 +5,22 @@ import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class Guides extends AbstractCMManager<GuideDTO> {
-    private static Guides instance = null;
 
-    public Guides() {
+
+    public Guides(CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate) {
+        super(cmAdministrationFacadeDelegate);
     }
 
     @Override
@@ -35,13 +34,13 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         return GuideDTO.class;
     }
 
-    public void processGuides(Collection<GuideDTO> guideDTOs) {
+    private void processGuides(Collection<GuideDTO> guideDTOs) {
         for (GuideDTO guideDTO : guideDTOs) {
             processGuide(guideDTO);
         }
     }
 
-    public void processGuide(GuideDTO guideDTO) {
+    private void processGuide(GuideDTO guideDTO) {
         if (!hasGuideObject(guideDTO)) {
             LoggerFactory.getLogger(Guides.class).info("Parsing guideline '{}'...", guideDTO.getId());
             long startTime = System.currentTimeMillis();
@@ -58,7 +57,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         }
     }
 
-    public static void parseGuide(GuideDTO guideDTO) {
+    private static void parseGuide(GuideDTO guideDTO) {
         try {
             Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
             guideDTO.setGuideObject(SerializationUtils.serialize(guide));
@@ -67,7 +66,7 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         }
     }
 
-    public static void compileGuide(GuideDTO guideDTO) {
+    private static void compileGuide(GuideDTO guideDTO) {
         if (!hasGuideObject(guideDTO)) {
             parseGuide(guideDTO);
         }
@@ -92,27 +91,12 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         }
     }
 
-    public Map<String, Guide> getGuidesMap(Collection<String> guideIds) throws InstanceNotFoundException, InternalErrorException {
-        Map<String, Guide> guideMap = new HashMap<String, Guide>();
-        for (String guideId : guideIds) {
-            guideMap.put(guideId, getGuide(guideId));
-        }
-        return guideMap;
-    }
-
     public static boolean hasGuideObject(GuideDTO guideDTO) {
         return guideDTO.getGuideObject() != null;
     }
 
-    public static boolean isCompiled(GuideDTO guideDTO) {
+    private static boolean isCompiled(GuideDTO guideDTO) {
         return guideDTO.getCompiledGuide() != null;
-    }
-
-    public static Guides getInstance() {
-        if (instance == null) {
-            instance = new Guides();
-        }
-        return instance;
     }
 }
 /*

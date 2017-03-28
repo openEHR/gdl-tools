@@ -1,20 +1,19 @@
 package se.cambio.cm.configuration;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.controller.terminology.TerminologyServiceImpl;
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
 import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Import(UserConfigurationManager.class)
 @Configuration
 @PropertySources({
         @PropertySource(value = "classpath:default-terminology-service-config.properties"),
@@ -22,6 +21,7 @@ import java.util.Map;
         @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
 })
+@Import({UserConfigurationManager.class, ClinicalModelsAdministrationConfiguration.class})
 public class TerminologyServiceConfiguration {
 
     private Map<String, TerminologyConfigVO> terminologyConfigMap;
@@ -44,8 +44,8 @@ public class TerminologyServiceConfiguration {
     }
 
     @Bean
-    public TerminologyService terminologyService() {
-        return new TerminologyServiceImpl(this);
+    public TerminologyService terminologyService(CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate) {
+        return new TerminologyServiceImpl(this, cmAdministrationFacadeDelegate);
     }
 
     private TerminologyConfigVO getTerminologyConfigFromProperties(String terminologyId) {

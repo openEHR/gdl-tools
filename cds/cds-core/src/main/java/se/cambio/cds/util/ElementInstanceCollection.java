@@ -15,6 +15,11 @@ public class ElementInstanceCollection {
 
     public final static String EMPTY_CODE = "*EMPTY*";
     private Map<String, Map<String, Map<String, Set<ArchetypeReference>>>> _archetypeReferenceMap = null;
+    private ElementInstanceCollectionManager elementInstanceCollectionManager;
+
+    public ElementInstanceCollection(ElementInstanceCollectionManager elementInstanceCollectionManager) {
+        this.elementInstanceCollectionManager = elementInstanceCollectionManager;
+    }
 
     public void add(ElementInstance elementInstance) {
         add(elementInstance.getArchetypeReference(), null, null);
@@ -51,7 +56,7 @@ public class ElementInstanceCollection {
                     DataValue dv = originalEI.getDataValue();
                     if (guideManager != null) {
                         Collection<Guide> guides = getGuides(guideManager, predicateOriginalEI, dv);
-                        dv = ElementInstanceCollectionUtil.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
+                        dv = ElementInstanceCollectionManager.resolvePredicate(dv, predicateOriginalEI.getOperatorKind(), guides, date);
                         //Might be null i.e. max(date/time) or path!=null
                     }
                     PredicateGeneratedElementInstance pgei =
@@ -93,7 +98,7 @@ public class ElementInstanceCollection {
         for (String guideId : guideIds) {
             Guide guide = guideManager.getGuide(guideId);
             if (guide == null) {
-                LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn("Guideline not found resolving rule reference '" + guideId + "'");
+                LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn("Guideline not found resolving rule reference '" + guideId + "'");
             } else {
                 guides.add(guide);
             }
@@ -101,7 +106,7 @@ public class ElementInstanceCollection {
         return guides;
     }
 
-    public Set<String> getReferenceGuideIds(DataValue dv, Collection<RuleReference> ruleReferences) {
+    private Set<String> getReferenceGuideIds(DataValue dv, Collection<RuleReference> ruleReferences) {
         Set<String> guideIds = new HashSet<>();
         if (dv instanceof DvCodedText) {
             DvCodedText dvCT = (DvCodedText) dv;
@@ -122,18 +127,12 @@ public class ElementInstanceCollection {
         getArchetypeReferences(archetypeReference).remove(archetypeReference);
     }
 
-    public void removeDomain(String idDomain) {
-        for (String idArchetype : getArchetypeReferenceMap().keySet()) {
-            getArchetypeReferenceMap(idArchetype, idDomain).clear();
-        }
-    }
-
     public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Map<String, Guide> guideMap, Calendar date) {
         boolean matches = false;
         Iterator<ArchetypeReference> i = getArchetypeReferences(generatedArchetypeReference).iterator();
         while (i.hasNext() && !matches) {
             ArchetypeReference ar = i.next();
-            matches = ElementInstanceCollectionUtil.matchAndFill(generatedArchetypeReference, ar, guideMap, date);
+            matches = elementInstanceCollectionManager.matchAndFill(generatedArchetypeReference, ar, guideMap, date);
         }
         return matches;
     }
@@ -171,12 +170,6 @@ public class ElementInstanceCollection {
         return elementInstances;
     }
 
-    public void merge(Collection<ElementInstanceCollection> elementInstanceCollections) {
-        for (ElementInstanceCollection eic : elementInstanceCollections) {
-            this.merge(eic);
-        }
-    }
-
     public void merge(ElementInstanceCollection eic) {
         for (ArchetypeReference archetypeReference : eic.getAllArchetypeReferences()) {
             add(archetypeReference);
@@ -194,37 +187,6 @@ public class ElementInstanceCollection {
         }
         return getArchetypeReferences(archetypeReference.getIdArchetype(), idDomain, idAux);
     }
-
-    public Set<ArchetypeReference> getArchetypeReferencesEmptyAsWildcard(ArchetypeReference ar) {
-        String idDomain = ar.getIdDomain();
-        String idAux = null;
-        if (Domains.CDS_ID.equals(idDomain)) {
-            idAux = ar.getIdTemplate();
-        }
-
-        if (idDomain == null) {
-            Set<ArchetypeReference> arSet = new HashSet<>();
-            arSet.addAll(getArchetypeReferencesEmptyAsWildcard(ar.getIdArchetype(), Domains.CDS_ID, idAux));
-            arSet.addAll(getArchetypeReferencesEmptyAsWildcard(ar.getIdArchetype(), Domains.EHR_ID, idAux));
-            return arSet;
-        } else {
-            return getArchetypeReferencesEmptyAsWildcard(ar.getIdArchetype(), idDomain, idAux);
-        }
-    }
-
-
-    private Set<ArchetypeReference> getArchetypeReferencesEmptyAsWildcard(String idArchetype, String idDomain, String idAux) {
-        Set<ArchetypeReference> arSet = new HashSet<>();
-        if (idAux == null) {
-            for (Set<ArchetypeReference> arSetAux : getArchetypeReferenceMap(idArchetype, idDomain).values()) {
-                arSet.addAll(arSetAux);
-            }
-        } else {
-            arSet.addAll(getArchetypeReferences(idArchetype, idDomain, idAux));
-        }
-        return arSet;
-    }
-
 
     private Set<ArchetypeReference> getAllArchetypeReferences(String idArchetype) {
         Set<ArchetypeReference> archetypeReferences = new HashSet<>();
@@ -247,36 +209,18 @@ public class ElementInstanceCollection {
         if (idAux == null) {
             LoggerFactory.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferences with idAux=='null'");
         }
-        Set<ArchetypeReference> archetypeReferences =
-                getArchetypeReferenceMap(idArchetype, idDomain).get(idAux);
-        if (archetypeReferences == null) {
-            archetypeReferences = new HashSet<>();
-            getArchetypeReferenceMap(idArchetype, idDomain).put(idAux, archetypeReferences);
-        }
-        return archetypeReferences;
+        return getArchetypeReferenceMap(idArchetype, idDomain).computeIfAbsent(idAux, k -> new HashSet<>());
     }
 
     private Map<String, Set<ArchetypeReference>> getArchetypeReferenceMap(String idArchetype, String idDomain) {
         if (idDomain == null) {
             LoggerFactory.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferenceMap with idDomain=='null'");
         }
-        Map<String, Set<ArchetypeReference>> archetypeReferenceMap =
-                getArchetypeReferenceMap(idArchetype).get(idDomain);
-        if (archetypeReferenceMap == null) {
-            archetypeReferenceMap = new HashMap<>();
-            getArchetypeReferenceMap(idArchetype).put(idDomain, archetypeReferenceMap);
-        }
-        return archetypeReferenceMap;
+        return getArchetypeReferenceMap(idArchetype).computeIfAbsent(idDomain, k -> new HashMap<>());
     }
 
     private Map<String, Map<String, Set<ArchetypeReference>>> getArchetypeReferenceMap(String idArchetype) {
-        Map<String, Map<String, Set<ArchetypeReference>>> archetypeReferenceMap =
-                getArchetypeReferenceMap().get(idArchetype);
-        if (archetypeReferenceMap == null) {
-            archetypeReferenceMap = new HashMap<>();
-            getArchetypeReferenceMap().put(idArchetype, archetypeReferenceMap);
-        }
-        return archetypeReferenceMap;
+        return getArchetypeReferenceMap().computeIfAbsent(idArchetype, k -> new HashMap<>());
     }
 
     public Collection<ArchetypeReference> getAllArchetypeReferencesByDomain(String domainId) {
@@ -295,22 +239,22 @@ public class ElementInstanceCollection {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("-----\n");
         for (String idArchetype : getArchetypeReferenceMap().keySet()) {
-            sb.append(idArchetype + "\n");
+            sb.append(idArchetype).append("\n");
             for (String idDomain : getArchetypeReferenceMap(idArchetype).keySet()) {
-                sb.append("-Domain=" + idDomain + "\n");
+                sb.append("-Domain=").append(idDomain).append("\n");
                 for (String idAux : getArchetypeReferenceMap(idArchetype, idDomain).keySet()) {
-                    sb.append("--idAux=" + idAux + "\n");
+                    sb.append("--idAux=").append(idAux).append("\n");
                     int i = 1;
                     for (ArchetypeReference ar : getArchetypeReferences(idArchetype, idDomain, idAux)) {
-                        sb.append("---[" + i + "]\n");
+                        sb.append("---[").append(i).append("]\n");
                         for (String idElement : ar.getElementInstancesMap().keySet()) {
-                            sb.append("----" + idElement + "");
+                            sb.append("----").append(idElement).append("");
                             ElementInstance ei = ar.getElementInstancesMap().get(idElement);
                             if (ei.getDataValue() != null) {
-                                sb.append(" (" + ei.getDataValue().toString() + ")");
+                                sb.append(" (").append(ei.getDataValue().toString()).append(")");
                             }
                             sb.append("\n");
                         }

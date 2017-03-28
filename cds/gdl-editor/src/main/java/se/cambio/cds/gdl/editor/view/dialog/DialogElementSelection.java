@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.view.dialog;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.util.WindowManager;
 
 import java.awt.*;
 
@@ -10,8 +11,8 @@ public class DialogElementSelection extends DialogSelection {
 
     private static final long serialVersionUID = 1L;
 
-    public DialogElementSelection(Window owner, SelectableNode<Object> rootNode) {
-        super(owner, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode, true, new Dimension(500, 500));
+    public DialogElementSelection(WindowManager windowManager, SelectableNode<Object> rootNode) {
+        super(windowManager.getMainWindow(), GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode, true, new Dimension(500, 500), windowManager);
     }
 }
 /*

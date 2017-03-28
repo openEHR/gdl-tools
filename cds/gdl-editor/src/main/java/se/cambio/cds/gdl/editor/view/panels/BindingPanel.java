@@ -9,6 +9,7 @@ import se.cambio.cds.gdl.editor.view.tables.BindingTable.BindingTableModel;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
+import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,17 +19,17 @@ import java.util.List;
 public class BindingPanel extends JPanel implements RefreshablePanel {
 
     private static final long serialVersionUID = 1L;
-    private GDLEditor _controller = null;
+    private GDLEditor controller = null;
     private JScrollPane mainScrollPanel;
     private BindingTable bindingTable;
-    private String _terminologyId = null;
+    private String terminologyId = null;
     private JButton addTermBtn = null;
     private JButton deleteBtn = null;
     private JPanel buttonPanel;
 
     BindingPanel(GDLEditor gdlEditor, String terminologyId) {
-        _controller = gdlEditor;
-        _terminologyId = terminologyId;
+        controller = gdlEditor;
+        this.terminologyId = terminologyId;
         init();
     }
 
@@ -49,8 +50,10 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
         if (bindingTable == null) {
             bindingTable =
                     new BindingTable(
-                            _controller.getTermBindings().get(_terminologyId).getBindings(),
-                            _terminologyId);
+                            controller.getWindowManager(),
+                            controller.getTerminologyDialogManager(), controller.getTermBindings().get(terminologyId).getBindings(),
+                            terminologyId,
+                            controller);
         }
         return bindingTable;
     }
@@ -64,7 +67,7 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
         this.add(getMainScrollPanel(), BorderLayout.CENTER);
         this.add(getButtonPanel(), BorderLayout.WEST);
         BindingTableModel otm = getBindingTable().getBindingTableModel();
-        TermBinding termBinding = _controller.getTermBindings().get(_terminologyId);
+        TermBinding termBinding = controller.getTermBindings().get(terminologyId);
 
         if (termBinding == null || termBinding.getBindings() == null) {
             return;
@@ -137,7 +140,7 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
     }
 
     private void deleteTermDefinitionInModel() {
-        Set<String> bindingsCodes = _controller.getTermBindings().keySet();
+        Set<String> bindingsCodes = controller.getTermBindings().keySet();
         if (bindingsCodes.size() == 0) {
             JOptionPane.showMessageDialog(this,
                     GDLEditorLanguageManager.getMessage("ErrorMessageDeleteTermData"));
@@ -229,7 +232,7 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
     }
 
     String getOwnerTabName() {
-        return _terminologyId;
+        return terminologyId;
     }
 
 

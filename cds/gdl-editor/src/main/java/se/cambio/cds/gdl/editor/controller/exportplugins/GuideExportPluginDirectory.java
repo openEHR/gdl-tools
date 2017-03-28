@@ -14,16 +14,16 @@ public class GuideExportPluginDirectory {
     private static GuideExportPluginDirectory instance;
     private Collection<GuideExportPlugin> guideExportPlugins = null;
 
-    private GuideExportPluginDirectory() {
+    public GuideExportPluginDirectory(DroolsGuideExportPlugin droolsGuideExportPlugin) {
         guideExportPlugins = new ArrayList<>();
-        guideExportPlugins.add(new DroolsGuideExportPlugin());
+        guideExportPlugins.add(droolsGuideExportPlugin);
     }
 
-    private static Collection<GuideExportPlugin> getGuideExportPlugins() {
-        return getDelegate().guideExportPlugins;
+    private Collection<GuideExportPlugin> getGuideExportPlugins() {
+        return guideExportPlugins;
     }
 
-    public static byte[] compile(Guide guide) throws InternalErrorException {
+    public byte[] compile(Guide guide) throws InternalErrorException {
         LoggerFactory.getLogger(GuideExportPluginDirectory.class).info("Compiling ...");
         Collection<GuideExportPlugin> guideExportPlugins = getGuideExportPlugins();
         if (guideExportPlugins.iterator().hasNext()) {
@@ -32,14 +32,6 @@ public class GuideExportPluginDirectory {
             return null;
         }
     }
-
-    private static GuideExportPluginDirectory getDelegate() {
-        if (instance == null) {
-            instance = new GuideExportPluginDirectory();
-        }
-        return instance;
-    }
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

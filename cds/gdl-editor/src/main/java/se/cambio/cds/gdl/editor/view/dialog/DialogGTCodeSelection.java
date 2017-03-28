@@ -1,9 +1,8 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.view.dialogs.DialogSelection;
@@ -19,14 +18,16 @@ public class DialogGTCodeSelection extends DialogSelection {
     private static final long serialVersionUID = 1L;
     private JButton addLocalTermButton;
     private String codeCreated = null;
+    private GDLEditor controller;
 
-    public DialogGTCodeSelection(Window owner, GDLEditor controller) {
+    public DialogGTCodeSelection(GDLEditor controller) {
         super(
-                owner,
+                controller.getEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SelectLocalTerm"),
-                NodeDefinitionConversor.getNodeGTCodes(controller.getCurrentTermsMap(), controller.getGTCodesUsedInDefinitions()),
+                NodeDefinitionManager.getNodeGTCodes(controller.getCurrentTermsMap(), controller.getGTCodesUsedInDefinitions()),
                 true,
-                new Dimension(500, 500));
+                new Dimension(500, 500), controller.getWindowManager());
+        this.controller = controller;
         getSelectionPanel().getFilterPanel().add(getAddLocalTermButton());
     }
 
@@ -57,10 +58,8 @@ public class DialogGTCodeSelection extends DialogSelection {
         public void actionPerformed(ActionEvent e) {
             DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddLocalTerm"), null);
             if (dialog.getAnswer()) {
-                GDLEditor gdlEditor = EditorManager.getActiveGDLEditor();
-                assert gdlEditor != null;
-                codeCreated = gdlEditor.createNextLocalCode();
-                Map<String, Term> currentTermsMap = gdlEditor.getCurrentTermsMap();
+                codeCreated = controller.createNextLocalCode();
+                Map<String, Term> currentTermsMap = controller.getCurrentTermsMap();
                 currentTermsMap.get(codeCreated).setText(dialog.getValue());
                 accept();
             }

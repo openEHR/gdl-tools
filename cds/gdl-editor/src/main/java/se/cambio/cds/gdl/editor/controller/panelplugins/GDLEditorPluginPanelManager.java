@@ -1,6 +1,6 @@
 package se.cambio.cds.gdl.editor.controller.panelplugins;
 
-import se.cambio.cds.gdl.editor.util.GDLEditorConfig;
+import se.cambio.cds.gdl.editor.configuration.GDLEditorConfiguration;
 import se.cambio.cds.gdl.editor.view.panels.AbstractPluginPanel;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -14,8 +14,8 @@ public class GDLEditorPluginPanelManager {
     private Map<String, AbstractPluginPanel> pluginPanelMap = null;
 
     private GDLEditorPluginPanelManager() {
-        GDLEditorConfig gdlEditorConfig = BeanProvider.getBean(GDLEditorConfig.class);
-        String gdlEditorPlugins = gdlEditorConfig.getGdlEditorPlugins();
+        GDLEditorConfiguration gdlEditorConfiguration = BeanProvider.getBean(GDLEditorConfiguration.class);
+        String gdlEditorPlugins = gdlEditorConfiguration.getGdlEditorPlugins();
         pluginPanelMap = new HashMap<>();
         if (gdlEditorPlugins != null && !gdlEditorPlugins.trim().isEmpty()) {
             try {

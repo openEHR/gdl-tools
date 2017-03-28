@@ -1,12 +1,13 @@
 
 package se.cambio.cds.gdl.editor.view.util;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.view.panels.TerminologyCodesWithButtonPanel;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable;
 import se.cambio.openehr.controller.sw.LoadTerminologyViewerRSW;
 import se.cambio.openehr.util.TerminologyCodesManager;
+import se.cambio.openehr.util.TerminologyDialogManager;
 import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +25,10 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
     private TerminologyCodesWithButtonPanel panel = null;
     private int row = 0;
 
-    public TerminologyCodesButtonEditor(BindingTable bt) {
+    public TerminologyCodesButtonEditor(
+            WindowManager windowManager,
+            TerminologyDialogManager terminologyDialogManager,
+            BindingTable bt) {
         super(new JTextField());
         bindingTable = bt;
         panel = new TerminologyCodesWithButtonPanel();
@@ -42,7 +46,7 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
             public void focusGained(FocusEvent e) { }
         });
 
-        panel.getSearchButton().addActionListener(new SearchCodesActionListener());
+        panel.getSearchButton().addActionListener(new SearchCodesActionListener(windowManager, terminologyDialogManager));
     }
 
     public void update(){
@@ -79,6 +83,15 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
     }
 
     private class SearchCodesActionListener implements ActionListener {
+        private TerminologyDialogManager terminologyDialogManager;
+        private WindowManager windowManager;
+
+        private SearchCodesActionListener(WindowManager windowManager, TerminologyDialogManager terminologyDialogManager) {
+            this.windowManager = windowManager;
+            this.terminologyDialogManager = terminologyDialogManager;
+        }
+
+
         @Override
         public void actionPerformed(ActionEvent e) {
             String terminologyCodes = panel.getTextField().getText();
@@ -90,11 +103,12 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
                 }
             }
             new LoadTerminologyViewerRSW(
-                    EditorManager.getActiveEditorWindow(),
+                    windowManager,
                     getTerminologyCodesManager(),
                     bindingTable.getTerminologyId(),
                     selectedCodes,
-                    SelectableNode.SelectionMode.MULTIPLE).execute();
+                    SelectableNode.SelectionMode.MULTIPLE,
+                    terminologyDialogManager).execute();
         }
     }
 

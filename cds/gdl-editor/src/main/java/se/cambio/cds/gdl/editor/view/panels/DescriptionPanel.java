@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathNotFoundException;
 import se.cambio.cds.formgen.view.util.SpringUtilities;
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
@@ -35,9 +36,11 @@ public class DescriptionPanel extends JPanel {
     private JPanel references;
     private JPanel conceptPanel;
     private JPanel descriptionPanel;
+    private Window window;
 
-    DescriptionPanel(EditorController controller) {
+    DescriptionPanel(EditorController controller, Window window) {
         this.controller = controller;
+        this.window = window;
         descriptionContext = JXPathContext.newContext(this.controller.getResourceDescription());
         conceptContext = JXPathContext.newContext(this.controller.getConceptTerm());
         init();
@@ -154,14 +157,14 @@ public class DescriptionPanel extends JPanel {
     private ListPanel getKeywordsPanel() {
         if (keywordsPanel == null) {
             String lang = controller.getCurrentLanguageCode();
-            keywordsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Keywords"), "/details/" + lang + "/keywords", descriptionContext);
+            keywordsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Keywords"), "/details/" + lang + "/keywords", descriptionContext, window);
         }
         return keywordsPanel;
     }
 
     private ListPanel getContributorsPanel() {
         if (contributorsPanel == null) {
-            contributorsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Contributors"), "/otherContributors", descriptionContext);
+            contributorsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Contributors"), "/otherContributors", descriptionContext, window);
         }
         return contributorsPanel;
     }

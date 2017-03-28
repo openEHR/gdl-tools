@@ -10,16 +10,17 @@ public class GTCodeButtonEditor extends ButtonEditor {
 
     private static final long serialVersionUID = 4720175033111295429L;
     private BindingTable bindingTable = null;
+    private GDLEditor gdlEditor;
     private String gtCode = null;
 
-    public GTCodeButtonEditor(BindingTable bt) {
+    public GTCodeButtonEditor(BindingTable bt, GDLEditor gdlEditor) {
         super();
         bindingTable = bt;
+        this.gdlEditor = gdlEditor;
     }
 
     public void performAction(int row) {
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
-        DialogGTCodeSelection dialog = new DialogGTCodeSelection(EditorManager.getActiveEditorWindow(), controller);
+        DialogGTCodeSelection dialog = new DialogGTCodeSelection(gdlEditor);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             gtCode = dialog.getSelectedObject();

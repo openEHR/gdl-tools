@@ -79,7 +79,7 @@ public class DroolsRuleEngineFacadeDelegate implements RuleEngineFacadeDelegate 
 
     @Override
     public byte[] compile(Guide guide) {
-        String droolsGuide = new GDLDroolsConverter(guide, ArchetypeManager.getInstance()).convertToDrools();
+        String droolsGuide = new GDLDroolsConverter(guide, droolsExecutionManager.getArchetypeManager()).convertToDrools();
         try {
             return droolsGuide.getBytes("UTF8");
         } catch (UnsupportedEncodingException exception) {

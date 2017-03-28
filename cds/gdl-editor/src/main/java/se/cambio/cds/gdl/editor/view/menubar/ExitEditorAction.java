@@ -18,9 +18,11 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 public class ExitEditorAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
 
-    ExitEditorAction() {
+    ExitEditorAction(EditorManager editorManager) {
         super();
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("ExitEditor"));
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExitEditorD"));
@@ -29,7 +31,7 @@ public class ExitEditorAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        EditorManager.closeEditor();
+        editorManager.closeEditor();
     }
 }
 /*

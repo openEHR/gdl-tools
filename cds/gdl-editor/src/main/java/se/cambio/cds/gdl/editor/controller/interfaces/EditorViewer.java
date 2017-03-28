@@ -7,10 +7,7 @@ import javax.swing.*;
 
 public interface EditorViewer {
 
-
     void initController(EditorController controller);
-
-    MainMenuBar getMainMenuBar();
 
     void setContent(JPanel panel);
 }

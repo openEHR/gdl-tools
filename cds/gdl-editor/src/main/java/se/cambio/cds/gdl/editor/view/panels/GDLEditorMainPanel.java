@@ -1,11 +1,13 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.LoadGuideAction;
 import se.cambio.cds.gdl.editor.view.menubar.SaveGuideAction;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -26,12 +28,16 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
     private JPanel mainPanel = null;
     private GuidePanel guidePanel = null;
     private GDLEditor controller = null;
+    private GuidelineLoadManager guidelineLoadManager;
     private JLabel titleLabel = null;
     private JButton loadButton;
     private RulePanel currentRulePanel = null;
+    private GuideHTMLExporter guideHTMLExporter;
 
-    public GDLEditorMainPanel(GDLEditor controller) {
+    public GDLEditorMainPanel(GDLEditor controller, GuidelineLoadManager guidelineLoadManager, GuideHTMLExporter guideHTMLExporter) {
         this.controller = controller;
+        this.guidelineLoadManager = guidelineLoadManager;
+        this.guideHTMLExporter = guideHTMLExporter;
         init();
     }
 
@@ -139,7 +145,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
 
     public GuidePanel getGuidePanel() {
         if (guidePanel == null) {
-            guidePanel = new GuidePanel(controller);
+            guidePanel = new GuidePanel(controller, guideHTMLExporter);
         }
         return guidePanel;
     }
@@ -151,7 +157,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
 
     public JButton getSaveButton() {
         if (saveButton == null) {
-            saveButton = new JButton(new SaveGuideAction());
+            saveButton = new JButton(new SaveGuideAction(controller));
             saveButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
             saveButton.setEnabled(false);
         }
@@ -161,7 +167,9 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
 
     private JButton getLoadButton() {
         if (loadButton == null) {
-            loadButton = new JButton(new LoadGuideAction());
+            loadButton = new JButton(new LoadGuideAction(
+                    controller,
+                    guidelineLoadManager));
             loadButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         }
         return loadButton;

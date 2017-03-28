@@ -23,7 +23,7 @@ public abstract class RuleLine {
         super();
         this.name = name;
         this.description = description;
-        this.ruleLineElements = new ArrayList<RuleLineElement>();
+        this.ruleLineElements = new ArrayList<>();
     }
 
     public void setReadableGuide(ReadableGuide readableGuide) {

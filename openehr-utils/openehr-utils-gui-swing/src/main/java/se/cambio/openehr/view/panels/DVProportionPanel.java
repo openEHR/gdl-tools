@@ -17,20 +17,22 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DVProportionPanel extends DVGenericPanel{
+public class DVProportionPanel extends DVGenericPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+    private final ArchetypeManager archetypeManager;
     private JFormattedTextField numeratorTextField;
     private JFormattedTextField denominatorTextField;
     private JComboBox proportionTypeComboBox;
     private static int DEFAULT_PRECISION = 0;
 
-    public DVProportionPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
+    public DVProportionPanel(
+            String idElement, String idTemplate,
+            boolean allowNull, boolean requestFocus,
+            ArchetypeManager archetypeManager) {
         super(idElement, idTemplate, allowNull, requestFocus);
-        this.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        this.archetypeManager = archetypeManager;
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         this.add(getNumeratorTextField());
         this.add(new JLabel(" / "));
         this.add(getDenominatorTextField());
@@ -38,11 +40,12 @@ public class DVProportionPanel extends DVGenericPanel{
         this.add(getProportionTypeComboBox());
     }
 
-    protected JFormattedTextField getNumeratorTextField(){
-        if (numeratorTextField==null){
+    protected JFormattedTextField getNumeratorTextField() {
+        if (numeratorTextField == null) {
             DecimalFormat format = OpenEHRNumberFormat.getDecimalFormat();
-            numeratorTextField = new JFormattedTextField(format){
+            numeratorTextField = new JFormattedTextField(format) {
                 private static final long serialVersionUID = 1L;
+
                 @Override
                 protected void processFocusEvent(final FocusEvent e) {
                     if (e.isTemporary()) {
@@ -56,16 +59,17 @@ public class DVProportionPanel extends DVGenericPanel{
                     super.processFocusEvent(e);
                 }
             };
-            numeratorTextField.setPreferredSize(new Dimension(100,18));
+            numeratorTextField.setPreferredSize(new Dimension(100, 18));
         }
         return numeratorTextField;
     }
 
-    protected JFormattedTextField getDenominatorTextField(){
-        if (denominatorTextField==null){
+    protected JFormattedTextField getDenominatorTextField() {
+        if (denominatorTextField == null) {
             DecimalFormat format = OpenEHRNumberFormat.getDecimalFormat();
-            denominatorTextField = new JFormattedTextField(format){
+            denominatorTextField = new JFormattedTextField(format) {
                 private static final long serialVersionUID = 1L;
+
                 @Override
                 protected void processFocusEvent(final FocusEvent e) {
                     if (e.isTemporary()) {
@@ -79,8 +83,8 @@ public class DVProportionPanel extends DVGenericPanel{
                     super.processFocusEvent(e);
                 }
             };
-            denominatorTextField.setPreferredSize(new Dimension(100,18));
-            if (isRequestFocus()){
+            denominatorTextField.setPreferredSize(new Dimension(100, 18));
+            if (isRequestFocus()) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         denominatorTextField.requestFocus();
@@ -91,8 +95,8 @@ public class DVProportionPanel extends DVGenericPanel{
         return denominatorTextField;
     }
 
-    protected JComboBox getProportionTypeComboBox(){
-        if (proportionTypeComboBox==null){
+    protected JComboBox getProportionTypeComboBox() {
+        if (proportionTypeComboBox == null) {
             proportionTypeComboBox = new JComboBox();
             //proportionTypeComboBox.setPreferredSize(new Dimension(60,18));
             proportionTypeComboBox.setRenderer(new ProportionTypeComboRenderer());
@@ -102,19 +106,19 @@ public class DVProportionPanel extends DVGenericPanel{
             proportionTypeComboBox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (ProportionKind.UNITARY.equals(proportionTypeComboBox.getSelectedItem())){
+                    if (ProportionKind.UNITARY.equals(proportionTypeComboBox.getSelectedItem())) {
                         getDenominatorTextField().setValue(1);
                         getDenominatorTextField().setEnabled(false);
-                    }else if (ProportionKind.PERCENT.equals(proportionTypeComboBox.getSelectedItem())){
+                    } else if (ProportionKind.PERCENT.equals(proportionTypeComboBox.getSelectedItem())) {
                         getDenominatorTextField().setValue(100);
                         getDenominatorTextField().setEnabled(false);
-                    }else{
+                    } else {
                         getDenominatorTextField().setEnabled(true);
                         getDenominatorTextField().setText("");
                     }
                 }
             });
-            if (proportionTypeComboBox.getItemCount()>0){
+            if (proportionTypeComboBox.getItemCount() > 0) {
                 proportionTypeComboBox.setSelectedIndex(0);
             }
         }
@@ -122,7 +126,7 @@ public class DVProportionPanel extends DVGenericPanel{
     }
 
     public ProportionTypes getProportionTypes() {
-        return ArchetypeManager.getInstance().getProportionTypes();
+        return archetypeManager.getProportionTypes();
     }
 
     private class ProportionTypeComboRenderer extends JLabel implements ListCellRenderer {
@@ -130,7 +134,8 @@ public class DVProportionPanel extends DVGenericPanel{
          *
          */
         private static final long serialVersionUID = 1L;
-        public ProportionTypeComboRenderer(){
+
+        public ProportionTypeComboRenderer() {
             setOpaque(true);
             setHorizontalAlignment(LEFT);
             setVerticalAlignment(CENTER);
@@ -145,7 +150,7 @@ public class DVProportionPanel extends DVGenericPanel{
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            if (value instanceof ProportionKind){
+            if (value instanceof ProportionKind) {
                 ProportionKind proportionKind = (ProportionKind) value;
                 String text = ProportionTypesConst.getInstance().getName(proportionKind);
                 setText(text);
@@ -155,27 +160,27 @@ public class DVProportionPanel extends DVGenericPanel{
         }
     }
 
-    private ProportionKind getSelectedType(){
-        if (getProportionTypeComboBox().getItemCount()>0){
-            return (ProportionKind)getProportionTypeComboBox().getSelectedItem();
-        }else{
+    private ProportionKind getSelectedType() {
+        if (getProportionTypeComboBox().getItemCount() > 0) {
+            return (ProportionKind) getProportionTypeComboBox().getSelectedItem();
+        } else {
             return null;
         }
     }
 
-    private int getPrecision(){
+    private int getPrecision() {
         String valueStr = getNumeratorTextField().getText().trim();
         int index = valueStr.lastIndexOf(".");
-        if (index<=0){
+        if (index <= 0) {
             valueStr = getDenominatorTextField().getText().trim();
             index = valueStr.lastIndexOf(".");
-            if (index<=0){
+            if (index <= 0) {
                 return DEFAULT_PRECISION;
-            }else{
-                return valueStr.length()-(index+1);
+            } else {
+                return valueStr.length() - (index + 1);
             }
-        }else{
-            return valueStr.length()-(index+1);
+        } else {
+            return valueStr.length() - (index + 1);
         }
     }
 
@@ -183,29 +188,29 @@ public class DVProportionPanel extends DVGenericPanel{
         String numerator = "";
         String denominator = "";
         ProportionKind proportionKind = ProportionKind.FRACTION;
-        if (dataValue instanceof DvProportion){
-            DvProportion dvProportion = (DvProportion)dataValue;
+        if (dataValue instanceof DvProportion) {
+            DvProportion dvProportion = (DvProportion) dataValue;
             numerator = OpenEHRNumberFormat.toStringUsingPrecision(dvProportion.getNumerator(), dvProportion.getPrecision());
             denominator = OpenEHRNumberFormat.toStringUsingPrecision(dvProportion.getDenominator(), dvProportion.getPrecision());
             proportionKind = dvProportion.getType();
         }
         getProportionTypeComboBox().setSelectedItem(proportionKind);
         getNumeratorTextField().setText(numerator);
-        if (getDenominatorTextField().isEnabled()){
+        if (getDenominatorTextField().isEnabled()) {
             getDenominatorTextField().setText(denominator);
         }
 
     }
 
-    public DataValue getDataValue(){
+    public DataValue getDataValue() {
         if (!getNumeratorTextField().getText().isEmpty() &&
-                !getDenominatorTextField().getText().isEmpty()){
+                !getDenominatorTextField().getText().isEmpty()) {
             return new DvProportion(
                     Double.parseDouble(getNumeratorTextField().getText()),
                     Double.parseDouble(getDenominatorTextField().getText()),
                     getSelectedType(),
                     getPrecision());
-        }else{
+        } else {
             return null;
         }
     }

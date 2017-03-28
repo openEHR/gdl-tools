@@ -2,6 +2,8 @@ package se.cambio.openehr.util;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 
 public class BeanProvider {
@@ -15,8 +17,8 @@ public class BeanProvider {
     private ConfigurableApplicationContext getAppCtx() {
         if (appCtx == null) {
             appCtx = new AnnotationConfigApplicationContext();
-            appCtx.getEnvironment().setDefaultProfiles("cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao", "rule-drools-engine");
-            ((AnnotationConfigApplicationContext)appCtx).register(CdsConfiguration.class);
+            appCtx.getEnvironment().setDefaultProfiles("cm-admin-file-dao", "rule-drools-engine");
+            ((AnnotationConfigApplicationContext) appCtx).register(CdsConfiguration.class);
             appCtx.refresh();
         }
         return appCtx;
@@ -26,10 +28,10 @@ public class BeanProvider {
         return getInstance().getAppCtx().getBean(beanClass);
     }
 
-    public static void setActiveProfiles (String... activeProfiles) {
+    public static void setActiveProfiles(String... activeProfiles) {
         getInstance().appCtx = new AnnotationConfigApplicationContext();
         getInstance().appCtx.getEnvironment().setActiveProfiles(activeProfiles);
-        ((AnnotationConfigApplicationContext)getInstance().appCtx).register(CdsConfiguration.class);
+        ((AnnotationConfigApplicationContext) getInstance().appCtx).register(CdsConfiguration.class);
         getInstance().appCtx.refresh();
     }
 

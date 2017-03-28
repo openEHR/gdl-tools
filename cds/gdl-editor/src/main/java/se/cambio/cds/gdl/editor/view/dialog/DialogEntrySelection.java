@@ -3,7 +3,7 @@ package se.cambio.cds.gdl.editor.view.dialog;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import javax.swing.*;
@@ -16,12 +16,12 @@ public class DialogEntrySelection extends DialogSelection{
     private GDLEditor _controller = null;
     private Object _selectedObject = null;
     private boolean _onlyCDSDomain;
-    public DialogEntrySelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
-        super(owner,
+    public DialogEntrySelection(GDLEditor controller, boolean onlyCDSDomain) {
+        super(controller.getWindowManager().getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectEntry"),
-                NodeDefinitionConversor.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
+                NodeDefinitionManager.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
                 true,
-                new Dimension(500,500));
+                new Dimension(500,500), controller.getWindowManager());
         _controller = controller;
         _onlyCDSDomain = onlyCDSDomain;
         getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());

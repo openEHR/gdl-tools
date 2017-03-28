@@ -2,12 +2,17 @@ package se.cambio.cds.gdl.converters.drools;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.Message;
 import org.kie.api.io.Resource;
 import org.kie.internal.io.ResourceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.cambio.cds.configuration.DroolsConfiguration;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -20,9 +25,13 @@ import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {DroolsConfiguration.class})
 public class ConvertToDroolsTest {
-
+    
+    @Autowired
+    ArchetypeManager archetypeManager;
+    
 	@Before
 	public void setUp() throws Exception {
 		String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
@@ -34,7 +43,7 @@ public class ConvertToDroolsTest {
     @Test
     public void testConvertBSACalculationGuide() throws Exception {
         parse("BSA_Calculation.v2.gdl");
-        converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
+        converter = new GDLDroolsConverter(guide, archetypeManager);
         String output = converter.convertToDrools();
         compile(output);
     }
@@ -42,7 +51,7 @@ public class ConvertToDroolsTest {
     @Test
     public void shouldConvertTemporalGuide() throws Exception {
         parse("temporal.gdl");
-        converter = new GDLDroolsConverter(guide, ArchetypeManager.getInstance());
+        converter = new GDLDroolsConverter(guide, archetypeManager);
         String output = converter.convertToDrools();
         compile(output);
     }

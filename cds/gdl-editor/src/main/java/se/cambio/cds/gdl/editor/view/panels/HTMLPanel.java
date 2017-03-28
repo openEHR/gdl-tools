@@ -16,9 +16,11 @@ public class HTMLPanel extends JPanel implements RefreshablePanel {
     private JScrollPane mainScrollPanel;
     private JEditorPane editorPanel;
     private GDLEditor controller = null;
+    private GuideHTMLExporter guideHTMLExporter;
 
-    HTMLPanel(GDLEditor controller) {
+    HTMLPanel(GDLEditor controller, GuideHTMLExporter guideHTMLExporter) {
         this.controller = controller;
+        this.guideHTMLExporter = guideHTMLExporter;
         init();
     }
 
@@ -41,7 +43,7 @@ public class HTMLPanel extends JPanel implements RefreshablePanel {
             editorPanel.setContentType("text/html");
             editorPanel.setEditable(false);
             try {
-                String html = new GuideHTMLExporter(ArchetypeManager.getInstance()).convertToHTML(controller.getEntity(), controller.getCurrentLanguageCode());
+                String html = guideHTMLExporter.convertToHTML(controller.getEntity(), controller.getCurrentLanguageCode());
                 if (html != null) {
                     editorPanel.setText(html);
                 }

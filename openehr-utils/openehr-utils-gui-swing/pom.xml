@@ -18,6 +18,11 @@
             <artifactId>cm-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.openehr.utils</groupId>
+			<artifactId>openehr-utils-terminology-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
         <dependency>
 			<groupId>com.toedter</groupId>
 			<artifactId>jcalendar</artifactId>

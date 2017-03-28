@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.view.menubar.CleanFileSelectionAction;
 import se.cambio.cds.gdl.editor.view.menubar.FileSelectionAction;
 
@@ -21,13 +22,15 @@ public class FileSelectionPanel extends JPanel {
     private static final long serialVersionUID = 8614448310448465673L;
     private JPanel jPanel;
     private JFileChooser fileChooser = null;
+    private EditorManager editorManager;
     private JTextField fileNameJTextField = null;
     private JButton selectFileButton = null;
     private JButton cleanSelectionButton = null;
 
-    public FileSelectionPanel(JFileChooser fileChooser) {
+    public FileSelectionPanel(JFileChooser fileChooser, EditorManager editorManager) {
         super();
         this.fileChooser = fileChooser;
+        this.editorManager = editorManager;
         initialize();
     }
 
@@ -70,7 +73,7 @@ public class FileSelectionPanel extends JPanel {
 
     private JButton getSelectFileButton() {
         if (selectFileButton == null) {
-            selectFileButton = new JButton(new FileSelectionAction(fileChooser, getFileNameJTextField()));
+            selectFileButton = new JButton(new FileSelectionAction(fileChooser, getFileNameJTextField(), editorManager));
             selectFileButton.setText("");
         }
         return selectFileButton;

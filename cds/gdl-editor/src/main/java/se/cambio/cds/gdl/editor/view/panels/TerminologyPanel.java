@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import org.apache.commons.jxpath.JXPathContext;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -138,7 +137,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
         for (String gtCode : getSelectedGTCodes()) {
             if (gtCodesUsed.contains(gtCode)) {
                 JOptionPane.showMessageDialog(
-                        EditorManager.getActiveEditorWindow(),
+                        controller.getEditorWindow(),
                         GDLEditorLanguageManager.getMessage("ReferenceBeingUsedMsg"),
                         GDLEditorLanguageManager.getMessage("ReferenceBeingUsedTitle"),
                         JOptionPane.WARNING_MESSAGE);

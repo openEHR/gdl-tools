@@ -1,22 +1,18 @@
 package se.cambio.cm.model.archetype.vo;
 
 
-/**
- * @author iago.corbal
- *
- */
 public class ArchetypeElementVO extends PathableVO {
 
-	private static final long serialVersionUID = 23032012L;
+    private static final long serialVersionUID = 23032012L;
 
-	public ArchetypeElementVO(
-		String name, String description, String type,
-		String idArchetype, String idTemplate, String path) {
-	    super(name, description, type,  idArchetype, idTemplate, path);
-	}
+    public ArchetypeElementVO(
+            String name, String description, String type,
+            String idArchetype, String idTemplate, String path) {
+        super(name, description, type, idArchetype, idTemplate, path);
+    }
 
     @Override
-    public ArchetypeElementVO clone(){
+    public ArchetypeElementVO clone() {
         return new ArchetypeElementVOBuilder()
                 .setName(getName())
                 .setDescription(getDescription())

@@ -16,7 +16,8 @@ import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.cm.controller.terminology.TerminologyService;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -187,12 +188,7 @@ public class DVUtil {
                 codePhrases.add(getCodePhrase(dataValue));
             }
             if (a != null && !codePhrases.isEmpty()) {
-                try {
-                    return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
-                } catch (InternalErrorException e) {
-                    ExceptionHandler.handle(e);
-                    return false;
-                }
+                return getTerminologyService().isSubclassOf(a, codePhrases);
             } else {
                 return false;
             }
@@ -212,7 +208,6 @@ public class DVUtil {
         if (ei instanceof PredicateGeneratedElementInstance) {
             return true;
         } else {
-            //TODO Remove, exceptions should be handled
             CodePhrase a = getCodePhrase(ei.getDataValue());
             Set<CodePhrase> codePhrases = new HashSet<>();
             for (DataValue dataValue : dataValues) {
@@ -220,9 +215,9 @@ public class DVUtil {
             }
             if (a != null && !codePhrases.isEmpty()) {
                 try {
-                    return !OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
-                } catch (InternalErrorException e) {
-                    ExceptionHandler.handle(e);
+                    return !getTerminologyService().isSubclassOf(a, codePhrases);
+                } catch (Exception exception) {
+                    ExceptionHandler.handle(exception);
                     return false;
                 }
             } else {
@@ -491,6 +486,10 @@ public class DVUtil {
             default:
                 throw new IllegalArgumentException(format("Unknown time units '%s'", ucumUnits));
         }
+    }
+
+    private static TerminologyService getTerminologyService() {
+        return BeanProvider.getBean(TerminologyService.class);
     }
 }
 /*

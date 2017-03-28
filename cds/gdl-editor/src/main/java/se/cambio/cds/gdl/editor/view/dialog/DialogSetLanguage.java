@@ -19,11 +19,13 @@ public class DialogSetLanguage extends DialogEditor {
 
     private static final long serialVersionUID = 2562412853124970610L;
     private JComboBox<String> languageSelection = null;
+    private EditorManager editorManager;
 
-    public DialogSetLanguage() {
-        super(EditorManager.getActiveEditorWindow(),
+    public DialogSetLanguage(EditorManager editorManager) {
+        super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SetEditorLanguage"),
                 new Dimension(250, 110),true);
+        this.editorManager = editorManager;
         initialize();
     }
 
@@ -68,7 +70,7 @@ public class DialogSetLanguage extends DialogEditor {
             JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
+        JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
         return true;
     }
 } 

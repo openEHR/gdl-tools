@@ -1,13 +1,13 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
 import org.apache.commons.io.IOUtils;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.*;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.WindowManager;
+import se.cambio.openehr.view.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
@@ -19,34 +19,32 @@ import java.io.FileInputStream;
 
 public class LoadGuideFromFileRSW extends CDSSwingWorker {
 
+    private WindowManager windowManager;
+    private EditorManager editorManager;
+    private EditorFileManager editorFileManager;
+    private GuidelineEditorManager guidelineEditorManager;
+    private GdlEditorFactory gdlEditorFactory;
     private File guideFile = null;
+    private MainMenuBar mainMenuBar;
     private GDLEditor editor = null;
     private String guideStr = null;
 
-    public LoadGuideFromFileRSW() {
+    public LoadGuideFromFileRSW(
+            WindowManager windowManager,
+            EditorManager editorManager,
+            EditorFileManager editorFileManager,
+            GuidelineEditorManager guidelineEditorManager,
+            GdlEditorFactory gdlEditorFactory,
+            MainMenuBar mainMenuBar,
+            File guideFile) {
         super();
-        init();
-    }
-
-    public LoadGuideFromFileRSW(File guideFile) {
-        super();
+        this.windowManager = windowManager;
+        this.editorManager = editorManager;
+        this.editorFileManager = editorFileManager;
+        this.guidelineEditorManager = guidelineEditorManager;
+        this.gdlEditorFactory = gdlEditorFactory;
         this.guideFile = guideFile;
-        init();
-    }
-
-    private void init() {
-        if (guideFile == null) {
-            JFileChooser fileChooser = new JFileChooser(EditorManager.getLastFolderLoaded());
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                    GDLEditorLanguageManager.getMessage("Guide"), "gdl");
-            fileChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("LoadGuide"));
-            fileChooser.setFileFilter(filter);
-            int result = fileChooser.showOpenDialog(EditorManager.getActiveEditorWindow());
-            if (result != JFileChooser.CANCEL_OPTION) {
-                guideFile = fileChooser.getSelectedFile();
-                WindowManager.setBusy(GDLEditorLanguageManager.getMessage("Loading") + "...");
-            }
-        }
+        this.mainMenuBar = mainMenuBar;
     }
 
     protected void executeCDSSW() throws InternalErrorException {
@@ -54,9 +52,11 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
             if (guideFile != null) {
                 FileInputStream fis = new FileInputStream(guideFile);
                 guideStr = IOUtils.toString(fis, "UTF8");
-                Guide guide = GDLEditor.parseGuide(new ByteArrayInputStream(guideStr.getBytes("UTF8")));
+                Guide guide = guidelineEditorManager.parseGuide(new ByteArrayInputStream(guideStr.getBytes("UTF8")));
                 if (guide != null) {
-                    editor = new GDLEditor(guide);
+                    editor = gdlEditorFactory.createGdlEditor(
+                            guide,
+                            editorManager.getActiveEditorViewer());
                 }
             } else {
                 this.cancel(true);
@@ -70,20 +70,15 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
     protected void done() {
         try {
             if (editor != null) {
-                if (GDLEditor.checkParsedGuide(guideStr, editor.getEntity())) {
-                    EditorManager.setLastFileLoaded(guideFile);
-                    EditorManager.setLastFolderLoaded(guideFile.getParentFile());
-                    try {
-                        EditorManager.initController(editor);
-                    } catch (InternalErrorException e) {
-                        ExceptionHandler.handle(e);
-                    }
+                if (guidelineEditorManager.checkParsedGuide(guideStr, editor.getEntity())) {
+                    editorFileManager.setLastFileLoaded(guideFile);
+                    editorFileManager.setLastFolderLoaded(guideFile.getParentFile());
+                    editorManager.initController(editor);
+                    mainMenuBar.refreshLanguageMenu();
                 }
             }
-        } catch (Throwable th) {
-            ExceptionHandler.handle(th);
         } finally {
-            WindowManager.setFree();
+            windowManager.setFree();
         }
     }
 }

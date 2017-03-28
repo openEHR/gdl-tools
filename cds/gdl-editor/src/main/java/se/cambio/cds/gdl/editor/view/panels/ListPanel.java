@@ -16,15 +16,17 @@ import java.util.List;
 class ListPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
+    private final Window window;
     private String title;
     private String xPath;
     private JXPathContext context;
     private JList<String> jList;
 
-    ListPanel(String title, String xPath, JXPathContext context) {
+    ListPanel(String title, String xPath, JXPathContext context, Window window) {
         this.title = title;
         this.xPath = xPath;
         this.context = context;
+        this.window = window;
         Object obj = context.getValue(xPath);
         if (obj instanceof List) {
             DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
@@ -60,7 +62,7 @@ class ListPanel extends JPanel {
         addButton.setPreferredSize(new Dimension(16, 16));
         addButton.setBorderPainted(false);
         addButton.addActionListener(e -> {
-            String value = JOptionPane.showInputDialog(EditorManager.getActiveEditorWindow(), title, "");
+            String value = JOptionPane.showInputDialog(window, title, "");
             if (value != null) {
                 DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
                 dlm.addElement(value);
@@ -104,7 +106,7 @@ class ListPanel extends JPanel {
     private void editItem(int index) {
         DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
         String label = dlm.getElementAt(index);
-        DialogNameInsert dialogNameInsert = new DialogNameInsert(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EditKeyword"), label);
+        DialogNameInsert dialogNameInsert = new DialogNameInsert(window, GDLEditorLanguageManager.getMessage("EditKeyword"), label);
         if (dialogNameInsert.getAnswer()) {
             label = dialogNameInsert.getValue();
             dlm.setElementAt(label, index);

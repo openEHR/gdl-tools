@@ -19,9 +19,11 @@ import java.awt.event.KeyEvent;
 public class SaveGuideAsAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
 
-    SaveGuideAsAction(){
+    SaveGuideAsAction(EditorManager editorManager){
         super();
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAs")+"...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsSD"));
@@ -30,7 +32,7 @@ public class SaveGuideAsAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        GDLEditor activeGDLEditor = EditorManager.getActiveGDLEditor();
+        GDLEditor activeGDLEditor = editorManager.getActiveGDLEditor();
         assert activeGDLEditor != null;
         activeGDLEditor.saveAs();
     }

@@ -3,7 +3,7 @@ package se.cambio.cds.gdl.editor.view.dialog;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -20,12 +20,12 @@ public class DialogElementInstanceSelection extends DialogSelection{
     private Object selectedObject = null;
     private boolean onlyCDSDomain;
 
-    public DialogElementInstanceSelection(Window owner, GDLEditor controller, boolean onlyCDSDomain, ArchetypeReference ar) {
-        super(owner,
+    public DialogElementInstanceSelection(GDLEditor controller, NodeDefinitionManager nodeDefinitionManager, boolean onlyCDSDomain, ArchetypeReference ar) {
+        super(controller.getWindowManager().getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionConversor.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
+                nodeDefinitionManager.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
                 true,
-                new Dimension(500,500));
+                new Dimension(500,500), controller.getWindowManager());
         this.controller = controller;
         this.onlyCDSDomain = onlyCDSDomain;
         getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());

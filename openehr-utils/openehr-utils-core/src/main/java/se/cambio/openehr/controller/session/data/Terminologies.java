@@ -1,24 +1,18 @@
 package se.cambio.openehr.controller.session.data;
 
+import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 
 
 public class Terminologies extends AbstractCMManager<TerminologyDTO> {
-    private static Terminologies instance = null;
 
-    private Terminologies(){
+    private Terminologies(CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate){
+        super(cmAdministrationFacadeDelegate);
     }
 
     @Override
     public Class<TerminologyDTO> getCMElementClass() {
         return TerminologyDTO.class;
-    }
-
-    public static Terminologies getInstance(){
-        if (instance == null){
-            instance = new Terminologies();
-        }
-        return instance;
     }
 }
 /*

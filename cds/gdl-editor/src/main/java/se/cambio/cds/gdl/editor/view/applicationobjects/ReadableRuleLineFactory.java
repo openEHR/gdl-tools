@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.editor.view.applicationobjects;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -27,23 +26,23 @@ import java.awt.event.ActionEvent;
 
 public class ReadableRuleLineFactory {
 
-    public static RuleLineContainerPanel createRuleLineContainer(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine) {
+    public static RuleLineContainerPanel createRuleLineContainer(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
         if (ruleLine instanceof InstantiationRuleLine) {
-            MultipleRuleLineContainerWithHeader archetypeInstantiationRL = new MultipleRuleLineContainerWithHeader(ruleLinesPanel, ruleLine);
+            MultipleRuleLineContainerWithHeader archetypeInstantiationRL = new MultipleRuleLineContainerWithHeader(ruleLinesPanel, ruleLine, gdlEditor);
             archetypeInstantiationRL.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
             return archetypeInstantiationRL;
         } else if (ruleLine instanceof OrOperatorRuleLine) {
-            return new OrOperatorRuleLinePanel(ruleLinesPanel, (OrOperatorRuleLine) ruleLine);
+            return new OrOperatorRuleLinePanel(ruleLinesPanel, (OrOperatorRuleLine) ruleLine, gdlEditor);
         } else if (ruleLine instanceof OperatorRuleLine) {
-            return new OperatorRuleLineContainer(ruleLinesPanel, ruleLine);
+            return new OperatorRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
         } else {
-            return new SingleRuleLinePanel(ruleLinesPanel, ruleLine);
+            return new SingleRuleLinePanel(ruleLinesPanel, ruleLine, gdlEditor);
         }
     }
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static JPanel createRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine) {
+    public static JPanel createRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
         JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JLabel iconLabel = new JLabel(RuleLineDirectory.getIconForRuleLine(ruleLine));
         if (ruleLine.isCommented()) {
@@ -90,7 +89,7 @@ public class ReadableRuleLineFactory {
         }
         jPanel.add(createCommentButton(ruleLine, ruleLinesPanel));
         jPanel.add(Box.createHorizontalStrut(2));
-        jPanel.add(createDeleteButton(ruleLine, ruleLinesPanel));
+        jPanel.add(createDeleteButton(ruleLine, ruleLinesPanel, gdlEditor));
         return jPanel;
     }
 
@@ -112,9 +111,9 @@ public class ReadableRuleLineFactory {
         return label;
     }
 
-    public static JButton createDeleteButton(RuleLine ruleLine, RuleLinesPanel ruleLinesPanel) {
+    public static JButton createDeleteButton(RuleLine ruleLine, RuleLinesPanel ruleLinesPanel, GDLEditor gdlEditor) {
         JButton button = createGenericButton();
-        button.setAction(new DeleteAction(ruleLine, ruleLinesPanel));
+        button.setAction(new DeleteAction(ruleLine, ruleLinesPanel, gdlEditor));
         button.setIcon(GDLEditorImageUtil.DELETE_ICON);
         button.setToolTipText(GDLEditorLanguageManager.getMessage("DeleteLine"));
         return button;
@@ -122,32 +121,32 @@ public class ReadableRuleLineFactory {
 
     private static class DeleteAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        private RuleLine _ruleLine = null;
-        private RuleLinesPanel _ruleLinesPanel = null;
+        private RuleLine ruleLine = null;
+        private RuleLinesPanel ruleLinesPanel = null;
+        private GDLEditor gdlEditor;
 
-        DeleteAction(RuleLine ruleLine, RuleLinesPanel ruleLinesPanel) {
-            _ruleLine = ruleLine;
-            _ruleLinesPanel = ruleLinesPanel;
+        DeleteAction(RuleLine ruleLine, RuleLinesPanel ruleLinesPanel, GDLEditor gdlEditor) {
+            this.ruleLine = ruleLine;
+            this.ruleLinesPanel = ruleLinesPanel;
+            this.gdlEditor = gdlEditor;
         }
 
         public void actionPerformed(ActionEvent e) {
-            GDLEditor controller = EditorManager.getActiveGDLEditor();
-            assert controller != null;
-            if (controller.checkRuleLineDelete(_ruleLine)) {
+            if (gdlEditor.checkRuleLineDelete(ruleLine)) {
                 int resp = JOptionPane.showConfirmDialog(
-                        EditorManager.getActiveEditorWindow(),
+                        gdlEditor.getEditorWindow(),
                         GDLEditorLanguageManager.getMessage("AskForRuleLineDeletionConfirmation"),
                         GDLEditorLanguageManager.getMessage("DeletingRuleLine"),
                         JOptionPane.YES_NO_CANCEL_OPTION);
                 if (resp == JOptionPane.YES_OPTION) {
 
 
-                    if (_ruleLine.getParentRuleLine() != null) {
-                        _ruleLine.detachFromParent();
+                    if (ruleLine.getParentRuleLine() != null) {
+                        ruleLine.detachFromParent();
                     } else {
-                        _ruleLinesPanel.removeRuleLine(_ruleLine);
+                        ruleLinesPanel.removeRuleLine(ruleLine);
                     }
-                    _ruleLinesPanel.refresh();
+                    ruleLinesPanel.refresh();
                 }
             }
         }
