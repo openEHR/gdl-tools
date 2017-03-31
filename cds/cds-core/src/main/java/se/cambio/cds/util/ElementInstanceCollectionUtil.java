@@ -5,6 +5,7 @@ import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.MapContext;
 import org.openehr.rm.datatypes.basic.DataValue;
+import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
@@ -256,7 +257,10 @@ public class ElementInstanceCollectionUtil {
     public static DataValue resolvePredicate(DataValue dv, OperatorKind op, Collection<Guide> guides, Calendar date) {
         if (OperatorKind.IS_A.equals(op)) {
             if (dv instanceof DvCodedText) {
-                return getResolvedCodedText(dv, guides);
+                DvCodedText dvCodedText = (DvCodedText) dv;
+                return getResolvedCodedText(dvCodedText, guides);
+            } else if (dv instanceof DvOrdinal) {
+                return dv;
             } else {
                 LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn("Not a coded text '" + dv + "'");
                 return null;
@@ -297,21 +301,26 @@ public class ElementInstanceCollectionUtil {
         return dv;
     }
 
-    private static DataValue getResolvedCodedText(DataValue dv, Collection<Guide> guides) {
-        DvCodedText dvCT = (DvCodedText) dv;
-        if (guides != null) {
-            for (Guide guide : guides) {
-                DvCodedText resolvedCodedText = getResolvedCodedText(dvCT, guide);
-                if (resolvedCodedText != null) {
-                    return resolvedCodedText;
+    private static DataValue getResolvedCodedText(DvCodedText dv, Collection<Guide> guides) {
+        if ("local".equalsIgnoreCase(dv.getTerminologyId())
+                && dv.getCode() != null
+                && dv.getCode().startsWith("gt")) {
+            if (guides != null) {
+                for (Guide guide : guides) {
+                    DvCodedText resolvedCodedText = getResolvedCodedText(dv, guide);
+                    if (resolvedCodedText != null) {
+                        return resolvedCodedText;
+                    }
                 }
             }
+            //If reaches here, no terminology was found (problem)
+            String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
+            //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
+            LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn(message);
+            return null;
+        } else {
+            return dv;
         }
-        //If reaches here, no terminology was found (problem)
-        String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
-        //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
-        LoggerFactory.getLogger(ElementInstanceCollectionUtil.class).warn(message);
-        return null;
     }
 
     private static DvCodedText getResolvedCodedText(DvCodedText dvCT, Guide guide) {
