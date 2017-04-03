@@ -46,21 +46,16 @@ public class DialogArchetypeChooser extends JDialog {
     private JLabel domainLabel;
     private WindowManager windowManager;
 
-    public DialogArchetypeChooser(WindowManager windowManager, ImportManager importManager, ArchetypeManager archetypeManager) {
-        super(windowManager.getMainWindow(),
-                OpenEHRLanguageManager.getMessage("Archetypes") + "/" + OpenEHRLanguageManager.getMessage("Templates"),
-                ModalityType.APPLICATION_MODAL);
-        this.importManager = importManager;
-        this.archetypeManager = archetypeManager;
-        init(new Dimension(500, 500), false);
-    }
-
-
-    public DialogArchetypeChooser(Window owner, String archetypeId, String domainId, boolean selectTemplates, boolean onlyShowCDS) {
+    public DialogArchetypeChooser(Window owner,
+                                  String archetypeId, String domainId,
+                                  boolean selectTemplates, boolean onlyShowCDS,
+                                  ImportManager importManager, ArchetypeManager archetypeManager) {
         super(
                 owner,
                 OpenEHRLanguageManager.getMessage("Archetypes") + "/" + OpenEHRLanguageManager.getMessage("Templates"),
                 ModalityType.APPLICATION_MODAL);
+        this.importManager = importManager;
+        this.archetypeManager = archetypeManager;
         if (onlyShowCDS) {
             getDomainSelector().setSelectedItem(Domains.CDS_ID);
             getDomainSelector().setEnabled(false);

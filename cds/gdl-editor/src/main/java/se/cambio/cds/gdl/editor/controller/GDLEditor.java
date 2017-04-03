@@ -1284,7 +1284,8 @@ public class GDLEditor implements EditorController<Guide> {
                     archetypeReferencesManager,
                     archetypeManager,
                     dbPanelFactory,
-                    this);
+                    this,
+                    importManager);
         }
         return ruleElementEditor;
     }

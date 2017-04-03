@@ -30,6 +30,7 @@ import se.cambio.openehr.view.dialogs.DVDialogEditor;
 import se.cambio.openehr.view.dialogs.DialogEditorNullValue;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.util.DVPanelFactory;
+import se.cambio.openehr.view.util.ImportManager;
 import se.cambio.openehr.view.util.WindowManager;
 
 import java.awt.*;
@@ -42,6 +43,7 @@ class RuleElementEditor {
     private DVPanelFactory dvPanelFactory;
     private NodeDefinitionManager nodeDefinitionManager;
     private GDLEditor gdlEditor;
+    private ImportManager importManager;
     private WindowManager windowManager;
 
     RuleElementEditor(
@@ -49,12 +51,14 @@ class RuleElementEditor {
             ArchetypeReferencesManager archetypeReferencesManager,
             ArchetypeManager archetypeManager,
             DVPanelFactory dvPanelFactory,
-            GDLEditor gdlEditor) {
+            GDLEditor gdlEditor,
+            ImportManager importManager) {
         this.windowManager = windowManager;
         this.archetypeReferencesManager = archetypeReferencesManager;
         this.archetypeManager = archetypeManager;
         this.dvPanelFactory = dvPanelFactory;
         this.gdlEditor = gdlEditor;
+        this.importManager = importManager;
     }
 
     private NodeDefinitionManager getNodeDefinitionManager() {
@@ -103,7 +107,7 @@ class RuleElementEditor {
         String idTemplate = ar != null ? ar.getIdTemplate() : null;
         boolean isTemplate = idTemplate != null;
         String domainId = ar != null ? ar.getIdDomain() : null;
-        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS);
+        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS, importManager, archetypeManager);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             CMElement cmElement = dialog.getSelectedCMElement();
