@@ -170,9 +170,10 @@ public class PredicateFilterManager {
                 CodePhrase codePhrase = getCodePhrase(elementInstance);
                 try {
                     if (codePhrase != null) {
-                        boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
-                        if ((!isA && !negation) || (isA && negation)) {
-                            archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
+                        if ("local".equalsIgnoreCase(codePhrase.getTerminologyId().name())) {
+                            filterIsALocalTerminology(negation, archetypeReferencesToRemove, codePhrases, elementInstance, codePhrase);
+                        } else {
+                            filterIsAExternalTerminology(negation, archetypeReferencesToRemove, codePhrases, elementInstance, codePhrase);
                         }
                     } else {
                         archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
@@ -185,6 +186,29 @@ public class PredicateFilterManager {
         }
         ehrArchetypeReferences.removeAll(archetypeReferencesToRemove);
 
+    }
+
+    private void filterIsALocalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) {
+        boolean isA = simpleIsACheck(codePhrase, codePhrases);
+        if ((!isA && !negation) || (isA && negation)) {
+            archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
+        }
+    }
+
+    private boolean simpleIsACheck(CodePhrase codePhrase, Set<CodePhrase> codePhrases) {
+        for (CodePhrase codePhraseAux: codePhrases) {
+            if (codePhrase.getCodeString().equalsIgnoreCase(codePhraseAux.getCodeString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void filterIsAExternalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) throws UnsupportedTerminologyException, InvalidCodeException {
+        boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
+        if ((!isA && !negation) || (isA && negation)) {
+            archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
+        }
     }
 
     private CodePhrase getCodePhrase(ElementInstance elementInstance) {
