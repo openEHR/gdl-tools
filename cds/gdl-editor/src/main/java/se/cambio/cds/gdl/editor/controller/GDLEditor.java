@@ -765,14 +765,14 @@ public class GDLEditor implements EditorController<Guide> {
 
     private void insertRules(GuideDefinition guideDefinition) {
         int priority = getRenderableRules().size();
-        for (ReadableRule renderableRule : getRenderableRules().values()) {
-            if (!renderableRule.isCommented()) {
-                String gtCode = renderableRule.getGTCode();
+        for (ReadableRule readableRule : getRenderableRules().values()) {
+            if (!readableRule.isCommented()) {
+                String gtCode = readableRule.getGTCode();
                 Rule rule = new Rule();
                 rule.setId(gtCode);
                 guideDefinition.getRules().put(gtCode, rule);
-                rule.setWhenStatements(convertToExpressionItems(renderableRule.getConditionRuleLines().getRuleLines()));
-                rule.setThenStatements(convertToAssignmentExpressionItems(renderableRule.getActionRuleLines().getRuleLines()));
+                rule.setWhenStatements(convertToExpressionItems(readableRule.getConditionRuleLines().getRuleLines()));
+                rule.setThenStatements(convertToAssignmentExpressionItems(readableRule.getActionRuleLines().getRuleLines()));
                 rule.setPriority(priority--);
             }
         }

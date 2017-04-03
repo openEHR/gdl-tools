@@ -201,6 +201,7 @@ public class GuideImporter {
     }
 
     protected DataValue parseDataValue(String rmType, String dvStr, ArchetypeElementVO archetypeElementVO) {
+        dvStr = cleanParenthesisIfNeeded(dvStr, rmType);
         DataValue dv = DataValue.parseValue(rmType + "," + dvStr);
         if (dv instanceof DvCodedText) {
             if (archetypeElementVO != null) {
@@ -220,6 +221,15 @@ public class GuideImporter {
             }
         }
         return dv;
+    }
+
+    private String cleanParenthesisIfNeeded(String dvStr, String rmType) {
+        if (OpenEHRDataValues.DV_COUNT.startsWith(rmType)) {
+            if (dvStr.startsWith("(") && dvStr.endsWith(")")) {
+                dvStr = StringUtils.substringBetween(dvStr, "(", ")");
+            }
+        }
+        return dvStr;
     }
 
     protected DataValue parseGTDataValue(String rmType, String dvStr) {

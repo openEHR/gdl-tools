@@ -287,6 +287,11 @@ public class DVUtil {
             return new DateTimeConstant(getDateTimeStrWithoutMillisAndTimezone(dataValueStr));
         } else if (dv instanceof DvQuantity) {
             return new QuantityConstant((DvQuantity) dv);
+        } else if (dv instanceof DvCount) {
+            if (dataValueStr.trim().startsWith("-")) {
+                dataValueStr = "(" + dataValueStr + ")";
+            }
+            return new ConstantExpression(dataValueStr);
         } else {
             return new ConstantExpression(dataValueStr);
         }
