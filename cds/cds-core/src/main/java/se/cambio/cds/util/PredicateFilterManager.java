@@ -204,7 +204,7 @@ public class PredicateFilterManager {
         return false;
     }
 
-    private void filterIsAExternalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) throws UnsupportedTerminologyException, InvalidCodeException {
+    private void filterIsAExternalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) {
         boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
         if ((!isA && !negation) || (isA && negation)) {
             archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
