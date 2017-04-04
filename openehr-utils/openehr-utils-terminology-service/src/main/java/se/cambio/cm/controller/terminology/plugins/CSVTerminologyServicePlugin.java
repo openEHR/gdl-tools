@@ -100,7 +100,18 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
     @Override
     public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language) throws UnsupportedTerminologyException, UnsupportedLanguageException {
-        return null;
+        if (terminologyId.equals(terminologyId)) {
+            ArrayList<TerminologyNodeVO> allNodes = new ArrayList<>();
+            for (String code : descriptionsMap.keySet()) {
+                if (!code.isEmpty() && parentsMap.get(code) == null) {
+                    TerminologyNodeVO node = retrieveAllSubclasses(code, language);
+                    allNodes.add(node);
+                }
+            }
+            return allNodes;
+        } else {
+            throw new UnsupportedTerminologyException(terminologyId + " not supported");
+        }
     }
 
     @Override
