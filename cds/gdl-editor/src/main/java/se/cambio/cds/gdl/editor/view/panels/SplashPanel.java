@@ -30,7 +30,7 @@ public class SplashPanel extends JPanel {
         g.setColor(Color.white);
         String versionNum = Version.getVersionNum();
         String buildNum = Version.getBuildNum();
-        buildNum = buildNum == null ? "" : buildNum;
+        buildNum = (buildNum == null ? "" : buildNum);
         if (versionNum != null) {
             g.drawString("v" + versionNum + " (" + buildNum + ")", 47, 281);
         }

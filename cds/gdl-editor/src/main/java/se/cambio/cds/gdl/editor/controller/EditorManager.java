@@ -39,11 +39,19 @@ public class EditorManager {
     }
 
     public void initController(EditorController controller) {
-        this.controller = controller;
-        if (editorViewer != null) {
-            getActiveEditorViewer().initController(controller);
+        boolean close = true;
+        if (this.controller != null) {
+            close = this.controller.close();
+        }
+        if (close) {
+            this.controller = controller;
+            if (editorViewer != null) {
+                getActiveEditorViewer().initController(controller);
+            } else {
+                throw new RuntimeException("createEditorFrame or createEditorDialog must be called before this method.");
+            }
         } else {
-            throw new RuntimeException("createEditorFrame or createEditorDialog must be called before this method.");
+            controller.close();
         }
     }
 

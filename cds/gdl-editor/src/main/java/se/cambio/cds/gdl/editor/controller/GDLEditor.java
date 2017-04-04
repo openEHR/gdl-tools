@@ -104,6 +104,7 @@ public class GDLEditor implements EditorController<Guide> {
     private GuideHTMLExporter guideHTMLExporter;
     private DVPanelFactory dbPanelFactory;
     private GuidelineLoadManager guidelineLoadManager;
+    private Boolean active;
 
     GDLEditor(
             WindowManager windowManager,
@@ -139,6 +140,7 @@ public class GDLEditor implements EditorController<Guide> {
         this.guideHTMLExporter = guideHTMLExporter;
         this.dbPanelFactory = dbPanelFactory;
         this.ruleLineCloner = new RuleLineCloner(this);
+        this.active = true;
     }
 
     void setGuideline(Guide guide) {
@@ -217,7 +219,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public void saveAs() {
         gdlEditorMainPanel.requestFocus();
-        runIfOkWithEditorState(() -> new SaveGuideOnFileRSW(windowManager, editorFileManager.getLastFileLoaded(), this, editorFileManager).execute());
+        runIfOkWithEditorState(() -> new SaveGuideOnFileRSW(windowManager, null, this, editorFileManager).execute());
     }
 
     @Override
@@ -1095,7 +1097,7 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    private boolean isModified() {
+    public boolean isModified() {
         String serializedGuide = null;
         try {
             Guide guide = constructCurrentGuide();
@@ -1324,6 +1326,15 @@ public class GDLEditor implements EditorController<Guide> {
 
     public WindowManager getWindowManager() {
         return windowManager;
+    }
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public Boolean close() {
+        active = false;
+        return true;
     }
 }
 /*

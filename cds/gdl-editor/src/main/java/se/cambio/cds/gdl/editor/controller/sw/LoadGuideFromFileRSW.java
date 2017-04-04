@@ -2,16 +2,13 @@ package se.cambio.cds.gdl.editor.controller.sw;
 
 import org.apache.commons.io.IOUtils;
 import se.cambio.cds.gdl.editor.controller.*;
-import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.view.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.view.util.WindowManager;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;

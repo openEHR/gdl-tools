@@ -1,6 +1,8 @@
 
 package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
+import se.cambio.cds.view.swing.CDSImageUtil;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 
 import javax.swing.*;
@@ -30,7 +32,7 @@ public class TerminologyCodesWithButtonPanel extends JPanel {
     public JButton getSearchButton() {
         if (button == null) {
             button = new JButton();
-            button.setIcon(OpenEHRImageUtil.SEARCH_ICON);
+            button.setIcon(GDLEditorImageUtil.SEARCH_ICON);
             button.setContentAreaFilled(false);
             button.setBorderPainted(false);
         }

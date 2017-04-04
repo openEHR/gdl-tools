@@ -137,7 +137,7 @@ public class DescriptionPanel extends JPanel {
             lyfeCB.addItem("Published");
             lyfeCB.addItem("Rejected");
             lyfeCB.addItem("Obsolete");
-            lyfeCB.setSelectedIndex(2);
+            lyfeCB.setSelectedIndex(0);
             connect(descriptionContext, "/lifecycleState", lyfeCB);
             authorshipLifecyclePanel.add(lyfeCB);
             authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Copyright") + ":"));

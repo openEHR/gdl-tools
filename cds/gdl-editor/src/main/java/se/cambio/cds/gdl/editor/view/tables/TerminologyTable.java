@@ -13,10 +13,10 @@ import java.util.Vector;
 public class TerminologyTable extends JTable {
 
     private static final long serialVersionUID = 1L;
-    private JXPathContext _context = null;
+    private JXPathContext context = null;
 
-    public TerminologyTable(JXPathContext context){
-        _context = context;
+    public TerminologyTable(JXPathContext context) {
+        this.context = context;
         this.setModel(new TerminologyTableModel());
         Vector<String> columnIdentifiers = new Vector<>();
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Code"));
@@ -24,15 +24,14 @@ public class TerminologyTable extends JTable {
         columnIdentifiers.add(GDLEditorLanguageManager.getMessage("Description"));
         getTerminologyTableModel().setColumnIdentifiers(columnIdentifiers);
         this.getColumnModel().getColumn(0).setMaxWidth(80);
-        final TerminologyTableCellEditor cellEditor =
-                new TerminologyTableCellEditor();
+        final TerminologyTableCellEditor cellEditor = new TerminologyTableCellEditor();
         this.getColumnModel().getColumn(1).setCellEditor(cellEditor);
         this.getColumnModel().getColumn(2).setCellEditor(cellEditor);
         this.putClientProperty("terminateEditOnFocusLost", true);
     }
 
-    public TerminologyTableModel getTerminologyTableModel(){
-        return (TerminologyTableModel)getModel();
+    public TerminologyTableModel getTerminologyTableModel() {
+        return (TerminologyTableModel) getModel();
     }
 
 
@@ -40,48 +39,51 @@ public class TerminologyTable extends JTable {
         return column != 0;
     }
 
-    public class TerminologyTableModel extends DefaultTableModel{
+    public class TerminologyTableModel extends DefaultTableModel {
         private static final long serialVersionUID = 1L;
     }
 
-    private void updateResults(TerminologyTableCellEditor otce){
-        String value = (String)otce.getCellEditorValue();
+    private void updateResults(TerminologyTableCellEditor otce) {
+        String value = (String) otce.getCellEditorValue();
         int row = otce.getRow();
         int column = otce.getColumn();
-        String gtCode = (String)getTerminologyTableModel().getValueAt(row, 0);
-        String attribute = column==1?"text":"description";
-        _context.setValue(gtCode+"/"+attribute, value);
+        String gtCode = (String) getTerminologyTableModel().getValueAt(row, 0);
+        String attribute = column == 1 ? "text" : "description";
+        context.setValue(gtCode + "/" + attribute, value);
     }
 
-    private class TerminologyTableCellEditor extends DefaultCellEditor{
-        private int _row;
-        private int _column;
+    private class TerminologyTableCellEditor extends DefaultCellEditor {
+        private int row;
+        private int column;
 
         TerminologyTableCellEditor() {
             super(new JTextField());
             this.addCellEditorListener(new CellEditorListener() {
                 public void editingStopped(ChangeEvent e) {
                     Object obj = e.getSource();
-                    if (obj instanceof TerminologyTableCellEditor){
-                        updateResults((TerminologyTableCellEditor)obj);
+                    if (obj instanceof TerminologyTableCellEditor) {
+                        updateResults((TerminologyTableCellEditor) obj);
                     }
                 }
+
                 public void editingCanceled(ChangeEvent e) {
                 }
             });
         }
 
-        public int getRow(){
-            return _row;
+        public int getRow() {
+            return row;
         }
-        int getColumn(){
-            return _column;
+
+        int getColumn() {
+            return column;
         }
+
         public Component getTableCellEditorComponent(JTable table, Object value,
                                                      boolean isSelected,
                                                      int row, int column) {
-            _row = row;
-            _column = column;
+            this.row = row;
+            this.column = column;
             return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
     }

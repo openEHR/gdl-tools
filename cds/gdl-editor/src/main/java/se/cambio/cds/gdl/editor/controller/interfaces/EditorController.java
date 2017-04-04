@@ -50,4 +50,6 @@ public interface EditorController<E> {
 
     String getSerializedEntity() throws InternalErrorException;
 
+    Boolean close();
+
 }

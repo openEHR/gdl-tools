@@ -11,19 +11,19 @@ import se.cambio.cds.gdl.editor.view.panels.TerminologyCodesWithButtonPanel;
 public class TerminologyCodesButtonRenderer extends TerminologyCodesWithButtonPanel implements TableCellRenderer {
 
     private static final long serialVersionUID = 3687161456388975032L;
- 
-    public TerminologyCodesButtonRenderer(){
-	super();
+
+    public TerminologyCodesButtonRenderer() {
+        super();
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
-	    boolean isSelected, boolean hasFocus, int row, int column) {
-	if (value instanceof String){
-	getTextField().setText((String)value);
-	}else{
-	    getTextField().setText("*EMPTY*");
-	}
-	return this;
+                                                   boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value instanceof String) {
+            getTextField().setText((String) value);
+        } else {
+            getTextField().setText("*EMPTY*");
+        }
+        return this;
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

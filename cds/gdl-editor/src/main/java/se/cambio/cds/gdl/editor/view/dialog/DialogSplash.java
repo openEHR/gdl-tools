@@ -120,6 +120,7 @@ public class DialogSplash extends JDialog implements Observer {
                 panelAux.add(getJProgressBar(), BorderLayout.CENTER);
             } else {
                 JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                panelAux.setBorder(BorderFactory.createEmptyBorder());
                 panelAux2.setBackground(Color.WHITE);
                 panelAux2.add(getCloseButton());
                 panelAux.add(panelAux2, BorderLayout.CENTER);
