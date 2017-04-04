@@ -31,14 +31,14 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
     private java.util.List<ActionListener> listeners;
     public final static String ACTION_RIGHT_CLICK = "LINK_ACTION_RIGHT_CLICK";
     private final static String ACTION_LEFT_CLICK = "LINK_ACTION_LEFT_CLICK";
-    private RuleLineElementWithValue<?> _ruleLineElementWithValue = null;
+    private RuleLineElementWithValue<?> ruleLineElementWithValue = null;
 
     private static final Color LINK_COLOR_VARSET = Color.BLUE;
     private static final Color LINK_COLOR_VARUNSET = new Color(200, 50, 50);
     private static final Color LINK_COLOR_COMMENTED = Color.GRAY;
 
     public JLinkRuleElementLabel(RuleLineElementWithValue<?> ruleLineElementWithValue) {
-        _ruleLineElementWithValue = ruleLineElementWithValue;
+        this.ruleLineElementWithValue = ruleLineElementWithValue;
         linkColorVarSet = LINK_COLOR_VARSET;
         linkColorVarUnSet = LINK_COLOR_VARUNSET;
         hoverColor = new Color(128, 0, 128);
@@ -58,13 +58,12 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
         }
     }
 
-
     public void addActionListener(ActionListener listener) {
         listeners.add(listener);
     }
 
     public RuleLineElementWithValue<?> getRuleLineElementWithValue() {
-        return _ruleLineElementWithValue;
+        return ruleLineElementWithValue;
     }
 
     private void mouseClickedAction(String actionCommand) {
@@ -109,27 +108,36 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
         setCursor(Cursor.getPredefinedCursor(0));
     }
 
+    @Override
+    public void setText(String text) {
+        if (text != null && text.length() > 0) {
+            super.setText("<html><u>" + text + "</u></html>");
+        } else {
+            super.setText("");
+        }
+    }
+
     public void refresh() {
-        String text = _ruleLineElementWithValue.getLabelText();
+        String text = ruleLineElementWithValue.getLabelText();
         setText(text);
-        if (_ruleLineElementWithValue.getValue() instanceof ArchetypeReference) {
-            String domainId = ((ArchetypeReference) _ruleLineElementWithValue.getValue()).getIdDomain();
+        if (ruleLineElementWithValue.getValue() instanceof ArchetypeReference) {
+            String domainId = ((ArchetypeReference) ruleLineElementWithValue.getValue()).getIdDomain();
             setIcon(DomainsUI.getIcon(domainId));
-        } else if (_ruleLineElementWithValue.getValue() instanceof ArchetypeElementRuleLineElement) {
-            ArchetypeElementRuleLineElement aerle = ((ArchetypeElementRuleLineElement) _ruleLineElementWithValue.getValue());
+        } else if (ruleLineElementWithValue.getValue() instanceof ArchetypeElementRuleLineElement) {
+            ArchetypeElementRuleLineElement aerle = ((ArchetypeElementRuleLineElement) ruleLineElementWithValue.getValue());
             String domainId = null;
             if (aerle != null) {
                 domainId = aerle.getDomainId();
             }
             setIcon(DomainsUI.getIcon(domainId));
-        } else if (_ruleLineElementWithValue.getValue() instanceof GTCodeRuleLineElement) {
-            RuleLine parentRuleLine = ((GTCodeRuleLineElement) _ruleLineElementWithValue.getValue()).getParentRuleLine();
+        } else if (ruleLineElementWithValue.getValue() instanceof GTCodeRuleLineElement) {
+            RuleLine parentRuleLine = ((GTCodeRuleLineElement) ruleLineElementWithValue.getValue()).getParentRuleLine();
             if (parentRuleLine instanceof ArchetypeElementInstantiationRuleLine) {
                 String domainId = ((ArchetypeElementInstantiationRuleLine) parentRuleLine).getArchetypeReference().getIdDomain();
                 setIcon(DomainsUI.getIcon(domainId));
             }
         }
-        if (_ruleLineElementWithValue.getValue() != null) {
+        if (ruleLineElementWithValue.getValue() != null) {
             setForeground(linkColorVarSet);
         } else {
             setForeground(linkColorVarUnSet);

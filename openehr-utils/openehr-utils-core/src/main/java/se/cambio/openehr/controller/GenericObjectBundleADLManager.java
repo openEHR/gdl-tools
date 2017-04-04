@@ -325,7 +325,8 @@ public class GenericObjectBundleADLManager {
     }
 
     private void addSubclassCodedTexts(CodedTextVO codedTextVO, Collection<CodedTextVO> codedTextVOs) {
-        if (!OpenEHRConst.LOCAL.equals(codedTextVO.getTerminology())) {
+        if (!OpenEHRConst.LOCAL.equals(codedTextVO.getTerminology())
+                && !"*".equals(codedTextVO.getCode())) {
             try {
                 TerminologyNodeVO node = terminologyService.retrieveAllSubclasses(
                         new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),

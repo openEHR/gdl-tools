@@ -105,7 +105,8 @@ public class ReadableRuleLineFactory {
         JLabel label = new JLabel(text);
         if (ruleLine.isCommented()) {
             label.setForeground(Color.GRAY);
-        } else if (ruleLineElement instanceof RuleLineElementWithValue && !(ruleLineElement instanceof SingleSelectionRuleElement)) {
+        } else if (ruleLineElement instanceof RuleLineElementWithValue
+                && !(ruleLineElement instanceof SingleSelectionRuleElement)) {
             label.setForeground(Color.BLUE);
         }
         return label;

@@ -49,4 +49,5 @@ public class RuleLineCollection {
     public ArchetypeManager getArchetypeManager() {
         return readableGuide.getArchetypeManager();
     }
+
 }

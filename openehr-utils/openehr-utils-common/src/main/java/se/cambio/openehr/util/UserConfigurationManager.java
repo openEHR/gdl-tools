@@ -186,10 +186,10 @@ public class UserConfigurationManager {
             configFile.createNewFile();
             try (OutputStream out = new FileOutputStream(configFile)) {
                 Properties properties = new Properties();
-                properties.put(ARCHETYPES_FOLDER, getArchetypeFolder().getFolder().getAbsolutePath());
-                properties.put(TEMPLATES_FOLDER, getTemplateFolder().getFolder().getAbsolutePath());
-                properties.put(GUIDELINES_FOLDER, getGuidesFolder().getFolder().getAbsolutePath());
-                properties.put(TERMINOLOGIES_FOLDER, getTerminologiesFolder().getFolder().getAbsolutePath());
+                properties.put(ARCHETYPES_FOLDER, getArchetypeFolder().getFolder().getAbsolutePath().replace("\\", "/"));
+                properties.put(TEMPLATES_FOLDER, getTemplateFolder().getFolder().getAbsolutePath().replace("\\", "/"));
+                properties.put(GUIDELINES_FOLDER, getGuidesFolder().getFolder().getAbsolutePath().replace("\\", "/"));
+                properties.put(TERMINOLOGIES_FOLDER, getTerminologiesFolder().getFolder().getAbsolutePath().replace("\\", "/"));
                 properties.put(LANGUAGE, getLanguage());
                 properties.put(COUNTRY, getCountryCode());
                 if (hasCustomCurrentDateTime()) {

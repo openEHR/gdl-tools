@@ -10,15 +10,15 @@ import java.util.Collection;
 
 public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind> {
 
-    private Collection<OperatorKind> _operators = null;
+    private Collection<OperatorKind> operators = null;
 
-    public AbstractComparisonOperatorRuleLineElement(RuleLine ruleLine) {
+    AbstractComparisonOperatorRuleLineElement(RuleLine ruleLine) {
         super(ruleLine, null);
-        _operators = new ArrayList<OperatorKind>();
+        operators = new ArrayList<>();
     }
 
-    protected void addOperator(OperatorKind ok) {
-        _operators.add(ok);
+    void addOperator(OperatorKind ok) {
+        operators.add(ok);
     }
 
     @Override
@@ -40,7 +40,7 @@ public abstract class AbstractComparisonOperatorRuleLineElement extends RuleLine
     }
 
     public Collection<OperatorKind> getItems() {
-        return _operators;
+        return operators;
     }
 
     @Override
