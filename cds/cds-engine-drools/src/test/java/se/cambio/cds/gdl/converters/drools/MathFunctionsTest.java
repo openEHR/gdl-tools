@@ -1,14 +1,10 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cds.configuration.DroolsConfiguration;
-import se.cambio.cds.controller.cds.CDSManager;
+import org.testng.annotations.Test;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -24,15 +20,13 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DroolsConfiguration.class})
 public class MathFunctionsTest extends GDLTestCase {
 
     @Autowired
     EhrDataFilterManager ehrDataFilterManager;
 
     @Autowired
-    CDSManager cdsManager;
+    CdsDataManager cdsDataManager;
 
     public MathFunctionsTest() {
         super();

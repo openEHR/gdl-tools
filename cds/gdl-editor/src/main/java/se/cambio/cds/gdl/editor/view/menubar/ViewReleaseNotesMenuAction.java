@@ -20,9 +20,11 @@ import java.io.IOException;
 public class ViewReleaseNotesMenuAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private UserConfigurationManager userConfigurationManager;
 
-    ViewReleaseNotesMenuAction() {
+    ViewReleaseNotesMenuAction(UserConfigurationManager userConfigurationManager) {
         super();
+        this.userConfigurationManager = userConfigurationManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("ReleaseNotes"));
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ReleaseNotesD"));
@@ -32,7 +34,7 @@ public class ViewReleaseNotesMenuAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         try {
             String path =
-                    UserConfigurationManager.instance().getDocumentsFolder().getCanonicalPath() +
+                    userConfigurationManager.getDocumentsFolder().getFolder() +
                             File.separator +
                             "release-notes.txt";
             Desktop.getDesktop().open(new File(path));

@@ -7,6 +7,11 @@ import java.io.File;
 public class EditorFileManager {
     private File lastFolderLoaded = null;
     private File lastFileLoaded = null;
+    private UserConfigurationManager userConfigurationManager;
+
+    public EditorFileManager(UserConfigurationManager userConfigurationManager) {
+        this.userConfigurationManager = userConfigurationManager;
+    }
 
     public void setLastFolderLoaded(File lastFolderLoaded) {
         this.lastFolderLoaded = lastFolderLoaded;
@@ -23,7 +28,7 @@ public class EditorFileManager {
 
     public File getLastFolderLoaded() {
         if (lastFolderLoaded == null) {
-            lastFolderLoaded = UserConfigurationManager.instance().getGuidesFolder().getFolder();
+            lastFolderLoaded = userConfigurationManager.getGuidesFolder().getFolder();
         }
         return lastFolderLoaded;
     }

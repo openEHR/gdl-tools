@@ -2,19 +2,18 @@ package se.cambio.cds.gdl.editor.view;
 
 
 import org.springframework.core.env.ConfigurableEnvironment;
-import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.editor.controller.EditorInitializer;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
 import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
-import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.view.util.WindowManager;
 import se.cambio.openehr.view.dialogs.InfoDialog;
+import se.cambio.openehr.view.util.WindowManager;
 
 import java.io.File;
 
@@ -23,7 +22,8 @@ public class InitGDLEditor {
     public static void main(String[] args) {
 
         ConfigurableEnvironment environment = BeanProvider.getBean(ConfigurableEnvironment.class);
-        String activeRuleEngine = UserConfigurationManager.instance().getActiveRuleEngine();
+        UserConfigurationManager userConfigurationManager = BeanProvider.getBean(UserConfigurationManager.class);
+        String activeRuleEngine = userConfigurationManager.getActiveRuleEngine();
         environment.addActiveProfile(activeRuleEngine);
         String[] activeProfiles = BeanProvider.getActiveProfiles();
         BeanProvider.setActiveProfiles(activeProfiles);
@@ -45,7 +45,8 @@ public class InitGDLEditor {
             GuidelineLoadManager guidelineLoadManager = BeanProvider.getBean(GuidelineLoadManager.class);
             guidelineLoadManager.loadGuide(new File(args[0]));
         }
-        CDSSessionManager.getRuleEngineFacadeDelegate().setUseCache(false);
+        RuleEngineService ruleEngineService = BeanProvider.getBean(RuleEngineService.class);
+        ruleEngineService.setUseCache(false);
     }
 }
 /*

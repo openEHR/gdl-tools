@@ -80,7 +80,7 @@ public class ArchetypeReferencesManager {
                 if (clusterVO != null) {
                     String name = null;
                     try {
-                        name = archetypeManager.getClusters().getText(clusterVO, UserConfigurationManager.instance().getLanguage());
+                        name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
                     } catch (InternalErrorException e) {
                         ExceptionHandler.handle(e);
                     }
@@ -124,11 +124,11 @@ public class ArchetypeReferencesManager {
     }
 
     private String getElementDescription(ArchetypeElementVO archetypeElementVO) {
-        return archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
+        return archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, archetypeManager.getUserConfigurationManager().getLanguage());
     }
 
     private String getElementName(ArchetypeElementVO archetypeElementVO) {
-        return archetypeManager.getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
+        return archetypeManager.getArchetypeElements().getText(archetypeElementVO, archetypeManager.getUserConfigurationManager().getLanguage());
     }
 
     private static String getArchetypeName(ArchetypeReference ar, String idDomain) {

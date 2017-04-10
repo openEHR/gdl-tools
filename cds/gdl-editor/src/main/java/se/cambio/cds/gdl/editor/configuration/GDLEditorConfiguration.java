@@ -5,11 +5,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import se.cambio.cds.configuration.DroolsConfiguration;
+import se.cambio.cds.controller.cds.CdsDataManager;
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.converters.drools.DroolsGuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.*;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
+import se.cambio.cds.gdl.graph.configuration.GdlGraphConfiguration;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
@@ -18,6 +23,7 @@ import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.configuration.OpenEhrSwingConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.TerminologyDialogManager;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.util.DVPanelFactory;
 import se.cambio.openehr.view.util.ImportManager;
 import se.cambio.openehr.view.util.WindowManager;
@@ -27,7 +33,7 @@ import se.cambio.openehr.view.util.WindowManager;
         @PropertySource(value = "classpath:default-gdl-editor-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/gdl-editor-config.properties", ignoreResourceNotFound = true)
 })
-@Import({DroolsConfiguration.class, OpenEhrSwingConfiguration.class})
+@Import({DroolsConfiguration.class, OpenEhrSwingConfiguration.class, GdlGraphConfiguration.class})
 public class GDLEditorConfiguration {
 
     private static final String GDL_PLUGINS_KEY = "gdl-editor.plugins";
@@ -59,7 +65,11 @@ public class GDLEditorConfiguration {
             GuideHTMLExporter guideHTMLExporter,
             EditorFileManager editorFileManager,
             DVPanelFactory dvPanelFactory,
-            GuidelineLoadManager guidelineLoadManager) {
+            GuidelineLoadManager guidelineLoadManager,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
         return new GdlEditorFactory(
                 windowManager,
                 archetypeManager,
@@ -75,7 +85,11 @@ public class GDLEditorConfiguration {
                 guideHTMLExporter,
                 editorFileManager,
                 dvPanelFactory,
-                guidelineLoadManager);
+                guidelineLoadManager,
+                gdlGraphManager,
+                guideExportPlugin,
+                cdsDataManager,
+                ruleEngineService);
     }
 
     @Bean
@@ -85,14 +99,16 @@ public class GDLEditorConfiguration {
             GuideHTMLExporter guideHTMLExporter,
             GdlEditorFactory gdlEditorFactory,
             EditorFileManager editorFileManager,
-            GuidelineLoadManager guidelineLoadManager) {
+            GuidelineLoadManager guidelineLoadManager,
+            UserConfigurationManager userConfigurationManager) {
         return new MainMenuBar(
                 importManager,
                 guideHTMLExporter,
                 editorManager,
                 gdlEditorFactory,
                 editorFileManager,
-                guidelineLoadManager);
+                guidelineLoadManager,
+                userConfigurationManager);
     }
 
     @Bean
@@ -116,8 +132,8 @@ public class GDLEditorConfiguration {
     }
 
     @Bean
-    EditorFileManager editorFileManager() {
-        return new EditorFileManager();
+    EditorFileManager editorFileManager(UserConfigurationManager userConfigurationManager) {
+        return new EditorFileManager(userConfigurationManager);
     }
 
     @Bean

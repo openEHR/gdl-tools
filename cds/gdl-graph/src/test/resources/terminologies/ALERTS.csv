@@ -1,0 +1,22 @@
+id,text,parent
+1,Alert,
+1001,"Non compliance with CHADVASc guideline detected",1
+1001.1,"Non compliance with CHADVASc guideline detected (score>=2)",1001
+1001.2,"Non compliance with CHADVASc guideline detected (score==1)",1001
+1001.3,"Non-compliant stroke prevention in AF, no previous review record",1001
+1001.4,"Non-compliant stroke prevention in AF found, no documented deviation in review record",1001
+1001.5,"Non-compliant stroke prevention found, documented deviation with different CHADSVASc score",1001
+1001.6,"Non compliant stroke prevention found, documented deviation older than 6 months",1001
+1002,"High aciclovir dose",1
+1003,"Obesity detected on patient",1
+1004,"NEWS Alert",1
+1004.1,"NEWS Alert - Medium medical risk",1004
+1004.2,"NEWS Alert - High medical risk",1004
+1005,"Demographics",1
+1005.1,"No Documented Age",1005
+1005.2,"No Documented Gender",1005
+1006,"High-risk patient",1
+1006.1,"High-risk patient (Age > 7 years old)",1006
+1006.2,"High-risk patient (Previous hospitalization during the last 12 months)",1006
+1006.3,"High-risk patient (Diagnosis is Diabetes/Atrial Fibrillation/Heart failure/COPD/Stroke)",1006
+1006.4,"High-risk patient (7 or more ongoing medication)",1006

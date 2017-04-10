@@ -23,7 +23,6 @@ import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DVDialogEditor;
@@ -63,7 +62,7 @@ class RuleElementEditor {
 
     private NodeDefinitionManager getNodeDefinitionManager() {
         if (nodeDefinitionManager == null) {
-            nodeDefinitionManager = new NodeDefinitionManager(archetypeReferencesManager, gdlEditor);
+            nodeDefinitionManager = new NodeDefinitionManager(archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
         }
         return nodeDefinitionManager;
     }
@@ -152,7 +151,7 @@ class RuleElementEditor {
         ArchetypeReference ar = aerlde.getArchetypeReference();
         if (ar != null) {
             SelectableNode<Object> node =
-                    NodeDefinitionManager.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), aerlde.getArchetypeManager());
+                    nodeDefinitionManager.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), aerlde.getArchetypeManager());
             DialogElementSelection dialog = new DialogElementSelection(gdlEditor.getWindowManager(), node);
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
@@ -166,8 +165,8 @@ class RuleElementEditor {
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
                         Term term = gdlEditor.getTerm(gtCode);
                         if (term.getText() == null || term.getText().isEmpty()) {
-                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), UserConfigurationManager.instance().getLanguage());
-                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), UserConfigurationManager.instance().getLanguage());
+                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
+                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
                             term.setText(name);
                             term.setDescription(desc);
                         }
@@ -345,7 +344,8 @@ class RuleElementEditor {
                         windowManager,
                         wepedrl.getArchetypeReference().getIdArchetype(),
                         wepedrl.getArchetypeReference().getIdTemplate(),
-                        archetypeManager);
+                        archetypeManager,
+                        nodeDefinitionManager);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             Object obj = dialog.getSelectedObject();
@@ -386,7 +386,7 @@ class RuleElementEditor {
             }
             ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
             DialogExpressionEditor dialog =
-                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, getNodeDefinitionManager());
+                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, getNodeDefinitionManager(), archetypeManager.getUserConfigurationManager());
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
                 ExpressionItem expressionItem = dialog.getExpressionItem();

@@ -6,8 +6,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.controller.terminology.TerminologyServiceImpl;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
@@ -21,7 +21,7 @@ import java.util.Map;
         @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
 })
-@Import({UserConfigurationManager.class, ClinicalModelsAdministrationConfiguration.class})
+@Import({UserConfigurationManager.class, ClinicalModelsConfiguration.class})
 public class TerminologyServiceConfiguration {
 
     private Map<String, TerminologyConfigVO> terminologyConfigMap;
@@ -44,8 +44,8 @@ public class TerminologyServiceConfiguration {
     }
 
     @Bean
-    public TerminologyService terminologyService(CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate) {
-        return new TerminologyServiceImpl(this, cmAdministrationFacadeDelegate);
+    public TerminologyService terminologyService(ClinicalModelsService clinicalModelsService) {
+        return new TerminologyServiceImpl(this, clinicalModelsService);
     }
 
     private TerminologyConfigVO getTerminologyConfigFromProperties(String terminologyId) {

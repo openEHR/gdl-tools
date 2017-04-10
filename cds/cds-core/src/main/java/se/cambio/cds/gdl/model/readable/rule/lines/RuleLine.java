@@ -138,7 +138,7 @@ public abstract class RuleLine {
     }
 
     protected String getLanguage() {
-        return UserConfigurationManager.instance().getLanguage();
+        return getReadableGuide().getArchetypeManager().getUserConfigurationManager().getLanguage();
     }
 }
 /*

@@ -14,15 +14,19 @@ import javax.swing.AbstractAction;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogRepositoriesPaths;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ConfigRepositoriesAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
     private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    ConfigRepositoriesAction(EditorManager editorManager) {
+    ConfigRepositoriesAction(EditorManager editorManager,
+                             UserConfigurationManager userConfigurationManager) {
         super();
         this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("Repositories") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesSD"));
@@ -30,7 +34,7 @@ public class ConfigRepositoriesAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        new DialogRepositoriesPaths(editorManager).setVisible(true);
+        new DialogRepositoriesPaths(editorManager, userConfigurationManager).setVisible(true);
     }
 }
 /*

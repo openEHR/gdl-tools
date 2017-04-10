@@ -4,6 +4,7 @@ package se.cambio.cds.gdl.editor.view.menubar;
 import se.cambio.cds.gdl.editor.controller.*;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.util.ImportManager;
 
 import javax.swing.*;
@@ -43,6 +44,7 @@ public class MainMenuBar extends JMenuBar {
     private GdlEditorFactory gdlEditorFactory;
     private EditorFileManager editorFileManager;
     private GuidelineLoadManager guidelineLoadManager;
+    private UserConfigurationManager userConfigurationManager;
 
     public MainMenuBar(
             ImportManager importManager,
@@ -50,13 +52,15 @@ public class MainMenuBar extends JMenuBar {
             EditorManager editorManager,
             GdlEditorFactory gdlEditorFactory,
             EditorFileManager editorFileManager,
-            GuidelineLoadManager guidelineLoadManager) {
+            GuidelineLoadManager guidelineLoadManager,
+            UserConfigurationManager userConfigurationManager) {
         this.importManager = importManager;
         this.guideHTMLExporter = guideHTMLExporter;
         this.editorManager = editorManager;
         this.gdlEditorFactory = gdlEditorFactory;
         this.editorFileManager = editorFileManager;
         this.guidelineLoadManager = guidelineLoadManager;
+        this.userConfigurationManager = userConfigurationManager;
         initialize();
     }
 
@@ -213,22 +217,22 @@ public class MainMenuBar extends JMenuBar {
             configurationMenu.setText(GDLEditorLanguageManager.getMessage("Configuration"));
             configurationMenu.add(getConfigurationRepositoriesAction());
             configurationMenu.add(getCurrentDateAndTimeAction());
-            configurationMenu.add(new ConfigActiveEngineAction(editorManager));
-            configurationMenu.add(new ConfigLanguageAction(editorManager));
+            configurationMenu.add(new ConfigActiveEngineAction(editorManager, userConfigurationManager));
+            configurationMenu.add(new ConfigLanguageAction(editorManager, userConfigurationManager));
         }
         return configurationMenu;
     }
 
     private Action getConfigurationRepositoriesAction() {
         if (configRepositoriesAction == null) {
-            configRepositoriesAction = new ConfigRepositoriesAction(editorManager);
+            configRepositoriesAction = new ConfigRepositoriesAction(editorManager, userConfigurationManager);
         }
         return configRepositoriesAction;
     }
 
     private Action getCurrentDateAndTimeAction() {
         if (currentDateAndTimeAction == null) {
-            currentDateAndTimeAction = new CurrentDateAndTimeAction(editorManager);
+            currentDateAndTimeAction = new CurrentDateAndTimeAction(editorManager, userConfigurationManager);
         }
         return currentDateAndTimeAction;
     }
@@ -248,21 +252,21 @@ public class MainMenuBar extends JMenuBar {
 
     private Action getViewUserManualAction() {
         if (viewUserManualAction == null) {
-            viewUserManualAction = new ViewUserManualAction();
+            viewUserManualAction = new ViewUserManualAction(userConfigurationManager);
         }
         return viewUserManualAction;
     }
 
     private Action getViewSamplesAction() {
         if (viewSamplesAction == null) {
-            viewSamplesAction = new ViewSamplesAction();
+            viewSamplesAction = new ViewSamplesAction(userConfigurationManager);
         }
         return viewSamplesAction;
     }
 
     private Action getReleaseNotesAction() {
         if (releaseNotesAction == null) {
-            releaseNotesAction = new ViewReleaseNotesMenuAction();
+            releaseNotesAction = new ViewReleaseNotesMenuAction(userConfigurationManager);
         }
         return releaseNotesAction;
     }

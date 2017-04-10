@@ -2,10 +2,10 @@ package se.cambio.cds.controller.session.data;
 
 import org.apache.commons.lang.SerializationUtils;
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.controller.CDSSessionManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.AbstractCMManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -19,8 +19,15 @@ import java.util.Collection;
 public class Guides extends AbstractCMManager<GuideDTO> {
 
 
-    public Guides(CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate) {
-        super(cmAdministrationFacadeDelegate);
+    private final RuleEngineService ruleEngineService;
+    private GDLParser gdlParser;
+
+    public Guides(
+            ClinicalModelsService clinicalModelsService,
+            RuleEngineService ruleEngineService) {
+        super(clinicalModelsService);
+        this.ruleEngineService = ruleEngineService;
+        this.gdlParser = new GDLParser();
     }
 
     @Override
@@ -57,21 +64,21 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         }
     }
 
-    private static void parseGuide(GuideDTO guideDTO) {
+    private void parseGuide(GuideDTO guideDTO) {
         try {
-            Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
+            Guide guide = gdlParser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
             guideDTO.setGuideObject(SerializationUtils.serialize(guide));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void compileGuide(GuideDTO guideDTO) {
+    private void compileGuide(GuideDTO guideDTO) {
         if (!hasGuideObject(guideDTO)) {
             parseGuide(guideDTO);
         }
         Guide guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
-        byte[] compiledGuide = CDSSessionManager.getRuleEngineFacadeDelegate().compile(guide);
+        byte[] compiledGuide = ruleEngineService.compile(guide);
         guideDTO.setCompiledGuide(compiledGuide);
     }
 

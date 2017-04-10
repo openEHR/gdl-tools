@@ -206,7 +206,8 @@ public class GuideImporter {
         if (dv instanceof DvCodedText) {
             if (archetypeElementVO != null) {
                 DvCodedText dvCT = (DvCodedText) dv;
-                String name = archetypeManager.getCodedTexts().getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvCT.getCode(), UserConfigurationManager.instance().getLanguage());
+                String lang = archetypeManager.getUserConfigurationManager().getLanguage();
+                String name = archetypeManager.getCodedTexts().getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvCT.getCode(), lang);
                 if (name != null) {
                     dvCT.setValue(name);
                 }
@@ -214,7 +215,8 @@ public class GuideImporter {
         } else if (dv instanceof DvOrdinal) {
             if (archetypeElementVO != null) {
                 DvOrdinal dvOrdinal = (DvOrdinal) dv;
-                String name = archetypeManager.getOrdinals().getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvOrdinal.getCode(), UserConfigurationManager.instance().getLanguage());
+                String lang = archetypeManager.getUserConfigurationManager().getLanguage();
+                String name = archetypeManager.getOrdinals().getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), dvOrdinal.getCode(), lang);
                 if (name != null) {
                     dvOrdinal.getSymbol().setValue(name);
                 }

@@ -9,6 +9,7 @@ package se.cambio.cds.gdl.editor.view.menubar;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSetActiveEngine;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,10 +18,12 @@ public class ConfigActiveEngineAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
     private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    ConfigActiveEngineAction(EditorManager editorManager) {
+    ConfigActiveEngineAction(EditorManager editorManager, UserConfigurationManager userConfigurationManager) {
         super();
         this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("SetActiveEngine") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetActiveEngineD"));
@@ -28,7 +31,7 @@ public class ConfigActiveEngineAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        new DialogSetActiveEngine(editorManager).setVisible(true);
+        new DialogSetActiveEngine(editorManager, userConfigurationManager).setVisible(true);
     }
 }
 /*

@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
@@ -29,7 +28,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
 
     public Archetypes(
             ArchetypeManager archetypeManager){
-        super(archetypeManager.getCmAdministrationFacadeDelegate());
+        super(archetypeManager.getClinicalModelsService());
         this.archetypeManager = archetypeManager;
     }
 

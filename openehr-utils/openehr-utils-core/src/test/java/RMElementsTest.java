@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
-import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
@@ -26,17 +26,20 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ClinicalModelsAdministrationConfiguration.class)
+@ContextConfiguration(classes = ClinicalModelsConfiguration.class)
 @ActiveProfiles({ "cm-admin-file-dao"})
 public class RMElementsTest {
 
     @Autowired
     private ArchetypeManager archetypeManager;
 
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.instance().setArchetypesFolderPath(RMElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.instance().setTemplatesFolderPath(RMElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
+        userConfigurationManager.setArchetypesFolderPath(RMElementsTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+        userConfigurationManager.setTemplatesFolderPath(RMElementsTest.class.getClassLoader().getResource("templates").toURI().getPath());
     }
 
     @Test

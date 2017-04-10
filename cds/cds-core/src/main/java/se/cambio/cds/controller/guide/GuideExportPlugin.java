@@ -5,8 +5,9 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public interface GuideExportPlugin {
 
-    public String getPluginName();
-    public byte[] compile(Guide guide) throws InternalErrorException;
+    String getPluginName();
+    byte[] compile(Guide guide);
+    String getSource(Guide guide);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

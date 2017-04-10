@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.cambio.cds.controller.cds.CdsDataManager;
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
@@ -21,6 +23,7 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
 import se.cambio.cds.gdl.editor.view.panels.GDLEditorMainPanel;
 import se.cambio.cds.gdl.editor.view.panels.GDLPanel;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
 import se.cambio.cds.gdl.model.*;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
@@ -29,6 +32,7 @@ import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GuideImporter;
@@ -43,7 +47,6 @@ import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.TerminologyDialogManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
@@ -103,8 +106,12 @@ public class GDLEditor implements EditorController<Guide> {
     private RuleLineCloner ruleLineCloner;
     private GuideHTMLExporter guideHTMLExporter;
     private DVPanelFactory dbPanelFactory;
+    private GdlGraphManager gdlGraphManager;
     private GuidelineLoadManager guidelineLoadManager;
     private Boolean active;
+    private GuideExportPlugin guideExportPlugin;
+    private final CdsDataManager cdsDataManager;
+    private final RuleEngineService ruleEngineService;
 
     GDLEditor(
             WindowManager windowManager,
@@ -122,7 +129,11 @@ public class GDLEditor implements EditorController<Guide> {
             GuidelineEditorManager guidelineEditorManager,
             GuidelineLoadManager guidelineLoadManager,
             GuideHTMLExporter guideHTMLExporter,
-            DVPanelFactory dbPanelFactory) {
+            DVPanelFactory dbPanelFactory,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
         this.windowManager = windowManager;
         this.archetypeManager = archetypeManager;
         this.terminologyService = terminologyService;
@@ -139,6 +150,10 @@ public class GDLEditor implements EditorController<Guide> {
         this.guidelineLoadManager = guidelineLoadManager;
         this.guideHTMLExporter = guideHTMLExporter;
         this.dbPanelFactory = dbPanelFactory;
+        this.gdlGraphManager = gdlGraphManager;
+        this.guideExportPlugin = guideExportPlugin;
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
         this.ruleLineCloner = new RuleLineCloner(this);
         this.active = true;
     }
@@ -212,7 +227,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public GDLEditorMainPanel getEditorPanel() {
         if (gdlEditorMainPanel == null) {
-            gdlEditorMainPanel = new GDLEditorMainPanel(this, guidelineLoadManager, guideHTMLExporter);
+            gdlEditorMainPanel = new GDLEditorMainPanel(this, guidelineLoadManager, guideHTMLExporter, gdlGraphManager, guideExportPlugin);
         }
         return gdlEditorMainPanel;
     }
@@ -277,8 +292,10 @@ public class GDLEditor implements EditorController<Guide> {
                     new FormGeneratorController(
                             guideDTO, getCurrentLanguageCode(),
                             guideImporter, elementInstanceCollectionManager,
-                            archetypeManager, dvSwingManager);
-            Date date = UserConfigurationManager.instance().getCurrentDateTime();
+                            archetypeManager, dvSwingManager,
+                            cdsDataManager,
+                            ruleEngineService);
+            Date date = archetypeManager.getUserConfigurationManager().getCurrentDateTime();
             if (date != null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date);
@@ -545,7 +562,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     public String getCurrentLanguageCode() {
         if (currentGuideLanguageCode == null) {
-            String editorLanguage = UserConfigurationManager.instance().getLanguage();
+            String editorLanguage = archetypeManager.getUserConfigurationManager().getLanguage();
             if (getSupportedLanguageCodes().contains(editorLanguage)) {
                 currentGuideLanguageCode = editorLanguage;
             } else {
@@ -560,7 +577,7 @@ public class GDLEditor implements EditorController<Guide> {
         if (originalLanuageCodePhrase == null) {
             String LANGUAGE_TERMINOLOGY = "ISO_639-1";
             originalLanuageCodePhrase = new CodePhrase(
-                    LANGUAGE_TERMINOLOGY, UserConfigurationManager.instance().getLanguage());
+                    LANGUAGE_TERMINOLOGY, archetypeManager.getUserConfigurationManager().getLanguage());
             getLanguage().setOriginalLanguage(originalLanuageCodePhrase);
         }
         return getLanguage().getOriginalLanguage().getCodeString();

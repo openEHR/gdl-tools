@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -20,18 +20,21 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ClinicalModelsAdministrationConfiguration.class)
+@ContextConfiguration(classes = ClinicalModelsConfiguration.class)
 @ActiveProfiles({ "cm-admin-file-dao"})
 public class TemplateMapperTest {
 
     @Autowired
     private ArchetypeManager archetypeManager;
 
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException {
-        UserConfigurationManager.instance().setTerminologiesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
-        UserConfigurationManager.instance().setArchetypesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
-        UserConfigurationManager.instance().setTemplatesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("templates").toURI().getPath());
+        userConfigurationManager.setTerminologiesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("terminologies").toURI().getPath());
+        userConfigurationManager.setArchetypesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("archetypes").toURI().getPath());
+        userConfigurationManager.setTemplatesFolderPath(TemplateMapperTest.class.getClassLoader().getResource("templates").toURI().getPath());
     }
 
     @Test

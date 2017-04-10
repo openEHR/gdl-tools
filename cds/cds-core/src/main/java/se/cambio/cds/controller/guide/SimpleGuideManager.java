@@ -35,7 +35,7 @@ public class SimpleGuideManager {
         return generateId(allGuidesMap.keySet());
     }
 
-    private static String generateId(Collection<String> guideIds) {
+    public static String generateId(Collection<String> guideIds) {
         List<String> guideIdsAux = new ArrayList<>(guideIds);
         Collections.sort(guideIdsAux);
         return StringUtils.join(guideIdsAux, ",");

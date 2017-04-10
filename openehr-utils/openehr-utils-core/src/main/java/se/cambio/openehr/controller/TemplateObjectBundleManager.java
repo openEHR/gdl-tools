@@ -10,6 +10,7 @@ import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.util.TemplateFlattener;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.InputStream;
@@ -20,12 +21,17 @@ public class TemplateObjectBundleManager {
     private TemplateDTO templateDTO = null;
     private final Map<String, Archetype> archetypeMap;
     private TerminologyService terminologyService;
+    private UserConfigurationManager userConfigurationManager;
     protected boolean correctlyParsed = false;
 
-    public TemplateObjectBundleManager(TemplateDTO templateDTO, Map<String, Archetype> archetypeMap, TerminologyService terminologyService) {
+    public TemplateObjectBundleManager(
+            TemplateDTO templateDTO, Map<String, Archetype> archetypeMap,
+            TerminologyService terminologyService,
+            UserConfigurationManager userConfigurationManager) {
         this.templateDTO = templateDTO;
         this.archetypeMap = archetypeMap;
         this.terminologyService = terminologyService;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
     public void buildArchetypeObjectBundleCustomVO() throws InternalErrorException {
@@ -58,7 +64,7 @@ public class TemplateObjectBundleManager {
             templateDTO.setArchetypeId(template.getDefinition().getArchetypeId());
             Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
             templateDTO.setAom(SerializationUtils.serialize(ar));
-            GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap, terminologyService);
+            GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap, terminologyService, userConfigurationManager);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             templateDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
         } catch (Exception e) {

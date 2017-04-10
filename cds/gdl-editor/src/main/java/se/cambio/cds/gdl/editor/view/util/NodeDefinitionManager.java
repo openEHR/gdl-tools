@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.editor.view.util;
 
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -25,36 +24,28 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.OpenEHRImageUtil;
-import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
-import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NodeDefinitionManager {
 
     private ArchetypeReferencesManager archetypeReferencesManager;
     private GDLEditor gdlEditor;
+    private UserConfigurationManager userConfigurationManager;
 
-    public NodeDefinitionManager(ArchetypeReferencesManager archetypeReferencesManager, GDLEditor gdlEditor) {
+    public NodeDefinitionManager(
+            ArchetypeReferencesManager archetypeReferencesManager,
+            GDLEditor gdlEditor,
+            UserConfigurationManager userConfigurationManager) {
         this.archetypeReferencesManager = archetypeReferencesManager;
         this.gdlEditor = gdlEditor;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
     public SelectableNode<Object> getElementInstancesSelectionNodes(
@@ -205,7 +196,7 @@ public class NodeDefinitionManager {
     }
 
 
-    private static ImageIcon getIconsArchetypeReference(ArchetypeReferenceRuleLineDefinitionElement arrlde) {
+    private ImageIcon getIconsArchetypeReference(ArchetypeReferenceRuleLineDefinitionElement arrlde) {
         String archetypeId = arrlde.getValue().getIdArchetype();
         String archReferenceRM = Archetypes.getEntryType(archetypeId);
         return new MultipleIcon(
@@ -214,7 +205,7 @@ public class NodeDefinitionManager {
                         OpenEHRConstUI.getIcon(archReferenceRM)});
     }
 
-    public static SelectableNode<Object> getElementsInArchetypeNode(
+    public SelectableNode<Object> getElementsInArchetypeNode(
             String idArchetype, String idTemplate,
             ArchetypeManager archetypeManager) throws InternalErrorException, InstanceNotFoundException {
         ArchetypeDTO archetypeVO = archetypeManager.getArchetypes().getCMElement(idArchetype);
@@ -249,13 +240,13 @@ public class NodeDefinitionManager {
         return rootNode;
     }
 
-    private static SelectableNode.SelectionMode getSelectionMode() {
+    private SelectableNode.SelectionMode getSelectionMode() {
         return SelectableNode.SelectionMode.SINGLE;
     }
 
-    private static SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode, ArchetypeManager archetypeManager) {
-        String name = archetypeManager.getArchetypeElements().getText(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
-        String desc = archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, UserConfigurationManager.instance().getLanguage());
+    private SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode, ArchetypeManager archetypeManager) {
+        String name = archetypeManager.getArchetypeElements().getText(archetypeElementVO, userConfigurationManager.getLanguage());
+        String desc = archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, userConfigurationManager.getLanguage());
         return new SelectableNodeBuilder<>()
                 .setName(name)
                 .setDescription(desc)
@@ -367,7 +358,7 @@ public class NodeDefinitionManager {
         return root;
     }
 
-    public static SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId, ArchetypeManager archetypeManager) {
+    public SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId, ArchetypeManager archetypeManager) {
         SelectableNode<Object> root =
                 new SelectableNodeBuilder<>()
                         .setName(GDLEditorLanguageManager.getMessage("Attributes"))

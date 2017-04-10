@@ -1,20 +1,18 @@
 package se.cambio.openehr.util.exceptions;
 
-/**
- * The root exception of all exceptions in the "Model".
- */
-public abstract class ModelException extends Exception {
+public abstract class ModelException extends RuntimeException {
 
     static final long serialVersionUID = 1L;
 
-	protected ModelException() {}
+    protected ModelException() {
+    }
 
     protected ModelException(String message) {
         super(message);
     }
-    
-    public String getMessage(){
-    	return "Model exception: "+super.getMessage();
+
+    public String getMessage() {
+        return "Model exception: " + super.getMessage();
     }
 }
 /*

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.cm.controller.terminology.plugins.TerminologyServicePlugin;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.cm.util.TerminologyConfigVO;
@@ -27,12 +27,12 @@ public class TerminologyServiceImpl implements TerminologyService {
     private Map<String, TerminologyService> terminologyPlugins;
     private Set<String> supportedTerminologies = null;
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
-    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
+    private ClinicalModelsService clinicalModelsService;
     private static Logger log = LoggerFactory.getLogger(TerminologyServiceImpl.class);
 
-    public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration, CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate) {
+    public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration, ClinicalModelsService clinicalModelsService) {
         this.terminologyServiceConfiguration = terminologyServiceConfiguration;
-        this.cmAdministrationFacadeDelegate = cmAdministrationFacadeDelegate;
+        this.clinicalModelsService = clinicalModelsService;
     }
 
     private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO) {
@@ -149,7 +149,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         TerminologyService terminologyService = getTerminologyServicePluginMap().get(terminologyId);
         if (terminologyService == null && isSupported(terminologyId)) {
             try {
-                Collection<TerminologyDTO> terminologyDTOs = cmAdministrationFacadeDelegate.searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
+                Collection<TerminologyDTO> terminologyDTOs = clinicalModelsService.searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
                 TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
                 terminologyService = generateTerminologyService(terminologyDTO);
                 getTerminologyServicePluginMap().put(terminologyId, terminologyService);
@@ -180,7 +180,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         if (shouldUpdateSupportedTerminologyIds()) {
             try {
                 supportedTerminologies.clear();
-                supportedTerminologies.addAll(cmAdministrationFacadeDelegate.getAllCMElementIds(TerminologyDTO.class));
+                supportedTerminologies.addAll(clinicalModelsService.getAllCMElementIds(TerminologyDTO.class));
                 lastUpdate = System.currentTimeMillis();
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);

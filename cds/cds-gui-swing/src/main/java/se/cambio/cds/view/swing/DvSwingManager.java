@@ -17,7 +17,6 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.DisabledComboUI;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRDataValuesUI;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 import se.cambio.openehr.view.util.DVPanelFactory;
 import se.cambio.openehr.view.util.MultipleIcon;
@@ -53,7 +52,7 @@ public class DvSwingManager {
                         elementInstance.getArchetypeReference().getIdTemplate(),
                         elementInstance.getId());
         JLabel label;
-        String name = archetypeManager.getArchetypeElements().getText(archetypeElement, UserConfigurationManager.instance().getLanguage());
+        String name = archetypeManager.getArchetypeElements().getText(archetypeElement, archetypeManager.getUserConfigurationManager().getLanguage());
 
         if (elementInstance instanceof GeneratedElementInstance){
             GeneratedElementInstance elementInstancesWithGTCode = (GeneratedElementInstance) elementInstance;

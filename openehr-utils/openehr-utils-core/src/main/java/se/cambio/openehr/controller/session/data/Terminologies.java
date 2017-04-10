@@ -1,13 +1,13 @@
 package se.cambio.openehr.controller.session.data;
 
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 
 
 public class Terminologies extends AbstractCMManager<TerminologyDTO> {
 
-    private Terminologies(CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate){
-        super(cmAdministrationFacadeDelegate);
+    private Terminologies(ClinicalModelsService clinicalModelsService){
+        super(clinicalModelsService);
     }
 
     @Override

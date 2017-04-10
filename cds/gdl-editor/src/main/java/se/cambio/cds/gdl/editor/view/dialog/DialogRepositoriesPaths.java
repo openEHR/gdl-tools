@@ -28,12 +28,14 @@ public class DialogRepositoriesPaths extends DialogEditor {
     private FileSelectionPanel guidesRepositoryFolderPanel = null;
     private Logger logger = LoggerFactory.getLogger(DialogRepositoriesPaths.class);
     private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    public DialogRepositoriesPaths(EditorManager editorManager) {
+    public DialogRepositoriesPaths(EditorManager editorManager, UserConfigurationManager userConfigurationManager) {
         super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SelectRepositories"),
                 new Dimension(500, 380), true);
         this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
         initialize();
     }
 
@@ -66,7 +68,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
     private JFileChooser getArchetypeFolderChooser() {
         if (archetypesFolderChooser == null) {
             archetypesFolderChooser = new JFileChooser();
-            archetypesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getArchetypeFolder().getFolder());
+            archetypesFolderChooser.setSelectedFile(userConfigurationManager.getArchetypeFolder().getFolder());
             archetypesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             archetypesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectArchetypeRepository"));
         }
@@ -86,7 +88,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
     private JFileChooser getTemplateFolderChooser() {
         if (templatesFolderChooser == null) {
             templatesFolderChooser = new JFileChooser();
-            templatesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getTemplateFolder().getFolder());
+            templatesFolderChooser.setSelectedFile(userConfigurationManager.getTemplateFolder().getFolder());
             templatesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             templatesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectTemplateRepository"));
         }
@@ -106,7 +108,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
     private JFileChooser getTerminologiesFolderChooser() {
         if (terminologiesFolderChooser == null) {
             terminologiesFolderChooser = new JFileChooser();
-            terminologiesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getTerminologiesFolder().getFolder());
+            terminologiesFolderChooser.setSelectedFile(userConfigurationManager.getTerminologiesFolder().getFolder());
             terminologiesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             terminologiesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectTerminologiesRepository"));
         }
@@ -126,7 +128,7 @@ public class DialogRepositoriesPaths extends DialogEditor {
     private JFileChooser getGuidesFolderChooser() {
         if (guidesFolderChooser == null) {
             guidesFolderChooser = new JFileChooser();
-            guidesFolderChooser.setSelectedFile(UserConfigurationManager.instance().getGuidesFolder().getFolder());
+            guidesFolderChooser.setSelectedFile(userConfigurationManager.getGuidesFolder().getFolder());
             guidesFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             guidesFolderChooser.setDialogTitle(GDLEditorLanguageManager.getMessage("SelectGuidesRepository"));
         }
@@ -140,16 +142,16 @@ public class DialogRepositoriesPaths extends DialogEditor {
         String terminologiesFolderStrSelected = getTerminologiesRepositoryFolderPanel().getFileNameJTextField().getText();
         String guidesFolderStrSelected = getGuidesRepositoryFolderPanel().getFileNameJTextField().getText();
         try {
-            UserConfigurationManager.instance().setArchetypesFolderPath(archetypeFolderStrSelected);
-            UserConfigurationManager.instance().setTemplatesFolderPath(templateFolderStrSelected);
-            UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesFolderStrSelected);
-            UserConfigurationManager.instance().setGuidelinesFolderPath(guidesFolderStrSelected);
+            userConfigurationManager.setArchetypesFolderPath(archetypeFolderStrSelected);
+            userConfigurationManager.setTemplatesFolderPath(templateFolderStrSelected);
+            userConfigurationManager.setTerminologiesFolderPath(terminologiesFolderStrSelected);
+            userConfigurationManager.setGuidelinesFolderPath(guidesFolderStrSelected);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), "ERROR : " + ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            UserConfigurationManager.instance().saveConfig();
+            userConfigurationManager.saveConfig();
         } catch (Exception e) {
             logger.error("Error saving config file.", e);
             JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);

@@ -1,11 +1,13 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.LoadGuideAction;
 import se.cambio.cds.gdl.editor.view.menubar.SaveGuideAction;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
@@ -33,11 +35,20 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
     private JButton loadButton;
     private RulePanel currentRulePanel = null;
     private GuideHTMLExporter guideHTMLExporter;
+    private GdlGraphManager gdlGraphManager;
+    private GuideExportPlugin guideExportPlugin;
 
-    public GDLEditorMainPanel(GDLEditor controller, GuidelineLoadManager guidelineLoadManager, GuideHTMLExporter guideHTMLExporter) {
+    public GDLEditorMainPanel(
+            GDLEditor controller,
+            GuidelineLoadManager guidelineLoadManager,
+            GuideHTMLExporter guideHTMLExporter,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin) {
         this.controller = controller;
         this.guidelineLoadManager = guidelineLoadManager;
         this.guideHTMLExporter = guideHTMLExporter;
+        this.gdlGraphManager = gdlGraphManager;
+        this.guideExportPlugin = guideExportPlugin;
         init();
     }
 
@@ -45,9 +56,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
         KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
         registerKeyboardAction(null, enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
         setLayout(new BorderLayout());
-
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
         buttonPanel.add(getLoadButton());
         buttonPanel.add(getSaveButton());
         buttonPanel.add(getAddRuleButton());
@@ -145,7 +154,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
 
     public GuidePanel getGuidePanel() {
         if (guidePanel == null) {
-            guidePanel = new GuidePanel(controller, guideHTMLExporter);
+            guidePanel = new GuidePanel(controller, guideHTMLExporter, gdlGraphManager, guideExportPlugin);
         }
         return guidePanel;
     }

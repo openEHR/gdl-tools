@@ -4,10 +4,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import se.cambio.cm.model.util.CMElementDAOFactory;
+import se.cambio.openehr.util.configuration.UserConfiguration;
 
 @Configuration
-@ComponentScan({"se.cambio.cm.model"})
+@Import({FileClinicalModelsPersistenceConfiguration.class})
 public class CmPersistenceConfig {
 
     @Bean

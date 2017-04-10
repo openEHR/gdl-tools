@@ -2,8 +2,6 @@ package se.cambio.openehr.util;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import se.cambio.openehr.util.configuration.CdsConfiguration;
 
 public class BeanProvider {
@@ -17,7 +15,7 @@ public class BeanProvider {
     private ConfigurableApplicationContext getAppCtx() {
         if (appCtx == null) {
             appCtx = new AnnotationConfigApplicationContext();
-            appCtx.getEnvironment().setDefaultProfiles("cm-admin-file-dao", "rule-drools-engine");
+            appCtx.getEnvironment().setDefaultProfiles("cm-admin-file-dao", "rule-drools-engine", "ehr-dummy-service");
             ((AnnotationConfigApplicationContext) appCtx).register(CdsConfiguration.class);
             appCtx.refresh();
         }

@@ -40,7 +40,7 @@ public class EditorFrame extends JFrame implements EditorViewer {
     private void setPositionAndDimension() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension labelSize = this.getSize();
-        this.setSize(new Dimension(1000, 600));
+        this.setSize(new Dimension(1100, 700));
         int locx = (screenSize.width / 2) - (labelSize.width / 2) - (this.getWidth() / 2);
         int locy = (screenSize.height / 2) - (labelSize.height / 2) - (this.getHeight() / 2);
         this.setLocation(locx, locy);

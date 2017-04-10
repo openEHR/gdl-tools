@@ -13,15 +13,18 @@ import javax.swing.AbstractAction;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSetLanguage;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ConfigLanguageAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
     private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    ConfigLanguageAction(EditorManager editorManager) {
+    ConfigLanguageAction(EditorManager editorManager, UserConfigurationManager userConfigurationManager) {
         super();
         this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("SetEditorLanguage") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageSD"));
@@ -29,7 +32,7 @@ public class ConfigLanguageAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        new DialogSetLanguage(editorManager).setVisible(true);
+        new DialogSetLanguage(editorManager, userConfigurationManager).setVisible(true);
     }
 }
 /*

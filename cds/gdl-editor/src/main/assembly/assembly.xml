@@ -102,9 +102,9 @@
 				<exclude>*</exclude>
 			</excludes>
 		</fileSet>-->
-		<!-- add guides folder
+		<!-- add guidelines folder
 		<fileSet>
-			<directory>../cm/guides</directory>
+			<directory>../cm/guidelines</directory>
 			<outputDirectory>Guidelines</outputDirectory>
 			<includes>
 				<include>*.*</include>

@@ -58,7 +58,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
             selectedDvCodeTexts.add(selectedCodedText);
             CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), selectedCodedText.getCode());
             if (codedTextVO != null) {
-                label = getCodedTexts().getText(codedTextVO, UserConfigurationManager.instance().getLanguage());
+                label = getCodedTexts().getText(codedTextVO, archetypeManager.getUserConfigurationManager().getLanguage());
             } else {
                 label = selectedCodedText.getCode();
                 String terminologyId = ((DvCodedText) dataValue).getDefiningCode().getTerminologyId().getValue();

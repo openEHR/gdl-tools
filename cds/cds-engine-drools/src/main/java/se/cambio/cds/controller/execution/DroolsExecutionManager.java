@@ -1,5 +1,6 @@
 package se.cambio.cds.controller.execution;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
@@ -13,9 +14,10 @@ import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.gdl.parser.GDLParser;
+import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineService;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cds.util.RuleExecutionWMLogger;
@@ -23,6 +25,7 @@ import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -33,13 +36,14 @@ public class DroolsExecutionManager {
     private boolean useCache = true;
     private ExecutionLogger logger = null;
     public static final Long DEFAULT_TIMEOUT = 30000L;
-    private Guides guides;
     private ArchetypeManager archetypeManager;
+    private GDLParser gdlParser;
+    private DroolsRuleEngineService droolsRuleEngineService;
 
-    public DroolsExecutionManager(Guides guides, ArchetypeManager archetypeManager) {
-        this.guides = guides;
+    public DroolsExecutionManager(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
+        gdlParser = new GDLParser();
     }
 
     public ArchetypeManager getArchetypeManager() {
@@ -147,12 +151,26 @@ public class DroolsExecutionManager {
         return guideIdsIdSB.toString();
     }
 
+    private void compileGuide(GuideDTO guideDTO) {
+        if (!hasGuideObject(guideDTO)) {
+            parseGuide(guideDTO);
+        }
+        Guide guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
+        byte[] compiledGuide = getDroolsRuleEngineService().compile(guide);
+        guideDTO.setCompiledGuide(compiledGuide);
+    }
+
+    public static boolean hasGuideObject(GuideDTO guideDTO) {
+        return guideDTO.getGuideObject() != null;
+    }
+
+
     private KieBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) {
         final KieServices kieServices = KieServices.Factory.get();
         final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         final KieRepository kr = kieServices.getRepository();
         for (GuideDTO guideDTO : guideDTOs) {
-            Guide guide = guides.getGuide(guideDTO);
+            Guide guide = getGuide(guideDTO);
             Resource resource = getResource(guide);
             if (resource != null) {
                 kieFileSystem.write("src/main/resources/" + guideDTO.getId() + ".drl", resource);
@@ -180,8 +198,35 @@ public class DroolsExecutionManager {
         }
     }
 
+    private Guide getGuide(GuideDTO guideDTO) {
+        if (guideDTO != null) {
+            if (!hasGuideObject(guideDTO)) {
+                parseGuide(guideDTO);
+            }
+            return (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
+        } else {
+            return null;
+        }
+    }
+
+    private void parseGuide(GuideDTO guideDTO) {
+        try {
+            Guide guide = gdlParser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
+            guideDTO.setGuideObject(SerializationUtils.serialize(guide));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private String getGuideSalienceId(String guideId) {
         return "$" + guideId.replaceAll("[^a-zA-Z0-9]+", "") + "_salience";
+    }
+
+    public DroolsRuleEngineService getDroolsRuleEngineService() {
+        if (droolsRuleEngineService == null) {
+            droolsRuleEngineService = new DroolsRuleEngineService(this);
+        }
+        return droolsRuleEngineService;
     }
 }
 /*

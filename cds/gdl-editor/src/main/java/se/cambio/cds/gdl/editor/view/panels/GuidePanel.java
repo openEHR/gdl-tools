@@ -1,9 +1,12 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.panelplugins.GDLEditorPluginPanelManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.graph.view.panel.DecisionGraphPanel;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 
 import javax.swing.*;
@@ -24,10 +27,20 @@ public class GuidePanel extends JPanel {
     private GDLPanel gdlPanel;
     private HTMLPanel htmlPanel;
     private GuideHTMLExporter guideHtmlExporter;
+    private GdlGraphManager gdlGraphManager;
+    private DecisionGraphPanel decisionGraphPanel;
+    private SourcePanel sourceViewPanel;
+    private GuideExportPlugin guideExportPlugin;
 
-    GuidePanel(GDLEditor controller, GuideHTMLExporter guideHtmlExporter) {
+    GuidePanel(
+            GDLEditor controller,
+            GuideHTMLExporter guideHtmlExporter,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin) {
         this.controller = controller;
         this.guideHtmlExporter = guideHtmlExporter;
+        this.gdlGraphManager = gdlGraphManager;
+        this.guideExportPlugin = guideExportPlugin;
         init();
     }
 
@@ -71,6 +84,14 @@ public class GuidePanel extends JPanel {
                     "GDL",
                     GDLEditorImageUtil.GDL_LANG_ICON,
                     getGDLPanel());
+            guideEditorTabPane.addTab(
+                    "Graph",
+                    GDLEditorImageUtil.GRAPH_ICON,
+                    getGdlGraphManager());
+            guideEditorTabPane.addTab(
+                    "Drools",
+                    GDLEditorImageUtil.PAGE_CODE_ICON,
+                    getSourceViewPanel());
             guideEditorTabPane.addTab(
                     "HTML",
                     GDLEditorImageUtil.HTML_ICON,
@@ -156,6 +177,20 @@ public class GuidePanel extends JPanel {
             htmlPanel = new HTMLPanel(controller, guideHtmlExporter);
         }
         return htmlPanel;
+    }
+
+    private DecisionGraphPanel getGdlGraphManager() {
+        if (decisionGraphPanel == null) {
+            decisionGraphPanel = gdlGraphManager.generateDecisionGraphPanel(controller.getEntity(), controller.getCurrentLanguageCode());
+        }
+        return decisionGraphPanel;
+    }
+
+    private SourcePanel getSourceViewPanel() {
+        if (sourceViewPanel == null) {
+            sourceViewPanel = new SourcePanel(guideExportPlugin, controller);
+        }
+        return sourceViewPanel;
     }
 }
 /*

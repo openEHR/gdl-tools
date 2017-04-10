@@ -1,8 +1,5 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -10,13 +7,11 @@ import org.kie.api.builder.Message;
 import org.kie.api.io.Resource;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cds.configuration.DroolsConfiguration;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,17 +20,15 @@ import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DroolsConfiguration.class})
-public class ConvertToDroolsTest {
+public class ConvertToDroolsTest extends GDLTestCase{
     
     @Autowired
     ArchetypeManager archetypeManager;
     
-	@Before
+	@BeforeClass
 	public void setUp() throws Exception {
 		String archetypesFolderPath = ConvertToDroolsTest.class.getClassLoader().getResource("archetypes").getPath();
-		UserConfigurationManager.instance().setArchetypesFolderPath(archetypesFolderPath);
+        archetypeManager.getUserConfigurationManager().setArchetypesFolderPath(archetypesFolderPath);
 		parser = new GDLParser();
 		guide = null;
 	}
@@ -65,8 +58,7 @@ public class ConvertToDroolsTest {
 
     @Test
     public void shouldCompileTemporalGuide() throws Exception {
-        String guide = readFile("temporal.drools");
-        //System.out.println(guide);
+        String guide = readFile();
         compile(guide);
     }
 
@@ -79,9 +71,9 @@ public class ConvertToDroolsTest {
         return this.getClass().getClassLoader().getResourceAsStream(name);
     }
 
-    private String readFile(String name) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(load(name)));
-        StringBuffer buf = new StringBuffer();
+    private String readFile() throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(load("temporal.drools")));
+        StringBuilder buf = new StringBuilder();
         String line = reader.readLine();
         while (line != null) {
             buf.append(line);

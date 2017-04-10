@@ -34,18 +34,25 @@ public class GenericObjectBundleADLManager {
     private Collection<ProportionTypeVO> proportionTypeVOs;
     private final Map<String, Archetype> archetypeMap;
     private TerminologyService terminologyService;
+    private UserConfigurationManager userConfigurationManager;
 
-    public GenericObjectBundleADLManager(Archetype ar, Map<String, Archetype> archetypeMap, TerminologyService terminologyService) {
+    public GenericObjectBundleADLManager(
+            Archetype ar, Map<String, Archetype> archetypeMap,
+            TerminologyService terminologyService, UserConfigurationManager userConfigurationManager) {
         this.ar = ar;
         this.archetypeMap = archetypeMap;
         this.terminologyService = terminologyService;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
-    public GenericObjectBundleADLManager(Archetype ar, String templateId, Map<String, Archetype> archetypeMap, TerminologyService terminologyService) {
+    public GenericObjectBundleADLManager(
+            Archetype ar, String templateId, Map<String, Archetype> archetypeMap,
+            TerminologyService terminologyService, UserConfigurationManager userConfigurationManager) {
         this.ar = ar;
         this.templateId = templateId;
         this.archetypeMap = archetypeMap;
         this.terminologyService = terminologyService;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
     public ArchetypeObjectBundleCustomVO generateObjectBundleCustomVO() {
@@ -62,7 +69,7 @@ public class GenericObjectBundleADLManager {
     }
 
     private void setDefaultLanguage() {
-        language = UserConfigurationManager.instance().getLanguage();
+        language = userConfigurationManager.getLanguage();
         if (!ar.getOriginalLanguage().getCodeString().equals(language) &&
                 (ar.getTranslations() == null || !ar.getTranslations().containsKey(language))) {
             language = ar.getOriginalLanguage().getCodeString();
@@ -70,12 +77,12 @@ public class GenericObjectBundleADLManager {
     }
 
     private void init() {
-        archetypeElementVOs = new ArrayList<ArchetypeElementVO>();
-        clusterVOs = new ArrayList<ClusterVO>();
-        codedTextVOs = new ArrayList<CodedTextVO>();
-        ordinalVOs = new ArrayList<OrdinalVO>();
-        unitVOs = new ArrayList<UnitVO>();
-        proportionTypeVOs = new ArrayList<ProportionTypeVO>();
+        archetypeElementVOs = new ArrayList<>();
+        clusterVOs = new ArrayList<>();
+        codedTextVOs = new ArrayList<>();
+        ordinalVOs = new ArrayList<>();
+        unitVOs = new ArrayList<>();
+        proportionTypeVOs = new ArrayList<>();
     }
 
     public void loadArchetypeObjects() {

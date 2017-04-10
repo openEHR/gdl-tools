@@ -91,8 +91,8 @@ class ClusterNodesUtil {
             ArchetypeManager archetypeManager) throws InternalErrorException {
         String upperNumOcurrences =
                 (clusterVO.getUpperCardinality() == null ? " [*]" : clusterVO.getUpperCardinality() > 1 ? " [" + clusterVO.getUpperCardinality() + "]" : "");
-        String name = archetypeManager.getClusters().getText(clusterVO, UserConfigurationManager.instance().getLanguage());
-        String desc = archetypeManager.getClusters().getDescription(clusterVO, UserConfigurationManager.instance().getLanguage());
+        String name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
+        String desc = archetypeManager.getClusters().getDescription(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
         SelectableNode.SelectionMode selectionMode = singleSelection ? SelectableNode.SelectionMode.SINGLE : SelectableNode.SelectionMode.MULTIPLE;
         return new SelectableNodeBuilder<>()
                 .setName(name + upperNumOcurrences)

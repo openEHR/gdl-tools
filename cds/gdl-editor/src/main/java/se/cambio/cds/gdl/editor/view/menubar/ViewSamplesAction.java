@@ -20,9 +20,11 @@ import java.io.IOException;
 public class ViewSamplesAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private UserConfigurationManager userConfigurationManager;
 
-    ViewSamplesAction() {
+    ViewSamplesAction(UserConfigurationManager userConfigurationManager) {
         super();
+        this.userConfigurationManager = userConfigurationManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("Samples"));
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SamplesD"));
@@ -32,7 +34,7 @@ public class ViewSamplesAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         try {
             String path =
-                    UserConfigurationManager.instance().getDocumentsFolder().getCanonicalPath() +
+                    userConfigurationManager.getDocumentsFolder().getFolder() +
                             File.separator +
                             "samples.pdf";
             File file = new File(path);

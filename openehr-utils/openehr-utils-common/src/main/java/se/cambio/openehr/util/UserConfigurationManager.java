@@ -3,10 +3,6 @@ package se.cambio.openehr.util;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,19 +12,17 @@ import java.util.*;
 
 import static java.lang.String.format;
 
-@Configuration
-@PropertySource(value = "file:conf/UserConfig.properties", ignoreResourceNotFound = true)
 public class UserConfigurationManager {
 
-    private static String ARCHETYPES_FOLDER = "ArchetypesFolder";
-    private static String TEMPLATES_FOLDER = "TemplatesFolder";
-    private static String GUIDELINES_FOLDER = "GuidesFolder";
-    private static String TERMINOLOGIES_FOLDER = "TerminologiesFolder";
-    private static String DOCUMENTS_FOLDER = "DocumentsFolder";
-    private static String CURRENT_DATE_TIME = "CurrentDateTime";
-    private static String LANGUAGE = "Messages/Language";
-    private static String COUNTRY = "Messages/Country";
-    private static String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
+    public static String ARCHETYPES_FOLDER = "ArchetypesFolder";
+    public static String TEMPLATES_FOLDER = "TemplatesFolder";
+    public static String GUIDELINES_FOLDER = "GuidesFolder";
+    public static String TERMINOLOGIES_FOLDER = "TerminologiesFolder";
+    public static String DOCUMENTS_FOLDER = "DocumentsFolder";
+    public static String CURRENT_DATE_TIME = "CurrentDateTime";
+    public static String LANGUAGE = "Messages/Language";
+    public static String COUNTRY = "Messages/Country";
+    public static String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
     private static List<String> SUPPORTED_RULE_ENGINES = Arrays.asList("rule-drools-engine", "rule-jgdl-engine");
     private static File DEFAULT_REPO_FOLDER = new File(System.getProperty("user.home"), "clinical-models");
 
@@ -37,14 +31,9 @@ public class UserConfigurationManager {
     private String language;
     private String country;
     private Date currentDateTime;
-    private boolean currentDateTimeChecked = false;
+    private Map<String, String> pathMap;
 
     private Logger logger = LoggerFactory.getLogger(UserConfigurationManager.class);
-
-    private static UserConfigurationManager instance;
-
-    @Autowired
-    private Environment environment;
 
     public UserConfigurationManager() {
     }
@@ -65,10 +54,12 @@ public class UserConfigurationManager {
         return getCmFolder(TERMINOLOGIES_FOLDER, "terminologies");
     }
 
+    public CmFolder getDocumentsFolder() {
+        return getCmFolder(DOCUMENTS_FOLDER, "docs");
+    }
+
+
     public String getLanguage() {
-        if (language == null) {
-            language = environment.getProperty(LANGUAGE, "en");
-        }
         return language;
     }
 
@@ -77,9 +68,6 @@ public class UserConfigurationManager {
     }
 
     public String getCountryCode() {
-        if (country == null) {
-            country = environment.getProperty(COUNTRY, "EN");
-        }
         return country;
     }
 
@@ -88,9 +76,6 @@ public class UserConfigurationManager {
     }
 
     public String getActiveRuleEngine() {
-        if (activeRuleEngine == null) {
-            activeRuleEngine = environment.getProperty(ACTIVE_RULE_ENGINE, "rule-drools-engine");
-        }
         return activeRuleEngine;
     }
 
@@ -102,25 +87,20 @@ public class UserConfigurationManager {
         this.activeRuleEngine = ruleEngine;
     }
 
-    public File getDocumentsFolder() {
-        return new File(environment.getProperty(DOCUMENTS_FOLDER, "docs"));
-    }
-
     public Date getCurrentDateTime() {
-        if (!currentDateTimeChecked) {
-            currentDateTimeChecked = true;
-            String currentDateStr = environment.getProperty(CURRENT_DATE_TIME, "");
-            if (currentDateStr.isEmpty()) {
-                return Calendar.getInstance().getTime();
-            } else {
-                currentDateTime = new DateTime(currentDateStr).toDate();
-            }
+        if (currentDateTime == null) {
+            return Calendar.getInstance().getTime();
+        } else {
+            return currentDateTime;
         }
-        return currentDateTime;
     }
 
     public void setCurrentDateTime(Date currentDateTime) {
         this.currentDateTime = currentDateTime;
+    }
+
+    public void setPathMap(Map<String, String> pathMap) {
+        this.pathMap = pathMap;
     }
 
     public boolean hasCustomCurrentDateTime() {
@@ -160,7 +140,7 @@ public class UserConfigurationManager {
         CmFolder cmFolder = cmFolderMap.get(parameterName);
         if (cmFolder == null) {
             File folder;
-            String path = environment.getProperty(parameterName);
+            String path = pathMap.get(parameterName);
             if (path != null) {
                 File pathFile = new File(path);
                 if (pathFile.isDirectory()) {
@@ -202,13 +182,6 @@ public class UserConfigurationManager {
             logger.error("Error saving", e);
             throw new IllegalArgumentException(format("Error saving configuration file %s : %s", configFile.getAbsolutePath(), e.getMessage()));
         }
-    }
-
-    public static UserConfigurationManager instance() {
-        if (instance == null) {
-            instance = BeanProvider.getBean(UserConfigurationManager.class);
-        }
-        return instance;
     }
 }
 /*

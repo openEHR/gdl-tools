@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.converters.drools.DroolsGuideExportPlugin;
-import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineFacadeDelegate;
+import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineService;
 import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
@@ -17,8 +17,8 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 public class DroolsConfiguration {
 
     @Bean
-    public DroolsExecutionManager droolsExecutionManager(Guides guides, ArchetypeManager archetypeManager) {
-        return new DroolsExecutionManager(guides, archetypeManager);
+    public DroolsExecutionManager droolsExecutionManager(ArchetypeManager archetypeManager) {
+        return new DroolsExecutionManager(archetypeManager);
     }
 
     @Bean
@@ -27,7 +27,7 @@ public class DroolsConfiguration {
     }
 
     @Bean
-    public DroolsRuleEngineFacadeDelegate droolsRuleEngineFacadeDelegate(DroolsExecutionManager droolsExecutionManager) {
-        return new DroolsRuleEngineFacadeDelegate(droolsExecutionManager);
+    public DroolsRuleEngineService droolsRuleEngineService(DroolsExecutionManager droolsExecutionManager) {
+        return droolsExecutionManager.getDroolsRuleEngineService();
     }
 }

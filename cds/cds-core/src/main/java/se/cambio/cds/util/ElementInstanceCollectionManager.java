@@ -310,7 +310,7 @@ public class ElementInstanceCollectionManager {
                 }
             }
             //If reaches here, no terminology was found (problem)
-            String message = "No terminology binding for '" + dv + "' was found! (num guides=" + (guides == null ? "0" : guides.size()) + ")";
+            String message = "No terminology binding for '" + dv + "' was found! (num guidelines=" + (guides == null ? "0" : guides.size()) + ")";
             //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
             LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn(message);
         return null;

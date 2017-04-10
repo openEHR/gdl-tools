@@ -1,6 +1,6 @@
 package se.cambio.openehr.util;
 
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -13,14 +13,14 @@ public class CachedCMManager {
     private Date lastCheckForUpdates;
     private Date mostRecentLocalUpdate;
     private Class<? extends CMElement> cmElementClass;
-    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
+    private ClinicalModelsService clinicalModelsService;
 
 
     public CachedCMManager(
             Class<? extends CMElement> cmElementClass,
-            CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate) {
+            ClinicalModelsService clinicalModelsService) {
         this.cmElementClass = cmElementClass;
-        this.cmAdministrationFacadeDelegate = cmAdministrationFacadeDelegate;
+        this.clinicalModelsService = clinicalModelsService;
         Date currentTime = Calendar.getInstance().getTime();
         mostRecentLocalUpdate = currentTime;
         lastCheckForUpdates = currentTime;
@@ -36,7 +36,7 @@ public class CachedCMManager {
 
     private boolean checkIfDataChanged() throws InternalErrorException {
         boolean changesDetected = false;
-        Date lastUpdateDateOnServer = this.cmAdministrationFacadeDelegate.getLastUpdate(cmElementClass);
+        Date lastUpdateDateOnServer = this.clinicalModelsService.getLastUpdate(cmElementClass);
         if (lastUpdateDateOnServer != null) {
             if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
                 changesDetected = true;

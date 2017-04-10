@@ -1,0 +1,157 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.cha2ds2vasc_compliance.v1
+
+concept
+	[at0000]	-- Cha2ds2vasc compliance
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"Rong Chen">
+		["organisation"] = <"Cambio Healthcare Systems">
+		["email"] = <"rong.chen@cambio.se">
+		["date"] = <"2013-12-19">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To record information about the treatment compliance for stroke prevention according to the ESC guidelines">
+			use = <"">
+			keywords = <"compliance", "treatment compliance", "CHA2DS2-VASc", "anticoagulatants", "stroke", "prevention">
+			misuse = <"">
+			copyright = <"">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"**(sv)(en)">
+			use = <"**(sv)(en)">
+			misuse = <"**(sv)(en)">
+			copyright = <"**(sv)(en)">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+	other_contributors = <>
+	other_details = <
+		["references"] = <"1. Lip GY, Nieuwlaat R, Pisters R, Lane DA, Crijns HJ. Refining clinical risk stratification for predicting stroke and thromboembolism in atrial fibrillation using a novel risk factor-based approach: the euro heart survey on atrial fibrillation. Chest. 2010 Feb;137(2):263-72. Epub 2009 Sep 17. PubMed PMID: 19762550. 
+
+2. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247.
+
+3. Lip GY, Frison L, Halperin JL, Lane DA. Identifying patients at high risk for stroke despite anticoagulation: a comparison of contemporary stroke risk stratification schemes in an anticoagulated atrial fibrillation cohort. Stroke. 2010 Dec;41(12):2731-8. Epub 2010 Oct 21. PubMed PMID: 20966417.">
+		["MD5-CAM-1.0.1"] = <"4BC99EB9CFE7FE65E56D68798C9615A3">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Cha2ds2vasc compliance
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- Stroke prevention treatment compliance
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0003, 	-- Compliant
+									at0004]	-- Non compliant
+								}
+							}
+						}
+					}
+					ELEMENT[at0017] occurrences matches {0..1} matches {	-- Anti-coagulant medication
+						value matches {
+							DV_CODED_TEXT matches {
+								defining_code matches {
+									[local::
+									at0018, 	-- Present
+									at0019]	-- Absent
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Cha2ds2vasc compliance">
+					description = <"*">
+				>
+				["at0001"] = <
+					text = <"Tree">
+					description = <"*">
+				>
+				["at0002"] = <
+					text = <"Stroke prevention treatment compliance">
+					description = <"Study criteria: Atrial Fibrillation = Present">
+				>
+				["at0003"] = <
+					text = <"Compliant">
+					description = <"*">
+				>
+				["at0004"] = <
+					text = <"Non compliant">
+					description = <"*">
+				>
+				["at0017"] = <
+					text = <"Anti-coagulant medication">
+					description = <"Study criteria: Atrial Fibrillation = Present">
+				>
+				["at0018"] = <
+					text = <"Present">
+					description = <"*">
+				>
+				["at0019"] = <
+					text = <"Absent">
+					description = <"*">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Cha2ds2vasc compliance">
+					description = <"**unknown(sv)(en)">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"**@ internal @(sv)(en)">
+				>
+				["at0002"] = <
+					text = <"Förenlighet med strokeprofylaxbehandling">
+					description = <"*CHA2DS2-VASc Compliance(en)">
+				>
+				["at0003"] = <
+					text = <"Förenlig">
+					description = <"*Compliant(en)">
+				>
+				["at0004"] = <
+					text = <"Ej förenlig">
+					description = <"*Non compliant(en)">
+				>
+				["at0017"] = <
+					text = <"Antikoagulantia">
+					description = <"**(en)">
+				>
+				["at0018"] = <
+					text = <"Finns">
+					description = <"*Present(en)">
+				>
+				["at0019"] = <
+					text = <"Finns ej">
+					description = <"*Absent(en)">
+				>
+			>
+		>
+	>

@@ -21,7 +21,8 @@ public class ArchetypeObjectBundleManager {
     private final ArchetypeManager archetypeManager;
     private ArchetypeDTO archetypeDTO = null;
 
-    public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO, ArchetypeManager archetypeManager) {
+    public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO,
+                                        ArchetypeManager archetypeManager) {
         this.archetypeDTO = archetypeDTO;
         this.archetypeManager = archetypeManager;
     }
@@ -58,7 +59,9 @@ public class ArchetypeObjectBundleManager {
             Archetype ar = adlParser.parse();
             archetypeDTO.setAom(SerializationUtils.serialize(ar));
             GenericObjectBundleADLManager genericObjectBundleADLManager =
-                    new GenericObjectBundleADLManager(ar, archetypeManager.getArchetypes().getArchetypeMap(), archetypeManager.getTerminologyService());
+                    new GenericObjectBundleADLManager(
+                            ar, archetypeManager.getArchetypes().getArchetypeMap(),
+                            archetypeManager.getTerminologyService(), archetypeManager.getUserConfigurationManager());
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
         } catch (Exception e) {
@@ -74,7 +77,8 @@ public class ArchetypeObjectBundleManager {
             FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
             byte[] flatArchetypeBytes = SerializationUtils.serialize(flatArchetype);
             archetypeDTO.setAom(flatArchetypeBytes);
-            GenericObjectBundleADLSManager genericObjectBundleADLSManager = new GenericObjectBundleADLSManager(flatArchetype, archetypeManager);
+            GenericObjectBundleADLSManager genericObjectBundleADLSManager =
+                    new GenericObjectBundleADLSManager(flatArchetype, archetypeManager);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLSManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
         } catch (Exception e) {

@@ -39,7 +39,7 @@ public class TerminologyServiceTestBase extends AbstractTestNGSpringContextTests
     @BeforeClass
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         BeanProvider.setActiveProfiles("cm-admin-file-dao");
-        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologies.getURL().getPath());
+        userConfigurationManager.setTerminologiesFolderPath(terminologies.getURL().getPath());
     }
 
     @Configuration

@@ -22,15 +22,16 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin {
     }
 
     @Override
-    public byte[] compile(Guide guide) throws InternalErrorException {
+    public byte[] compile(Guide guide) {
         try {
-            return getDroolsGuide(guide).getBytes("UTF8");
+            return getSource(guide).getBytes("UTF8");
         } catch (UnsupportedEncodingException e) {
-            throw new InternalErrorException(e);
+            throw new RuntimeException(e);
         }
     }
 
-    private String getDroolsGuide(Guide guide) throws InternalErrorException {
+    @Override
+    public String getSource(Guide guide) {
         return new GDLDroolsConverter(guide, archetypeManager).convertToDrools();
     }
 }

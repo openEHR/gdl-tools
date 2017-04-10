@@ -18,12 +18,9 @@ import java.util.Map;
 public class ArchetypeElements {
 
     private final ArchetypeManager archetypeManager;
-    private Map<String, ArchetypeElementVO> _archetypeElementsById = null;
-    private Map<String, Map<String, ArchetypeElementVO>> _templateElementsByTemplateIdAndId = null;
+    private Map<String, ArchetypeElementVO> archetypeElementsById = null;
+    private Map<String, Map<String, ArchetypeElementVO>> templateElementsByTemplateIdAndId = null;
 
-    public static String ID_CURRENT_DATE_TIME = "currentDateTime";
-
-    //Add current time
     public static ArchetypeElementVO CURRENT_DATE_TIME =
             new ArchetypeElementVOBuilder()
                     .setName(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
@@ -32,37 +29,37 @@ public class ArchetypeElements {
                     .createArchetypeElementVO();
 
 
-    public ArchetypeElements(ArchetypeManager archetypeManager){
+    public ArchetypeElements(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         init();
     }
 
 
-    public void init(){
-        _archetypeElementsById = new LinkedHashMap<String, ArchetypeElementVO>();
-        _templateElementsByTemplateIdAndId = new LinkedHashMap<String, Map<String, ArchetypeElementVO>>();
+    public void init() {
+        archetypeElementsById = new LinkedHashMap<>();
+        templateElementsByTemplateIdAndId = new LinkedHashMap<>();
     }
 
-    public void loadArchetypeElements(Collection<ArchetypeElementVO> archetypeElementVOs){
+    public void loadArchetypeElements(Collection<ArchetypeElementVO> archetypeElementVOs) {
         for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
             registerArchetypeElement(archetypeElementVO);
         }
     }
 
-    public void registerArchetypeElement(ArchetypeElementVO archetypeElementVO){
-        if (archetypeElementVO.getIdTemplate()==null){
-            _archetypeElementsById.put(archetypeElementVO.getId(), archetypeElementVO);
-        }else{
+    public void registerArchetypeElement(ArchetypeElementVO archetypeElementVO) {
+        if (archetypeElementVO.getIdTemplate() == null) {
+            archetypeElementsById.put(archetypeElementVO.getId(), archetypeElementVO);
+        } else {
             getArchetypeElementsInTemplate(archetypeElementVO.getIdTemplate()).put(archetypeElementVO.getId(), archetypeElementVO);
         }
     }
 
     //TODO Should throw an exception when the element is not found
-    public ArchetypeElementVO getArchetypeElement(String idTemplate, String idElement){
+    public ArchetypeElementVO getArchetypeElement(String idTemplate, String idElement) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
-        if (idTemplate==null){
-            return _archetypeElementsById.get(idElement);
-        }else{
+        if (idTemplate == null) {
+            return archetypeElementsById.get(idElement);
+        } else {
             return getArchetypeElementsInTemplate(idTemplate).get(idElement);
         }
     }
@@ -74,14 +71,14 @@ public class ArchetypeElements {
     public String getText(String idTemplate, String idElement, String lang) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         ArchetypeElementVO archetypeElementVO = getArchetypeElement(idTemplate, idElement);
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
-            if (archetypeTem!=null){
+            if (archetypeTem != null) {
                 return archetypeTem.getText();
-            }else{
+            } else {
                 return archetypeElementVO.getName();
             }
-        }else{
+        } else {
             return "*UNKNOWN*";
         }
     }
@@ -93,14 +90,14 @@ public class ArchetypeElements {
     public String getDescription(String idTemplate, String idElement, String lang) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         ArchetypeElementVO archetypeElementVO = getArchetypeElement(idTemplate, idElement);
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(idTemplate, idElement, lang);
-            if (archetypeTem!=null){
+            if (archetypeTem != null) {
                 return archetypeTem.getDescription();
-            }else{
+            } else {
                 return archetypeElementVO.getDescription();
             }
-        }else{
+        } else {
             return "*UNKNOWN*";
         }
     }
@@ -109,9 +106,9 @@ public class ArchetypeElements {
         return this.archetypeManager.getArchetypeTerms();
     }
 
-    private Map<String, ArchetypeElementVO> getArchetypeElementsInTemplate(String idTemplate){
+    private Map<String, ArchetypeElementVO> getArchetypeElementsInTemplate(String idTemplate) {
         Map<String, ArchetypeElementVO> elementsInTemplate =
-                _templateElementsByTemplateIdAndId.get(idTemplate);
+                templateElementsByTemplateIdAndId.get(idTemplate);
         try {
             archetypeManager.getTemplates().getCMElement(idTemplate);
         } catch (InstanceNotFoundException e) {
@@ -119,22 +116,22 @@ public class ArchetypeElements {
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
         }
-        if (elementsInTemplate==null){
-            elementsInTemplate = new LinkedHashMap<String, ArchetypeElementVO>();
-            _templateElementsByTemplateIdAndId.put(idTemplate, elementsInTemplate);
+        if (elementsInTemplate == null) {
+            elementsInTemplate = new LinkedHashMap<>();
+            templateElementsByTemplateIdAndId.put(idTemplate, elementsInTemplate);
         }
         return elementsInTemplate;
     }
 
-    public Collection<ArchetypeElementVO> getArchetypeElementsVO(String idArchetype, String idTemplate){
+    public Collection<ArchetypeElementVO> getArchetypeElementsVO(String idArchetype, String idTemplate) {
         archetypeManager.loadArchetypesIfNeeded(idArchetype);
         archetypeManager.loadTemplateIfNeeded(idTemplate);
         Collection<ArchetypeElementVO> list = new ArrayList<ArchetypeElementVO>();
-        if (idTemplate!=null){
+        if (idTemplate != null) {
             list.addAll(getArchetypeElementsInTemplate(idTemplate).values());
-        }else{
-            for (ArchetypeElementVO archetypeElementVO : _archetypeElementsById.values()) {
-                if(idArchetype.equals(archetypeElementVO.getIdArchetype())){
+        } else {
+            for (ArchetypeElementVO archetypeElementVO : archetypeElementsById.values()) {
+                if (idArchetype.equals(archetypeElementVO.getIdArchetype())) {
                     list.add(archetypeElementVO);
                 }
             }
@@ -142,16 +139,16 @@ public class ArchetypeElements {
         return list;
     }
 
-    public ArrayList<ClusterVO> getClusters(ArchetypeElementVO archetypeElementVO){
-        ArrayList<ClusterVO> clusters = new ArrayList<ClusterVO>();
+    public ArrayList<ClusterVO> getClusters(ArchetypeElementVO archetypeElementVO) {
+        ArrayList<ClusterVO> clusters = new ArrayList<>();
         String[] pathArray = archetypeElementVO.getPath().split("\\/");
-        StringBuffer clusterPathSB = new StringBuffer();
+        StringBuilder clusterPathSB = new StringBuilder();
         clusterPathSB.append(archetypeElementVO.getIdArchetype());
         for (String pathNode : pathArray) {
-            if (!pathNode.isEmpty()){
-                clusterPathSB.append("/"+pathNode);
+            if (!pathNode.isEmpty()) {
+                clusterPathSB.append("/").append(pathNode);
                 ClusterVO clusterVO = this.archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
-                if (clusterVO!=null){
+                if (clusterVO != null) {
                     clusters.add(clusterVO);
                 }
             }

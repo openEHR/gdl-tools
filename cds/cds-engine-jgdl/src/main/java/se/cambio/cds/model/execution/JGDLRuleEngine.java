@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.ExecutionLog;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
@@ -17,8 +17,6 @@ import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.jgdl.DataInstance;
 import se.cambio.jgdl.Interpreter;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -28,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Profile("rule-jgdl-engine")
-public class JGDLRuleEngine implements RuleEngineFacadeDelegate {
+public class JGDLRuleEngine implements RuleEngineService {
     private static Logger LOGGER = LoggerFactory.getLogger(JGDLRuleEngine.class);
     private Map<String, Guide> guideCache = new ConcurrentHashMap<>();
     private boolean useCache = true;

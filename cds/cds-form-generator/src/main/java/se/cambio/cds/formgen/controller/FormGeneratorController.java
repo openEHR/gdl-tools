@@ -1,6 +1,6 @@
 package se.cambio.cds.formgen.controller;
 
-import se.cambio.cds.controller.cds.CDSManager;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.formgen.view.panels.CDSFormPanel;
 import se.cambio.cds.gdl.model.Guide;
@@ -8,6 +8,7 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -24,12 +25,7 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.ByteArrayInputStream;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FormGeneratorController {
 
@@ -46,7 +42,8 @@ public class FormGeneratorController {
     private ElementInstanceCollectionManager elementInstanceCollectionManager;
     private final ArchetypeManager archetypeManager;
     private final DvSwingManager dvSwingManager;
-    private CDSManager cdsManager;
+    private CdsDataManager cdsDataManager;
+    private final RuleEngineService ruleEngineService;
 
     public FormGeneratorController(
             GuideDTO guideDTO,
@@ -54,14 +51,17 @@ public class FormGeneratorController {
             GuideImporter guideImporter,
             ElementInstanceCollectionManager elementInstanceCollectionManager,
             ArchetypeManager archetypeManager,
-            DvSwingManager dvSwingManager) {
+            DvSwingManager dvSwingManager,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
         this.guideDTO = guideDTO;
         this.lang = lang;
         this.guideImporter = guideImporter;
         this.elementInstanceCollectionManager = elementInstanceCollectionManager;
         this.archetypeManager = archetypeManager;
         this.dvSwingManager = dvSwingManager;
-        cdsManager = BeanProvider.getBean(CDSManager.class);
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
         init();
     }
 
@@ -130,7 +130,7 @@ public class FormGeneratorController {
 
     public CDSFormPanel getCDSFormPanel() {
         if (cdsFormPanel == null) {
-            cdsFormPanel = new CDSFormPanel(this, archetypeManager, dvSwingManager);
+            cdsFormPanel = new CDSFormPanel(this, archetypeManager, dvSwingManager, cdsDataManager, ruleEngineService);
         }
         return cdsFormPanel;
     }
@@ -153,7 +153,7 @@ public class FormGeneratorController {
 
     private Collection<ArchetypeReference> getInputArchetypeReferences() {
         GeneratedElementInstanceCollection eic = getGuideManager().getCompleteElementInstanceCollection();
-        return cdsManager.getEHRArchetypeReferences(eic);
+        return cdsDataManager.getEHRArchetypeReferences(eic);
     }
 
     public void updateResults(RuleExecutionResult result) {
@@ -196,7 +196,7 @@ public class FormGeneratorController {
 
     public String getLanguage() {
         if (lang == null) {
-            lang = UserConfigurationManager.instance().getLanguage();
+            lang = archetypeManager.getUserConfigurationManager().getLanguage();
         }
         return lang;
     }

@@ -52,7 +52,7 @@ public class GenericObjectBundleADLSManager {
     }
 
     private void setDefaultLanguage() {
-        language = UserConfigurationManager.instance().getLanguage();
+        language = archetypeManager.getUserConfigurationManager().getLanguage();
         if (!ar.getOriginalLanguage().getCodeString().equals(language) &&
                 (ar.getTranslations() == null || !containsLanguage(ar.getTranslations(), language))) {
             language = ar.getOriginalLanguage().getCodeString();

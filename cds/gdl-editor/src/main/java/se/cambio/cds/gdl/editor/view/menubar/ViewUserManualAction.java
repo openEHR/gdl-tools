@@ -20,9 +20,11 @@ import java.io.IOException;
 public class ViewUserManualAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
+    private UserConfigurationManager userConfigurationManager;
 
-    ViewUserManualAction() {
+    ViewUserManualAction(UserConfigurationManager userConfigurationManager) {
         super();
+        this.userConfigurationManager = userConfigurationManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("UserManual"));
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("UserManualD"));
@@ -32,7 +34,7 @@ public class ViewUserManualAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         try {
             String path =
-                    UserConfigurationManager.instance().getDocumentsFolder().getCanonicalPath() +
+                    userConfigurationManager.getDocumentsFolder().getFolder() +
                             File.separator +
                             "user-manual.pdf";
             File file = new File(path);

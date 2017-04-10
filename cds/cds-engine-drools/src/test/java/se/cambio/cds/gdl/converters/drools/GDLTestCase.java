@@ -1,23 +1,26 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.BeforeClass;
+import se.cambio.cds.configuration.CdsCoreConfiguration;
 import se.cambio.cds.configuration.DroolsConfiguration;
-import se.cambio.cds.controller.cds.CDSManager;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.controller.session.data.Guides;
-import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineFacadeDelegate;
+import se.cambio.cds.model.facade.ehr.delegate.EhrService;
+import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -25,6 +28,7 @@ import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -37,34 +41,42 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DroolsConfiguration.class)
-@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
-public abstract class GDLTestCase {
+@ContextConfiguration(classes = {DroolsConfiguration.class, CdsCoreConfiguration.class})
+@ActiveProfiles({"cm-admin-file-dao", "ehr-dummy-service", "rule-drools-engine"})
+public abstract class GDLTestCase extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private CDSManager cdsManager;
+    EhrService ehrService;
+
+    @Autowired
+    private CdsDataManager cdsDataManager;
 
     @Value("classpath:/archetypes")
     private Resource archetypesResource;
 
-    @Value("classpath:/templates1")
+    @Value("classpath:/templates")
     private Resource templatesResource;
 
     @Value("classpath:/terminologies")
     private Resource terminologiesResource;
 
-    @Value("classpath:/guides")
+    @Value("classpath:/guidelines")
     private Resource guidelinesResource;
 
     @Autowired
-    private DroolsRuleEngineFacadeDelegate droolsRuleEngineFacadeDelegate;
+    private DroolsRuleEngineService droolsRuleEngineFacadeDelegate;
 
     @Autowired
     private Guides guides;
 
     @Autowired
     private ElementInstanceCollectionManager elementInstanceCollectionManager;
+
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
+
+    @Autowired
+    ConfigurableApplicationContext applicationContext;
 
     static String DIAGNOSIS_ARCHETYPE_ID = "openEHR-EHR-EVALUATION.problem-diagnosis.v1";
     static String DIAGNOSIS_TEMPLATE_ID = "diagnosis_icd10";
@@ -93,12 +105,13 @@ public abstract class GDLTestCase {
     static String CONTACT_DOCTOR_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0014]";
     static String CONTACT_ADMINISTRATIVE_VISIT_ELEMENT_ID = "openEHR-EHR-EVALUATION.contact.v1/data[at0001]/items[at0015]";
 
-    @Before
-    void initializeCM() throws URISyntaxException, IOException {
-        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
-        UserConfigurationManager.instance().setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
+    @BeforeClass
+    public void initializeCM() throws URISyntaxException, IOException {
+        BeanProvider.setApplicationContext(applicationContext);
+        userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        userConfigurationManager.setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
+        userConfigurationManager.setTemplatesFolderPath(templatesResource.getFile().getPath());
+        userConfigurationManager.setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
     }
 
     public static ArchetypeReference generateICD10DiagnosisArchetypeReference(String icd10Code) {
@@ -194,7 +207,7 @@ public abstract class GDLTestCase {
             long startTime = System.currentTimeMillis();
             ElementInstanceCollection eic = new ElementInstanceCollection(elementInstanceCollectionManager);
             eic.addAll(elementInstances);
-            cdsManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
+            cdsDataManager.checkForMissingElements(eic, guideManager.getCompleteElementInstanceCollection(), guideManager, cal);
             Collection<ArchetypeReference> archetypeReferences = eic.getAllArchetypeReferences();
             System.out.println("Executing : " + guideIdsSB.toString());
             rer = droolsRuleEngineFacadeDelegate.execute(null, guideManager.getAllGuidesDTO(), archetypeReferences, cal);

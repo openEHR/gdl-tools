@@ -1,9 +1,11 @@
 package se.cambio.cds.formgen.view.panels;
 
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.controller.sw.ExecuteRSW;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -27,6 +29,8 @@ public class CDSFormPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private final ArchetypeManager archetypeManager;
     private final DvSwingManager dvSwingManager;
+    private final CdsDataManager cdsDataManager;
+    private final RuleEngineService ruleEngineService;
 
     private FormGeneratorController formGenerator = null;
     private JPanel inputPanel;
@@ -38,9 +42,13 @@ public class CDSFormPanel extends JPanel {
     public CDSFormPanel(
             FormGeneratorController formGenerator,
             ArchetypeManager archetypeManager,
-            DvSwingManager dvSwingManager) {
+            DvSwingManager dvSwingManager,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
         this.archetypeManager = archetypeManager;
         this.dvSwingManager = dvSwingManager;
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
         this.setLayout(new BorderLayout());
         this.formGenerator = formGenerator;
         eigps = new ArrayList<>();
@@ -138,7 +146,7 @@ public class CDSFormPanel extends JPanel {
     public class ExecutionActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent ev) {
-            ExecuteRSW sw = new ExecuteRSW(formGenerator);
+            ExecuteRSW sw = new ExecuteRSW(formGenerator, cdsDataManager, ruleEngineService);
             sw.execute();
             formGenerator.getViewer().setBusy(OpenEHRLanguageManager.getMessage("Executing") + "...", sw);
         }
@@ -165,8 +173,9 @@ public class CDSFormPanel extends JPanel {
                             auxMap.put(ruleName, ruleStr);
                         }
                     }
+                    String language = archetypeManager.getUserConfigurationManager().getLanguage();
                     DialogRuleExecutionList dialog =
-                            new DialogRuleExecutionList(owner, rulesMap, false);
+                            new DialogRuleExecutionList(owner, rulesMap, false, language);
                     dialog.setVisible(true);
                 }
             });

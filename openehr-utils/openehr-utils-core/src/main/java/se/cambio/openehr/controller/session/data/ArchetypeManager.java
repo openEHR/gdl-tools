@@ -8,12 +8,13 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.cm.model.archetype.vo.OrdinalVO;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.util.TemplateAttributeMap;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.PathUtils;
+import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -33,22 +34,29 @@ public class ArchetypeManager {
     private ArchetypeTerms archetypeTerms = null;
     private Archetypes archetypes;
     private Templates templates;
-    private CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate;
+    private ClinicalModelsService clinicalModelsService;
     private TerminologyService terminologyService;
+    private UserConfigurationManager userConfigurationManager;
 
     public ArchetypeManager(
-            CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate,
-            TerminologyService terminologyService) {
-        this.cmAdministrationFacadeDelegate = cmAdministrationFacadeDelegate;
+            ClinicalModelsService clinicalModelsService,
+            TerminologyService terminologyService,
+            UserConfigurationManager userConfigurationManager) {
+        this.clinicalModelsService = clinicalModelsService;
         this.terminologyService = terminologyService;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
-    public CMAdministrationFacadeDelegate getCmAdministrationFacadeDelegate() {
-        return cmAdministrationFacadeDelegate;
+    public ClinicalModelsService getClinicalModelsService() {
+        return clinicalModelsService;
     }
 
     public TerminologyService getTerminologyService() {
         return terminologyService;
+    }
+
+    public UserConfigurationManager getUserConfigurationManager() {
+        return userConfigurationManager;
     }
 
     void registerArchetypeObjectBundle(

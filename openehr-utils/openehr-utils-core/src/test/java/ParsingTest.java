@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cm.configuration.CmServiceConfiguration;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
-import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -25,7 +25,7 @@ import java.util.Calendar;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CmServiceConfiguration.class, ClinicalModelsAdministrationConfiguration.class})
+@ContextConfiguration(classes = {CmServiceConfiguration.class, ClinicalModelsConfiguration.class})
 public class ParsingTest {
 
     @Value("classpath:/archetypes")
@@ -34,9 +34,12 @@ public class ParsingTest {
     @Autowired
     ArchetypeManager archetypeManager;
 
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
+
     @Before
     public void initializeCM() throws URISyntaxException, IOException {
-        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
     }
 
     @Test

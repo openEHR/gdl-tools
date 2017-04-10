@@ -1,9 +1,13 @@
 package se.cambio.cds.gdl.editor.controller;
 
+import se.cambio.cds.controller.cds.CdsDataManager;
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
@@ -32,6 +36,10 @@ public class GdlEditorFactory {
     private EditorFileManager editorFileManager;
     private DVPanelFactory dbPanelFactory;
     private GuidelineLoadManager guidelineLoadManager;
+    private GdlGraphManager gdlGraphManager;
+    private GuideExportPlugin guideExportPlugin;
+    private final CdsDataManager cdsDataManager;
+    private final RuleEngineService ruleEngineService;
 
     public GdlEditorFactory(
             WindowManager windowManager,
@@ -48,7 +56,11 @@ public class GdlEditorFactory {
             GuideHTMLExporter guideHTMLExporter,
             EditorFileManager editorFileManager,
             DVPanelFactory dbPanelFactory,
-            GuidelineLoadManager guidelineLoadManager) {
+            GuidelineLoadManager guidelineLoadManager,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
         this.windowManager = windowManager;
         this.archetypeManager = archetypeManager;
         this.terminologyService = terminologyService;
@@ -64,6 +76,10 @@ public class GdlEditorFactory {
         this.guideHTMLExporter = guideHTMLExporter;
         this.dbPanelFactory = dbPanelFactory;
         this.guidelineLoadManager = guidelineLoadManager;
+        this.gdlGraphManager = gdlGraphManager;
+        this.guideExportPlugin = guideExportPlugin;
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
     }
 
     public GDLEditor createGdlEditor(Guide guide, EditorViewer editorViewer) {
@@ -83,7 +99,11 @@ public class GdlEditorFactory {
                 guidelineEditorManager,
                 guidelineLoadManager,
                 guideHTMLExporter,
-                dbPanelFactory);
+                dbPanelFactory,
+                gdlGraphManager,
+                guideExportPlugin,
+                cdsDataManager,
+                ruleEngineService);
         gdlEditor.setGuideline(guide);
         return gdlEditor;
     }

@@ -7,7 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cm.model.facade.configuration.ClinicalModelsAdministrationConfiguration;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Clusters;
@@ -22,7 +22,7 @@ import java.net.URISyntaxException;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ClinicalModelsAdministrationConfiguration.class)
+@ContextConfiguration(classes = ClinicalModelsConfiguration.class)
 @ActiveProfiles({ "cm-admin-file-dao"})
 public class ArchetypeElementsTest {
 
@@ -38,11 +38,14 @@ public class ArchetypeElementsTest {
     @Autowired
     private ArchetypeManager archetypeManager;
 
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
-        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
-        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
+        userConfigurationManager.setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
+        userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        userConfigurationManager.setTemplatesFolderPath(templatesResource.getFile().getPath());
     }
 
     @Test

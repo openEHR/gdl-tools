@@ -31,7 +31,9 @@ public class GDLEditorImageUtil {
     public static final ImageIcon DESCRIPTION_ICON = GDLEditorImageUtil.getIcon("tag_blue.png");
     public static final ImageIcon HTML_ICON = GDLEditorImageUtil.getIcon("html.png");
     public static final ImageIcon RUN_ICON = GDLEditorImageUtil.getIcon("run.png");
+    public static final ImageIcon GRAPH_ICON = GDLEditorImageUtil.getIcon("graph.png");
     public static final ImageIcon SEARCH_ICON = GDLEditorImageUtil.getIcon("magnifier.png");
+    public static final ImageIcon PAGE_CODE_ICON = GDLEditorImageUtil.getIcon("page_code.png");
 
 
     public static final ImageIcon ONTOLOGY_ICON = GDLEditorImageUtil.getIcon("ontology.png");

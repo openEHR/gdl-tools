@@ -1,42 +1,39 @@
 package se.cambio.cds.formgen.controller.sw;
 
-import se.cambio.cds.controller.CDSSessionManager;
-import se.cambio.cds.controller.cds.CDSManager;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
-import se.cambio.cds.model.facade.execution.delegate.RuleEngineFacadeDelegate;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cm.model.guide.dto.GuideDTO;
-import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ExecuteRSW extends SwingWorker<Object, Object> {
 
-    private RuleExecutionResult _result = null;
+    private RuleExecutionResult result = null;
     private FormGeneratorController controller = null;
-    private RuleEngineFacadeDelegate _refd = null;
-    private CDSManager cdsManager = BeanProvider.getBean(CDSManager.class);
+    private final CdsDataManager cdsDataManager;
+    private RuleEngineService ruleEngineService = null;
 
-    public ExecuteRSW(FormGeneratorController controller) {
+    public ExecuteRSW(FormGeneratorController controller,
+                      CdsDataManager cdsDataManager,
+                      RuleEngineService ruleEngineService) {
         super();
         this.controller = controller;
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
     }
 
     protected Object doInBackground() {
-        _result = executeGuides(controller);
+        result = executeGuides(controller);
         return null;
     }
 
@@ -61,9 +58,8 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
             }
             GuideManager guideManager = new GuideManager(guideDTOs, this.controller.getElementInstanceCollectionManager());
             Collection<ArchetypeReference> ehrArchetypeReferences =
-                    cdsManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
-            _refd = CDSSessionManager.getRuleEngineFacadeDelegate();
-            return _refd.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
+                    cdsDataManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
+            return ruleEngineService.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
         } catch (Throwable e) {
             ExceptionHandler.handle(e);
             return null;
@@ -76,10 +72,10 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
 
     protected void done() {
         if (isCancelled()) {
-            _refd.cancelExecution();
+            ruleEngineService.cancelExecution();
         }
         controller.getViewer().setFree();
-        controller.updateResults(_result);
+        controller.updateResults(result);
 
     }
 }

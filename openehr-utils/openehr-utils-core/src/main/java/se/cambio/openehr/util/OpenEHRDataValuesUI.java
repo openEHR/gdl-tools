@@ -224,7 +224,7 @@ public class OpenEHRDataValuesUI {
         if (getDelegate()._defaultLanguageCodePhrase == null) {
             getDelegate()._defaultLanguageCodePhrase = new CodePhrase(
                     "ISO_639-1",
-                    UserConfigurationManager.instance().getLanguage());
+                    "en");
         }
         return getDelegate()._defaultLanguageCodePhrase;
     }

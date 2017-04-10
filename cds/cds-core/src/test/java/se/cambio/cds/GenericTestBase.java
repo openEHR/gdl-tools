@@ -8,7 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.configuration.CdsCoreConfiguration;
-import se.cambio.cds.controller.cds.CDSManager;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -21,7 +21,10 @@ import java.net.URISyntaxException;
 public abstract class GenericTestBase {
 
     @Autowired
-    CDSManager cdsManager;
+    CdsDataManager cdsDataManager;
+
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
 
     @Value("classpath:/archetypes")
     private Resource archetypesResource;
@@ -37,10 +40,10 @@ public abstract class GenericTestBase {
 
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
-        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
-        UserConfigurationManager.instance().setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
+        userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        userConfigurationManager.setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
+        userConfigurationManager.setTemplatesFolderPath(templatesResource.getFile().getPath());
+        userConfigurationManager.setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
         BeanProvider.setActiveProfiles("cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao", "rule-dummy-engine");
     }
 }

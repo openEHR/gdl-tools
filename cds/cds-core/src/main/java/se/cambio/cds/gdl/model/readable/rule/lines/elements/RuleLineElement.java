@@ -50,7 +50,7 @@ public abstract class RuleLineElement {
     }
 
     protected String getLanguage() {
-        return UserConfigurationManager.instance().getLanguage();
+        return getArchetypeManager().getUserConfigurationManager().getLanguage();
     }
 }
 /*

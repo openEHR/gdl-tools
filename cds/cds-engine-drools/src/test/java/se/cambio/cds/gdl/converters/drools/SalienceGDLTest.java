@@ -2,13 +2,9 @@ package se.cambio.cds.gdl.converters.drools;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cds.configuration.DroolsConfiguration;
+import org.testng.annotations.Test;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -25,8 +21,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {DroolsConfiguration.class})
 public class SalienceGDLTest extends GDLTestCase {
 
     @Value("classpath:/multiple-guide-salience-test-ar.json")

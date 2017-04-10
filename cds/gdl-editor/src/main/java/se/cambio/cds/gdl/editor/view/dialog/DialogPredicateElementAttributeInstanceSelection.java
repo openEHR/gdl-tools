@@ -13,11 +13,14 @@ public class DialogPredicateElementAttributeInstanceSelection extends DialogSele
 
     private static final long serialVersionUID = 1L;
 
-    public DialogPredicateElementAttributeInstanceSelection(WindowManager windowManager, String archetypeId, String templateId, ArchetypeManager archetypeManager) {
+    public DialogPredicateElementAttributeInstanceSelection(
+            WindowManager windowManager, String archetypeId, String templateId,
+            ArchetypeManager archetypeManager,
+            NodeDefinitionManager nodeDefinitionManager) {
         super(
                 windowManager.getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                NodeDefinitionManager.getNodeAttributesAndFunctions(archetypeId, templateId, archetypeManager),
+                nodeDefinitionManager.getNodeAttributesAndFunctions(archetypeId, templateId, archetypeManager),
                 true,
                 new Dimension(500, 500), windowManager);
     }

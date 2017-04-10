@@ -4,7 +4,6 @@ import org.apache.commons.lang.SerializationUtils;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
@@ -24,7 +23,7 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
 
 
     public Templates(ArchetypeManager archetypeManager) {
-        super(archetypeManager.getCmAdministrationFacadeDelegate());
+        super(archetypeManager.getClinicalModelsService());
         this.archetypeManager = archetypeManager;
     }
 
@@ -54,7 +53,8 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
         new TemplateObjectBundleManager(
                 templateDTO,
                 archetypeManager.getArchetypes().getArchetypeMap(),
-                archetypeManager.getTerminologyService())
+                archetypeManager.getTerminologyService(),
+                archetypeManager.getUserConfigurationManager())
                 .buildArchetypeObjectBundleCustomVO();
     }
 

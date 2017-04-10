@@ -70,7 +70,7 @@ public class ReadableRuleLineFactory {
                         comboBox.setSelectedItem(null);
                         comboBox.setEditable(false);
                     }
-                    comboBox.setRenderer(new SingleSelectionRuleElementRenderer(ssre));
+                    comboBox.setRenderer(new SingleSelectionRuleElementRenderer(ssre, gdlEditor.getCurrentLanguageCode()));
                     comboBox.addItemListener(new RuleLineElementItemListener(ruleLineElementWithValue));
                     jPanel.add(comboBox);
                 } else {
@@ -83,7 +83,7 @@ public class ReadableRuleLineFactory {
                     jPanel.add(linkLabel);
                 }
             } else {
-                jPanel.add(createLabel(ruleLine, ruleLineElement));
+                jPanel.add(createLabel(ruleLine, ruleLineElement, gdlEditor.getCurrentLanguageCode()));
             }
             jPanel.add(Box.createHorizontalStrut(4));
         }
@@ -93,11 +93,11 @@ public class ReadableRuleLineFactory {
         return jPanel;
     }
 
-    private static JLabel createLabel(RuleLine ruleLine, RuleLineElement ruleLineElement) {
+    private static JLabel createLabel(RuleLine ruleLine, RuleLineElement ruleLineElement, String language) {
         String text;
         if (ruleLineElement instanceof ExpressionRuleLineElement) {
             ExpressionRuleLineElement erli = (ExpressionRuleLineElement) ruleLineElement;
-            text = ExpressionUtil.convertToHTMLText(erli, erli.getValue(), UserConfigurationManager.instance().getLanguage());
+            text = ExpressionUtil.convertToHTMLText(erli, erli.getValue(), language);
         } else {
             text = ruleLineElement.getLabelText();
         }

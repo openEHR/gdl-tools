@@ -20,12 +20,14 @@ public class DialogSetActiveEngine extends DialogEditor {
     private JComboBox<String> engineComboBox = null;
     private Logger logger = LoggerFactory.getLogger(DialogSetActiveEngine.class);
     private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    public DialogSetActiveEngine(EditorManager editorManager) {
+    public DialogSetActiveEngine(EditorManager editorManager, UserConfigurationManager userConfigurationManager) {
         super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SetActiveEngine"),
                 new Dimension(300, 110), true);
         this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
         initialize();
     }
 
@@ -48,11 +50,11 @@ public class DialogSetActiveEngine extends DialogEditor {
     private JComboBox getEngineComboBox() {
         if (engineComboBox == null) {
             engineComboBox = new JComboBox<>();
-            for (String ruleEngine : UserConfigurationManager.instance().getSupportedRuleEngines()) {
+            for (String ruleEngine : userConfigurationManager.getSupportedRuleEngines()) {
                 engineComboBox.addItem(ruleEngine);
             }
-            String activeRuleEngine = UserConfigurationManager.instance().getActiveRuleEngine();
-            if (UserConfigurationManager.instance().getSupportedRuleEngines().contains(activeRuleEngine)) {
+            String activeRuleEngine = userConfigurationManager.getActiveRuleEngine();
+            if (userConfigurationManager.getSupportedRuleEngines().contains(activeRuleEngine)) {
                 engineComboBox.setSelectedItem(activeRuleEngine);
             }
         }
@@ -62,10 +64,10 @@ public class DialogSetActiveEngine extends DialogEditor {
 
     protected boolean acceptDialog() {
         String activeRuleEngine = (String) getEngineComboBox().getSelectedItem();
-        UserConfigurationManager.instance().setActiveRuleEngine(activeRuleEngine);
+        userConfigurationManager.setActiveRuleEngine(activeRuleEngine);
         JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
         try {
-            UserConfigurationManager.instance().saveConfig();
+            userConfigurationManager.saveConfig();
         } catch (Exception e) {
             logger.error("Error saving config file.", e);
             JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);

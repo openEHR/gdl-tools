@@ -14,45 +14,42 @@ import java.awt.event.*;
 
 public abstract class DialogEditor extends JDialog {
 
-    /**
-     * Comentario para <code>serialVersionUID</code>
-     */
     private static final long serialVersionUID = 1L;
-    private AceptarCambiosAction aceptarCambiosAction = null;
-    private CancelarCambiosAction cancelarCambiosAction = null;
+    private AcceptChangesAction acceptChangesAction = null;
+    private CancelChangesAction cancelChangesAction = null;
     private JPanel jPanel = null;
-    private boolean _respuesta = false;
-    private JComponent _componentWithFirstFocus = null;
+    private boolean answer = false;
+    private JComponent componentWithFirstFocus = null;
     private JButton acceptButton = null;
     private JButton cancelButton = null;
 
 
-    public DialogEditor(Window owner, String title, Dimension size, boolean modal){
-        super(owner, title, modal?ModalityType.APPLICATION_MODAL:ModalityType.MODELESS);
+    public DialogEditor(Window owner, String title, Dimension size, boolean modal) {
+        super(owner, title, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
         init(size);
     }
 
-    public DialogEditor(Window owner, String titulo, Dimension size, boolean modal, boolean resizable){
-        super(owner, titulo, modal?ModalityType.APPLICATION_MODAL:ModalityType.MODELESS);
+    public DialogEditor(Window owner, String titulo, Dimension size, boolean modal, boolean resizable) {
+        super(owner, titulo, modal ? ModalityType.APPLICATION_MODAL : ModalityType.MODELESS);
         init(size);
         this.setResizable(resizable);
     }
 
-    public DialogEditor(Window owner, String titulo, Dimension size){
+    public DialogEditor(Window owner, String titulo, Dimension size) {
         super(owner, titulo);
         init(size);
     }
 
-    private void init(Dimension size){
+    private void init(Dimension size) {
         this.setSize(size);
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         this.setResizable(false);
         this.addWindowListener(getCancelChangesAction());
         this.setContentPane(getJPanel());
-	    /* Enter KeyStroke */
-        KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
-        getJPanel().registerKeyboardAction(getAceptarCambiosAction(), enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        KeyStroke esc = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE,0,true);
+        /* Enter KeyStroke */
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
+        getJPanel().registerKeyboardAction(getAcceptChangesAction(), enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        KeyStroke esc = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true);
         getJPanel().registerKeyboardAction(getCancelChangesAction(), esc, JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
@@ -63,25 +60,25 @@ public abstract class DialogEditor extends JDialog {
         return jPanel;
     }
 
-    protected AceptarCambiosAction getAceptarCambiosAction(){
-        if (aceptarCambiosAction == null){
-            aceptarCambiosAction = new AceptarCambiosAction();
+    protected AcceptChangesAction getAcceptChangesAction() {
+        if (acceptChangesAction == null) {
+            acceptChangesAction = new AcceptChangesAction();
         }
-        return aceptarCambiosAction;
+        return acceptChangesAction;
     }
 
-    protected CancelarCambiosAction getCancelChangesAction(){
-        if (cancelarCambiosAction == null){
-            cancelarCambiosAction = new CancelarCambiosAction();
+    protected CancelChangesAction getCancelChangesAction() {
+        if (cancelChangesAction == null) {
+            cancelChangesAction = new CancelChangesAction();
         }
-        return cancelarCambiosAction;
+        return cancelChangesAction;
     }
 
-    protected class CancelarCambiosAction extends WindowAdapter implements ActionListener{
+    protected class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e){
-            if (_componentWithFirstFocus!=null){
-                _componentWithFirstFocus.requestFocus();
+        public void windowOpened(WindowEvent e) {
+            if (componentWithFirstFocus != null) {
+                componentWithFirstFocus.requestFocus();
             }
         }
 
@@ -94,11 +91,8 @@ public abstract class DialogEditor extends JDialog {
         }
     }
 
-    public class AceptarCambiosAction extends AbstractAction{
+    public class AcceptChangesAction extends AbstractAction {
 
-        /**
-         * Comentario para <code>serialVersionUID</code>
-         */
         private static final long serialVersionUID = -8058749276509227718L;
 
         public void actionPerformed(ActionEvent e) {
@@ -106,11 +100,6 @@ public abstract class DialogEditor extends JDialog {
         }
     }
 
-    /**
-     * This method initializes jButton	
-     *
-     * @return javax.swing.JButton
-     */
     protected JButton getAcceptButton() {
         if (acceptButton == null) {
             acceptButton = new JButton();
@@ -118,16 +107,11 @@ public abstract class DialogEditor extends JDialog {
             acceptButton.setIcon(OpenEHRImageUtil.ACCEPT_ICON);
             acceptButton.setEnabled(true);
             acceptButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            acceptButton.addActionListener(getAceptarCambiosAction());
+            acceptButton.addActionListener(getAcceptChangesAction());
         }
         return acceptButton;
     }
 
-    /**
-     * This method initializes jButton1	
-     *
-     * @return javax.swing.JButton
-     */
     protected JButton getCancelButton() {
         if (cancelButton == null) {
             cancelButton = new JButton();
@@ -139,37 +123,37 @@ public abstract class DialogEditor extends JDialog {
         return cancelButton;
     }
 
-    public final void accept(){
-        if (acceptDialog()){
-            _respuesta = true;
+    public final void accept() {
+        if (acceptDialog()) {
+            answer = true;
             setVisible(false);
         }
     }
 
-    public final void exit(){
-        if (cancelDialog()){
-            _respuesta = false;
+    public final void exit() {
+        if (cancelDialog()) {
+            answer = false;
             setVisible(false);
         }
     }
 
-    public final boolean getAnswer(){
-        return  _respuesta;
+    public final boolean getAnswer() {
+        return answer;
     }
 
-    protected void registerComponentWithFirstFocus(JComponent componentWithFirstFocus){
-        _componentWithFirstFocus = componentWithFirstFocus;
+    protected void registerComponentWithFirstFocus(JComponent componentWithFirstFocus) {
+        this.componentWithFirstFocus = componentWithFirstFocus;
     }
 
-    protected final void setRespuesta(boolean respuesta){
-        _respuesta = respuesta;
+    protected final void setAnswer(boolean answer) {
+        this.answer = answer;
     }
 
-    protected boolean cancelDialog(){
+    protected boolean cancelDialog() {
         return true;
     }
 
-    protected boolean acceptDialog(){
+    protected boolean acceptDialog() {
         return true;
     }
 }
