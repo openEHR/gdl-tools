@@ -21,7 +21,7 @@ maven-build-tag:
     image: gitlab.cambiocds.com:4567/tools/docker-builder
     stage: build
     script:
-        - mvn clean deploy
+        - mvn clean deploy sonar:sonar -P sonar
     artifacts:
         paths:
             - cds/gdl-editor/target/*.zip
