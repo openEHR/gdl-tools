@@ -31,7 +31,7 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
     public void registerCMElementsInCache(Collection<TemplateDTO> cmElements) {
         super.registerCMElementsInCache(cmElements);
         try {
-            proccessTemplates(cmElements);
+            processTemplates(cmElements);
             registerTemplateDTOs(cmElements);
         } catch (InternalErrorException e) {
             ExceptionHandler.handle(e);
@@ -43,7 +43,7 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
         return TemplateDTO.class;
     }
 
-    public void proccessTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
+    public void processTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
         for (TemplateDTO templateDTO : templateDTOs) {
             processTemplate(templateDTO);
         }

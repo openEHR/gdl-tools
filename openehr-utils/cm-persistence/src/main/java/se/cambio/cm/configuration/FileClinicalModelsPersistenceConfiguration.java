@@ -23,22 +23,22 @@ public class FileClinicalModelsPersistenceConfiguration {
     UserConfigurationManager userConfigurationManager;
 
     @Bean(name = "ArchetypeDAO")
-    GenericCMElementDAO<ArchetypeDTO> archetypeDAO() {
+    public GenericCMElementDAO<ArchetypeDTO> archetypeDAO() {
         return new FileGenericCMElementDAO<>(ArchetypeDTO.class, userConfigurationManager.getArchetypeFolder());
     }
 
     @Bean(name = "TemplateDAO")
-    GenericCMElementDAO<TemplateDTO> templateDTO() {
+    public GenericCMElementDAO<TemplateDTO> templateDTO() {
         return new FileGenericCMElementDAO<>(TemplateDTO.class, userConfigurationManager.getTemplateFolder());
     }
 
     @Bean(name = "TerminologyDAO")
-    GenericCMElementDAO<TerminologyDTO> terminologyDAO() {
+    public GenericCMElementDAO<TerminologyDTO> terminologyDAO() {
         return new FileGenericCMElementDAO<>(TerminologyDTO.class, userConfigurationManager.getTerminologiesFolder());
     }
 
     @Bean(name = "GuideDAO")
-    GenericCMElementDAO<GuideDTO> guideDAO() {
+    public GenericCMElementDAO<GuideDTO> guideDAO() {
         return new FileGenericCMElementDAO<>(GuideDTO.class, userConfigurationManager.getGuidesFolder());
     }
 }
