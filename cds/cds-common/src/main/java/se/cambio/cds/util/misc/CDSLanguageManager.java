@@ -3,6 +3,7 @@ package se.cambio.cds.util.misc;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public final class CDSLanguageManager {
     private static String country;
 
     private CDSLanguageManager() {
-        UserConfigurationManager userConfigurationManager = BeanProvider.getBean(UserConfigurationManager.class);
+        UserConfigurationManager userConfigurationManager = UserConfiguration.getInstanceUserConfigurationManager();
         language = userConfigurationManager.getLanguage();
         country = userConfigurationManager.getCountryCode();
         resourceMap = new HashMap<>();

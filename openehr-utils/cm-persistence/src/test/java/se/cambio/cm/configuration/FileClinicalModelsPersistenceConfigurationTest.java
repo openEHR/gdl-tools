@@ -10,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.generic.dao.GenericCMElementDAO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
