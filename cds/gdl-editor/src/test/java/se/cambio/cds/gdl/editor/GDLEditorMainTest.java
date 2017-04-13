@@ -12,12 +12,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.gdl.editor.configuration.GdlEditorConfiguration;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
-import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.*;
@@ -28,8 +27,8 @@ import static junit.framework.TestCase.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CdsConfiguration.class)
-@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
+@ContextConfiguration(classes = {GdlEditorConfiguration.class})
+@ActiveProfiles({"cm-admin-file-dao", "ehr-dummy-service", "rule-drools-engine"})
 public class GDLEditorMainTest {
 
     @Value("classpath:/archetypes")
@@ -47,6 +46,9 @@ public class GDLEditorMainTest {
     @Autowired
     UserConfigurationManager userConfigurationManager;
 
+    @Autowired
+    ClinicalModelsService clinicalModelsService;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
@@ -57,7 +59,6 @@ public class GDLEditorMainTest {
 
     @Test
     public void should_get_facades_implementation_from_annotations() {
-        ClinicalModelsService clinicalModelsService = BeanProvider.getBean(ClinicalModelsService.class);
         assertNotNull(clinicalModelsService);
     }
 

@@ -13,14 +13,14 @@ public class ElementInitializedConditionRuleLine extends ExpressionRuleLine impl
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ExistenceOperatorRuleLineElement existenceOperatorRuleLineElement = null;
-    private String NULL_STR = "null";
+    private static final String NULL_STR = "null";
 
     public ElementInitializedConditionRuleLine() {
         super(OpenEHRLanguageManager.getMessage("ElementExists"),
                 OpenEHRLanguageManager.getMessage("ElementExistsDesc"));
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         existenceOperatorRuleLineElement = new ExistenceOperatorRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(existenceOperatorRuleLineElement);
     }

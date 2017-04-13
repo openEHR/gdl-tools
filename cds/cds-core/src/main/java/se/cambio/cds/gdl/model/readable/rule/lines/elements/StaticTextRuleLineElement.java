@@ -1,10 +1,12 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 
+import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+
 public class StaticTextRuleLineElement extends RuleLineElement {
 
-    public StaticTextRuleLineElement(String textId) {
-        super(null, textId);
+    public StaticTextRuleLineElement(RuleLine parentRuleLine, String textId) {
+        super(parentRuleLine, textId);
     }
 }
 /*

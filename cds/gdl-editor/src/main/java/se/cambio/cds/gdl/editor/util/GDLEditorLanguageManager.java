@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.util;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
 
 import java.util.Locale;
@@ -19,7 +20,7 @@ public final class GDLEditorLanguageManager {
     private static final String MESSAGES_BUNDLE = "se.cambio.cds.gdl.editor.view.messages.Messages";
 
     private GDLEditorLanguageManager() {
-        UserConfigurationManager userConfigurationManager = BeanProvider.getBean(UserConfigurationManager.class);
+        UserConfigurationManager userConfigurationManager = UserConfiguration.getInstanceUserConfigurationManager();
         String language = userConfigurationManager.getLanguage();
         String country = userConfigurationManager.getCountryCode();
         resource = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());

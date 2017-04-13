@@ -33,6 +33,8 @@ public class TerminologyServiceConfiguration {
     private static final String CODE_EXISTENCE_CHECK_PROPERTY_POSTFIX = ".code-existence-check";
     private static final String CLASS_PROPERTY_POSTFIX = ".class";
 
+    private static TerminologyService terminologyService;
+
     @Autowired
     public TerminologyServiceConfiguration(Environment environment) {
         this.environment = environment;
@@ -45,7 +47,11 @@ public class TerminologyServiceConfiguration {
 
     @Bean
     public TerminologyService terminologyService(ClinicalModelsService clinicalModelsService) {
-        return new TerminologyServiceImpl(this, clinicalModelsService);
+        return terminologyService = new TerminologyServiceImpl(this, clinicalModelsService);
+    }
+
+    public static TerminologyService getTerminologyServiceInstance(){
+        return terminologyService;
     }
 
     private TerminologyConfigVO getTerminologyConfigFromProperties(String terminologyId) {

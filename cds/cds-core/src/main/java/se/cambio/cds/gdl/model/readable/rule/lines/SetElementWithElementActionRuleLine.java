@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
-import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.Variable;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
@@ -8,7 +7,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineEl
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class SetElementWithElementActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine{
@@ -23,9 +21,9 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("SetElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"SetElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement("ToRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ToRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement2);
     }
 

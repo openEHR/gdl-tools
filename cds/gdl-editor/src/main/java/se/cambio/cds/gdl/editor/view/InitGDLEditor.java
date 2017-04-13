@@ -12,6 +12,7 @@ import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.view.dialogs.InfoDialog;
 import se.cambio.openehr.view.util.WindowManager;
 
@@ -22,7 +23,7 @@ public class InitGDLEditor {
     public static void main(String[] args) {
 
         ConfigurableEnvironment environment = BeanProvider.getBean(ConfigurableEnvironment.class);
-        UserConfigurationManager userConfigurationManager = BeanProvider.getBean(UserConfigurationManager.class);
+        UserConfigurationManager userConfigurationManager = UserConfiguration.getInstanceUserConfigurationManager();
         String activeRuleEngine = userConfigurationManager.getActiveRuleEngine();
         environment.addActiveProfile(activeRuleEngine);
         String[] activeProfiles = BeanProvider.getActiveProfiles();

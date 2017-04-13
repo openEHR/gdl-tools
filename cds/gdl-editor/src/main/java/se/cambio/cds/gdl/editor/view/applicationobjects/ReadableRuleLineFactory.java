@@ -18,7 +18,6 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleE
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.InstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ExpressionUtil;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;

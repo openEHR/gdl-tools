@@ -4,13 +4,8 @@ import se.cambio.cds.gdl.model.expression.BinaryExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.expression.Variable;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementAttributeRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.AttributeComparisonOperatorRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExpressionRuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.StaticTextRuleLineElement;
+import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
-import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
@@ -28,7 +23,7 @@ public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleL
         comparisonOperatorRuleLineElement = new AttributeComparisonOperatorRuleLineElement(this);
         expressionRuleLineElement = new ExpressionRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ElementRLE"));
         getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(expressionRuleLineElement);
@@ -73,7 +68,7 @@ public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleL
     }
 
     public String toHTMLString(int level, String lang) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(getLevelSpace(level));
         int i = 0;
         for (RuleLineElement ruleLineElement : getRuleLineElements()) {
@@ -84,27 +79,6 @@ public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleL
             }
         }
         return sb.toString();
-    }
-
-    private boolean isAgeCondition() {
-        if (getRuleLineElements().size() == 4) {
-            RuleLineElement ruleLineElement = getRuleLineElements().get(3);
-            if (ruleLineElement instanceof ExpressionRuleLineElement) {
-                ExpressionItem expressionItem = ((ExpressionRuleLineElement) ruleLineElement).getValue();
-                if (expressionItem instanceof BinaryExpression) {
-                    ExpressionItem currentDateTime = ((BinaryExpression) expressionItem).getLeft();
-                    if (currentDateTime instanceof Variable) {
-                        Variable currentDateVar = (Variable) currentDateTime;
-                        if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(currentDateVar.getCode()) &&
-                                OpenEHRConst.VALUE.equals(currentDateVar.getAttribute())) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 }
 /*

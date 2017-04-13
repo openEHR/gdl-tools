@@ -17,7 +17,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine{
+public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine {
 
     private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
     private PredicateComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
@@ -31,7 +31,7 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         comparisonOperatorRuleLineElement = new PredicateComparisonOperatorRuleLineElement(this);
         dataValueRuleLineElement = new DataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(dataValueRuleLineElement);
@@ -60,8 +60,8 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         return dataValueRuleLineElement;
     }
 
-    public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+    private ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
+        return (ArchetypeInstantiationRuleLine) getParentRuleLine();
     }
 
     @Override
@@ -72,15 +72,15 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
                 getDataValueRuleLineElement().getValue();
         OperatorKind operatorKind =
                 getComparisonOperatorRuleLineElement().getValue();
-        ConstantExpression constantExpression = null;
-        if (dataValue!=null){
+        ConstantExpression constantExpression;
+        if (dataValue != null) {
             constantExpression = DVUtil.convertToExpression(dataValue);
-        }else{
+        } else {
             throw new IllegalStateException("No data value set");
         }
         String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         return new BinaryExpression(
-                new Variable(null,name, path),
+                new Variable(null, name, path),
                 constantExpression,
                 operatorKind);
     }
@@ -89,13 +89,15 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
     public String getPredicateDescription() {
         StringBuilder sb = new StringBuilder();
         ArchetypeElementRuleLineDefinitionElement aerlde = getArchetypeElementRuleLineDefinitionElement();
-        if (aerlde!=null){
+        if (aerlde != null) {
             ArchetypeElementVO archetypeElementVO = aerlde.getValue();
-            if (archetypeElementVO!=null){
+            if (archetypeElementVO != null) {
                 String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
-                sb.append(name+"="+ DVDefSerializer.getReadableValue(getDataValueRuleLineElement().getValue(), null));
-            }else{
-                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                sb.append(name)
+                        .append("=")
+                        .append(DVDefSerializer.getReadableValue(getDataValueRuleLineElement().getValue(), null));
+            } else {
+                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + aerlde.toString() + "'");
                 sb.append("*UNKNOWN PREDICATE*");
             }
         }

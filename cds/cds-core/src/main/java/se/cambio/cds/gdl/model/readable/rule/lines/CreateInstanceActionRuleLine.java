@@ -23,7 +23,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         super(CDSLanguageManager.getMessage("CreateInstance"),
                 CDSLanguageManager.getMessage("CreateInstanceDesc"));
         cdsEntryRuleLineElement = new CDSEntryRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement("CreateInstanceRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"CreateInstanceRLE"));
         getRuleLineElements().add(cdsEntryRuleLineElement);
     }
 
@@ -43,7 +43,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         Variable var = new Variable(
                 cdsEntryRuleLineElement.getValue().getValue(),
                 null, name, CreateInstanceExpression.FUNCTION_CREATE_NAME);
-        List<AssignmentExpression> assignmentExpressions = new ArrayList<AssignmentExpression>();
+        List<AssignmentExpression> assignmentExpressions = new ArrayList<>();
         if (!getChildrenRuleLines().getRuleLines().isEmpty()){
             for(RuleLine childRuleLine: getChildrenRuleLines().getRuleLines()){
                 AssignmentExpressionRuleLine assignmentExpressionRuleLine = (AssignmentExpressionRuleLine)childRuleLine;
@@ -58,7 +58,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
     }
 
     public String toString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toString());
@@ -68,8 +68,8 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
     }
 
     public String toHTMLString(int level, String lang){
-        StringBuffer sb = new StringBuffer();
-        sb.append(toHTMLStringSingle(level, lang) + "<br/>");
+        StringBuilder sb = new StringBuilder();
+        sb.append(toHTMLStringSingle(level, lang)).append("<br/>");
         String prefix = "";
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             sb.append(prefix);
@@ -79,7 +79,7 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         return sb.toString();
     }
 
-    public String toHTMLStringSingle(int level, String lang){
+    private String toHTMLStringSingle(int level, String lang){
         return super.toHTMLString(level, lang);
     }
 }/*

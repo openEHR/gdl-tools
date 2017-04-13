@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import se.cambio.cds.configuration.CdsCoreConfiguration;
 import se.cambio.cds.configuration.DroolsConfiguration;
 import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideExportPlugin;
@@ -19,6 +20,7 @@ import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.cds.view.swing.DvSwingManager;
+import se.cambio.cds.view.swing.configuration.CdsGuiSwingConfiguration;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.configuration.OpenEhrSwingConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -33,20 +35,16 @@ import se.cambio.openehr.view.util.WindowManager;
         @PropertySource(value = "classpath:default-gdl-editor-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/gdl-editor-config.properties", ignoreResourceNotFound = true)
 })
-@Import({DroolsConfiguration.class, OpenEhrSwingConfiguration.class, GdlGraphConfiguration.class})
-public class GDLEditorConfiguration {
+@Import({DroolsConfiguration.class, CdsCoreConfiguration.class, CdsGuiSwingConfiguration.class, GdlGraphConfiguration.class})
+public class GdlEditorConfiguration {
 
     private static final String GDL_PLUGINS_KEY = "gdl-editor.plugins";
 
     private Environment environment;
 
     @Autowired
-    public GDLEditorConfiguration(Environment environment) {
+    public GdlEditorConfiguration(Environment environment) {
         this.environment = environment;
-    }
-
-    public String getGdlEditorPlugins() {
-        return environment.getProperty(GDL_PLUGINS_KEY, "");
     }
 
     @Bean

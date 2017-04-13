@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.expression.UnaryExpression;
@@ -29,7 +28,7 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         functionRuleLineElement = new PredicateComparisonFunctionRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(functionRuleLineElement);
     }

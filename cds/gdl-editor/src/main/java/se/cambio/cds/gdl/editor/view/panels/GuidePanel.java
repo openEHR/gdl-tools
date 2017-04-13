@@ -2,7 +2,6 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.panelplugins.GDLEditorPluginPanelManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.graph.view.panel.DecisionGraphPanel;
@@ -97,15 +96,6 @@ public class GuidePanel extends JPanel {
                     GDLEditorImageUtil.HTML_ICON,
                     getHTMLPanel());
             guideEditorTabPane.setFocusable(true);
-            for (AbstractPluginPanel abstractPluginPanel : GDLEditorPluginPanelManager.getPluginPanels()) {
-                abstractPluginPanel.setGdlEditor(controller);
-                guideEditorTabPane.addTab(
-                        abstractPluginPanel.getPluginName(),
-                        abstractPluginPanel.getPluginIcon(),
-                        abstractPluginPanel
-                );
-            }
-
             guideEditorTabPane.addChangeListener(e -> {
                 if (e.getSource() instanceof JTabbedPane) {
                     final Component comp = ((JTabbedPane) e.getSource()).getSelectedComponent();

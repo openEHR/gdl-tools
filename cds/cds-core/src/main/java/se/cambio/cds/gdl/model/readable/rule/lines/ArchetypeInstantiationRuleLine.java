@@ -22,7 +22,7 @@ public class ArchetypeInstantiationRuleLine extends RuleLine implements Archetyp
                 OpenEHRLanguageManager.getMessage("ArchetypeInstantiationDesc"));
         archetypeReferenceRuleLineDefinitionElement = new ArchetypeReferenceRuleLineDefinitionElement(this);
         gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement("InstantiateArchetypeRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"InstantiateArchetypeRLE"));
         getRuleLineElements().add(archetypeReferenceRuleLineDefinitionElement);
     }
 
@@ -55,12 +55,9 @@ public class ArchetypeInstantiationRuleLine extends RuleLine implements Archetyp
         return gtCodeRuleLineElement;
     }
 
-    public void setGtCodeRuleLineElement(GTCodeRuleLineElement gtCodeRuleLineElement) {
-        this.gtCodeRuleLineElement = gtCodeRuleLineElement;
-    }
     public String toHTMLString(int level, String lang){
-        StringBuffer sb = new StringBuffer();
-        sb.append(toHTMLStringSingle(level, lang) + "<br/>");
+        StringBuilder sb = new StringBuilder();
+        sb.append(toHTMLStringSingle(level, lang)).append("<br/>");
         String prefix = "";
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             sb.append(prefix);
@@ -70,7 +67,7 @@ public class ArchetypeInstantiationRuleLine extends RuleLine implements Archetyp
         return sb.toString();
     }
 
-    public String toHTMLStringSingle(int level, String lang){
+    private String toHTMLStringSingle(int level, String lang){
         return super.toHTMLString(level, lang);
     }
 }/*

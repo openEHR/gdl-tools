@@ -4,7 +4,6 @@ import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 public abstract class RuleLineElement {
     private String labelTextId = null;

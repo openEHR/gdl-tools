@@ -16,6 +16,7 @@ import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -494,7 +495,7 @@ public class DVUtil {
     }
 
     private static TerminologyService getTerminologyService() {
-        return BeanProvider.getBean(TerminologyService.class);
+        return TerminologyServiceConfiguration.getTerminologyServiceInstance();
     }
 }
 /*

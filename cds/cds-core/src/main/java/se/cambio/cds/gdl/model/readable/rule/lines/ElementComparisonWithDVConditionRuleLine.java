@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import org.openehr.rm.datatypes.basic.DataValue;
-import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
@@ -13,7 +12,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, ConditionRuleLine{
@@ -30,7 +28,7 @@ public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine
         comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
         archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(archetypeDataValueRuleLineElement);

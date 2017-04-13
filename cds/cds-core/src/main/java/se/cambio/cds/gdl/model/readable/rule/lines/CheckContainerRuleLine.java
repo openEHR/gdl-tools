@@ -6,23 +6,20 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.DefinitionsRuleLin
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class CheckContainerRuleLine extends RuleLine implements DefinitionsRuleLine{
+public class CheckContainerRuleLine extends RuleLine implements DefinitionsRuleLine {
 
-    private ArchetypeElementRuleLineElement archetypeElementRuleLineElement1 = null;
-    private ArchetypeElementRuleLineElement archetypeElementRuleLineElement2 = null;
-    
 
     public CheckContainerRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("CheckContainer"), 
-		OpenEHRLanguageManager.getMessage("CheckContainerDesc"));
-	archetypeElementRuleLineElement1 = new ArchetypeElementRuleLineElement(this);
-	archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
-	
-	getRuleLineElements().add(new StaticTextRuleLineElement("ElemntsRLE"));
-	getRuleLineElements().add(archetypeElementRuleLineElement1);
-	getRuleLineElements().add(new StaticTextRuleLineElement("andRLE"));
-	getRuleLineElements().add(archetypeElementRuleLineElement2);
-	getRuleLineElements().add(new StaticTextRuleLineElement("areOnTheSameContainerRLE"));
+        super(OpenEHRLanguageManager.getMessage("CheckContainer"),
+                OpenEHRLanguageManager.getMessage("CheckContainerDesc"));
+        ArchetypeElementRuleLineElement archetypeElementRuleLineElement1 = new ArchetypeElementRuleLineElement(this);
+        ArchetypeElementRuleLineElement archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
+
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ElemntsRLE"));
+        getRuleLineElements().add(archetypeElementRuleLineElement1);
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "andRLE"));
+        getRuleLineElements().add(archetypeElementRuleLineElement2);
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "areOnTheSameContainerRLE"));
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

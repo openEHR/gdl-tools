@@ -35,7 +35,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
             archetypeInstantiationRuleLine.addChildRuleLine(this);
         }
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"WithElementRLE"));
         getRuleLineElements().add(archetypeElementAttributeRuleLineDefinitionElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(expressionRuleLineElement);
@@ -59,7 +59,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
                 getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
-    public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
+    private ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
         return (ArchetypeInstantiationRuleLine) getParentRuleLine();
     }
 
@@ -81,7 +81,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
 
     @Override
     public String getPredicateDescription() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         PredicateArchetypeElementAttributeRuleLineElement paearle = getArchetypeElementAttributeRuleLineDefinitionElement();
         PredicateAttributeComparisonOperatorRuleLineElement pacorl = getComparisonOperatorRuleLineElement();
         ExpressionRuleLineElement ere = getExpressionRuleLineElement();
@@ -90,7 +90,7 @@ public class WithElementPredicateExpressionDefinitionRuleLine extends Expression
             String attribute = paearle.getAttribute();
             if (archetypeElementVO != null && pacorl.getValue() != null) {
                 String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
-                sb.append(name + "." + attribute + " " + pacorl.getValue().getSymbol() + " " + ere.toString());
+                sb.append(name).append(".").append(attribute).append(" ").append(pacorl.getValue().getSymbol()).append(" ").append(ere.toString());
             } else {
                 LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + paearle.toString() + "'");
                 sb.append("*UNKNOWN PREDICATE*");
