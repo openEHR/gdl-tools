@@ -36,7 +36,6 @@ public class mxGraphRendererImpl implements GraphRenderer{
             graph = new mxGraph(model);
             graph.setCellsDeletable(true);
             graph.getSelectionModel().setSingleSelection(false);
-            graph.setPortsEnabled(true);
             graph.setHtmlLabels(true);
             graph.setAllowDanglingEdges(false);
         }
