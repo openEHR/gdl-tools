@@ -3,6 +3,8 @@ package se.cambio.cds.controller.guide;
 import org.apache.commons.lang.SerializationUtils;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
+import se.cambio.cds.util.ElementInstanceCollection;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;
 
@@ -16,8 +18,8 @@ public class GuideManager extends SimpleGuideManager{
 
     private LinkedHashMap<String, GuideDTO> _allGuidesDTOMap = null;
 
-    public GuideManager(Collection<GuideDTO> guideDTOs){
-        super(loadGuideDTOs(guideDTOs));
+    public GuideManager(Collection<GuideDTO> guideDTOs, ElementInstanceCollectionManager elementInstanceCollectionManager){
+        super(loadGuideDTOs(guideDTOs), elementInstanceCollectionManager);
         _allGuidesDTOMap = new LinkedHashMap<>();
         for (GuideDTO guideDTO: guideDTOs){
             _allGuidesDTOMap.put(guideDTO.getId(), guideDTO);

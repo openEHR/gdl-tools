@@ -1,57 +1,62 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.LoadGuideAction;
 import se.cambio.cds.gdl.editor.view.menubar.SaveGuideAction;
-import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.util.export.html.GuideHTMLExporter;
+import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
-    /**
-     *
-     */
+public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
+
     private static final long serialVersionUID = 7045006987399987315L;
     private JButton saveButton = null;
     private JButton backToGuideButton = null;
     private JButton generateFormButton = null;
     private JButton addRuleButton;
     private JButton createBinding = null;
-    private JPanel _mainPanel = null;
-    private GuidePanel _guidePanel = null;
-    private GDLEditor _controller = null;
-    private JLabel _titleLabel = null;
+    private JPanel mainPanel = null;
+    private GuidePanel guidePanel = null;
+    private GDLEditor controller = null;
+    private GuidelineLoadManager guidelineLoadManager;
+    private JLabel titleLabel = null;
     private JButton loadButton;
-    private RulePanel _currentRulePanel = null;
+    private RulePanel currentRulePanel = null;
+    private GuideHTMLExporter guideHTMLExporter;
+    private GdlGraphManager gdlGraphManager;
+    private GuideExportPlugin guideExportPlugin;
 
-    /**
-     * This is the default constructor
-     */
-    public GDLEditorMainPanel(GDLEditor controller){
-        _controller = controller;
+    public GDLEditorMainPanel(
+            GDLEditor controller,
+            GuidelineLoadManager guidelineLoadManager,
+            GuideHTMLExporter guideHTMLExporter,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin) {
+        this.controller = controller;
+        this.guidelineLoadManager = guidelineLoadManager;
+        this.guideHTMLExporter = guideHTMLExporter;
+        this.gdlGraphManager = gdlGraphManager;
+        this.guideExportPlugin = guideExportPlugin;
         init();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void init() {
-	/* Enter KeyStroke */
-        KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
+    private void init() {
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
         registerKeyboardAction(null, enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
         setLayout(new BorderLayout());
-
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
         buttonPanel.add(getLoadButton());
         buttonPanel.add(getSaveButton());
         buttonPanel.add(getAddRuleButton());
@@ -76,7 +81,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         return addRuleButton;
     }
 
-    public class AddRuleAction extends AbstractAction{
+    public class AddRuleAction extends AbstractAction {
 
         private static final long serialVersionUID = -3085701867293096187L;
 
@@ -93,44 +98,41 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
             createBinding.setText(GDLEditorLanguageManager.getMessage("AddBinding"));
             createBinding.setIcon(GDLEditorImageUtil.ADD_ONTOLOGY_ICON);
             createBinding.setToolTipText(GDLEditorLanguageManager.getMessage("AddBindingD"));
-            createBinding.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    BindingsPanel bindingPanel = getGuidePanel().getBindingPanel();
-                    getGuidePanel().getGuideEditorTabPane().setSelectedComponent(bindingPanel);
-                    try {
-                        bindingPanel.addTermTab();
-                    } catch (InternalErrorException e1) {
-                        ExceptionHandler.handle(e1);
-                    }
+            createBinding.addActionListener(e -> {
+                MultipleBindingsPanel bindingPanel = getGuidePanel().getBindingPanel();
+                getGuidePanel().getGuideEditorTabPane().setSelectedComponent(bindingPanel);
+                try {
+                    bindingPanel.addTermTab();
+                } catch (InternalErrorException e1) {
+                    ExceptionHandler.handle(e1);
                 }
             });
         }
         return createBinding;
     }
 
-    public JPanel getMainPanel(){
-        if (_mainPanel==null){
-            _mainPanel = new JPanel();
-            _mainPanel.setLayout(new BorderLayout());
-            _mainPanel.add(getGuidePanel());
+    private JPanel getMainPanel() {
+        if (mainPanel == null) {
+            mainPanel = new JPanel();
+            mainPanel.setLayout(new BorderLayout());
+            mainPanel.add(getGuidePanel());
         }
-        return _mainPanel;
+        return mainPanel;
     }
 
-    public void loadGuideView(){
+    public void loadGuideView() {
         getMainPanel().removeAll();
-        _currentRulePanel = null;
-        //getTitleLabel().setText(_controller.getTitle());
+        currentRulePanel = null;
         getMainPanel().add(getGuidePanel());
         setButtonsInRule(false);
         this.repaint();
         this.validate();
     }
 
-    public void loadRuleView(ReadableRule rule){
+    public void loadRuleView(ReadableRule rule) {
         getMainPanel().removeAll();
         JPanel auxPanel = new JPanel(new BorderLayout());
-        getTitleLabel().setText(_controller.getGTName(rule.getGTCode()));
+        getTitleLabel().setText(controller.getGTName(rule.getGTCode()));
         auxPanel.add(getTitleLabel(), BorderLayout.NORTH);
         auxPanel.add(createRulePanel(), BorderLayout.CENTER);
         getMainPanel().add(auxPanel);
@@ -139,32 +141,32 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         this.validate();
     }
 
-    public void refresh(){
-        if (_currentRulePanel!=null){
-            _currentRulePanel.refresh();
-        }else{
+    public void refresh() {
+        if (currentRulePanel != null) {
+            currentRulePanel.refresh();
+        } else {
             Component comp = getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
-            if (comp instanceof RefreshablePanel){
-                ((RefreshablePanel)comp).refresh();
+            if (comp instanceof RefreshablePanel) {
+                ((RefreshablePanel) comp).refresh();
             }
         }
     }
 
-    public GuidePanel getGuidePanel(){
-        if (_guidePanel==null){
-            _guidePanel = new GuidePanel(_controller);
+    public GuidePanel getGuidePanel() {
+        if (guidePanel == null) {
+            guidePanel = new GuidePanel(controller, guideHTMLExporter, gdlGraphManager, guideExportPlugin);
         }
-        return _guidePanel;
+        return guidePanel;
     }
 
-    public RulePanel createRulePanel(){
-        _currentRulePanel = new RulePanel(_controller);
-        return _currentRulePanel;
+    private RulePanel createRulePanel() {
+        currentRulePanel = new RulePanel(controller);
+        return currentRulePanel;
     }
 
     public JButton getSaveButton() {
         if (saveButton == null) {
-            saveButton = new JButton(new SaveGuideAction());
+            saveButton = new JButton(new SaveGuideAction(controller));
             saveButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
             saveButton.setEnabled(false);
         }
@@ -172,22 +174,24 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
     }
 
 
-    public JButton getLoadButton() {
+    private JButton getLoadButton() {
         if (loadButton == null) {
-            loadButton = new JButton(new LoadGuideAction());
+            loadButton = new JButton(new LoadGuideAction(
+                    controller,
+                    guidelineLoadManager));
             loadButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         }
         return loadButton;
     }
 
-    public JLabel getTitleLabel(){
-        if (_titleLabel==null){
-            _titleLabel = new JLabel();
-            _titleLabel.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
+    private JLabel getTitleLabel() {
+        if (titleLabel == null) {
+            titleLabel = new JLabel();
+            titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
             Font f = new Font("Dialog", Font.BOLD, 18);
-            _titleLabel.setFont(f);
+            titleLabel.setFont(f);
         }
-        return _titleLabel;
+        return titleLabel;
     }
 
     private JButton getBackToGuideButton() {
@@ -202,16 +206,17 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         return backToGuideButton;
     }
 
-    public void setButtonsInRule(boolean visible){
+    private void setButtonsInRule(boolean visible) {
         getBackToGuideButton().setVisible(visible);
         getAddRuleButton().setVisible(!visible);
         getCreateBindingButton().setVisible(!visible);
     }
 
-    public class BackToGuideAction extends AbstractAction{
+    public class BackToGuideAction extends AbstractAction {
         private static final long serialVersionUID = -3085701867293096187L;
+
         public void actionPerformed(ActionEvent e) {
-            _controller.goBackToGuide();
+            controller.goBackToGuide();
         }
     }
 
@@ -227,15 +232,16 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel{
         return generateFormButton;
     }
 
-    public class GenerateFormAction extends AbstractAction{
+    public class GenerateFormAction extends AbstractAction {
         private static final long serialVersionUID = -3085701867293096187L;
+
         public void actionPerformed(ActionEvent e) {
             generateFormAction();
         }
     }
 
-    private void generateFormAction(){
-        _controller.generateForm();
+    private void generateFormAction() {
+        controller.generateForm();
     }
 
 }/*

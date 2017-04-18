@@ -19,98 +19,95 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-/**
- * @author iago.corbal
- *
- */
 public class OpenEHRDataValuesUI {
 
-    private static OpenEHRDataValuesUI _instance = null;
-    private final HashMap<String,String> _openEHRDVNames;
-    private final HashMap<String,String> _openEHRDVDescriptions;
-    private final HashMap<String,ImageIcon> _openEHRDVIcons;
-    private final HashMap<String,String[]> _openEHRDVFieldNames;
-    private final HashMap<String,String> _openEHRDVClassName;
-    private final HashMap<String,String> _openEHRDVIconName;
+    private static OpenEHRDataValuesUI instance = null;
+    private final HashMap<String, String> openEHRDVNames;
+    private final HashMap<String, String> openEHRDVDescriptions;
+    private final HashMap<String, ImageIcon> openEHRDVIcons;
+    private final HashMap<String, String[]> openEHRDVFieldNames;
+    private final HashMap<String, String> openEHRDVClassName;
+    private final HashMap<String, String> openEHRDVIconName;
 
-    private static final ArrayList<String> GENERIC_FUNCTIONS = new ArrayList<String>();
-    static{
+    private static final ArrayList<String> GENERIC_FUNCTIONS = new ArrayList<>();
+
+    static {
         GENERIC_FUNCTIONS.add(OpenEHRDataValues.FUNCTION_COUNT);
     }
 
     private CodePhrase _languageCodePhrase = null;
     private CodePhrase _defaultLanguageCodePhrase = null;
 
-    private OpenEHRDataValuesUI(){
-        _openEHRDVNames = new HashMap<String, String>();
-        _openEHRDVDescriptions = new HashMap<String, String>();
-        _openEHRDVIcons = new HashMap<String, ImageIcon>();
-        _openEHRDVFieldNames = new HashMap<String, String[]>();
-        _openEHRDVClassName = new HashMap<String, String>();
-        _openEHRDVIconName = new HashMap<String, String>();
+    private OpenEHRDataValuesUI() {
+        openEHRDVNames = new HashMap<>();
+        openEHRDVDescriptions = new HashMap<>();
+        openEHRDVIcons = new HashMap<>();
+        openEHRDVFieldNames = new HashMap<>();
+        openEHRDVClassName = new HashMap<>();
+        openEHRDVIconName = new HashMap<>();
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_TEXT, OpenEHRLanguageManager.getMessage("DataValueText"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_TEXT, OpenEHRLanguageManager.getMessage("DataValueTextDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_TEXT, OpenEHRImageUtil.DV_TEXT_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_TEXT,
+        openEHRDVNames.put(OpenEHRDataValues.DV_TEXT, OpenEHRLanguageManager.getMessage("DataValueText"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_TEXT, OpenEHRLanguageManager.getMessage("DataValueTextDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_TEXT, OpenEHRImageUtil.DV_TEXT_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_TEXT,
                 new String[]{OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_TEXT, DvText.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_TEXT, OpenEHRImageUtil.DV_TEXT_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_TEXT, DvText.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_TEXT, OpenEHRImageUtil.DV_TEXT_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRLanguageManager.getMessage("DataValueCodedText"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRLanguageManager.getMessage("DataValueCodedTextDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRImageUtil.DV_CODED_TEXT_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_CODED_TEXT,
+        openEHRDVNames.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRLanguageManager.getMessage("DataValueCodedText"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRLanguageManager.getMessage("DataValueCodedTextDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRImageUtil.DV_CODED_TEXT_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_CODED_TEXT,
                 new String[]{
                         OpenEHRDataValues.VALUE_ATT,
                         OpenEHRDataValues.TEMINOLOGYID_ATT,
                         OpenEHRDataValues.CODE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_CODED_TEXT, DvCodedText.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRImageUtil.DV_CODED_TEXT_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_CODED_TEXT, DvCodedText.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_CODED_TEXT, OpenEHRImageUtil.DV_CODED_TEXT_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRLanguageManager.getMessage("DataValueOrdinal"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRLanguageManager.getMessage("DataValueOrdinalDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRImageUtil.DV_ORDINAL_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_ORDINAL,
+        openEHRDVNames.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRLanguageManager.getMessage("DataValueOrdinal"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRLanguageManager.getMessage("DataValueOrdinalDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRImageUtil.DV_ORDINAL_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_ORDINAL,
                 new String[]{
                         OpenEHRDataValues.VALUE_ATT,
                         OpenEHRDataValues.TEMINOLOGYID_ATT,
                         OpenEHRDataValues.SYMBOL_VALUE_ATT,
                         OpenEHRDataValues.CODE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_ORDINAL, DvOrdinal.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRImageUtil.DV_ORDINAL_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_ORDINAL, DvOrdinal.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_ORDINAL, OpenEHRImageUtil.DV_ORDINAL_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRLanguageManager.getMessage("DataValueQuantity"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRLanguageManager.getMessage("DataValueQuantityDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRImageUtil.DV_QUANTITY_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_QUANTITY,
+        openEHRDVNames.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRLanguageManager.getMessage("DataValueQuantity"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRLanguageManager.getMessage("DataValueQuantityDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRImageUtil.DV_QUANTITY_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_QUANTITY,
                 new String[]{
                         OpenEHRDataValues.MAGNITUDE_ATT,
                         OpenEHRDataValues.PRECISION_ATT,
                         OpenEHRDataValues.UNITS_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_QUANTITY, DvQuantity.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRImageUtil.DV_QUANTITY_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_QUANTITY, DvQuantity.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_QUANTITY, OpenEHRImageUtil.DV_QUANTITY_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_COUNT, OpenEHRLanguageManager.getMessage("DataValueCount"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_COUNT, OpenEHRLanguageManager.getMessage("DataValueCountDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_COUNT, OpenEHRImageUtil.DV_COUNT_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_COUNT,
+        openEHRDVNames.put(OpenEHRDataValues.DV_COUNT, OpenEHRLanguageManager.getMessage("DataValueCount"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_COUNT, OpenEHRLanguageManager.getMessage("DataValueCountDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_COUNT, OpenEHRImageUtil.DV_COUNT_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_COUNT,
                 new String[]{OpenEHRDataValues.MAGNITUDE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_COUNT, DvCount.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_COUNT, OpenEHRImageUtil.DV_COUNT_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_COUNT, DvCount.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_COUNT, OpenEHRImageUtil.DV_COUNT_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_DURATION, OpenEHRLanguageManager.getMessage("DataValueDuration"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_DURATION, OpenEHRLanguageManager.getMessage("DataValueDurationDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_DURATION, OpenEHRImageUtil.DV_DURATION_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_DURATION,
+        openEHRDVNames.put(OpenEHRDataValues.DV_DURATION, OpenEHRLanguageManager.getMessage("DataValueDuration"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_DURATION, OpenEHRLanguageManager.getMessage("DataValueDurationDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_DURATION, OpenEHRImageUtil.DV_DURATION_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_DURATION,
                 new String[]{OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_DURATION, DvDuration.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_DURATION, OpenEHRImageUtil.DV_DURATION_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_DURATION, DvDuration.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_DURATION, OpenEHRImageUtil.DV_DURATION_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRLanguageManager.getMessage("DataValueDateTime"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRLanguageManager.getMessage("DataValueDateTimeDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRImageUtil.DV_DATE_TIME_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_DATE_TIME,
+        openEHRDVNames.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRLanguageManager.getMessage("DataValueDateTime"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRLanguageManager.getMessage("DataValueDateTimeDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRImageUtil.DV_DATE_TIME_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_DATE_TIME,
                 new String[]{
                         OpenEHRDataValues.YEAR_ATT,
                         OpenEHRDataValues.MONTH_ATT,
@@ -121,25 +118,25 @@ public class OpenEHRDataValuesUI {
                         OpenEHRDataValues.FRACTIONAL_SECOND_ATT,
                         OpenEHRDataValues.TIMEZONE_ATT,
                         OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_DATE_TIME, DvDateTime.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRImageUtil.DV_DATE_TIME_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_DATE_TIME, DvDateTime.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_DATE_TIME, OpenEHRImageUtil.DV_DATE_TIME_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_DATE, OpenEHRLanguageManager.getMessage("DataValueDate"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_DATE, OpenEHRLanguageManager.getMessage("DataValueDateDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_DATE, OpenEHRImageUtil.DV_DATE_TIME_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_DATE,
+        openEHRDVNames.put(OpenEHRDataValues.DV_DATE, OpenEHRLanguageManager.getMessage("DataValueDate"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_DATE, OpenEHRLanguageManager.getMessage("DataValueDateDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_DATE, OpenEHRImageUtil.DV_DATE_TIME_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_DATE,
                 new String[]{
                         OpenEHRDataValues.YEAR_ATT,
                         OpenEHRDataValues.MONTH_ATT,
                         OpenEHRDataValues.DAY_ATT,
                         OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_DATE, DvDate.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_DATE, OpenEHRImageUtil.DV_DATE_TIME_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_DATE, DvDate.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_DATE, OpenEHRImageUtil.DV_DATE_TIME_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_TIME, OpenEHRLanguageManager.getMessage("DataValueTime"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_TIME, OpenEHRLanguageManager.getMessage("DataValueTimeDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_TIME, OpenEHRImageUtil.DV_DATE_TIME_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_TIME,
+        openEHRDVNames.put(OpenEHRDataValues.DV_TIME, OpenEHRLanguageManager.getMessage("DataValueTime"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_TIME, OpenEHRLanguageManager.getMessage("DataValueTimeDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_TIME, OpenEHRImageUtil.DV_DATE_TIME_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_TIME,
                 new String[]{
                         OpenEHRDataValues.HOUR_ATT,
                         OpenEHRDataValues.MINUTE_ATT,
@@ -147,91 +144,96 @@ public class OpenEHRDataValuesUI {
                         OpenEHRDataValues.FRACTIONAL_SECOND_ATT,
                         OpenEHRDataValues.TIMEZONE_ATT,
                         OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_TIME, DvTime.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_TIME, OpenEHRImageUtil.DV_DATE_TIME_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_TIME, DvTime.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_TIME, OpenEHRImageUtil.DV_DATE_TIME_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRLanguageManager.getMessage("DataValueBoolean"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRLanguageManager.getMessage("DataValueBooleanDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRImageUtil.DV_BOOLEAN_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_BOOLEAN,
+        openEHRDVNames.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRLanguageManager.getMessage("DataValueBoolean"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRLanguageManager.getMessage("DataValueBooleanDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRImageUtil.DV_BOOLEAN_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_BOOLEAN,
                 new String[]{OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_BOOLEAN, DvBoolean.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRImageUtil.DV_BOOLEAN_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_BOOLEAN, DvBoolean.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_BOOLEAN, OpenEHRImageUtil.DV_BOOLEAN_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRLanguageManager.getMessage("DataValueProportion"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRLanguageManager.getMessage("DataValueProportionDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRImageUtil.DV_PROPORTION_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_PROPORTION,
+        openEHRDVNames.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRLanguageManager.getMessage("DataValueProportion"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRLanguageManager.getMessage("DataValueProportionDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRImageUtil.DV_PROPORTION_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_PROPORTION,
                 new String[]{
                         OpenEHRDataValues.NUMERATOR_ATT,
                         OpenEHRDataValues.DENOMINATOR_ATT,
                         OpenEHRDataValues.TYPE_ATT,
                         OpenEHRDataValues.PRECISION_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_PROPORTION, DvProportion.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRImageUtil.DV_PROPORTION_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_PROPORTION, DvProportion.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_PROPORTION, OpenEHRImageUtil.DV_PROPORTION_NAME);
 
-        _openEHRDVNames.put(OpenEHRDataValues.DV_URI, OpenEHRLanguageManager.getMessage("DataValueURI"));
-        _openEHRDVDescriptions.put(OpenEHRDataValues.DV_URI, OpenEHRLanguageManager.getMessage("DataValueURIDesc"));
-        _openEHRDVIcons.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_ICON);
-        _openEHRDVFieldNames.put(OpenEHRDataValues.DV_URI,
+        openEHRDVNames.put(OpenEHRDataValues.DV_URI, OpenEHRLanguageManager.getMessage("DataValueURI"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_URI, OpenEHRLanguageManager.getMessage("DataValueURIDesc"));
+        openEHRDVIcons.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_URI,
                 new String[]{OpenEHRDataValues.VALUE_ATT});
-        _openEHRDVClassName.put(OpenEHRDataValues.DV_URI, DvURI.class.getSimpleName());
-        _openEHRDVIconName.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_NAME);
+        openEHRDVClassName.put(OpenEHRDataValues.DV_URI, DvURI.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_NAME);
     }
 
-    public static String getName(String idDataValue){
-        return getDelegate()._openEHRDVNames.get(idDataValue);
+    public static String getName(String idDataValue) {
+        return getDelegate().openEHRDVNames.get(idDataValue);
     }
 
-    public static String getDescription(String idDataValue){
-        return getDelegate()._openEHRDVDescriptions.get(idDataValue);
+    public static String getDescription(String idDataValue) {
+        return getDelegate().openEHRDVDescriptions.get(idDataValue);
     }
 
-    public static ImageIcon getIcon(String idDataValue){
-        return getDelegate()._openEHRDVIcons.get(idDataValue);
+    public static ImageIcon getIcon(String idDataValue) {
+        return getDelegate().openEHRDVIcons.get(idDataValue);
     }
 
-    public static Collection<String> getManagedDVs(){
-        return getDelegate()._openEHRDVNames.keySet();
+    public static Collection<String> getManagedDVs() {
+        return getDelegate().openEHRDVNames.keySet();
     }
 
-    public static String[] getFieldNames(String idDataValue){
-        return getDelegate()._openEHRDVFieldNames.get(idDataValue);
+    public static String[] getFieldNames(String idDataValue) {
+        String[] fieldNames = getDelegate().openEHRDVFieldNames.get(idDataValue);
+        if (fieldNames != null) {
+            return fieldNames;
+        } else {
+            return new String[0];
+        }
     }
 
-    public static ArrayList<String> getFunctionNames(){
+    public static ArrayList<String> getFunctionNames() {
         return GENERIC_FUNCTIONS;
     }
 
-    public static String getDVClassName(String idDataValue){
-        return getDelegate()._openEHRDVClassName.get(idDataValue);
+    public static String getDVClassName(String idDataValue) {
+        return getDelegate().openEHRDVClassName.get(idDataValue);
     }
 
-    public static String getDVIconName(String idDataValue){
-        return getDelegate()._openEHRDVIconName.get(idDataValue);
+    public static String getDVIconName(String idDataValue) {
+        return getDelegate().openEHRDVIconName.get(idDataValue);
     }
 
-    public static CodePhrase getLanguageCodePhrase(){
-        if (getDelegate()._languageCodePhrase==null){
+    public static CodePhrase getLanguageCodePhrase() {
+        if (getDelegate()._languageCodePhrase == null) {
             getDelegate()._languageCodePhrase = OpenEHRConst.DEFAULT_LANGUAGE_CODE_PHRASE;
         }
         return getDelegate()._languageCodePhrase;
     }
 
-    public static CodePhrase getDefaultLanguageCodePhrase(){
-        if (getDelegate()._defaultLanguageCodePhrase==null){
+    public static CodePhrase getDefaultLanguageCodePhrase() {
+        if (getDelegate()._defaultLanguageCodePhrase == null) {
             getDelegate()._defaultLanguageCodePhrase = new CodePhrase(
                     "ISO_639-1",
-                    UserConfigurationManager.instance().getLanguage());
+                    "en");
         }
         return getDelegate()._defaultLanguageCodePhrase;
     }
 
-    public static OpenEHRDataValuesUI getDelegate(){
-        if (_instance == null){
-            _instance = new OpenEHRDataValuesUI();
+    public static OpenEHRDataValuesUI getDelegate() {
+        if (instance == null) {
+            instance = new OpenEHRDataValuesUI();
         }
-        return _instance;
+        return instance;
     }
 }
 /*

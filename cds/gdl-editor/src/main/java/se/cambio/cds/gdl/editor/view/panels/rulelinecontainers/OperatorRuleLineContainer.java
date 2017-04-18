@@ -6,26 +6,27 @@ import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
-public class OperatorRuleLineContainer extends MultipleRuleLineContainerWithHeader{
+public class OperatorRuleLineContainer extends MultipleRuleLineContainerWithHeader {
 
     private static final long serialVersionUID = 1L;
 
-    public OperatorRuleLineContainer(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine){
-	super(ruleLinesPanel, ruleLine);
-	init();
+    public OperatorRuleLineContainer(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
+        super(ruleLinesPanel, ruleLine, gdlEditor);
+        init();
     }
-    
-    private void init(){
-	JPanel closurePanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-	JLabel closureLabel = new JLabel(")");
-	if (getRuleLine().isCommented()){
-	    closureLabel.setEnabled(false);
-	}
-	closurePanel.add(closureLabel);
-	getMainPanel().add(closurePanel, BorderLayout.SOUTH);
+
+    private void init() {
+        JPanel closurePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JLabel closureLabel = new JLabel(")");
+        if (getRuleLine().isCommented()) {
+            closureLabel.setEnabled(false);
+        }
+        closurePanel.add(closureLabel);
+        getMainPanel().add(closurePanel, BorderLayout.SOUTH);
     }
 }
 /*

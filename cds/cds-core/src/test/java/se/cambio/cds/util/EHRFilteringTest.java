@@ -9,14 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.GenericTestBase;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
-import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstanceBuilder;
+import se.cambio.cds.configuration.CdsCoreConfiguration;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -25,7 +20,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CdsConfiguration.class)
+@ContextConfiguration(classes = CdsCoreConfiguration.class)
 public class EHRFilteringTest extends GenericTestBase {
 
     @Autowired

@@ -1,0 +1,593 @@
+(GUIDE) <
+	gdl_version = <"0.1">
+	id = <"CHA2DS2VASc_diagnosis_review.v1">
+	concept = <"gt0036">
+	language = (LANGUAGE) <
+		original_language = <[ISO_639-1::en]>
+	>
+	description = (RESOURCE_DESCRIPTION) <
+		details = <
+			["en"] = (RESOURCE_DESCRIPTION_ITEM) <
+				copyright = <"">
+				keywords = <"CHA2DS2-VASc", "stroke", "atrial fibrillation", "diabetes", "hypertension", "congestive heart failure", "CHF", "vascular disease">
+				misuse = <"">
+				purpose = <"Provides a set of diagnosis for the calculation of CHA2DS2-VASc Score in patients with Atrial fribrilation">
+				use = <"Use to detect relevant diagnosis for calculation of CHA2DS2-VASc Score and to overide diagnosis in patients with Atrial fibrilation">
+			>
+			["sv"] = (RESOURCE_DESCRIPTION_ITEM) <
+			>
+		>
+		lifecycle_state = <"Author draft">
+		original_author = <
+			["date"] = <"2014-02-13">
+			["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+			["name"] = <"Konstantinos Kalliamvakos">
+			["organisation"] = <"Cambio Healthcare Systems">
+		>
+		other_details = <
+			["references"] = <"1. European Heart Rhythm Association; European Association for Cardio-Thoracic Surgery, Camm AJ, Kirchhof P, Lip GY, Schotten U, Savelieva I, Ernst S, Van Gelder IC, Al-Attar N, Hindricks G, Prendergast B, Heidbuchel H, Alfieri O, Angelini A, Atar D, Colonna P, De Caterina R, De Sutter J, Goette A, Gorenek B, Heldal M, Hohloser SH, Kolh P, Le Heuzey JY, Ponikowski P, Rutten FH. Guidelines for the management of atrial fibrillation: the Task Force for the Management of Atrial Fibrillation of the European Society of Cardiology (ESC). Eur Heart J. 2010 Oct;31(19):2369-429. Epub 2010 Aug 29. Erratum in: Eur Heart J. 2011 May;32(9):1172. PubMed PMID: 20802247.">
+		>
+	>
+	definition = (GUIDE_DEFINITION) <
+		archetype_bindings = <
+			["gt0157"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0137"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0035]">
+					>
+					["gt0138"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0041]">
+					>
+					["gt0139"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0040]">
+					>
+					["gt0140"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0038]">
+					>
+					["gt0141"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0036]">
+					>
+					["gt0142"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0037]">
+					>
+					["gt0143"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0039]">
+					>
+				>
+				predicates = <"max(/data[at0001]/items[at0041])",...>
+			>
+			["gt0158"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.chadsvas_diagnosis_review.v1">
+				domain = <"CDS">
+				elements = <
+					["gt0114"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0035]">
+					>
+					["gt0115"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0036]">
+					>
+					["gt0116"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0037]">
+					>
+					["gt0117"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0038]">
+					>
+					["gt0118"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0039]">
+					>
+					["gt0119"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0040]">
+					>
+					["gt0124"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0041]">
+					>
+				>
+			>
+			["gt0159"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0122"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0125"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0149|Atrial fibrillation diagnosis|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			["gt0160"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0108"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0123"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0101|Hypertension|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			["gt0161"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0109"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0126"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0102|Diabetes|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			["gt0162"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0110"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0127"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0100|Congestive heart failure|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			["gt0163"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0111"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0128"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0103|Previous stroke or TIA|",...>
+				template_id = <"diagnosis_icd10">
+			>
+			["gt0164"] = (ARCHETYPE_BINDING) <
+				archetype_id = <"openEHR-EHR-EVALUATION.problem-diagnosis.v1">
+				domain = <"EHR">
+				elements = <
+					["gt0112"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0002.1]">
+					>
+					["gt0129"] = (ELEMENT_BINDING) <
+						path = <"/data[at0001]/items[at0003]">
+					>
+				>
+				predicates = <"/data[at0001]/items[at0002.1] is_a local::gt0104|Vascular disease|",...>
+				template_id = <"diagnosis_icd10">
+			>
+		>
+		rules = <
+			["gt0017"] = (RULE) <
+				when = <"$gt0117!=1|local::at0051|Present|", "$gt0110!=null", "($gt0140==null)||($gt0127>$gt0138)">
+				then = <"$gt0117=1|local::at0051|Present|",...>
+				priority = <12>
+			>
+			["gt0018"] = (RULE) <
+				when = <"$gt0119!=1|local::at0051|Present|", "$gt0108!=null", "($gt0139==null)||($gt0123>$gt0138)">
+				then = <"$gt0119=1|local::at0051|Present|",...>
+				priority = <13>
+			>
+			["gt0019"] = (RULE) <
+				when = <"$gt0115!=1|local::at0051|Present|", "$gt0109!=null", "($gt0141==null)||($gt0126>$gt0138)">
+				then = <"$gt0115=1|local::at0051|Present|",...>
+				priority = <11>
+			>
+			["gt0020"] = (RULE) <
+				when = <"$gt0116!=1|local::at0051|Present|", "$gt0111!=null", "($gt0142==null)||($gt0128>$gt0138)">
+				then = <"$gt0116=1|local::at0051|Present|",...>
+				priority = <10>
+			>
+			["gt0027"] = (RULE) <
+				when = <"$gt0124==null", "$gt0119==null", "$gt0118==null", "$gt0117==null", "$gt0116==null", "$gt0115==null", "$gt0114==null">
+				then = <"$gt0124.value=$currentDateTime.value", "$gt0119=0|local::at0050|Absent|", "$gt0118=0|local::at0050|Absent|", "$gt0117=0|local::at0050|Absent|", "$gt0116=0|local::at0050|Absent|", "$gt0115=0|local::at0050|Absent|", "$gt0114=0|local::at0050|Absent|">
+				priority = <14>
+			>
+			["gt0028"] = (RULE) <
+				when = <"$gt0118!=1|local::at0051|Present|", "$gt0112!=null", "($gt0143==null)||($gt0129>$gt0138)">
+				then = <"$gt0118=1|local::at0051|Present|",...>
+				priority = <9>
+			>
+			["gt0121"] = (RULE) <
+				when = <"$gt0114!=1|local::at0051|Present|", "$gt0122!=null", "($gt0137==null)||($gt0125>$gt0138)">
+				then = <"$gt0114=1|local::at0051|Present|",...>
+				priority = <8>
+			>
+			["gt0136"] = (RULE) <
+				when = <"$gt0114!=1|local::at0051|Present|", "$gt0137==1|local::at0051|Present|", "($gt0138>$gt0125)||($gt0122==null)">
+				then = <"$gt0114=1|local::at0051|Present|",...>
+				priority = <2>
+			>
+			["gt0144"] = (RULE) <
+				when = <"$gt0119!=1|local::at0051|Present|", "$gt0139==1|local::at0051|Present|", "($gt0138>$gt0123)||($gt0108==null)">
+				then = <"$gt0119=1|local::at0051|Present|",...>
+				priority = <7>
+			>
+			["gt0145"] = (RULE) <
+				when = <"$gt0117!=1|local::at0051|Present|", "$gt0140==1|local::at0051|Present|", "($gt0138>$gt0127)||($gt0110==null)">
+				then = <"$gt0117=1|local::at0051|Present|",...>
+				priority = <6>
+			>
+			["gt0146"] = (RULE) <
+				when = <"$gt0115!=1|local::at0051|Present|", "$gt0141==1|local::at0051|Present|", "($gt0138>$gt0126)||($gt0109==null)">
+				then = <"$gt0115=1|local::at0051|Present|",...>
+				priority = <5>
+			>
+			["gt0147"] = (RULE) <
+				when = <"$gt0116!=1|local::at0051|Present|", "$gt0142==1|local::at0051|Present|", "($gt0138>$gt0128)||($gt0111==null)">
+				then = <"$gt0116=1|local::at0051|Present|",...>
+				priority = <4>
+			>
+			["gt0148"] = (RULE) <
+				when = <"$gt0118!=1|local::at0051|Present|", "$gt0143==1|local::at0051|Present|", "($gt0138>$gt0129)||($gt0112==null)">
+				then = <"$gt0118=1|local::at0051|Present|",...>
+				priority = <3>
+			>
+			["gt0156"] = (RULE) <
+				when = <"$gt0114==0|local::at0050|Absent|", "$gt0116!=null", "$gt0117!=null", "$gt0118!=null", "$gt0119!=null", "$gt0115!=null">
+				then = <"$gt0117.null_flavor=openehr::271|no information|", "$gt0118.null_flavor=openehr::271|no information|", "$gt0119.null_flavor=openehr::271|no information|", "$gt0116.null_flavor=openehr::271|no information|", "$gt0115.null_flavor=openehr::271|no information|">
+				priority = <1>
+			>
+		>
+	>
+	ontology = (GUIDE_ONTOLOGY) <
+		term_bindings = <
+			["ICD10"] = (TERM_BINDING) <
+				bindings = <
+					["gt0100"] = (BINDING) <
+						codes = <[ICD10::I50],...>
+						uri = <"">
+					>
+					["gt0101"] = (BINDING) <
+						codes = <[ICD10::I12], [ICD10::I13], [ICD10::I10], [ICD10::I11], [ICD10::I15]>
+						uri = <"">
+					>
+					["gt0102"] = (BINDING) <
+						codes = <[ICD10::E11], [ICD10::E10], [ICD10::E13], [ICD10::E12], [ICD10::E14]>
+						uri = <"">
+					>
+					["gt0103"] = (BINDING) <
+						codes = <[ICD10::G459], [ICD10::I63], [ICD10::I693]>
+						uri = <"">
+					>
+					["gt0104"] = (BINDING) <
+						codes = <[ICD10::I249], [ICD10::I258], [ICD10::I259], [ICD10::I255], [ICD10::I256], [ICD10::I739], [ICD10::I250], [ICD10::I251], [ICD10::I252], [ICD10::I72], [ICD10::I71], [ICD10::I21], [ICD10::I70], [ICD10::I22], [ICD10::Z951]>
+						uri = <"">
+					>
+					["gt0149"] = (BINDING) <
+						codes = <[ICD10::I48],...>
+						uri = <"">
+					>
+				>
+			>
+		>
+		term_definitions = <
+			["en"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0017"] = (TERM) <
+						text = <"Set CHF present based on diagnosis">
+					>
+					["gt0018"] = (TERM) <
+						text = <"Set hypertension based on diagnosis">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Set diabetes based on diagnosis">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Set previous stroke based on diagnosis">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Set default">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Set vascular disease based on diagnosis">
+					>
+					["gt0036"] = (TERM) <
+						text = <"Diagnosis review">
+						description = <"">
+					>
+					["gt0100"] = (TERM) <
+						text = <"Congestive heart failure">
+					>
+					["gt0101"] = (TERM) <
+						text = <"Hypertension">
+					>
+					["gt0102"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0103"] = (TERM) <
+						text = <"Previous stroke or TIA">
+					>
+					["gt0104"] = (TERM) <
+						text = <"Vascular disease">
+					>
+					["gt0108"] = (TERM) <
+						text = <"Hypertension diagnosis">
+					>
+					["gt0109"] = (TERM) <
+						text = <"Diabetes diagnosis">
+					>
+					["gt0110"] = (TERM) <
+						text = <"Congestive heart failure diagnosis">
+					>
+					["gt0111"] = (TERM) <
+						text = <"Previous stroke or TIA diagnosis">
+					>
+					["gt0112"] = (TERM) <
+						text = <"Vascular disease diagnosis">
+					>
+					["gt0114"] = (TERM) <
+						text = <"Atrial fibrillation">
+						description = <"">
+					>
+					["gt0115"] = (TERM) <
+						text = <"Diabetes">
+						description = <"">
+					>
+					["gt0116"] = (TERM) <
+						text = <"Stroke">
+						description = <"">
+					>
+					["gt0117"] = (TERM) <
+						text = <"Congestive heart failure">
+						description = <"">
+					>
+					["gt0118"] = (TERM) <
+						text = <"Vascular disease">
+						description = <"">
+					>
+					["gt0119"] = (TERM) <
+						text = <"Hypertension">
+						description = <"">
+					>
+					["gt0121"] = (TERM) <
+						text = <"Set atrial fibrillation based on diagnosis">
+					>
+					["gt0122"] = (TERM) <
+						text = <"Atrial fibrillation diagnosis">
+						description = <"">
+					>
+					["gt0123"] = (TERM) <
+						text = <"Hypertension date of initial onset">
+						description = <"">
+					>
+					["gt0124"] = (TERM) <
+						text = <"Date (time) of diagnosis review">
+						description = <"">
+					>
+					["gt0125"] = (TERM) <
+						text = <"Atrial fibrillation date of initial onset">
+						description = <"">
+					>
+					["gt0126"] = (TERM) <
+						text = <"Diabetes date of initial onset">
+						description = <"">
+					>
+					["gt0127"] = (TERM) <
+						text = <"Congestive heart failure date of initial onset">
+						description = <"">
+					>
+					["gt0128"] = (TERM) <
+						text = <"Previous stroke or TIA  date of initial onset">
+						description = <"">
+					>
+					["gt0129"] = (TERM) <
+						text = <"Vascular disease date of initial onset">
+						description = <"">
+					>
+					["gt0136"] = (TERM) <
+						text = <"Set atrial fibrillation based on review">
+					>
+					["gt0137"] = (TERM) <
+						text = <"Atrial fibrillation review">
+						description = <"">
+					>
+					["gt0138"] = (TERM) <
+						text = <"Date (time) of diagnosis review">
+						description = <"">
+					>
+					["gt0139"] = (TERM) <
+						text = <"Hypertension review">
+						description = <"">
+					>
+					["gt0140"] = (TERM) <
+						text = <"Congestive heart failure review">
+						description = <"">
+					>
+					["gt0141"] = (TERM) <
+						text = <"Diabetes review">
+						description = <"">
+					>
+					["gt0142"] = (TERM) <
+						text = <"Stroke review">
+						description = <"">
+					>
+					["gt0143"] = (TERM) <
+						text = <"Vascular disease review">
+						description = <"">
+					>
+					["gt0144"] = (TERM) <
+						text = <"Set hypertension based on review">
+					>
+					["gt0145"] = (TERM) <
+						text = <"Set CHF present based on review">
+					>
+					["gt0146"] = (TERM) <
+						text = <"Set diabetes based on review">
+					>
+					["gt0147"] = (TERM) <
+						text = <"Set previous stroke based on review">
+					>
+					["gt0148"] = (TERM) <
+						text = <"Set vascular disease based on review">
+					>
+					["gt0149"] = (TERM) <
+						text = <"Atrial fibrillation diagnosis">
+					>
+					["gt0156"] = (TERM) <
+						text = <"Clear diagnosis review when AF is absent">
+					>
+				>
+			>
+			["sv"] = (TERM_DEFINITION) <
+				terms = <
+					["gt0017"] = (TERM) <
+						text = <"Ange Hjärtsvikt/VK-dysfunktion finss">
+					>
+					["gt0018"] = (TERM) <
+						text = <"Ange hypertoni">
+					>
+					["gt0019"] = (TERM) <
+						text = <"Ange diabetes">
+					>
+					["gt0020"] = (TERM) <
+						text = <"Ange stroke/TIA">
+					>
+					["gt0027"] = (TERM) <
+						text = <"Ange som förval">
+					>
+					["gt0028"] = (TERM) <
+						text = <"Ange vaskulär sjukdom">
+					>
+					["gt0036"] = (TERM) <
+						text = <"Diagnosöversikt">
+						description = <"*CHA2DS2-VASc Score for estimation stroke risks in atrial fibrillation (en)">
+					>
+					["gt0100"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion">
+					>
+					["gt0101"] = (TERM) <
+						text = <"Hypertoni">
+					>
+					["gt0102"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0103"] = (TERM) <
+						text = <"Tidigare Stroke/TIA">
+					>
+					["gt0104"] = (TERM) <
+						text = <"Vaskulär sjukdom">
+					>
+					["gt0108"] = (TERM) <
+						text = <"Hypertoni diagnos">
+					>
+					["gt0109"] = (TERM) <
+						text = <"Diabetes diagnos">
+					>
+					["gt0110"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion diagnos">
+					>
+					["gt0111"] = (TERM) <
+						text = <"Tidigare Stroke/TIA diagnos">
+					>
+					["gt0112"] = (TERM) <
+						text = <"Vaskulär sjukdom diagnos">
+					>
+					["gt0114"] = (TERM) <
+						text = <"Förmaksflimmer">
+					>
+					["gt0115"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0116"] = (TERM) <
+						text = <"Tidigare Stroke/TIA">
+					>
+					["gt0117"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion">
+					>
+					["gt0118"] = (TERM) <
+						text = <"Vaskulär sjukdom">
+					>
+					["gt0119"] = (TERM) <
+						text = <"Hypertoni">
+					>
+					["gt0121"] = (TERM) <
+						text = <"Ange förmaksflimmer">
+					>
+					["gt0122"] = (TERM) <
+						text = <"Förmaksflimmer diagnos">
+					>
+					["gt0123"] = (TERM) <
+						text = <"Hypertoni tidpunkt för inledning">
+					>
+					["gt0124"] = (TERM) <
+						text = <"Tidpunkt för översikt av diagnos">
+					>
+					["gt0125"] = (TERM) <
+						text = <"Förmaksflimmer tidpunkt för inledning">
+					>
+					["gt0126"] = (TERM) <
+						text = <"Diabetes tidpunkt för inledning">
+					>
+					["gt0127"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion tidpunkt för inledning">
+					>
+					["gt0128"] = (TERM) <
+						text = <"Tidigare Stroke/TIA tidpunkt för inledning">
+					>
+					["gt0129"] = (TERM) <
+						text = <"Vaskulär sjukdom tidpunkt för inledning">
+					>
+					["gt0136"] = (TERM) <
+						text = <"Sätt förmaksflimmer baserat på översyn">
+					>
+					["gt0137"] = (TERM) <
+						text = <"Förmaksflimmer">
+					>
+					["gt0138"] = (TERM) <
+						text = <"Tidpunkt för översikt av diagnos">
+					>
+					["gt0139"] = (TERM) <
+						text = <"Hypertoni">
+					>
+					["gt0140"] = (TERM) <
+						text = <"Hjärtsvikt/VK-dysfunktion">
+					>
+					["gt0141"] = (TERM) <
+						text = <"Diabetes">
+					>
+					["gt0142"] = (TERM) <
+						text = <"Tidigare Stroke/TIA">
+					>
+					["gt0143"] = (TERM) <
+						text = <"Vaskulär sjukdom">
+					>
+					["gt0144"] = (TERM) <
+						text = <"Sätt hypertoni baserat på översyn">
+					>
+					["gt0145"] = (TERM) <
+						text = <"Sätt Hjärtsvikt/VK-dysfunktion baserat på översyn">
+					>
+					["gt0146"] = (TERM) <
+						text = <"Sätt diabetes baserat på översyn">
+					>
+					["gt0147"] = (TERM) <
+						text = <"Sätt Tidigare Stroke/TIA baserat på översyn">
+					>
+					["gt0148"] = (TERM) <
+						text = <"Sätt vaskulär sjukdom baserat på översyn">
+					>
+					["gt0149"] = (TERM) <
+						text = <"Förmaksflimmer diagnos">
+					>
+					["gt0156"] = (TERM) <
+						text = <"Nollställ översyn av diagnos när förmaksflimmer saknas">
+					>
+				>
+			>
+		>
+	>
+>

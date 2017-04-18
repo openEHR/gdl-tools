@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.editor.view.renderers;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.SingleSelectionRuleElement;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,40 +8,42 @@ import java.awt.*;
 public class SingleSelectionRuleElementRenderer extends JLabel implements ListCellRenderer {
     private static final long serialVersionUID = 1L;
     @SuppressWarnings("rawtypes")
-    private SingleSelectionRuleElement _singleSelectionRuleElement = null;
-    
-    public SingleSelectionRuleElementRenderer(@SuppressWarnings("rawtypes") SingleSelectionRuleElement singleSelectionRuleElement){
-	setOpaque(true);
-	_singleSelectionRuleElement = singleSelectionRuleElement;
-	setHorizontalAlignment(LEFT);
-	setVerticalAlignment(CENTER);
+    private SingleSelectionRuleElement singleSelectionRuleElement = null;
+    private String language;
+
+    public SingleSelectionRuleElementRenderer(@SuppressWarnings("rawtypes") SingleSelectionRuleElement singleSelectionRuleElement, String language) {
+        this.language = language;
+        setOpaque(true);
+        this.singleSelectionRuleElement = singleSelectionRuleElement;
+        setHorizontalAlignment(LEFT);
+        setVerticalAlignment(CENTER);
     }
 
 
     @SuppressWarnings("unchecked")
     public Component getListCellRendererComponent(JList list, Object value,
-	    int index, boolean isSelected, boolean cellHasFocus) {
-	if (isSelected) {
-	    setBackground(list.getSelectionBackground());
-	    setForeground(list.getSelectionForeground());
-	} else {
-	    setBackground(list.getBackground());
-	    setForeground(list.getForeground());
-	}
-	String resolvedName = null;
-	if (value!=null){
-	    resolvedName = _singleSelectionRuleElement.getResolvedName(value, UserConfigurationManager.instance().getLanguage());
-	}
-	if (resolvedName != null){
-	    setText(resolvedName);
-	    setToolTipText(resolvedName);
-	    setBorder(null);
-	}else{
-	    setText(" ");
-	    setToolTipText("");
-	    setBorder(BorderFactory.createLineBorder(Color.RED));
-	}
-	return this;
+                                                  int index, boolean isSelected, boolean cellHasFocus) {
+        if (isSelected) {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+        } else {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+        }
+        String resolvedName = null;
+        if (value != null) {
+            resolvedName = singleSelectionRuleElement.getResolvedName(value, language);
+        }
+        if (resolvedName != null) {
+            setText(resolvedName);
+            setToolTipText(resolvedName);
+            setBorder(null);
+        } else {
+            setText(" ");
+            setToolTipText("");
+            setBorder(BorderFactory.createLineBorder(Color.RED));
+        }
+        return this;
     }
 }
 /*

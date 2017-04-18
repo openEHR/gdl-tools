@@ -2,7 +2,7 @@ package se.cambio.openehr.controller.sw;
 
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.OpenEHRUtilSwingWorker;
-import se.cambio.openehr.util.WindowManager;
+import se.cambio.openehr.view.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.util.NodeConversor;
@@ -15,19 +15,20 @@ import javax.swing.plaf.TreeUI;
  */
 public class FilterTreeRSW extends OpenEHRUtilSwingWorker{
 
-    private SelectionPanel _selectionPanel = null;
-    private TreeUI _treeUI = null;
-    public FilterTreeRSW(SelectionPanel selectionPanel) {
+    private WindowManager windowManager;
+    private SelectionPanel selectionPanel = null;
+    private TreeUI treeUI = null;
+    public FilterTreeRSW(WindowManager windowManager, SelectionPanel selectionPanel) {
         super();
-        _selectionPanel = selectionPanel;
+        this.windowManager = windowManager;
+        this.selectionPanel = selectionPanel;
     }
 
     protected void executeSW() throws InternalErrorException {
-        WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
-        _treeUI = _selectionPanel.getJTree().getUI();
-        _selectionPanel.getJTree().setUI(null);
-        filterNode(_selectionPanel);
-        //_selectionPanel.getJTree().expand(_selectionPanel.getNode()); //Can perform very bad on large trees (check SNOMED Terminology)
+        windowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
+        treeUI = selectionPanel.getJTree().getUI();
+        selectionPanel.getJTree().setUI(null);
+        filterNode(selectionPanel);
     }
 
     public static void filterNode(SelectionPanel selectionPanel){
@@ -39,8 +40,8 @@ public class FilterTreeRSW extends OpenEHRUtilSwingWorker{
 
 
     protected void done() {
-        WindowManager.setFree();
-        _selectionPanel.getJTree().setUI(_treeUI);
+        windowManager.setFree();
+        selectionPanel.getJTree().setUI(treeUI);
     }
 }
 /*

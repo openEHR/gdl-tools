@@ -14,42 +14,29 @@ import se.cambio.openehr.view.util.ScreenUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-/**
- * @author icorram
- *
- */
+public class DialogEditor extends JDialog implements EditorViewer {
 
-public class DialogEditor extends JDialog implements EditorViewer{
-
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private MainMenuBar principalMenuBar;
+    private EditorManager editorManager;
+    private MainMenuBar mainMenuBar;
 
-    /**
-     * This is the default constructor
-     */
-    public DialogEditor(Window owner) {
+    public DialogEditor(Window owner, EditorManager editorManager, MainMenuBar mainMenuBar) {
         super(owner, "", ModalityType.APPLICATION_MODAL);
+        this.editorManager = editorManager;
+        this.mainMenuBar = mainMenuBar;
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void initialize() {
+    private void initialize() {
         this.setSize(new Dimension(1024, 768));
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
-        this.setJMenuBar(getMainMenuBar());
+        this.setJMenuBar(mainMenuBar);
         this.setResizable(true);
-        this.addWindowListener(new CancelarCambiosAction());
+        this.addWindowListener(new CancelChanges());
         this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
@@ -58,25 +45,16 @@ public class DialogEditor extends JDialog implements EditorViewer{
         setContent(controller.getEditorPanel());
     }
 
-    protected class CancelarCambiosAction extends WindowAdapter{
+    protected class CancelChanges extends WindowAdapter {
 
-        public void windowOpened(WindowEvent e){
+        @Override
+        public void windowOpened(WindowEvent event) {
         }
 
-        public void actionPerformed(ActionEvent e) {
-            EditorManager.closeEditor();
-        }
-
+        @Override
         public void windowClosing(WindowEvent we) {
-            EditorManager.closeEditor();
+            editorManager.closeEditor();
         }
-    }
-
-    public MainMenuBar getMainMenuBar() {
-        if (principalMenuBar == null) {
-            principalMenuBar = new MainMenuBar();
-        }
-        return principalMenuBar;
     }
 
     @Override

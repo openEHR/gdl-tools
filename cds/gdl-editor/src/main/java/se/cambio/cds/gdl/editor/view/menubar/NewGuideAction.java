@@ -6,8 +6,10 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import se.cambio.cds.gdl.editor.controller.EditorFileManager;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.openehr.util.ExceptionHandler;
@@ -18,16 +20,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 
-
 public class NewGuideAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
+    private GdlEditorFactory gdlEditorFactory;
+    private MainMenuBar mainMenuBar;
+    private EditorFileManager editorFileManager;
 
-    public NewGuideAction(){
+    NewGuideAction(EditorManager editorManager, EditorFileManager editorFileManager, GdlEditorFactory gdlEditorFactory, MainMenuBar mainMenuBar) {
         super();
+        this.editorFileManager = editorFileManager;
+        this.editorManager = editorManager;
+        this.gdlEditorFactory = gdlEditorFactory;
+        this.mainMenuBar = mainMenuBar;
         putValue(NAME, GDLEditorLanguageManager.getMessage("CreateNewGuide"));
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CreateNewGuideSD"));
@@ -35,22 +41,15 @@ public class NewGuideAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-        EditorManager.runIfOkWithCurrentEditor(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        GDLEditor controller = new GDLEditor(new Guide());
-                        EditorManager.setLastFileLoaded(null);
-                        try {
-                            EditorManager.initController(controller);
-                        } catch (InternalErrorException e1) {
-                            ExceptionHandler.handle(e1);
-                        }
-                    }
+        editorManager.runIfOkWithCurrentEditor(
+                () -> {
+                    GDLEditor controller = gdlEditorFactory.createGdlEditor(
+                            new Guide(),
+                            editorManager.getActiveEditorViewer());
+                    editorFileManager.setLastFileLoaded(null);
+                    editorManager.initController(controller);
+                    mainMenuBar.refreshLanguageMenu();
                 });
     }
 }

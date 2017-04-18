@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathNotFoundException;
 import se.cambio.cds.formgen.view.util.SpringUtilities;
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
@@ -14,21 +15,18 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class DescriptionPanel extends JPanel{
+public class DescriptionPanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    private EditorController _controller = null;
+    private EditorController controller = null;
 
     private JSplitPane mainSplitPane;
     private JScrollPane leftPanel;
     private JPanel detailsPanel;
     private JPanel authorDetailsPanel;
-    private JXPathContext _descriptionContext = null;
-    private JXPathContext _conceptContext = null;
+    private JXPathContext descriptionContext = null;
+    private JXPathContext conceptContext = null;
     private JPanel authorshipLifecyclePanel;
     private ListPanel contributorsPanel;
     private ListPanel keywordsPanel;
@@ -38,21 +36,23 @@ public class DescriptionPanel extends JPanel{
     private JPanel references;
     private JPanel conceptPanel;
     private JPanel descriptionPanel;
+    private Window window;
 
-    public DescriptionPanel(EditorController controller){
-        _controller = controller;
-        _descriptionContext = JXPathContext.newContext(_controller.getResourceDescription());
-        _conceptContext = JXPathContext.newContext(_controller.getConceptTerm());
+    DescriptionPanel(EditorController controller, Window window) {
+        this.controller = controller;
+        this.window = window;
+        descriptionContext = JXPathContext.newContext(this.controller.getResourceDescription());
+        conceptContext = JXPathContext.newContext(this.controller.getConceptTerm());
         init();
     }
 
-    public void init(){
+    public void init() {
         this.setLayout(new BorderLayout());
         this.add(getMainSplitPane());
     }
 
-    public JSplitPane getMainSplitPane(){
-        if (mainSplitPane==null){
+    private JSplitPane getMainSplitPane() {
+        if (mainSplitPane == null) {
             mainSplitPane = new JSplitPane();
             mainSplitPane.setOrientation(javax.swing.JSplitPane.HORIZONTAL_SPLIT);
             mainSplitPane.setResizeWeight(0.1);
@@ -63,8 +63,8 @@ public class DescriptionPanel extends JPanel{
     }
 
 
-    public JScrollPane getLeftPanel(){
-        if (leftPanel==null){
+    private JScrollPane getLeftPanel() {
+        if (leftPanel == null) {
             leftPanel = new JScrollPane();
             JPanel aux = new JPanel();
             aux.setLayout(new BoxLayout(aux, BoxLayout.Y_AXIS));
@@ -78,55 +78,54 @@ public class DescriptionPanel extends JPanel{
         return leftPanel;
     }
 
-    public JPanel getConceptPanel(){
-        if (conceptPanel==null){
+    private JPanel getConceptPanel() {
+        if (conceptPanel == null) {
             conceptPanel = new JPanel(new SpringLayout());
-            conceptPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Name")+":"));
+            conceptPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Name") + ":"));
             JTextField nameTF = new JTextField();
-            connect(_conceptContext, "/text", nameTF);
+            connect(conceptContext, "/text", nameTF);
             conceptPanel.add(nameTF);
             SpringUtilities.makeCompactGrid(conceptPanel,
-                    1, 2, 	//rows, cols
+                    1, 2,    //rows, cols
                     6, 6,   //initX, initY
                     6, 6);
         }
         return conceptPanel;
     }
 
-    public JPanel getAuthorDetailsPanel(){
-        if (authorDetailsPanel==null){
+    private JPanel getAuthorDetailsPanel() {
+        if (authorDetailsPanel == null) {
             authorDetailsPanel = new JPanel(new SpringLayout());
             authorDetailsPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("AuthorDetails")));
-            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorName")+":"));
+            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorName") + ":"));
             JTextField nameTF = new JTextField();
-            connect(_descriptionContext, "/originalAuthor/name", nameTF);
+            connect(descriptionContext, "/originalAuthor/name", nameTF);
             authorDetailsPanel.add(nameTF);
-            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Email")+":"));
+            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Email") + ":"));
             JTextField emailTF = new JTextField();
-            connect(_descriptionContext, "/originalAuthor/email",emailTF);
+            connect(descriptionContext, "/originalAuthor/email", emailTF);
             authorDetailsPanel.add(emailTF);
-            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Organisation")+":"));
+            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Organisation") + ":"));
             JTextField orgTF = new JTextField();
-            connect(_descriptionContext, "/originalAuthor/organisation", orgTF);
+            connect(descriptionContext, "/originalAuthor/organisation", orgTF);
             authorDetailsPanel.add(orgTF);
-            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Date")+":"));
+            authorDetailsPanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Date") + ":"));
             JTextField dateTF = new JTextField();
-            connect(_descriptionContext, "/originalAuthor/date", dateTF);
+            connect(descriptionContext, "/originalAuthor/date", dateTF);
             authorDetailsPanel.add(dateTF);
             SpringUtilities.makeCompactGrid(authorDetailsPanel,
-                    4, 2, 	//rows, cols
+                    4, 2,    //rows, cols
                     6, 6,   //initX, initY
                     6, 6);
         }
         return authorDetailsPanel;
     }
 
-    public JPanel getAuthorshipLifeCycle(){
-        if (authorshipLifecyclePanel==null){
+    private JPanel getAuthorshipLifeCycle() {
+        if (authorshipLifecyclePanel == null) {
             authorshipLifecyclePanel = new JPanel(new SpringLayout());
-            authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorshipLifecycle")+":"));
-            JComboBox lyfeCB = new JComboBox();
-            //TODO Translations?
+            authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("AuthorshipLifecycle") + ":"));
+            JComboBox<String> lyfeCB = new JComboBox<>();
             lyfeCB.addItem("Not set");
             lyfeCB.addItem("Initial");
             lyfeCB.addItem("Author draft");
@@ -138,42 +137,42 @@ public class DescriptionPanel extends JPanel{
             lyfeCB.addItem("Published");
             lyfeCB.addItem("Rejected");
             lyfeCB.addItem("Obsolete");
-            lyfeCB.setSelectedIndex(2);
-            connect(_descriptionContext, "/lifecycleState", lyfeCB);
+            lyfeCB.setSelectedIndex(0);
+            connect(descriptionContext, "/lifecycleState", lyfeCB);
             authorshipLifecyclePanel.add(lyfeCB);
-            authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Copyright")+":"));
+            authorshipLifecyclePanel.add(new JLabel(GDLEditorLanguageManager.getMessage("Copyright") + ":"));
             JTextField copyrightTF = new JTextField();
-            String lang = _controller.getCurrentLanguageCode();
-            connect(_descriptionContext, "/details/"+lang+"/copyright", copyrightTF);
+            String lang = controller.getCurrentLanguageCode();
+            connect(descriptionContext, "/details/" + lang + "/copyright", copyrightTF);
             authorshipLifecyclePanel.add(copyrightTF);
 
             SpringUtilities.makeCompactGrid(authorshipLifecyclePanel,
-                    2, 2, 	//rows, cols
+                    2, 2,    //rows, cols
                     6, 6,   //initX, initY
                     6, 6);
         }
         return authorshipLifecyclePanel;
     }
-    public ListPanel getKeywordsPanel(){
-        if (keywordsPanel==null){
-            String lang = _controller.getCurrentLanguageCode();
-            keywordsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Keywords"), "/details/"+lang+"/keywords", _descriptionContext);
+
+    private ListPanel getKeywordsPanel() {
+        if (keywordsPanel == null) {
+            String lang = controller.getCurrentLanguageCode();
+            keywordsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Keywords"), "/details/" + lang + "/keywords", descriptionContext, window);
         }
         return keywordsPanel;
     }
 
-    public ListPanel getContributorsPanel(){
-        if (contributorsPanel==null){
-            contributorsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Contributors"), "/otherContributors", _descriptionContext);
+    private ListPanel getContributorsPanel() {
+        if (contributorsPanel == null) {
+            contributorsPanel = new ListPanel(GDLEditorLanguageManager.getMessage("Contributors"), "/otherContributors", descriptionContext, window);
         }
         return contributorsPanel;
     }
 
 
-
-    public JPanel getDetailsPanel(){
-        if (detailsPanel==null){
-            detailsPanel = new JPanel(new GridLayout(5,1));
+    private JPanel getDetailsPanel() {
+        if (detailsPanel == null) {
+            detailsPanel = new JPanel(new GridLayout(5, 1));
             JScrollPane aux = new JScrollPane();
             aux.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("Description")));
             aux.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -207,13 +206,13 @@ public class DescriptionPanel extends JPanel{
         return detailsPanel;
     }
 
-    public JPanel getDescriptionPanel(){
-        if (descriptionPanel==null){
+    private JPanel getDescriptionPanel() {
+        if (descriptionPanel == null) {
             descriptionPanel = new JPanel(new BorderLayout());
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            connect(_conceptContext, "/description",ta);
+            connect(conceptContext, "/description", ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
             descriptionPanel.add(ta, BorderLayout.CENTER);
@@ -221,14 +220,14 @@ public class DescriptionPanel extends JPanel{
         return descriptionPanel;
     }
 
-    public JPanel getPurposePanel(){
-        if (purposePanel==null){
+    private JPanel getPurposePanel() {
+        if (purposePanel == null) {
             purposePanel = new JPanel(new BorderLayout());
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            String lang = _controller.getCurrentLanguageCode();
-            connect(_descriptionContext, "/details/"+lang+"/purpose",ta);
+            String lang = controller.getCurrentLanguageCode();
+            connect(descriptionContext, "/details/" + lang + "/purpose", ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
             purposePanel.add(ta, BorderLayout.CENTER);
@@ -236,14 +235,14 @@ public class DescriptionPanel extends JPanel{
         return purposePanel;
     }
 
-    public JPanel getUsePanel(){
-        if (usePanel==null){
+    private JPanel getUsePanel() {
+        if (usePanel == null) {
             usePanel = new JPanel(new BorderLayout());
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            String lang = _controller.getCurrentLanguageCode();
-            connect(_descriptionContext, "/details/"+lang+"/use",ta);
+            String lang = controller.getCurrentLanguageCode();
+            connect(descriptionContext, "/details/" + lang + "/use", ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
             usePanel.add(ta, BorderLayout.CENTER);
@@ -252,14 +251,14 @@ public class DescriptionPanel extends JPanel{
     }
 
 
-    public JPanel getMisusePanel(){
-        if (misusePanel==null){
+    private JPanel getMisusePanel() {
+        if (misusePanel == null) {
             misusePanel = new JPanel(new BorderLayout());
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            String lang = _controller.getCurrentLanguageCode();
-            connect(_descriptionContext, "/details/"+lang+"/misuse",ta);
+            String lang = controller.getCurrentLanguageCode();
+            connect(descriptionContext, "/details/" + lang + "/misuse", ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
             misusePanel.add(ta, BorderLayout.CENTER);
@@ -267,13 +266,13 @@ public class DescriptionPanel extends JPanel{
         return misusePanel;
     }
 
-    public JPanel getReferencePanel(){
-        if (references==null){
+    private JPanel getReferencePanel() {
+        if (references == null) {
             references = new JPanel(new BorderLayout());
             JTextArea ta = new JTextArea();
             ta.setLineWrap(true);
             ta.setWrapStyleWord(true);
-            connect(_descriptionContext, "/otherDetails/references", ta);
+            connect(descriptionContext, "/otherDetails/references", ta);
             ta.setBorder(BorderFactory.createEtchedBorder());
             ta.setCaretPosition(0);
             references.add(ta, BorderLayout.CENTER);
@@ -281,22 +280,22 @@ public class DescriptionPanel extends JPanel{
         return references;
     }
 
-    private class ComponentFocusAdapter extends FocusAdapter{
+    private class ComponentFocusAdapter extends FocusAdapter {
         private String xPath = null;
         private JXPathContext context = null;
 
-        public ComponentFocusAdapter(JXPathContext context, String xPath){
+        ComponentFocusAdapter(JXPathContext context, String xPath) {
             this.xPath = xPath;
             this.context = context;
         }
 
         public void focusLost(FocusEvent ev) {
-            if (ev.getSource() instanceof JTextComponent){
-                JTextComponent textComponent = (JTextComponent)ev.getSource();
+            if (ev.getSource() instanceof JTextComponent) {
+                JTextComponent textComponent = (JTextComponent) ev.getSource();
                 saveText(context, xPath, textComponent);
-            }else if(ev.getSource() instanceof JComboBox){
-                JComboBox comboBox = (JComboBox)ev.getSource();
-                String text = (String)comboBox.getSelectedItem();
+            } else if (ev.getSource() instanceof JComboBox) {
+                JComboBox comboBox = (JComboBox) ev.getSource();
+                String text = (String) comboBox.getSelectedItem();
                 context.setValue(xPath, text);
             }
         }
@@ -306,13 +305,13 @@ public class DescriptionPanel extends JPanel{
 
     private void saveText(JXPathContext context, String xPath, JTextComponent textComponent) {
         String text = textComponent.getText();
-        if (text!=null){
-            text = text.replace("\"","\\\"");
+        if (text != null) {
+            text = text.replace("\"", "\\\"");
         }
         context.setValue(xPath, text);
     }
 
-    private void connect(JXPathContext context, String xPath, JComponent component){
+    private void connect(JXPathContext context, String xPath, JComponent component) {
         if (component instanceof JTextComponent) {
             JTextComponent textComponent = (JTextComponent) component;
             textComponent.getDocument().addDocumentListener(new DescriptionDocumentListener(context, xPath, textComponent));
@@ -320,18 +319,18 @@ public class DescriptionPanel extends JPanel{
             component.addFocusListener(new ComponentFocusAdapter(context, xPath));
         }
         String value = null;
-        try{
-            value = (String)context.getValue(xPath);
-        }catch(JXPathNotFoundException e){
+        try {
+            value = (String) context.getValue(xPath);
+        } catch (JXPathNotFoundException e) {
             //Value not found
         }
-        if (value!=null){
-            if (component instanceof JTextComponent){
+        if (value != null) {
+            if (component instanceof JTextComponent) {
                 JTextComponent textComponent = (JTextComponent) component;
-                value = value.replace("\\\"","\"");
+                value = value.replace("\\\"", "\"");
                 textComponent.setText(value);
-            }else if (component instanceof JComboBox){
-                ((JComboBox)component).setSelectedItem(value);
+            } else if (component instanceof JComboBox) {
+                ((JComboBox) component).setSelectedItem(value);
             }
         }
     }
@@ -341,7 +340,7 @@ public class DescriptionPanel extends JPanel{
         private String xPath = null;
         private JTextComponent textComponent;
 
-        public DescriptionDocumentListener(JXPathContext context, String xPath, JTextComponent textComponent){
+        DescriptionDocumentListener(JXPathContext context, String xPath, JTextComponent textComponent) {
             this.xPath = xPath;
             this.context = context;
             this.textComponent = textComponent;
@@ -362,7 +361,7 @@ public class DescriptionPanel extends JPanel{
             update();
         }
 
-        private void update(){
+        private void update() {
             saveText(context, xPath, textComponent);
         }
     }

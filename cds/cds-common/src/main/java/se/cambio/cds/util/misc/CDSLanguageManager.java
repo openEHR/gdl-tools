@@ -1,58 +1,55 @@
 package se.cambio.cds.util.misc;
 
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
+import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import static java.lang.String.format;
 
 
 public final class CDSLanguageManager {
 
 
-    private static CDSLanguageManager _instance;
+    private static CDSLanguageManager instance;
 
-    private Map<String, ResourceBundle> _resourceMap = null;
+    private Map<String, ResourceBundle> resourceMap = null;
     private static final String MESSAGES_BUNDLE = "se.cambio.cds.view.messages.Messages";
-    private String language;
-    private String country;
+    private static String language;
+    private static String country;
 
     private CDSLanguageManager() {
-        language = UserConfigurationManager.instance().getLanguage();
-        country = UserConfigurationManager.instance().getCountryCode();
-        _resourceMap = new HashMap<String, ResourceBundle>();
+        UserConfigurationManager userConfigurationManager = UserConfiguration.getInstanceUserConfigurationManager();
+        language = userConfigurationManager.getLanguage();
+        country = userConfigurationManager.getCountryCode();
+        resourceMap = new HashMap<>();
     }
 
-    private ResourceBundle getResourceBundle() {
+    private static ResourceBundle getResourceBundle() {
         return getResourceBundle(language);
     }
 
-    private ResourceBundle getResourceBundle(String language) {
-        if (language == null) {
-            return getResourceBundle();
-        }
-        ResourceBundle resourceBundle = _resourceMap.get(language);
+    private static ResourceBundle getResourceBundle(String language) {
+        ResourceBundle resourceBundle = getDelegate().resourceMap.get(language);
         if (resourceBundle == null) {
             try {
                 resourceBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());
             } catch (Exception e) {
-                if (!this.language.equals(language)) {
+                if (!CDSLanguageManager.language.equals(language)) {
                     resourceBundle = getResourceBundle();
                 }
                 ExceptionHandler.handle(e);
             }
-            _resourceMap.put(language, resourceBundle);
+            if (resourceBundle != null) {
+                getDelegate().resourceMap.put(language, resourceBundle);
+            } else {
+                throw new RuntimeException(format("Cannot find resource bundle for language: %s", language));
+            }
         }
         return resourceBundle;
-    }
-
-    public static void refreshConfig() {
-        _instance = null;
-        getDelegate();
     }
 
     public static String getMessage(String key) {
@@ -61,7 +58,7 @@ public final class CDSLanguageManager {
 
     public static String getMessageWithLanguage(String key, String language) {
         try {
-            return getDelegate().getResourceBundle(language).getString(key);
+            return getResourceBundle(language).getString(key);
         } catch (MissingResourceException e) {
             ExceptionHandler.handle(e);
             return "ERROR: Text not Found!";
@@ -73,7 +70,7 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessageWithLanguage(String key, String data1, String language) {
-        String s = getDelegate().getResourceBundle(language).getString(key);
+        String s = getResourceBundle(language).getString(key);
         int i = s.indexOf("$0");
         if (i >= 0 && i < s.length()) {
             String s1 = s.substring(0, i);
@@ -87,7 +84,7 @@ public final class CDSLanguageManager {
     }
 
     public static String getMessageWithLanguage(String key, String[] data, String language) {
-        String s = getDelegate().getResourceBundle(language).getString(key);
+        String s = getResourceBundle(language).getString(key);
         for (int i = 0; i < data.length && i < 10; i++) {
             int index = s.indexOf("$" + i);
             String s1 = s.substring(0, index);
@@ -98,10 +95,10 @@ public final class CDSLanguageManager {
     }
 
     private static CDSLanguageManager getDelegate() {
-        if (_instance == null) {
-            _instance = new CDSLanguageManager();
+        if (instance == null) {
+            instance = new CDSLanguageManager();
         }
-        return _instance;
+        return instance;
     }
 
 

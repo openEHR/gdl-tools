@@ -1,4 +1,5 @@
 package se.cambio.cds.gdl.editor.view.panels;
+
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
@@ -9,75 +10,80 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public abstract class DraggablePanel extends JPanel implements MouseListener, MouseMotionListener {
-	private static final long serialVersionUID = 1L;
-	private Point mLastPoint;
-	private JLabel _dragLabel = null;
+    private static final long serialVersionUID = 1L;
+    private Point mLastPoint;
+    private JLabel _dragLabel = null;
 
-	public DraggablePanel(JComponent component) {
-		super(new BorderLayout());
-		JPanel aux = new JPanel(new BorderLayout());
-		aux.add(getDragLabel(), BorderLayout.NORTH);
-		this.add(aux, BorderLayout.WEST);
-		this.add(component, BorderLayout.CENTER);
-		this.setBounds(50, 50, (int)component.getSize().getWidth(), (int)component.getSize().getHeight());
-		getDragLabel().addMouseListener(this);
-		getDragLabel().addMouseMotionListener(this);
-	}
+    DraggablePanel(JComponent component) {
+        super(new BorderLayout());
+        JPanel aux = new JPanel(new BorderLayout());
+        aux.add(getDragLabel(), BorderLayout.NORTH);
+        this.add(aux, BorderLayout.WEST);
+        this.add(component, BorderLayout.CENTER);
+        this.setBounds(50, 50, (int) component.getSize().getWidth(), (int) component.getSize().getHeight());
+        getDragLabel().addMouseListener(this);
+        getDragLabel().addMouseMotionListener(this);
+    }
 
-	public JLabel getDragLabel(){
-		if (_dragLabel==null){
-			_dragLabel = new JLabel();
-			_dragLabel.setIcon(GDLEditorImageUtil.DRAG_ICON);
-			_dragLabel.setToolTipText(GDLEditorLanguageManager.getMessage("MoveLine"));
-		}
-		return _dragLabel;
-	}
+    private JLabel getDragLabel() {
+        if (_dragLabel == null) {
+            _dragLabel = new JLabel();
+            _dragLabel.setIcon(GDLEditorImageUtil.DRAG_ICON);
+            _dragLabel.setToolTipText(GDLEditorLanguageManager.getMessage("MoveLine"));
+        }
+        return _dragLabel;
+    }
 
-	public void mouseDragged(MouseEvent event_) {
-		int x, y;
-		if(mLastPoint != null) {
-			x = 0;
-			y = super.getY() + (event_.getY() - (int)mLastPoint.getY());
-			super.setLocation(x, y);
-		}
-	}
+    public void mouseDragged(MouseEvent event_) {
+        int x, y;
+        if (mLastPoint != null) {
+            x = 0;
+            y = super.getY() + (event_.getY() - (int) mLastPoint.getY());
+            super.setLocation(x, y);
+        }
+    }
 
-	public void mouseMoved(MouseEvent event_) {
-		setCursorType(event_.getPoint());
-	}
-	public void mouseClicked(MouseEvent event_) {}
-	public void mouseEntered(MouseEvent event_) {}
-	public void mouseExited(MouseEvent event_) {
-		if(mLastPoint == null){
-			super.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		}
-	}
+    public void mouseMoved(MouseEvent event_) {
+        setCursorType(event_.getPoint());
+    }
 
-	public void mousePressed(MouseEvent event) {
-		if(super.getCursor().equals(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))) {
-			mLastPoint = event.getPoint();
-			super.getParent().add(this, 0);
-			super.getParent().repaint();
-		} else {
-			mLastPoint = null;
-		}
-	}
+    public void mouseClicked(MouseEvent event_) {
+    }
 
-	public void mouseReleased(MouseEvent e) {
-		mLastPoint = null;
-		if (super.getParent() instanceof DropPanel){
-			((DropPanel)super.getParent()).panelDragged(this);
-		}
-	}
+    public void mouseEntered(MouseEvent event_) {
+    }
 
-	private void setCursorType(Point p) {
-		Point loc = super.getLocation();
-		Dimension size = super.getSize();
+    public void mouseExited(MouseEvent event_) {
+        if (mLastPoint == null) {
+            super.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+    }
 
-		if((p.y + 4 < loc.y + size.height) && (p.x + 4 < p.x + size.width)) {
-			super.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		}
-	}
+    public void mousePressed(MouseEvent event) {
+        if (super.getCursor().equals(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))) {
+            mLastPoint = event.getPoint();
+            super.getParent().add(this, 0);
+            super.getParent().repaint();
+        } else {
+            mLastPoint = null;
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        mLastPoint = null;
+        if (super.getParent() instanceof DropPanel) {
+            ((DropPanel) super.getParent()).panelDragged(this);
+        }
+    }
+
+    private void setCursorType(Point p) {
+        Point loc = super.getLocation();
+        Dimension size = super.getSize();
+
+        if ((p.y + 4 < loc.y + size.height) && (p.x + 4 < p.x + size.width)) {
+            super.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

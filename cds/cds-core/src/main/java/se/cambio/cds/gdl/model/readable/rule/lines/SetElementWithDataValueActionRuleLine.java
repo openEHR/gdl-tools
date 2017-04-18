@@ -27,9 +27,9 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("SetElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"SetElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement("ToRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ToRLE"));
         getRuleLineElements().add(archetypeDataValueRuleLineElement);
     }
 
@@ -61,7 +61,7 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
                 archetypeElementRuleLineElement.getValue().getValue(),
                 null, name);
         DataValue dataValue = archetypeDataValueRuleLineElement.getValue();
-        ConstantExpression constantExpression = null;
+        ConstantExpression constantExpression;
         if (dataValue!=null){
             constantExpression = DVUtil.convertToExpression(dataValue);
         }else{

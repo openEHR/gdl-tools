@@ -2,28 +2,29 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
+import se.cambio.cm.model.archetype.vo.OrdinalVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Ordinals;
-import se.cambio.cm.model.archetype.vo.OrdinalVO;
-import se.cambio.openehr.util.UserConfigurationManager;
 
-public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
-    /**
-     *
-     */
+public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface {
+
     private static final long serialVersionUID = 1L;
+    private ArchetypeManager archetypeManager;
 
-    public DVOrdinalPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
+    public DVOrdinalPanel(String idElement, String idTemplate,
+                          boolean allowNull, boolean requestFocus,
+                          ArchetypeManager archetypeManager) {
         super(idElement, idTemplate, allowNull, requestFocus);
+        this.archetypeManager = archetypeManager;
         for (OrdinalVO ordinalVO : getOrdinals().getOrdinalVOs(idTemplate, idElement)) {
-            String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.instance().getLanguage());
+            String name = getOrdinals().getText(ordinalVO, archetypeManager.getUserConfigurationManager().getLanguage());
             insertOption(ordinalVO.getCode(), ordinalVO.getValue() + " - " + name, ordinalVO.getDescription());
         }
     }
 
     public void setDataValue(DataValue dataValue) {
         String codeString = null;
-        if (dataValue instanceof DvOrdinal){
+        if (dataValue instanceof DvOrdinal) {
             DvOrdinal dvOrdinal = (DvOrdinal) dataValue;
             codeString = dvOrdinal.getCode();
         }
@@ -32,14 +33,14 @@ public class DVOrdinalPanel extends DVComboBoxPanel implements DVPanelInterface{
 
 
     public DataValue getDataValue() {
-        String ordinalKey = (String)getComboBox().getSelectedItem();
+        String ordinalKey = (String) getComboBox().getSelectedItem();
         OrdinalVO ordinalVO = getOrdinals().getOrdinalVO(getIdTemplate(), getIdElement(), ordinalKey);
-        String name = getOrdinals().getText(ordinalVO, UserConfigurationManager.instance().getLanguage());
-        return new DvOrdinal(ordinalVO.getValue(), name,ordinalVO.getTerminology(), ordinalVO.getCode());
+        String name = getOrdinals().getText(ordinalVO, archetypeManager.getUserConfigurationManager().getLanguage());
+        return new DvOrdinal(ordinalVO.getValue(), name, ordinalVO.getTerminology(), ordinalVO.getCode());
     }
 
-    private Ordinals getOrdinals(){
-        return ArchetypeManager.getInstance().getOrdinals();
+    private Ordinals getOrdinals() {
+        return archetypeManager.getOrdinals();
     }
 }
 /*

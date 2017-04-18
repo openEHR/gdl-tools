@@ -25,7 +25,7 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
                 OpenEHRLanguageManager.getMessage("ElementPredicateExistsDesc"));
         archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         existenceOperatorRuleLineElement = new ExistenceOperatorRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement("WithElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(existenceOperatorRuleLineElement);
     }

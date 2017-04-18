@@ -13,16 +13,16 @@ import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.LoggerFactory;
+import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.*;
-import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.openehr.util.*;
 
 import java.util.*;
 
 public class GenericObjectBundleADLManager {
-    private static String SECTION_NAME = "name/value='";
+    private final static String SECTION_NAME = "name/value='";
     protected String templateId = null;
     private String language = null;
     private Archetype ar = null;
@@ -33,16 +33,26 @@ public class GenericObjectBundleADLManager {
     private Collection<UnitVO> unitVOs;
     private Collection<ProportionTypeVO> proportionTypeVOs;
     private final Map<String, Archetype> archetypeMap;
+    private TerminologyService terminologyService;
+    private UserConfigurationManager userConfigurationManager;
 
-    public GenericObjectBundleADLManager(Archetype ar, Map<String, Archetype> archetypeMap) {
+    public GenericObjectBundleADLManager(
+            Archetype ar, Map<String, Archetype> archetypeMap,
+            TerminologyService terminologyService, UserConfigurationManager userConfigurationManager) {
         this.ar = ar;
         this.archetypeMap = archetypeMap;
+        this.terminologyService = terminologyService;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
-    public GenericObjectBundleADLManager(Archetype ar, String templateId, Map<String, Archetype> archetypeMap) {
+    public GenericObjectBundleADLManager(
+            Archetype ar, String templateId, Map<String, Archetype> archetypeMap,
+            TerminologyService terminologyService, UserConfigurationManager userConfigurationManager) {
         this.ar = ar;
         this.templateId = templateId;
         this.archetypeMap = archetypeMap;
+        this.terminologyService = terminologyService;
+        this.userConfigurationManager = userConfigurationManager;
     }
 
     public ArchetypeObjectBundleCustomVO generateObjectBundleCustomVO() {
@@ -59,7 +69,7 @@ public class GenericObjectBundleADLManager {
     }
 
     private void setDefaultLanguage() {
-        language = UserConfigurationManager.instance().getLanguage();
+        language = userConfigurationManager.getLanguage();
         if (!ar.getOriginalLanguage().getCodeString().equals(language) &&
                 (ar.getTranslations() == null || !ar.getTranslations().containsKey(language))) {
             language = ar.getOriginalLanguage().getCodeString();
@@ -67,12 +77,12 @@ public class GenericObjectBundleADLManager {
     }
 
     private void init() {
-        archetypeElementVOs = new ArrayList<ArchetypeElementVO>();
-        clusterVOs = new ArrayList<ClusterVO>();
-        codedTextVOs = new ArrayList<CodedTextVO>();
-        ordinalVOs = new ArrayList<OrdinalVO>();
-        unitVOs = new ArrayList<UnitVO>();
-        proportionTypeVOs = new ArrayList<ProportionTypeVO>();
+        archetypeElementVOs = new ArrayList<>();
+        clusterVOs = new ArrayList<>();
+        codedTextVOs = new ArrayList<>();
+        ordinalVOs = new ArrayList<>();
+        unitVOs = new ArrayList<>();
+        proportionTypeVOs = new ArrayList<>();
     }
 
     public void loadArchetypeObjects() {
@@ -260,7 +270,7 @@ public class GenericObjectBundleADLManager {
         return idParentCluster;
     }
 
-    private static void loadCodedTexts(
+    private void loadCodedTexts(
             String archetypdId,
             Archetype ar,
             String templateId,
@@ -321,13 +331,13 @@ public class GenericObjectBundleADLManager {
         }
     }
 
-    private static void addSubclassCodedTexts(CodedTextVO codedTextVO, Collection<CodedTextVO> codedTextVOs) {
-        if (!OpenEHRConst.LOCAL.equals(codedTextVO.getTerminology())) {
+    private void addSubclassCodedTexts(CodedTextVO codedTextVO, Collection<CodedTextVO> codedTextVOs) {
+        if (!OpenEHRConst.LOCAL.equals(codedTextVO.getTerminology())
+                && !"*".equals(codedTextVO.getCode())) {
             try {
-                TerminologyNodeVO node =
-                        OpenEHRSessionManager.getTerminologyFacadeDelegate().retrieveTerminologyNode(
-                                new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
-                                OpenEHRDataValuesUI.getLanguageCodePhrase());
+                TerminologyNodeVO node = terminologyService.retrieveAllSubclasses(
+                        new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
+                        OpenEHRDataValuesUI.getLanguageCodePhrase());
                 if (node == null) {
                     LoggerFactory.getLogger(GenericObjectBundleADLManager.class).warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
                     return;

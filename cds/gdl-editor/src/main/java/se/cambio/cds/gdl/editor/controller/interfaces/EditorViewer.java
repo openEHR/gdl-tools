@@ -5,12 +5,11 @@ import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import javax.swing.*;
 
 
-public abstract interface EditorViewer{
-    
+public interface EditorViewer {
 
-    public void initController(EditorController controller);
-    public MainMenuBar getMainMenuBar();
-    public void setContent(JPanel panel);
+    void initController(EditorController controller);
+
+    void setContent(JPanel panel);
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

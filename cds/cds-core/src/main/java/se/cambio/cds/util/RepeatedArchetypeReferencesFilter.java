@@ -8,7 +8,6 @@ import se.cambio.cds.util.export.CdsGsonBuilderFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Component
 public class RepeatedArchetypeReferencesFilter {
 
     private Gson gson;

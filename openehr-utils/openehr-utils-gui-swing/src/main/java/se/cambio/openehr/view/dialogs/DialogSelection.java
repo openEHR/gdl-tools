@@ -9,6 +9,7 @@ package se.cambio.openehr.view.dialogs;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.util.NodeConversor;
+import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -17,57 +18,49 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
-/**
- * @author icorram
- */
+
 public class DialogSelection extends DialogEditor {
 
-
-    private static int BIG_LIST_THRESHOLD = 2000;
-    /**
-     *
-     */
+    private static final int BIG_LIST_THRESHOLD = 2000;
     private static final long serialVersionUID = -2770907170844293126L;
     private SelectionPanel selectionPanel = null;
-    private SelectableNode<?> _rootNode = null;
-    private JPanel butonsPanel = null;
-    private boolean _bigList = false;
-    /**
-     * This is the default constructor
-     */
-    public DialogSelection(Window owner, String title, SelectableNode<?> rootNode, boolean expandTree, Dimension dimension) {
+    private SelectableNode<?> rootNode = null;
+    private JPanel buttonsPanel = null;
+    private boolean bigList = false;
+    private WindowManager windowManager;
+
+    public DialogSelection(Window owner, String title, SelectableNode<?> rootNode, boolean expandTree, Dimension dimension, WindowManager windowManager) {
         super(owner, title, dimension, true, true);
-        _rootNode = rootNode;
+        this.rootNode = rootNode;
+        this.windowManager = windowManager;
         initialize();
         if (expandTree){
             expandTree();
         }
     }
-    public DialogSelection(Window owner, String titulo,SelectableNode<?> rootNode) {
+    public DialogSelection(Window owner, String titulo, SelectableNode<?> rootNode, WindowManager windowManager) {
         super(owner, titulo, new Dimension(300, 500), true);
-        _rootNode = rootNode;
+        this.rootNode = rootNode;
+        this.windowManager = windowManager;
         initialize();
         expandTree();
     }
 
-    public void setRootNode(SelectableNode<?> rootNode, boolean expandTree){
-        _rootNode = rootNode;
+    public void setRootNode(SelectableNode<?> rootNode){
+        this.rootNode = rootNode;
         getJPanel().removeAll();
         selectionPanel = null;
         initialize();
-        if (expandTree){
-            expandTree();
-        }
     }
 
     /**
      * This method initializes this
      */
     private void initialize() {
-        if (_rootNode.getAllChildrenCount()>BIG_LIST_THRESHOLD){
-            _bigList = true;
+        if (rootNode.getAllChildrenCount()>BIG_LIST_THRESHOLD){
+            bigList = true;
         }
-        NodeConversor.setAllVisible(_rootNode);
+        NodeConversor.setAllVisible(rootNode);
         registerComponentWithFirstFocus(getSelectionPanel().getTextWithCleanButtonPanel().getJTextField());
         GridBagConstraints gbc = new GridBagConstraints();
         getJPanel().setLayout(new GridBagLayout());
@@ -80,35 +73,35 @@ public class DialogSelection extends DialogEditor {
         getJPanel().add(getSelectionPanel(), gbc);
         gbc.weighty = 0;
         gbc.gridy++;
-        getJPanel().add(getButonsPanel(), gbc);
+        getJPanel().add(getButtonsPanel(), gbc);
         KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
         getJPanel().registerKeyboardAction(null, enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
         this.setResizable(true);
     }
 
-    public JPanel getButonsPanel(){
-        if (butonsPanel==null){
-            butonsPanel = new JPanel();
+    private JPanel getButtonsPanel(){
+        if (buttonsPanel ==null){
+            buttonsPanel = new JPanel();
             GridBagConstraints gbc = new GridBagConstraints();
-            butonsPanel.setLayout(new GridBagLayout());
+            buttonsPanel.setLayout(new GridBagLayout());
             gbc.gridwidth = 1;
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.fill = GridBagConstraints.NONE;
             gbc.anchor = java.awt.GridBagConstraints.EAST;
             gbc.insets = new java.awt.Insets(3,10,3,5);
-            butonsPanel.add(getAcceptButton(), gbc);
+            buttonsPanel.add(getAcceptButton(), gbc);
             gbc.anchor = java.awt.GridBagConstraints.WEST;
             gbc.gridx++;
             gbc.insets = new java.awt.Insets(3,5,3,0);
-            butonsPanel.add(getCancelButton(), gbc);
+            buttonsPanel.add(getCancelButton(), gbc);
         }
-        return butonsPanel;
+        return buttonsPanel;
     }
 
-    public SelectionPanel getSelectionPanel(){
+    protected SelectionPanel getSelectionPanel(){
         if (selectionPanel == null){
-            selectionPanel = new SelectionPanel(_rootNode, true, _bigList);
+            selectionPanel = new SelectionPanel(windowManager, rootNode, true, bigList);
             selectionPanel.getJTree().addExtraMouseListener(new DoubleClickMouseListener());
         }
         return selectionPanel;
@@ -116,14 +109,14 @@ public class DialogSelection extends DialogEditor {
 
 
     protected boolean cancelDialog(){
-        _rootNode.setAllSelected(Boolean.FALSE);
+        rootNode.setAllSelected(Boolean.FALSE);
         return true;
     }
 
     class DoubleClickMouseListener extends MouseAdapter{
         public void mouseClicked(MouseEvent e) {
             if(e.getClickCount() > 1){
-                SelectableNode<?> selectableNode = NodeConversor.getSelectedNode(_rootNode, false);
+                SelectableNode<?> selectableNode = NodeConversor.getSelectedNode(rootNode, false);
                 if (selectableNode != null && selectableNode.isSingleSelectionMode() && selectableNode.getObject() != null){
                     accept();
                 }
@@ -132,21 +125,21 @@ public class DialogSelection extends DialogEditor {
     }
 
     public Object getSelectedObject(){
-        return NodeConversor.getSelectedObject(_rootNode);
+        return NodeConversor.getSelectedObject(rootNode, false);
     }
 
     public Collection<?> getSelectedObjects(){
-        return NodeConversor.getSelectedObjects(_rootNode);
+        return NodeConversor.getSelectedObjects(rootNode);
     }
 
     public SelectableNode<?> getNode(){
-        return _rootNode;
+        return rootNode;
     }
 
-    public void expandTree(){
+    private void expandTree(){
         TreeUI ui = getSelectionPanel().getJTree().getUI();
         getSelectionPanel().getJTree().setUI(null);
-        getSelectionPanel().getJTree().expand(_rootNode);
+        getSelectionPanel().getJTree().expand(rootNode);
         getSelectionPanel().getJTree().setUI(ui);
     }
 

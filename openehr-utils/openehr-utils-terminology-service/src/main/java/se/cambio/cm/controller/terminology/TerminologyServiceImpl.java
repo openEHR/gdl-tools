@@ -1,19 +1,16 @@
 package se.cambio.cm.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
-import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.cm.controller.terminology.plugins.TerminologyServicePlugin;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
+import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.cm.util.TerminologyConfigVO;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.cm.util.exceptions.UnsupportedTerminologyException;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.*;
 
@@ -21,19 +18,21 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-@Component
+import static java.lang.String.format;
+
 public class TerminologyServiceImpl implements TerminologyService {
 
     private Long lastUpdate = null;
-    private static long MAX_INTERVAL_BEFORE_UPLOAD = 5000;
+    private static final long MAX_INTERVAL_BEFORE_UPLOAD = 5000;
     private Map<String, TerminologyService> terminologyPlugins;
     private Set<String> supportedTerminologies = null;
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
+    private ClinicalModelsService clinicalModelsService;
     private static Logger log = LoggerFactory.getLogger(TerminologyServiceImpl.class);
 
-    @Autowired
-    public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration) {
+    public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration, ClinicalModelsService clinicalModelsService) {
         this.terminologyServiceConfiguration = terminologyServiceConfiguration;
+        this.clinicalModelsService = clinicalModelsService;
     }
 
     private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO) {
@@ -61,8 +60,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         }
     }
 
-    public boolean isSubclassOf(CodePhrase a, CodePhrase b)
-            throws UnsupportedTerminologyException, InvalidCodeException {
+    public boolean isSubclassOf(CodePhrase a, CodePhrase b) {
 
         log.debug("Checking isSubclassOf (" + a + ", " + b + ")");
 
@@ -76,8 +74,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         return ret;
     }
 
-    public boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes)
-            throws UnsupportedTerminologyException, InvalidCodeException {
+    public boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes) {
         log.debug("Checking isSubclassOf (" + code + ", " + codes + ")");
         checkTerminologySupported(code);
         for (CodePhrase cp : codes) {
@@ -94,15 +91,13 @@ public class TerminologyServiceImpl implements TerminologyService {
         return getSupportedTerminologiesI().contains(terminologyId);
     }
 
-    private void checkTerminologySupported(CodePhrase code)
-            throws UnsupportedTerminologyException {
+    private void checkTerminologySupported(CodePhrase code) {
         checkTerminologySupported(code.getTerminologyId().getValue());
     }
 
-    private void checkTerminologySupported(String terminology)
-            throws UnsupportedTerminologyException {
+    private void checkTerminologySupported(String terminology) {
         if (!isTerminologySupported(terminology)) {
-            throw new UnsupportedTerminologyException(terminology + " not supported");
+            throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminology));
         }
     }
 
@@ -110,9 +105,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         return isTerminologySupported(code.getTerminologyId().getValue());
     }
 
-    public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
-            throws UnsupportedTerminologyException,
-            UnsupportedLanguageException, InvalidCodeException {
+    public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language) {
         log.debug("retrieve all subclasses of " + concept);
         String terminologyId = concept.getTerminologyId().getValue();
         TerminologyService ts = getTerminologyServicePlugin(terminologyId);
@@ -121,31 +114,28 @@ public class TerminologyServiceImpl implements TerminologyService {
         if (ts != null) {
             node = ts.retrieveAllSubclasses(concept, language);
         } else {
-            throw new UnsupportedTerminologyException("Unknown terminology '" + terminologyId + "'");
+            throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminologyId));
         }
         return node;
     }
 
-    public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
-            throws UnsupportedTerminologyException, UnsupportedLanguageException {
+    public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language) {
         TerminologyService ts = getTerminologyServicePlugin(terminologyId);
         if (ts != null) {
             return ts.retrieveAll(terminologyId, language);
         } else {
-            throw new UnsupportedTerminologyException("Unknown terminology '" + terminologyId + "'");
+            throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminologyId));
         }
     }
 
-    public String retrieveTerm(CodePhrase concept, CodePhrase language)
-            throws UnsupportedTerminologyException,
-            UnsupportedLanguageException {
+    public String retrieveTerm(CodePhrase concept, CodePhrase language) {
 
         String terminologyId = concept.getTerminologyId().getValue();
         TerminologyService ts = getTerminologyServicePlugin(terminologyId);
         if (ts != null) {
             return ts.retrieveTerm(concept, language);
         } else {
-            throw new UnsupportedTerminologyException("Unknown terminology '" + terminologyId + "'");
+            throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminologyId));
         }
     }
 
@@ -159,7 +149,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         TerminologyService terminologyService = getTerminologyServicePluginMap().get(terminologyId);
         if (terminologyService == null && isSupported(terminologyId)) {
             try {
-                Collection<TerminologyDTO> terminologyDTOs = getCMAdministrationFacadeDelegate().searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
+                Collection<TerminologyDTO> terminologyDTOs = clinicalModelsService.searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
                 TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
                 terminologyService = generateTerminologyService(terminologyDTO);
                 getTerminologyServicePluginMap().put(terminologyId, terminologyService);
@@ -190,7 +180,7 @@ public class TerminologyServiceImpl implements TerminologyService {
         if (shouldUpdateSupportedTerminologyIds()) {
             try {
                 supportedTerminologies.clear();
-                supportedTerminologies.addAll(getCMAdministrationFacadeDelegate().getAllCMElementIds(TerminologyDTO.class));
+                supportedTerminologies.addAll(clinicalModelsService.getAllCMElementIds(TerminologyDTO.class));
                 lastUpdate = System.currentTimeMillis();
             } catch (InternalErrorException e) {
                 ExceptionHandler.handle(e);
@@ -206,10 +196,6 @@ public class TerminologyServiceImpl implements TerminologyService {
     private boolean shouldUpdateSupportedTerminologyIds() {
         long currentTimeMinusWaitInterval = System.currentTimeMillis() - MAX_INTERVAL_BEFORE_UPLOAD;
         return lastUpdate == null || lastUpdate < currentTimeMinusWaitInterval;
-    }
-
-    private CMAdministrationFacadeDelegate getCMAdministrationFacadeDelegate() throws InternalErrorException {
-        return OpenEHRSessionManager.getAdministrationFacadeDelegate();
     }
 }
 

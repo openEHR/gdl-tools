@@ -2,56 +2,54 @@ package se.cambio.cds.gdl.editor.controller.sw;
 
 
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CompileGuideSW extends CDSSwingWorker {
-    private String _errorMsg = null;
-    private byte[] _compiledGuide = null;
-    private Guide _guide = null;
-    private GDLEditor _controller = null;
+    private String errorMsg = null;
+    private byte[] compiledGuide = null;
+    private Guide guide = null;
+    private GDLEditor gdlEditor;
 
-    public CompileGuideSW(){
-        _controller = EditorManager.getActiveGDLEditor();
+    protected CompileGuideSW(GDLEditor gdlEditor) {
+        this.gdlEditor = gdlEditor;
     }
 
     @Override
-    protected void executeCDSSW() throws InternalErrorException{
-        try{
-            _guide = _controller.getEntity();
-            if (_guide != null){
-                _compiledGuide = GuideExportPluginDirectory.compile(_guide);
+    protected void executeCDSSW() throws InternalErrorException {
+        try {
+            guide = gdlEditor.getEntity();
+            if (guide != null) {
+                compiledGuide = gdlEditor.getGuideExportPluginDirectory().compile(guide);
             }
-        }catch(Throwable e){
-            _errorMsg = e.getMessage();
-            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '"+_controller.getEntity().getId()+"': "+e.getMessage());
+        } catch (Throwable e) {
+            errorMsg = e.getMessage();
+            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '" + gdlEditor.getEntity().getId() + "': " + e.getMessage());
             ExceptionHandler.handle(e);
         }
     }
 
-    public byte[] getCompiledGuide(){
-        return _compiledGuide;
+    protected byte[] getCompiledGuide() {
+        return compiledGuide;
     }
 
-    public Guide getGuide(){
-        return _guide;
+    public Guide getGuide() {
+        return guide;
     }
 
-    public String getErrorMsg(){
-        return _errorMsg;
+    protected String getErrorMsg() {
+        return errorMsg;
     }
 
-    public GDLEditor getController(){
-        return _controller;
+    public GDLEditor getController() {
+        return gdlEditor;
     }
 
     protected void done() {
-        _controller.compilationFinished(_errorMsg);
+        gdlEditor.compilationFinished(errorMsg);
     }
 }
 /*

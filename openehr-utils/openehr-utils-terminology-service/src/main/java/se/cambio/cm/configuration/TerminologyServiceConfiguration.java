@@ -1,20 +1,19 @@
 package se.cambio.cm.configuration;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.controller.terminology.TerminologyServiceImpl;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
+import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Import(UserConfigurationManager.class)
 @Configuration
 @PropertySources({
         @PropertySource(value = "classpath:default-terminology-service-config.properties"),
@@ -22,12 +21,10 @@ import java.util.Map;
         @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
 })
+@Import({UserConfigurationManager.class, ClinicalModelsConfiguration.class})
 public class TerminologyServiceConfiguration {
 
     private Map<String, TerminologyConfigVO> terminologyConfigMap;
-    private static Logger log = LoggerFactory.getLogger(TerminologyServiceConfiguration.class);
-
-    @Autowired
     private Environment environment;
 
     private static final String TERMINOLOGY_PROPERTY_PREFIX = "terminologies.";
@@ -36,7 +33,11 @@ public class TerminologyServiceConfiguration {
     private static final String CODE_EXISTENCE_CHECK_PROPERTY_POSTFIX = ".code-existence-check";
     private static final String CLASS_PROPERTY_POSTFIX = ".class";
 
-    public TerminologyServiceConfiguration() {
+    private static TerminologyService terminologyService;
+
+    @Autowired
+    public TerminologyServiceConfiguration(Environment environment) {
+        this.environment = environment;
         this.terminologyConfigMap = new HashMap<>();
     }
 
@@ -45,8 +46,12 @@ public class TerminologyServiceConfiguration {
     }
 
     @Bean
-    public TerminologyService terminologyService() {
-        return new TerminologyServiceImpl(this);
+    public TerminologyService terminologyService(ClinicalModelsService clinicalModelsService) {
+        return terminologyService = new TerminologyServiceImpl(this, clinicalModelsService);
+    }
+
+    public static TerminologyService getTerminologyServiceInstance(){
+        return terminologyService;
     }
 
     private TerminologyConfigVO getTerminologyConfigFromProperties(String terminologyId) {

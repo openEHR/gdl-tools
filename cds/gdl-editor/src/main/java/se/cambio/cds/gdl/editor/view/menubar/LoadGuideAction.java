@@ -6,8 +6,7 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
-import se.cambio.cds.gdl.editor.controller.sw.LoadGuideFromFileRSW;
+import se.cambio.cds.gdl.editor.controller.*;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
@@ -16,33 +15,43 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 
-
 public class LoadGuideAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
+    private GuidelineLoadManager guidelineLoadManager;
+    private GDLEditor gdlEditor;
 
-    public LoadGuideAction(){
+    LoadGuideAction(
+            EditorManager editorManager,
+            GuidelineLoadManager guidelineLoadManager) {
         super();
-        putValue(NAME, GDLEditorLanguageManager.getMessage("LoadGuide")+"...");
+        this.editorManager = editorManager;
+        init(guidelineLoadManager);
+    }
+
+    public LoadGuideAction(
+            GDLEditor gdlEditor,
+            GuidelineLoadManager guidelineLoadManager) {
+        super();
+        this.gdlEditor = gdlEditor;
+        init(guidelineLoadManager);
+    }
+
+    private void init(GuidelineLoadManager guidelineLoadManager) {
+        this.guidelineLoadManager = guidelineLoadManager;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("LoadGuide") + "...");
         putValue(SMALL_ICON, GDLEditorImageUtil.FOLDER_ICON);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideSD"));
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("LoadGuideD"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-        EditorManager.getActiveGDLEditor().runIfOKToExit(new Runnable() {
-            @Override
-            public void run() {
-                new LoadGuideFromFileRSW().execute();
-            }
-        });
+        if (gdlEditor == null) {
+            gdlEditor = editorManager.getActiveGDLEditor();
+        }
+        gdlEditor.runIfOKToExit(() -> guidelineLoadManager.showLoadDialog());
     }
 
 }

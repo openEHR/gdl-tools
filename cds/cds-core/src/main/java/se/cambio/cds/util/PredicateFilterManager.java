@@ -7,27 +7,21 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 import org.openehr.rm.datatypes.text.TermMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cm.controller.terminology.TerminologyService;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
 
 import java.util.*;
 
 
-@Component
 public class PredicateFilterManager {
 
     private TerminologyService terminologyService;
     private RepeatedArchetypeReferencesFilter repeatedArchetypeReferencesFilter;
     private Logger logger = LoggerFactory.getLogger(PredicateFilterManager.class);
 
-    @Autowired
     public PredicateFilterManager(
             TerminologyService terminologyService,
             RepeatedArchetypeReferencesFilter repeatedArchetypeReferencesFilter) {
@@ -77,6 +71,8 @@ public class PredicateFilterManager {
             filterIsA(predicate, ehrArchetypeReferences, true);
         } else if (OperatorKind.EQUALITY.equals(predicate.getOperatorKind())) {
             filterEquals(predicate, ehrArchetypeReferences, false);
+        } else if (OperatorKind.INEQUAL.equals(predicate.getOperatorKind())) {
+            filterEquals(predicate, ehrArchetypeReferences, true);
         } else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(predicate.getOperatorKind())) {
             filterGreaterLessThanPredicate(predicate.getId(), predicate.getDataValue(), ehrArchetypeReferences, true, date);
         } else if (OperatorKind.LESS_THAN_OR_EQUAL.equals(predicate.getOperatorKind())) {
@@ -85,7 +81,7 @@ public class PredicateFilterManager {
     }
 
     private void filterEquals(PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
-        final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<ArchetypeReference>();
+        final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
             ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
             if (elementInstance != null) {
@@ -104,7 +100,7 @@ public class PredicateFilterManager {
     }
 
     private void filterMaxMin(String elementId, Collection<ArchetypeReference> ehrArchetypeReferences, boolean max) {
-        final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<ArchetypeReference>();
+        final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         ElementInstance maxElementInstance = null;
         for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
             ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get(elementId);
@@ -133,7 +129,7 @@ public class PredicateFilterManager {
             boolean greaterThan, Calendar date) {
         if (dv instanceof CurrentTimeExpressionDataValue) {
             OperatorKind operatorKind = greaterThan ? OperatorKind.GREATER_THAN_OR_EQUAL : OperatorKind.LESS_THAN_OR_EQUAL;
-            dv = ElementInstanceCollectionUtil.resolvePredicate(dv, operatorKind, null, date);
+            dv = ElementInstanceCollectionManager.resolvePredicate(dv, operatorKind, null, date);
             if (dv == null) {
                 LoggerFactory.getLogger(PredicateFilterManager.class).warn("No Data Value returned after resolving predicate!");
             }
@@ -182,9 +178,9 @@ public class PredicateFilterManager {
                     } else {
                         archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
                     }
-                } catch (InvalidCodeException | UnsupportedTerminologyException e) {
+                } catch (Exception exception) {
                     archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
-                    logger.warn("Filter isA ", e);
+                    logger.warn("Filter isA ", exception);
                 }
             }
         }
@@ -208,7 +204,7 @@ public class PredicateFilterManager {
         return false;
     }
 
-    private void filterIsAExternalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) throws UnsupportedTerminologyException, InvalidCodeException {
+    private void filterIsAExternalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) {
         boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
         if ((!isA && !negation) || (isA && negation)) {
             archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
@@ -245,7 +241,7 @@ public class PredicateFilterManager {
 
     private List<PredicateGeneratedElementInstance> getSortedPredicates(ArchetypeReference archetypeReference) {
         List<PredicateGeneratedElementInstance> predicates = getPredicates(archetypeReference);
-        Collections.sort(predicates, new PredicateSorter());
+        predicates.sort(new PredicateSorter());
         return predicates;
     }
 

@@ -1,6 +1,6 @@
 package se.cambio.cds.formgen.controller;
 
-import se.cambio.cds.controller.cds.CDSManager;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.formgen.view.panels.CDSFormPanel;
 import se.cambio.cds.gdl.model.Guide;
@@ -8,12 +8,15 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.parser.GDLParser;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
 import se.cambio.cds.util.GuideImporter;
+import se.cambio.cds.view.swing.DvSwingManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.BeanProvider;
@@ -22,37 +25,52 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.ByteArrayInputStream;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FormGeneratorController {
 
-    private GuideDTO _guideDTO = null;
-    private Guide _guide = null;
-    private GuideManager _guideManager = null;
-    private CDSFormPanel _cdsFormPanel = null;
-    private FormGeneratorViewer _viewer = null;
-    private Map<String, Map<String, ReadableGuide>> _readableGuideMap;
-    private List<RuleReference> _lastFiredRulesReference = null;
-    private Calendar _currentDate = null;
-    private String _lang = null;
-    private CDSManager cdsManager;
+    private GuideDTO guideDTO = null;
+    private Guide guide = null;
+    private GuideManager guideManager = null;
+    private CDSFormPanel cdsFormPanel = null;
+    private FormGeneratorViewer viewer = null;
+    private Map<String, Map<String, ReadableGuide>> readableGuideMap;
+    private List<RuleReference> lastFiredRulesReference = null;
+    private Calendar currentDate = null;
+    private String lang = null;
+    private GuideImporter guideImporter;
+    private ElementInstanceCollectionManager elementInstanceCollectionManager;
+    private final ArchetypeManager archetypeManager;
+    private final DvSwingManager dvSwingManager;
+    private CdsDataManager cdsDataManager;
+    private final RuleEngineService ruleEngineService;
 
     public FormGeneratorController(
             GuideDTO guideDTO,
-            String lang) {
-        _guideDTO = guideDTO;
-        _lang = lang;
-        cdsManager = BeanProvider.getBean(CDSManager.class);
+            String lang,
+            GuideImporter guideImporter,
+            ElementInstanceCollectionManager elementInstanceCollectionManager,
+            ArchetypeManager archetypeManager,
+            DvSwingManager dvSwingManager,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
+        this.guideDTO = guideDTO;
+        this.lang = lang;
+        this.guideImporter = guideImporter;
+        this.elementInstanceCollectionManager = elementInstanceCollectionManager;
+        this.archetypeManager = archetypeManager;
+        this.dvSwingManager = dvSwingManager;
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
         init();
     }
 
+    public ElementInstanceCollectionManager getElementInstanceCollectionManager() {
+        return elementInstanceCollectionManager;
+    }
+
     private void init() {
-        getCDSFormPanel().setInputElements(getInputArcehtypeReferences());
+        getCDSFormPanel().setInputElements(getInputArchetypeReferences());
     }
 
     public Collection<ElementInstance> getAllElementInstances() {
@@ -60,11 +78,11 @@ public class FormGeneratorController {
     }
 
     public GuideDTO getGuideDTO() {
-        return _guideDTO;
+        return guideDTO;
     }
 
     public String getName() {
-        Term ct = getConcepTerm();
+        Term ct = getConceptTerm();
         if (ct != null) {
             return ct.getText();
         } else {
@@ -73,7 +91,7 @@ public class FormGeneratorController {
     }
 
     public String getDescription() {
-        Term ct = getConcepTerm();
+        Term ct = getConceptTerm();
         if (ct != null) {
             return ct.getDescription();
         } else {
@@ -81,7 +99,7 @@ public class FormGeneratorController {
         }
     }
 
-    public Term getConcepTerm() {
+    private Term getConceptTerm() {
         String concept = getGuide().getConcept();
         TermDefinition td = getTermDefinition();
         if (td != null) {
@@ -100,72 +118,71 @@ public class FormGeneratorController {
     }
 
     public Guide getGuide() {
-        if (_guide == null) {
+        if (guide == null) {
             try {
-                _guide = getGuideManager().getGuide(getGuideDTO().getId());
+                guide = getGuideManager().getGuide(getGuideDTO().getId());
             } catch (Exception e) {
                 ExceptionHandler.handle(e);
             }
         }
-        return _guide;
+        return guide;
     }
 
     public CDSFormPanel getCDSFormPanel() {
-        if (_cdsFormPanel == null) {
-            _cdsFormPanel = new CDSFormPanel(this);
+        if (cdsFormPanel == null) {
+            cdsFormPanel = new CDSFormPanel(this, archetypeManager, dvSwingManager, cdsDataManager, ruleEngineService);
         }
-        return _cdsFormPanel;
+        return cdsFormPanel;
     }
 
 
     public GuideManager getGuideManager() {
-        if (_guideManager == null) {
-            _guideManager = new GuideManager(Collections.singletonList(getGuideDTO()));
+        if (guideManager == null) {
+            guideManager = new GuideManager(Collections.singletonList(getGuideDTO()), elementInstanceCollectionManager);
         }
-        return _guideManager;
+        return guideManager;
     }
 
     public Calendar getCurrentDate() {
-        return _currentDate;
+        return currentDate;
     }
 
     public void setCurrentDate(Calendar currentDate) {
-        _currentDate = currentDate;
+        this.currentDate = currentDate;
     }
 
-    public Collection<ArchetypeReference> getInputArcehtypeReferences() {
+    private Collection<ArchetypeReference> getInputArchetypeReferences() {
         GeneratedElementInstanceCollection eic = getGuideManager().getCompleteElementInstanceCollection();
-        return cdsManager.getEHRArchetypeReferences(eic);
+        return cdsDataManager.getEHRArchetypeReferences(eic);
     }
 
     public void updateResults(RuleExecutionResult result) {
         getCDSFormPanel().updateResults(result);
         if (result != null) {
-            _lastFiredRulesReference = result.getFiredRules();
+            lastFiredRulesReference = result.getFiredRules();
         }
     }
 
     public Collection<String> getSupportedLanguages() {
-        return getReadableGuideMap().get(_guideDTO.getId()).keySet();
+        return getReadableGuideMap().get(guideDTO.getId()).keySet();
     }
 
     public List<RuleReference> getLastRulesFired() {
-        return _lastFiredRulesReference;
+        return lastFiredRulesReference;
     }
 
     public Map<String, Map<String, ReadableGuide>> getReadableGuideMap() {
-        if (_readableGuideMap == null) {
-            _readableGuideMap = new HashMap<>();
+        if (readableGuideMap == null) {
+            readableGuideMap = new HashMap<>();
             try {
                 GDLParser parser = new GDLParser();
                 for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
                     Map<String, ReadableGuide> auxMap = new HashMap<>();
-                    _readableGuideMap.put(guideDTO.getId(), auxMap);
+                    readableGuideMap.put(guideDTO.getId(), auxMap);
                     Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                     Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
                     for (TermDefinition termDefinition : termDefinitions.values()) {
                         String lang = termDefinition.getId();
-                        GuideImporter guideImporter = new GuideImporter(ArchetypeManager.getInstance());
                         ReadableGuide readableGuide = guideImporter.importGuide(guide, lang);
                         auxMap.put(lang, readableGuide);
                     }
@@ -174,22 +191,22 @@ public class FormGeneratorController {
                 ExceptionHandler.handle(e);
             }
         }
-        return _readableGuideMap;
+        return readableGuideMap;
     }
 
     public String getLanguage() {
-        if (_lang == null) {
-            _lang = UserConfigurationManager.instance().getLanguage();
+        if (lang == null) {
+            lang = archetypeManager.getUserConfigurationManager().getLanguage();
         }
-        return _lang;
+        return lang;
     }
 
     public void setViewer(FormGeneratorViewer viewer) {
-        _viewer = viewer;
+        this.viewer = viewer;
     }
 
     public FormGeneratorViewer getViewer() {
-        return _viewer;
+        return viewer;
     }
 }
 /*

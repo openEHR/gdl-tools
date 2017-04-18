@@ -1,0 +1,296 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-EVALUATION.stroke_prevention_review.v1
+
+concept
+	[at0000]	-- Stroke Prevention Review
+language
+	original_language = <[ISO_639-1::en]>
+	translations = <
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			author = <
+				["name"] = <"?">
+			>
+		>
+	>
+description
+	original_author = <
+		["name"] = <"Konstantinos Kalliamvakos">
+		["organisation"] = <"Cambio Healthcare Systems">
+		["email"] = <"Konstantinos.Kalliamvakos@cambio.se">
+		["date"] = <"2014-02-13">
+	>
+	details = <
+		["en"] = <
+			language = <[ISO_639-1::en]>
+			purpose = <"To document a clinical review of stroke prevention treatment in non-valvular atrial fibrillation ">
+			use = <"">
+			keywords = <"atrial fibrillation", "stroke", "CHA2DS2-VASc">
+			misuse = <"">
+			copyright = <"">
+		>
+		["sv"] = <
+			language = <[ISO_639-1::sv]>
+			purpose = <"*To document a clinical review of stroke prevention treatment in non-valvular atrial fibrillation (en)">
+			use = <"*(en)">
+			misuse = <"*(en)">
+			copyright = <"*(en)">
+		>
+	>
+	lifecycle_state = <"AuthorDraft">
+	other_contributors = <>
+	other_details = <
+		["current_contact"] = <"Konstantinos Kalliamvakos, Cambio Healthcare Systems, Konstantinos.Kalliamvakos@cambio.se">
+		["MD5-CAM-1.0.1"] = <"51FFECCAEBB3F60B7841FB26A7452295">
+	>
+
+definition
+	EVALUATION[at0000] matches {	-- Stroke Prevention Review
+		data matches {
+			ITEM_TREE[at0001] matches {	-- Träd
+				items cardinality matches {0..*; unordered} matches {
+					ELEMENT[at0002] occurrences matches {0..1} matches {	-- CHA2DS2-VASc Score
+						value matches {
+							DV_COUNT matches {*}
+						}
+					}
+					ELEMENT[at0003] occurrences matches {0..1} matches {	-- CDS Recommendation
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0004] occurrences matches {0..1} matches {	-- Follow-CDS Recommendation
+						value matches {
+							DV_BOOLEAN matches {
+								value matches {True, False}
+							}
+						}
+					}
+					ELEMENT[at0006] occurrences matches {0..1} matches {	-- Actual treatment
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0020] occurrences matches {0..1} matches {	-- Selected Drug
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0007] occurrences matches {0..1} matches {	-- Review date
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0008] occurrences matches {0..1} matches {	-- Reason for deviation
+						value matches {
+							0|[local::at0009], 	-- Any contraindication
+							1|[local::at0010], 	-- Patient preferrence
+							2|[local::at0011]  	-- Any other reason
+						}
+					}
+					ELEMENT[at0018] occurrences matches {0..1} matches {	-- Reason for deviation, specify
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0012] occurrences matches {0..1} matches {	-- Decision delayed 
+						value matches {
+							C_DV_QUANTITY <
+								property = <[openehr::128]>
+								list = <
+									["1"] = <
+										units = <"d">
+									>
+								>
+							>
+						}
+					}
+					ELEMENT[at0013] occurrences matches {0..1} matches {	-- Reason for delayed decision
+						value matches {
+							0|[local::at0014], 	-- Patient related
+							1|[local::at0015], 	-- Lab tests needed
+							2|[local::at0016], 	-- Referral to cardiologist
+							3|[local::at0017]  	-- Other reason
+						}
+					}
+					ELEMENT[at0019] occurrences matches {0..1} matches {	-- Reason for delayed decision, specify
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["en"] = <
+			items = <
+				["at0000"] = <
+					text = <"Stroke Prevention Review">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"CHA2DS2-VASc Score">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"CDS Recommendation">
+					description = <"*">
+				>
+				["at0004"] = <
+					text = <"Follow-CDS Recommendation">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"Actual treatment">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"Review date">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"Reason for deviation">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"Any contraindication">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"Patient preferrence">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"Any other reason">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"Decision delayed ">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"Reason for delayed decision">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"Patient related">
+					description = <"*">
+				>
+				["at0015"] = <
+					text = <"Lab tests needed">
+					description = <"*">
+				>
+				["at0016"] = <
+					text = <"Referral to cardiologist">
+					description = <"*">
+				>
+				["at0017"] = <
+					text = <"Other reason">
+					description = <"*">
+				>
+				["at0018"] = <
+					text = <"Reason for deviation, specify">
+					description = <"*">
+				>
+				["at0019"] = <
+					text = <"Reason for delayed decision, specify">
+					description = <"*">
+				>
+				["at0020"] = <
+					text = <"Selected Drug">
+					description = <"*">
+				>
+			>
+		>
+		["sv"] = <
+			items = <
+				["at0000"] = <
+					text = <"Strokeprofylax-översikt">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Träd">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"CHA2DS2-VASc poäng">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Rekommenderad behandling baserat på CHA2DS2-VASc">
+					description = <"*">
+				>
+				["at0004"] = <
+					text = <"Följt rekommendation">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"Kommentar">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"Senaste översyn">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"Anledning till avvikelse">
+					description = <"**(en)">
+				>
+				["at0009"] = <
+					text = <"Kontraindikation finns">
+					description = <"**(en)">
+				>
+				["at0010"] = <
+					text = <"Patientens val">
+					description = <"**(en)">
+				>
+				["at0011"] = <
+					text = <"Annan orsak">
+					description = <"**(en)">
+				>
+				["at0012"] = <
+					text = <"Beslutet uppskjutet">
+					description = <"**(en)">
+				>
+				["at0013"] = <
+					text = <"Anledning till uppskjutningen">
+					description = <"**(en)">
+				>
+				["at0014"] = <
+					text = <"Patientrelaterat">
+					description = <"**(en)">
+				>
+				["at0015"] = <
+					text = <"Labbresultat behövs">
+					description = <"**(en)">
+				>
+				["at0016"] = <
+					text = <"Remiss till kardiolog">
+					description = <"**(en)">
+				>
+				["at0017"] = <
+					text = <"Annat skäl">
+					description = <"**(en)">
+				>
+				["at0018"] = <
+					text = <"Anledning till avvikelse, specificera">
+					description = <"**(en)">
+				>
+				["at0019"] = <
+					text = <"Anledning till uppskjutningen, specificera">
+					description = <"**(en)">
+				>
+				["at0020"] = <
+					text = <"Vald medicin">
+					description = <"*">
+				>
+			>
+		>
+	>

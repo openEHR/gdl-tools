@@ -8,31 +8,33 @@ import se.cambio.cds.gdl.editor.view.tables.BindingTable;
 
 public class GTCodeButtonEditor extends ButtonEditor {
 
-	private static final long serialVersionUID = 4720175033111295429L;
-	private BindingTable _bt = null;
-	private String _gtCode = null;
-	public GTCodeButtonEditor(BindingTable bt) {
-		super();
-		_bt = bt;
-	}
+    private static final long serialVersionUID = 4720175033111295429L;
+    private BindingTable bindingTable = null;
+    private GDLEditor gdlEditor;
+    private String gtCode = null;
 
-	public void performAction(int row){
-		GDLEditor controller = EditorManager.getActiveGDLEditor();
-		DialogGTCodeSelection dialog = new DialogGTCodeSelection(EditorManager.getActiveEditorWindow(), controller);
-		dialog.setVisible(true);
-		if (dialog.getAnswer()){
-			_gtCode = dialog.getSelectedObject();
-			_bt.getModel().setValueAt(_gtCode, row, 0);
-			_bt.updateResults();
-		}else{
-			_gtCode = (String)_bt.getModel().getValueAt(row, 0);
-		}
-	}
+    public GTCodeButtonEditor(BindingTable bt, GDLEditor gdlEditor) {
+        super();
+        bindingTable = bt;
+        this.gdlEditor = gdlEditor;
+    }
 
-	@Override
-	public Object getCellEditorValue() {
-		return _gtCode;
-	}
+    public void performAction(int row) {
+        DialogGTCodeSelection dialog = new DialogGTCodeSelection(gdlEditor);
+        dialog.setVisible(true);
+        if (dialog.getAnswer()) {
+            gtCode = dialog.getSelectedObject();
+            bindingTable.getModel().setValueAt(gtCode, row, 0);
+            bindingTable.updateResults();
+        } else {
+            gtCode = (String) bindingTable.getModel().getValueAt(row, 0);
+        }
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return gtCode;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

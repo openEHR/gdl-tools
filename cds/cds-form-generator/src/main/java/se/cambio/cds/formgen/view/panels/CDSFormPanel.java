@@ -1,14 +1,18 @@
 package se.cambio.cds.formgen.view.panels;
 
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.formgen.controller.FormGeneratorController;
 import se.cambio.cds.formgen.controller.sw.ExecuteRSW;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
+import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
+import se.cambio.cds.view.swing.DvSwingManager;
 import se.cambio.cds.view.swing.dialogs.DialogRuleExecutionList;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.view.util.JLinkLabel;
@@ -20,25 +24,38 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class CDSFormPanel extends JPanel{
+public class CDSFormPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
+    private final ArchetypeManager archetypeManager;
+    private final DvSwingManager dvSwingManager;
+    private final CdsDataManager cdsDataManager;
+    private final RuleEngineService ruleEngineService;
 
-    private FormGeneratorController _formGenerator = null;
+    private FormGeneratorController formGenerator = null;
     private JPanel inputPanel;
     private JPanel resultPanel;
     private JLinkLabel executedRulesLabel;
     private JPanel executionButtonPanel;
-    private Collection<ElementInstanceGroupPanel> _eigps = null;
+    private Collection<ElementInstanceGroupPanel> eigps = null;
 
-    public CDSFormPanel(FormGeneratorController formGenerator){
+    public CDSFormPanel(
+            FormGeneratorController formGenerator,
+            ArchetypeManager archetypeManager,
+            DvSwingManager dvSwingManager,
+            CdsDataManager cdsDataManager,
+            RuleEngineService ruleEngineService) {
+        this.archetypeManager = archetypeManager;
+        this.dvSwingManager = dvSwingManager;
+        this.cdsDataManager = cdsDataManager;
+        this.ruleEngineService = ruleEngineService;
         this.setLayout(new BorderLayout());
-        _formGenerator = formGenerator;
-        _eigps = new ArrayList<ElementInstanceGroupPanel>();
+        this.formGenerator = formGenerator;
+        eigps = new ArrayList<>();
         init();
     }
 
-    private void init(){
+    private void init() {
         JPanel panelAux = new JPanel(new BorderLayout());
         panelAux.add(getInputPanel(), BorderLayout.CENTER);
         panelAux.add(getExecutionButtonPanel(), BorderLayout.SOUTH);
@@ -50,68 +67,71 @@ public class CDSFormPanel extends JPanel{
         this.revalidate();
     }
 
-    public void setInputElements(Collection<ArchetypeReference> archetypeReferences){
+    public void setInputElements(Collection<ArchetypeReference> archetypeReferences) {
         this.removeAll();
         inputPanel = null;
-        _eigps.clear();
-        if (archetypeReferences!=null){
+        eigps.clear();
+        if (archetypeReferences != null) {
             addArchetypeReferences(archetypeReferences, true);
         }
         init();
     }
 
-    public void setResultElements(Collection<ArchetypeReference> archetypeReferences){
+    private void setResultElements(Collection<ArchetypeReference> archetypeReferences) {
         this.removeAll();
         resultPanel = null;
-        if (archetypeReferences!=null){
+        if (archetypeReferences != null) {
             addArchetypeReferences(archetypeReferences, false);
         }
         getResultPanel().setVisible(true);
         init();
     }
 
-    private void addArchetypeReferences(Collection<ArchetypeReference> archetypeReferences, boolean input){
+    private void addArchetypeReferences(Collection<ArchetypeReference> archetypeReferences, boolean input) {
         for (ArchetypeReference ar : archetypeReferences) {
-            ElementInstanceGroupPanel eigp = new ElementInstanceGroupPanel(ar, _formGenerator.getTermDefinition(), input);
+            ElementInstanceGroupPanel eigp =
+                    new ElementInstanceGroupPanel(
+                            ar, formGenerator.getTermDefinition(),
+                            input, archetypeManager, dvSwingManager);
             eigp.setAlignmentX(Component.LEFT_ALIGNMENT);
-            if (input){
+            if (input) {
                 getInputPanel().add(eigp);
-                _eigps.add(eigp);
-            }else{
+                eigps.add(eigp);
+            } else {
                 getResultPanel().add(eigp);
             }
         }
     }
 
-    public Collection<ElementInstance> getElementInstances(){
-        Collection<ElementInstance> elementInstances = new ArrayList<ElementInstance>();
-        for (ElementInstanceGroupPanel eigp : _eigps) {
+    public Collection<ElementInstance> getElementInstances() {
+        Collection<ElementInstance> elementInstances = new ArrayList<>();
+        for (ElementInstanceGroupPanel eigp : eigps) {
             elementInstances.addAll(eigp.getElementInstances());
         }
         return elementInstances;
     }
 
-    public JPanel getInputPanel(){
-        if (inputPanel==null){
+    private JPanel getInputPanel() {
+        if (inputPanel == null) {
             inputPanel = new JPanel();
             inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
             inputPanel.setBorder(BorderFactory.createTitledBorder(OpenEHRLanguageManager.getMessage("Input")));
         }
-        return  inputPanel;
+        return inputPanel;
     }
 
-    public JPanel getResultPanel(){
-        if (resultPanel==null){
+    private JPanel getResultPanel() {
+        if (resultPanel == null) {
             resultPanel = new JPanel();
             resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
             resultPanel.setBorder(BorderFactory.createTitledBorder(OpenEHRLanguageManager.getMessage("Result")));
             resultPanel.setVisible(false);
         }
-        return  resultPanel;
+        return resultPanel;
     }
 
-    private JPanel getExecutionButtonPanel(){
-        if (executionButtonPanel==null){
+    private JPanel getExecutionButtonPanel() {
+        if (executionButtonPanel == null) {
             executionButtonPanel = new JPanel();
             JButton jButton = new JButton(OpenEHRLanguageManager.getMessage("Execute"));
             jButton.setIcon(OpenEHRImageUtil.LIGHTNING_ICON);
@@ -123,45 +143,40 @@ public class CDSFormPanel extends JPanel{
         return executionButtonPanel;
     }
 
-    public class ExecutionActionListener implements ActionListener{
+    public class ExecutionActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent ev) {
-            ExecuteRSW sw = new ExecuteRSW(_formGenerator);
+            ExecuteRSW sw = new ExecuteRSW(formGenerator, cdsDataManager, ruleEngineService);
             sw.execute();
-            _formGenerator.getViewer().setBusy(OpenEHRLanguageManager.getMessage("Executing")+"...", sw);
+            formGenerator.getViewer().setBusy(OpenEHRLanguageManager.getMessage("Executing") + "...", sw);
         }
     }
 
-    private JLinkLabel getExecutedRulesLabel(){
-        if (executedRulesLabel==null){
+    private JLinkLabel getExecutedRulesLabel() {
+        if (executedRulesLabel == null) {
             executedRulesLabel = new JLinkLabel();
             executedRulesLabel.setIcon(OpenEHRImageUtil.RULE_ICON);
-            executedRulesLabel.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    List<RuleReference> ruleReferences = _formGenerator.getLastRulesFired();
-                    if (ruleReferences!=null && !ruleReferences.isEmpty()){
-                        Window owner = null;
-                        if (_formGenerator.getViewer() instanceof Window){
-                            owner = (Window)_formGenerator.getViewer();
-                        }
-                        Map<String,Map<String, String>> rulesMap = new HashMap<String, Map<String,String>>();
-                        for (RuleReference ruleReference : ruleReferences) {
-                            for (String lang : _formGenerator.getSupportedLanguages()) {
-                                Map<String, String> auxMap = rulesMap.get(lang);
-                                if (auxMap==null){
-                                    auxMap = new LinkedHashMap<String, String>();
-                                    rulesMap.put(lang, auxMap);
-                                }
-                                ReadableRule readableRule = getReadableRule(ruleReference, lang);
-                                String ruleName = readableRule.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
-                                String ruleStr = readableRule.toString();
-                                auxMap.put(ruleName, ruleStr);
-                            }
-                        }
-                        DialogRuleExecutionList dialog =
-                                new DialogRuleExecutionList(owner, rulesMap, false);
-                        dialog.setVisible(true);
+            executedRulesLabel.addActionListener(e -> {
+                List<RuleReference> ruleReferences = formGenerator.getLastRulesFired();
+                if (ruleReferences != null && !ruleReferences.isEmpty()) {
+                    Window owner = null;
+                    if (formGenerator.getViewer() instanceof Window) {
+                        owner = (Window) formGenerator.getViewer();
                     }
+                    Map<String, Map<String, String>> rulesMap = new HashMap<>();
+                    for (RuleReference ruleReference : ruleReferences) {
+                        for (String lang : formGenerator.getSupportedLanguages()) {
+                            Map<String, String> auxMap = rulesMap.computeIfAbsent(lang, k -> new LinkedHashMap<>());
+                            ReadableRule readableRule = getReadableRule(ruleReference, lang);
+                            String ruleName = readableRule.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
+                            String ruleStr = readableRule.toString();
+                            auxMap.put(ruleName, ruleStr);
+                        }
+                    }
+                    String language = archetypeManager.getUserConfigurationManager().getLanguage();
+                    DialogRuleExecutionList dialog =
+                            new DialogRuleExecutionList(owner, rulesMap, false, language);
+                    dialog.setVisible(true);
                 }
             });
             executedRulesLabel.setVisible(false);
@@ -169,41 +184,41 @@ public class CDSFormPanel extends JPanel{
         return executedRulesLabel;
     }
 
-    public ReadableRule getReadableRule(RuleReference ruleReference, String lang){
+    private ReadableRule getReadableRule(RuleReference ruleReference, String lang) {
         ReadableGuide readableGuide =
-                _formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get(lang);
-        if (readableGuide==null){//Language does not exist, fall back to English
+                formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get(lang);
+        if (readableGuide == null) {
             readableGuide =
-                    _formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
+                    formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
         }
         return readableGuide.getReadableRules().get(ruleReference.getGTCode());
     }
 
-    public void updateResults(RuleExecutionResult result){
-        if (result!=null && result.getFiredRules()!=null){
+    public void updateResults(RuleExecutionResult result) {
+        if (result != null && result.getFiredRules() != null) {
             setResultElements(result.getArchetypeReferences());
             int numRulesFired = result.getFiredRules().size();
-            getExecutedRulesLabel().setText("("+numRulesFired+")");
-            StringBuffer sb = new StringBuffer();
-            sb.append("<HTML><b>"+OpenEHRLanguageManager.getMessage("ExecutionLog")+":</b><br>");
-            String lang = _formGenerator.getLanguage();
+            getExecutedRulesLabel().setText("(" + numRulesFired + ")");
+            StringBuilder sb = new StringBuilder();
+            sb.append("<HTML><b>").append(OpenEHRLanguageManager.getMessage("ExecutionLog")).append(":</b><br>");
+            String lang = formGenerator.getLanguage();
             for (RuleReference ruleReference : result.getFiredRules()) {
                 ReadableGuide readableGuide =
-                        _formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get(lang);
-                if (readableGuide==null){//Language does not exist, fall back to English
+                        formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get(lang);
+                if (readableGuide == null) {//Language does not exist, fall back to English
                     readableGuide =
-                            _formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
+                            formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
                 }
                 String ruleName = "*UNKNOWN*";
                 if (readableGuide != null) {
                     ruleName = readableGuide.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
                 }
-                sb.append("&nbsp;&nbsp;"+ruleName+"<br>");
+                sb.append("&nbsp;&nbsp;").append(ruleName).append("<br>");
             }
             sb.append("</HTML>");
             getExecutedRulesLabel().setToolTipText(sb.toString());
             executedRulesLabel.setVisible(true);
-        }else{
+        } else {
             setResultElements(null);
             getExecutedRulesLabel().setVisible(false);
         }

@@ -1,16 +1,20 @@
 package se.cambio.cds.gdl.converters.drools;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 
 import static org.junit.Assert.assertEquals;
 
-public class ConverterUtilTest {
+public class ConverterUtilTest extends GDLTestCase{
 
-    @Before
+	@Autowired
+	ArchetypeManager archetypeManager;
+
+    @BeforeClass
 	public void setUp() {
-		converter = new GDLDroolsConverter(null, ArchetypeManager.getInstance());
+		converter = new GDLDroolsConverter(null, archetypeManager);
 	}
 
     @Test

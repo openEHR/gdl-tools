@@ -6,33 +6,35 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogRepositoriesPaths;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ConfigRepositoriesAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    public ConfigRepositoriesAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("Repositories")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
+    ConfigRepositoriesAction(EditorManager editorManager,
+                             UserConfigurationManager userConfigurationManager) {
+        super();
+        this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("Repositories") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogRepositoriesPaths().setVisible(true);
+        new DialogRepositoriesPaths(editorManager, userConfigurationManager).setVisible(true);
     }
 }
 /*

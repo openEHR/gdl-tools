@@ -7,32 +7,33 @@
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
+import sun.applet.Main;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ChangeGuideLanguageAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
-    private String _language = null;
+    private String language = null;
+    private EditorManager editorManager;
+    private MainMenuBar mainMenuBar;
 
-    public ChangeGuideLanguageAction(String language){
+    ChangeGuideLanguageAction(String language, EditorManager editorManager, MainMenuBar mainMenuBar) {
         super();
-        _language = language;
-        putValue(NAME, _language);
+        this.language = language;
+        this.editorManager = editorManager;
+        this.mainMenuBar = mainMenuBar;
+        putValue(NAME, this.language);
         putValue(SMALL_ICON, null);
-        putValue(SHORT_DESCRIPTION, _language/*TODO Add desc*/);
-        putValue(LONG_DESCRIPTION, _language/*TODO Add desc*/);
+        putValue(SHORT_DESCRIPTION, this.language/*TODO Add desc*/);
+        putValue(LONG_DESCRIPTION, this.language/*TODO Add desc*/);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-        EditorManager.getActiveEditorController().changeLanguage(_language);
+        editorManager.getActiveEditorController().changeLanguage(language);
+        mainMenuBar.refreshLanguageMenu();
+
     }
 }
 /*

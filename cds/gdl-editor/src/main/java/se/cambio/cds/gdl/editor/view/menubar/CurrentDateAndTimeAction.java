@@ -10,29 +10,29 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogCurrentTimeSelection;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class CurrentDateAndTimeAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    public CurrentDateAndTimeAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("DefaultDateTime")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeD"));
+    CurrentDateAndTimeAction(EditorManager editorManager, UserConfigurationManager userConfigurationManager) {
+        super();
+        this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("DefaultDateTime") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogCurrentTimeSelection().setVisible(true);
+        new DialogCurrentTimeSelection(editorManager, userConfigurationManager).setVisible(true);
     }
 }
 /*

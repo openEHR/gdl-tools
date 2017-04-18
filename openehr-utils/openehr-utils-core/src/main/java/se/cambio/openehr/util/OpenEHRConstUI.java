@@ -24,7 +24,7 @@ public class OpenEHRConstUI {
     private final HashMap<String,ImageIcon> _openEHRConstIcons;
     private final HashMap<String,String> _openEHRConstIconNames;
 
-    public static Map<String, DvCodedText> NULL_FLAVOUR_MAP = new LinkedHashMap<String, DvCodedText>();
+    public static Map<String, DvCodedText> NULL_FLAVOUR_MAP = new LinkedHashMap<>();
     static {
         NULL_FLAVOUR_MAP.put("271", NULL_FLAVOUR_CODE_NO_INFO);
         NULL_FLAVOUR_MAP.put("253", NULL_FLAVOUR_CODE_UNKNOWN);
@@ -33,10 +33,10 @@ public class OpenEHRConstUI {
     }
 
     private OpenEHRConstUI(){
-        _openEHRConstNames = new HashMap<String, String>();
-        _openEHRConstDescriptions = new HashMap<String, String>();
-        _openEHRConstIcons = new HashMap<String, ImageIcon>();
-        _openEHRConstIconNames = new HashMap<String, String>();
+        _openEHRConstNames = new HashMap<>();
+        _openEHRConstDescriptions = new HashMap<>();
+        _openEHRConstIcons = new HashMap<>();
+        _openEHRConstIconNames = new HashMap<>();
 
         _openEHRConstNames.put(OpenEHRConst.HISTORY, OpenEHRLanguageManager.getMessage("History"));
         _openEHRConstDescriptions.put(OpenEHRConst.HISTORY, OpenEHRLanguageManager.getMessage("HistoryDesc"));

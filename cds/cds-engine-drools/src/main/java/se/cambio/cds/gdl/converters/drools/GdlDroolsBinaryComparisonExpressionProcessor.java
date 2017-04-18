@@ -16,6 +16,8 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.Map;
 import java.util.Set;
 
+import static java.lang.String.format;
+
 public class GdlDroolsBinaryComparisonExpressionProcessor {
 
     private final GDLDroolsConverter gdlDroolsConverter;
@@ -30,12 +32,12 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
         this.stringBuffer = new StringBuffer();
     }
 
-    public String process() throws InternalErrorException {
+    public String process() {
         processComparisonExpression();
         return stringBuffer.toString();
     }
 
-    protected void processComparisonExpression() throws InternalErrorException {
+    protected void processComparisonExpression() {
         Variable var = null;
         if (binaryExpression.getLeft() instanceof Variable) {
             var = (Variable) binaryExpression.getLeft();
@@ -49,19 +51,19 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
                 processVariableWithAttribute(var, archetypeElementVO);
             }
         } else {
-            throw new InternalErrorException(new Exception("Unknown expression '" + binaryExpression.getLeft() + "'"));
+            throw new RuntimeException(format("Unknown expression '%s'", binaryExpression.getLeft()));
         }
     }
 
-    private void processVariableWithAttribute(Variable var, ArchetypeElementVO archetypeElementVO) throws InternalErrorException {
-        if (var.getAttribute().equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)){
+    private void processVariableWithAttribute(Variable var, ArchetypeElementVO archetypeElementVO) {
+        if (var.getAttribute().equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)) {
             processNullFlavour(var);
-        }else{
+        } else {
             processVariableWithAttributeNotNull(var, archetypeElementVO);
         }
     }
 
-    private void processVariableWithAttributeNotNull(Variable var, ArchetypeElementVO archetypeElementVO) throws InternalErrorException {
+    private void processVariableWithAttributeNotNull(Variable var, ArchetypeElementVO archetypeElementVO) {
         Map<RefStat, Set<String>> statsAux = gdlDroolsConverter.initStats();
         String arithmeticExpStr = ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), binaryExpression.getRight(), statsAux);
         ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), binaryExpression.getLeft(), statsAux);
@@ -79,9 +81,9 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
         }
         stringBuffer.append("(");
         String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName, var);
-        if (rmName != null && gdlDroolsConverter.isString(rmName, var.getAttribute())){
+        if (rmName != null && gdlDroolsConverter.isString(rmName, var.getAttribute())) {
             stringBuffer.append(gdlDroolsConverter.getAttributeOperatorMVELLine(varCall, binaryExpression.getOperator(), arithmeticExpStr));
-        }else{
+        } else {
             stringBuffer.append(varCall);
             stringBuffer.append(binaryExpression.getOperator().getSymbol());
             stringBuffer.append(arithmeticExpStr);
@@ -98,13 +100,13 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
         stringBuffer.append(opNeg + "DVUtil.nullValueEquals($" + var.getCode() + ".getNullFlavour(), " + DVDefSerializer.getDVInstantiation(dv) + "))");
     }
 
-    private void processVariableWithoutAttribute(Variable var, ArchetypeElementVO archetypeElementVO) throws CompilationErrorException {
+    private void processVariableWithoutAttribute(Variable var, ArchetypeElementVO archetypeElementVO) {
         if (binaryExpression.getRight() instanceof ConstantExpression) {
             processVariableWithoutAttributeConstantExpression(var, archetypeElementVO);
         } else if (binaryExpression.getRight() instanceof Variable) {
             processVariableWithoutAttributeVariable(var);
         } else {
-            throw new CompilationErrorException("Unknown expression '" + binaryExpression.getRight().getClass().getName() + "'");
+            throw new RuntimeException(format("Unknown expression '%s'", binaryExpression.getRight().getClass().getName()));
         }
     }
 
@@ -118,22 +120,22 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
         stats.get(RefStat.REFERENCE).add(gtCodeAux);
     }
 
-    private void processVariableWithoutAttributeConstantExpression(Variable var, ArchetypeElementVO archetypeElementVO) throws CompilationErrorException {
+    private void processVariableWithoutAttributeConstantExpression(Variable var, ArchetypeElementVO archetypeElementVO) {
         ConstantExpression constantExpression = (ConstantExpression) binaryExpression.getRight();
         String dvStr = constantExpression.getValue();
         DataValue dv = null;
         if (!dvStr.equals("null")) {
-            if (archetypeElementVO == null){
+            if (archetypeElementVO == null) {
                 String guideId = gdlDroolsConverter.getGuide().getId();
-                throw new CompilationErrorException("Element '" + var.getCode() + "' not found. (guideId='" + guideId + "')");
+                throw new RuntimeException(format("Element '%s' not found. (guideId='%s')", var.getCode(), guideId));
             }
             String rmType = archetypeElementVO.getRMType();
             dv = DataValue.parseValue(rmType + "," + dvStr);
         }
         if (dv != null) {
             stringBuffer.append("eval(");
-            if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())){
-                stringBuffer.append("$" + var.getCode() + ".hasValue() && ");
+            if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(var.getCode())) {
+                stringBuffer.append("$").append(var.getCode()).append(".hasValue() && ");
             }
             stringBuffer.append(gdlDroolsConverter.getOperatorMVELLine("$" + var.getCode(),
                     binaryExpression.getOperator(),
@@ -142,7 +144,7 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
         } else {
             if (OperatorKind.EQUALITY.equals(binaryExpression.getOperator())) {
                 String guideId = gdlDroolsConverter.getGuide().getId();
-                stringBuffer.append("eval($" + var.getCode() + ".hasNoValue(\"" + guideId + "/"+var.getCode() + "\"))");
+                stringBuffer.append("eval($" + var.getCode() + ".hasNoValue(\"" + guideId + "/" + var.getCode() + "\"))");
             } else if (OperatorKind.INEQUAL.equals(binaryExpression.getOperator())) {
                 stringBuffer.append("eval($" + var.getCode() + ".hasValue())");
             }

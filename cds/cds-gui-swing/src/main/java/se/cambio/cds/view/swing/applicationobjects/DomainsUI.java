@@ -9,56 +9,55 @@ import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-
 public class DomainsUI {
 
     public static String ANY_NAME = OpenEHRLanguageManager.getMessage("ANY");
     public static String EHR_NAME = OpenEHRLanguageManager.getMessage("EHR");
     public static String CDS_NAME = OpenEHRLanguageManager.getMessage("CDS");
 
-    private static String ANY_DESC = OpenEHRLanguageManager.getMessage("ANY"); 
+    private static String ANY_DESC = OpenEHRLanguageManager.getMessage("ANY");
     private static String EHR_DESC = OpenEHRLanguageManager.getMessage("EHR");
-    private static String CDS_DESC = OpenEHRLanguageManager.getMessage("CDS"); 
+    private static String CDS_DESC = OpenEHRLanguageManager.getMessage("CDS");
 
     public static ImageIcon EHR_ICON = OpenEHRImageUtil.EHR_LABEL_ICON;
     public static ImageIcon CDS_ICON = OpenEHRImageUtil.CDS_LABEL_ICON;
     public static ImageIcon ANY_ICON = OpenEHRImageUtil.ANY_LABEL_ICON;
 
-    public static ImageIcon getGroupIconFromArchetypeReference(ArchetypeReference ar){
-	return getIcon(ar.getIdDomain());
-    }
-    
-    public static ImageIcon getIcon(String idDomain){
-	if (idDomain==null){
-	    return DomainsUI.ANY_ICON;
-	}else if (Domains.EHR_ID.equals(idDomain)){
-	    return DomainsUI.EHR_ICON;
-	}else if (Domains.CDS_ID.equals(idDomain)){
-	    return DomainsUI.CDS_ICON;
-	}
-	return null;
+    public static ImageIcon getGroupIconFromArchetypeReference(ArchetypeReference ar) {
+        return getIcon(ar.getIdDomain());
     }
 
-    public static String getName(String idDomain){
-	if (idDomain==null){
-	    return ANY_NAME;
-	}else if (Domains.EHR_ID.equals(idDomain)){
-	    return EHR_NAME;
-	}else if (Domains.CDS_ID.equals(idDomain)){
-	    return CDS_NAME;
-	}
-	return null;
+    public static ImageIcon getIcon(String idDomain) {
+        if (idDomain == null) {
+            return DomainsUI.ANY_ICON;
+        } else if (Domains.EHR_ID.equals(idDomain)) {
+            return DomainsUI.EHR_ICON;
+        } else if (Domains.CDS_ID.equals(idDomain)) {
+            return DomainsUI.CDS_ICON;
+        }
+        return null;
     }
 
-    public static String getDescription(String idDomain){
-	if (idDomain==null){
-	    return ANY_DESC;
-	}else if (Domains.EHR_ID.equals(idDomain)){
-	    return EHR_DESC;
-	}else if (Domains.CDS_ID.equals(idDomain)){
-	    return CDS_DESC;
-	}
-	return null;
+    public static String getName(String idDomain) {
+        if (idDomain == null) {
+            return ANY_NAME;
+        } else if (Domains.EHR_ID.equals(idDomain)) {
+            return EHR_NAME;
+        } else if (Domains.CDS_ID.equals(idDomain)) {
+            return CDS_NAME;
+        }
+        return null;
+    }
+
+    public static String getDescription(String idDomain) {
+        if (idDomain == null) {
+            return ANY_DESC;
+        } else if (Domains.EHR_ID.equals(idDomain)) {
+            return EHR_DESC;
+        } else if (Domains.CDS_ID.equals(idDomain)) {
+            return CDS_DESC;
+        }
+        return null;
     }
 }
 /*

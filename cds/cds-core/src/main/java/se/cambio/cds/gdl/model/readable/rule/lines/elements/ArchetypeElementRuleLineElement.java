@@ -1,8 +1,9 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
+import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeElementsUtil;
+import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 
@@ -34,13 +35,23 @@ public class ArchetypeElementRuleLineElement extends RuleLineElementWithValue<GT
     public String getLabelDescription(String lang) {
         if (getValue() != null && getValue().getValue() != null) {
             if (getArchetypeElementVO() != null && getArchetypeElementVO().getIdArchetype() != null) {
-                return ReadableArchetypeElementsUtil.getHTMLTooltip(getArchetypeElementInstantiationRuleLine());
+                String extraLines = getExtraLines();
+                return getArchetypeReferencesManager().getHTMLTooltip(getArchetypeElementVO(), this.getArchetypeReference(), extraLines);
             } else {
                 return super.getLabelDescription(lang);
             }
         } else {
-            return super.getLabelDescription(lang); //currentDateTime
+            return super.getLabelDescription(lang);
         }
+    }
+
+    private String getExtraLines() {
+        String extraLines = null;
+        if (this.getParentRuleLine() instanceof ArchetypeInstantiationRuleLine) {
+            ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) this.getParentRuleLine();
+            extraLines = ReadableArchetypeReferencesUtil.getHTMLPredicate(airl);
+        }
+        return extraLines;
     }
 
     private ArchetypeElementInstantiationRuleLine getArchetypeElementInstantiationRuleLine() {

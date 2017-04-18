@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class GeneratedElementInstance extends ElementInstance{
+public class GeneratedElementInstance extends ElementInstance {
 
     private static final long serialVersionUID = 1L;
     private Set<RuleReference> ruleReferences = new HashSet<RuleReference>();
@@ -24,13 +24,13 @@ public class GeneratedElementInstance extends ElementInstance{
         super(id, dataValue, archetypeReference, containerInstance, nullFlavour);
     }
 
-    public GeneratedElementInstance clone(){
+    public GeneratedElementInstance clone() {
         GeneratedElementInstance generatedElementInstance = new GeneratedElementInstance(getId(), getDataValue(), getArchetypeReference().clone(), getContainerInstance(), getNullFlavour());
         generatedElementInstance.setRuleReferences(new HashSet<RuleReference>(getRuleReferences()));
         return generatedElementInstance;
     }
 
-    public boolean isPredicate(){
+    public boolean isPredicate() {
         return false;
     }
 
@@ -42,22 +42,22 @@ public class GeneratedElementInstance extends ElementInstance{
         this.ruleReferences = ruleReferences;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuffer rrSB = new StringBuffer();
         String prefix = "";
-        for(RuleReference ruleReference: getRuleReferences()){
+        for (RuleReference ruleReference : getRuleReferences()) {
             rrSB.append(prefix);
             rrSB.append(ruleReference);
             prefix = ", ";
         }
-        return "(G)"+super.toString()+"\n"+
-                "RuleRefs="+rrSB;
+        return "(G)" + super.toString() + "\n" +
+                "RuleRefs=" + rrSB;
     }
 
-    public boolean hasNoValue(String gtCodeReference){
-        if (gtCodeReference!=null){
-            for(RuleReference ruleReference: ruleReferences){
-                if (ruleReference.toString().equals(gtCodeReference)){
+    public boolean hasNoValue(String gtCodeReference) {
+        if (gtCodeReference != null) {
+            for (RuleReference ruleReference : ruleReferences) {
+                if (ruleReference.toString().equals(gtCodeReference)) {
                     return super.hasNoValue();
                 }
             }

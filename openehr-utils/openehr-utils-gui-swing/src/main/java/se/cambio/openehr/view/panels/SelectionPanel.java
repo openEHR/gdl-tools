@@ -12,6 +12,7 @@ import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectionTree;
+import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -21,57 +22,45 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 
-/**
- * @author icorram
- *
-
-
- */
 public class SelectionPanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -7877248591456367314L;
     private SelectionTree jTree = null;
     private JScrollPane jScrollPane = null;
     private JPanel jPanelFiltro;
-    private SelectableNode<?> _nodoRaiz = null;
+    private SelectableNode<?> rootNode = null;
     private TextWithCleanButtonPanel textWithCleanButtonPanel = null;
     private JButton expandButton = null;
     private JButton contractButton = null;
-    private boolean _useEditor = true;
-    private boolean _bigList = false;
+    private boolean useEditor = true;
+    private boolean bigList = false;
     private JButton searchButton;
+    private WindowManager windowManager;
 
-    /**
-     * This is the default constructor
-     */
-    public SelectionPanel(SelectableNode<?> nodoRaiz) {
+    public SelectionPanel(WindowManager windowManager, SelectableNode<?> rootNode) {
         super();
-        _nodoRaiz = nodoRaiz;
+        this.windowManager = windowManager;
+        this.rootNode = rootNode;
         initialize();
     }
 
-    public SelectionPanel(SelectableNode<?> nodoRaiz, boolean useEditor) {
+    public SelectionPanel(WindowManager windowManager, SelectableNode<?> rootNode, boolean useEditor) {
         super();
-        _nodoRaiz = nodoRaiz;
-        _useEditor = useEditor;
+        this.windowManager = windowManager;
+        this.rootNode = rootNode;
+        this.useEditor = useEditor;
         initialize();
     }
 
-    public SelectionPanel(SelectableNode<?> nodoRaiz, boolean useEditor, boolean bigList) {
+    public SelectionPanel(WindowManager windowManager, SelectableNode<?> rootNode, boolean useEditor, boolean bigList) {
         super();
-        _nodoRaiz = nodoRaiz;
-        _useEditor = useEditor;
-        _bigList = bigList;
+        this.windowManager = windowManager;
+        this.rootNode = rootNode;
+        this.useEditor = useEditor;
+        this.bigList = bigList;
         initialize();
     }
-    /**
-     * This method initializes this
-     *
 
-     */
     private  void initialize() {
         this.setLayout(new BorderLayout());
         this.add(getFilterPanel(), BorderLayout.NORTH);
@@ -79,7 +68,7 @@ public class SelectionPanel extends JPanel {
     }
 
     public SelectableNode<?> getNode(){
-        return _nodoRaiz;
+        return rootNode;
     }
 
     public JPanel getFilterPanel() {
@@ -87,7 +76,7 @@ public class SelectionPanel extends JPanel {
             jPanelFiltro = new JPanel(new FlowLayout(FlowLayout.LEFT));
             jPanelFiltro.add(new JLabel(OpenEHRLanguageManager.getMessage("Filter")+" :"));
             jPanelFiltro.add(getTextWithCleanButtonPanel());
-            if (_bigList){
+            if (bigList){
                 jPanelFiltro.add(getSearchButton());
             }
             jPanelFiltro.add(getExpandButton());
@@ -100,7 +89,7 @@ public class SelectionPanel extends JPanel {
         if (textWithCleanButtonPanel == null){
             textWithCleanButtonPanel = new TextWithCleanButtonPanel();
             textWithCleanButtonPanel.setPreferredSize(new Dimension(100,20));
-            if (_bigList){
+            if (bigList){
                 textWithCleanButtonPanel.getJButton().addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -140,7 +129,7 @@ public class SelectionPanel extends JPanel {
     }
 
 
-    public JButton getExpandButton(){
+    private JButton getExpandButton(){
         if (expandButton == null){
             expandButton = new JButton(new ExpandTreeAction());
             expandButton.setIcon(OpenEHRImageUtil.EXPAND_ICON);
@@ -160,12 +149,12 @@ public class SelectionPanel extends JPanel {
     private class ExpandTreeAction extends AbstractAction{
         private static final long serialVersionUID = 1L;
         public void actionPerformed(ActionEvent e) {
-            if (_bigList){
-                new ExpandTreeRSW(getSelectionPanel()).execute();
+            if (bigList){
+                new ExpandTreeRSW(windowManager, getSelectionPanel()).execute();
             }else{
                 TreeUI ui = getJTree().getUI();
                 getJTree().setUI(null);
-                getJTree().expand(_nodoRaiz);
+                getJTree().expand(rootNode);
                 getJTree().setUI(ui);
             }
         }
@@ -188,7 +177,7 @@ public class SelectionPanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
         public void actionPerformed(ActionEvent e) {
-            getJTree().collapse(_nodoRaiz);
+            getJTree().collapse(rootNode);
         }
     }
     /**
@@ -198,7 +187,7 @@ public class SelectionPanel extends JPanel {
      */
     public SelectionTree getJTree() {
         if (jTree == null) {
-            jTree = new SelectionTree(_nodoRaiz, _useEditor);
+            jTree = new SelectionTree(rootNode, useEditor);
         }
         return jTree;
     }
@@ -216,7 +205,7 @@ public class SelectionPanel extends JPanel {
     }
 
     public void changeRootNode(SelectableNode<?> node){
-        _nodoRaiz = node;
+        rootNode = node;
 
         //Guardamos los mouse listeners
         ArrayList<MouseListener> mListeners = getJTree().getExtraMouseListeners();
@@ -250,15 +239,15 @@ public class SelectionPanel extends JPanel {
     }
 
     private void filter(){
-        if (_bigList){
-            new FilterTreeRSW(this).execute();
+        if (bigList){
+            new FilterTreeRSW(windowManager, this).execute();
         }else{
-            FilterTreeRSW.filterNode(this); //No need to do in a Swing Worker
+            FilterTreeRSW.filterNode(this);
             getJTree().expand(getNode());
         }
     }
 
-}  //  @jve:decl-index=0:visual-constraint="10,10"
+}
 /*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

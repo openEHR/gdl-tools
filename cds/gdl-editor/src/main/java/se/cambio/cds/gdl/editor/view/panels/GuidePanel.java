@@ -1,22 +1,20 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
+import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.panelplugins.GDLEditorPluginPanelManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.graph.view.panel.DecisionGraphPanel;
+import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
+import se.cambio.cds.util.export.html.GuideHTMLExporter;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class GuidePanel extends JPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private GDLEditor _controller;
+    private GDLEditor controller;
     private JTabbedPane guideEditorTabPane = null;
     private JPanel descriptionPanel;
     private RulesPanel rulesPanel;
@@ -24,25 +22,34 @@ public class GuidePanel extends JPanel {
     private RuleLinesPanel defaultActionsPanel;
     private RuleLinesPanel definitionsPanel;
     private TerminologyPanel terminologyPanel;
-    private BindingsPanel bindingTabPanel;
+    private MultipleBindingsPanel bindingTabPanel;
     private GDLPanel gdlPanel;
     private HTMLPanel htmlPanel;
+    private GuideHTMLExporter guideHtmlExporter;
+    private GdlGraphManager gdlGraphManager;
+    private DecisionGraphPanel decisionGraphPanel;
+    private SourcePanel sourceViewPanel;
+    private GuideExportPlugin guideExportPlugin;
 
-    public GuidePanel(GDLEditor controller){
-        _controller = controller;
+    GuidePanel(
+            GDLEditor controller,
+            GuideHTMLExporter guideHtmlExporter,
+            GdlGraphManager gdlGraphManager,
+            GuideExportPlugin guideExportPlugin) {
+        this.controller = controller;
+        this.guideHtmlExporter = guideHtmlExporter;
+        this.gdlGraphManager = gdlGraphManager;
+        this.guideExportPlugin = guideExportPlugin;
         init();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void init() {
+    private void init() {
         this.setLayout(new BorderLayout());
         this.add(getGuideEditorTabPane());
     }
 
-    public JTabbedPane getGuideEditorTabPane(){
-        if ( guideEditorTabPane == null){
+    public JTabbedPane getGuideEditorTabPane() {
+        if (guideEditorTabPane == null) {
             guideEditorTabPane = new JTabbedPane();
             guideEditorTabPane.addTab(
                     GDLEditorLanguageManager.getMessage("Description"),
@@ -77,92 +84,103 @@ public class GuidePanel extends JPanel {
                     GDLEditorImageUtil.GDL_LANG_ICON,
                     getGDLPanel());
             guideEditorTabPane.addTab(
+                    "Graph",
+                    GDLEditorImageUtil.GRAPH_ICON,
+                    getGdlGraphManager());
+            guideEditorTabPane.addTab(
+                    "Drools",
+                    GDLEditorImageUtil.PAGE_CODE_ICON,
+                    getSourceViewPanel());
+            guideEditorTabPane.addTab(
                     "HTML",
                     GDLEditorImageUtil.HTML_ICON,
                     getHTMLPanel());
             guideEditorTabPane.setFocusable(true);
-            for (AbstractPluginPanel abstractPluginPanel : GDLEditorPluginPanelManager.getPluginPanels()) {
-                abstractPluginPanel.setGdlEditor(_controller);
-                guideEditorTabPane.addTab(
-                        abstractPluginPanel.getPluginName(),
-                        abstractPluginPanel.getPluginIcon(),
-                        abstractPluginPanel
-                );
-            }
-
-            guideEditorTabPane.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    if (e.getSource() instanceof JTabbedPane){
-                        final Component comp = ((JTabbedPane)e.getSource()).getSelectedComponent();
-                        _controller.tabChanged(comp);
-                    }
+            guideEditorTabPane.addChangeListener(e -> {
+                if (e.getSource() instanceof JTabbedPane) {
+                    final Component comp = ((JTabbedPane) e.getSource()).getSelectedComponent();
+                    controller.tabChanged(comp);
                 }
             });
         }
         return guideEditorTabPane;
     }
 
-    private JPanel getRefreshableDescriptionPanel(){
-        if (descriptionPanel==null){
-            descriptionPanel = new RefreshableDescriptionPanel(_controller);
+    private JPanel getRefreshableDescriptionPanel() {
+        if (descriptionPanel == null) {
+            descriptionPanel = new RefreshableDescriptionPanel(controller, controller.getEditorWindow());
         }
         return descriptionPanel;
     }
 
-    public RulesPanel getRulesPanel(){
-        if (rulesPanel==null){
-            rulesPanel = new RulesPanel(_controller);
+    RulesPanel getRulesPanel() {
+        if (rulesPanel == null) {
+            rulesPanel = new RulesPanel(controller);
         }
         return rulesPanel;
     }
 
-    private RuleLinesPanel getPreconditionsPanel(){
-        if (preconditionsPanel==null){
-            preconditionsPanel = new PreconditionRuleLinesPanel(_controller);
+    private RuleLinesPanel getPreconditionsPanel() {
+        if (preconditionsPanel == null) {
+            preconditionsPanel = new PreconditionRuleLinesPanel(controller);
         }
         return preconditionsPanel;
     }
 
-    private RuleLinesPanel getDefaultActionsPanel(){
-        if (defaultActionsPanel ==null){
-            defaultActionsPanel = new DefaultActionsPanel(_controller);
+    private RuleLinesPanel getDefaultActionsPanel() {
+        if (defaultActionsPanel == null) {
+            defaultActionsPanel = new DefaultActionsPanel(controller);
         }
         return defaultActionsPanel;
     }
 
-    private RuleLinesPanel getDefinitionsPanel(){
-        if (definitionsPanel==null){
-            definitionsPanel = new DefinitionRuleLinesPanel( _controller);
+    private RuleLinesPanel getDefinitionsPanel() {
+        if (definitionsPanel == null) {
+            definitionsPanel = new DefinitionRuleLinesPanel(controller);
         }
         return definitionsPanel;
     }
 
-    private TerminologyPanel getTerminologyPanel(){
-        if (terminologyPanel ==null){
-            terminologyPanel = new TerminologyPanel(_controller);
+    private TerminologyPanel getTerminologyPanel() {
+        if (terminologyPanel == null) {
+            terminologyPanel = new TerminologyPanel(controller);
         }
         return terminologyPanel;
     }
 
-    public BindingsPanel getBindingPanel(){
-        if (bindingTabPanel==null){
-            bindingTabPanel = new BindingsPanel(_controller);
+    MultipleBindingsPanel getBindingPanel() {
+        if (bindingTabPanel == null) {
+            bindingTabPanel = new MultipleBindingsPanel(controller);
         }
         return bindingTabPanel;
     }
 
-    private GDLPanel getGDLPanel(){
-        if (gdlPanel==null){
-            gdlPanel = new GDLPanel(_controller);
+    private GDLPanel getGDLPanel() {
+        if (gdlPanel == null) {
+            gdlPanel = new GDLPanel(controller);
         }
         return gdlPanel;
     }
 
-    private HTMLPanel getHTMLPanel(){
-        if (htmlPanel==null){
-            htmlPanel = new HTMLPanel(_controller);
+    private HTMLPanel getHTMLPanel() {
+        if (htmlPanel == null) {
+            htmlPanel = new HTMLPanel(controller, guideHtmlExporter);
         }
         return htmlPanel;
+    }
+
+    private DecisionGraphPanel getGdlGraphManager() {
+        if (decisionGraphPanel == null) {
+            decisionGraphPanel = gdlGraphManager.generateDecisionGraphPanel(controller.getEntity(), controller.getCurrentLanguageCode());
+        }
+        return decisionGraphPanel;
+    }
+
+    private SourcePanel getSourceViewPanel() {
+        if (sourceViewPanel == null) {
+            sourceViewPanel = new SourcePanel(guideExportPlugin, controller);
+        }
+        return sourceViewPanel;
     }
 }
 /*

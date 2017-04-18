@@ -12,14 +12,12 @@ public class RulePanel extends JPanel implements RefreshablePanel{
     private static final long serialVersionUID = 1L;
 
     private JTabbedPane ruleEditorTabPane = null;
-    private GDLEditor _controller = null;
-
-    //private JPanel configurationPanel;
+    private GDLEditor controller = null;
 
     private ConditionsAndActionsPanel conditionsAndActionsPanel;
 
-    public RulePanel(GDLEditor controller){
-        _controller=controller;
+    RulePanel(GDLEditor controller){
+        this.controller =controller;
         initialize();
     }
 
@@ -41,7 +39,7 @@ public class RulePanel extends JPanel implements RefreshablePanel{
 
     private ConditionsAndActionsPanel getConditionsAndActionsPanel(){
         if (conditionsAndActionsPanel==null){
-            conditionsAndActionsPanel = new ConditionsAndActionsPanel(_controller);
+            conditionsAndActionsPanel = new ConditionsAndActionsPanel(controller);
         }
         return conditionsAndActionsPanel;
     }

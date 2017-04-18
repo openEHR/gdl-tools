@@ -4,10 +4,6 @@ import org.joda.time.DateTime;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
@@ -15,18 +11,16 @@ import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.OpenEHRConst;
 
-@Configuration
-@PropertySources({
-        @PropertySource(value = "classpath:default-date-time-path.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "file:conf/date-time-path.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:date-time-path.properties", ignoreResourceNotFound = true)
-})
+
 public class DateTimeARFinder {
 
     private Logger logger = LoggerFactory.getLogger(DateTimeARFinder.class);
 
-    @Autowired
-    Environment environment;
+    private Environment environment;
+
+    public DateTimeARFinder(Environment environment) {
+        this.environment = environment;
+    }
 
     public DateTime getDateTime(ArchetypeReference ar) {
         String dvDateTimePath = getEventTimePath(ar.getIdArchetype());
@@ -47,7 +41,7 @@ public class DateTimeARFinder {
         } else {
             if (OpenEHRConst.EVALUATION.equals(rmName) ||
                     OpenEHRConst.INSTRUCTION.equals(rmName)) {
-                String dateTimePath = environment.getProperty(archetypeId, String.class);
+                String dateTimePath = environment.getProperty(archetypeId);
                 if (dateTimePath == null) {
                     logger.warn("Unregistered DvDateTime for '" + archetypeId + "', please add the path to 'date-time-path.properties'");
                 }

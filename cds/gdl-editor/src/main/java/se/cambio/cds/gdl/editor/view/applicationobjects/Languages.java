@@ -11,15 +11,15 @@ public class Languages {
     private static Languages _instance;
     private Map<String, String> _languages;
     private Set<String> _supportedLanguages;
-    private Languages(){
-        _supportedLanguages = new HashSet<String>();
+
+    private Languages() {
+        _supportedLanguages = new HashSet<>();
         _supportedLanguages.add("en_EN");
         _supportedLanguages.add("es_ES");
         _supportedLanguages.add("sv_SE");
         _supportedLanguages.add("el_GR");
-        //TODO Add more support! :P
 
-        _languages = new HashMap<String, String>();
+        _languages = new HashMap<>();
         String[] isoLanguages = Locale.getISOLanguages();
         for (String language : isoLanguages) {
             Locale locale = new Locale(language, "EN");
@@ -32,16 +32,16 @@ public class Languages {
         }
     }
 
-    public static Set<String> getSupportedLanguages(){
+    public static Set<String> getSupportedLanguages() {
         return getDelegate()._supportedLanguages;
     }
 
-    public static String getLanguageName(String code){
+    public static String getLanguageName(String code) {
         return getDelegate()._languages.get(code);
     }
 
-    public static Languages getDelegate(){
-        if (_instance==null){
+    private static Languages getDelegate() {
+        if (_instance == null) {
             _instance = new Languages();
         }
         return _instance;

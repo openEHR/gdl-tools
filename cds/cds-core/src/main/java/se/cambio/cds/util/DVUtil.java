@@ -16,7 +16,9 @@ import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.openehr.controller.session.OpenEHRSessionManager;
+import se.cambio.cm.configuration.TerminologyServiceConfiguration;
+import se.cambio.cm.controller.terminology.TerminologyService;
+import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -187,12 +189,7 @@ public class DVUtil {
                 codePhrases.add(getCodePhrase(dataValue));
             }
             if (a != null && !codePhrases.isEmpty()) {
-                try {
-                    return OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
-                } catch (InternalErrorException e) {
-                    ExceptionHandler.handle(e);
-                    return false;
-                }
+                return getTerminologyService().isSubclassOf(a, codePhrases);
             } else {
                 return false;
             }
@@ -212,7 +209,6 @@ public class DVUtil {
         if (ei instanceof PredicateGeneratedElementInstance) {
             return true;
         } else {
-            //TODO Remove, exceptions should be handled
             CodePhrase a = getCodePhrase(ei.getDataValue());
             Set<CodePhrase> codePhrases = new HashSet<>();
             for (DataValue dataValue : dataValues) {
@@ -220,9 +216,9 @@ public class DVUtil {
             }
             if (a != null && !codePhrases.isEmpty()) {
                 try {
-                    return !OpenEHRSessionManager.getTerminologyFacadeDelegate().isSubclassOf(a, codePhrases);
-                } catch (InternalErrorException e) {
-                    ExceptionHandler.handle(e);
+                    return !getTerminologyService().isSubclassOf(a, codePhrases);
+                } catch (Exception exception) {
+                    ExceptionHandler.handle(exception);
                     return false;
                 }
             } else {
@@ -269,9 +265,6 @@ public class DVUtil {
                     || dv1 instanceof DvDuration && dv2 instanceof DvDuration
                     || dv1 instanceof DvProportion && dv2 instanceof DvProportion
                     || dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal;
-//Comparison of DVText always incompatible (not for equals/unequals)
-
-
     }
 
     public static double round(double unroundedDouble, int precision) {
@@ -295,6 +288,11 @@ public class DVUtil {
             return new DateTimeConstant(getDateTimeStrWithoutMillisAndTimezone(dataValueStr));
         } else if (dv instanceof DvQuantity) {
             return new QuantityConstant((DvQuantity) dv);
+        } else if (dv instanceof DvCount) {
+            if (dataValueStr.trim().startsWith("-")) {
+                dataValueStr = "(" + dataValueStr + ")";
+            }
+            return new ConstantExpression(dataValueStr);
         } else {
             return new ConstantExpression(dataValueStr);
         }
@@ -494,6 +492,10 @@ public class DVUtil {
             default:
                 throw new IllegalArgumentException(format("Unknown time units '%s'", ucumUnits));
         }
+    }
+
+    private static TerminologyService getTerminologyService() {
+        return TerminologyServiceConfiguration.getTerminologyServiceInstance();
     }
 }
 /*

@@ -4,18 +4,10 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
-import java.util.List;
+public class ActionRuleLinesPanel extends RuleLinesPanel {
 
-/**
- * User: Iago.Corbal
- * Date: 2013-08-14
- * Time: 15:05
- */
-public class ActionRuleLinesPanel extends RuleLinesPanel{
-
-    public ActionRuleLinesPanel(GDLEditor controller) {
+    ActionRuleLinesPanel(GDLEditor controller) {
         super(
                 controller,
                 RuleLineDirectory.getSelectableActions(),

@@ -14,7 +14,7 @@ public class NotOperatorRuleLine extends ExpressionRuleLine implements Condition
     public NotOperatorRuleLine() {
 	super(OpenEHRLanguageManager.getMessage("NotOperator"),
 		OpenEHRLanguageManager.getMessage("NotOperatorDesc"));
-	getRuleLineElements().add(new StaticTextRuleLineElement("NotRLE"));
+	getRuleLineElements().add(new StaticTextRuleLineElement(this,"NotRLE"));
     }
     
     public ExpressionItem toExpressionItem(){

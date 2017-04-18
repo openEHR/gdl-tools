@@ -13,38 +13,26 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-
-/**
- * @author iago.corbal
- *
- */
-
-public class EditorFrame extends JFrame implements EditorViewer{
+public class EditorFrame extends JFrame implements EditorViewer {
 
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private MainMenuBar principalMenuBar;
+    private EditorManager editorManager;
+    private MainMenuBar mainMenuBar;
 
-    /**
-     * This is the default constructor
-     */
-    public EditorFrame() {
+    public EditorFrame(EditorManager editorManager, MainMenuBar mainMenuBar) {
         super();
+        this.editorManager = editorManager;
+        this.mainMenuBar = mainMenuBar;
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void initialize() {
+    private void initialize() {
         setTooltipDelay();
         setPositionAndDimension();
         this.setResizable(true);
         this.addWindowListener(new WindowListener());
-        this.setJMenuBar(getMainMenuBar());
+        this.setJMenuBar(mainMenuBar);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setIconImage(GDLEditorImageUtil.LOGO.getImage());
     }
@@ -52,10 +40,10 @@ public class EditorFrame extends JFrame implements EditorViewer{
     private void setPositionAndDimension() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension labelSize = this.getSize();
-        this.setSize(new Dimension(1000, 600));
-        int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-        int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-        this.setLocation(locx,locy);
+        this.setSize(new Dimension(1100, 700));
+        int locx = (screenSize.width / 2) - (labelSize.width / 2) - (this.getWidth() / 2);
+        int locy = (screenSize.height / 2) - (labelSize.height / 2) - (this.getHeight() / 2);
+        this.setLocation(locx, locy);
     }
 
     private void setTooltipDelay() {
@@ -63,24 +51,17 @@ public class EditorFrame extends JFrame implements EditorViewer{
     }
 
 
-    protected class WindowListener extends WindowAdapter{
+    protected class WindowListener extends WindowAdapter {
         public void windowClosing(WindowEvent we) {
-            EditorManager.requestFocusInWindow();
-            EditorManager.closeEditor();
+            editorManager.requestFocusInWindow();
+            editorManager.closeEditor();
         }
     }
 
     public void initController(EditorController controller) {
         String buildNum = Version.getBuildNum();
-        setTitle(controller.getTitle()+(buildNum!=null?" - ("+buildNum+")":""));
+        setTitle(controller.getTitle() + (buildNum != null ? " - (" + buildNum + ")" : ""));
         controller.init();
-    }
-
-    public MainMenuBar getMainMenuBar() {
-        if (principalMenuBar == null) {
-            principalMenuBar = new MainMenuBar();
-        }
-        return principalMenuBar;
     }
 
     public void setContent(JPanel panel) {

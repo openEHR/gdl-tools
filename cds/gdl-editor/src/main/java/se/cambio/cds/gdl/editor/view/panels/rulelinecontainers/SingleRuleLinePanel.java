@@ -1,27 +1,25 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
-import java.awt.FlowLayout;
-
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.panels.RuleLinesPanel;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 
-public class SingleRuleLinePanel extends RuleLineContainerPanel{
+import java.awt.*;
+
+public class SingleRuleLinePanel extends RuleLineContainerPanel {
 
     private RuleLine _ruleLine = null;
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public SingleRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine){
-	_ruleLine = ruleLine;
-	this.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-	this.add(ReadableRuleLineFactory.createRuleLinePanel(ruleLinesPanel, ruleLine));
+    public SingleRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
+        _ruleLine = ruleLine;
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        this.add(ReadableRuleLineFactory.createRuleLinePanel(ruleLinesPanel, ruleLine, gdlEditor));
     }
 
     public RuleLine getRuleLine() {
-	return _ruleLine;
+        return _ruleLine;
     }
 }
 /*

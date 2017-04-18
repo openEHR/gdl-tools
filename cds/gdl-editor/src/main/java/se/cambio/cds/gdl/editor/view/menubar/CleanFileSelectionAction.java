@@ -15,35 +15,26 @@ import javax.swing.JTextField;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
-/**
- * @author icorram
- *
+public class CleanFileSelectionAction extends AbstractAction {
 
+    private static final long serialVersionUID = -2323804790429232264L;
+    private JFileChooser fileChooser = null;
+    private JTextField textField = null;
 
- */
-public class CleanFileSelectionAction extends AbstractAction{ 
+    public CleanFileSelectionAction(JFileChooser fileChooser, JTextField textField) {
+        this.fileChooser = fileChooser;
+        this.textField = textField;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("CleanSelectFolder"));
+        putValue(SMALL_ICON, GDLEditorImageUtil.CLEAR_ICON);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CleanSelectFolderSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CleanSelectFolderD"));
+        this.setEnabled(true);
+    }
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2323804790429232264L;
-	private JFileChooser _fileChooser = null;
-	private JTextField _textField = null;
-
-	public CleanFileSelectionAction(JFileChooser fileChooser, JTextField textField){ 
-		_fileChooser = fileChooser;
-		_textField = textField;
-		putValue(NAME, GDLEditorLanguageManager.getMessage("CleanSelectFolder"));
-		putValue(SMALL_ICON, GDLEditorImageUtil.CLEAR_ICON);
-		putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("CleanSelectFolderSD"));
-		putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CleanSelectFolderD"));
-		this.setEnabled(true);
-	} 
-
-	public void actionPerformed(ActionEvent e){ 
-		_fileChooser.setSelectedFile(null);
-		_textField.setText("");
-	} 
+    public void actionPerformed(ActionEvent e) {
+        fileChooser.setSelectedFile(null);
+        textField.setText("");
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

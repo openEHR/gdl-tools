@@ -13,83 +13,83 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.view.menubar.CleanFileSelectionAction;
 import se.cambio.cds.gdl.editor.view.menubar.FileSelectionAction;
 
-public class FileSelectionPanel extends JPanel{
+public class FileSelectionPanel extends JPanel {
 
-    /**
-     * Comentario para <code>serialVersionUID</code>
-     */
     private static final long serialVersionUID = 8614448310448465673L;
     private JPanel jPanel;
-    private JFileChooser _fileChooser = null;
+    private JFileChooser fileChooser = null;
+    private EditorManager editorManager;
     private JTextField fileNameJTextField = null;
     private JButton selectFileButton = null;
     private JButton cleanSelectionButton = null;
 
-    public FileSelectionPanel(JFileChooser fileChooser) {
-	super();
-	_fileChooser = fileChooser;
-	initialize();
+    public FileSelectionPanel(JFileChooser fileChooser, EditorManager editorManager) {
+        super();
+        this.fileChooser = fileChooser;
+        this.editorManager = editorManager;
+        initialize();
     }
 
-    private  void initialize() {
-	this.setLayout(new BorderLayout());
-	this.add(getPanel());
+    private void initialize() {
+        this.setLayout(new BorderLayout());
+        this.add(getPanel());
     }
 
 
-    private JPanel getPanel(){
-	if (jPanel==null){
-	    jPanel = new JPanel(new GridBagLayout());
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    gbc.weightx = 1.0;
-	    gbc.insets = new Insets(5,5,5,5);
-	    gbc.fill = java.awt.GridBagConstraints.BOTH;
-	    jPanel.add(getFileNameJTextField(),gbc);
-	    gbc.gridx++;
-	    gbc.weightx = 0;
-	    jPanel.add(getSelectFileButton(),gbc);
-	    gbc.gridx++;
-	    gbc.weightx = 0;
-	    jPanel.add(getLimpiarSeleccionButton(),gbc);
-	}
-	return jPanel;
+    private JPanel getPanel() {
+        if (jPanel == null) {
+            jPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 1.0;
+            gbc.insets = new Insets(5, 5, 5, 5);
+            gbc.fill = java.awt.GridBagConstraints.BOTH;
+            jPanel.add(getFileNameJTextField(), gbc);
+            gbc.gridx++;
+            gbc.weightx = 0;
+            jPanel.add(getSelectFileButton(), gbc);
+            gbc.gridx++;
+            gbc.weightx = 0;
+            jPanel.add(getCleanSelectionButton(), gbc);
+        }
+        return jPanel;
     }
 
-    public JTextField getFileNameJTextField(){
-	if (fileNameJTextField==null){
-	    fileNameJTextField = new JTextField();
-	    if (_fileChooser.getSelectedFile()!=null){
-		String path = getRelativePath(_fileChooser.getSelectedFile().getAbsolutePath());
-		fileNameJTextField.setText(path);
-	    }
-	}
-	return fileNameJTextField;
+    public JTextField getFileNameJTextField() {
+        if (fileNameJTextField == null) {
+            fileNameJTextField = new JTextField();
+            if (fileChooser.getSelectedFile() != null) {
+                String path = getRelativePath(fileChooser.getSelectedFile().getAbsolutePath());
+                fileNameJTextField.setText(path);
+            }
+        }
+        return fileNameJTextField;
     }
 
-    public JButton getSelectFileButton(){
-	if (selectFileButton==null){
-	    selectFileButton = new JButton(new FileSelectionAction(_fileChooser, getFileNameJTextField()));
-	    selectFileButton.setText("");
-	}
-	return selectFileButton;
+    private JButton getSelectFileButton() {
+        if (selectFileButton == null) {
+            selectFileButton = new JButton(new FileSelectionAction(fileChooser, getFileNameJTextField(), editorManager));
+            selectFileButton.setText("");
+        }
+        return selectFileButton;
     }
 
-    public JButton getLimpiarSeleccionButton(){
-	if (cleanSelectionButton==null){
-	    cleanSelectionButton = new JButton(new CleanFileSelectionAction(_fileChooser, getFileNameJTextField()));
-	    cleanSelectionButton.setText("");
-	}
-	return cleanSelectionButton;
+    private JButton getCleanSelectionButton() {
+        if (cleanSelectionButton == null) {
+            cleanSelectionButton = new JButton(new CleanFileSelectionAction(fileChooser, getFileNameJTextField()));
+            cleanSelectionButton.setText("");
+        }
+        return cleanSelectionButton;
     }
 
-    private String getRelativePath(String path){
-	String userPath = System.getProperty("user.dir");
-	return path.replace(userPath+"\\", "");
+    private String getRelativePath(String path) {
+        String userPath = System.getProperty("user.dir");
+        return path.replace(userPath + "\\", "");
     }
 }
 /*

@@ -11,10 +11,10 @@ public abstract class CDSSwingWorker extends SwingWorker<Object, Object> {
     protected final Object doInBackground() throws Exception {
         try {
             executeCDSSW();
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (Throwable e) {
-            ExceptionHandler.handle(e);
+        } catch (InternalErrorException exception) {
+            ExceptionHandler.handle(exception);
+        } catch (Exception exception) {
+            ExceptionHandler.handle(exception);
         }
         return null;
     }

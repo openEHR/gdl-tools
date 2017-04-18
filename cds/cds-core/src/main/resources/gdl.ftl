@@ -18,7 +18,7 @@
 </h1>
 <h2>${texts.GuideDetails?upper_case}</h2>
 <table>
-    <tr valign='top'><td class="details-label">${texts.Description}:</td><td align='left'>${guide_terms["guide.concept"?eval].description?if_exists}</td></tr>
+    <tr valign='top'><td class="details-label">${texts.Description}:</td><td align='left'>${guide_terms["guide.concept"?eval].description?if_exists?replace("\n", "<br>")}</td></tr>
     <tr valign='top'><td class="details-label">${texts.Purpose}:</td><td align='left'>${guide_details.purpose?if_exists?replace("\n", "<br>")}</td></tr>
     <tr valign='top'><td class="details-label">${texts.Use}:</td><td align='left'>${guide_details.use?if_exists?replace("\n", "<br>")}</td></tr>
     <tr valign='top'><td class="details-label">${texts.Misuse}:</td><td align='left'>${guide_details.misuse?if_exists?replace("\n", "<br>")}</td></tr>

@@ -2,8 +2,6 @@ package se.cambio.cds.gdl.converters.drools;
 
 import com.google.gson.Gson;
 import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
@@ -11,9 +9,8 @@ import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cds.controller.cds.CDSManager;
+import org.testng.annotations.Test;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.facade.execution.vo.PredicateGeneratedElementInstance;
@@ -24,7 +21,6 @@ import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.EhrDataFilterManager;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.PatientNotFoundException;
@@ -34,15 +30,13 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CdsConfiguration.class})
 public class BasicGDLTest extends GDLTestCase {
 
     @Autowired
-    EhrDataFilterManager ehrDataFilterManager;
+    private EhrDataFilterManager ehrDataFilterManager;
 
     @Autowired
-    CDSManager cdsManager;
+    private CdsDataManager cdsDataManager;
 
     public BasicGDLTest() {
         super();
@@ -202,7 +196,7 @@ public class BasicGDLTest extends GDLTestCase {
         GuideManager guideManager = generateGuideManager(guideIds);
         try {
             Collection<ArchetypeReference> archetypeReferences =
-                    cdsManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
+                    cdsDataManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
             int elementInstanceSize = 0;
             for (ArchetypeReference archetypeReference : archetypeReferences) {
                 elementInstanceSize += archetypeReference.getElementInstancesMap().size();
@@ -231,7 +225,7 @@ public class BasicGDLTest extends GDLTestCase {
         GuideManager guideManager = generateGuideManager(guideIds);
         try {
             Collection<ArchetypeReference> archetypeReferences =
-                    cdsManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
+                    cdsDataManager.getArchetypeReferences(null, guideIds, ars, guideManager, Calendar.getInstance());
             Collection<ElementInstance> elementInstances = new ArrayList<>();
             for (ArchetypeReference archetypeReference : archetypeReferences) {
                 elementInstances.addAll(archetypeReference.getElementInstancesMap().values());
@@ -305,7 +299,7 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(4, ars.size());
         for (ArchetypeReference arAux : ars) {
             if (GDLTestCase.MEDICATION_ARCHETYPE_ID.equals(arAux.getIdArchetype())) {
-                assertEquals(3, arAux.getElementInstancesMap().size()); //End date is generated in CDSManager
+                assertEquals(3, arAux.getElementInstancesMap().size()); //End date is generated in CdsDataManager
             }
         }
     }
@@ -392,7 +386,7 @@ public class BasicGDLTest extends GDLTestCase {
 
     @Test
     public void shouldAllowFiredRulesConditions() {
-        Collection<ElementInstance> elementInstances = getElementInstances(new ArrayList<ArchetypeReference>());
+        Collection<ElementInstance> elementInstances = getElementInstances(new ArrayList<>());
         List<String> guideIds = new ArrayList<>();
         guideIds.add("fired_rule_test");
         RuleExecutionResult rer = executeGuides(guideIds, elementInstances);
@@ -454,7 +448,7 @@ public class BasicGDLTest extends GDLTestCase {
         ArchetypeReference ar = generateBasicDemographicsArchetypeReference(date, Gender.FEMALE);
         ehrArs.add(ar);
 
-        List<String> guideIds = Arrays.asList("test_attribute_predicate");
+        List<String> guideIds = Collections.singletonList("test_attribute_predicate");
         RuleExecutionResult rer = executeGuides(guideIds, getElementInstances(ehrArs));
         assertThat(rer.getFiredRules().size(), equalTo(1));
 

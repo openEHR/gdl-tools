@@ -1,6 +1,6 @@
 package se.cambio.cds.formgen.view.panels;
 
-import se.cambio.cds.view.swing.DVSwingUtil;
+import se.cambio.cds.view.swing.DvSwingManager;
 import se.cambio.openehr.view.panels.DVGenericPanel;
 
 import javax.swing.*;
@@ -54,7 +54,7 @@ public class PanelWithButtons extends JPanel {
     protected void setEditableComponents(boolean editable){
 	for (JComponent comp : getJComponents()) {
 	    if (editable){
-		DVSwingUtil.enable(comp);
+		DvSwingManager.enable(comp);
 		if (_addButton!=null){
 		    _addButton.setVisible(true);
 		}
@@ -62,7 +62,7 @@ public class PanelWithButtons extends JPanel {
 		    _removeButton.setVisible(true);
 		}
 	    }else{
-		DVSwingUtil.disable(comp);
+		DvSwingManager.disable(comp);
 		if (_addButton!=null){
 		    _addButton.setVisible(false);
 		}

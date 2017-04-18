@@ -5,50 +5,53 @@ import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.util.WindowManager;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * @author iago.corbal
- *
- */
 public class LoadTerminologyViewerRSW extends OpenEHRUtilSwingWorker {
 
     private final SelectableNode.SelectionMode selectionMode;
-    private final Window owner;
+    private TerminologyDialogManager terminologyDialogManager;
     private String _terminologyId = null;
+    private WindowManager windowManager;
     private Collection<String> _selectedCodes = null;
     private DialogSelection _dialog = null;
     private TerminologyCodesManager _terminologyCodesManager = null;
 
-    public LoadTerminologyViewerRSW(Window owner, TerminologyCodesManager terminologyCodesManager, String terminologyId, Collection<String> selectedCodes, SelectableNode.SelectionMode selectionMode) {
+    public LoadTerminologyViewerRSW(
+            WindowManager windowManager,
+            TerminologyCodesManager terminologyCodesManager,
+            String terminologyId, Collection<String> selectedCodes,
+            SelectableNode.SelectionMode selectionMode,
+            TerminologyDialogManager terminologyDialogManager) {
         super();
+        this.windowManager = windowManager;
         _selectedCodes = selectedCodes;
         _terminologyId = terminologyId;
         _terminologyCodesManager = terminologyCodesManager;
         this.selectionMode = selectionMode;
-        this.owner = owner;
-        WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
+        this.terminologyDialogManager = terminologyDialogManager;
+        windowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
     }
 
     protected void executeSW() throws InternalErrorException {
-        try{
-            _dialog = TerminologyDialogs.getTerminologyDialog(owner, _terminologyId, selectionMode, _selectedCodes);
-        }catch(Exception e){
+        try {
+            _dialog = terminologyDialogManager.getTerminologyDialog(windowManager.getMainWindow(), _terminologyId, selectionMode, _selectedCodes);
+        } catch (Exception e) {
             ExceptionHandler.handle(e);
         }
     }
 
 
     protected void done() {
-        WindowManager.setFree();
+        windowManager.setFree();
         _dialog.setVisible(true);
-        if (_dialog.getAnswer()){
-            Collection<String> terminologyCodes = new ArrayList<String>();
+        if (_dialog.getAnswer()) {
+            Collection<String> terminologyCodes = new ArrayList<>();
             for (Object object : _dialog.getSelectedObjects()) {
-                if (object instanceof DvCodedText){
+                if (object instanceof DvCodedText) {
                     terminologyCodes.add(((DvCodedText) object).getCode());
                 }
             }

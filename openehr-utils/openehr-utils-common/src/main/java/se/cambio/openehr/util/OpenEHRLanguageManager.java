@@ -1,5 +1,6 @@
 package se.cambio.openehr.util;
 
+import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
 
 import java.util.HashMap;
@@ -12,17 +13,18 @@ import java.util.ResourceBundle;
 public final class OpenEHRLanguageManager {
 
 
-    private static OpenEHRLanguageManager _instance;
+    private static OpenEHRLanguageManager instance;
 
-    private Map<String, ResourceBundle> _resourceMap = null;
+    private Map<String, ResourceBundle> resourceMap = null;
     public static final String MESSAGES_BUNDLE = "se.cambio.openehr.view.messages.Messages";
     private String language;
     private String country;
 
     private OpenEHRLanguageManager() {
-        language = UserConfigurationManager.instance().getLanguage();
-        country = UserConfigurationManager.instance().getCountryCode();
-        _resourceMap = new HashMap<String, ResourceBundle>();
+        UserConfigurationManager userConfigurationManager = UserConfiguration.getInstanceUserConfigurationManager();
+        language = userConfigurationManager.getLanguage();
+        country = userConfigurationManager.getCountryCode();
+        resourceMap = new HashMap<>();
     }
 
     private ResourceBundle getResourceBundle() {
@@ -33,7 +35,7 @@ public final class OpenEHRLanguageManager {
         if (language == null) {
             return getResourceBundle();
         }
-        ResourceBundle resourceBundle = _resourceMap.get(language);
+        ResourceBundle resourceBundle = resourceMap.get(language);
         if (resourceBundle == null) {
             try {
                 resourceBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());
@@ -43,13 +45,13 @@ public final class OpenEHRLanguageManager {
                 }
                 ExceptionHandler.handle(e);
             }
-            _resourceMap.put(language, resourceBundle);
+            resourceMap.put(language, resourceBundle);
         }
         return resourceBundle;
     }
 
     public static void refreshConfig() {
-        _instance = null;
+        instance = null;
         getDelegate();
     }
 
@@ -96,10 +98,10 @@ public final class OpenEHRLanguageManager {
     }
 
     private static OpenEHRLanguageManager getDelegate() {
-        if (_instance == null) {
-            _instance = new OpenEHRLanguageManager();
+        if (instance == null) {
+            instance = new OpenEHRLanguageManager();
         }
-        return _instance;
+        return instance;
     }
 
     public String getLanguage() {

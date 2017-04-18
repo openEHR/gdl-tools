@@ -1,19 +1,15 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.cambio.cds.controller.cds.CDSManager;
+import org.testng.annotations.Test;
+import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.EhrDataFilterManager;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -24,15 +20,13 @@ import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CdsConfiguration.class})
 public class TimeExpressionGDLTest extends GDLTestCase {
 
     @Autowired
     EhrDataFilterManager ehrDataFilterManager;
 
     @Autowired
-    CDSManager cdsManager;
+    CdsDataManager cdsDataManager;
 
     public TimeExpressionGDLTest() {
         super();

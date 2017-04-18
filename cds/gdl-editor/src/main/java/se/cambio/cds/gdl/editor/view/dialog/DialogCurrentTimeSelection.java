@@ -1,6 +1,8 @@
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import com.toedter.calendar.JDateChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.ClockPanel;
@@ -14,35 +16,27 @@ import java.util.Date;
 
 import static java.lang.String.format;
 
-/**
- * @author icorram
- */
 public class DialogCurrentTimeSelection extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
-    private ClockPanel _clockPanel = null;
+    private final UserConfigurationManager userConfigurationManager;
+    private ClockPanel clockPanel = null;
     private JRadioButton radioButtonDefault = null;
     private JRadioButton radioButtonCustom = null;
     private JDateChooser dateChooser;
-    private static String DEFAULT_VALUE = "default";
-    private static String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    private static final String DEFAULT_FORMAT = "dd/MM/yyyy HH:mm:ss";
+    private Logger logger = LoggerFactory.getLogger(DialogCurrentTimeSelection.class);
 
-    /**
-     * This is the default constructor
-     */
-    public DialogCurrentTimeSelection() {
-        super(EditorManager.getActiveEditorWindow(),
+    public DialogCurrentTimeSelection(
+            EditorManager editorManager,
+            UserConfigurationManager userConfigurationManager) {
+        super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("DefaultDateTime"),
                 new Dimension(500, 180), true);
+        this.userConfigurationManager = userConfigurationManager;
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
     private void initialize() {
         getJPanel().setLayout(new BorderLayout());
         JPanel panelAux = new JPanel(new BorderLayout());
@@ -71,7 +65,7 @@ public class DialogCurrentTimeSelection extends DialogEditor {
         if (radioButtonDefault == null) {
             radioButtonDefault = new JRadioButton();
             radioButtonDefault.setText(GDLEditorLanguageManager.getMessage("CurrentDateTime"));
-            if (!UserConfigurationManager.instance().hasCustomCurrentDateTime()) {
+            if (!userConfigurationManager.hasCustomCurrentDateTime()) {
                 radioButtonDefault.setSelected(true);
             }
         }
@@ -82,7 +76,7 @@ public class DialogCurrentTimeSelection extends DialogEditor {
         if (radioButtonCustom == null) {
             radioButtonCustom = new JRadioButton();
             radioButtonCustom.setText(GDLEditorLanguageManager.getMessage("CustomDateTime"));
-            if (UserConfigurationManager.instance().hasCustomCurrentDateTime()) {
+            if (userConfigurationManager.hasCustomCurrentDateTime()) {
                 radioButtonCustom.setSelected(true);
             }
         }
@@ -90,17 +84,17 @@ public class DialogCurrentTimeSelection extends DialogEditor {
     }
 
     private ClockPanel getClockPanel() {
-        if (_clockPanel == null) {
-            _clockPanel = new ClockPanel();
+        if (clockPanel == null) {
+            clockPanel = new ClockPanel();
         }
-        return _clockPanel;
+        return clockPanel;
     }
 
-    public JDateChooser getDateChooser() {
+    private JDateChooser getDateChooser() {
         if (dateChooser == null) {
             dateChooser = new JDateChooser(DEFAULT_FORMAT, "##/##/#### ##:##:##", '_');
             dateChooser.setIcon(OpenEHRImageUtil.CALENDAR_ICON);
-            Date date = UserConfigurationManager.instance().getCurrentDateTime();
+            Date date = userConfigurationManager.getCurrentDateTime();
             if (date != null) {
                 dateChooser.setDate(date);
             }
@@ -119,18 +113,18 @@ public class DialogCurrentTimeSelection extends DialogEditor {
         if (getRadioButtonCustom().isSelected()) {
             date = getDateChooser().getDate();
         }
-        UserConfigurationManager.instance().setCurrentDateTime(date);
+        userConfigurationManager.setCurrentDateTime(date);
         try {
-            UserConfigurationManager.instance().saveConfig();
+            userConfigurationManager.saveConfig();
         } catch (Exception e) {
+            logger.error("Error saving config file", e);
             JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
 
-}  //  @jve:decl-index=0:visual-constraint="124,21"
-
+}
 
 /*
  *  ***** BEGIN LICENSE BLOCK *****

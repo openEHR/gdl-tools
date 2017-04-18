@@ -1,15 +1,12 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.RuleLineCloner;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.listeners.SelectableRuleLineDragMouseListener;
 import se.cambio.cds.gdl.editor.view.panels.rulelinecontainers.BaseRuleLineContainerPanel;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithValue;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,27 +16,24 @@ import java.util.Collection;
 
 public abstract class RuleLinesPanel extends JLayeredPane implements RefreshablePanel{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     private JPanel toolsPanel;
 
-    private JPanel _selectionPanel = null;
-    private GDLEditor _controller = null;
+    private JPanel selectionPanel = null;
+    private GDLEditor controller = null;
     private JScrollPane jScrollPaneCond;
-    private Collection<RuleLine> _selectableRuleLines = null;
-    private String _title = null;
+    private Collection<RuleLine> selectableRuleLines = null;
+    private String title = null;
     private JPanel mainPanel;
     private SelectableRuleLineDragMouseListener selectableRuleLineDragMouseListener;
-    private BaseRuleLineContainerPanel _baseRuleLinePanel;
-    private RuleLine _ruleLineCheck = null;
+    private BaseRuleLineContainerPanel baseRuleLinePanel;
+    private RuleLine ruleLineCheck = null;
 
     public RuleLinesPanel(GDLEditor controller, Collection<RuleLine> selectableRuleLines,String title){
-        _controller = controller;
-        _selectableRuleLines = selectableRuleLines;
-        _title = title;
+        this.controller = controller;
+        this.selectableRuleLines = selectableRuleLines;
+        this.title = title;
         init();
     }
 
@@ -54,7 +48,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
         this.add(getMainPanel(), JLayeredPane.DEFAULT_LAYER);
     }
 
-    public JPanel getMainPanel(){
+    private JPanel getMainPanel(){
         if (mainPanel==null){
             mainPanel = new JPanel(new BorderLayout());
             mainPanel.add(getRuleLinesJScrollPane(), BorderLayout.CENTER);
@@ -64,7 +58,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
     }
 
 
-    public JPanel getToolsPanel(){
+    private JPanel getToolsPanel(){
         if (toolsPanel==null){
             toolsPanel = new JPanel(new BorderLayout());
             toolsPanel.add(getSelectionPanel(), BorderLayout.NORTH);
@@ -73,27 +67,27 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
     }
 
     private JPanel getSelectionPanel(){
-        if (_selectionPanel==null){
-            _selectionPanel = new JPanel(new BorderLayout());
-            _selectionPanel.setBorder(BorderFactory.createTitledBorder(_title));
+        if (selectionPanel ==null){
+            selectionPanel = new JPanel(new BorderLayout());
+            selectionPanel.setBorder(BorderFactory.createTitledBorder(title));
             JPanel aux = new JPanel();
             aux.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             aux.setLayout(new BoxLayout(aux, BoxLayout.Y_AXIS));
-            _selectionPanel.add(aux, BorderLayout.NORTH);
-            for (RuleLine ruleLine : _selectableRuleLines) {
+            selectionPanel.add(aux, BorderLayout.NORTH);
+            for (RuleLine ruleLine : selectableRuleLines) {
                 DraggableSelectableRuleLinePanel label = new DraggableSelectableRuleLinePanel(ruleLine);
                 label.addMouseListener(getSelectableRuleLineDragMouseListener());
                 label.addMouseMotionListener(getSelectableRuleLineDragMouseListener());
                 aux.add(label);
             }
         }
-        return _selectionPanel;
+        return selectionPanel;
     }
 
     public SelectableRuleLineDragMouseListener getSelectableRuleLineDragMouseListener(){
         if (selectableRuleLineDragMouseListener==null){
             selectableRuleLineDragMouseListener =
-                    new SelectableRuleLineDragMouseListener(this);
+                    new SelectableRuleLineDragMouseListener(this, controller);
         }
         return selectableRuleLineDragMouseListener;
     }
@@ -102,26 +96,9 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     public void addRuleLine(RuleLine ruleLine){
         if (RuleLineDirectory.isDirectoryRuleLine(ruleLine)){
-            ruleLine = RuleLineCloner.clone(ruleLine);
+            ruleLine = controller.cloneRuleLine(ruleLine);
         }
         getRuleLines().add(0, ruleLine);
-        ruleLineAdded(ruleLine);
-    }
-
-    public void ruleLineAdded(RuleLine ruleLine){
-	/* AUTOMATIC DIALOG OPENER (disabled for now)
-	RuleLineElementWithValue<?> rlewv = null;
-	Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
-	while(i.hasNext()){
-	    RuleLineElement rle = i.next();
-	    if (rle instanceof RuleLineElementWithValue<?>){
-		rlewv = (RuleLineElementWithValue<?>)rle;
-		break;
-	    }
-	}
-	if (rlewv!=null && rlewv.getValue()==null){
-	    RuleElementEditor.edit(rlewv);
-	}*/
     }
 
     public void removeRuleLine(RuleLine ruleLine){
@@ -137,39 +114,31 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
     }
 
     public BaseRuleLineContainerPanel getBaseRuleLinePanel(){
-        if (_baseRuleLinePanel==null){
-            _baseRuleLinePanel = new BaseRuleLineContainerPanel(this, getRuleLines());
-            _baseRuleLinePanel.setBorder(BorderFactory.createTitledBorder(_title));
+        if (baseRuleLinePanel ==null){
+            baseRuleLinePanel = new BaseRuleLineContainerPanel(this, getRuleLines(), controller);
+            baseRuleLinePanel.setBorder(BorderFactory.createTitledBorder(title));
         }
-        return _baseRuleLinePanel;
+        return baseRuleLinePanel;
     }
 
 
     public void showCompatibility(RuleLine ruleLine){
-        _ruleLineCheck = ruleLine;
+        ruleLineCheck = ruleLine;
         refresh();
-        _ruleLineCheck = null;
+        ruleLineCheck = null;
     }
 
     public RuleLine getRuleLineCheck(){
-        return _ruleLineCheck;
+        return ruleLineCheck;
     }
 
     public void refresh(){
-        _baseRuleLinePanel = null;
+        baseRuleLinePanel = null;
         getRuleLinesJScrollPane().setViewportView(getBaseRuleLinePanel());
     }
 
     public GDLEditor getController(){
-        return _controller;
-    }
-
-    public String getDescription(RuleLineElementWithValue<?> ruleLineElementWithValue){
-        if (ruleLineElementWithValue!=null){
-            return ruleLineElementWithValue.getLabelDescription(UserConfigurationManager.instance().getLanguage());
-        }else{
-            return null;
-        }
+        return controller;
     }
 }
 /*

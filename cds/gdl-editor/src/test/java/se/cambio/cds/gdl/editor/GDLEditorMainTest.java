@@ -5,18 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.GuideUtil;
+import se.cambio.cds.gdl.editor.configuration.GdlEditorConfiguration;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
-import se.cambio.cm.model.facade.administration.delegate.CMAdministrationFacadeDelegate;
-import se.cambio.openehr.util.BeanProvider;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.configuration.CdsConfiguration;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.*;
@@ -27,8 +27,8 @@ import static junit.framework.TestCase.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CdsConfiguration.class)
-@ActiveProfiles({"cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao"})
+@ContextConfiguration(classes = {GdlEditorConfiguration.class})
+@ActiveProfiles({"cm-admin-file-dao", "ehr-dummy-service", "rule-drools-engine"})
 public class GDLEditorMainTest {
 
     @Value("classpath:/archetypes")
@@ -43,23 +43,28 @@ public class GDLEditorMainTest {
     @Value("classpath:/guidelines")
     Resource guidelinesResource;
 
+    @Autowired
+    UserConfigurationManager userConfigurationManager;
+
+    @Autowired
+    ClinicalModelsService clinicalModelsService;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
-        UserConfigurationManager.instance().setArchetypesFolderPath(archetypesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
-        UserConfigurationManager.instance().setTemplatesFolderPath(templatesResource.getFile().getPath());
-        UserConfigurationManager.instance().setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
+        userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
+        userConfigurationManager.setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
+        userConfigurationManager.setTemplatesFolderPath(templatesResource.getFile().getPath());
+        userConfigurationManager.setGuidelinesFolderPath(guidelinesResource.getFile().getPath());
     }
 
     @Test
     public void should_get_facades_implementation_from_annotations() {
-        CMAdministrationFacadeDelegate cmAdministrationFacadeDelegate = BeanProvider.getBean(CMAdministrationFacadeDelegate.class);
-        assertNotNull(cmAdministrationFacadeDelegate);
+        assertNotNull(clinicalModelsService);
     }
 
     @Test
     public void testCompareSerializedGuides() throws Exception {
-        UserConfigurationManager.instance().setLanguage("en");
+        userConfigurationManager.setLanguage("en");
         File mainGuideDir = new File(GDLEditorMainTest.class.getClassLoader().getResource("guidelines").getPath());
         for (File file : mainGuideDir.listFiles()) {
             if (file.getName().endsWith(".gdl")) {

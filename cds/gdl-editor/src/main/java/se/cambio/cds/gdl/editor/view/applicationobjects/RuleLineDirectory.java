@@ -12,139 +12,116 @@ import java.util.Collection;
 
 public class RuleLineDirectory {
 
-    private Collection<RuleLine> _selectableDefinitions = null;
-    private ArrayList<RuleLine> _selectablePreconditions;
-    private Collection<RuleLine> _selectableConditions = null;
-    private Collection<RuleLine> _selectableActions = null;
-    private ArrayList<RuleLine> _selectableDefaultActions;
-    private static RuleLineDirectory _instance =null;
+    private Collection<RuleLine> selectableDefinitions = null;
+    private ArrayList<RuleLine> selectablePreconditions;
+    private Collection<RuleLine> selectableConditions = null;
+    private Collection<RuleLine> selectableActions = null;
+    private ArrayList<RuleLine> selectableDefaultActions;
+    private static RuleLineDirectory instance = null;
 
-    private RuleLineDirectory(){
+    private RuleLineDirectory() {
 
     }
 
-    public static Collection<RuleLine> getSelectableDefinitions(){
-        if (getDelegate()._selectableDefinitions == null){
-            getDelegate()._selectableDefinitions = new ArrayList<RuleLine>();
-            getDelegate()._selectableDefinitions.add(new ArchetypeInstantiationRuleLine());
-            getDelegate()._selectableDefinitions.add(new ArchetypeElementInstantiationRuleLine(null));
-            getDelegate()._selectableDefinitions.add(new WithElementPredicateAttributeDefinitionRuleLine());
-            getDelegate()._selectableDefinitions.add(new WithElementPredicateFunctionDefinitionRuleLine());
-            getDelegate()._selectableDefinitions.add(new WithElementPredicateExistsDefinitionRuleLine());
-            getDelegate()._selectableDefinitions.add(new WithElementPredicateExpressionDefinitionRuleLine(null));
+    public static Collection<RuleLine> getSelectableDefinitions() {
+        if (getDelegate().selectableDefinitions == null) {
+            getDelegate().selectableDefinitions = new ArrayList<>();
+            getDelegate().selectableDefinitions.add(new ArchetypeInstantiationRuleLine());
+            getDelegate().selectableDefinitions.add(new ArchetypeElementInstantiationRuleLine(null));
+            getDelegate().selectableDefinitions.add(new WithElementPredicateAttributeDefinitionRuleLine());
+            getDelegate().selectableDefinitions.add(new WithElementPredicateFunctionDefinitionRuleLine());
+            getDelegate().selectableDefinitions.add(new WithElementPredicateExistsDefinitionRuleLine());
+            getDelegate().selectableDefinitions.add(new WithElementPredicateExpressionDefinitionRuleLine(null));
         }
-        return getDelegate()._selectableDefinitions;
+        return getDelegate().selectableDefinitions;
     }
 
-    public static Collection<RuleLine> getSelectablePreconditions(){
-        if (getDelegate()._selectablePreconditions == null){
-            getDelegate()._selectablePreconditions = new ArrayList<RuleLine>();
-            getDelegate()._selectablePreconditions.add(new ElementComparisonWithDVConditionRuleLine());
-            getDelegate()._selectablePreconditions.add(new ElementComparisonWithNullValueConditionRuleLine());
-            getDelegate()._selectablePreconditions.add(new ElementComparisonWithElementConditionRuleLine());
-            getDelegate()._selectablePreconditions.add(new ElementAttributeComparisonConditionRuleLine());
-            getDelegate()._selectablePreconditions.add(new ElementInitializedConditionRuleLine());
-            getDelegate()._selectablePreconditions.add(new OrOperatorRuleLine());
-            getDelegate()._selectablePreconditions.add(new NotOperatorRuleLine());
+    public static Collection<RuleLine> getSelectablePreconditions() {
+        if (getDelegate().selectablePreconditions == null) {
+            getDelegate().selectablePreconditions = new ArrayList<>();
+            getDelegate().selectablePreconditions.add(new ElementComparisonWithDVConditionRuleLine());
+            getDelegate().selectablePreconditions.add(new ElementComparisonWithNullValueConditionRuleLine());
+            getDelegate().selectablePreconditions.add(new ElementComparisonWithElementConditionRuleLine());
+            getDelegate().selectablePreconditions.add(new ElementAttributeComparisonConditionRuleLine());
+            getDelegate().selectablePreconditions.add(new ElementInitializedConditionRuleLine());
+            getDelegate().selectablePreconditions.add(new OrOperatorRuleLine());
+            getDelegate().selectablePreconditions.add(new NotOperatorRuleLine());
         }
-        return getDelegate()._selectablePreconditions;
+        return getDelegate().selectablePreconditions;
     }
 
-    public static Collection<RuleLine> getSelectableConditions(){
-        if (getDelegate()._selectableConditions == null){
-            getDelegate()._selectableConditions = new ArrayList<RuleLine>();
-            getDelegate()._selectableConditions.addAll(getSelectablePreconditions());
-            getDelegate()._selectableConditions.add(new FiredRuleConditionRuleLine());
+    public static Collection<RuleLine> getSelectableConditions() {
+        if (getDelegate().selectableConditions == null) {
+            getDelegate().selectableConditions = new ArrayList<>();
+            getDelegate().selectableConditions.addAll(getSelectablePreconditions());
+            getDelegate().selectableConditions.add(new FiredRuleConditionRuleLine());
         }
-        return getDelegate()._selectableConditions;
+        return getDelegate().selectableConditions;
     }
 
-    public static Collection<RuleLine> getSelectableDefaultActions(){
-        if (getDelegate()._selectableDefaultActions == null){
-            getDelegate()._selectableDefaultActions = new ArrayList<RuleLine>();
-            getDelegate()._selectableDefaultActions.add(new CreateInstanceActionRuleLine());
-            getDelegate()._selectableDefaultActions.add(new SetElementWithDataValueActionRuleLine());
-            getDelegate()._selectableDefaultActions.add(new SetElementWithNullValueActionRuleLine());
-            getDelegate()._selectableDefaultActions.add(new SetElementAttributeActionRuleLine());
+    public static Collection<RuleLine> getSelectableDefaultActions() {
+        if (getDelegate().selectableDefaultActions == null) {
+            getDelegate().selectableDefaultActions = new ArrayList<>();
+            getDelegate().selectableDefaultActions.add(new CreateInstanceActionRuleLine());
+            getDelegate().selectableDefaultActions.add(new SetElementWithDataValueActionRuleLine());
+            getDelegate().selectableDefaultActions.add(new SetElementWithNullValueActionRuleLine());
+            getDelegate().selectableDefaultActions.add(new SetElementAttributeActionRuleLine());
 
         }
-        return getDelegate()._selectableDefaultActions;
+        return getDelegate().selectableDefaultActions;
     }
 
-    public static Collection<RuleLine> getSelectableActions(){
-        if (getDelegate()._selectableActions == null){
-            getDelegate()._selectableActions = new ArrayList<RuleLine>();
-            getDelegate()._selectableActions.addAll(getSelectableDefaultActions());
-            getDelegate()._selectableActions.add(new SetElementWithElementActionRuleLine());
+    public static Collection<RuleLine> getSelectableActions() {
+        if (getDelegate().selectableActions == null) {
+            getDelegate().selectableActions = new ArrayList<>();
+            getDelegate().selectableActions.addAll(getSelectableDefaultActions());
+            getDelegate().selectableActions.add(new SetElementWithElementActionRuleLine());
         }
-        return getDelegate()._selectableActions;
+        return getDelegate().selectableActions;
     }
 
-    public static boolean isDirectoryRuleLine(RuleLine ruleLine){
+    public static boolean isDirectoryRuleLine(RuleLine ruleLine) {
         return getSelectableDefinitions().contains(ruleLine) ||
                 getSelectableConditions().contains(ruleLine) ||
                 getSelectableActions().contains(ruleLine);
     }
 
-    public static ImageIcon getIconForRuleLine(RuleLine ruleLine){
-        if (ruleLine instanceof DefinitionsRuleLine){
+    public static ImageIcon getIconForRuleLine(RuleLine ruleLine) {
+        if (ruleLine instanceof DefinitionsRuleLine) {
             return GDLEditorImageUtil.SOURCE_ICON;
-        }else if (ruleLine instanceof ConditionRuleLine){
+        } else if (ruleLine instanceof ConditionRuleLine) {
             return GDLEditorImageUtil.CONDITION_ICON;
-        }else if (ruleLine instanceof ActionRuleLine){
+        } else if (ruleLine instanceof ActionRuleLine) {
             return GDLEditorImageUtil.ACTION_ICON;
-        }else{
+        } else {
             return GDLEditorImageUtil.EMPTY_ICON;
         }
     }
 
-    public static RuleLineDirectory getDelegate(){
-        if (_instance == null){
-            _instance = new RuleLineDirectory();
+    private static RuleLineDirectory getDelegate() {
+        if (instance == null) {
+            instance = new RuleLineDirectory();
         }
-        return _instance;
+        return instance;
     }
 
-    public static boolean checkRuleLineCompatibility(RuleLine ruleLine, RuleLine ruleLineParent){
-        if (ruleLineParent == null){
-            if(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
+    public static boolean checkRuleLineCompatibility(RuleLine ruleLine, RuleLine ruleLineParent) {
+        if (ruleLineParent == null) {
+            return !(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
                     ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine ||
                     ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine ||
                     ruleLine instanceof WithElementPredicateExistsDefinitionRuleLine ||
-                    ruleLine instanceof WithElementPredicateFunctionDefinitionRuleLine){
-                return false;
-            }else{
-                return true;
-            }
-        }else if (ruleLine instanceof ArchetypeInstantiationRuleLine){
+                    ruleLine instanceof WithElementPredicateFunctionDefinitionRuleLine);
+        } else if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
             return false;
-        }else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
-            if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
-                return true;
-            }else{
-                return false;
-            }
-        }else if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
-            if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
-                return true;
-            }else{
-                return false;
-            }
-        }else if (ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine){
-            if (ruleLineParent instanceof ArchetypeInstantiationRuleLine){
-                return true;
-            }else{
-                return false;
-            }
-        }else if (ruleLineParent instanceof CreateInstanceActionRuleLine){
-            if (ruleLine instanceof CreateInstanceActionRuleLine){
-                return false;
-            }else{
-                return true;
-            }
-        }else{
-            return true;
-        }
+        } else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine) {
+            return ruleLineParent instanceof ArchetypeInstantiationRuleLine;
+        } else if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine) {
+            return ruleLineParent instanceof ArchetypeInstantiationRuleLine;
+        } else if (ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine) {
+            return ruleLineParent instanceof ArchetypeInstantiationRuleLine;
+        } else
+            return !(ruleLineParent instanceof CreateInstanceActionRuleLine) || !(ruleLine instanceof CreateInstanceActionRuleLine);
     }
 }
 /*

@@ -10,29 +10,29 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSetLanguage;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 public class ConfigLanguageAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    public ConfigLanguageAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("SetEditorLanguage")+"...");
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageSD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageD"));
+    ConfigLanguageAction(EditorManager editorManager, UserConfigurationManager userConfigurationManager) {
+        super();
+        this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SetEditorLanguage") + "...");
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageSD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	new DialogSetLanguage().setVisible(true);
+        new DialogSetLanguage(editorManager, userConfigurationManager).setVisible(true);
     }
 }
 /*

@@ -23,7 +23,7 @@ public class OpenEHRRMUtil {
 
     private static Collection<String> rmPaths;
     static {
-        rmPaths = new ArrayList<String>();
+        rmPaths = new ArrayList<>();
         rmPaths.add(EVENT_TIME_PATH);
         rmPaths.add(EXPIRY_TIME_PATH);
         rmPaths.add(NARRATIVE_PATH);
@@ -129,14 +129,13 @@ public class OpenEHRRMUtil {
         return rmArchetypeClusters;
     }
 
-    public final static Collection<String> getRmPaths(){
+    public static Collection<String> getRmPaths(){
         return rmPaths;
     }
 
     public static boolean isRMPath(String path) {
-        Iterator<String> i = rmPaths.iterator();
-        while(i.hasNext()){
-            if (path.endsWith(i.next())){
+        for (String rmPath : rmPaths) {
+            if (path.endsWith(rmPath)) {
                 return true;
             }
         }

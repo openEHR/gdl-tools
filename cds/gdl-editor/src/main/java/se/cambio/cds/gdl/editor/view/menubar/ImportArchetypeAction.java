@@ -8,10 +8,11 @@ package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.util.GuideImporter;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.view.util.ImportUtils;
+import se.cambio.openehr.view.util.ImportManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,13 +20,14 @@ import java.awt.event.KeyEvent;
 
 public class ImportArchetypeAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private ImportManager importManager;
+    private EditorManager editorManager;
 
-    public ImportArchetypeAction(){
+    ImportArchetypeAction(ImportManager importManager, EditorManager editorManager){
         super();
+        this.importManager = importManager;
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("ImportArchetype"));
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportArchetypeD"));
@@ -33,12 +35,9 @@ public class ImportArchetypeAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
         try {
-            ImportUtils.showImportArchetypeDialogAndAddToRepo(EditorManager.getActiveEditorWindow(), null);
+            importManager.showImportArchetypeDialogAndAddToRepo(editorManager.getActiveEditorWindow(), null);
         } catch (InternalErrorException e1) {
             ExceptionHandler.handle(e1);
         } catch (InstanceNotFoundException e1) {

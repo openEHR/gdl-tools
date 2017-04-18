@@ -1,41 +1,9 @@
 package se.cambio.cds.util;
 
 public class GeneratedElementInstanceCollection extends ElementInstanceCollection{
-    /*
-    public void add(ArchetypeReference archetypeReferenceToAdd){
-        Set<ArchetypeReference> archetypeReferences = getArchetypeReferences(archetypeReferenceToAdd);
-        if (archetypeReferences.isEmpty()){
-            archetypeReferences.add(archetypeReferenceToAdd);
-        }else{
-            if (ElementInstanceCollectionUtil.isEmpty(archetypeReferenceToAdd)){
-                ArchetypeReference ar = ElementInstanceCollectionUtil.getEmptyArchetypeReference(archetypeReferences);
-                if (ar!=null){
-                    if (!ElementInstanceCollectionUtil.containsAll(ar, archetypeReferenceToAdd)){
-                        for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
-                            if (!ar.getElementInstancesMap().containsKey(idElement)){
-                                ElementInstance elementInstance = archetypeReferenceToAdd.getElementInstancesMap().get(idElement);
-                                elementInstance = elementInstance.clone();
-                                elementInstance.setArchetypeReference(ar);
-                            }
-                        }
-                    }else{
-                        //Copy rule references if exist
-                        for (String idElement : archetypeReferenceToAdd.getElementInstancesMap().keySet()) {
-                            ElementInstance ei = ar.getElementInstancesMap().get(idElement);
-                            ElementInstance eiToAdd = archetypeReferenceToAdd.getElementInstancesMap().get(idElement);
-                            if (ei instanceof GeneratedElementInstance && eiToAdd instanceof GeneratedElementInstance){
-                                ((GeneratedElementInstance)ei).getRuleReferences().addAll(((GeneratedElementInstance)eiToAdd).getRuleReferences());
-                            }
-                        }
-                    }
-                }else{
-                    archetypeReferences.add(archetypeReferenceToAdd);
-                }
-            }else{
-                archetypeReferences.add(archetypeReferenceToAdd);
-            }
-        }
-    } */
+    public GeneratedElementInstanceCollection(ElementInstanceCollectionManager elementInstanceCollectionManager) {
+        super(elementInstanceCollectionManager);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

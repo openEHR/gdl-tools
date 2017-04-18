@@ -26,7 +26,9 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
     public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
     private ArchetypeManager archetypeManager = null;
 
-    public Archetypes(ArchetypeManager archetypeManager){
+    public Archetypes(
+            ArchetypeManager archetypeManager){
+        super(archetypeManager.getClinicalModelsService());
         this.archetypeManager = archetypeManager;
     }
 

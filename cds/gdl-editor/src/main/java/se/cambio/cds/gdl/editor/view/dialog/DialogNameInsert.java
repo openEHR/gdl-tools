@@ -17,65 +17,50 @@ import javax.swing.JTextField;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.openehr.view.dialogs.DialogEditor;
-/**
- * @author icorram
- *
 
-
- */
 public class DialogNameInsert extends DialogEditor {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2562412853124970610L;
     private String _oldValue = null;
     private JTextField valueTextField = null;
 
-    /**
-     * This is the default constructor
-     */
     public DialogNameInsert(Window owner, String title, String oldValue) {
-	super(owner, title, new Dimension(250, 100), true);
-	_oldValue = oldValue;
-	initialize();
+        super(owner, title, new Dimension(250, 100), true);
+        _oldValue = oldValue;
+        initialize();
     }
-    /**
-     * This method initializes this
 
-     */
-    private  void initialize() {
-	registerComponentWithFirstFocus(getValueTextField());
-	getJPanel().setLayout(new BorderLayout());
-	JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	jPanel1.add(new JLabel(GDLEditorLanguageManager.getMessage("Name")+":"));
-	jPanel1.add(getValueTextField());
-	getJPanel().add(jPanel1, BorderLayout.CENTER);
-	JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	jPanel2.add(getAcceptButton());
-	jPanel2.add(getCancelButton());
-	getJPanel().add(jPanel2, BorderLayout.SOUTH);
-	setVisible(true);
+    private void initialize() {
+        registerComponentWithFirstFocus(getValueTextField());
+        getJPanel().setLayout(new BorderLayout());
+        JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        jPanel1.add(new JLabel(GDLEditorLanguageManager.getMessage("Name") + ":"));
+        jPanel1.add(getValueTextField());
+        getJPanel().add(jPanel1, BorderLayout.CENTER);
+        JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        jPanel2.add(getAcceptButton());
+        jPanel2.add(getCancelButton());
+        getJPanel().add(jPanel2, BorderLayout.SOUTH);
+        setVisible(true);
     }
 
 
-
-    public String getValue(){
-	return getValueTextField().getText();
+    public String getValue() {
+        return getValueTextField().getText();
     }
 
-    private JTextField getValueTextField(){
-	if (valueTextField==null){
-	    valueTextField = new JTextField();
-	    valueTextField.setPreferredSize(new Dimension(150,18));
-	    if (_oldValue!=null){
-		valueTextField.setText(_oldValue);
-	    }
-	}
-	return valueTextField;
+    private JTextField getValueTextField() {
+        if (valueTextField == null) {
+            valueTextField = new JTextField();
+            valueTextField.setPreferredSize(new Dimension(150, 18));
+            if (_oldValue != null) {
+                valueTextField.setText(_oldValue);
+            }
+        }
+        return valueTextField;
     }
 
-} 
+}
 
 
 /*

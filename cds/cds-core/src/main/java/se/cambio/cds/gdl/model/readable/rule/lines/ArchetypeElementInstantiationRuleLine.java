@@ -27,9 +27,9 @@ public class ArchetypeElementInstantiationRuleLine extends RuleLine implements A
         _archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         _gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("InstantiateElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"InstantiateElementRLE"));
         getRuleLineElements().add(_archetypeElementRuleLineDefinitionElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement("asRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"asRLE"));
         getRuleLineElements().add(_gtCodeRuleLineElement);
     }
 
@@ -50,7 +50,7 @@ public class ArchetypeElementInstantiationRuleLine extends RuleLine implements A
         return _gtCodeRuleLineElement;
     }
 
-    public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
+    private ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
         return (ArchetypeInstantiationRuleLine)getParentRuleLine();
     }
 

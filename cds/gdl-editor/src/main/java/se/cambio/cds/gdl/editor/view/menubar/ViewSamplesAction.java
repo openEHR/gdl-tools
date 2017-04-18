@@ -17,36 +17,31 @@ import java.io.File;
 import java.io.IOException;
 
 
-
 public class ViewSamplesAction extends AbstractAction {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private UserConfigurationManager userConfigurationManager;
 
-    public ViewSamplesAction(){
-	super();
-	putValue(NAME, GDLEditorLanguageManager.getMessage("Samples"));
-	putValue(SMALL_ICON, null);
-	putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SamplesD"));
-	putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SamplesD"));
+    ViewSamplesAction(UserConfigurationManager userConfigurationManager) {
+        super();
+        this.userConfigurationManager = userConfigurationManager;
+        putValue(NAME, GDLEditorLanguageManager.getMessage("Samples"));
+        putValue(SMALL_ICON, null);
+        putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SamplesD"));
+        putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SamplesD"));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-	try {
-	    String path = 
-		    UserConfigurationManager.instance().getDocumentsFolder().getCanonicalPath()+
-		    File.separator+
-		    "samples.pdf";
-	    File file = new File(path);
-	    Desktop.getDesktop().open(file);
-	} catch (IOException e1) {
-	    ExceptionHandler.handle(e1);
-	}
+        try {
+            String path =
+                    userConfigurationManager.getDocumentsFolder().getFolder() +
+                            File.separator +
+                            "samples.pdf";
+            File file = new File(path);
+            Desktop.getDesktop().open(file);
+        } catch (IOException e1) {
+            ExceptionHandler.handle(e1);
+        }
     }
 }
 /*

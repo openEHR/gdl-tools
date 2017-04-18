@@ -15,35 +15,31 @@ import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 public abstract class ButtonEditor extends DefaultCellEditor {
 
     private static final long serialVersionUID = 3538959536078591524L;
-    protected JButton button;
+    private JButton button;
 
-    public ButtonEditor() {
-	super(new JCheckBox());
-	button = new JButton();
-	button.setOpaque(true);
-	button.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		fireEditingStopped();
-	    }
-	});
+    ButtonEditor() {
+        super(new JCheckBox());
+        button = new JButton();
+        button.setOpaque(true);
+        button.addActionListener(e -> fireEditingStopped());
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value,
-	    boolean isSelected, int row, int column) {
-	if (isSelected) {
-	    button.setForeground(table.getSelectionForeground());
-	    button.setBackground(table.getSelectionBackground());
-	} else {
-	    button.setForeground(table.getForeground());
-	    button.setBackground(table.getBackground());
-	}
-	if (value==null || ((String)value).trim().isEmpty()){
-	    button.setText(GDLEditorLanguageManager.getMessage("Select"));
-	}else{
-	    button.setText((String)value);
-	}	
-	performAction(row);
-	return button;
+                                                 boolean isSelected, int row, int column) {
+        if (isSelected) {
+            button.setForeground(table.getSelectionForeground());
+            button.setBackground(table.getSelectionBackground());
+        } else {
+            button.setForeground(table.getForeground());
+            button.setBackground(table.getBackground());
+        }
+        if (value == null || ((String) value).trim().isEmpty()) {
+            button.setText(GDLEditorLanguageManager.getMessage("Select"));
+        } else {
+            button.setText((String) value);
+        }
+        performAction(row);
+        return button;
     }
 
     public abstract Object getCellEditorValue();

@@ -15,8 +15,8 @@ public class BeanProvider {
     private ConfigurableApplicationContext getAppCtx() {
         if (appCtx == null) {
             appCtx = new AnnotationConfigApplicationContext();
-            appCtx.getEnvironment().setDefaultProfiles("cm-admin-plain-service", "terminology-plain-service", "cm-admin-file-dao", "rule-drools-engine");
-            ((AnnotationConfigApplicationContext)appCtx).register(CdsConfiguration.class);
+            appCtx.getEnvironment().setDefaultProfiles("cm-admin-file-dao", "rule-drools-engine", "ehr-dummy-service");
+            ((AnnotationConfigApplicationContext) appCtx).register(CdsConfiguration.class);
             appCtx.refresh();
         }
         return appCtx;
@@ -26,10 +26,10 @@ public class BeanProvider {
         return getInstance().getAppCtx().getBean(beanClass);
     }
 
-    public static void setActiveProfiles (String... activeProfiles) {
+    public static void setActiveProfiles(String... activeProfiles) {
         getInstance().appCtx = new AnnotationConfigApplicationContext();
         getInstance().appCtx.getEnvironment().setActiveProfiles(activeProfiles);
-        ((AnnotationConfigApplicationContext)getInstance().appCtx).register(CdsConfiguration.class);
+        ((AnnotationConfigApplicationContext) getInstance().appCtx).register(CdsConfiguration.class);
         getInstance().appCtx.refresh();
     }
 

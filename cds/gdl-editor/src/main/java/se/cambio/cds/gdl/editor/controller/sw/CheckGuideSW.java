@@ -1,53 +1,46 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
-import se.cambio.cds.gdl.editor.controller.exportplugins.GuideExportPluginDirectory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.cds.util.GuideImporter;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 
 public class CheckGuideSW extends CDSSwingWorker {
-    private String _errorMsg = null;
-    private GDLEditor _controller = null;
-    private Guide _guide = null;
-    private String _guideStr = null;
-    private boolean _checkOk = false;
-    private Runnable _pendingRunnable = null;
+    private String errorMsg = null;
+    private GDLEditor controller = null;
+    private Guide guide = null;
+    private String guideStr = null;
+    private boolean checkOk = false;
+    private Runnable pendingRunnable = null;
 
-    public CheckGuideSW(GDLEditor controller, String guideStr, Runnable pendingRunnable){
-        _controller = controller;
-        _guideStr = guideStr;
-        _pendingRunnable = pendingRunnable;
+    public CheckGuideSW(
+            GDLEditor controller, String guideStr, Runnable pendingRunnable){
+        this.controller = controller;
+        this.guideStr = guideStr;
+        this.pendingRunnable = pendingRunnable;
     }
 
     @Override
     protected void executeCDSSW() throws InternalErrorException{
         try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(_guideStr.getBytes("UTF-8"));
-            _guide = _controller.parseGuide(bais);
-            if (_guide!=null){
-                GuideImporter guideImporter = new GuideImporter(ArchetypeManager.getInstance());
-                guideImporter.importGuide(_guide, _controller.getCurrentLanguageCode());
-                GuideExportPluginDirectory.compile(_guide);
-                _checkOk = true;
+            ByteArrayInputStream bais = new ByteArrayInputStream(guideStr.getBytes("UTF-8"));
+            guide = controller.getGuidelineEditorManager().parseGuide(bais);
+            if (guide !=null){
+                controller.getGuideImporter().importGuide(guide, controller.getCurrentLanguageCode());
+                controller.getGuideExportPluginDirectory().compile(guide);
+                checkOk = true;
             }
         }catch(Exception e){
             ExceptionHandler.handle(e);
-            _errorMsg = e.getMessage();
+            errorMsg = e.getMessage();
         }
     }
 
-    public String getErrorMsg(){
-        return _errorMsg;
-    }
-
     protected void done() {
-        _controller.gdlEditingChecked(_guide, _checkOk, _errorMsg, _pendingRunnable);
+        controller.gdlEditingChecked(guide, checkOk, errorMsg, pendingRunnable);
     }
 }
 /*

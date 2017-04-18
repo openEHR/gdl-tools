@@ -21,7 +21,7 @@ public class DefaultProgressManager implements ProgressManager {
     @Override
     public void changeLoadingText(String description) {
         message = description;
-        logger.info("DPM: " + description);
+        logger.info("DPM: {}", description);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DefaultProgressManager implements ProgressManager {
         this.message = msg;
         this.progress = progress;
         if (Math.abs(lastUpdatedProgress - progress) >= 0.2) {
-            logger.info("DPM: " + msg + "(progress=" + progress + ")");
+            logger.info("DPM: {} (progress={})", msg, progress);
             lastUpdatedProgress = progress;
         }
     }

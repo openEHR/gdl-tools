@@ -2,8 +2,6 @@ package se.cambio.cds.util;
 
 import org.joda.time.DateTime;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.instance.ArchetypeReference;
@@ -11,13 +9,11 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import java.text.DateFormat;
 import java.util.*;
 
-@Component
 public class EhrDataFilterManager {
 
     private DateTimeARFinder dateTimeARFinder;
     private PredicateFilterManager predicateFilterManager;
 
-    @Autowired
     public EhrDataFilterManager(DateTimeARFinder dateTimeARFinder, PredicateFilterManager predicateFilterManager) {
         this.dateTimeARFinder = dateTimeARFinder;
         this.predicateFilterManager = predicateFilterManager;

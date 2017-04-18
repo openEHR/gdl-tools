@@ -1,70 +1,23 @@
 package se.cambio.cm.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
-import org.openehr.rm.datatypes.text.DvCodedText;
-import se.cambio.cm.model.facade.terminology.vo.TerminologyNodeVO;
-import se.cambio.openehr.util.exceptions.InvalidCodeException;
-import se.cambio.openehr.util.exceptions.UnknownPropertyException;
-import se.cambio.openehr.util.exceptions.UnsupportedLanguageException;
-import se.cambio.openehr.util.exceptions.UnsupportedTerminologyException;
+import se.cambio.cm.util.TerminologyNodeVO;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-/**
- * This class defines a minimal interface of a terminology service 
- * that is required to support runtime and authoring of CDSS. 
- * 
- * @author rong.chen
- *
- */
 public interface TerminologyService {
-	/**
-	 * Checks if codePhrase a is subclass of b with regards to
-	 * subsumption relationship
-	 * 
-	 * @param a
-	 * @param b
-	 * @return true if a is subclass of b
-	 */
-	boolean isSubclassOf(CodePhrase a, CodePhrase b) 
-			throws UnsupportedTerminologyException, InvalidCodeException;
+
+	boolean isSubclassOf(CodePhrase a, CodePhrase b);
 	
-	/**
-	 * Checks if the given code is subclass of any member of 
-	 * specified set of codes
-	 * 
-	 * @param code
-	 * @param codes
-	 * @return true if a is subclass of b
-	 */
-	boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes) 
-			throws UnsupportedTerminologyException, InvalidCodeException;
+	boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes);
+
+	TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language);
 	
-	/**
-	 * Retrieves all subclasses of given concept with specified language
-	 * 
-	 * @param concept
-	 * @return returns a tree representation of subclasses
-	 */
-	TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language)
-			throws UnsupportedTerminologyException, UnsupportedLanguageException, InvalidCodeException;	
-	
-	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language)
-		throws UnsupportedTerminologyException, UnsupportedLanguageException;	
-	
-	/**
-	 * Retrieves the term of a given concept in given language
-	 *
-	 * @param concept
-	 * @param language
-	 * @return the term
-	 * @throws UnsupportedTerminologyException
-	 * @throws UnsupportedLanguageException
-	 */
-	String retrieveTerm(CodePhrase concept, CodePhrase language)
-			throws UnsupportedTerminologyException, UnsupportedLanguageException;
+	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language);
+
+	String retrieveTerm(CodePhrase concept, CodePhrase language);
 
 	boolean isTerminologySupported(String terminologyId);
 	boolean isValidCodePhrase(CodePhrase codePhrase);

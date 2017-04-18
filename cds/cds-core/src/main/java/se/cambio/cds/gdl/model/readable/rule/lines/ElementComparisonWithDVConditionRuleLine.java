@@ -12,7 +12,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.DVUtil;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 
 public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, ConditionRuleLine{
@@ -29,7 +28,7 @@ public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine
         comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
         archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement("ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(archetypeDataValueRuleLineElement);
@@ -64,7 +63,7 @@ public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine
                     getArchetypeElementRuleLineElement().getValue().getValue();
             DataValue dataValue =
                     getArchetypeDataValueRuleLineElement().getValue();
-            ConstantExpression constantExpression = null;
+            ConstantExpression constantExpression;
             if (dataValue!=null){
                 constantExpression = DVUtil.convertToExpression(dataValue);
             }else{

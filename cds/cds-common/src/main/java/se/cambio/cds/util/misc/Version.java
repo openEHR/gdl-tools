@@ -16,9 +16,9 @@ import java.util.Properties;
 
 public class Version {
 
-    private static String VERSION_PROPPERTIES_FILE = "build.properties";
+    private static String VERSION_PROPERTIES_FILE = "build.properties";
 
-    private static Version _instance = null;
+    private static Version instance = null;
     private Map<Object, Object> parameters;
 
     private Version() {
@@ -28,7 +28,7 @@ public class Version {
             ClassLoader classLoader =
                     version.getClassLoader();
             InputStream inputStream =
-                    classLoader.getResourceAsStream(VERSION_PROPPERTIES_FILE);
+                    classLoader.getResourceAsStream(VERSION_PROPERTIES_FILE);
             Properties properties = new Properties();
             properties.load(inputStream);
             inputStream.close();
@@ -80,10 +80,10 @@ public class Version {
     }
 
     public static Version getDelegate() {
-        if (_instance == null) {
-            _instance = new Version();
+        if (instance == null) {
+            instance = new Version();
         }
-        return _instance;
+        return instance;
     }
 }
 /*

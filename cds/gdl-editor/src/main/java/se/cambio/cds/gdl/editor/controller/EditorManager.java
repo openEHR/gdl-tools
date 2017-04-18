@@ -2,166 +2,114 @@ package se.cambio.cds.gdl.editor.controller;
 
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorViewer;
-import se.cambio.cds.gdl.editor.view.dialog.DialogEditor;
-import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
-import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.view.util.WindowManager;
 
 import java.awt.*;
-import java.io.File;
 
 public class EditorManager {
-    private static EditorManager _instance = null;
-    private EditorController _controller = null;
-    private Window _editorViewer = null;
-    private boolean _exitOnClose = true;
+    private WindowManager windowManager;
+    private EditorController controller = null;
+    private boolean checkOnExit = true;
+    private Window editorViewer = null;
+    private boolean exitOnClose = true;
 
-    private File _lastFolderLoaded = null;
-    private File _lastFileLoaded = null;
-    private boolean _checkOnExit = true;
-
-    private EditorManager(){
+    public EditorManager(
+            WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
 
-    public static GDLEditor getActiveGDLEditor(){
-        if (getDelegate()._controller instanceof GDLEditor){
-            return (GDLEditor)getActiveEditorController();
-        }else{
+    public GDLEditor getActiveGDLEditor() {
+        if (controller instanceof GDLEditor) {
+            return (GDLEditor) getActiveEditorController();
+        } else {
             return null;
         }
     }
 
-    public static EditorController getActiveEditorController(){
-        return getDelegate()._controller;
+    public EditorController getActiveEditorController() {
+        return controller;
     }
 
-    public static Window getActiveEditorWindow(){
-        return getDelegate()._editorViewer;
+    public Window getActiveEditorWindow() {
+        return editorViewer;
     }
 
-    public static EditorViewer getActiveEditorViewer(){
-        return ((EditorViewer)getDelegate()._editorViewer);
+    public EditorViewer getActiveEditorViewer() {
+        return ((EditorViewer) editorViewer);
     }
 
-    public static MainMenuBar getMainMenuBar(){
-        return getActiveEditorViewer().getMainMenuBar();
-    }
-
-    public static void setExitOnClose(boolean exitOnClose){
-        getDelegate()._exitOnClose = exitOnClose;
-    }
-
-    public static boolean getExitOnClose(){
-        return getDelegate()._exitOnClose;
-    }
-
-    public static void closeEditor(){
-        Runnable exitRunnable = new Runnable() {
-            @Override
-            public void run() {
-                getDelegate()._editorViewer.dispose();
-                if (getDelegate()._exitOnClose){
-                    System.exit(0);
-                }
+    public void initController(EditorController controller) {
+        boolean close = true;
+        if (this.controller != null) {
+            close = this.controller.close();
+        }
+        if (close) {
+            this.controller = controller;
+            if (editorViewer != null) {
+                getActiveEditorViewer().initController(controller);
+            } else {
+                throw new RuntimeException("createEditorFrame or createEditorDialog must be called before this method.");
             }
-        };
-        if (getDelegate()._controller != null && checkOnExit()){
-            getDelegate()._controller.runIfOKToExit(exitRunnable);
-        }else{
-            exitRunnable.run();
+        } else {
+            controller.close();
         }
     }
 
-    public static void initController(EditorController controller) throws InternalErrorException{
-        getDelegate()._controller = controller;
-        if (getDelegate()._editorViewer!=null){
-            getActiveEditorViewer().initController(controller);
-        }else{
-            throw new InternalErrorException(new Exception("createEditorFrame or createEditorDialog must be called before this method."));
-        }
+
+    public boolean checkOnExit() {
+        return checkOnExit;
     }
 
-    public static EditorFrame createEditorFrame(){
-        EditorFrame ef = new EditorFrame();
-        getDelegate()._editorViewer = ef;
-        setExitOnClose(true);
-        return ef;
+    public void setCheckOnExit(boolean checkOnExit) {
+        this.checkOnExit = checkOnExit;
     }
 
 
-    public static DialogEditor createEditorDialog(Window owner){
-        DialogEditor ed = new DialogEditor(owner);
-        getDelegate()._editorViewer = ed;
-        setExitOnClose(false);
-        return ed;
-    }
-
-    public static File getLastFolderLoaded() {
-        if (getDelegate()._lastFolderLoaded==null){
-            getDelegate()._lastFolderLoaded = UserConfigurationManager.instance().getGuidesFolder().getFolder();
-        }
-        return getDelegate()._lastFolderLoaded;
-    }
-
-    public static void setLastFolderLoaded(File _lastFolderLoaded) {
-        getDelegate()._lastFolderLoaded = _lastFolderLoaded;
-    }
-
-    public static File getLastFileLoaded() {
-        return getDelegate()._lastFileLoaded;
-    }
-
-    public static void setLastFileLoaded(File _lastFileLoaded) {
-        getDelegate()._lastFileLoaded = _lastFileLoaded;
-    }
-
-    public static boolean checkOnExit(){
-        return getDelegate()._checkOnExit;
-    }
-
-    public static void setCheckOnExit(boolean checkOnExit){
-        getDelegate()._checkOnExit = checkOnExit;
-    }
-
-    public static void initializeNewEditor(final EditorController editorController){
-        runIfOkWithCurrentEditor(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        EditorManager.setLastFileLoaded(null);
-                        try {
-                            EditorManager.initController(editorController);
-                        } catch (InternalErrorException e1) {
-                            ExceptionHandler.handle(e1);
-                        }
-                    }
-                });
-    }
-
-
-    public static void runIfOkWithCurrentEditor(Runnable runnable){
+    public void runIfOkWithCurrentEditor(Runnable runnable) {
         EditorController editorController = getActiveEditorController();
-        if(editorController!=null){
+        if (editorController != null) {
             editorController.runIfOKToExit(runnable);
-        }else{
+        } else {
             runnable.run();
         }
     }
 
-    public static void requestFocusInWindow(){
+    public void requestFocusInWindow() {
         EditorController editorController = getActiveEditorController();
-        if(editorController!=null){
+        if (editorController != null) {
             editorController.getEditorPanel().requestFocusInWindow();
         }
     }
 
-    public static EditorManager getDelegate(){
-        if (_instance==null){
-            _instance = new EditorManager();
+    public void closeEditor() {
+        Runnable exitRunnable = () -> {
+            editorViewer.dispose();
+            if (exitOnClose) {
+                System.exit(0);
+            }
+        };
+        if (controller != null && checkOnExit()) {
+            controller.runIfOKToExit(exitRunnable);
+        } else {
+            exitRunnable.run();
         }
-        return _instance;
+    }
+
+    public void setExitOnClose(boolean exitOnClose) {
+        this.exitOnClose = exitOnClose;
+    }
+
+    public boolean getExitOnClose() {
+        return exitOnClose;
+    }
+
+    public void setEditorViewer(Window editorViewer) {
+        this.editorViewer = editorViewer;
+    }
+
+
+    public WindowManager getWindowManager() {
+        return windowManager;
     }
 }
 /*

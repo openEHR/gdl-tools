@@ -10,76 +10,61 @@ import java.util.Map;
 
 public class Ordinals {
     private final ArchetypeManager archetypeManager;
-    private Map<String, Map<String, OrdinalVO>> _ordinalByParentId = null;
-    private Map<String, Map<String, Map<String, OrdinalVO>>> _templateOrdinalsByTemplateIdAndId = null;
+    private Map<String, Map<String, OrdinalVO>> ordinalByParentId = null;
+    private Map<String, Map<String, Map<String, OrdinalVO>>> templateOrdinalsByTemplateIdAndId = null;
 
-    public Ordinals(ArchetypeManager archetypeManager){
+    public Ordinals(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         init();
     }
 
-    public void init(){
-        _ordinalByParentId = new HashMap<String, Map<String, OrdinalVO>>();
-        _templateOrdinalsByTemplateIdAndId = new HashMap<String, Map<String,Map<String,OrdinalVO>>>();
+    public void init() {
+        ordinalByParentId = new HashMap<>();
+        templateOrdinalsByTemplateIdAndId = new HashMap<>();
     }
 
-    public void loadOrdinals(Collection<OrdinalVO> ordinalVOs){
+    public void loadOrdinals(Collection<OrdinalVO> ordinalVOs) {
         for (OrdinalVO ordinalVO : ordinalVOs) {
             registerOrdinal(ordinalVO);
         }
     }
 
-    public void registerOrdinal(OrdinalVO ordinalVO){
-        if (ordinalVO.getIdTemplate() == null){
+    public void registerOrdinal(OrdinalVO ordinalVO) {
+        if (ordinalVO.getIdTemplate() == null) {
             getOrdinalMap(ordinalVO.getId()).put(ordinalVO.getCode(), ordinalVO);
-        }else{
-            getOrdinalTemplateMap(ordinalVO.getIdTemplate(),ordinalVO.getId()).put(ordinalVO.getCode(), ordinalVO);
+        } else {
+            getOrdinalTemplateMap(ordinalVO.getIdTemplate(), ordinalVO.getId()).put(ordinalVO.getCode(), ordinalVO);
         }
     }
 
-    public OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, String ordinalKey){
+    public OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, String ordinalKey) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
-        if (idTemplate==null){
+        if (idTemplate == null) {
             return getOrdinalMap(idParentArchetypeNode).get(ordinalKey);
-        }else{
+        } else {
             return getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).get(ordinalKey);
         }
     }
 
-    public Collection<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode){
+    public Collection<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
-        if (idTemplate==null){
-            return new ArrayList<OrdinalVO>(getOrdinalMap(idParentArchetypeNode).values());
-        }else{
-            return new ArrayList<OrdinalVO>(getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).values());
+        if (idTemplate == null) {
+            return new ArrayList<>(getOrdinalMap(idParentArchetypeNode).values());
+        } else {
+            return new ArrayList<>(getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).values());
         }
     }
 
-    private Map<String, Map<String, OrdinalVO>> getOrdinalTemplateMap(String idTemplate){
-        Map<String, Map<String,OrdinalVO>> map = _templateOrdinalsByTemplateIdAndId.get(idTemplate);
-        if (map==null){
-            map = new HashMap<String, Map<String, OrdinalVO>>();
-            _templateOrdinalsByTemplateIdAndId.put(idTemplate, map);
-        }
-        return map;
+    private Map<String, Map<String, OrdinalVO>> getOrdinalTemplateMap(String idTemplate) {
+        return templateOrdinalsByTemplateIdAndId.computeIfAbsent(idTemplate, k -> new HashMap<>());
     }
 
-    public Map<String, OrdinalVO> getOrdinalTemplateMap(String idTemplate, String idParentArchetypeNode){
-        Map<String,OrdinalVO> map = getOrdinalTemplateMap(idTemplate).get(idParentArchetypeNode);
-        if (map==null){
-            map = new HashMap<String, OrdinalVO>();
-            getOrdinalTemplateMap(idTemplate).put(idParentArchetypeNode, map);
-        }
-        return map;
+    public Map<String, OrdinalVO> getOrdinalTemplateMap(String idTemplate, String idParentArchetypeNode) {
+        return getOrdinalTemplateMap(idTemplate).computeIfAbsent(idParentArchetypeNode, k -> new HashMap<>());
     }
 
-    private Map<String, OrdinalVO> getOrdinalMap(String idParentArchetypeNode){
-        Map<String, OrdinalVO> map = _ordinalByParentId.get(idParentArchetypeNode);
-        if (map==null){
-            map = new HashMap<String, OrdinalVO>();
-            _ordinalByParentId.put(idParentArchetypeNode, map);
-        }
-        return map;
+    private Map<String, OrdinalVO> getOrdinalMap(String idParentArchetypeNode) {
+        return ordinalByParentId.computeIfAbsent(idParentArchetypeNode, k -> new HashMap<>());
     }
 
     public String getText(OrdinalVO ordinalVO, String lang) {
@@ -88,34 +73,34 @@ public class Ordinals {
 
     public String getText(String idTemplate, String idElement, String ordinalKey, String lang) {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, ordinalKey);
-        if (ordinalVO!=null){
+        if (ordinalVO != null) {
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
             ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
-            if (archetypeTem!=null){
+            if (archetypeTem != null) {
                 return archetypeTem.getText();
-            }else{
+            } else {
                 return ordinalVO.getName();
             }
-        }else{
+        } else {
             return "*UNKNOWN*";
         }
     }
 
-    public String getDescription(OrdinalVO ordinalVO, String lang)  {
+    public String getDescription(OrdinalVO ordinalVO, String lang) {
         return getDescription(ordinalVO.getIdTemplate(), ordinalVO.getId(), ordinalVO.getCode(), lang);
     }
 
     public String getDescription(String idTemplate, String idElement, String ordinalKey, String lang) {
         OrdinalVO ordinalVO = getOrdinalVO(idTemplate, idElement, ordinalKey);
-        if (ordinalVO!=null){
+        if (ordinalVO != null) {
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
             ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, ordinalVO.getCode(), lang);
-            if (archetypeTem!=null){
+            if (archetypeTem != null) {
                 return archetypeTem.getDescription();
-            }else{
+            } else {
                 return ordinalVO.getDescription();
             }
-        }else{
+        } else {
             return "*UNKNOWN*";
         }
     }

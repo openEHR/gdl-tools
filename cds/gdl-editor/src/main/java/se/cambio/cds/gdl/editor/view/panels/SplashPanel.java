@@ -6,42 +6,38 @@ import se.cambio.cds.util.misc.Version;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 
 public class SplashPanel extends JPanel {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private Image img;
 
     public SplashPanel() {
-	    this.img = GDLEditorImageUtil.SPLASH_IMAGE.getImage();
-	}
+        this.img = GDLEditorImageUtil.SPLASH_IMAGE.getImage();
+    }
 
-	@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(img.getWidth(null), img.getHeight(null));
-	}
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(img.getWidth(null), img.getHeight(null));
+    }
 
-	@Override
-	public void paintComponent(Graphics g) {
-		g.drawImage(img, 0, 0, this);
-		g.setColor(new Color(56,114,57));
-		g.setFont(new Font("Arial",Font.BOLD,17));
-		//g.drawString(LanguageManager.getMessage("ApplicationName"), 172, 104);
-		g.setColor(new Color(255,255,255));
-		//g.drawString(LanguageManager.getMessage("ApplicationName"), 173, 105);
-		g.setFont(new Font("Verdana",Font.BOLD,12));
-		g.setColor(Color.white);
-		String versionNum = Version.getVersionNum();
-		String buildNum = Version.getBuildNum();
-		buildNum = buildNum == null ? "" : buildNum;
-		if (versionNum!=null){
-			g.drawString("v" + versionNum + " (" + buildNum + ")", 47, 281);
-		}
-		g.drawString(GDLEditorLanguageManager.getMessage("Developers")+": Iago Corbal, Rong Chen", 47, 297);
-		g.drawString(GDLEditorLanguageManager.getMessage("Contributors")+": Konstantinos Kalliamvakos, Mihindu Wijesena", 47, 313);
-		g.drawString(GDLEditorLanguageManager.getMessage("FundedBy")+": Cambio Healthcare Systems (cambio.se)", 47, 329);
-	}
+    @Override
+    public void paintComponent(Graphics g) {
+        g.drawImage(img, 0, 0, this);
+        g.setColor(new Color(56, 114, 57));
+        g.setFont(new Font("Arial", Font.BOLD, 17));
+        g.setColor(new Color(255, 255, 255));
+        g.setFont(new Font("Verdana", Font.BOLD, 12));
+        g.setColor(Color.white);
+        String versionNum = Version.getVersionNum();
+        String buildNum = Version.getBuildNum();
+        buildNum = (buildNum == null ? "" : buildNum);
+        if (versionNum != null) {
+            g.drawString("v" + versionNum + " (" + buildNum + ")", 47, 281);
+        }
+        g.drawString(GDLEditorLanguageManager.getMessage("Developers") + ": Iago Corbal, Rong Chen", 47, 297);
+        g.drawString(GDLEditorLanguageManager.getMessage("Contributors") + ": Konstantinos Kalliamvakos, Mihindu Wijesena", 47, 313);
+        g.drawString(GDLEditorLanguageManager.getMessage("FundedBy") + ": Cambio Healthcare Systems (cambio.se)", 47, 329);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

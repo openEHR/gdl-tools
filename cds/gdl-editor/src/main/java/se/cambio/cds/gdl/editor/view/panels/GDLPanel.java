@@ -18,7 +18,7 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
     private JPanel mainPanel;
     private JLabel statusLabel;
 
-    public GDLPanel(GDLEditor controller){
+    GDLPanel(GDLEditor controller){
         this.controller = controller;
         init();
     }
@@ -74,15 +74,10 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
         }
         this.repaint();
         this.revalidate();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                getMainScrollPanel().getVerticalScrollBar().setValue(0);
-            }
-        });
+        SwingUtilities.invokeLater(() -> getMainScrollPanel().getVerticalScrollBar().setValue(0));
     }
 
-    public JLabel getStatusLabel() {
+    private JLabel getStatusLabel() {
         if (statusLabel == null) {
             statusLabel = new JLabel();
         }

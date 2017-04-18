@@ -6,7 +6,7 @@ public class AttributeFunctionContainerNode {
     private GTCodeRuleLineElement gtCodeRuleLineElement = null;
     private String attributeFunction = null;
 
-    public AttributeFunctionContainerNode (GTCodeRuleLineElement gtCodeRuleLineElement, String attribute) {
+    AttributeFunctionContainerNode(GTCodeRuleLineElement gtCodeRuleLineElement, String attribute) {
         this.gtCodeRuleLineElement = gtCodeRuleLineElement;
         this.attributeFunction = attribute;
     }

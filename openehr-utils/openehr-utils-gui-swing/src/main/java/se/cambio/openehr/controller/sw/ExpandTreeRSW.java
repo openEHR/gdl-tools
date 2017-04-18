@@ -2,36 +2,35 @@ package se.cambio.openehr.controller.sw;
 
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.OpenEHRUtilSwingWorker;
-import se.cambio.openehr.util.WindowManager;
+import se.cambio.openehr.view.util.WindowManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.panels.SelectionPanel;
 
 import javax.swing.plaf.TreeUI;
 
-/**
- * @author iago.corbal
- *
- */
-public class ExpandTreeRSW extends OpenEHRUtilSwingWorker{
+public class ExpandTreeRSW extends OpenEHRUtilSwingWorker {
 
-    private SelectionPanel _selectionPanel = null;
-    private TreeUI _treeUI = null;
-    public ExpandTreeRSW(SelectionPanel selectionPanel) {
+    private WindowManager windowManager;
+    private SelectionPanel selectionPanel = null;
+    private TreeUI treeUI = null;
+
+    public ExpandTreeRSW(WindowManager windowManager, SelectionPanel selectionPanel) {
         super();
-        _selectionPanel = selectionPanel;
+        this.windowManager = windowManager;
+        this.selectionPanel = selectionPanel;
     }
 
     protected void executeSW() throws InternalErrorException {
-        WindowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
-        _treeUI = _selectionPanel.getJTree().getUI();
-        _selectionPanel.getJTree().setUI(null);
-        _selectionPanel.getJTree().expand(_selectionPanel.getNode());
+        windowManager.setBusy(OpenEHRLanguageManager.getMessage("Loading") + "...");
+        treeUI = selectionPanel.getJTree().getUI();
+        selectionPanel.getJTree().setUI(null);
+        selectionPanel.getJTree().expand(selectionPanel.getNode());
     }
 
 
     protected void done() {
-        _selectionPanel.getJTree().setUI(_treeUI);
-        WindowManager.setFree();
+        selectionPanel.getJTree().setUI(treeUI);
+        windowManager.setFree();
     }
 }
 /*

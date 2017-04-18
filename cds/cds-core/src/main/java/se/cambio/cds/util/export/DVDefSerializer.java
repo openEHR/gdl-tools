@@ -1,6 +1,5 @@
 package se.cambio.cds.util.export;
 
-import org.apache.commons.lang.StringUtils;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.basic.DvBoolean;
 import org.openehr.rm.datatypes.quantity.*;
@@ -14,10 +13,6 @@ import org.openehr.rm.datatypes.text.DvText;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.util.DVUtil;
-import se.cambio.cm.model.archetype.vo.CodedTextVO;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.openehr.controller.session.data.Ordinals;
 import se.cambio.openehr.util.*;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -262,115 +257,6 @@ public class DVDefSerializer {
         return stringWithReferences;
     }
 
-    public static String getReadableDefinition(String idTemplate, String idElement, String rmName, String dvInstantiation, ArchetypeManager archetypeManager){
-        if (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName)){
-            String codedTextName = getCodedTextNameFromDVInstantiation(idTemplate, idElement, dvInstantiation, archetypeManager.getCodedTexts());
-            if (codedTextName != null){
-                return codedTextName;
-            }
-        }else if (OpenEHRDataValues.DV_ORDINAL.equals(rmName)){
-            String ordinalName = getOrdinalNameFromDVInstantiation(idTemplate, idElement, dvInstantiation, archetypeManager.getOrdinals());
-            if (ordinalName != null){
-                return ordinalName;
-            }
-        }else if (OpenEHRDataValues.DV_COUNT.equals(rmName) ||
-                OpenEHRDataValues.DV_BOOLEAN.equals(rmName)){
-            String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
-            if (dvDefinition != null){
-                return dvDefinition;
-            }
-        }else if(OpenEHRDataValues.DV_QUANTITY.equals(rmName)){
-            String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
-            if (dvDefinition != null){
-                String[] splitDef = dvDefinition.split("\\,");
-                if (splitDef.length > 2){
-                    return  roundToStr(Double.parseDouble(splitDef[1]), Integer.parseInt(splitDef[2]))+" "+splitDef[0].replace("\"", "");
-                }else{
-                    return dvDefinition;
-                }
-            }
-        }else if(OpenEHRDataValues.DV_PROPORTION.equals(rmName)){
-            String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
-            if (dvDefinition!=null){
-                String[] splitDef = dvDefinition.split("\\,");
-                if (splitDef.length > 3){
-                    //TODO Display changes depending on proportion kind (slitDef[2])
-                    return roundToStr(Double.parseDouble(splitDef[0]), Integer.parseInt(splitDef[3]))+
-                            "/"+
-                            roundToStr(Double.parseDouble(splitDef[1]), Integer.parseInt(splitDef[3]));
-                }else{
-                    return dvDefinition;
-                }
-            }
-        }else if (OpenEHRDataValues.DV_DATE.equals(rmName)){
-            return getDVDefinition(dvInstantiation);
-        }else if (OpenEHRDataValues.DV_TIME.equals(rmName)){
-            String dvDefinition = getDVDefinition(dvInstantiation);
-            String[] defSplit = dvDefinition.split("\\+");
-            if (defSplit.length > 1){
-                return defSplit[0];
-            }else{
-                return dvDefinition;
-            }
-        }else if(OpenEHRDataValues.DV_DATE_TIME.equals(rmName)){
-            String dvDefinition = getDVDefinition(dvInstantiation);
-            String[] defSplit = dvDefinition.split("\\+");
-            if (defSplit.length > 1){
-                dvDefinition = defSplit[0];
-            }
-            defSplit = dvDefinition.split("T");
-            String dateDefinition = null;
-            String hourDefinition = null;
-            if (defSplit.length > 1){
-                dateDefinition = defSplit[0];
-                hourDefinition = defSplit[1];
-            }else{
-                dateDefinition = dvDefinition;
-            }
-
-            String result = "";
-            if (dateDefinition != null && !dateDefinition.isEmpty()){
-                dateDefinition = dateDefinition.replaceAll("-", "");
-                String year = dateDefinition.substring(0,4);
-                int monthInt = (Integer.parseInt(dateDefinition.substring(4,6)));
-                String month = (monthInt>9?"":"0")+monthInt;
-                int dayInt = (Integer.parseInt(dateDefinition.substring(6,8)));
-                String day = (dayInt>9?"":"0")+dayInt;
-                result = result+day+"/"+month+"/"+year;
-            }
-            if (hourDefinition!=null){
-                result = result+" "+hourDefinition;
-            }
-            return result;
-        }
-        String dvDefinition = getDVDefinitionWithoutQuotes(dvInstantiation);
-        if (dvDefinition!=null){
-            return dvDefinition;
-        }else{
-            return dvInstantiation;
-        }
-    }
-
-    public static String getOrdinalNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, Ordinals ordinals){
-        String codeString = getOrdinalCodeStringFromDVInstantiation(dvInstantiation);
-        return ordinals.getText(idTemplate, idParentArchetypeNode, codeString, UserConfigurationManager.instance().getLanguage());
-    }
-
-    public static String getOrdinalCodeStringFromDVInstantiation(String dvInstantiation){
-        String dvDefinition = DVDefSerializer.getDVDefinitionWithoutQuotes(dvInstantiation);
-        return StringUtils.substringAfterLast(dvDefinition, ",").replace("\"", "");
-    }
-
-    public static String getCodedTextNameFromDVInstantiation(String idTemplate, String idParentArchetypeNode, String dvInstantiation, CodedTexts codedTexts){
-        CodedTextVO codedTexTVO = codedTexts.getCodedTextVO(idTemplate, idParentArchetypeNode, getCodeFromDVInstantiation(dvInstantiation));
-        if (codedTexTVO!=null){
-            String name = codedTexts.getText(codedTexTVO, UserConfigurationManager.instance().getLanguage());
-            return name;
-        }else{
-            return getCodeFromDVInstantiation(dvInstantiation);
-        }
-    }
-
     public static String getCodeFromDVInstantiation(String dvInstantiation){
         String dvDefinition = DVDefSerializer.getDVDefinitionWithoutQuotes(dvInstantiation);
         if (dvDefinition!=null && dvDefinition.contains(",")){
@@ -380,51 +266,6 @@ public class DVDefSerializer {
             return dvDefinition;
         }else{
             return null;
-        }
-    }
-
-    public static Collection<String> getCodesFromDVInstantiation(String dvInstantiation){
-        if (dvInstantiation!=null){
-            Collection<String> codes = new ArrayList<String>();
-            String[] dvStrings = dvInstantiation.split(commaSplitPatternOutsideParenthesis);
-            for (String dvInstantiationAux : dvStrings) {
-                codes.add(getCodeFromDVInstantiation(dvInstantiationAux));
-            }
-            return codes;
-        }else{
-            return null;
-        }
-    }
-
-    public static String roundToStr(double unrounded, int precision){
-        StringBuffer roundSB= new StringBuffer();
-        roundSB.append(unrounded);
-        String origStr = roundSB.toString();
-        if (origStr.contains(".")){
-            int numDecimals = origStr.length()-origStr.indexOf(".")-1;
-            if (numDecimals!=precision){
-                if (numDecimals>precision){
-                    if (precision>0){
-                        roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")+precision+1));
-                    }else{
-                        roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")));
-                    }
-                }else {
-                    appendZeros(roundSB, precision-numDecimals);
-                }
-            }
-        }else{
-            if (precision>0){
-                roundSB.append(".");
-                appendZeros(roundSB, precision);
-            }
-        }
-        return roundSB.toString();
-    }
-
-    private static void appendZeros(StringBuffer roundSB, int precision){
-        for (int i =0; i<precision;i++) {
-            roundSB.append("0");
         }
     }
 

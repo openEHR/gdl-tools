@@ -25,9 +25,9 @@ public class SetElementWithNullValueActionRuleLine extends AssignmentExpressionR
 	archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
 	nullValueRuleLineElement = new NullValueRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement("SetElementRLE"));
+	getRuleLineElements().add(new StaticTextRuleLineElement(this,"SetElementRLE"));
 	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(new StaticTextRuleLineElement("ToRLE"));
+	getRuleLineElements().add(new StaticTextRuleLineElement(this,"ToRLE"));
 	getRuleLineElements().add(nullValueRuleLineElement);
     }
 

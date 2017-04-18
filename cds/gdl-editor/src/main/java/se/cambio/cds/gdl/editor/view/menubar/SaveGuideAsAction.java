@@ -7,6 +7,7 @@
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
 import javax.swing.*;
@@ -17,13 +18,12 @@ import java.awt.event.KeyEvent;
 
 public class SaveGuideAsAction extends AbstractAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -3561842193285119707L;
+    private EditorManager editorManager;
 
-    public SaveGuideAsAction(){
+    SaveGuideAsAction(EditorManager editorManager){
         super();
+        this.editorManager = editorManager;
         putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAs")+"...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsSD"));
@@ -31,11 +31,10 @@ public class SaveGuideAsAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent e) {
-        EditorManager.getActiveGDLEditor().saveAs();
+        GDLEditor activeGDLEditor = editorManager.getActiveGDLEditor();
+        assert activeGDLEditor != null;
+        activeGDLEditor.saveAs();
     }
 
 

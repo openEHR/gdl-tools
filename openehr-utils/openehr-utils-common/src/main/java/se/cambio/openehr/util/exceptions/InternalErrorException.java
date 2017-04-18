@@ -4,11 +4,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 
-public class InternalErrorException extends Exception {
+public class InternalErrorException extends RuntimeException {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -916751219990677911L;
 	private Exception encapsulatedException;
 
@@ -39,19 +36,6 @@ public class InternalErrorException extends Exception {
         printWriter.println("***Information about encapsulated exception***");
         encapsulatedException.printStackTrace(printWriter);
     }
-
-    /* Test code. Uncomment for testing. */    
-//    public final static void main(String[] args) {
-//    
-//        try {
-//            throw new InternalErrorException(
-//                new NumberFormatException("Bad number format"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    
-//    }
-    
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -3,30 +3,25 @@ package se.cambio.cds.gdl.editor.view.dialog;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class DialogEntrySelection extends DialogSelection{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
     private GDLEditor _controller = null;
     private Object _selectedObject = null;
     private boolean _onlyCDSDomain;
-    public DialogEntrySelection(Window owner, GDLEditor controller, boolean onlyCDSDomain) {
-        super(owner,
+    public DialogEntrySelection(GDLEditor controller, boolean onlyCDSDomain) {
+        super(controller.getWindowManager().getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectEntry"),
-                NodeDefinitionConversor.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
+                NodeDefinitionManager.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
                 true,
-                new Dimension(500,500));
+                new Dimension(500,500), controller.getWindowManager());
         _controller = controller;
         _onlyCDSDomain = onlyCDSDomain;
         getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());
@@ -40,20 +35,17 @@ public class DialogEntrySelection extends DialogSelection{
         }
     }
 
-    public JButton getAddArchetypeReferenceButton() {
+    private JButton getAddArchetypeReferenceButton() {
         if (addArchetypeReferenceButton == null) {
             addArchetypeReferenceButton = new JButton();
             addArchetypeReferenceButton.setText(GDLEditorLanguageManager.getMessage("AddArchetype"));
             addArchetypeReferenceButton.setToolTipText(GDLEditorLanguageManager.getMessage("AddArchetypeD"));
             addArchetypeReferenceButton.setIcon(GDLEditorImageUtil.ADD_ICON);
             addArchetypeReferenceButton.setEnabled(true);
-            addArchetypeReferenceButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    accept();
-                    _selectedObject =
-                            _controller.addArchetypeReference(_onlyCDSDomain);
-                }
+            addArchetypeReferenceButton.addActionListener(e -> {
+                accept();
+                _selectedObject =
+                        _controller.addArchetypeReference(_onlyCDSDomain);
             });
         }
         return addArchetypeReferenceButton;

@@ -10,43 +10,36 @@ import se.cambio.openehr.view.dialogs.DialogEditor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 import static java.lang.String.format;
 
-/**
- * @author icorram
- *
 
-
- */
 public class DialogSetLanguage extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
-    private JComboBox _languageSelection = null;
+    private JComboBox<String> languageSelection = null;
+    private EditorManager editorManager;
+    private UserConfigurationManager userConfigurationManager;
 
-    /**
-     * This is the default constructor
-     */
-    public DialogSetLanguage() {
-        super(EditorManager.getActiveEditorWindow(),
+    public DialogSetLanguage(
+            EditorManager editorManager,
+            UserConfigurationManager userConfigurationManager) {
+        super(editorManager.getActiveEditorWindow(),
                 GDLEditorLanguageManager.getMessage("SetEditorLanguage"),
-                new Dimension(250, 110),true);
+                new Dimension(250, 110), true);
+        this.editorManager = editorManager;
+        this.userConfigurationManager = userConfigurationManager;
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
-    private  void initialize() {
+    private void initialize() {
         getJPanel().setLayout(new BorderLayout());
         JPanel panelAux = new JPanel(new BorderLayout());
         getJPanel().add(panelAux, BorderLayout.NORTH);
 
         JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelAux1.add(new JLabel(GDLEditorLanguageManager.getMessage("SetEditorLanguage")+":"));
+        panelAux1.add(new JLabel(GDLEditorLanguageManager.getMessage("SetEditorLanguage") + ":"));
         panelAux1.add(getLanguageSelectorComboBox());
         panelAux.add(panelAux1, BorderLayout.NORTH);
         JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -56,31 +49,32 @@ public class DialogSetLanguage extends DialogEditor {
 
     }
 
-    private JComboBox getLanguageSelectorComboBox(){
-        if (_languageSelection==null){
-            _languageSelection = new JComboBox(Languages.getSupportedLanguages().toArray());
-            _languageSelection.setRenderer(new LanguageRenderer());
-            String langCountryCode = UserConfigurationManager.instance().getLanguage() + "_" + UserConfigurationManager.instance().getCountryCode();
-            if (Languages.getSupportedLanguages().contains(langCountryCode)){
-                _languageSelection.setSelectedItem(langCountryCode);
+    private JComboBox getLanguageSelectorComboBox() {
+        if (languageSelection == null) {
+            Set<String> supportedLanguages = Languages.getSupportedLanguages();
+            languageSelection = new JComboBox<>(supportedLanguages.toArray(new String[supportedLanguages.size()]));
+            languageSelection.setRenderer(new LanguageRenderer());
+            String langCountryCode = userConfigurationManager.getLanguage() + "_" + userConfigurationManager.getCountryCode();
+            if (supportedLanguages.contains(langCountryCode)) {
+                languageSelection.setSelectedItem(langCountryCode);
             }
         }
-        return _languageSelection;
+        return languageSelection;
     }
 
 
-    protected boolean acceptDialog(){
-        String languageAndCountry = (String)getLanguageSelectorComboBox().getSelectedItem();
-        String [] str = languageAndCountry.split("_");
-        UserConfigurationManager.instance().setLanguage(str[0]);
-        UserConfigurationManager.instance().setCountry(str[1]);
+    protected boolean acceptDialog() {
+        String languageAndCountry = (String) getLanguageSelectorComboBox().getSelectedItem();
+        String[] str = languageAndCountry.split("_");
+        userConfigurationManager.setLanguage(str[0]);
+        userConfigurationManager.setCountry(str[1]);
         try {
-            UserConfigurationManager.instance().saveConfig();
+            userConfigurationManager.saveConfig();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        JOptionPane.showMessageDialog(EditorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
+        JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));
         return true;
     }
 } 

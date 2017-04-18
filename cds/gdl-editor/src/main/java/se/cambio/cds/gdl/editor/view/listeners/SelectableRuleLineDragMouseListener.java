@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.view.listeners;
 
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.applicationobjects.ReadableRuleLineFactory;
 import se.cambio.cds.gdl.editor.view.applicationobjects.RuleLineDirectory;
 import se.cambio.cds.gdl.editor.view.panels.DraggableSelectableRuleLinePanel;
@@ -16,46 +17,48 @@ import java.awt.event.MouseEvent;
 
 public class SelectableRuleLineDragMouseListener extends MouseAdapter {
 
-    private RuleLinesPanel _ruleLinesPanel = null;
+    private RuleLinesPanel ruleLinesPanel = null;
     private RuleLineContainerPanel draggedPanel = null;
     private RuleLineContainerPanel backUpRLC = null;
+    private GDLEditor gdlEditor;
 
-    public SelectableRuleLineDragMouseListener(RuleLinesPanel ruleLinesPanel){
-        _ruleLinesPanel = ruleLinesPanel;
+    public SelectableRuleLineDragMouseListener(RuleLinesPanel ruleLinesPanel, GDLEditor gdlEditor) {
+        this.ruleLinesPanel = ruleLinesPanel;
+        this.gdlEditor = gdlEditor;
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
         RuleLine ruleLine = null;
-        JComponent clickedJComponent = (JComponent)me.getSource();
+        JComponent clickedJComponent = (JComponent) me.getSource();
         Point p = me.getPoint();
-        p = SwingUtilities.convertPoint(clickedJComponent, p, _ruleLinesPanel);
-        if (clickedJComponent instanceof DraggableSelectableRuleLinePanel){
-            ruleLine = ((DraggableSelectableRuleLinePanel)clickedJComponent).getRuleLine();
-            draggedPanel = ReadableRuleLineFactory.createRuleLineContainer(_ruleLinesPanel, ruleLine);
-        }else{
-            //Component component = _ruleLinesPanel.findComponentAt(p);
+        p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
+        if (clickedJComponent instanceof DraggableSelectableRuleLinePanel) {
+            ruleLine = ((DraggableSelectableRuleLinePanel) clickedJComponent).getRuleLine();
+            draggedPanel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
+        } else {
+            //Component component = ruleLinesPanel.findComponentAt(p);
             draggedPanel = getRuleLineContainer(clickedJComponent);
-            if (draggedPanel!=null){
+            if (draggedPanel != null) {
                 backUpRLC = getRuleLineContainer(draggedPanel.getParent());
                 ruleLine = draggedPanel.getRuleLine();
-                if (ruleLine.getParentRuleLine()!=null){
+                if (ruleLine.getParentRuleLine() != null) {
                     ruleLine.detachFromParent();
-                }else{
-                    _ruleLinesPanel.removeRuleLine(ruleLine);
+                } else {
+                    ruleLinesPanel.removeRuleLine(ruleLine);
                 }
             }
         }
-        if (draggedPanel!=null){
-            _ruleLinesPanel.add(draggedPanel, JLayeredPane.DRAG_LAYER);
+        if (draggedPanel != null) {
+            ruleLinesPanel.add(draggedPanel, JLayeredPane.DRAG_LAYER);
             Dimension d = draggedPanel.getPreferredSize();
-            Rectangle r = new Rectangle(0,0, (int)d.getWidth(), (int)d.getHeight());
+            Rectangle r = new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight());
             draggedPanel.setBounds(r);
             draggedPanel.setLocation(p);
-            _ruleLinesPanel.showCompatibility(ruleLine);
-            if (me.getClickCount()>=2){
-                clearRuleLineDraggableLayer(_ruleLinesPanel);
-                addToComponent(_ruleLinesPanel.getBaseRuleLinePanel());
+            ruleLinesPanel.showCompatibility(ruleLine);
+            if (me.getClickCount() >= 2) {
+                clearRuleLineDraggableLayer(ruleLinesPanel);
+                addToComponent(ruleLinesPanel.getBaseRuleLinePanel());
             }
         }
     }
@@ -65,16 +68,16 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
         if (draggedPanel == null) {
             return;
         }
-        JComponent clickedJComponent = (JComponent)me.getSource();
+        JComponent clickedJComponent = (JComponent) me.getSource();
         Point p = me.getPoint();
-        p = SwingUtilities.convertPoint(clickedJComponent, p, _ruleLinesPanel);
+        p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
         draggedPanel.setLocation(p);
-        if (p.getY()>_ruleLinesPanel.getHeight()){
-            JScrollBar scrollBar = _ruleLinesPanel.getRuleLinesJScrollPane().getVerticalScrollBar();
-            scrollBar.setValue(scrollBar.getValue()+3);
-        }else if (p.getY()<0){
-            JScrollBar scrollBar = _ruleLinesPanel.getRuleLinesJScrollPane().getVerticalScrollBar();
-            scrollBar.setValue(scrollBar.getValue()-3);
+        if (p.getY() > ruleLinesPanel.getHeight()) {
+            JScrollBar scrollBar = ruleLinesPanel.getRuleLinesJScrollPane().getVerticalScrollBar();
+            scrollBar.setValue(scrollBar.getValue() + 3);
+        } else if (p.getY() < 0) {
+            JScrollBar scrollBar = ruleLinesPanel.getRuleLinesJScrollPane().getVerticalScrollBar();
+            scrollBar.setValue(scrollBar.getValue() - 3);
         }
     }
 
@@ -83,61 +86,61 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
         if (draggedPanel == null) {
             return;
         }
-        JComponent clickedJComponent = (JComponent)me.getSource();
+        JComponent clickedJComponent = (JComponent) me.getSource();
         Point p = me.getPoint();
-        p = SwingUtilities.convertPoint(clickedJComponent, p, _ruleLinesPanel);
-        clearRuleLineDraggableLayer(_ruleLinesPanel);
-        Component comp = _ruleLinesPanel.findComponentAt(p);
+        p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
+        clearRuleLineDraggableLayer(ruleLinesPanel);
+        Component comp = ruleLinesPanel.findComponentAt(p);
         addToComponent(comp);
     }
 
-    private void addToComponent(Component comp){
+    private void addToComponent(Component comp) {
         RuleLineContainerPanel ruleLineContainer = getRuleLineContainer(comp);
         boolean inserted = false;
-        while (ruleLineContainer!=null){
-            if (ruleLineContainer instanceof MultipleRuleLinePanel){
+        while (ruleLineContainer != null) {
+            if (ruleLineContainer instanceof MultipleRuleLinePanel) {
                 MultipleRuleLinePanel multipleRuleLinePanel = (MultipleRuleLinePanel) ruleLineContainer;
                 RuleLine ruleLineAux = multipleRuleLinePanel.getRuleLine();
-                if (RuleLineDirectory.checkRuleLineCompatibility(draggedPanel.getRuleLine(), ruleLineAux)){
+                if (RuleLineDirectory.checkRuleLineCompatibility(draggedPanel.getRuleLine(), ruleLineAux)) {
                     multipleRuleLinePanel.addRuleLine(draggedPanel.getRuleLine());
                     inserted = true;
                     break;
                 }
-            }else if (ruleLineContainer instanceof BaseRuleLineContainerPanel){
-                if (RuleLineDirectory.checkRuleLineCompatibility(draggedPanel.getRuleLine(), null)){
-                    _ruleLinesPanel.addRuleLine(draggedPanel.getRuleLine());
+            } else if (ruleLineContainer instanceof BaseRuleLineContainerPanel) {
+                if (RuleLineDirectory.checkRuleLineCompatibility(draggedPanel.getRuleLine(), null)) {
+                    ruleLinesPanel.addRuleLine(draggedPanel.getRuleLine());
                     inserted = true;
                     break;
                 }
             }
             ruleLineContainer = getRuleLineContainer(ruleLineContainer.getParent());
         }
-        if (!inserted && backUpRLC!=null){
-            if (backUpRLC.getRuleLine()!=null){
+        if (!inserted && backUpRLC != null) {
+            if (backUpRLC.getRuleLine() != null) {
                 backUpRLC.getRuleLine().addChildRuleLine(draggedPanel.getRuleLine());
-            }else{
-                _ruleLinesPanel.addRuleLine(draggedPanel.getRuleLine());
+            } else {
+                ruleLinesPanel.addRuleLine(draggedPanel.getRuleLine());
             }
         }
-        _ruleLinesPanel.refresh();
+        ruleLinesPanel.refresh();
         backUpRLC = null;
         draggedPanel = null;
     }
 
-    private static void clearRuleLineDraggableLayer(RuleLinesPanel ruleLinesPanel){
+    private static void clearRuleLineDraggableLayer(RuleLinesPanel ruleLinesPanel) {
         for (Component comp : ruleLinesPanel.getComponentsInLayer(JLayeredPane.DRAG_LAYER)) {
             ruleLinesPanel.remove(comp);
         }
         ruleLinesPanel.repaint();
     }
 
-    public static RuleLineContainerPanel getRuleLineContainer(Component component){
-        while (component!=null && !(component instanceof RuleLineContainerPanel)){
+    private static RuleLineContainerPanel getRuleLineContainer(Component component) {
+        while (component != null && !(component instanceof RuleLineContainerPanel)) {
             component = component.getParent();
         }
-        if (component != null){
-            return (RuleLineContainerPanel)component;
-        }else{
+        if (component != null) {
+            return (RuleLineContainerPanel) component;
+        } else {
             return null;
         }
     }

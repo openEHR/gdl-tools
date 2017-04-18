@@ -3,6 +3,7 @@ package se.cambio.cds.gdl.editor.view.renderers;
 
 import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
 
@@ -14,37 +15,39 @@ import java.util.Map;
 public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
 
     private static final long serialVersionUID = 3687161456388975032L;
+    private GDLEditor gdlEditor;
 
-    public GTCodeButtonRenderer() {
-	setOpaque(true);
-	setHorizontalAlignment(JLabel.LEFT);
+    public GTCodeButtonRenderer(GDLEditor gdlEditor) {
+        this.gdlEditor = gdlEditor;
+        setOpaque(true);
+        setHorizontalAlignment(JLabel.LEFT);
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
-	    boolean isSelected, boolean hasFocus, int row, int column) {
-	if (isSelected) {
-	    setForeground(table.getSelectionForeground());
-	    setBackground(table.getSelectionBackground());
-	} else {
-	    setForeground(table.getForeground());
-	    setBackground(UIManager.getColor("Button.background"));
-	}
-	if (value==null || ((String)value).trim().isEmpty()){
-	    setText(GDLEditorLanguageManager.getMessage("Select"));
-	}else{
-	    String gtCode = (String)value;
-		Map<String, Term> currentTermsMap = EditorManager.getActiveEditorController().getCurrentTermsMap();
-		Term term = currentTermsMap.get(gtCode);
-	    if (term!=null && term.getText()!=null){
-		setText(gtCode+" - "+term.getText());
-		setToolTipText(term.getDescription());
-	    }else{
-		setText(gtCode);
-		setToolTipText("*UNKNOWN*");
-		LoggerFactory.getLogger(GTCodeButtonRenderer.class).warn("GTCode '"+gtCode+"' not found!");
-	    }
-	}
-	return this;
+                                                   boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isSelected) {
+            setForeground(table.getSelectionForeground());
+            setBackground(table.getSelectionBackground());
+        } else {
+            setForeground(table.getForeground());
+            setBackground(UIManager.getColor("Button.background"));
+        }
+        if (value == null || ((String) value).trim().isEmpty()) {
+            setText(GDLEditorLanguageManager.getMessage("Select"));
+        } else {
+            String gtCode = (String) value;
+            Map<String, Term> currentTermsMap = gdlEditor.getCurrentTermsMap();
+            Term term = currentTermsMap.get(gtCode);
+            if (term != null && term.getText() != null) {
+                setText(gtCode + " - " + term.getText());
+                setToolTipText(term.getDescription());
+            } else {
+                setText(gtCode);
+                setToolTipText("*UNKNOWN*");
+                LoggerFactory.getLogger(GTCodeButtonRenderer.class).warn("GTCode '" + gtCode + "' not found!");
+            }
+        }
+        return this;
     }
 }/*
  *  ***** BEGIN LICENSE BLOCK *****

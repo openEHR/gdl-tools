@@ -1,10 +1,11 @@
 package se.cambio.cds.gdl.editor.controller;
 
+import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.editor.util.DefinitionDependencyChecker;
 import se.cambio.cds.gdl.editor.view.dialog.*;
 import se.cambio.cds.gdl.editor.view.panels.DVLocalCodedTextPanel;
 import se.cambio.cds.gdl.editor.view.util.AttributeFunctionContainerNode;
-import se.cambio.cds.gdl.editor.view.util.NodeDefinitionConversor;
+import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
@@ -12,86 +13,116 @@ import se.cambio.cds.gdl.model.expression.StringConstant;
 import se.cambio.cds.gdl.model.readable.rule.lines.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
-import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.gdl.model.readable.util.PredicateAttributeVO;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.util.Domains;
 import se.cambio.cds.view.swing.dialogs.DialogArchetypeChooser;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.CMElement;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DVDialogEditor;
 import se.cambio.openehr.view.dialogs.DialogEditorNullValue;
 import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.util.DVPanelFactory;
+import se.cambio.openehr.view.util.ImportManager;
+import se.cambio.openehr.view.util.WindowManager;
 
 import java.awt.*;
 import java.util.Collection;
-import java.util.Iterator;
 
-public class RuleElementEditor {
+class RuleElementEditor {
 
-    public static void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
-        if (ruleLineElementWithValue instanceof ArchetypeReferenceRuleLineDefinitionElement){
-            editArchetype((ArchetypeReferenceRuleLineDefinitionElement)ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof GTCodeRuleLineElement){
-            rename((GTCodeRuleLineElement)ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineDefinitionElement){
-            editArchetypeElement((ArchetypeElementRuleLineDefinitionElement)ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof CDSEntryRuleLineElement){
+    private ArchetypeReferencesManager archetypeReferencesManager;
+    private ArchetypeManager archetypeManager;
+    private DVPanelFactory dvPanelFactory;
+    private NodeDefinitionManager nodeDefinitionManager;
+    private GDLEditor gdlEditor;
+    private ImportManager importManager;
+    private WindowManager windowManager;
+
+    RuleElementEditor(
+            WindowManager windowManager,
+            ArchetypeReferencesManager archetypeReferencesManager,
+            ArchetypeManager archetypeManager,
+            DVPanelFactory dvPanelFactory,
+            GDLEditor gdlEditor,
+            ImportManager importManager) {
+        this.windowManager = windowManager;
+        this.archetypeReferencesManager = archetypeReferencesManager;
+        this.archetypeManager = archetypeManager;
+        this.dvPanelFactory = dvPanelFactory;
+        this.gdlEditor = gdlEditor;
+        this.importManager = importManager;
+    }
+
+    private NodeDefinitionManager getNodeDefinitionManager() {
+        if (nodeDefinitionManager == null) {
+            nodeDefinitionManager = new NodeDefinitionManager(archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
+        }
+        return nodeDefinitionManager;
+    }
+
+    void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
+        if (ruleLineElementWithValue instanceof ArchetypeReferenceRuleLineDefinitionElement) {
+            editArchetype((ArchetypeReferenceRuleLineDefinitionElement) ruleLineElementWithValue);
+        } else if (ruleLineElementWithValue instanceof GTCodeRuleLineElement) {
+            rename((GTCodeRuleLineElement) ruleLineElementWithValue);
+        } else if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineDefinitionElement) {
+            editArchetypeElement((ArchetypeElementRuleLineDefinitionElement) ruleLineElementWithValue);
+        } else if (ruleLineElementWithValue instanceof CDSEntryRuleLineElement) {
             selectCDSEntry((CDSEntryRuleLineElement) ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineElement){
+        } else if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineElement) {
             selectArchetypeElement((ArchetypeElementRuleLineElement) ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof DataValueRuleLineElement){
+        } else if (ruleLineElementWithValue instanceof DataValueRuleLineElement) {
             editDataValue((DataValueRuleLineElement) ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof NullValueRuleLineElement){
+        } else if (ruleLineElementWithValue instanceof NullValueRuleLineElement) {
             editNullValue((NullValueRuleLineElement) ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof PredicateArchetypeElementAttributeRuleLineElement){
+        } else if (ruleLineElementWithValue instanceof PredicateArchetypeElementAttributeRuleLineElement) {
             editPredicateAttribute((PredicateArchetypeElementAttributeRuleLineElement) ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof ArchetypeElementAttributeRuleLineElement){
+        } else if (ruleLineElementWithValue instanceof ArchetypeElementAttributeRuleLineElement) {
             editAttribute((ArchetypeElementAttributeRuleLineElement) ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof ExpressionRuleLineElement){
-            editExpression((ExpressionRuleLineElement)ruleLineElementWithValue);
-        }else if (ruleLineElementWithValue instanceof FiredRuleReferenceRuleElement){
+        } else if (ruleLineElementWithValue instanceof ExpressionRuleLineElement) {
+            editExpression((ExpressionRuleLineElement) ruleLineElementWithValue);
+        } else if (ruleLineElementWithValue instanceof FiredRuleReferenceRuleElement) {
             selectFiredRule((FiredRuleReferenceRuleElement) ruleLineElementWithValue);
         }
     }
 
-    public static void editArchetype(ArchetypeReferenceRuleLineDefinitionElement arrlde){
-        ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)arrlde.getParentRuleLine();
-        boolean showOnlyCDS = DefinitionDependencyChecker.isBeingUsedInAction(airl, EditorManager.getActiveGDLEditor());
+    private void editArchetype(ArchetypeReferenceRuleLineDefinitionElement arrlde) {
+        ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) arrlde.getParentRuleLine();
+        boolean showOnlyCDS = DefinitionDependencyChecker.isBeingUsedInAction(airl, gdlEditor);
         editArchetype(arrlde, showOnlyCDS);
     }
 
-    public static void editArchetype(ArchetypeReferenceRuleLineDefinitionElement arrlde, boolean showOnlyCDS){
-        Window owner = EditorManager.getActiveEditorWindow();
+    void editArchetype(ArchetypeReferenceRuleLineDefinitionElement arrlde, boolean showOnlyCDS) {
+        Window owner = gdlEditor.getEditorWindow();
         ArchetypeReference ar = arrlde.getValue();
-        String idArchetype = ar!=null?ar.getIdArchetype():null;
-        String idTemplate = ar!=null?ar.getIdTemplate():null;
-        boolean isTemplate = idTemplate!=null;
-        String domainId = ar!=null?ar.getIdDomain():null;
-        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS);
+        String idArchetype = ar != null ? ar.getIdArchetype() : null;
+        String idTemplate = ar != null ? ar.getIdTemplate() : null;
+        boolean isTemplate = idTemplate != null;
+        String domainId = ar != null ? ar.getIdDomain() : null;
+        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS, importManager, archetypeManager);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             CMElement cmElement = dialog.getSelectedCMElement();
-            if (cmElement instanceof ArchetypeDTO){
+            if (cmElement instanceof ArchetypeDTO) {
                 idArchetype = cmElement.getId();
-            } else if (cmElement instanceof TemplateDTO){
-                idArchetype = ((TemplateDTO)cmElement).getArchetypeId();
+            } else if (cmElement instanceof TemplateDTO) {
+                idArchetype = ((TemplateDTO) cmElement).getArchetypeId();
                 idTemplate = cmElement.getId();
             }
-            if (idArchetype==null){
-                if (ar!=null){
+            if (idArchetype == null) {
+                if (ar != null) {
                     idArchetype = ar.getIdArchetype();
                     idTemplate = ar.getIdTemplate();
                 }
             }
-            if (idArchetype!=null){
+            if (idArchetype != null) {
                 String idDomain = dialog.getSelectedDomain();
                 ar = new ArchetypeReference(idDomain, idArchetype, idTemplate);
                 arrlde.setValue(ar);
@@ -99,43 +130,43 @@ public class RuleElementEditor {
         }
     }
 
-    public static void rename(GTCodeRuleLineElement gtCodeRuleLineElement){
-        Window owner = EditorManager.getActiveEditorWindow();
+    private void rename(GTCodeRuleLineElement gtCodeRuleLineElement) {
+        Window owner = gdlEditor.getEditorWindow();
         String title = null;
         RuleLine ruleLine = gtCodeRuleLineElement.getParentRuleLine();
-        if (ruleLine instanceof ArchetypeInstantiationRuleLine){
-            title = ((ArchetypeInstantiationRuleLine)ruleLine).getArchetypeReferenceRuleLineDefinitionElement().getLabelText();
-        }else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
-            title = ((ArchetypeElementInstantiationRuleLine)ruleLine).getArchetypeElementRuleLineDefinitionElement().getLabelText();
+        if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
+            title = ((ArchetypeInstantiationRuleLine) ruleLine).getArchetypeReferenceRuleLineDefinitionElement().getLabelText();
+        } else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine) {
+            title = ((ArchetypeElementInstantiationRuleLine) ruleLine).getArchetypeElementRuleLineDefinitionElement().getLabelText();
         }
-        Term term = EditorManager.getActiveGDLEditor().getTerm(gtCodeRuleLineElement.getValue());
+        Term term = gdlEditor.getTerm(gtCodeRuleLineElement.getValue());
         String oldValue = term.getText();
         DialogNameInsert dialog = new DialogNameInsert(owner, title, oldValue);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             term.setText(dialog.getValue());
         }
     }
 
-    public static void editArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde) throws InstanceNotFoundException, InternalErrorException {
+    private void editArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde) throws InstanceNotFoundException, InternalErrorException {
         ArchetypeReference ar = aerlde.getArchetypeReference();
-        if (ar!=null){
+        if (ar != null) {
             SelectableNode<Object> node =
-                    NodeDefinitionConversor.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), true, true, aerlde.getArchetypeManager());
-            DialogElementSelection dialog = new DialogElementSelection(EditorManager.getActiveEditorWindow(), node);
+                    nodeDefinitionManager.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), aerlde.getArchetypeManager());
+            DialogElementSelection dialog = new DialogElementSelection(gdlEditor.getWindowManager(), node);
             dialog.setVisible(true);
-            if (dialog.getAnswer()){
+            if (dialog.getAnswer()) {
                 Object obj = dialog.getSelectedObject();
-                if (obj instanceof ArchetypeElementVO){
-                    aerlde.setValue((ArchetypeElementVO)obj);
+                if (obj instanceof ArchetypeElementVO) {
+                    aerlde.setValue((ArchetypeElementVO) obj);
                     RuleLine ruleLine = aerlde.getParentRuleLine();
-                    if (ruleLine instanceof ArchetypeElementInstantiationRuleLine){
+                    if (ruleLine instanceof ArchetypeElementInstantiationRuleLine) {
                         ArchetypeElementInstantiationRuleLine aeirl =
-                                (ArchetypeElementInstantiationRuleLine)ruleLine;
+                                (ArchetypeElementInstantiationRuleLine) ruleLine;
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
-                        Term term = EditorManager.getActiveGDLEditor().getTerm(gtCode);
-                        if (term.getText()==null || term.getText().isEmpty()){
-                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), UserConfigurationManager.instance().getLanguage());
-                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), UserConfigurationManager.instance().getLanguage());
+                        Term term = gdlEditor.getTerm(gtCode);
+                        if (term.getText() == null || term.getText().isEmpty()) {
+                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
+                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
                             term.setText(name);
                             term.setDescription(desc);
                         }
@@ -145,138 +176,118 @@ public class RuleElementEditor {
         }
     }
 
-    public static void selectArchetypeElement(ArchetypeElementRuleLineElement arrle){
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
+    private void selectArchetypeElement(ArchetypeElementRuleLineElement arrle) {
         boolean onlyCDSDomain = onlyCDSDomain(arrle);
         Object selectedObject = null;
         ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arrle, onlyCDSDomain);
         DialogElementInstanceSelection dialog =
-                new DialogElementInstanceSelection(EditorManager.getActiveEditorWindow(), controller, onlyCDSDomain, ar);
+                new DialogElementInstanceSelection(gdlEditor, getNodeDefinitionManager(), onlyCDSDomain, ar);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             selectedObject = dialog.getSelectedObject();
         }
-        if (selectedObject instanceof GTCodeRuleLineElement){
-            GTCodeRuleLineElement gtCodeRuleLineElement = (GTCodeRuleLineElement)selectedObject;
-            if (gtCodeRuleLineElement.getParentRuleLine() instanceof ArchetypeElementInstantiationRuleLine){
+        if (selectedObject instanceof GTCodeRuleLineElement) {
+            GTCodeRuleLineElement gtCodeRuleLineElement = (GTCodeRuleLineElement) selectedObject;
+            if (gtCodeRuleLineElement.getParentRuleLine() instanceof ArchetypeElementInstantiationRuleLine) {
                 arrle.setValue(gtCodeRuleLineElement);
             }
-        }else if (selectedObject instanceof ArchetypeInstantiationRuleLine){
-            ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
-            ArchetypeElementInstantiationRuleLine aeirl = controller.addArchetypeElement(airl);
-            if (aeirl!=null){
+        } else if (selectedObject instanceof ArchetypeInstantiationRuleLine) {
+            ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) selectedObject;
+            ArchetypeElementInstantiationRuleLine aeirl = gdlEditor.addArchetypeElement(airl);
+            if (aeirl != null) {
                 arrle.setValue(aeirl.getGTCodeRuleLineElement());
             }
         }
     }
 
-    private static ArchetypeReference getArchetypeReferenceFromCreateInstanceRuleLine(RuleLineElementWithValue<?> ruleLineElement, boolean onlyCDSDomain){
+    private static ArchetypeReference getArchetypeReferenceFromCreateInstanceRuleLine(RuleLineElementWithValue<?> ruleLineElement, boolean onlyCDSDomain) {
         //If the set is inside a create instance action, we limit the selection to the created archetype reference
-        if (onlyCDSDomain && ruleLineElement.getParentRuleLine().getParentRuleLine() instanceof CreateInstanceActionRuleLine){
-            return ((CreateInstanceActionRuleLine)ruleLineElement.getParentRuleLine().getParentRuleLine()).getArchetypeReference();
-        }else{
+        if (onlyCDSDomain && ruleLineElement.getParentRuleLine().getParentRuleLine() instanceof CreateInstanceActionRuleLine) {
+            return ((CreateInstanceActionRuleLine) ruleLineElement.getParentRuleLine().getParentRuleLine()).getArchetypeReference();
+        } else {
             return null;
         }
     }
 
     //This method creates a dialog, if the user selects a valid object (ArchetypeInstantiationRuleLine)
     // it sets the referring element's value (CDSEntryRuleLineElement) to the GTCode of the archetype instance.
-    public static void selectCDSEntry(CDSEntryRuleLineElement cdserle){
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
-        boolean onlyCDSDomain = true;
+    private void selectCDSEntry(CDSEntryRuleLineElement cdserle) {
         Object selectedObject = null;
         //if (!emptyDefinitions(controller.getDefinitionRuleLines(), onlyCDSDomain)){
         DialogEntrySelection dialog =
-                new DialogEntrySelection(EditorManager.getActiveEditorWindow(), controller, onlyCDSDomain);
+                new DialogEntrySelection(gdlEditor, true);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             selectedObject = dialog.getSelectedObject();
         }
 
-        if (selectedObject instanceof ArchetypeInstantiationRuleLine){
-            ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)selectedObject;
+        if (selectedObject instanceof ArchetypeInstantiationRuleLine) {
+            ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) selectedObject;
             cdserle.setValue(airl.getGTCodeRuleLineElement());
         }
     }
 
-    public static void selectFiredRule(FiredRuleReferenceRuleElement frrrl) {
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
-        DialogRuleSelection dialog = new DialogRuleSelection(EditorManager.getActiveEditorWindow(), controller);
+    private void selectFiredRule(FiredRuleReferenceRuleElement frrrl) {
+        DialogRuleSelection dialog = new DialogRuleSelection(gdlEditor);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             GTCodeRuleLineElement gtCodeRuleLineElement = dialog.getSelectedGTCodeRuleLineElement();
             frrrl.setValue(gtCodeRuleLineElement);
         }
     }
 
-    public static boolean emptyDefinitions(Collection<RuleLine> definitionRuleLines, boolean onlyShowCDS){
-        if (!onlyShowCDS){
-            return definitionRuleLines.isEmpty();
-        }else{
-            Iterator<RuleLine> i = definitionRuleLines.iterator();
-            while(i.hasNext()){
-                RuleLine ruleLine = i.next();
-                if (ruleLine instanceof ArchetypeReferenceRuleLine){
-                    ArchetypeReference ar = ((ArchetypeReferenceRuleLine)ruleLine).getArchetypeReference();
-                    if (Domains.CDS_ID.equals(ar.getIdDomain())){
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-    }
-
-    public static void editDataValue(DataValueRuleLineElement dvrle){
+    private void editDataValue(DataValueRuleLineElement dvrle) {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementVO(dvrle.getParentRuleLine());
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             DVDialogEditor dialog =
                     new DVDialogEditor(
-                            EditorManager.getActiveEditorWindow(),
+                            gdlEditor.getEditorWindow(),
                             archetypeElementVO,
-                            true, true);
+                            true, true,
+                            dvPanelFactory,
+                            archetypeManager);
             //Change the behaviour if IS_A (IS_NOT_A) DV_TEXT => allow local term selection
-            if (isAnISAComparatorWithDV(dvrle.getParentRuleLine())){
-                dialog.setDVGenericPanel(new DVLocalCodedTextPanel(EditorManager.getActiveGDLEditor()));
+            if (isAnISAComparatorWithDV(dvrle.getParentRuleLine())) {
+                dialog.setDVGenericPanel(new DVLocalCodedTextPanel(gdlEditor));
             }
             dialog.getDVGenericPanel().setDataValue(dvrle.getValue());
             dialog.setVisible(true);
-            if(dialog.getAnswer()){
+            if (dialog.getAnswer()) {
                 dvrle.setValue(dialog.getDataValue());
             }
         }
     }
 
-    public static void editNullValue(NullValueRuleLineElement nvrle){
+    private void editNullValue(NullValueRuleLineElement nvrle) {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementVO(nvrle.getParentRuleLine());
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             DialogEditorNullValue dialog =
-                    new DialogEditorNullValue(EditorManager.getActiveEditorWindow());
+                    new DialogEditorNullValue(gdlEditor.getEditorWindow());
             dialog.setNullValue(nvrle.getValue());
             dialog.setVisible(true);
-            if(dialog.getAnswer()){
+            if (dialog.getAnswer()) {
                 nvrle.setValue(dialog.getSelectedNullValue());
             }
         }
     }
 
-    private static ArchetypeElementVO getArchetypeElementVO(RuleLine ruleLine){
+    private static ArchetypeElementVO getArchetypeElementVO(RuleLine ruleLine) {
         ArchetypeElementVO archetypeElementVO = null;
         for (RuleLineElement ruleLineElement : ruleLine.getRuleLineElements()) {
-            if (ruleLineElement instanceof ArchetypeElementRuleLineElement){
+            if (ruleLineElement instanceof ArchetypeElementRuleLineElement) {
                 ArchetypeElementRuleLineElement aerle =
                         (ArchetypeElementRuleLineElement) ruleLineElement;
                 archetypeElementVO = aerle.getArchetypeElementVO();
                 break;
-            }else if (ruleLineElement instanceof ArchetypeElementRuleLineDefinitionElement){
+            } else if (ruleLineElement instanceof ArchetypeElementRuleLineDefinitionElement) {
                 archetypeElementVO =
-                        ((ArchetypeElementRuleLineDefinitionElement)ruleLineElement).getValue();
-            }else if (ruleLineElement instanceof PredicateArchetypeElementAttributeRuleLineElement){
+                        ((ArchetypeElementRuleLineDefinitionElement) ruleLineElement).getValue();
+            } else if (ruleLineElement instanceof PredicateArchetypeElementAttributeRuleLineElement) {
                 archetypeElementVO =
-                        ((PredicateArchetypeElementAttributeRuleLineElement)ruleLineElement).getValue();
-            }else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement){
-                ArchetypeElementRuleLineElement aerle = ((ArchetypeElementAttributeRuleLineElement)ruleLineElement).getValue();
-                if (aerle!=null){
+                        ((PredicateArchetypeElementAttributeRuleLineElement) ruleLineElement).getValue();
+            } else if (ruleLineElement instanceof ArchetypeElementAttributeRuleLineElement) {
+                ArchetypeElementRuleLineElement aerle = ((ArchetypeElementAttributeRuleLineElement) ruleLineElement).getValue();
+                if (aerle != null) {
                     archetypeElementVO = aerle.getArchetypeElementVO();
                 }
             }
@@ -284,79 +295,75 @@ public class RuleElementEditor {
         return archetypeElementVO;
     }
 
-    private static boolean isAnISAComparatorWithDV(RuleLine ruleLine){
-        if (ruleLine instanceof ElementComparisonWithDVConditionRuleLine){
-            OperatorKind operatorKind = ((ElementComparisonWithDVConditionRuleLine)ruleLine).getComparisonOperatorRuleLineElement().getValue();
-            return operatorKind!=null && (operatorKind.equals(OperatorKind.IS_A) || operatorKind.equals(OperatorKind.IS_NOT_A));
-        }else if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine){
-            OperatorKind operatorKind = ((WithElementPredicateAttributeDefinitionRuleLine)ruleLine).getComparisonOperatorRuleLineElement().getValue();
-            return operatorKind!=null && (operatorKind.equals(OperatorKind.IS_A) || operatorKind.equals(OperatorKind.IS_NOT_A));
-        }else{
+    private static boolean isAnISAComparatorWithDV(RuleLine ruleLine) {
+        if (ruleLine instanceof ElementComparisonWithDVConditionRuleLine) {
+            OperatorKind operatorKind = ((ElementComparisonWithDVConditionRuleLine) ruleLine).getComparisonOperatorRuleLineElement().getValue();
+            return operatorKind != null && (operatorKind.equals(OperatorKind.IS_A) || operatorKind.equals(OperatorKind.IS_NOT_A));
+        } else if (ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine) {
+            OperatorKind operatorKind = ((WithElementPredicateAttributeDefinitionRuleLine) ruleLine).getComparisonOperatorRuleLineElement().getValue();
+            return operatorKind != null && (operatorKind.equals(OperatorKind.IS_A) || operatorKind.equals(OperatorKind.IS_NOT_A));
+        } else {
             return false;
         }
     }
 
-    public static void editAttribute(ArchetypeElementAttributeRuleLineElement aearle){
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
+    private void editAttribute(ArchetypeElementAttributeRuleLineElement aearle) {
         boolean onlyCDSDomain = (aearle.getParentRuleLine() instanceof ActionRuleLine);
         Object selectedObject = null;
         ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(aearle, onlyCDSDomain);
         DialogElementAttributeFunctionInstanceSelection dialog =
-                new DialogElementAttributeFunctionInstanceSelection(EditorManager.getActiveEditorWindow(), controller, onlyCDSDomain, ar);
+                new DialogElementAttributeFunctionInstanceSelection(
+                        gdlEditor,
+                        getNodeDefinitionManager(),
+                        onlyCDSDomain, ar);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             selectedObject = dialog.getSelectedObject();
         }
-        if (selectedObject instanceof AttributeFunctionContainerNode){
+        if (selectedObject instanceof AttributeFunctionContainerNode) {
             AttributeFunctionContainerNode attributeContainerNode = (AttributeFunctionContainerNode) selectedObject;
             ArchetypeElementRuleLineElement archetypeElementRuleLineElement =
                     new ArchetypeElementRuleLineElement(aearle.getParentRuleLine());
             archetypeElementRuleLineElement.setValue(attributeContainerNode.getGtCodeRuleLineElement());
             aearle.setValue(archetypeElementRuleLineElement);
             aearle.setAttribute(attributeContainerNode.getAttributeFunction());
-        }else if (selectedObject instanceof GTCodeRuleLineElement){
-            GTCodeRuleLineElement gtCodeRuleLineElement = (GTCodeRuleLineElement)selectedObject;
-            if (gtCodeRuleLineElement.getParentRuleLine() instanceof ArchetypeInstantiationRuleLine){
-                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine)gtCodeRuleLineElement.getParentRuleLine();
-                controller.addArchetypeElement(airl);
+        } else if (selectedObject instanceof GTCodeRuleLineElement) {
+            GTCodeRuleLineElement gtCodeRuleLineElement = (GTCodeRuleLineElement) selectedObject;
+            if (gtCodeRuleLineElement.getParentRuleLine() instanceof ArchetypeInstantiationRuleLine) {
+                ArchetypeInstantiationRuleLine airl = (ArchetypeInstantiationRuleLine) gtCodeRuleLineElement.getParentRuleLine();
+                gdlEditor.addArchetypeElement(airl);
                 editAttribute(aearle);
             }
         }
     }
 
-    private static void editPredicateAttribute(PredicateArchetypeElementAttributeRuleLineElement paearle){
-        GDLEditor controller = EditorManager.getActiveGDLEditor();
-        WithElementPredicateExpressionDefinitionRuleLine wepedrl = (WithElementPredicateExpressionDefinitionRuleLine)paearle.getParentRuleLine();
+    private void editPredicateAttribute(PredicateArchetypeElementAttributeRuleLineElement paearle) {
+        WithElementPredicateExpressionDefinitionRuleLine wepedrl = (WithElementPredicateExpressionDefinitionRuleLine) paearle.getParentRuleLine();
         DialogPredicateElementAttributeInstanceSelection dialog =
                 new DialogPredicateElementAttributeInstanceSelection(
-                        EditorManager.getActiveEditorWindow(),
-                        controller,
+                        windowManager,
                         wepedrl.getArchetypeReference().getIdArchetype(),
-                        wepedrl.getArchetypeReference().getIdTemplate());
+                        wepedrl.getArchetypeReference().getIdTemplate(),
+                        archetypeManager,
+                        nodeDefinitionManager);
         dialog.setVisible(true);
-        if (dialog.getAnswer()){
+        if (dialog.getAnswer()) {
             Object obj = dialog.getSelectedObject();
-            if (obj instanceof PredicateAttributeVO){
-                PredicateAttributeVO predicateAttributeVO = (PredicateAttributeVO)obj;
+            if (obj instanceof PredicateAttributeVO) {
+                PredicateAttributeVO predicateAttributeVO = (PredicateAttributeVO) obj;
                 paearle.setAttribute(predicateAttributeVO.getAttribute());
                 paearle.setValue(predicateAttributeVO.getArchetypeElementVO());
             }
         }
     }
 
-    private static boolean onlyCDSDomain(ArchetypeElementRuleLineElement aearle){
-        if (aearle.getParentRuleLine() instanceof ActionRuleLine){
-            if (aearle.getParentRuleLine() instanceof SetElementWithElementActionRuleLine){
-                return !aearle.equals(((SetElementWithElementActionRuleLine)aearle.getParentRuleLine()).getSecondArchetypeElementRuleLineElement());
-            }else{
-                return true;
-            }
-        }else{
-            return false;
-        }
+    private static boolean onlyCDSDomain(ArchetypeElementRuleLineElement aearle) {
+        return aearle.getParentRuleLine() instanceof ActionRuleLine
+                && (!(aearle.getParentRuleLine() instanceof SetElementWithElementActionRuleLine)
+                || !aearle.equals(((SetElementWithElementActionRuleLine) aearle.getParentRuleLine()).getSecondArchetypeElementRuleLineElement()));
     }
 
-    public static void editExpression(ExpressionRuleLineElement arle) {
+    private void editExpression(ExpressionRuleLineElement arle) {
         String attribute = getAttributeValue(arle);
         ArchetypeElementVO archetypeElementVO = getArchetypeElementVO(arle.getParentRuleLine());
         if (archetypeElementVO != null && OpenEHRDataValues.UNITS_ATT.equals(attribute)) {
@@ -366,7 +373,7 @@ public class RuleElementEditor {
                 oldValue = ((StringConstant) arle.getValue()).getValue();
             }
             DialogComboBoxInsert dialog =
-                    new DialogComboBoxInsert(EditorManager.getActiveEditorWindow(), OpenEHRLanguageManager.getMessage("Units"), oldValue, units);
+                    new DialogComboBoxInsert(gdlEditor.getEditorWindow(), OpenEHRLanguageManager.getMessage("Units"), oldValue, units);
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
                 String unit = dialog.getSelectedItem();
@@ -374,26 +381,24 @@ public class RuleElementEditor {
             }
         } else {
             boolean inPredicate = false;
-            if (arle.getParentRuleLine() instanceof WithElementPredicateExpressionDefinitionRuleLine){
+            if (arle.getParentRuleLine() instanceof WithElementPredicateExpressionDefinitionRuleLine) {
                 inPredicate = true;
             }
             ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
             DialogExpressionEditor dialog =
-                    new DialogExpressionEditor(EditorManager.getActiveEditorWindow(), arle, inPredicate, ar);
+                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, getNodeDefinitionManager(), archetypeManager.getUserConfigurationManager());
             dialog.setVisible(true);
-            if (dialog.getAnswer()){
+            if (dialog.getAnswer()) {
                 ExpressionItem expressionItem = dialog.getExpressionItem();
                 arle.setValue(expressionItem);
             }
         }
     }
 
-    private static String getAttributeValue(ExpressionRuleLineElement arle){
-        Iterator<RuleLineElement> i = arle.getParentRuleLine().getRuleLineElements().iterator();
-        while (i.hasNext()){
-            RuleLineElement rle = i.next();
-            if (rle instanceof ArchetypeElementAttributeRuleLineElement){
-                return ((ArchetypeElementAttributeRuleLineElement)rle).getAttribute();
+    private static String getAttributeValue(ExpressionRuleLineElement arle) {
+        for (RuleLineElement rle : arle.getParentRuleLine().getRuleLineElements()) {
+            if (rle instanceof ArchetypeElementAttributeRuleLineElement) {
+                return ((ArchetypeElementAttributeRuleLineElement) rle).getAttribute();
             }
         }
         return null;
