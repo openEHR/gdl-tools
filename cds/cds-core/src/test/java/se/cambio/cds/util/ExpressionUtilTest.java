@@ -5,7 +5,6 @@ import se.cambio.cds.gdl.model.expression.BinaryExpression;
 import se.cambio.cds.gdl.model.expression.ConstantExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.readable.util.*;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.testng.Assert.*;
 
 public class ExpressionUtilTest {
     @Test

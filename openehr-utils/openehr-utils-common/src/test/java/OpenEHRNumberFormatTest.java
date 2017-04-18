@@ -1,15 +1,15 @@
 import junit.framework.TestCase;
+import org.junit.Test;
 import se.cambio.openehr.util.OpenEHRNumberFormat;
 
 import java.text.DecimalFormat;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-05-26
- * Time: 16:53
- */
-public class OpenEHRNumberFormatTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+
+public class OpenEHRNumberFormatTest {
+
+    @Test
     public void testRoundToStr(){
         assertEquals("20.1234", OpenEHRNumberFormat.toStringUsingPrecision(new Double(20.1234), 4));
         assertEquals("2012340000000.0000", OpenEHRNumberFormat.toStringUsingPrecision(2.01234E12, 4));
