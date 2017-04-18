@@ -43,7 +43,6 @@
         <module>cds-core</module>
         <module>cds-gui-swing</module>
         <module>cds-form-generator</module>
-        <module>gdl-graph</module>
         <module>gdl-editor</module>
 	</modules>
 </project>
