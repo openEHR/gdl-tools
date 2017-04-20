@@ -59,10 +59,7 @@ import se.cambio.openehr.view.util.WindowManager;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -70,6 +67,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     private static String UNKNOWN_GUIDE_ID = "unknown";
     private static String GT_HEADER = "gt";
+    public static Collection<String> SUPPORTED_EXTENSIONS = Collections.singleton("gdl");
     private GDLEditorMainPanel gdlEditorMainPanel = null;
     private ResourceDescription resourceDescription = null;
     private GuideOntology guideOntology = null;
@@ -1307,6 +1305,21 @@ public class GDLEditor implements EditorController<Guide> {
                     importManager);
         }
         return ruleElementEditor;
+    }
+
+    @Override
+    public String getEntityName() {
+        return GDLEditorLanguageManager.getMessage("Guide");
+    }
+
+    @Override
+    public Collection<String> getSupportedEntityExtensions() {
+        return SUPPORTED_EXTENSIONS;
+    }
+
+    @Override
+    public void updateTerm(Term term) {
+        getTermsMap(getCurrentLanguageCode()).put(term.getId(), term);
     }
 
     public TerminologyService getTerminologyService() {

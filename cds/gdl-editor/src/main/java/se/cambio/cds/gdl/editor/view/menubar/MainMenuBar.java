@@ -72,7 +72,7 @@ public class MainMenuBar extends JMenuBar {
         this.add(getHelpMenu());
     }
 
-    private JMenu getFileMenu() {
+    public JMenu getFileMenu() {
         if (fileMenu == null) {
             fileMenu = new JMenu();
             fileMenu.setText(GDLEditorLanguageManager.getMessage("File"));

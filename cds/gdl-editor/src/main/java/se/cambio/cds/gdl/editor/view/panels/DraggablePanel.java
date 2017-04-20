@@ -14,7 +14,7 @@ public abstract class DraggablePanel extends JPanel implements MouseListener, Mo
     private Point mLastPoint;
     private JLabel _dragLabel = null;
 
-    DraggablePanel(JComponent component) {
+    public DraggablePanel(JComponent component) {
         super(new BorderLayout());
         JPanel aux = new JPanel(new BorderLayout());
         aux.add(getDragLabel(), BorderLayout.NORTH);

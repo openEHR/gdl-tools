@@ -14,7 +14,7 @@ public class RefreshableDescriptionPanel extends JPanel implements RefreshablePa
     private Window window;
     private DescriptionPanel descriptionPanel = null;
 
-    RefreshableDescriptionPanel(EditorController controller, Window window){
+    public RefreshableDescriptionPanel(EditorController controller, Window window){
         this.controller = controller;
         this.window = window;
         init();

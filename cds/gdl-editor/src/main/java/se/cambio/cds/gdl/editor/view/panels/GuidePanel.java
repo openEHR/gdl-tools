@@ -143,7 +143,7 @@ public class GuidePanel extends JPanel {
 
     private TerminologyPanel getTerminologyPanel() {
         if (terminologyPanel == null) {
-            terminologyPanel = new TerminologyPanel(controller);
+            terminologyPanel = new TerminologyPanel(controller, controller.getEditorWindow());
         }
         return terminologyPanel;
     }

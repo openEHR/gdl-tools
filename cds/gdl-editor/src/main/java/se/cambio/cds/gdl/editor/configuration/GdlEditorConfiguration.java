@@ -38,15 +38,6 @@ import se.cambio.openehr.view.util.WindowManager;
 @Import({DroolsConfiguration.class, CdsCoreConfiguration.class, CdsGuiSwingConfiguration.class, GdlGraphConfiguration.class})
 public class GdlEditorConfiguration {
 
-    private static final String GDL_PLUGINS_KEY = "gdl-editor.plugins";
-
-    private Environment environment;
-
-    @Autowired
-    public GdlEditorConfiguration(Environment environment) {
-        this.environment = environment;
-    }
-
     @Bean
     GdlEditorFactory gdlEditorFactory(
             WindowManager windowManager,

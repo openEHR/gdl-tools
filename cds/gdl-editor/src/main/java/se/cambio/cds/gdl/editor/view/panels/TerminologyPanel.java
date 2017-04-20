@@ -2,6 +2,7 @@ package se.cambio.cds.gdl.editor.view.panels;
 
 import org.apache.commons.jxpath.JXPathContext;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.tables.TerminologyTable;
@@ -17,7 +18,8 @@ import java.util.List;
 public class TerminologyPanel extends JPanel implements RefreshablePanel {
 
     private static final long serialVersionUID = 1L;
-    private GDLEditor controller = null;
+    private EditorController controller = null;
+    private Window window;
     private JXPathContext context = null;
     private JScrollPane terminologyScrollPanel;
     private TerminologyTable terminologyTable;
@@ -27,8 +29,9 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
     private JPanel mainPanel;
     private JPanel editButtonPanel;
 
-    TerminologyPanel(GDLEditor controller) {
+    public TerminologyPanel(EditorController controller, Window window) {
         this.controller = controller;
+        this.window = window;
         init();
     }
 
@@ -137,7 +140,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
         for (String gtCode : getSelectedGTCodes()) {
             if (gtCodesUsed.contains(gtCode)) {
                 JOptionPane.showMessageDialog(
-                        controller.getEditorWindow(),
+                        window,
                         GDLEditorLanguageManager.getMessage("ReferenceBeingUsedMsg"),
                         GDLEditorLanguageManager.getMessage("ReferenceBeingUsedTitle"),
                         JOptionPane.WARNING_MESSAGE);

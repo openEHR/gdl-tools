@@ -5,16 +5,15 @@ import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRConstUI;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
 
 import java.util.Map;
 
-class ClusterNodesUtil {
+public class ClusterNodesUtil {
 
-    static SelectableNode<Object> getClusterNode(
+    public static SelectableNode<Object> getClusterNode(
             String idTemplate, String idCluster,
             SelectableNode<Object> rootNode,
             Map<Object, SelectableNode<Object>> clusters,
@@ -50,7 +49,7 @@ class ClusterNodesUtil {
         }
     }
 
-    static SelectableNode<Object> getRMNode(
+    public static SelectableNode<Object> getRMNode(
             SelectableNode<Object> rootNode,
             Map<String, SelectableNode<Object>> rmNodes,
             String path) {

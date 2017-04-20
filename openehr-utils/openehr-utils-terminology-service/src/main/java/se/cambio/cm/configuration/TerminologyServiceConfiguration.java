@@ -25,6 +25,7 @@ import java.util.Map;
 public class TerminologyServiceConfiguration {
 
     private Map<String, TerminologyConfigVO> terminologyConfigMap;
+    @Autowired
     private Environment environment;
 
     private static final String TERMINOLOGY_PROPERTY_PREFIX = "terminologies.";
@@ -35,9 +36,7 @@ public class TerminologyServiceConfiguration {
 
     private static TerminologyService terminologyService;
 
-    @Autowired
-    public TerminologyServiceConfiguration(Environment environment) {
-        this.environment = environment;
+    public TerminologyServiceConfiguration() {
         this.terminologyConfigMap = new HashMap<>();
     }
 

@@ -1,7 +1,7 @@
 package se.cambio.cds.view.swing.panel.interfaces;
 
 public interface RefreshablePanel {
-    public void refresh();
+    void refresh();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

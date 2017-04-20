@@ -7,12 +7,12 @@ public class DropPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private GridBagConstraints gridBagConstraints = null;
 
-    DropPanel() {
+    public DropPanel() {
         super();
         super.setLayout(new GridBagLayout());
     }
 
-    GridBagConstraints getGBC() {
+    public GridBagConstraints getGBC() {
         if (gridBagConstraints == null) {
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.weightx = 1;
