@@ -172,7 +172,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
     private TerminologyNodeVO getNodeForCode(String code, CodePhrase language) {
         String desc = retrieveTerm(code, language);
-        if (desc == null) {
+        if (desc == null || desc.trim().isEmpty()) {
             desc = code;
         }
         return new TerminologyNodeVO(new DvCodedText(desc, new CodePhrase(terminologyConfig.getTerminologyId(), code)));
