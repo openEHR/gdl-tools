@@ -1,16 +1,16 @@
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import se.cambio.cm.configuration.CmServiceConfiguration;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
+import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -24,9 +24,8 @@ import java.util.Calendar;
 
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CmServiceConfiguration.class, ClinicalModelsConfiguration.class})
-public class ParsingTest {
+@ContextConfiguration(classes = {ClinicalModelsCacheConfiguration.class})
+public class ParsingTest extends AbstractTestNGSpringContextTests{
 
     @Value("classpath:/archetypes")
     private Resource archetypesResource;
@@ -37,7 +36,7 @@ public class ParsingTest {
     @Autowired
     UserConfigurationManager userConfigurationManager;
 
-    @Before
+    @BeforeClass
     public void initializeCM() throws URISyntaxException, IOException {
         userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
     }

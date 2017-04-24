@@ -117,8 +117,8 @@ public class GenericObjectBundleADLManager {
         CComplexObject cComplexObject = ((CComplexObject) cObject);
         CAttribute att = cComplexObject.getAttribute("value");
         Archetype localAOM = getLocalAOM(ar, path);
-        String text = null;
-        String desc = null;
+        String text;
+        String desc;
         text = getText(localAOM, cObject.getNodeId(), language);
         desc = getDescription(localAOM, cObject.getNodeId(), language);
         if (text == null) {

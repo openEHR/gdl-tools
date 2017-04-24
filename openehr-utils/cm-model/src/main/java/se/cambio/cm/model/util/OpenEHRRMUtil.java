@@ -36,7 +36,7 @@ public class OpenEHRRMUtil {
     }
 
     public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType, String parentPath) {
-        Collection<ArchetypeElementVO> rmArchetypeElements = new ArrayList<ArchetypeElementVO>();
+        Collection<ArchetypeElementVO> rmArchetypeElements = new ArrayList<>();
         if (OpenEHRConst.OBSERVATION.equals(entryType)) {
             String eventsTimePath = EVENT_TIME_PATH;
             //EventTime
@@ -115,7 +115,7 @@ public class OpenEHRRMUtil {
     }
 
     public static Collection<ClusterVO> getRMClusters(String idArchetype, String idTemplate) {
-        Collection<ClusterVO> rmArchetypeClusters = new ArrayList<ClusterVO>();
+        Collection<ClusterVO> rmArchetypeClusters = new ArrayList<>();
         ClusterVO clusterVO =
                 new ClusterVO(
                         OpenEHRLanguageManager.getMessage("ArchetypeDetails"),

@@ -1,4 +1,5 @@
 import junit.framework.TestCase;
+import org.testng.annotations.Test;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.HTMLRenderer;
 
@@ -6,13 +7,14 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-10
- * Time: 17:17
- */
-public class FreeMarkerTest extends TestCase{
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNull.notNullValue;
 
+
+public class FreeMarkerTest {
+
+    @Test
     public void testRenderer(){
         String src = "<html>\n" +
                 "<head>\n" +
@@ -33,9 +35,9 @@ public class FreeMarkerTest extends TestCase{
         try {
             HTMLRenderer cmHTMLr = new HTMLRenderer(new StringReader(src));
             String result = cmHTMLr.proccess(root);
-            assertNotNull(result);
-            assertTrue(result.contains("Welcome Big Joe!"));
-            assertTrue(result.contains("test1"));
+            assertThat(result, notNullValue());
+            assertThat(result, containsString("Welcome Big Joe!"));
+            assertThat(result, containsString("test1"));
         } catch (InternalErrorException e) {
             e.printStackTrace();
         }

@@ -1,13 +1,13 @@
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
+import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Clusters;
@@ -21,10 +21,9 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ClinicalModelsConfiguration.class)
+@ContextConfiguration(classes = ClinicalModelsCacheConfiguration.class)
 @ActiveProfiles({ "cm-admin-file-dao"})
-public class ArchetypeElementsTest {
+public class ArchetypeElementsTest extends AbstractTestNGSpringContextTests {
 
     @Value("classpath:/archetypes")
     private Resource archetypesResource;
@@ -41,7 +40,7 @@ public class ArchetypeElementsTest {
     @Autowired
     UserConfigurationManager userConfigurationManager;
 
-    @Before
+    @BeforeClass
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         userConfigurationManager.setTerminologiesFolderPath(terminologiesResource.getFile().getPath());
         userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());

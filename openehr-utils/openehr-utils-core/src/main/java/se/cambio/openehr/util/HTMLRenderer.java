@@ -7,11 +7,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.io.*;
 import java.util.Map;
 
-/**
- * User: Iago.Corbal
- * Date: 2014-09-10
- * Time: 17:09
- */
 public class HTMLRenderer {
     Template template = null;
 
