@@ -346,7 +346,7 @@ public class DVUtil {
         }
     }
 
-    public static boolean areDomainsCompatible(String domain1, String domain2) {
+    private static boolean areDomainsCompatible(String domain1, String domain2) {
         return domain1 == null || domain2 == null || domain1.equals(domain2);
     }
 
