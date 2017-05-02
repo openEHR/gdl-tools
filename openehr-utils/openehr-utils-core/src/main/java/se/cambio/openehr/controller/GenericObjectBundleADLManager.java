@@ -17,6 +17,7 @@ import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.cm.util.TerminologyNodeVO;
+import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.*;
 
 import java.util.*;
@@ -117,16 +118,9 @@ public class GenericObjectBundleADLManager {
         CComplexObject cComplexObject = ((CComplexObject) cObject);
         CAttribute att = cComplexObject.getAttribute("value");
         Archetype localAOM = getLocalAOM(ar, path);
-        String text;
-        String desc;
-        text = getText(localAOM, cObject.getNodeId(), language);
-        desc = getDescription(localAOM, cObject.getNodeId(), language);
-        if (text == null) {
-            text = cObject.getNodeId();
-        }
-        if (desc == null) {
-            desc = cObject.getNodeId();
-        }
+        String text = getText(localAOM, cObject, language);
+        String desc = getDescription(localAOM, cObject, language);
+
         //TODO ????
         if ("@ internal @".equals(desc) || text == null || text.startsWith("*")) {
             int firstIndex = path.lastIndexOf("/") + 1;
@@ -229,11 +223,11 @@ public class GenericObjectBundleADLManager {
         archetypeElementVOs.add(archetypeElementVO);
         if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)) {
             if (codedTextVOs != null) {
-                loadCodedTexts(archetypeId, localAOM, templateId, path, childCObject, archetypeElementVO.getId(), language, codedTextVOs);
+                loadCodedTexts(archetypeId, localAOM, templateId, path, childCObject, language, codedTextVOs);
             }
         } else if (OpenEHRDataValues.DV_ORDINAL.equals(type)) {
             if (ordinalVOs != null) {
-                loadOrdinals(archetypeId, localAOM, templateId, path, childCObject, archetypeElementVO.getId(), language, ordinalVOs);
+                loadOrdinals(archetypeId, localAOM, templateId, path, childCObject, language, ordinalVOs);
             }
         } else if (OpenEHRDataValues.DV_QUANTITY.equals(type)) {
             if (unitVOs != null) {
@@ -252,31 +246,12 @@ public class GenericObjectBundleADLManager {
         pathableVO.setUpperCardinality(cObject.getOccurrences().getUpper());
     }
 
-    private static String getIdParentCluster(String path, Collection<ClusterVO> clusterVOs) {
-        ArrayList<ClusterVO> parentClusters = new ArrayList<ClusterVO>();
-        for (ClusterVO clusterVO : clusterVOs) {
-            if (path.startsWith(clusterVO.getPath())) {
-                parentClusters.add(clusterVO);
-            }
-        }
-        String idParentCluster = null;
-        int length = 0;
-        for (ClusterVO clusterVO : parentClusters) {
-            if (clusterVO.getPath().length() > length) {
-                idParentCluster = clusterVO.getId();
-                length = clusterVO.getPath().length();
-            }
-        }
-        return idParentCluster;
-    }
-
     private void loadCodedTexts(
-            String archetypdId,
+            String archetypeId,
             Archetype ar,
             String templateId,
             String path,
             CObject childCObject,
-            String idElement,
             String language,
             Collection<CodedTextVO> codedTextVOs) {
         boolean codedListFound = false;
@@ -293,7 +268,6 @@ public class GenericObjectBundleADLManager {
                         CObject cObject = childattsIt.next();
                         if (cObject instanceof CCodePhrase) {
                             CCodePhrase cCodePhrase = ((CCodePhrase) cObject);
-                            //CodePhrase assumed = cCodePhrase.getAssumedValue();
                             if (cCodePhrase.getCodeList() != null) {
                                 for (String codedStr : cCodePhrase.getCodeList()) {
                                     String text = codedStr;
@@ -304,7 +278,7 @@ public class GenericObjectBundleADLManager {
                                                     .setName(text)
                                                     .setDescription(desc)
                                                     .setType(cCodePhrase.getRmTypeName())
-                                                    .setIdArchetype(archetypdId)
+                                                    .setIdArchetype(archetypeId)
                                                     .setIdTemplate(templateId)
                                                     .setPath(path)
                                                     .setTerminology(terminologyId)
@@ -388,7 +362,6 @@ public class GenericObjectBundleADLManager {
             String templateId,
             String path,
             CObject childCObject,
-            String idElement,
             String language,
             Collection<OrdinalVO> ordinalVOs) {
         if (childCObject instanceof CDvOrdinal) {
@@ -461,6 +434,38 @@ public class GenericObjectBundleADLManager {
                 }
                 ;
             }
+        }
+    }
+
+    private String getText(Archetype ar, CObject cObject, String language) {
+        String text = getText(ar, cObject.getNodeId(), language);
+        if (text != null) {
+            return text;
+        } else {
+            Archetype archetype = archetypeMap.get(cObject.getNodeId());
+            if (archetype != null) {
+                text = archetype.getConceptName(language);
+            } else {
+                text = cObject.getNodeId();
+            }
+            return text;
+        }
+    }
+
+    private String getDescription(Archetype ar, CObject cObject, String language) {
+        String desc = getDescription(ar, cObject.getNodeId(), language);
+        if (desc != null) {
+            return desc;
+        } else {
+            Archetype archetype = archetypeMap.get(cObject.getNodeId());
+            if (archetype != null) {
+                String conceptCode = archetype.getConcept();
+                ArchetypeTerm term = archetype.getOntology().termDefinition(language, conceptCode);
+                desc = term.getDescription();
+            } else {
+                desc = cObject.getNodeId();
+            }
+            return desc;
         }
     }
 

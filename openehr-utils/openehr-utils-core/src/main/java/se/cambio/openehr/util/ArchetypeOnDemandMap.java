@@ -17,7 +17,7 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
 
     @Override
     public Set<Entry<String, Archetype>> entrySet() {
-        Collection<Entry<String, Archetype>> entries = new ArrayList<Entry<String, Archetype>>();
+        Collection<Entry<String, Archetype>> entries = new ArrayList<>();
         try {
             for (Archetype archetype : archetypes.getArchetypeAOMsInCacheById(archetypes.getAllIdsInCache())) {
                 ArchetypeEntry simpleEntry = new ArchetypeEntry(archetype);
@@ -28,8 +28,7 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
         } catch (InstanceNotFoundException e) {
             ExceptionHandler.handle(e);
         }
-        Set<Entry<String, Archetype>> set = new HashSet<Entry<String, Archetype>>(entries);
-        return set;
+        return new HashSet<>(entries);
     }
 
     @Override

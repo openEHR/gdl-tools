@@ -18,10 +18,7 @@ import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ArchetypeManager {
 
@@ -151,13 +148,7 @@ public class ArchetypeManager {
                 archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
             }
         } else {
-            Collection<String> archetypeIds = new ArrayList<String>();
-            try {
-                archetypeIds.addAll(this.getArchetypes().getAllIdsInCache());
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
-            String archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, archetypeIds);
+            String archetypeId = PathUtils.getLastEntryArchetypeInPath(idElement);
             if (archetypeId == null) {
                 archetypeId = StringUtils.substringBefore(idElement, "/");
             }
@@ -173,13 +164,7 @@ public class ArchetypeManager {
         if (idTemplate == null) {
             archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
         } else {
-            Collection<String> archetypeIds = new ArrayList<>();
-            try {
-                archetypeIds.addAll(this.getArchetypes().getAllIdsInCache());
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
-            archetypeId = PathUtils.getLastArchetypeIdInPath(idElement, archetypeIds);
+            archetypeId = PathUtils.getLastEntryArchetypeInPath(idElement);
             if (archetypeId == null) {
                 archetypeId = StringUtils.substringBefore(idElement, "/");
             }
@@ -194,6 +179,10 @@ public class ArchetypeManager {
         if (slashIndex > 0) {
             String archetypeId = idElement.substring(0, slashIndex);
             loadArchetypesIfNeeded(archetypeId);
+            List<String> archetypeIds = PathUtils.getEntryArchetypesInPath(idElement);
+            for (String archetypeIdAux : archetypeIds) {
+                loadArchetypesIfNeeded(archetypeIdAux);
+            }
             loadTemplateIfNeeded(templateId);
         }
     }
