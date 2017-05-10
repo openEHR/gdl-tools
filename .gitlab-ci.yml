@@ -33,7 +33,7 @@ release:
     stage: release
     when: manual
     script:
-        - git remote set-url origin $(echo $CI_BUILD_REPO | sed -e 's/[^@]\+@\([^\/]\+\)\//git@\1\:/')
+        - git remote set-url origin $(echo $CI_REPOSITORY_URL | sed -e 's/[^@]\+@\([^\/]\+\)\//git@\1\:/')
         - git checkout -b release-$CURRENT_VERSION
         - git push -u origin release-$CURRENT_VERSION
         - mvn versions:set -DnewVersion=$CURRENT_VERSION
