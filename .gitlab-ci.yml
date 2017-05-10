@@ -48,7 +48,7 @@ publish-to-gdrive:
     image: icorbal/docker-ant-gdrive
     stage: publish
     script:
-        - gdrive --refresh-token $GDRIVE_TOKEN upload cds/gdl-editor/target/gdl-editor-$CI_BUILD_REF_NAME-bundle.zip -p $GDRIVE_FOLDER
+        - gdrive --refresh-token $GDRIVE_TOKEN upload cds/gdl-editor/target/gdl-editor-$CI_COMMIT_REF_NAME-bundle.zip -p $GDRIVE_FOLDER
     dependencies:
         - maven-build-tag
     only:
