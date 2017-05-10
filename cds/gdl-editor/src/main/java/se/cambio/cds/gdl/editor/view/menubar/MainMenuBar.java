@@ -2,6 +2,7 @@
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.*;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -180,7 +181,7 @@ public class MainMenuBar extends JMenuBar {
     public void refreshLanguageMenu() {
         getLanguageMenu().removeAll();
         ButtonGroup itemGroup = new ButtonGroup();
-        GDLEditor controller = editorManager.getActiveGDLEditor();
+        EditorController controller = editorManager.getActiveEditorController();
         assert controller != null;
         String currentLang = controller.getCurrentLanguageCode();
         Collection<String> supportedLanguageCodes = controller.getSupportedLanguageCodes();
