@@ -61,22 +61,22 @@ public class SelectionPanel extends JPanel {
         initialize();
     }
 
-    private  void initialize() {
+    private void initialize() {
         this.setLayout(new BorderLayout());
         this.add(getFilterPanel(), BorderLayout.NORTH);
         this.add(getJScrollPane(), BorderLayout.CENTER);
     }
 
-    public SelectableNode<?> getNode(){
+    public SelectableNode<?> getNode() {
         return rootNode;
     }
 
     public JPanel getFilterPanel() {
         if (jPanelFiltro == null) {
             jPanelFiltro = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            jPanelFiltro.add(new JLabel(OpenEHRLanguageManager.getMessage("Filter")+" :"));
+            jPanelFiltro.add(new JLabel(OpenEHRLanguageManager.getMessage("Filter") + " :"));
             jPanelFiltro.add(getTextWithCleanButtonPanel());
-            if (bigList){
+            if (bigList) {
                 jPanelFiltro.add(getSearchButton());
             }
             jPanelFiltro.add(getExpandButton());
@@ -85,32 +85,22 @@ public class SelectionPanel extends JPanel {
         return jPanelFiltro;
     }
 
-    public TextWithCleanButtonPanel getTextWithCleanButtonPanel(){
-        if (textWithCleanButtonPanel == null){
+    public TextWithCleanButtonPanel getTextWithCleanButtonPanel() {
+        if (textWithCleanButtonPanel == null) {
             textWithCleanButtonPanel = new TextWithCleanButtonPanel();
-            textWithCleanButtonPanel.setPreferredSize(new Dimension(100,20));
-            if (bigList){
-                textWithCleanButtonPanel.getJButton().addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        filter();
-                    }
-                });
-                textWithCleanButtonPanel.getJTextField().addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        filter();
-                    }
-                });
-            }else{
-                textWithCleanButtonPanel.addKeyListener(new FiltroSeleccionKeyListener());
+            textWithCleanButtonPanel.setPreferredSize(new Dimension(100, 20));
+            if (bigList) {
+                textWithCleanButtonPanel.getJButton().addActionListener(e -> filter());
+                textWithCleanButtonPanel.getJTextField().addActionListener(e -> filter());
+            } else {
+                textWithCleanButtonPanel.addKeyListener(new FilerSelectionKeyListener());
             }
         }
         return textWithCleanButtonPanel;
     }
 
-    private JButton getSearchButton(){
-        if (searchButton==null){
+    private JButton getSearchButton() {
+        if (searchButton == null) {
             searchButton = new JButton();
             searchButton.setIcon(OpenEHRImageUtil.SEARCH_ICON);
             searchButton.setToolTipText("Search");
@@ -118,19 +108,14 @@ public class SelectionPanel extends JPanel {
             searchButton.setContentAreaFilled(false);
             searchButton.setBorderPainted(false);
             searchButton.setPreferredSize(new Dimension(16, 16));
-            searchButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    filter();
-                }
-            });
+            searchButton.addActionListener(e -> filter());
         }
         return searchButton;
     }
 
 
-    private JButton getExpandButton(){
-        if (expandButton == null){
+    private JButton getExpandButton() {
+        if (expandButton == null) {
             expandButton = new JButton(new ExpandTreeAction());
             expandButton.setIcon(OpenEHRImageUtil.EXPAND_ICON);
             expandButton.setToolTipText(OpenEHRLanguageManager.getMessage("ExpandTreeD"));
@@ -142,16 +127,17 @@ public class SelectionPanel extends JPanel {
         return expandButton;
     }
 
-    private SelectionPanel getSelectionPanel(){
+    private SelectionPanel getSelectionPanel() {
         return this;
     }
 
-    private class ExpandTreeAction extends AbstractAction{
+    private class ExpandTreeAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
+
         public void actionPerformed(ActionEvent e) {
-            if (bigList){
+            if (bigList) {
                 new ExpandTreeRSW(windowManager, getSelectionPanel()).execute();
-            }else{
+            } else {
                 TreeUI ui = getJTree().getUI();
                 getJTree().setUI(null);
                 getJTree().expand(rootNode);
@@ -160,8 +146,8 @@ public class SelectionPanel extends JPanel {
         }
     }
 
-    public JButton getContractButton(){
-        if (contractButton == null){
+    public JButton getContractButton() {
+        if (contractButton == null) {
             contractButton = new JButton(new ContractTreeAction());
             contractButton.setIcon(OpenEHRImageUtil.CONTRACT_ICON);
             contractButton.setToolTipText(OpenEHRLanguageManager.getMessage("ContractTreeD"));
@@ -172,7 +158,8 @@ public class SelectionPanel extends JPanel {
         }
         return contractButton;
     }
-    private class ContractTreeAction extends AbstractAction{
+
+    private class ContractTreeAction extends AbstractAction {
 
         private static final long serialVersionUID = 1L;
 
@@ -180,8 +167,9 @@ public class SelectionPanel extends JPanel {
             getJTree().collapse(rootNode);
         }
     }
+
     /**
-     * This method initializes jTable	
+     * This method initializes jTable
      *
      * @return javax.swing.JTable
      */
@@ -191,8 +179,9 @@ public class SelectionPanel extends JPanel {
         }
         return jTree;
     }
+
     /**
-     * This method initializes jScrollPane	
+     * This method initializes jScrollPane
      *
      * @return javax.swing.JScrollPane
      */
@@ -204,12 +193,10 @@ public class SelectionPanel extends JPanel {
         return jScrollPane;
     }
 
-    public void changeRootNode(SelectableNode<?> node){
+    public void changeRootNode(SelectableNode<?> node) {
         rootNode = node;
 
-        //Guardamos los mouse listeners
         ArrayList<MouseListener> mListeners = getJTree().getExtraMouseListeners();
-        //Guardamos los tree selection listeners
         ArrayList<TreeSelectionListener> tsListeners = getJTree().getExtraTreeSelectionListeners();
         jTree = null;
         getJScrollPane().remove(getJTree());
@@ -224,7 +211,7 @@ public class SelectionPanel extends JPanel {
         getJScrollPane().repaint();
     }
 
-    public class FiltroSeleccionKeyListener implements KeyListener{
+    public class FilerSelectionKeyListener implements KeyListener {
 
         public void keyPressed(KeyEvent e) {
         }
@@ -238,10 +225,10 @@ public class SelectionPanel extends JPanel {
         }
     }
 
-    private void filter(){
-        if (bigList){
+    private void filter() {
+        if (bigList) {
             new FilterTreeRSW(windowManager, this).execute();
-        }else{
+        } else {
             FilterTreeRSW.filterNode(this);
             getJTree().expand(getNode());
         }

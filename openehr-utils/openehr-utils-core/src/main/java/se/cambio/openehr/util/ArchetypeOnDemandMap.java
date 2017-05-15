@@ -68,7 +68,7 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
         return null;
     }
 
-    private class ArchetypeEntry implements Entry<String, Archetype>{
+    private static class ArchetypeEntry implements Entry<String, Archetype>{
         private Archetype archetype;
 
         private ArchetypeEntry(Archetype archetype){

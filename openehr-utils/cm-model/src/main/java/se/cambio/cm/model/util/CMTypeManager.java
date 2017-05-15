@@ -93,7 +93,7 @@ public class CMTypeManager {
         return new CmElementListParameterizedType<E>(cmElementClass);
     }
 
-    private class CmElementListParameterizedType<E extends CMElement> implements ParameterizedType {
+    private  static class CmElementListParameterizedType<E extends CMElement> implements ParameterizedType {
         private Class<E> cmElementClass;
 
         public CmElementListParameterizedType(Class<E> cmElementClass) {

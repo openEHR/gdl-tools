@@ -435,7 +435,7 @@ public class DVUtil {
         String units = quantity.getUnits();
         Double magnitude = quantity.getMagnitude();
         Double multiplier = getMillisMultiplierFromUcum(units);
-        return new Double(multiplier * magnitude).longValue();
+        return (long) (multiplier * magnitude);
     }
 
     private static Double getMillisMultiplierFromUcum(String units) {

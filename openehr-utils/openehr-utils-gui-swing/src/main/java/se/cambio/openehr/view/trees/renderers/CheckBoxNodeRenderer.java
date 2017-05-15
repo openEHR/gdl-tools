@@ -15,10 +15,10 @@ import java.awt.event.ActionListener;
 
 public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     private JCheckBox leafRenderer = new JCheckBox();
-    private SelectableNode<E> _nodoSeleccionable = new SelectableNodeBuilder().createSelectableNode();
+    private SelectableNode<E> selectableNode = new <E>SelectableNodeBuilder().createSelectableNode();
 
 
-    Color selectionBorderColor, selectionForeground, selectionBackground,
+    private Color selectionForeground, selectionBackground,
             textForeground, textBackground;
 
     public JCheckBox getLeafRenderer() {
@@ -26,7 +26,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     }
 
     public SelectableNode<?> getNodoSeleccionable() {
-        return _nodoSeleccionable;
+        return selectableNode;
     }
 
     public CheckBoxNodeRenderer() {
@@ -34,7 +34,6 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
         leafRenderer.setFocusPainted((booleanValue != null)
                 && (booleanValue));
         leafRenderer.addActionListener(new CheckBoxNodeActionListener());
-        selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
         selectionForeground = UIManager.getColor("Tree.selectionForeground");
         selectionBackground = UIManager.getColor("Tree.selectionBackground");
         textForeground = UIManager.getColor("Tree.textForeground");
@@ -73,7 +72,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
         if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
             if (value instanceof SelectableNode<?>) {
                 SelectableNode<E> node = (SelectableNode<E>) value;
-                _nodoSeleccionable = node;
+                selectableNode = node;
                 leafRenderer.setText(node.getName());
                 Font fontValue = UIManager.getFont("Tree.font");
                 if (fontValue != null) {
@@ -127,7 +126,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
 
     class CheckBoxNodeActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            _nodoSeleccionable.stateChange(_nodoSeleccionable);
+            selectableNode.stateChange(selectableNode);
         }
     }
 }

@@ -129,7 +129,7 @@ public class DVProportionPanel extends DVGenericPanel {
         return archetypeManager.getProportionTypes();
     }
 
-    private class ProportionTypeComboRenderer extends JLabel implements ListCellRenderer {
+    private static class ProportionTypeComboRenderer extends JLabel implements ListCellRenderer {
         /**
          *
          */

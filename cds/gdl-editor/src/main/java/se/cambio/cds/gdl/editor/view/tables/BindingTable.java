@@ -59,7 +59,7 @@ public class BindingTable extends JTable {
         return true;
     }
 
-    public class BindingTableModel extends DefaultTableModel {
+    public static class BindingTableModel extends DefaultTableModel {
         private static final long serialVersionUID = 1L;
     }
 

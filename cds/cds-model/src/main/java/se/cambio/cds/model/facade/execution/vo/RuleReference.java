@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 public class RuleReference implements Serializable{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private String guideId = null;
     private String gtCode = null;
@@ -29,10 +26,10 @@ public class RuleReference implements Serializable{
     public void setGuideId(String guideId) {
         this.guideId = guideId;
     }
-    public String getGTCode() {
+    public String getGtCode() {
         return gtCode;
     }
-    public void setGTCode(String gtCode) {
+    public void setGtCode(String gtCode) {
         this.gtCode = gtCode;
     }
 
