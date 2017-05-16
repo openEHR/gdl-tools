@@ -166,7 +166,7 @@ class GDLDecisionModelBuilder {
                                 RuleReference ruleReference = new RuleReference(guide.getId(), variable.getCode());
                                 ElementInstance elementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
                                 if (elementInstance == null) {
-                                    if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(ruleReference.getGTCode())) {
+                                    if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(ruleReference.getGtCode())) {
                                         logger.warn("ElementInstance not found for " + ruleReference);
                                     }
                                 } else {
@@ -288,7 +288,7 @@ class GDLDecisionModelBuilder {
         }
     }
 
-    private class GuideBinaryExpressionItem {
+    private static class GuideBinaryExpressionItem {
         private String guideId;
         private BinaryExpression binaryExpression;
 
@@ -329,7 +329,7 @@ class GDLDecisionModelBuilder {
         }
     }
 
-    public class GuideAssignmentExpression {
+    public static class GuideAssignmentExpression {
         private String guideId;
         private AssignmentExpression assignmentExpression;
 

@@ -49,7 +49,6 @@ public class DialogSplash extends JDialog implements Observer {
 
     public void stop() {
         progressValue = -100;
-        currentThread = null;
         InitialLoadingObservable.getDelegate().deleteObserver(this);
         getCancelButton().setVisible(false);
         this.setVisible(false);
@@ -63,10 +62,7 @@ public class DialogSplash extends JDialog implements Observer {
             cancelButton.setBorder(BorderFactory.createEmptyBorder());
             cancelButton.setVisible(false);
             cancelButton.setFocusable(false);
-            cancelButton.addActionListener(e -> {
-                currentThread.cancel(true);
-                stop();
-            });
+            cancelButton.addActionListener(e -> stop());
         }
         return cancelButton;
     }

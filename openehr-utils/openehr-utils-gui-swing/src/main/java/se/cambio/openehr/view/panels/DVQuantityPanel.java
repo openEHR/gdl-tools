@@ -88,7 +88,7 @@ public class DVQuantityPanel extends DVGenericPanel {
         return unitsComboBox;
     }
 
-    public class DisabledComboUI extends BasicComboBoxUI {
+    public static class DisabledComboUI extends BasicComboBoxUI {
         protected ComboPopup createPopup() {
             BasicComboPopup popup = (BasicComboPopup) super.createPopup();
             popup.removeAll();

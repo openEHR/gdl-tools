@@ -4,14 +4,9 @@ import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.graph.controller.renderer.GraphRenderingException;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
-import se.cambio.cds.view.swing.panel.interfaces.PluginPanelI;
-import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ExceptionHandler;
 
-import javax.swing.*;
-import java.awt.*;
-import java.net.URL;
 import java.util.Collections;
 
 public class GdlGraphManager {
@@ -19,8 +14,6 @@ public class GdlGraphManager {
     private ArchetypeManager archetypeManager;
     private final ArchetypeReferencesManager archetypeReferencesManager;
     private final ElementInstanceCollectionManager elementInstanceCollectionManager;
-    private Guide guide;
-    private String language;
 
     public GdlGraphManager(
             ArchetypeManager archetypeManager,

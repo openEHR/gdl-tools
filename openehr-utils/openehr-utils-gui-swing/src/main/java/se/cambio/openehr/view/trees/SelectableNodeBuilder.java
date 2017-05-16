@@ -66,6 +66,6 @@ public class SelectableNodeBuilder<E> {
     }
 
     public SelectableNode<E> createSelectableNode() {
-        return new SelectableNode<E>(name, description, object, selectionMode, selectionPropagationMode, selected, bold, italic, foregroundColor, icon);
+        return new SelectableNode<>(name, description, object, selectionMode, selectionPropagationMode, selected, bold, italic, foregroundColor, icon);
     }
 }

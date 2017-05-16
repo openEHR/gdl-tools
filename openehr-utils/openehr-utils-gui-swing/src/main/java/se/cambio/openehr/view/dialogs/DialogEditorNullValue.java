@@ -99,10 +99,8 @@ public class DialogEditorNullValue  extends JDialog {
         return comboBox;
     }
 
-    private class DVComboBoxRendered  extends JLabel implements ListCellRenderer{
-        /**
-         *
-         */
+    private static class DVComboBoxRendered  extends JLabel implements ListCellRenderer{
+
         private static final long serialVersionUID = 1L;
         public DVComboBoxRendered(){
             setOpaque(true);

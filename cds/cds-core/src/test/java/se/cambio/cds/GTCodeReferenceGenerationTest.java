@@ -41,7 +41,7 @@ public class GTCodeReferenceGenerationTest extends GenericTestBase {
             if (elementInstance instanceof GeneratedElementInstance) {
                 GeneratedElementInstance gei = (GeneratedElementInstance)elementInstance;
                 for(RuleReference ruleReference: gei.getRuleReferences()){
-                    if (ruleReference.getGTCode().equals("gt0014")){
+                    if (ruleReference.getGtCode().equals("gt0014")){
                         gtCodeFound = true;
                     }
                 }

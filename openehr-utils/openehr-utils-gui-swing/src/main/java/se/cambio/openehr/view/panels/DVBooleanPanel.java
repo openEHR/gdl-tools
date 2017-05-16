@@ -5,14 +5,14 @@ import org.openehr.rm.datatypes.basic.DvBoolean;
 
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-public class DVBooleanPanel extends DVComboBoxPanel implements DVPanelInterface{
+public class DVBooleanPanel extends DVComboBoxPanel implements DVPanelInterface {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-    public DVBooleanPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
+    public DVBooleanPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus) {
         super(idElement, idTemplate, allowNull, requestFocus);
         insertOption("false", OpenEHRLanguageManager.getMessage("False"), OpenEHRLanguageManager.getMessage("False"));
         insertOption("true", OpenEHRLanguageManager.getMessage("True"), OpenEHRLanguageManager.getMessage("True"));
@@ -20,19 +20,19 @@ public class DVBooleanPanel extends DVComboBoxPanel implements DVPanelInterface{
 
     public void setDataValue(DataValue dataValue) {
         String code = "";
-        if (dataValue instanceof DvBoolean){
-            code =((DvBoolean) dataValue).toString();
+        if (dataValue instanceof DvBoolean) {
+            code = dataValue.toString();
         }
         getComboBox().setSelectedItem(code);
     }
 
 
-    public DataValue getDataValue(){
-        String selectedItem = (String)getComboBox().getSelectedItem();
-        if (selectedItem.trim().isEmpty()){
+    public DataValue getDataValue() {
+        String selectedItem = (String) getComboBox().getSelectedItem();
+        if (selectedItem.trim().isEmpty()) {
             return null;  //No value selected
-        }else{
-            return new DvBoolean(new Boolean(""+selectedItem));
+        } else {
+            return new DvBoolean(Boolean.valueOf(selectedItem));
         }
     }
 }

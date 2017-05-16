@@ -111,7 +111,7 @@ public class ElementInstanceCollection {
         if (dv instanceof DvCodedText) {
             DvCodedText dvCT = (DvCodedText) dv;
             for (RuleReference ruleReference : ruleReferences) {
-                if (ruleReference.getGTCode().equals(dvCT.getCode())) {
+                if (ruleReference.getGtCode().equals(dvCT.getCode())) {
                     guideIds.add(ruleReference.getGuideId());
                 }
             }

@@ -106,7 +106,11 @@ class RuleElementEditor {
         String idTemplate = ar != null ? ar.getIdTemplate() : null;
         boolean isTemplate = idTemplate != null;
         String domainId = ar != null ? ar.getIdDomain() : null;
-        DialogArchetypeChooser dialog = new DialogArchetypeChooser(owner, idArchetype, domainId, isTemplate, showOnlyCDS, importManager, archetypeManager);
+        DialogArchetypeChooser dialog =
+                new DialogArchetypeChooser(
+                        owner, windowManager,
+                        idArchetype, domainId, isTemplate,
+                        showOnlyCDS, importManager, archetypeManager);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             CMElement cmElement = dialog.getSelectedCMElement();

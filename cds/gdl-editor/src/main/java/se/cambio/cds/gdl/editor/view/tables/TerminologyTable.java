@@ -39,7 +39,7 @@ public class TerminologyTable extends JTable {
         return column != 0;
     }
 
-    public class TerminologyTableModel extends DefaultTableModel {
+    public static class TerminologyTableModel extends DefaultTableModel {
         private static final long serialVersionUID = 1L;
     }
 

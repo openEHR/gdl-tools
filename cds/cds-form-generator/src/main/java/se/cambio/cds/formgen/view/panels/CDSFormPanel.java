@@ -168,7 +168,7 @@ public class CDSFormPanel extends JPanel {
                         for (String lang : formGenerator.getSupportedLanguages()) {
                             Map<String, String> auxMap = rulesMap.computeIfAbsent(lang, k -> new LinkedHashMap<>());
                             ReadableRule readableRule = getReadableRule(ruleReference, lang);
-                            String ruleName = readableRule.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
+                            String ruleName = readableRule.getTermDefinition().getTerms().get(ruleReference.getGtCode()).getText();
                             String ruleStr = readableRule.toString();
                             auxMap.put(ruleName, ruleStr);
                         }
@@ -191,7 +191,7 @@ public class CDSFormPanel extends JPanel {
             readableGuide =
                     formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
         }
-        return readableGuide.getReadableRules().get(ruleReference.getGTCode());
+        return readableGuide.getReadableRules().get(ruleReference.getGtCode());
     }
 
     public void updateResults(RuleExecutionResult result) {
@@ -211,7 +211,7 @@ public class CDSFormPanel extends JPanel {
                 }
                 String ruleName = "*UNKNOWN*";
                 if (readableGuide != null) {
-                    ruleName = readableGuide.getTermDefinition().getTerms().get(ruleReference.getGTCode()).getText();
+                    ruleName = readableGuide.getTermDefinition().getTerms().get(ruleReference.getGtCode()).getText();
                 }
                 sb.append("&nbsp;&nbsp;").append(ruleName).append("<br>");
             }

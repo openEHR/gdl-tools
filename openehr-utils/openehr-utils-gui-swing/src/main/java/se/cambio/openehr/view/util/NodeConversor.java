@@ -13,14 +13,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 
-
-/**
- * @author icorram
- *
- */
 public class NodeConversor {
 
-    public static enum SearchType{
+    public enum SearchType{
         SEARCH_ONLY_LEAVES, SEARCH_ONLY_PARENT, SEARCH_ALL
     }
 
@@ -50,7 +45,7 @@ public class NodeConversor {
         }
         rootNode.setVisible(visible);
         if (visible){
-            filtro = new String();
+            filtro = "";
         }
         if (!rootNode.isLeaf()){
             Enumeration<?> e = rootNode.getAllchildren();

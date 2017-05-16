@@ -62,7 +62,7 @@ public class DvSwingManager {
                 if (termDefinition!=null){
                     String gtCode = null;
                     if (!elementInstancesWithGTCode.getRuleReferences().isEmpty()){
-                        gtCode = elementInstancesWithGTCode.getRuleReferences().iterator().next().getGTCode();
+                        gtCode = elementInstancesWithGTCode.getRuleReferences().iterator().next().getGtCode();
                     }
                     term = termDefinition.getTerms().get(gtCode);
                 }

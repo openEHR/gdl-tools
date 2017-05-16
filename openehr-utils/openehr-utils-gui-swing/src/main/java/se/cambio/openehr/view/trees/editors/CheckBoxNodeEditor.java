@@ -6,41 +6,25 @@
  */
 package se.cambio.openehr.view.trees.editors;
 
-import java.awt.Component;
-import java.awt.event.ItemEvent;
+import se.cambio.openehr.view.trees.SelectableNode;
+import se.cambio.openehr.view.trees.renderers.CheckBoxNodeRenderer;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
-import javax.swing.AbstractCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.JTree;
-import javax.swing.event.ChangeEvent;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreePath;
-
-import se.cambio.openehr.view.trees.SelectableNode;
-import se.cambio.openehr.view.trees.renderers.CheckBoxNodeRenderer;
-
-/**
- * @author icorram
- *
-
-
- */
 public class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
-	  /**
-	 * 
-	 */
 	private static final long serialVersionUID = -8830354408101728168L;
 
-	CheckBoxNodeRenderer<?> renderer = new CheckBoxNodeRenderer<Object>();
+	private CheckBoxNodeRenderer<?> renderer = new CheckBoxNodeRenderer<>();
 
-	  ChangeEvent changeEvent = null;
-
-	  JTree tree;
+	  private JTree tree;
 
 	  public CheckBoxNodeEditor(JTree tree) {
 	    this.tree = tree;
@@ -48,7 +32,7 @@ public class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEd
 
 	  public Object getCellEditorValue() {
 	  	JCheckBox checkbox = renderer.getLeafRenderer();
-	  	renderer.getNodoSeleccionable().setAllSelected(new Boolean(checkbox.isSelected()));
+	  	renderer.getNodoSeleccionable().setAllSelected(checkbox.isSelected());
 	  	tree.setToolTipText(checkbox.getToolTipText());
 	  	tree.repaint();
 	  	return checkbox;
@@ -78,13 +62,11 @@ public class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEd
 	        true, expanded, leaf, row, true);
 	    
 	    // editor always selected / focused
-	    ItemListener itemListener = new ItemListener() {
-	      public void itemStateChanged(ItemEvent itemEvent) {
-	        if (stopCellEditing()) {
-	          fireEditingStopped();
-	        }
-	      }
-	    };
+	    ItemListener itemListener = itemEvent -> {
+          if (stopCellEditing()) {
+            fireEditingStopped();
+          }
+        };
 	    if (editor instanceof JCheckBox) {
 	      ((JCheckBox) editor).addItemListener(itemListener);
 	    }

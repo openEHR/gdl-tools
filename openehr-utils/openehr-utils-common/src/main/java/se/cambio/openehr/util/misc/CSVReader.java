@@ -1594,7 +1594,7 @@ public class CSVReader {
 		close(false);
 	}
 
-	private class ComplexEscape {
+	private static class ComplexEscape {
 		private static final int UNICODE = 1;
 
 		private static final int OCTAL = 2;
@@ -1618,7 +1618,7 @@ public class CSVReader {
 		return result;
 	}
 
-	private class DataBuffer {
+	private static class DataBuffer {
 		public char[] Buffer;
 
 		public int Position;
@@ -1647,7 +1647,7 @@ public class CSVReader {
 		}
 	}
 
-	private class ColumnBuffer {
+	private static class ColumnBuffer {
 		public char[] Buffer;
 
 		public int Position;
@@ -1670,7 +1670,7 @@ public class CSVReader {
 		}
 	}
 
-	private class Letters {
+	private static class Letters {
 		public static final char LF = '\n';
 
 		public static final char CR = '\r';
@@ -1700,7 +1700,7 @@ public class CSVReader {
 		public static final char ALERT = '\u0007';
 	}
 
-	private class UserSettings {
+	private static class UserSettings {
 		public char TextQualifier;
 
 		public boolean TrimWhitespace;
@@ -1738,7 +1738,7 @@ public class CSVReader {
 		}
 	}
 
-	private class HeadersHolder {
+	private static class HeadersHolder {
 		public String[] Headers;
 
 		public int Length;
@@ -1752,7 +1752,7 @@ public class CSVReader {
 		}
 	}
 
-	private class StaticSettings {
+	private static class StaticSettings {
 		// these are static instead of final so they can be changed in unit test
 		// isn't visible outside this class and is only accessed once during
 		// CsvReader construction
