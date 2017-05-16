@@ -890,7 +890,7 @@ public final class GDLLexer extends DefaultJFlexLexer {
     /**
      * number of newlines encountered up to the start of the matched text
      */
-    private int yyline;
+    //private int yyline;
 
     /**
      * the number of characters up to the start of the matched text
@@ -901,12 +901,12 @@ public final class GDLLexer extends DefaultJFlexLexer {
      * the number of characters from the last newline up to the start of the
      * matched text
      */
-    private int yycolumn;
+    //private int yycolumn;
 
     /**
      * zzAtBOL == true <=> the scanner is currently at the beginning of a line
      */
-    private boolean zzAtBOL = true;
+    //private boolean zzAtBOL = true;
 
     /**
      * zzAtEOF == true <=> the scanner is at the EOF
@@ -916,7 +916,7 @@ public final class GDLLexer extends DefaultJFlexLexer {
     /**
      * denotes if the user-EOF-code has already been executed
      */
-    private boolean zzEOFDone;
+    //private boolean zzEOFDone;
 
   /* user code: */
 
@@ -1054,12 +1054,13 @@ public final class GDLLexer extends DefaultJFlexLexer {
      */
     public final void yyreset(java.io.Reader reader) {
         zzReader = reader;
-        zzAtBOL = true;
+        //zzAtBOL = true;
         zzAtEOF = false;
-        zzEOFDone = false;
+        //zzEOFDone = false;
         zzEndRead = zzStartRead = 0;
         zzCurrentPos = zzMarkedPos = 0;
-        yyline = yychar = yycolumn = 0;
+        //yyline = yychar = yycolumn = 0;
+        yychar = 0;
         zzLexicalState = YYINITIAL;
     }
 

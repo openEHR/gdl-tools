@@ -1658,7 +1658,7 @@ public class CSVReader {
 		}
 	}
 
-	private class RawRecordBuffer {
+	private static class RawRecordBuffer {
 		public char[] Buffer;
 
 		public int Position;
