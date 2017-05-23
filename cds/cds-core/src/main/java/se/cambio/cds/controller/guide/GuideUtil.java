@@ -196,6 +196,8 @@ public class GuideUtil {
             return new DvDateTime(constantExpression.getValue());
         } else if ("true".equals(constantExpression.getValue()) || "false".equals(constantExpression.getValue())) {
             return new DvBoolean(constantExpression.getValue());
+        } else if (constantExpression.getValue().startsWith("openehr::")) {
+            return DataValue.parseValue("DV_CODED_TEXT," + constantExpression.getValue());
         } else if (isParsableInteger(constantExpression.getValue())) {
             int count = Integer.parseInt(constantExpression.getValue());
             return new DvCount(count);
