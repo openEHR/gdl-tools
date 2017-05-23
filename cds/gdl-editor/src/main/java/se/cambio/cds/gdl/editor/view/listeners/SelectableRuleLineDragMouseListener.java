@@ -37,7 +37,6 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
             ruleLine = ((DraggableSelectableRuleLinePanel) clickedJComponent).getRuleLine();
             draggedPanel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
         } else {
-            //Component component = ruleLinesPanel.findComponentAt(p);
             draggedPanel = getRuleLineContainer(clickedJComponent);
             if (draggedPanel != null) {
                 backUpRLC = getRuleLineContainer(draggedPanel.getParent());

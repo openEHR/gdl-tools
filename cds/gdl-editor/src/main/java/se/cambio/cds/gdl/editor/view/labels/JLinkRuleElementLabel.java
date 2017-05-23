@@ -32,13 +32,15 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
     public final static String ACTION_RIGHT_CLICK = "LINK_ACTION_RIGHT_CLICK";
     private final static String ACTION_LEFT_CLICK = "LINK_ACTION_LEFT_CLICK";
     private RuleLineElementWithValue<?> ruleLineElementWithValue = null;
+    private String language;
 
     private static final Color LINK_COLOR_VARSET = Color.BLUE;
     private static final Color LINK_COLOR_VARUNSET = new Color(200, 50, 50);
     private static final Color LINK_COLOR_COMMENTED = Color.GRAY;
 
-    public JLinkRuleElementLabel(RuleLineElementWithValue<?> ruleLineElementWithValue) {
+    public JLinkRuleElementLabel(RuleLineElementWithValue<?> ruleLineElementWithValue, String language) {
         this.ruleLineElementWithValue = ruleLineElementWithValue;
+        this.language = language;
         linkColorVarSet = LINK_COLOR_VARSET;
         linkColorVarUnSet = LINK_COLOR_VARUNSET;
         hoverColor = new Color(128, 0, 128);
@@ -118,7 +120,7 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
     }
 
     public void refresh() {
-        String text = ruleLineElementWithValue.getLabelText();
+        String text = ruleLineElementWithValue.getLabelText(language);
         setText(text);
         if (ruleLineElementWithValue.getValue() instanceof ArchetypeReference) {
             String domainId = ((ArchetypeReference) ruleLineElementWithValue.getValue()).getIdDomain();

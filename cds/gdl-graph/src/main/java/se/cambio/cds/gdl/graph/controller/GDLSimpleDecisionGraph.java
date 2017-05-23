@@ -99,7 +99,7 @@ public class GDLSimpleDecisionGraph {
 
     public JComponent generateGraphComponent(String lang) throws InternalErrorException {
         init(lang);
-        return  graphRenderer.generateGraphComponent();
+        return graphRenderer.generateGraphComponent();
     }
 
     public void generatePngGraphImage(File file, String lang) throws InternalErrorException {
@@ -452,11 +452,9 @@ public class GDLSimpleDecisionGraph {
     }
 
     private void addArchetypeNode(Guide guide, Rule rule, Collection<Map.Entry<GraphNode, GraphNode>> insertedEdges, Set<String> archetypeKeysAdded, String archetypeKey, boolean isWriteAction) throws InternalErrorException {
-
-
         GraphNode archetypeNode = getArchetypeNodesMap().get(archetypeKey);
         if (archetypeNode == null) {
-            throw new InternalErrorException(new Exception("Element not found for arcketypeKey " + archetypeKey));
+            throw new InternalErrorException(new Exception("Element not found for archetypeKey " + archetypeKey));
         }
         if (!archetypeKeysAdded.contains(archetypeKey)) {
             graphRenderer.insertGraphNode(archetypeNode);

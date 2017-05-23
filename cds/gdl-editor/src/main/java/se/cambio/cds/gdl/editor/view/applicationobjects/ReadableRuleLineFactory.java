@@ -53,6 +53,7 @@ public class ReadableRuleLineFactory {
         jPanel.addMouseMotionListener(ruleLinesPanel.getSelectableRuleLineDragMouseListener());
 
         for (RuleLineElement ruleLineElement : ruleLine.getRuleLineElements()) {
+            String language = gdlEditor.getCurrentLanguageCode();
             if (ruleLineElement instanceof RuleLineElementWithValue) {
                 RuleLineElementWithValue<?> ruleLineElementWithValue =
                         (RuleLineElementWithValue<?>) ruleLineElement;
@@ -69,20 +70,20 @@ public class ReadableRuleLineFactory {
                         comboBox.setSelectedItem(null);
                         comboBox.setEditable(false);
                     }
-                    comboBox.setRenderer(new SingleSelectionRuleElementRenderer(ssre, gdlEditor.getCurrentLanguageCode()));
+                    comboBox.setRenderer(new SingleSelectionRuleElementRenderer(ssre, language));
                     comboBox.addItemListener(new RuleLineElementItemListener(ruleLineElementWithValue));
                     jPanel.add(comboBox);
                 } else {
                     JLinkRuleElementLabel linkLabel =
-                            new JLinkRuleElementLabel(ruleLineElementWithValue);
-                    linkLabel.setToolTipText(ruleLineElement.getLabelDescription());
+                            new JLinkRuleElementLabel(ruleLineElementWithValue, language);
+                    linkLabel.setToolTipText(ruleLineElement.getLabelDescription(language));
                     linkLabel.setCommented(ruleLine.isCommented());
                     linkLabel.refresh();
                     linkLabel.addActionListener(new PluginTypeLinkListener(ruleLinesPanel));
                     jPanel.add(linkLabel);
                 }
             } else {
-                jPanel.add(createLabel(ruleLine, ruleLineElement, gdlEditor.getCurrentLanguageCode()));
+                jPanel.add(createLabel(ruleLine, ruleLineElement, language));
             }
             jPanel.add(Box.createHorizontalStrut(4));
         }
@@ -98,7 +99,7 @@ public class ReadableRuleLineFactory {
             ExpressionRuleLineElement erli = (ExpressionRuleLineElement) ruleLineElement;
             text = ExpressionUtil.convertToHTMLText(erli, erli.getValue(), language);
         } else {
-            text = ruleLineElement.getLabelText();
+            text = ruleLineElement.getLabelText(language);
         }
         text = "<HTML>" + text + "</HTML>";
         JLabel label = new JLabel(text);

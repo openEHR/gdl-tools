@@ -96,7 +96,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     public void addRuleLine(RuleLine ruleLine){
         if (RuleLineDirectory.isDirectoryRuleLine(ruleLine)){
-            ruleLine = controller.cloneRuleLine(ruleLine);
+            ruleLine.setReadableGuide(controller.getReadableGuide());
         }
         getRuleLines().add(0, ruleLine);
     }
