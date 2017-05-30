@@ -36,7 +36,6 @@
 	<modules>
         <module>cds-common</module>
         <module>cds-engine-drools</module>
-        <module>cds-engine-jgdl</module>
         <module>cds-model</module>
         <module>gdl-model</module>
         <module>gdl-parser</module>
