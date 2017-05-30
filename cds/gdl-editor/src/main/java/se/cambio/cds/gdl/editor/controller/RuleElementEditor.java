@@ -58,13 +58,7 @@ class RuleElementEditor {
         this.dvPanelFactory = dvPanelFactory;
         this.gdlEditor = gdlEditor;
         this.importManager = importManager;
-    }
-
-    private NodeDefinitionManager getNodeDefinitionManager() {
-        if (nodeDefinitionManager == null) {
-            nodeDefinitionManager = new NodeDefinitionManager(archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
-        }
-        return nodeDefinitionManager;
+        this.nodeDefinitionManager = new NodeDefinitionManager(archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
     }
 
     void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
@@ -185,7 +179,7 @@ class RuleElementEditor {
         Object selectedObject = null;
         ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arrle, onlyCDSDomain);
         DialogElementInstanceSelection dialog =
-                new DialogElementInstanceSelection(gdlEditor, getNodeDefinitionManager(), onlyCDSDomain, ar);
+                new DialogElementInstanceSelection(gdlEditor, nodeDefinitionManager, onlyCDSDomain, ar);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
             selectedObject = dialog.getSelectedObject();
@@ -318,7 +312,7 @@ class RuleElementEditor {
         DialogElementAttributeFunctionInstanceSelection dialog =
                 new DialogElementAttributeFunctionInstanceSelection(
                         gdlEditor,
-                        getNodeDefinitionManager(),
+                        nodeDefinitionManager,
                         onlyCDSDomain, ar);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
@@ -390,7 +384,7 @@ class RuleElementEditor {
             }
             ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
             DialogExpressionEditor dialog =
-                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, getNodeDefinitionManager(), archetypeManager.getUserConfigurationManager());
+                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, nodeDefinitionManager, archetypeManager.getUserConfigurationManager());
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
                 ExpressionItem expressionItem = dialog.getExpressionItem();

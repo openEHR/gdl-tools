@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.controller;
 
+import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
@@ -17,6 +18,8 @@ public class RuleLineCloner {
     }
 
     public RuleLine clone(RuleLine ruleLine){
+        ReadableGuide readableGuide = ruleLine.getReadableGuide();
+        ruleLine.setReadableGuide(null);
         RuleLine clonedRuleLine = cloner.deepClone(ruleLine);
         if (ruleLine instanceof GTCodeDefiner){
             GTCodeDefiner tdRuleLine = (GTCodeDefiner)clonedRuleLine;
@@ -24,6 +27,8 @@ public class RuleLineCloner {
             String gtCode = gdlEditor.createNextGTCode(generateTerm);
             tdRuleLine.setGTCode(gtCode);
         }
+        clonedRuleLine.setReadableGuide(gdlEditor.getReadableGuide());
+        ruleLine.setReadableGuide(readableGuide);
         return clonedRuleLine;
     }
 }
