@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@PropertySource(value = "file:conf/UserConfig.properties", ignoreResourceNotFound = true)
+@PropertySource(value = { "file:conf/UserConfig.properties", "file:${user.home}/.gdleditor/UserConfig.properties"}, ignoreResourceNotFound = true)
 public class UserConfiguration {
 
     @Autowired

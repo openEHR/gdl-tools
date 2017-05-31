@@ -42,12 +42,14 @@ public class InitGDLEditor {
         EditorManager editorManager = BeanProvider.getBean(EditorManager.class);
         new LoadEditorSW(dialog, gdlEditorFactory, editorManager).execute();
         dialog.setVisible(true);
+
+        RuleEngineService ruleEngineService = BeanProvider.getBean(RuleEngineService.class);
+        ruleEngineService.setUseCache(false);
+
         if (args.length > 0) {
             GuidelineLoadManager guidelineLoadManager = BeanProvider.getBean(GuidelineLoadManager.class);
             guidelineLoadManager.loadGuide(new File(args[0]));
         }
-        RuleEngineService ruleEngineService = BeanProvider.getBean(RuleEngineService.class);
-        ruleEngineService.setUseCache(false);
     }
 }
 /*

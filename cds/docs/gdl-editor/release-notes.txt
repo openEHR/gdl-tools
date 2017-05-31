@@ -1,6 +1,12 @@
 GDL Editor - Release Notes
 
-2014-12-19i - v0.95.6
+2017-06-01 - v1.3.8
++ Support for creation of new instances on CDS domain (lists)
++ Support for checking rule execution
++ Support default actions
+
+
+2014-12-19 - v0.95.6
 
 + Using new GDL specification (v0.91)
 + Dynamic load of clinical models
