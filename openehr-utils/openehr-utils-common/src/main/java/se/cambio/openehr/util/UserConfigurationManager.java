@@ -160,7 +160,7 @@ public class UserConfigurationManager {
     }
 
     public void saveConfig() {
-        File configFile = new File("conf/UserConfig.properties");
+        File configFile = new File(System.getProperty("user.home"),".gdleditor/UserConfig.properties");
         configFile.getParentFile().mkdirs();
         try {
             configFile.createNewFile();
