@@ -262,11 +262,6 @@
         </dependency>
         <dependency>
             <groupId>se.cambio.cds</groupId>
-            <artifactId>cds-engine-jgdl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>se.cambio.cds</groupId>
             <artifactId>gdl-graph</artifactId>
             <version>${project.version}</version>
         </dependency>
