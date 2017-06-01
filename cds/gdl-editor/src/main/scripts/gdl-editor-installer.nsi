@@ -60,7 +60,7 @@ Function .onInit
 	Call GetMyDocs
 	StrCpy $MYFOLDER $0
 	StrCpy $USER_CONFIG_FOLDER "$PROFILE\.gdleditor"
-	${StrRep} $CLINICAL_CONTENT_FOLDER "$MYFOLDER\clinical-content" "\" "\\"
+	StrCpy $CLINICAL_CONTENT_FOLDER "$MYFOLDER\clinical-content"
 FunctionEnd
 
 
@@ -83,11 +83,11 @@ Section "GDL editor (required)"
   ;Write user config
   SetOutPath $PROFILE\.gdleditor
   Delete "UserConfig.properties"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\\archetypes"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TemplatesFolder=$CLINICAL_CONTENT_FOLDER\\templates"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TerminologiesFolder=$CLINICAL_CONTENT_FOLDER\\terminologies"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "GuidesFolder=$CLINICAL_CONTENT_FOLDER\\guidelines"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "DocumentsFolder=$INSTDIR\\docs"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\archetypes"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TemplatesFolder=$CLINICAL_CONTENT_FOLDER\templates"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TerminologiesFolder=$CLINICAL_CONTENT_FOLDER\terminologies"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "GuidesFolder=$CLINICAL_CONTENT_FOLDER\guidelines"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "DocumentsFolder=$INSTDIR\docs"
 
   
   ; Write the uninstall keys for Windows
