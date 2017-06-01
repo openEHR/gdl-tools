@@ -55,6 +55,7 @@ UninstPage instfiles
 Var USER_CONFIG_FOLDER
 Var CLINICAL_CONTENT_FOLDER
 Var MYFOLDER
+Var ARCHETYPE_FOLDER
 
 Function .onInit
 	Call GetMyDocs
