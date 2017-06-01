@@ -85,8 +85,8 @@ Section "GDL editor (required)"
   SetOutPath $PROFILE\.gdleditor
   Delete "UserConfig.properties"
   StrCpy $ARCHETYPE_FOLDER "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\archetypes"
-  !searchreplace ARCHETYPE_FOLDER  $ARCHETYPE_FOLDER "\" "\\"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" ${ARCHETYPE_FOLDER}
+  !searchreplace ARCHETYPE_FOLDER_A  $ARCHETYPE_FOLDER "\" "\\"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" ${ARCHETYPE_FOLDER_A}
   ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TemplatesFolder=$CLINICAL_CONTENT_FOLDER\templates"
   ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TerminologiesFolder=$CLINICAL_CONTENT_FOLDER\terminologies"
   ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "GuidesFolder=$CLINICAL_CONTENT_FOLDER\guidelines"
