@@ -60,7 +60,7 @@ Function .onInit
 	Call GetMyDocs
 	StrCpy $MYFOLDER $0
 	StrCpy $USER_CONFIG_FOLDER "$PROFILE\.gdleditor"
-	StrRep $CLINICAL_CONTENT_FOLDER "$MYFOLDER\clinical-content" "\" "\\"
+	${StrRep} $CLINICAL_CONTENT_FOLDER "$MYFOLDER\clinical-content" "\" "\\"
 FunctionEnd
 
 
