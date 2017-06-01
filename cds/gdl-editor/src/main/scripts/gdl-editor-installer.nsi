@@ -55,7 +55,6 @@ UninstPage instfiles
 Var USER_CONFIG_FOLDER
 Var CLINICAL_CONTENT_FOLDER
 Var MYFOLDER
-Var ARCHETYPE_FOLDER
 
 Function .onInit
 	Call GetMyDocs
@@ -84,7 +83,7 @@ Section "GDL editor (required)"
   ;Write user config
   SetOutPath $PROFILE\.gdleditor
   Delete "UserConfig.properties"
-  StrCpy $ARCHETYPE_FOLDER "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\archetypes"
+  !define ARCHETYPE_FOLDER "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\archetypes"
   !searchreplace ARCHETYPE_FOLDER_A  "${ARCHETYPE_FOLDER}" "\" "\\"
   ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" ${ARCHETYPE_FOLDER_A}
   ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TemplatesFolder=$CLINICAL_CONTENT_FOLDER\templates"
