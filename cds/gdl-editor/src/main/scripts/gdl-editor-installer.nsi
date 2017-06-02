@@ -26,6 +26,8 @@ InstallDirRegKey HKLM "Software\NSIS_GDL_editor" "Install_Dir"
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
 
+!include 'StrRep.nsh'
+
 !macro WriteToFile NewLine File String
   !if `${NewLine}` == true
   Push `${String}$\r$\n`
@@ -56,6 +58,10 @@ Var USER_CONFIG_FOLDER
 Var CLINICAL_CONTENT_FOLDER
 Var MYFOLDER
 Var ARCHETYPE_FOLDER
+Var TEMPLATE_FOLDER
+Var TERMINOLOGY_FOLDER
+Var GUIDELINE_FOLDER
+Var DOCUMENT_FOLDER
 
 Function .onInit
 	Call GetMyDocs
@@ -84,11 +90,16 @@ Section "GDL editor (required)"
   ;Write user config
   SetOutPath $PROFILE\.gdleditor
   Delete "UserConfig.properties"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\archetypes"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TemplatesFolder=$CLINICAL_CONTENT_FOLDER\templates"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "TerminologiesFolder=$CLINICAL_CONTENT_FOLDER\terminologies"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "GuidesFolder=$CLINICAL_CONTENT_FOLDER\guidelines"
-  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" "DocumentsFolder=$INSTDIR\docs"
+  ${StrRep} $ARCHETYPE_FOLDER "ArchetypesFolder=$CLINICAL_CONTENT_FOLDER\archetypes" "\" "\\"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" $ARCHETYPE_FOLDER
+  ${StrRep} $TEMPLATE_FOLDER "TemplatesFolder=$CLINICAL_CONTENT_FOLDER\templates" "\" "\\"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" $TEMPLATE_FOLDER
+  ${StrRep} $TERMINOLOGY_FOLDER "TerminologiesFolder=$CLINICAL_CONTENT_FOLDER\terminologies" "\" "\\"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" $TERMINOLOGY_FOLDER
+  ${StrRep} $GUIDELINE_FOLDER "GuidesFolder=$CLINICAL_CONTENT_FOLDER\guidelines" "\" "\\"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" $GUIDELINE_FOLDER
+  ${StrRep} $DOCUMENT_FOLDER "DocumentsFolder=$INSTDIR\docs" "\" "\\"
+  ${WriteLineToFile} "$USER_CONFIG_FOLDER\UserConfig.properties" $DOCUMENT_FOLDER
 
   
   ; Write the uninstall keys for Windows
