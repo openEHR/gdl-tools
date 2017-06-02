@@ -63,4 +63,3 @@
     FunctionEnd
 !macroend
 !insertmacro Func_StrRep ""
-!insertmacro Func_StrRep "un."
