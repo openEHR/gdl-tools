@@ -54,7 +54,7 @@
 		</fileSet>
 		<!-- add gdl icon -->
 		<fileSet>
-			<directory>source/main/resources/img</directory>
+			<directory>src/main/resources/img</directory>
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>gdl.ico</include>
