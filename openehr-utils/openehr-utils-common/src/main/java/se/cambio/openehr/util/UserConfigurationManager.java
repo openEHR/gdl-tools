@@ -23,7 +23,6 @@ public class UserConfigurationManager {
     public static String LANGUAGE = "Messages/Language";
     public static String COUNTRY = "Messages/Country";
     public static String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
-    private static List<String> SUPPORTED_RULE_ENGINES = Arrays.asList("rule-drools-engine", "rule-jgdl-engine");
     private static File DEFAULT_REPO_FOLDER = new File(System.getProperty("user.home"), "clinical-models");
 
     private Map<String, CmFolder> cmFolderMap = new HashMap<>();
@@ -77,10 +76,6 @@ public class UserConfigurationManager {
 
     public String getActiveRuleEngine() {
         return activeRuleEngine;
-    }
-
-    public List<String> getSupportedRuleEngines() {
-        return SUPPORTED_RULE_ENGINES;
     }
 
     public void setActiveRuleEngine(String ruleEngine) {
