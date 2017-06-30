@@ -1,5 +1,14 @@
 package se.cambio.cds.model.facade.execution.drools;
 
+import org.apache.commons.io.IOUtils;
+import org.kie.api.KieServices;
+import org.kie.api.builder.KieBuilder;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.builder.KieRepository;
+import org.kie.api.builder.Message;
+import org.kie.api.io.Resource;
+import org.kie.api.runtime.KieContainer;
+import org.kie.internal.io.ResourceFactory;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideUtil;
@@ -12,8 +21,9 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cm.model.guide.dto.GuideDTO;
+import sun.nio.ch.IOUtil;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -43,10 +53,10 @@ public class DroolsRuleEngineService implements RuleEngineService {
             droolsExecutionManager.executeGuides(
                     guides, date, workingMemoryObjects, executionLogger);
         }
-        final Set<ArchetypeReference> modifiedArhetypeReferences = new HashSet<>();
+        final Set<ArchetypeReference> modifiedArchetypeReferences = new HashSet<>();
         //Search for modified elements
         for (ElementInstance elementInstance : executionLogger.getElementInstancesSet()) {
-            modifiedArhetypeReferences.add(elementInstance.getArchetypeReference());
+            modifiedArchetypeReferences.add(elementInstance.getArchetypeReference());
         }
         final List<RuleReference> ruleReferences =
                 GuideUtil.getRuleReferences(executionLogger.getFiredRules());
@@ -54,7 +64,7 @@ public class DroolsRuleEngineService implements RuleEngineService {
         if (date == null) {
             date = Calendar.getInstance();
         }
-        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, date.getTime(), modifiedArhetypeReferences, executionLogger.getLog(), ruleReferences);
+        RuleExecutionResult ruleExecutionResult = new RuleExecutionResult(ehrId, date.getTime(), modifiedArchetypeReferences, executionLogger.getLog(), ruleReferences);
         ruleExecutionResult.setTimedOut(executionLogger.executionTimedOut());
         return ruleExecutionResult;
     }
@@ -77,10 +87,41 @@ public class DroolsRuleEngineService implements RuleEngineService {
     @Override
     public byte[] compile(Guide guide) {
         String droolsGuide = new GDLDroolsConverter(guide, droolsExecutionManager.getArchetypeManager()).convertToDrools();
+        final KieServices kieServices = KieServices.Factory.get();
+        final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+        Resource resource = getResource(droolsGuide);
+        if (resource != null) {
+            kieFileSystem.write("src/main/resources/" + guide.getId() + ".drl", resource);
+        }
+        final KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
+        kieBuilder.buildAll();
+        if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
+            throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
+        }
+        final KieRepository kr = kieServices.getRepository();
+        final KieContainer kContainer = kieServices.newKieContainer(kr.getDefaultReleaseId());
+        return compiledGuideToByteArray(guide.getId(), kContainer.getKieBase());
+    }
+
+    private byte[] compiledGuideToByteArray(String guideId, Object compiledGuide) {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            ObjectOutput out = new ObjectOutputStream(bos);
+            out.writeObject(compiledGuide);
+            out.flush();
+            return bos.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(format("Error converting compiled guideline '%s' to byte array", guideId));
+        }
+    }
+
+    private Resource getResource(String guideStr) {
+        if (guideStr == null) {
+            return null;
+        }
         try {
-            return droolsGuide.getBytes("UTF8");
+            return ResourceFactory.newByteArrayResource(guideStr.getBytes("UTF8"));
         } catch (UnsupportedEncodingException exception) {
-            throw new RuntimeException(format("Error compiling guide '%s'", guide.getId()), exception);
+            throw new RuntimeException(exception);
         }
     }
 

@@ -1,16 +1,21 @@
 package se.cambio.cds.controller.execution;
 
+import com.google.common.base.Stopwatch;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
+import org.drools.core.impl.KnowledgeBaseImpl;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.KieRepository;
 import org.kie.api.builder.Message;
+import org.kie.api.definition.KiePackage;
 import org.kie.api.io.Resource;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.StatelessKieSession;
+import org.kie.internal.KnowledgeBase;
+import org.kie.internal.definition.KnowledgePackage;
 import org.kie.internal.io.ResourceFactory;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.slf4j.LoggerFactory;
@@ -25,9 +30,12 @@ import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 public class DroolsExecutionManager {
 
@@ -165,47 +173,37 @@ public class DroolsExecutionManager {
     }
 
 
-    private KieBase generateKnowledgeBase(Collection<GuideDTO> guideDTOs) {
-        final KieServices kieServices = KieServices.Factory.get();
-        final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        final KieRepository kr = kieServices.getRepository();
+    private KnowledgeBaseImpl generateKnowledgeBase(Collection<GuideDTO> guideDTOs) {
+        KnowledgeBaseImpl knowledgeBase = null;
         for (GuideDTO guideDTO : guideDTOs) {
-            Guide guide = getGuide(guideDTO);
-            Resource resource = getResource(guide);
-            if (resource != null) {
-                kieFileSystem.write("src/main/resources/" + guideDTO.getId() + ".drl", resource);
+            KieBase kieBase = getKieBaseFormByteArray(guideDTO.getId(), guideDTO.getCompiledGuide());
+            if (knowledgeBase == null) {
+                knowledgeBase = (KnowledgeBaseImpl)kieBase;
+            } else {
+                Collection<KnowledgePackage> knowledgePackages = getKnowledgePackages(kieBase);
+                knowledgeBase.addKnowledgePackages(knowledgePackages);
             }
         }
-        final KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
-        kieBuilder.buildAll();
-        if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
-            throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
-        }
-
-        final KieContainer kContainer = kieServices.newKieContainer(kr.getDefaultReleaseId());
-        return kContainer.getKieBase();
+        return knowledgeBase;
     }
 
-    private Resource getResource(Guide guide) {
-        if (guide == null) {
-            return null;
-        }
-        String compiledGuide = new GDLDroolsConverter(guide, archetypeManager).convertToDrools();
+    private Collection<KnowledgePackage> getKnowledgePackages(KieBase kieBase) {
+        return kieBase.getKiePackages().stream().map( kiePackage -> (KnowledgePackage) kiePackage).collect(Collectors.toList());
+    }
+
+    private KieBase getKieBaseFormByteArray(String guideId, byte[] byteArray) {
         try {
-            return ResourceFactory.newByteArrayResource(compiledGuide.getBytes("UTF8"));
-        } catch (UnsupportedEncodingException exception) {
-            throw new RuntimeException(exception);
-        }
-    }
-
-    private Guide getGuide(GuideDTO guideDTO) {
-        if (guideDTO != null) {
-            if (!hasGuideObject(guideDTO)) {
-                parseGuide(guideDTO);
+            ObjectInput in = null;
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(byteArray)) {
+                in = new ObjectInputStream(bis);
+                return (KieBase) in.readObject();
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
             }
-            return (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
-        } else {
-            return null;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(format("Error converting compiled guideline '%s' to byte array", guideId));
         }
     }
 
