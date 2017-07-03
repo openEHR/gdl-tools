@@ -1,6 +1,7 @@
 package se.cambio.cm.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.openehr.rm.datatypes.text.DvCodedText;
 import se.cambio.cm.util.TerminologyNodeVO;
 
 import java.util.Collection;
@@ -14,12 +15,15 @@ public interface TerminologyService {
 	boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes);
 
 	TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language);
-	
+
 	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language);
 
 	String retrieveTerm(CodePhrase concept, CodePhrase language);
 
+	DvCodedText translate(DvCodedText concept, CodePhrase language);
+
 	boolean isTerminologySupported(String terminologyId);
+
 	boolean isValidCodePhrase(CodePhrase codePhrase);
 	
 	Collection<String> getSupportedTerminologies();

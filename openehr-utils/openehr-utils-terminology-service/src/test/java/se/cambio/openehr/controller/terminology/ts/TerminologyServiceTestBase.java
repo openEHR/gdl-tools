@@ -26,6 +26,7 @@ public class TerminologyServiceTestBase extends AbstractTestNGSpringContextTests
 
     protected static final String ICD10 = "ICD10";
     static final String TEST_TERMINOLOGY = "TEST-TERMINOLOGY";
+    static final String MULTI_LANG_TEST_TERMINOLOGY = "MULTI-LANG-TEST-TERMINOLOGY";
 
     @Autowired
     TerminologyServiceImpl terminologyService;

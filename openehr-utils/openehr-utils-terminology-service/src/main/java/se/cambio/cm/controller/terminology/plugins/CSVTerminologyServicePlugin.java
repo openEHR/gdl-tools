@@ -1,5 +1,6 @@
 package se.cambio.cm.controller.terminology.plugins;
 
+import org.apache.commons.lang.StringUtils;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.Logger;
@@ -21,9 +22,9 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
-    private Map<String, ArrayList<String>> parentsMap = null;
-    private Map<String, ArrayList<String>> childrenMap = null;
-    private Map<String, String> descriptionsMap = null;
+    private Map<String, Set<String>> parentsMap = null;
+    private Map<String, Set<String>> childrenMap = null;
+    private Map<String, Map<String, String>> descriptionsMap = null;
     private static Logger log = LoggerFactory.getLogger(CSVTerminologyServicePlugin.class);
     private TerminologyConfigVO terminologyConfig;
 
@@ -39,22 +40,29 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             childrenMap = new HashMap<>();
             descriptionsMap = new HashMap<>();
             csvReader.readHeaders();
-            processCSV(csvReader);
+            processCsv(csvReader);
         } catch (Exception e) {
             String message = format("Failed to initialize the terminology service '%s'", terminologyConfig.getTerminologyId());
             throw new RuntimeException(message, e);
         }
     }
 
-    private void processCSV(CSVReader csvReader) throws IOException {
+    private void processCsv(CSVReader csvReader) throws IOException {
         while (csvReader.readRecord()) {
             String id = csvReader.get("id");
             String description = csvReader.get("text");
             String parent = csvReader.get("parent");
             log.debug("id: " + id + ", description: " + description);
-            addTerm(id, description, parent);
+            addTerm(id, description, parent, "");
+            for (String header : csvReader.getHeaders()) {
+                if (header.startsWith("text_")) {
+                    String language = StringUtils.substringAfter(header, "text_");
+                    description = csvReader.get(header);
+                    addTerm(id, description, parent, language);
+                }
+            }
         }
-        log.debug("Total " + descriptionsMap.size() + " term(s) loaded..");
+        log.debug("Total " + getDefaultDescription().size() + " term(s) loaded..");
     }
 
     @Override
@@ -99,7 +107,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     public List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language) {
         if (this.terminologyConfig.getTerminologyId().equals(terminologyId)) {
             ArrayList<TerminologyNodeVO> allNodes = new ArrayList<>();
-            for (String code : descriptionsMap.keySet()) {
+            for (String code : getDefaultDescription().keySet()) {
                 if (!code.isEmpty() && parentsMap.get(code) == null) {
                     TerminologyNodeVO node = retrieveAllSubclasses(code, language);
                     allNodes.add(node);
@@ -109,6 +117,10 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         } else {
             throw new UnsupportedTerminologyException(terminologyId + " not supported");
         }
+    }
+
+    private Map<String, String> getDefaultDescription() {
+        return getDescriptionByLanguage("");
     }
 
     @Override
@@ -123,6 +135,26 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     }
 
     @Override
+    public DvCodedText translate(DvCodedText codedText, CodePhrase language) {
+        if (codedText == null) {
+            throw new RuntimeException(format("Detected 'null' codedText trying to perform translation for language '%s'", language));
+        }
+        if (language == null) {
+            throw new RuntimeException(format("Detected 'null' language trying to translate concept '%s'", codedText.toString()));
+        }
+        String code = codedText.getCode();
+        String description = getDescription(code, language.getCodeString());
+        if (description == null) {
+            description = getDescription(code, "");
+        }
+        if (description == null) {
+            return codedText;
+        } else {
+            return new DvCodedText(description, codedText.getDefiningCode());
+        }
+    }
+
+    @Override
     public Collection<String> getSupportedTerminologies() {
         Collection<String> supportedTerminologies = new ArrayList<>();
         supportedTerminologies.add(terminologyConfig.getTerminologyId());
@@ -134,23 +166,25 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return isValidTerminologyCode(codePhrase) && !invalidCode(codePhrase.getCodeString());
     }
 
-    private void addTerm(String id, String description, String parent) {
+    private void addTerm(String id, String description, String parent, String language) {
         if (!isEmpty(id) && !isEmpty(description)) {
-            descriptionsMap.put(id, description);
+            getDescriptionByLanguage(language).put(id, description);
             addParent(id, parent);
         }
     }
 
+    private Map<String, String> getDescriptionByLanguage(String language) {
+        return descriptionsMap.computeIfAbsent(language, k -> new HashMap<>());
+    }
+
     private void addParent(String id, String parent) {
-        if (!isEmpty(parent)) {
-            ArrayList<String> parents = new ArrayList<>();
-            parents.add(parent);
-            ArrayList<String> hierarchy = parentsMap.get(parent);
-            if (hierarchy != null) {
-                parents.addAll(hierarchy);
-            }
-            parentsMap.put(id, parents);
-            ArrayList<String> children = childrenMap.computeIfAbsent(parent, k -> new ArrayList<>());
+        if (!isEmpty(parent) && !parentsMap.containsKey(id)) {
+            Set<String> parentHierarchy = parentsMap.computeIfAbsent(parent, f -> new HashSet<>());
+            Set<String> childHierarchy = new HashSet<>();
+            childHierarchy.addAll(parentHierarchy);
+            childHierarchy.add(parent);
+            parentsMap.put(id, childHierarchy);
+            Set<String> children = childrenMap.computeIfAbsent(parent, k -> new HashSet<>());
             children.add(id);
         }
     }
@@ -158,7 +192,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     private TerminologyNodeVO retrieveAllSubclasses(String code, CodePhrase language) {
         String cleanCode = cleanUpCode(code);
         TerminologyNodeVO node = getNodeForCode(cleanCode, language);
-        ArrayList<String> children = childrenMap.get(cleanCode);
+        Set<String> children = childrenMap.get(cleanCode);
         if (children != null) {
             for (String childCode : children) {
                 TerminologyNodeVO nodeAux = retrieveAllSubclasses(childCode, language);
@@ -204,7 +238,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             if (cleanAS.equals(cleanBS)) {
                 return true;
             } else {
-                ArrayList<String> parents = parentsMap.get(cleanAS);
+                Set<String> parents = parentsMap.get(cleanAS);
                 return (parents != null && parents.contains(cleanBS));
             }
         }
@@ -223,7 +257,7 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     private boolean invalidCode(String code) {
         if (terminologyConfig.isCodeExistenceCheck()) {
             String cleanCode = cleanUpCode(code);
-            return descriptionsMap.get(cleanCode) == null;
+            return getDefaultDescription().get(cleanCode) == null;
         } else {
             return false;
         }
@@ -233,13 +267,23 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         return isTerminologySupported(code.getTerminologyId().getValue());
     }
 
-    private String retrieveTerm(String code, CodePhrase language) {
-        if (language == null) {
-              log.warn("Language not defined!");
+    private String retrieveTerm(String code, CodePhrase languageCodePhrase) {
+        String language = "";
+        if (languageCodePhrase == null) {
+            log.warn("Language not defined!");
+        } else {
+            language = languageCodePhrase.getCodeString();
         }
         String cleanCode = cleanUpCode(code);
-        String description = descriptionsMap.get(cleanCode);
+        String description = getDescription(cleanCode, language);
+        if (description == null && !language.isEmpty()) {
+            description = getDescription(cleanCode, "");
+        }
         return description != null ? description : "";
+    }
+
+    private String getDescription(String code, String language) {
+        return getDescriptionByLanguage(language).get(code);
     }
 
     private String cleanUpCode(String code) {

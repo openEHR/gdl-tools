@@ -1,18 +1,20 @@
 package se.cambio.cm.controller.terminology;
 
 import org.openehr.rm.datatypes.text.CodePhrase;
+import org.openehr.rm.datatypes.text.DvCodedText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.plugins.CSVTerminologyServicePlugin;
 import se.cambio.cm.controller.terminology.plugins.TerminologyServicePlugin;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
-import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.cm.util.TerminologyConfigVO;
+import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.cm.util.exceptions.UnsupportedTerminologyException;
 import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.*;
+import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
+import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -129,11 +131,21 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     public String retrieveTerm(CodePhrase concept, CodePhrase language) {
-
         String terminologyId = concept.getTerminologyId().getValue();
         TerminologyService ts = getTerminologyServicePlugin(terminologyId);
         if (ts != null) {
             return ts.retrieveTerm(concept, language);
+        } else {
+            throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminologyId));
+        }
+    }
+
+    @Override
+    public DvCodedText translate(DvCodedText concept, CodePhrase language) {
+        String terminologyId = concept.getTerminologyId();
+        TerminologyService ts = getTerminologyServicePlugin(terminologyId);
+        if (ts != null) {
+            return ts.translate(concept, language);
         } else {
             throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminologyId));
         }

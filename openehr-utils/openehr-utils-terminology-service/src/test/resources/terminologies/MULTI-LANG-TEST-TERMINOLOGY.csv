@@ -1,0 +1,6 @@
+id,text,parent,text_es,text_sv
+test1,Name1,,Name1_es,Name1_sv
+test2,Name2,test1,Name2_es,Name2_sv
+test3,Name3,test1,Name3_es,Name3_sv
+test4,Name4,test3,Name4_es,Name4_sv
+test5,Name5,test4,Name5_es,Name5_sv
