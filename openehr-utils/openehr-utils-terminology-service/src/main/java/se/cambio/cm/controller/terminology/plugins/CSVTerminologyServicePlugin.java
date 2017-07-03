@@ -108,7 +108,8 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
         if (this.terminologyConfig.getTerminologyId().equals(terminologyId)) {
             ArrayList<TerminologyNodeVO> allNodes = new ArrayList<>();
             for (String code : getDefaultDescription().keySet()) {
-                if (!code.isEmpty() && parentsMap.get(code) == null) {
+                if (!code.isEmpty()
+                        && (parentsMap.get(code) == null || parentsMap.get(code).isEmpty())) {
                     TerminologyNodeVO node = retrieveAllSubclasses(code, language);
                     allNodes.add(node);
                 }
