@@ -1,25 +1,27 @@
 package se.cambio.openehr.util;
 
+import org.openehr.rm.datatypes.quantity.DvQuantity;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
-public class OpenEHRNumberFormat  {
+public class OpenEHRNumberFormat {
 
 
     public static char DV_QUANTITY_DECIMAL_SEPARATOR = '.';
 
-    public static DecimalFormat getDecimalFormat(){
+    public static DecimalFormat getDecimalFormat() {
         return getDecimalFormat(null);
     }
 
-    public static DecimalFormat getDecimalFormat(Integer precision){
+    public static DecimalFormat getDecimalFormat(Integer precision) {
         DecimalFormatSymbols custom = new DecimalFormatSymbols();
         custom.setDecimalSeparator(DV_QUANTITY_DECIMAL_SEPARATOR);
         DecimalFormat format = new DecimalFormat();
         format.setDecimalFormatSymbols(custom);
         format.setGroupingUsed(false);
-        if (precision!=null){
+        if (precision != null) {
             format.setMinimumFractionDigits(precision);
             format.setMaximumFractionDigits(precision);
         }
@@ -27,34 +29,49 @@ public class OpenEHRNumberFormat  {
     }
 
 
-    public static String toStringUsingPrecision(double unrounded, int precision){
-        String origStr = new BigDecimal(unrounded).toString();
-        StringBuffer roundSB = new StringBuffer();
-        roundSB.append(origStr);
-        if (origStr.contains(".")){
-            int numDecimals = origStr.length()-origStr.indexOf(".")-1;
-            if (numDecimals!=precision){
-                if (numDecimals>precision){
-                    if (precision>0){
-                        roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")+precision+1));
-                    }else{
-                        roundSB = new StringBuffer(origStr.substring(0, origStr.indexOf(".")));
+    public static String toStringUsingPrecision(double value, int precision) {
+        String strValue = new BigDecimal(value).toString();
+        if (strValue.contains(".")) {
+            int numDecimals = strValue.length() - strValue.indexOf(".") - 1;
+            if (numDecimals != precision) {
+                if (numDecimals > precision) {
+                    if (precision > 0) {
+                        DecimalFormat format = new DecimalFormat();
+                        format.setMinimumFractionDigits(precision);
+                        format.setMaximumFractionDigits(precision);
+                        DecimalFormatSymbols dfs = format.getDecimalFormatSymbols();
+                        dfs.setDecimalSeparator(DvQuantity.DECIMAL_SEPARATOR);
+                        format.setDecimalFormatSymbols(dfs);
+                        format.setGroupingUsed(false);
+                        return format.format(value);
+                    } else {
+                        return strValue.substring(0, strValue.indexOf("."));
                     }
-                }else {
-                    appendZeros(roundSB, precision-numDecimals);
+                } else {
+                    StringBuilder roundSB = new StringBuilder();
+                    roundSB.append(strValue.substring(0, strValue.indexOf(".")))
+                            .append(".");
+                    appendZeros(roundSB, precision - numDecimals);
+                    return roundSB.toString();
                 }
+            } else {
+                return strValue;
             }
-        }else{
-            if (precision>0){
-                roundSB.append(".");
-                appendZeros(roundSB, precision);
+        } else {
+            if (precision > 0) {
+                StringBuilder valueWithZeroesSB = new StringBuilder();
+                valueWithZeroesSB.append(strValue);
+                valueWithZeroesSB.append(".");
+                appendZeros(valueWithZeroesSB, precision);
+                return valueWithZeroesSB.toString();
+            } else {
+                return strValue;
             }
         }
-        return roundSB.toString();
     }
 
-    private static void appendZeros(StringBuffer roundSB, int precision){
-        for (int i =0; i<precision;i++) {
+    private static void appendZeros(StringBuilder roundSB, int precision) {
+        for (int i = 0; i < precision; i++) {
             roundSB.append("0");
         }
     }

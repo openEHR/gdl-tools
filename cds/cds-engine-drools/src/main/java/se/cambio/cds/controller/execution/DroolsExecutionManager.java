@@ -1,27 +1,12 @@
 package se.cambio.cds.controller.execution;
 
-import com.google.common.base.Stopwatch;
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.drools.core.impl.KnowledgeBaseImpl;
 import org.kie.api.KieBase;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieBuilder;
-import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.KieRepository;
-import org.kie.api.builder.Message;
-import org.kie.api.definition.KiePackage;
-import org.kie.api.io.Resource;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.StatelessKieSession;
-import org.kie.internal.KnowledgeBase;
 import org.kie.internal.definition.KnowledgePackage;
-import org.kie.internal.io.ResourceFactory;
 import org.openehr.rm.datatypes.quantity.datetime.DvDateTime;
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
-import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineService;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
@@ -30,9 +15,11 @@ import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -45,13 +32,11 @@ public class DroolsExecutionManager {
     private ExecutionLogger logger = null;
     public static final Long DEFAULT_TIMEOUT = 30000L;
     private ArchetypeManager archetypeManager;
-    private GDLParser gdlParser;
     private DroolsRuleEngineService droolsRuleEngineService;
 
     public DroolsExecutionManager(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
-        gdlParser = new GDLParser();
     }
 
     public ArchetypeManager getArchetypeManager() {
@@ -159,20 +144,6 @@ public class DroolsExecutionManager {
         return guideIdsIdSB.toString();
     }
 
-    private void compileGuide(GuideDTO guideDTO) {
-        if (!hasGuideObject(guideDTO)) {
-            parseGuide(guideDTO);
-        }
-        Guide guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
-        byte[] compiledGuide = getDroolsRuleEngineService().compile(guide);
-        guideDTO.setCompiledGuide(compiledGuide);
-    }
-
-    public static boolean hasGuideObject(GuideDTO guideDTO) {
-        return guideDTO.getGuideObject() != null;
-    }
-
-
     private KnowledgeBaseImpl generateKnowledgeBase(Collection<GuideDTO> guideDTOs) {
         KnowledgeBaseImpl knowledgeBase = null;
         for (GuideDTO guideDTO : guideDTOs) {
@@ -204,15 +175,6 @@ public class DroolsExecutionManager {
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(format("Error converting compiled guideline '%s' to byte array", guideId));
-        }
-    }
-
-    private void parseGuide(GuideDTO guideDTO) {
-        try {
-            Guide guide = gdlParser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
-            guideDTO.setGuideObject(SerializationUtils.serialize(guide));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
         }
     }
 

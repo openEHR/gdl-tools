@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.converters.drools;
 
+import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.exceptions.GuideCompilationException;
@@ -10,10 +11,12 @@ import java.io.UnsupportedEncodingException;
 
 public class DroolsGuideExportPlugin implements GuideExportPlugin {
 
+    private final DroolsExecutionManager droolsExecutionManager;
     private ArchetypeManager archetypeManager;
 
     public DroolsGuideExportPlugin(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
+        this.droolsExecutionManager = new DroolsExecutionManager(archetypeManager);
     }
 
     @Override
@@ -23,11 +26,7 @@ public class DroolsGuideExportPlugin implements GuideExportPlugin {
 
     @Override
     public byte[] compile(Guide guide) {
-        try {
-            return getSource(guide).getBytes("UTF8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return droolsExecutionManager.getDroolsRuleEngineService().compile(guide);
     }
 
     @Override

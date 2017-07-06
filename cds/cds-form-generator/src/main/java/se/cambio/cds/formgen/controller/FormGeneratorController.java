@@ -19,10 +19,8 @@ import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.view.swing.DvSwingManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
