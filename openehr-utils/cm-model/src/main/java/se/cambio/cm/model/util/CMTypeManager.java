@@ -1,29 +1,24 @@
 package se.cambio.cm.model.util;
 
+import org.springframework.util.Assert;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.terminology.dto.TerminologyDTO;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CMTypeManager {
 
     private static CMTypeManager instance;
     private Map<String, CMType> cmTypeByIdMap;
 
-    private CMTypeManager(){
+    private CMTypeManager() {
         registerCMType(new CMType("terminologies", TerminologyDTO.class, Collections.singleton(CMTypeFormat.CSV_FORMAT.getFormat())));
         registerCMType(new CMType("archetypes", ArchetypeDTO.class, Arrays.asList(CMTypeFormat.ADL_FORMAT.getFormat(), CMTypeFormat.ADLS_FORMAT.getFormat())));
         registerCMType(new CMType("templates", TemplateDTO.class, Collections.singleton(CMTypeFormat.OET_FORMAT.getFormat())));
@@ -33,13 +28,11 @@ public class CMTypeManager {
 
     private void registerAdditionalCMTypes() {
         try {
-            for (CMType cmType: CMConfigurationManager.getAdditionalCMElements()){
+            for (CMType cmType : CMConfigurationManager.getAdditionalCMElements()) {
                 registerCMType(cmType);
             }
         } catch (MissingConfigurationParameterException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -57,8 +50,9 @@ public class CMTypeManager {
     }
 
     public CMType getCMTypeByClass(Class<? extends CMElement> cmElementClass) throws InternalErrorException {
-        for (CMType cmType : getAllCMTypes()){
-            if (cmType.getCmElementClass().equals(cmElementClass)){
+        Assert.notNull(cmElementClass, "CM element class cannot be null");
+        for (CMType cmType : getAllCMTypes()) {
+            if (cmElementClass.isAssignableFrom(cmType.getCmElementClass())) {
                 return cmType;
             }
         }
@@ -70,14 +64,14 @@ public class CMTypeManager {
         return cmType.getCmElementClass();
     }
 
-    public Collection<CMType> getAllCMTypes(){
+    public Collection<CMType> getAllCMTypes() {
         return getCmTypeByIdMap().values();
     }
 
 
     private Map<String, CMType> getCmTypeByIdMap() {
         if (cmTypeByIdMap == null) {
-            cmTypeByIdMap = new LinkedHashMap<String, CMType>();
+            cmTypeByIdMap = new LinkedHashMap<>();
         }
         return cmTypeByIdMap;
     }
@@ -89,14 +83,14 @@ public class CMTypeManager {
         return instance;
     }
 
-    public <E extends CMElement>CmElementListParameterizedType<E> getCmElementListParameterizedType(Class<E> cmElementClass) {
-        return new CmElementListParameterizedType<E>(cmElementClass);
+    public <E extends CMElement> CmElementListParameterizedType<E> getCmElementListParameterizedType(Class<E> cmElementClass) {
+        return new CmElementListParameterizedType<>(cmElementClass);
     }
 
-    private  static class CmElementListParameterizedType<E extends CMElement> implements ParameterizedType {
+    private static class CmElementListParameterizedType<E extends CMElement> implements ParameterizedType {
         private Class<E> cmElementClass;
 
-        public CmElementListParameterizedType(Class<E> cmElementClass) {
+        CmElementListParameterizedType(Class<E> cmElementClass) {
             this.cmElementClass = cmElementClass;
         }
 
@@ -109,7 +103,7 @@ public class CMTypeManager {
         }
 
         public Type[] getActualTypeArguments() {
-            return new Type[] {cmElementClass};
+            return new Type[]{cmElementClass};
         }
     }
 }
