@@ -77,8 +77,8 @@ public class GuideImporter {
             }
             Map<String, Rule> rulesMap = guideDefinition.getRules();
             if (rulesMap != null) {
-                List<Rule> rules = new ArrayList(rulesMap.values());
-                Collections.sort(rules, new RulePriorityComparator());
+                List<Rule> rules = new ArrayList<>(rulesMap.values());
+                rules.sort(new RulePriorityComparator());
                 for (Rule rule : rules) {
                     ReadableRule rr = new ReadableRule(readableGuide.getTermDefinition(), rule.getId(), readableGuide);
                     readableGuide.getReadableRules().put(rule.getId(), rr);
