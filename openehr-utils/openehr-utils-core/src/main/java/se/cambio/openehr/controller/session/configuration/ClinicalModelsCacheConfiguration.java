@@ -8,6 +8,7 @@ import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.controller.session.data.Terminologies;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.UserConfiguration;
 
@@ -21,5 +22,10 @@ public class ClinicalModelsCacheConfiguration {
             TerminologyService terminologyService,
             UserConfigurationManager userConfigurationManager) {
         return new ArchetypeManager(clinicalModelsService, terminologyService, userConfigurationManager);
+    }
+
+    @Bean
+    Terminologies terminologies(ClinicalModelsService clinicalModelsService) {
+        return new Terminologies(clinicalModelsService);
     }
 }

@@ -52,7 +52,11 @@ public abstract class AbstractCMManager<E extends CMElement> {
     }
 
     public E getCMElement(final String id) throws InstanceNotFoundException, InternalErrorException {
-        return getCMElementByIds(Collections.singletonList(id)).iterator().next();
+        Iterator<E> iterator = getCMElementByIds(Collections.singletonList(id)).iterator();
+        if (!iterator.hasNext()) {
+            throw new InstanceNotFoundException(id, getCMElementClass().getSimpleName());
+        }
+        return iterator.next();
     }
 
     public Collection<E> getCMElementsInCache(final Collection<String> ids) throws InstanceNotFoundException, InternalErrorException {
