@@ -46,6 +46,8 @@ public class OpenEHRRMUtil {
                             .setDescription(OpenEHRLanguageManager.getMessage("EventTimeDesc"))
                             .setType(OpenEHRDataValues.DV_DATE_TIME)
                             .setIdArchetype(idArchetype).setIdTemplate(idTemplate)
+                            .setLowerCardinality(1)
+                            .setUpperCardinality(1)
                             .setPath(parentPath + eventsTimePath).createArchetypeElementVO());
         }else if (OpenEHRConst.INSTRUCTION.equals(entryType)){
             //Expiry Time
@@ -56,6 +58,8 @@ public class OpenEHRRMUtil {
                             .setType(OpenEHRDataValues.DV_DATE_TIME)
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
+                            .setLowerCardinality(0)
+                            .setUpperCardinality(1)
                             .setPath(parentPath + EXPIRY_TIME_PATH).createArchetypeElementVO());
             //Narrative Description
             rmArchetypeElements.add(
@@ -66,6 +70,8 @@ public class OpenEHRRMUtil {
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + NARRATIVE_PATH)
+                            .setLowerCardinality(1)
+                            .setUpperCardinality(1)
                             .createArchetypeElementVO());
             //Detailed activity timing
             rmArchetypeElements.add(
@@ -76,6 +82,8 @@ public class OpenEHRRMUtil {
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + TIMING_PATH)
+                            .setLowerCardinality(1)
+                            .setUpperCardinality(1)
                             .createArchetypeElementVO());
         }else if (OpenEHRConst.ACTION.equals(entryType)){
             //Date and time Action step performed
@@ -87,6 +95,8 @@ public class OpenEHRRMUtil {
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + TIME_PATH)
+                            .setLowerCardinality(1)
+                            .setUpperCardinality(1)
                             .createArchetypeElementVO());
             //Current Action State
             rmArchetypeElements.add(
@@ -97,6 +107,8 @@ public class OpenEHRRMUtil {
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
                             .setPath(parentPath + ISM_TRANSITION_PATH)
+                            .setLowerCardinality(1)
+                            .setUpperCardinality(1)
                             .createArchetypeElementVO());
         }
         if (parentPath.isEmpty()) { //TODO Check if this assumption is correct
@@ -109,6 +121,8 @@ public class OpenEHRRMUtil {
                             .setIdArchetype(idArchetype)
                             .setIdTemplate(idTemplate)
                             .setPath(TEMPLATE_ID_PATH)
+                            .setLowerCardinality(0)
+                            .setUpperCardinality(1)
                             .createArchetypeElementVO());
         }
         return rmArchetypeElements;

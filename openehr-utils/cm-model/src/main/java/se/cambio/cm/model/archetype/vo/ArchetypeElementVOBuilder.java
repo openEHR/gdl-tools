@@ -7,6 +7,8 @@ public class ArchetypeElementVOBuilder {
     private String idArchetype;
     private String idTemplate;
     private String path;
+    private Integer lowerCardinality;
+    private Integer upperCardinality;
 
     public ArchetypeElementVOBuilder setName(String name) {
         this.name = name;
@@ -35,6 +37,16 @@ public class ArchetypeElementVOBuilder {
 
     public ArchetypeElementVOBuilder setPath(String path) {
         this.path = path;
+        return this;
+    }
+
+    public ArchetypeElementVOBuilder setLowerCardinality(Integer lowerCardinality) {
+        this.lowerCardinality = lowerCardinality;
+        return this;
+    }
+
+    public ArchetypeElementVOBuilder setUpperCardinality(Integer upperCardinality) {
+        this.upperCardinality = upperCardinality;
         return this;
     }
 

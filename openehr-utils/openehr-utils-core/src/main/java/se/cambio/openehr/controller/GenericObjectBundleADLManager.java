@@ -97,7 +97,6 @@ public class GenericObjectBundleADLManager {
             }
         }
         clusterVOs.addAll(OpenEHRRMUtil.getRMClusters(archId, templateId));
-
         archetypeElementVOs.addAll(rmArchetypeElements);
     }
 
@@ -241,7 +240,6 @@ public class GenericObjectBundleADLManager {
     }
 
     private static void setCardinalities(PathableVO pathableVO, CObject cObject) {
-        //TODO
         pathableVO.setLowerCardinality(cObject.getOccurrences().getLower());
         pathableVO.setUpperCardinality(cObject.getOccurrences().getUpper());
     }
@@ -357,7 +355,7 @@ public class GenericObjectBundleADLManager {
     }
 
     private static void loadOrdinals(
-            String archetypdId,
+            String archetypeId,
             Archetype ar,
             String templateId,
             String path,
@@ -375,7 +373,7 @@ public class GenericObjectBundleADLManager {
                         text = getText(ar, codedStr, language);
                         desc = getDescription(ar, codedStr, language);
                     } else {
-                        LoggerFactory.getLogger(GenericObjectBundleADLManager.class).error("Unkown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
+                        LoggerFactory.getLogger(GenericObjectBundleADLManager.class).error("Unknown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
                         //TODO TERMINOLOGY SERVICE
                     }
                     ordinalVOs.add(
@@ -383,7 +381,7 @@ public class GenericObjectBundleADLManager {
                                     .setName(text)
                                     .setDescription(desc)
                                     .setType(cDvOrdinal.getRmTypeName())
-                                    .setIdArchetype(archetypdId)
+                                    .setIdArchetype(archetypeId)
                                     .setIdTemplate(templateId)
                                     .setPath(path)
                                     .setValue(ordinal.getValue())
