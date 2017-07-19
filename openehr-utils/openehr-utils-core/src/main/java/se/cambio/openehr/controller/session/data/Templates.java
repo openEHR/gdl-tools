@@ -61,8 +61,10 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
     private void registerTemplateDTOs(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
         for (TemplateDTO templateDTO : templateDTOs) {
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(templateDTO);
-            Archetype archetype = getTemplateAOM(templateDTO);
-            archetypeManager.registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
+            archetypeManager.registerArchetypeObjectBundle(
+                    templateDTO.getArchetypeId(),
+                    templateDTO.getId(),
+                    archetypeObjectBundleCustomVO);
         }
     }
 

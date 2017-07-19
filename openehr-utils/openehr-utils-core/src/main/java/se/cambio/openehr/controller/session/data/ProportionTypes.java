@@ -8,64 +8,73 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 public class ProportionTypes {
-    private Map<String, Collection<ProportionKind>> _proportionTypesByIdElement = null;
-    private Map<String, Map<String, Collection<ProportionKind>>> _templateProportionTypesByTemplateIdAndId = null;
+    private Map<String, Collection<ProportionKind>> proportionTypesByIdElement = null;
+    private Map<String, Map<String, Collection<ProportionKind>>> templateProportionTypesByTemplateIdAndId = null;
 
 
-
-    public ProportionTypes(){
+    public ProportionTypes() {
         init();
     }
 
-    public void init(){
-        _proportionTypesByIdElement = new HashMap<String, Collection<ProportionKind>>();
-        _templateProportionTypesByTemplateIdAndId = new HashMap<String, Map<String,Collection<ProportionKind>>>();
+    public void init() {
+        proportionTypesByIdElement = new HashMap<>();
+        templateProportionTypesByTemplateIdAndId = new HashMap<>();
     }
 
-    public void loadProportionTypes(Collection<ProportionTypeVO> proportionTypeVOs){
+    public void loadProportionTypes(
+            String archetypeId,
+            String templateId,
+            Collection<ProportionTypeVO> proportionTypeVOs) {
+        cleanPreviousElements(archetypeId, templateId);
         for (ProportionTypeVO proportionTypeVO : proportionTypeVOs) {
             registerProportionType(proportionTypeVO);
         }
     }
 
-    public void registerProportionType(ProportionTypeVO proportionTypeVO){
-        if (proportionTypeVO.getIdTemplate()==null){
+    private void cleanPreviousElements(String archetypeId, String templateId) {
+        if (templateId != null) {
+            templateProportionTypesByTemplateIdAndId.remove(templateId);
+        } else {
+            Collection<String> ids = new ArrayList<>(proportionTypesByIdElement.keySet());
+            for (String id : ids) {
+                if (id.startsWith(archetypeId)) {
+                    proportionTypesByIdElement.remove(id);
+                }
+            }
+        }
+    }
+
+    public void registerProportionType(ProportionTypeVO proportionTypeVO) {
+        if (proportionTypeVO.getIdTemplate() == null) {
             getProportionTypes(proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
-        }else{
+        } else {
             getProportionTypes(proportionTypeVO.getIdTemplate(), proportionTypeVO.getIdElement()).add(ProportionKind.fromValue(proportionTypeVO.getType()));
         }
     }
 
-    private Map<String, Collection<ProportionKind>> getProportionTypesInTemplate(String idTemplate){
-        Map<String, Collection<ProportionKind>> map = _templateProportionTypesByTemplateIdAndId.get(idTemplate);
-        if (map==null){
-            map = new HashMap<String, Collection<ProportionKind>>();
-            _templateProportionTypesByTemplateIdAndId.put(idTemplate, map);
-        }
-        return map;
+    private Map<String, Collection<ProportionKind>> getProportionTypesInTemplate(String idTemplate) {
+        return templateProportionTypesByTemplateIdAndId.computeIfAbsent(idTemplate, k -> new HashMap<>());
     }
 
-    public Collection<ProportionKind> getProportionTypes(String idTemplate, String idElement){
-        if (idTemplate==null){
-            return getProportionTypes(idElement);
-        }else{
-            Collection<ProportionKind> proportionTypes = getProportionTypesInTemplate(idTemplate).get(idElement);
-            if (proportionTypes==null){
-                proportionTypes = new ArrayList<ProportionKind>();
-                getProportionTypesInTemplate(idTemplate).put(idElement, proportionTypes);
+    public Collection<ProportionKind> getProportionTypes(String idTemplate, String idElement) {
+        if (idTemplate == null) {
+            if (!proportionTypesByIdElement.containsKey(idElement)) {
+                throw new RuntimeException(format("Could not find element '%s'", idElement));
             }
-            return proportionTypes;
+            return getProportionTypes(idElement);
+        } else {
+            if (!getProportionTypesInTemplate(idTemplate).containsKey(idElement)) {
+                throw new RuntimeException(format("Could not find element '%s' with template '%s'", idElement, idTemplate));
+            }
+            return getProportionTypesInTemplate(idTemplate).get(idElement);
         }
     }
 
-    private Collection<ProportionKind> getProportionTypes(String idElement){
-        Collection<ProportionKind> proportionTypes = _proportionTypesByIdElement.get(idElement);
-        if (proportionTypes==null){
-            proportionTypes = new ArrayList<ProportionKind>();
-            _proportionTypesByIdElement.put(idElement, proportionTypes);
-        }
-        return proportionTypes;
+    private Collection<ProportionKind> getProportionTypes(String idElement) {
+        return proportionTypesByIdElement.computeIfAbsent(idElement, k -> new ArrayList<>());
     }
 }
 /*

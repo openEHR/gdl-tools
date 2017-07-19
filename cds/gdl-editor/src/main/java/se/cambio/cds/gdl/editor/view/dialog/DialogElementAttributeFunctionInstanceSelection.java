@@ -106,7 +106,7 @@ public class DialogElementAttributeFunctionInstanceSelection extends DialogSelec
     private void selectAttributeFromGTCodeRLE(ArchetypeElementInstantiationRuleLine aeirl) {
         RuleLineCollection definitionRuleLines = new RuleLineCollection(aeirl.getReadableGuide());
         definitionRuleLines.add(aeirl);
-        SelectableNode<Object> rootNode = NodeDefinitionManager.getSingleNodeAttributesAndFunctions();
+        SelectableNode<Object> rootNode = nodeDefinitionManager.getSingleNodeAttributesAndFunctions();
         nodeDefinitionManager.addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, rootNode, onlyCDSDomain, archetypeReference);
         DialogSelection dialog =
                 new DialogSelection(this, GDLEditorLanguageManager.getMessage("SelectElementInstance"), rootNode, controller.getWindowManager());

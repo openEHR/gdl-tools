@@ -1,89 +1,97 @@
 package se.cambio.openehr.controller.session.data;
 
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import static java.lang.String.format;
 
 public class CodedTexts {
     private final ArchetypeManager archetypeManager;
-    private Map<String, Map<String, CodedTextVO>> _codedTextsByParentId = null;
-    private Map<String, Map<String, Map<String, CodedTextVO>>> _templateCodedTextsByTemplateIdAndId = null;
+    private Map<String, Map<String, CodedTextVO>> codedTextsByParentId = null;
+    private Map<String, Map<String, Map<String, CodedTextVO>>> templateCodedTextsByTemplateIdAndId = null;
 
 
-    public CodedTexts(ArchetypeManager archetypeManager){
+    public CodedTexts(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         init();
     }
 
-    public void init(){
-        _codedTextsByParentId = new HashMap<String, Map<String, CodedTextVO>>();
-        _templateCodedTextsByTemplateIdAndId = new HashMap<String, Map<String,Map<String,CodedTextVO>>>();
+    public void init() {
+        codedTextsByParentId = new HashMap<>();
+        templateCodedTextsByTemplateIdAndId = new HashMap<>();
     }
-    public void loadCodedTexts(Collection<CodedTextVO> codedTextVOs){
+
+    public void loadCodedTexts(
+            String archetypeId,
+            String templateId,
+            Collection<CodedTextVO> codedTextVOs) {
+        cleanPreviousElements(archetypeId, templateId);
         for (CodedTextVO codedTextVO : codedTextVOs) {
             registerCodedText(codedTextVO);
         }
     }
 
-    public void registerCodedText(CodedTextVO codedTextVO){
-        if (codedTextVO.getIdTemplate()==null){
+    private void cleanPreviousElements(String archetypeId, String templateId) {
+        if (templateId != null) {
+            templateCodedTextsByTemplateIdAndId.remove(templateId);
+        } else {
+            Collection<String> ids = new ArrayList<>(codedTextsByParentId.keySet());
+            for (String id : ids) {
+                if (id.startsWith(archetypeId)) {
+                    codedTextsByParentId.remove(id);
+                }
+            }
+        }
+    }
+
+    private void registerCodedText(CodedTextVO codedTextVO) {
+        if (codedTextVO.getIdTemplate() == null) {
             getCodedTextMap(codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
-        }else{
-            getCodedTextTemplateMap(codedTextVO.getIdTemplate(),codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
+        } else {
+            getCodedTextTemplateMap(codedTextVO.getIdTemplate(), codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
         }
     }
 
 
-    private Map<String, Map<String, CodedTextVO>> getCodedTextTemplateMap(String idTemplate){
-        Map<String, Map<String,CodedTextVO>> map = _templateCodedTextsByTemplateIdAndId.get(idTemplate);
-        if (map==null){
-            map = new HashMap<String, Map<String,CodedTextVO>>();
-            _templateCodedTextsByTemplateIdAndId.put(idTemplate, map);
-        }
-        return map;
+    private Map<String, Map<String, CodedTextVO>> getCodedTextTemplateMap(String idTemplate) {
+        return templateCodedTextsByTemplateIdAndId.computeIfAbsent(idTemplate, k -> new HashMap<>());
     }
 
-    public Map<String, CodedTextVO> getCodedTextTemplateMap(String idTemplate, String idElement){
-        Map<String,CodedTextVO> map = getCodedTextTemplateMap(idTemplate).get(idElement);
-        if (map==null){
-            map = new HashMap<String,CodedTextVO>();
-            getCodedTextTemplateMap(idTemplate).put(idElement, map);
-        }
-        return map;
+    public Map<String, CodedTextVO> getCodedTextTemplateMap(String idTemplate, String idElement) {
+        return getCodedTextTemplateMap(idTemplate).computeIfAbsent(idElement, k -> new HashMap<>());
     }
 
-    public CodedTextVO getCodedTextVO(String idTemplate, String idElement, String code){
+    public CodedTextVO getCodedTextVO(String idTemplate, String idElement, String code) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
-        if (idTemplate==null){
+        if (idTemplate == null) {
+            if (!codedTextsByParentId.containsKey(idElement)) {
+                throw new RuntimeException(format("Could not find element '%s'", idElement));
+            }
             return getCodedTextMap(idElement).get(code);
-        }else{
+        } else {
+            if (!getCodedTextTemplateMap(idTemplate).containsKey(idElement)) {
+                throw new RuntimeException(format("Could not find element '%s' in template '%s'", idElement, idTemplate));
+            }
             return getCodedTextTemplateMap(idTemplate, idElement).get(code);
         }
     }
 
-    public ArrayList<CodedTextVO> getCodedTextVOs(String idTemplate, String idElement){
+    public List<CodedTextVO> getCodedTextVOs(String idTemplate, String idElement) {
         archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
-        ArrayList<CodedTextVO> codedTexts = null;
-        if (idTemplate==null){
-            codedTexts = new ArrayList<CodedTextVO>(getCodedTextMap(idElement).values());
-        }else{
-            codedTexts = new ArrayList<CodedTextVO>(getCodedTextTemplateMap(idTemplate, idElement).values());
+        ArrayList<CodedTextVO> codedTexts;
+        if (idTemplate == null) {
+            codedTexts = new ArrayList<>(getCodedTextMap(idElement).values());
+        } else {
+            codedTexts = new ArrayList<>(getCodedTextTemplateMap(idTemplate, idElement).values());
         }
         return codedTexts;
     }
 
-    private Map<String, CodedTextVO> getCodedTextMap(String idElement){
-        Map<String, CodedTextVO> map = _codedTextsByParentId.get(idElement);
-        if (map==null){
-            map = new HashMap<String, CodedTextVO>();
-            _codedTextsByParentId.put(idElement, map);
-        }
-        return map;
+    private Map<String, CodedTextVO> getCodedTextMap(String idElement) {
+        return codedTextsByParentId.computeIfAbsent(idElement, k -> new HashMap<>());
     }
 
     public String getText(CodedTextVO codedTextVO, String lang) {
@@ -92,15 +100,15 @@ public class CodedTexts {
 
     public String getText(String idTemplate, String idElement, String code, String lang) {
         CodedTextVO codedTextVO = getCodedTextVO(idTemplate, idElement, code);
-        if (codedTextVO!=null){
+        if (codedTextVO != null) {
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
-            if (archetypeTem!=null){
+            ArchetypeTermVO archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
+            if (archetypeTem != null) {
                 return archetypeTem.getText();
-            }else{
+            } else {
                 return codedTextVO.getName();
             }
-        }else{
+        } else {
             return null;
         }
     }
@@ -111,21 +119,17 @@ public class CodedTexts {
 
     public String getDescription(String idTemplate, String idElement, String code, String lang) {
         CodedTextVO codedTextVO = getCodedTextVO(idTemplate, idElement, code);
-        if (codedTextVO!=null){
+        if (codedTextVO != null) {
             String archetypeId = idElement.substring(0, idElement.indexOf("/"));
-            ArchetypeTerm archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
-            if (archetypeTem!=null){
+            ArchetypeTermVO archetypeTem = archetypeManager.getArchetypeTerm(archetypeId, idTemplate, idElement, code, lang);
+            if (archetypeTem != null) {
                 return archetypeTem.getDescription();
-            }else{
+            } else {
                 return codedTextVO.getDescription();
             }
-        }else{
+        } else {
             return null;
         }
-    }
-
-    private ArchetypeTerms getArchetypeTerms() {
-        return this.archetypeManager.getArchetypeTerms();
     }
 }
 /*

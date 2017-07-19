@@ -21,7 +21,6 @@ import se.cambio.cds.view.swing.CDSImageUtil;
 import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.*;
@@ -35,14 +34,17 @@ import java.util.*;
 
 public class NodeDefinitionManager {
 
+    private ArchetypeManager archetypeManager;
     private ArchetypeReferencesManager archetypeReferencesManager;
     private GDLEditor gdlEditor;
     private UserConfigurationManager userConfigurationManager;
 
     public NodeDefinitionManager(
+            ArchetypeManager archetypeManager,
             ArchetypeReferencesManager archetypeReferencesManager,
             GDLEditor gdlEditor,
             UserConfigurationManager userConfigurationManager) {
+        this.archetypeManager = archetypeManager;
         this.archetypeReferencesManager = archetypeReferencesManager;
         this.gdlEditor = gdlEditor;
         this.userConfigurationManager = userConfigurationManager;
@@ -158,10 +160,10 @@ public class NodeDefinitionManager {
                 .createSelectableNode();
     }
 
-    private static GTCodeRuleLineElement getCurrentDateTimeGTCodeRuleLineElement() {
+    private GTCodeRuleLineElement getCurrentDateTimeGTCodeRuleLineElement() {
         ArchetypeElementInstantiationRuleLine aeirl = new ArchetypeElementInstantiationRuleLine(null);
         GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = aeirl.getGTCodeRuleLineElement();
-        aeirl.setArchetypeElementVO(ArchetypeElements.CURRENT_DATE_TIME);
+        aeirl.setArchetypeElementVO(archetypeManager.getArchetypeElements().getCurrentDateTimeArchetypeElementVO());
         currentDateTimeGTCodeRuleLineElement.setValue(OpenEHRConst.CURRENT_DATE_TIME_ID);
         return currentDateTimeGTCodeRuleLineElement;
     }
@@ -206,8 +208,7 @@ public class NodeDefinitionManager {
     }
 
     public SelectableNode<Object> getElementsInArchetypeNode(
-            String idArchetype, String idTemplate,
-            ArchetypeManager archetypeManager) throws InternalErrorException, InstanceNotFoundException {
+            String idArchetype, String idTemplate) throws InternalErrorException, InstanceNotFoundException {
         ArchetypeDTO archetypeVO = archetypeManager.getArchetypes().getCMElement(idArchetype);
         SelectableNode.SelectionMode selectionMode = getSelectionMode();
         SelectableNode<Object> rootNode = new SelectableNodeBuilder<>()
@@ -234,7 +235,7 @@ public class NodeDefinitionManager {
                             true,
                             true,
                             archetypeManager);
-            nodoOrigen = createElementNode(archetypeElementVO, selectionMode, archetypeManager);
+            nodoOrigen = createElementNode(archetypeElementVO, selectionMode);
             clusterNode.add(nodoOrigen);
         }
         return rootNode;
@@ -244,7 +245,7 @@ public class NodeDefinitionManager {
         return SelectableNode.SelectionMode.SINGLE;
     }
 
-    private SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode, ArchetypeManager archetypeManager) {
+    private SelectableNode<Object> createElementNode(ArchetypeElementVO archetypeElementVO, SelectableNode.SelectionMode selectionMode) {
         String name = archetypeManager.getArchetypeElements().getText(archetypeElementVO, userConfigurationManager.getLanguage());
         String desc = archetypeManager.getArchetypeElements().getDescription(archetypeElementVO, userConfigurationManager.getLanguage());
         return new SelectableNodeBuilder<>()
@@ -316,7 +317,7 @@ public class NodeDefinitionManager {
         }
     }
 
-    public static SelectableNode<Object> getSingleNodeAttributesAndFunctions() {
+    public SelectableNode<Object> getSingleNodeAttributesAndFunctions() {
         String name = GDLEditorLanguageManager.getMessage("Attributes") + "/" + GDLEditorLanguageManager.getMessage("Functions");
         return new SelectableNodeBuilder<>()
                 .setName(name)
@@ -340,7 +341,7 @@ public class NodeDefinitionManager {
         return root;
     }
 
-    private static SelectableNode<Object> getCurrentTimeNodeWithAttributes() {
+    private SelectableNode<Object> getCurrentTimeNodeWithAttributes() {
         GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
         SelectableNode<Object> currentDateTimeNode =
                 getCurrentDateTimeArchetypeElementRuleLineElementNode(currentDateTimeGTCodeRuleLineElement);
@@ -348,7 +349,7 @@ public class NodeDefinitionManager {
         return currentDateTimeNode;
     }
 
-    public static SelectableNode<Object> getNodeAttributesAndFunctionsPredicate() {
+    public SelectableNode<Object> getNodeAttributesAndFunctionsPredicate() {
         SelectableNode<Object> root = new SelectableNodeBuilder<>()
                 .setName(GDLEditorLanguageManager.getMessage("Attributes"))
                 .setIcon(GDLEditorImageUtil.OBJECT_ICON)
@@ -358,7 +359,7 @@ public class NodeDefinitionManager {
         return root;
     }
 
-    public SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId, ArchetypeManager archetypeManager) {
+    public SelectableNode<Object> getNodeAttributesAndFunctions(String archetypteId, String templateId) {
         SelectableNode<Object> root =
                 new SelectableNodeBuilder<>()
                         .setName(GDLEditorLanguageManager.getMessage("Attributes"))
@@ -366,7 +367,7 @@ public class NodeDefinitionManager {
                         .createSelectableNode();
         Collection<ArchetypeElementVO> archetypeElementVOs = archetypeManager.getArchetypeElements().getArchetypeElementsVO(archetypteId, templateId);
         for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
-            SelectableNode<Object> elementNode = createElementNode(archetypeElementVO, SelectableNode.SelectionMode.SINGLE, archetypeManager);
+            SelectableNode<Object> elementNode = createElementNode(archetypeElementVO, SelectableNode.SelectionMode.SINGLE);
             String[] fieldNames =
                     OpenEHRDataValuesUI.getFieldNames(archetypeElementVO.getRMType());
             for (String fieldName : fieldNames) {

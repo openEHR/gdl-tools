@@ -121,7 +121,7 @@ public class DialogExpressionEditor extends DialogEditor {
     private void updateSelectionPanel() {
         SelectableNode<Object> node;
         if (inPredicate) {
-            node = NodeDefinitionManager.getNodeAttributesAndFunctionsPredicate();
+            node = nodeDefinitionManager.getNodeAttributesAndFunctionsPredicate();
         } else {
             node = nodeDefinitionManager.getNodeAttributesAndFunctions(gdlEditor, false, archetypeReference);
         }

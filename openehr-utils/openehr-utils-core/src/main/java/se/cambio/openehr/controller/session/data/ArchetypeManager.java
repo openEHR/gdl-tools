@@ -4,10 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.cm.controller.terminology.TerminologyService;
-import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.cm.model.archetype.vo.ArchetypeObjectBundleCustomVO;
-import se.cambio.cm.model.archetype.vo.CodedTextVO;
-import se.cambio.cm.model.archetype.vo.OrdinalVO;
+import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.util.TemplateAttributeMap;
 import se.cambio.cm.model.util.TemplateElementMap;
@@ -57,17 +54,16 @@ public class ArchetypeManager {
     }
 
     void registerArchetypeObjectBundle(
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO,
-            Archetype archetype) {
-        getArchetypeElements().loadArchetypeElements(archetypeObjectBundleCustomVO.getArchetypeElementVOs());
-        getClusters().loadClusters(archetypeObjectBundleCustomVO.getClusterVOs());
-        getCodedTexts().loadCodedTexts(archetypeObjectBundleCustomVO.getCodedTextVOs());
-        getOrdinals().loadOrdinals(archetypeObjectBundleCustomVO.getOrdinalVOs());
-        getUnits().loadUnits(archetypeObjectBundleCustomVO.getUnitVOs());
-        getProportionTypes().loadProportionTypes(archetypeObjectBundleCustomVO.getProportionTypes());
-        if (archetype != null) {
-            getArchetypeTerms().loadArchetype(archetype);
-        }
+            String archetypeId,
+            String templateId,
+            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
+        getArchetypeElements().loadArchetypeElements(archetypeId, templateId, archetypeObjectBundleCustomVO.getArchetypeElementVOs());
+        getClusters().loadClusters(archetypeId, templateId, archetypeObjectBundleCustomVO.getClusterVOs());
+        getCodedTexts().loadCodedTexts(archetypeId, templateId, archetypeObjectBundleCustomVO.getCodedTextVOs());
+        getOrdinals().loadOrdinals(archetypeId, templateId, archetypeObjectBundleCustomVO.getOrdinalVOs());
+        getUnits().loadUnits(archetypeId, templateId, archetypeObjectBundleCustomVO.getUnitVOs());
+        getProportionTypes().loadProportionTypes(archetypeId, templateId, archetypeObjectBundleCustomVO.getProportionTypes());
+        getArchetypeTerms().loadArchetypeTerms(archetypeId, archetypeObjectBundleCustomVO.getArchetypeTermVOs());
     }
 
     public Archetypes getArchetypes() {
@@ -133,14 +129,14 @@ public class ArchetypeManager {
         return archetypeTerms;
     }
 
-    protected ArchetypeTerm getArchetypeTerm(String idTemplate, String idElement, String lang) {
+    protected ArchetypeTermVO getArchetypeTerm(String idTemplate, String idElement, String lang) {
         loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
         int bracketIndex = idElement.lastIndexOf("[");
         String atCode = null;
         if (bracketIndex > 0) {
             atCode = idElement.substring(bracketIndex + 1, idElement.length() - 1);
         }
-        ArchetypeTerm archetypeTerm = null;
+        ArchetypeTermVO archetypeTerm = null;
         if (idTemplate == null) {
             int slashIndex = idElement.indexOf("/");
             if (slashIndex > 0) {
@@ -158,9 +154,9 @@ public class ArchetypeManager {
     }
 
 
-    protected ArchetypeTerm getArchetypeTerm(String archetypeId, String idTemplate, String idElement, String atCode, String lang) {
+    protected ArchetypeTermVO getArchetypeTerm(String archetypeId, String idTemplate, String idElement, String atCode, String lang) {
         loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
-        ArchetypeTerm archetypeTerm;
+        ArchetypeTermVO archetypeTerm;
         if (idTemplate == null) {
             archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
         } else {

@@ -37,7 +37,6 @@ import java.util.Collection;
 
 class RuleElementEditor {
 
-    private ArchetypeReferencesManager archetypeReferencesManager;
     private ArchetypeManager archetypeManager;
     private DVPanelFactory dvPanelFactory;
     private NodeDefinitionManager nodeDefinitionManager;
@@ -53,12 +52,11 @@ class RuleElementEditor {
             GDLEditor gdlEditor,
             ImportManager importManager) {
         this.windowManager = windowManager;
-        this.archetypeReferencesManager = archetypeReferencesManager;
         this.archetypeManager = archetypeManager;
         this.dvPanelFactory = dvPanelFactory;
         this.gdlEditor = gdlEditor;
         this.importManager = importManager;
-        this.nodeDefinitionManager = new NodeDefinitionManager(archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
+        this.nodeDefinitionManager = new NodeDefinitionManager(archetypeManager, archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
     }
 
     void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
@@ -149,7 +147,7 @@ class RuleElementEditor {
         ArchetypeReference ar = aerlde.getArchetypeReference();
         if (ar != null) {
             SelectableNode<Object> node =
-                    nodeDefinitionManager.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate(), aerlde.getArchetypeManager());
+                    nodeDefinitionManager.getElementsInArchetypeNode(ar.getIdArchetype(), ar.getIdTemplate());
             DialogElementSelection dialog = new DialogElementSelection(gdlEditor.getWindowManager(), node);
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
@@ -342,7 +340,6 @@ class RuleElementEditor {
                         windowManager,
                         wepedrl.getArchetypeReference().getIdArchetype(),
                         wepedrl.getArchetypeReference().getIdTemplate(),
-                        archetypeManager,
                         nodeDefinitionManager);
         dialog.setVisible(true);
         if (dialog.getAnswer()) {
