@@ -91,6 +91,15 @@ public class ArchetypeElements {
         }
     }
 
+    public boolean isArchetypeElement(String templateId, String elementId) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, elementId);
+        if (templateId == null) {
+            return archetypeElementsById.containsKey(elementId);
+        } else {
+            return getArchetypeElementsInTemplate(templateId).containsKey(elementId);
+        }
+    }
+
     public String getText(ArchetypeElementVO archetypeElementVO, String lang) {
         return getText(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId(), lang);
     }

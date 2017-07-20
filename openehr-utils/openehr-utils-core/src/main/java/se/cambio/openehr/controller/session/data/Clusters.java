@@ -76,6 +76,14 @@ public class Clusters {
         }
     }
 
+    public boolean isCluster(String templateId, String idCluster) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, idCluster);
+        if (templateId != null) {
+            return getClusterVOMap(templateId).containsKey(idCluster);
+        } else {
+            return clustersById.containsKey(idCluster);
+        }
+    }
 
     public Collection<ClusterVO> getSections(String templateId) {
         Collection<ClusterVO> sections = new ArrayList<>();
