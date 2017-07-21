@@ -30,12 +30,8 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
     @Override
     public void registerCMElementsInCache(Collection<TemplateDTO> cmElements) {
         super.registerCMElementsInCache(cmElements);
-        try {
-            processTemplates(cmElements);
-            registerTemplateDTOs(cmElements);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        processTemplates(cmElements);
+        registerTemplateDTOs(cmElements);
     }
 
     @Override

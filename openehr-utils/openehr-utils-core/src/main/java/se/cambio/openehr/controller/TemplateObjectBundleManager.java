@@ -45,10 +45,8 @@ public class TemplateObjectBundleManager {
             try {
                 generateTemplateData();
                 correctlyParsed = true;
-            } catch (InternalErrorException e) {
-                throw e;
-            } catch (Error | Exception e) {
-                throw new InternalErrorException(new Exception("Failed to parse template '" + templateDTO.getId() + "'", e));
+            } catch (Error | Exception ex) {
+                throw new InternalErrorException(new Exception("Failed to parse template '" + templateDTO.getId() + "'", ex));
             }
             long endTime = System.currentTimeMillis();
             LoggerFactory.getLogger(TemplateObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
@@ -57,9 +55,7 @@ public class TemplateObjectBundleManager {
         }
     }
 
-    private void generateTemplateData()
-            throws InternalErrorException {
-        try {
+    private void generateTemplateData() throws Exception {
             TEMPLATE template = getParsedTemplate(templateDTO.getSource());
             templateDTO.setArchetypeId(template.getDefinition().getArchetypeId());
             Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
@@ -67,9 +63,6 @@ public class TemplateObjectBundleManager {
             GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap, terminologyService, userConfigurationManager);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             templateDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
-        }
     }
 
     public static TEMPLATE getParsedTemplate(String templateSrc) throws InternalErrorException {

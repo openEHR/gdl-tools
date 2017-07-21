@@ -1,6 +1,5 @@
 package se.cambio.cds.model.facade.execution.drools;
 
-import org.apache.commons.io.IOUtils;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -9,8 +8,9 @@ import org.kie.api.builder.Message;
 import org.kie.api.io.Resource;
 import org.kie.api.runtime.KieContainer;
 import org.kie.internal.io.ResourceFactory;
-import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.converters.drools.GDLDroolsConverter;
 import se.cambio.cds.gdl.model.Guide;
@@ -21,7 +21,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.ExecutionLogger;
 import se.cambio.cm.model.guide.dto.GuideDTO;
-import sun.nio.ch.IOUtil;
 
 import java.io.*;
 import java.util.*;
@@ -86,21 +85,26 @@ public class DroolsRuleEngineService implements RuleEngineService {
 
     @Override
     public byte[] compile(Guide guide) {
-        String droolsGuide = new GDLDroolsConverter(guide, droolsExecutionManager.getArchetypeManager()).convertToDrools();
-        final KieServices kieServices = KieServices.Factory.get();
-        final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        Resource resource = getResource(droolsGuide);
-        if (resource != null) {
-            kieFileSystem.write("src/main/resources/" + guide.getId() + ".drl", resource);
+        Assert.notNull(guide, "Guideline cannot be null.");
+        try {
+            String droolsGuide = new GDLDroolsConverter(guide, droolsExecutionManager.getArchetypeManager()).convertToDrools();
+            final KieServices kieServices = KieServices.Factory.get();
+            final KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+            Resource resource = getResource(droolsGuide);
+            if (resource != null) {
+                kieFileSystem.write("src/main/resources/" + guide.getId() + ".drl", resource);
+            }
+            final KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
+            kieBuilder.buildAll();
+            if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
+                throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
+            }
+            final KieRepository kr = kieServices.getRepository();
+            final KieContainer kContainer = kieServices.newKieContainer(kr.getDefaultReleaseId());
+            return compiledGuideToByteArray(guide.getId(), kContainer.getKieBase());
+        } catch (Exception ex) {
+            throw new RuntimeException(format("Problem compiling guide '%s' ", guide.getId()), ex);
         }
-        final KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
-        kieBuilder.buildAll();
-        if (kieBuilder.getResults().hasMessages(Message.Level.ERROR)) {
-            throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
-        }
-        final KieRepository kr = kieServices.getRepository();
-        final KieContainer kContainer = kieServices.newKieContainer(kr.getDefaultReleaseId());
-        return compiledGuideToByteArray(guide.getId(), kContainer.getKieBase());
     }
 
     private byte[] compiledGuideToByteArray(String guideId, Object compiledGuide) {
