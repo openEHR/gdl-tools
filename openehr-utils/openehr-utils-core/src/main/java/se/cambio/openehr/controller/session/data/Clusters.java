@@ -1,5 +1,6 @@
 package se.cambio.openehr.controller.session.data;
 
+import org.apache.commons.lang.StringUtils;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
@@ -9,6 +10,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.*;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 
 public class Clusters {
     private final ArchetypeManager archetypeManager;
@@ -50,39 +52,61 @@ public class Clusters {
     }
 
     private void registerCluster(ClusterVO clusterVO) {
+        String clusterId = clusterVO.getId();
+        Map<String, ClusterVO> map;
         if (clusterVO.getIdTemplate() == null) {
-            clustersById.put(clusterVO.getId(), clusterVO);
+            map = clustersById;
         } else {
-            getClusterVOMap(clusterVO.getIdTemplate()).put(clusterVO.getId(), clusterVO);
+            map = getClusterVOMap(clusterVO.getIdTemplate());
         }
+        map.put(clusterId, clusterVO);
     }
 
     private Map<String, ClusterVO> getClusterVOMap(String templateId) {
         return templateClustersByTemplateIdAndId.computeIfAbsent(templateId, k -> new LinkedHashMap<>());
     }
 
-    public ClusterVO getClusterVO(String templateId, String idCluster) {
-        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, idCluster);
+    public ClusterVO getClusterVO(String templateId, String clusterId) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, clusterId);
+        Map<String, ClusterVO> clusterMap = getClusterMap(templateId);
+        if (!clusterMap.containsKey(clusterId)) {
+            String complexClusterId = findComplexClusterId(clusterId, clusterMap);
+            if (complexClusterId == null) {
+                throw new RuntimeException(format("Could not find cluster '%s' in template '%s'", clusterId, templateId));
+            } else {
+                clusterId = complexClusterId;
+            }
+        }
+        return clusterMap.get(clusterId);
+    }
+
+    private Map<String, ClusterVO> getClusterMap(String templateId) {
         if (templateId != null) {
-            if (!getClusterVOMap(templateId).containsKey(idCluster)) {
-                throw new RuntimeException(format("Could not find cluster '%s' in template '%s'", idCluster, templateId));
-            }
-            return getClusterVOMap(templateId).get(idCluster);
+            return getClusterVOMap(templateId);
         } else {
-            if (!clustersById.containsKey(idCluster)) {
-                throw new RuntimeException(format("Could not find cluster '%s'", idCluster));
-            }
-            return clustersById.get(idCluster);
+            return clustersById;
         }
     }
 
-    public boolean isCluster(String templateId, String idCluster) {
-        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, idCluster);
-        if (templateId != null) {
-            return getClusterVOMap(templateId).containsKey(idCluster);
-        } else {
-            return clustersById.containsKey(idCluster);
+    private String findComplexClusterId(String clusterId, Map<String, ClusterVO> map) {
+        for (String clusterIdAux: map.keySet()) {
+            String simplifiedClusterId = getSimplifiedClusterId(clusterIdAux);
+            if (clusterId.equals(simplifiedClusterId)) {
+                return clusterIdAux;
+            }
         }
+        return null;
+    }
+
+    private String getSimplifiedClusterId(String clusterIdAux) {
+        return clusterIdAux.replaceAll("\\[[^]]+]","");
+    }
+
+    public boolean isCluster(String templateId, String clusterId) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, clusterId);
+        Map<String, ClusterVO> clusterMap = getClusterMap(templateId);
+        return clusterMap.containsKey(clusterId)
+                || clusterMap.containsKey(findComplexClusterId(clusterId, clusterMap));
     }
 
     public Collection<ClusterVO> getSections(String templateId) {
