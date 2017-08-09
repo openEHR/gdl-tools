@@ -8,6 +8,7 @@ import org.openehr.am.archetype.Archetype;
 import org.openehr.jaxb.am.DifferentialArchetype;
 import org.openehr.jaxb.am.FlatArchetype;
 import org.openehr.jaxb.rm.ArchetypeId;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.acode.openehr.parser.ADLParser;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
@@ -17,9 +18,12 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import static java.lang.String.format;
+
 public class ArchetypeObjectBundleManager {
     private final ArchetypeManager archetypeManager;
     private ArchetypeDTO archetypeDTO = null;
+    private Logger logger = LoggerFactory.getLogger(ArchetypeObjectBundleManager.class);
 
     public ArchetypeObjectBundleManager(ArchetypeDTO archetypeDTO,
                                         ArchetypeManager archetypeManager) {
@@ -33,7 +37,6 @@ public class ArchetypeObjectBundleManager {
             obj = SerializationUtils.deserialize(archetypeDTO.getAobcVO());
         }
         if (!(obj instanceof ArchetypeObjectBundleCustomVO)) {
-            LoggerFactory.getLogger(ArchetypeObjectBundleManager.class).info("Parsing archetype '" + archetypeDTO.getId() + "'...");
             long startTime = System.currentTimeMillis();
             try {
                 if (CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
@@ -41,13 +44,11 @@ public class ArchetypeObjectBundleManager {
                 } else if (CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
                     generateArchetype20Data();
                 }
-            } catch (InternalErrorException e) {
-                throw e;
-            } catch (Error | Exception e) {
-                throw new InternalErrorException(new Exception("Failed to parse archetype '" + archetypeDTO.getId() + "'", e));
+            } catch (Error | Exception ex) {
+                throw new RuntimeException(format("Failed to parsing archetype '%s'", archetypeDTO.getId()), ex);
             }
             long endTime = System.currentTimeMillis();
-            LoggerFactory.getLogger(ArchetypeObjectBundleManager.class).info("Done (" + (endTime - startTime) + " ms)");
+            logger.info(format("Archetype '%s' parsed successfully (%s ms)", archetypeDTO.getId(), (endTime - startTime)));
         }
     }
 

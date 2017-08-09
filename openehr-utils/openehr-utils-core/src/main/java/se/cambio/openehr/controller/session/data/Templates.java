@@ -8,7 +8,6 @@ import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.TemplateObjectBundleManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -19,8 +18,7 @@ import java.util.*;
 
 public class Templates extends AbstractCMManager<TemplateDTO> {
     public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
-    private ArchetypeManager archetypeManager = null;
-
+    private ArchetypeManager archetypeManager;
 
     public Templates(ArchetypeManager archetypeManager) {
         super(archetypeManager.getClinicalModelsService());
@@ -39,7 +37,7 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
         return TemplateDTO.class;
     }
 
-    public void processTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
+    private void processTemplates(Collection<TemplateDTO> templateDTOs) throws InternalErrorException {
         for (TemplateDTO templateDTO : templateDTOs) {
             processTemplate(templateDTO);
         }
@@ -76,7 +74,7 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
         return getTemplatesAOMsByIds(Collections.singleton(templateId)).iterator().next();
     }
 
-    public Collection<Archetype> getTemplatesAOMsByIds(Collection<String> templateIds) throws InternalErrorException, InstanceNotFoundException {
+    private Collection<Archetype> getTemplatesAOMsByIds(Collection<String> templateIds) throws InternalErrorException, InstanceNotFoundException {
         Collection<TemplateDTO> templateDTOs = getCMElementByIds(templateIds);
         Collection<Archetype> archetypes = new ArrayList<>();
         for (TemplateDTO templateDTO : templateDTOs) {
@@ -85,7 +83,7 @@ public class Templates extends AbstractCMManager<TemplateDTO> {
         return archetypes;
     }
 
-    public Archetype getTemplateAOM(TemplateDTO templateDTO) throws InternalErrorException {
+    private Archetype getTemplateAOM(TemplateDTO templateDTO) throws InternalErrorException {
         if (templateDTO.getAom() == null) {
             processTemplate(templateDTO);
         }

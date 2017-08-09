@@ -1,10 +1,6 @@
 package se.cambio.openehr.controller;
 
-import openEHR.v1.template.DictionaryItem;
-import org.openehr.am.archetype.ontology.*;
 import org.openehr.jaxb.am.*;
-import org.openehr.jaxb.am.ArchetypeOntology;
-import org.openehr.jaxb.am.ArchetypeTerm;
 import org.openehr.jaxb.rm.CodePhrase;
 import org.openehr.jaxb.rm.DvOrdinal;
 import org.openehr.jaxb.rm.StringDictionaryItem;
@@ -17,7 +13,6 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ArchetypeTermMapGenerator;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.ArchetypeProcessingException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;

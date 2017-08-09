@@ -14,7 +14,6 @@ public class ArchetypeElementsTest {
 
     private static final String TEST_ARCHETYPE_ID = "testArchetypeId";
 
-
     @Test
     public void should_find_archetype_element_in_element_id() {
         ArchetypeElements archetypeElements = new ArchetypeElements(mock(ArchetypeManager.class));

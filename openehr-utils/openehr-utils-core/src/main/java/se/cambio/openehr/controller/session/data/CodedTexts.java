@@ -1,5 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -10,21 +12,21 @@ import static java.lang.String.format;
 
 public class CodedTexts {
     private final ArchetypeManager archetypeManager;
-    private Map<String, Map<String, CodedTextVO>> codedTextsByParentId = null;
-    private Map<String, Map<String, Map<String, CodedTextVO>>> templateCodedTextsByTemplateIdAndId = null;
+    private ListMultimap<String, CodedTextVO> codedTextByElementId;
+    private Map<String, ListMultimap<String, CodedTextVO>> codedTextsByTemplateIdAndElementId;
 
 
-    public CodedTexts(ArchetypeManager archetypeManager) {
+    CodedTexts(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         init();
     }
 
     public void init() {
-        codedTextsByParentId = new HashMap<>();
-        templateCodedTextsByTemplateIdAndId = new HashMap<>();
+        codedTextByElementId = ArrayListMultimap.create();
+        codedTextsByTemplateIdAndElementId = new HashMap<>();
     }
 
-    public void loadCodedTexts(
+    void loadCodedTexts(
             String archetypeId,
             String templateId,
             Collection<CodedTextVO> codedTextVOs) {
@@ -36,12 +38,12 @@ public class CodedTexts {
 
     private void cleanPreviousElements(String archetypeId, String templateId) {
         if (templateId != null) {
-            templateCodedTextsByTemplateIdAndId.remove(templateId);
+            codedTextsByTemplateIdAndElementId.remove(templateId);
         } else {
-            Collection<String> ids = new ArrayList<>(codedTextsByParentId.keySet());
+            Collection<String> ids = new ArrayList<>(codedTextByElementId.keySet());
             for (String id : ids) {
                 if (id.startsWith(archetypeId)) {
-                    codedTextsByParentId.remove(id);
+                    codedTextByElementId.removeAll(id);
                 }
             }
         }
@@ -49,49 +51,53 @@ public class CodedTexts {
 
     private void registerCodedText(CodedTextVO codedTextVO) {
         if (codedTextVO.getIdTemplate() == null) {
-            getCodedTextMap(codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
+            codedTextByElementId.put(codedTextVO.getId(), codedTextVO);
         } else {
-            getCodedTextTemplateMap(codedTextVO.getIdTemplate(), codedTextVO.getId()).put(codedTextVO.getCode(), codedTextVO);
+            getCodedTextTemplateMap(codedTextVO.getIdTemplate()).put(codedTextVO.getId(), codedTextVO);
         }
     }
 
 
-    private Map<String, Map<String, CodedTextVO>> getCodedTextTemplateMap(String idTemplate) {
-        return templateCodedTextsByTemplateIdAndId.computeIfAbsent(idTemplate, k -> new HashMap<>());
+    private ListMultimap<String, CodedTextVO> getCodedTextTemplateMap(String idTemplate) {
+        return codedTextsByTemplateIdAndElementId.computeIfAbsent(idTemplate, k -> ArrayListMultimap.create());
     }
 
-    public Map<String, CodedTextVO> getCodedTextTemplateMap(String idTemplate, String idElement) {
-        return getCodedTextTemplateMap(idTemplate).computeIfAbsent(idElement, k -> new HashMap<>());
-    }
-
-    public CodedTextVO getCodedTextVO(String idTemplate, String idElement, String code) {
-        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
-        if (idTemplate == null) {
-            if (!codedTextsByParentId.containsKey(idElement)) {
-                throw new RuntimeException(format("Could not find element '%s'", idElement));
+    public CodedTextVO getCodedTextVO(String templateId, String elementId, String code) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, elementId);
+        if (templateId == null) {
+            if (!codedTextByElementId.containsKey(elementId)) {
+                throw new RuntimeException(format("Could not find element '%s'", elementId));
             }
-            return getCodedTextMap(idElement).get(code);
+            return getCodedTexts(elementId)
+                    .stream()
+                    .filter(c -> c.getCode().equals(code))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException(format("Could not find code '%s' in element '%s'", code, elementId)));
         } else {
-            if (!getCodedTextTemplateMap(idTemplate).containsKey(idElement)) {
-                throw new RuntimeException(format("Could not find element '%s' in template '%s'", idElement, idTemplate));
+            if (!getCodedTextTemplateMap(templateId).containsKey(elementId)) {
+                throw new RuntimeException(format("Could not find element '%s' in template '%s'", elementId, templateId));
             }
-            return getCodedTextTemplateMap(idTemplate, idElement).get(code);
+            return getCodedTextTemplateMap(templateId).get(elementId)
+                    .stream()
+                    .filter(c -> c.getCode().equals(code))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException(format("Could not find code '%s' in element '%s' with template '%s'", code, elementId, templateId)));
         }
     }
 
-    public List<CodedTextVO> getCodedTextVOs(String idTemplate, String idElement) {
-        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idElement);
+    public List<CodedTextVO> getCodedTextVOs(String idTemplate, String elementId) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, elementId);
         ArrayList<CodedTextVO> codedTexts;
         if (idTemplate == null) {
-            codedTexts = new ArrayList<>(getCodedTextMap(idElement).values());
+            codedTexts = new ArrayList<>(getCodedTexts(elementId));
         } else {
-            codedTexts = new ArrayList<>(getCodedTextTemplateMap(idTemplate, idElement).values());
+            codedTexts = new ArrayList<>(getCodedTextTemplateMap(idTemplate).get(elementId));
         }
         return codedTexts;
     }
 
-    private Map<String, CodedTextVO> getCodedTextMap(String idElement) {
-        return codedTextsByParentId.computeIfAbsent(idElement, k -> new HashMap<>());
+    private List<CodedTextVO> getCodedTexts(String idElement) {
+        return codedTextByElementId.get(idElement);
     }
 
     public String getText(CodedTextVO codedTextVO, String lang) {

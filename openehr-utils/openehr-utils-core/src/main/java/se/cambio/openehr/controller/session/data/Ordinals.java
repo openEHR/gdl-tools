@@ -1,6 +1,7 @@
 package se.cambio.openehr.controller.session.data;
 
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 import se.cambio.cm.model.archetype.vo.OrdinalVO;
 
@@ -10,20 +11,20 @@ import static java.lang.String.format;
 
 public class Ordinals {
     private final ArchetypeManager archetypeManager;
-    private Map<String, Map<String, OrdinalVO>> ordinalByParentId = null;
-    private Map<String, Map<String, Map<String, OrdinalVO>>> templateOrdinalsByTemplateIdAndId = null;
+    private ListMultimap<String, OrdinalVO> ordinalByElementId = null;
+    private Map<String, ListMultimap<String, OrdinalVO>> ordinalsByTemplateIdAndElementId = null;
 
-    public Ordinals(ArchetypeManager archetypeManager) {
+    Ordinals(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
         init();
     }
 
     public void init() {
-        ordinalByParentId = new HashMap<>();
-        templateOrdinalsByTemplateIdAndId = new HashMap<>();
+        ordinalByElementId = ArrayListMultimap.create();
+        ordinalsByTemplateIdAndElementId = new HashMap<>();
     }
 
-    public void loadOrdinals(
+    void loadOrdinals(
             String archetypeId,
             String templateId,
             Collection<OrdinalVO> ordinalVOs) {
@@ -35,12 +36,12 @@ public class Ordinals {
 
     private void cleanPreviousElements(String archetypeId, String templateId) {
         if (templateId != null) {
-            templateOrdinalsByTemplateIdAndId.remove(templateId);
+            ordinalsByTemplateIdAndElementId.remove(templateId);
         } else {
-            Collection<String> ids = new ArrayList<>(ordinalByParentId.keySet());
+            Collection<String> ids = new ArrayList<>(ordinalByElementId.keySet());
             for (String id : ids) {
                 if (id.startsWith(archetypeId)) {
-                    ordinalByParentId.remove(id);
+                    ordinalByElementId.removeAll(id);
                 }
             }
         }
@@ -48,46 +49,50 @@ public class Ordinals {
 
     private void registerOrdinal(OrdinalVO ordinalVO) {
         if (ordinalVO.getIdTemplate() == null) {
-            getOrdinalMap(ordinalVO.getId()).put(ordinalVO.getCode(), ordinalVO);
+            ordinalByElementId.put(ordinalVO.getId(), ordinalVO);
         } else {
-            getOrdinalTemplateMap(ordinalVO.getIdTemplate(), ordinalVO.getId()).put(ordinalVO.getCode(), ordinalVO);
+            getTemplateOrdinals(ordinalVO.getIdTemplate()).put(ordinalVO.getId(), ordinalVO);
         }
     }
 
-    public OrdinalVO getOrdinalVO(String idTemplate, String idParentArchetypeNode, String ordinalKey) {
-        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
-        if (idTemplate == null) {
-            if (!ordinalByParentId.containsKey(idParentArchetypeNode)) {
-                throw new RuntimeException(format("Could not find element '%s'", idParentArchetypeNode));
+    public OrdinalVO getOrdinalVO(String templateId, String elementId, String code) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(templateId, elementId);
+        if (templateId == null) {
+            if (!ordinalByElementId.containsKey(elementId)) {
+                throw new RuntimeException(format("Could not find element '%s'", elementId));
             }
-            return getOrdinalMap(idParentArchetypeNode).get(ordinalKey);
+            return getOrdinals(elementId)
+                    .stream()
+                    .filter(o -> o.getCode().equals(code))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException(format("Could not find code '%s' in element '%s'", code, elementId)));
         } else {
-            if (!getOrdinalTemplateMap(idTemplate).containsKey(idParentArchetypeNode)) {
-                throw new RuntimeException(format("Could not find element '%s' with template '%s'", idParentArchetypeNode, idTemplate));
+            if (!getTemplateOrdinals(templateId).containsKey(elementId)) {
+                throw new RuntimeException(format("Could not find element '%s' with template '%s'", elementId, templateId));
             }
-            return getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).get(ordinalKey);
+            return getTemplateOrdinals(templateId).get(elementId)
+                    .stream()
+                    .filter(o -> o.getCode().equals(code))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException(format("Could not find code '%s' in element '%s' with template '%s'", code, elementId, templateId)));
         }
     }
 
-    public List<OrdinalVO> getOrdinalVOs(String idTemplate, String idParentArchetypeNode) {
-        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, idParentArchetypeNode);
+    public List<OrdinalVO> getOrdinalVOs(String idTemplate, String elementId) {
+        archetypeManager.loadArchetypesAndTemplatesIfNeeded(idTemplate, elementId);
         if (idTemplate == null) {
-            return new ArrayList<>(getOrdinalMap(idParentArchetypeNode).values());
+            return new ArrayList<>(getOrdinals(elementId));
         } else {
-            return new ArrayList<>(getOrdinalTemplateMap(idTemplate, idParentArchetypeNode).values());
+            return new ArrayList<>(getTemplateOrdinals(idTemplate).get(elementId));
         }
     }
 
-    private Map<String, Map<String, OrdinalVO>> getOrdinalTemplateMap(String idTemplate) {
-        return templateOrdinalsByTemplateIdAndId.computeIfAbsent(idTemplate, k -> new HashMap<>());
+    private ListMultimap<String, OrdinalVO> getTemplateOrdinals(String idTemplate) {
+        return ordinalsByTemplateIdAndElementId.computeIfAbsent(idTemplate, k -> ArrayListMultimap.create());
     }
 
-    public Map<String, OrdinalVO> getOrdinalTemplateMap(String idTemplate, String idParentArchetypeNode) {
-        return getOrdinalTemplateMap(idTemplate).computeIfAbsent(idParentArchetypeNode, k -> new HashMap<>());
-    }
-
-    private Map<String, OrdinalVO> getOrdinalMap(String idParentArchetypeNode) {
-        return ordinalByParentId.computeIfAbsent(idParentArchetypeNode, k -> new HashMap<>());
+    private List<OrdinalVO> getOrdinals(String elementId) {
+        return ordinalByElementId.get(elementId);
     }
 
     public String getText(OrdinalVO ordinalVO, String lang) {

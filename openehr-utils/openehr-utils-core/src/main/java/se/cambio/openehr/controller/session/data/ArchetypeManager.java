@@ -1,8 +1,6 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.apache.commons.lang.StringUtils;
-import org.openehr.am.archetype.Archetype;
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
@@ -16,6 +14,7 @@ import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 public class ArchetypeManager {
 
@@ -31,14 +30,17 @@ public class ArchetypeManager {
     private ClinicalModelsService clinicalModelsService;
     private TerminologyService terminologyService;
     private UserConfigurationManager userConfigurationManager;
+    private ExecutorService executorService;
 
     public ArchetypeManager(
             ClinicalModelsService clinicalModelsService,
             TerminologyService terminologyService,
-            UserConfigurationManager userConfigurationManager) {
+            UserConfigurationManager userConfigurationManager,
+            ExecutorService executorService) {
         this.clinicalModelsService = clinicalModelsService;
         this.terminologyService = terminologyService;
         this.userConfigurationManager = userConfigurationManager;
+        this.executorService = executorService;
     }
 
     public ClinicalModelsService getClinicalModelsService() {
@@ -68,7 +70,7 @@ public class ArchetypeManager {
 
     public Archetypes getArchetypes() {
         if (archetypes == null) {
-            archetypes = new Archetypes(this);
+            archetypes = new Archetypes(this, executorService);
         }
         return archetypes;
     }

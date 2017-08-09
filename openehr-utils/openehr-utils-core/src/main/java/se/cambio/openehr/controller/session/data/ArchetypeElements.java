@@ -1,17 +1,16 @@
 package se.cambio.openehr.controller.session.data;
 
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
 import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static java.lang.String.format;
 

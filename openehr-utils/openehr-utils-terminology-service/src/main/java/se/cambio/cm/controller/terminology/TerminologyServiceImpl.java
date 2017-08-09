@@ -23,7 +23,7 @@ public class TerminologyServiceImpl implements TerminologyService {
 
     private Long lastUpdate = null;
     private static final long MAX_INTERVAL_BEFORE_UPLOAD = 5000;
-    private Map<String, TerminologyService> terminologyPlugins;
+    private Map<String, TerminologyService> terminologyServicesMap;
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
     private ClinicalModelsService clinicalModelsService;
     private static Logger log = LoggerFactory.getLogger(TerminologyServiceImpl.class);
@@ -31,7 +31,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration, ClinicalModelsService clinicalModelsService) {
         this.terminologyServiceConfiguration = terminologyServiceConfiguration;
         this.clinicalModelsService = clinicalModelsService;
-        this.terminologyPlugins = new HashMap<>();
+        this.terminologyServicesMap = new HashMap<>();
 
     }
 
@@ -89,7 +89,7 @@ public class TerminologyServiceImpl implements TerminologyService {
 
     public boolean isTerminologySupported(String terminologyId) {
         checkForUpdates();
-        return terminologyPlugins.containsKey(terminologyId);
+        return terminologyServicesMap.containsKey(terminologyId);
     }
 
     private void checkTerminologySupported(CodePhrase code) {
@@ -158,10 +158,10 @@ public class TerminologyServiceImpl implements TerminologyService {
 
     private TerminologyService getTerminologyServicePlugin(String terminologyId) {
         checkForUpdates();
-        if (!terminologyPlugins.containsKey(terminologyId)) {
+        if (!terminologyServicesMap.containsKey(terminologyId)) {
             throw new RuntimeException(format("Terminology '%s' not supported!", terminologyId));
         }
-        return terminologyPlugins.get(terminologyId);
+        return terminologyServicesMap.get(terminologyId);
     }
 
     private void checkForUpdates() {
@@ -173,19 +173,13 @@ public class TerminologyServiceImpl implements TerminologyService {
         }
     }
 
-    private TerminologyService registerTerminology(TerminologyDTO terminologyDTO) {
+    private void registerTerminology(TerminologyDTO terminologyDTO) {
         TerminologyService terminologyService = generateTerminologyService(terminologyDTO);
-        terminologyPlugins.put(terminologyDTO.getId(), terminologyService);
-        return terminologyService;
+        terminologyServicesMap.put(terminologyDTO.getId(), terminologyService);
     }
-
-    private boolean isSupported(String terminologyId) {
-        return terminologyPlugins.containsKey(terminologyId);
-    }
-
 
     public Collection<String> getSupportedTerminologies() {
-        return Collections.unmodifiableCollection(terminologyPlugins.keySet());
+        return Collections.unmodifiableCollection(terminologyServicesMap.keySet());
     }
 
     private boolean shouldUpdateTerminologies() {
