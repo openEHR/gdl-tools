@@ -6,8 +6,8 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 
+@Slf4j
 public class ViewSamplesAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
@@ -39,8 +40,8 @@ public class ViewSamplesAction extends AbstractAction {
                             "samples.pdf";
             File file = new File(path);
             Desktop.getDesktop().open(file);
-        } catch (IOException e1) {
-            ExceptionHandler.handle(e1);
+        } catch (IOException ex) {
+            log.error("Error opening samples document", ex);
         }
     }
 }

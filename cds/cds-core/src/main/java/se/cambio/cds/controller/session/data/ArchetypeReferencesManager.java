@@ -7,8 +7,6 @@ import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.*;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class ArchetypeReferencesManager {
 
@@ -78,12 +76,7 @@ public class ArchetypeReferencesManager {
                 clusterPathSB.append("/").append(pathNode);
                 if (archetypeManager.getClusters().isCluster(archetypeElementVO.getIdTemplate(), clusterPathSB.toString())) {
                     ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
-                    String name = null;
-                    try {
-                        name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
-                    } catch (InternalErrorException e) {
-                        ExceptionHandler.handle(e);
-                    }
+                    String name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
                     pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getRMType()))).append("&nbsp;").append(name).append(" / ");
                 }
             }
@@ -96,15 +89,7 @@ public class ArchetypeReferencesManager {
     }
 
     private ArchetypeDTO getArchetypeDTO(ArchetypeElementVO archetypeElementVO) {
-        ArchetypeDTO archetypeVO = null;
-        try {
-            archetypeVO = archetypeManager.getArchetypes().getCMElement(archetypeElementVO.getIdArchetype());
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
-        return archetypeVO;
+        return archetypeManager.getArchetypes().getCMElement(archetypeElementVO.getIdArchetype());
     }
 
     private static String getDomainId(ArchetypeReference ar) {

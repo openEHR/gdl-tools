@@ -309,24 +309,20 @@ public class GenericObjectBundleADLManager {
     private void addSubclassCodedTexts(CodedTextVO codedTextVO, Collection<CodedTextVO> codedTextVOs) {
         if (!OpenEHRConst.LOCAL.equals(codedTextVO.getTerminology())
                 && !"*".equals(codedTextVO.getCode())) {
-            try {
-                TerminologyNodeVO node = terminologyService.retrieveAllSubclasses(
-                        new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
-                        OpenEHRDataValuesUI.getLanguageCodePhrase());
-                if (node == null) {
-                    LoggerFactory.getLogger(GenericObjectBundleADLManager.class).warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
-                    return;
-                }
-                DvCodedText ct = node.getValue();
-                codedTextVO.setName(getValidCodedTextName(ct.getValue()));
-                codedTextVO.setDescription(getValidCodedTextName(ct.getValue()));
-                if (codedTextVOs.size() > 15) { //No need to load the whole terminology
-                    return;
-                }
-                addCodedTextVOs(node, codedTextVO, codedTextVOs);
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
+            TerminologyNodeVO node = terminologyService.retrieveAllSubclasses(
+                    new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
+                    OpenEHRDataValuesUI.getLanguageCodePhrase());
+            if (node == null) {
+                LoggerFactory.getLogger(GenericObjectBundleADLManager.class).warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
+                return;
             }
+            DvCodedText ct = node.getValue();
+            codedTextVO.setName(getValidCodedTextName(ct.getValue()));
+            codedTextVO.setDescription(getValidCodedTextName(ct.getValue()));
+            if (codedTextVOs.size() > 15) { //No need to load the whole terminology
+                return;
+            }
+            addCodedTextVOs(node, codedTextVO, codedTextVOs);
         }
     }
 

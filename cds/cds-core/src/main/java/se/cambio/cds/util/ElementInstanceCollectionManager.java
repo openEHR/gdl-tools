@@ -24,7 +24,6 @@ import se.cambio.cds.model.facade.execution.vo.RuleReference;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cm.controller.terminology.TerminologyService;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
@@ -272,29 +271,24 @@ public class ElementInstanceCollectionManager {
         CurrentTimeExpressionDataValue ctedv = ((CurrentTimeExpressionDataValue) dv);
         ExpressionItem expressionItem = ctedv.getExpressionItem();
         String attribute = ctedv.getAttrbute();
-        try {
-            String expStr = ExpressionUtil.getArithmeticExpressionStr(null, expressionItem, null);
-            date = (date != null ? date : Calendar.getInstance());
-            DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
-            JexlEngine engine = new JexlEngine();
-            engine.setStrict(true);
-            Expression e = engine.createExpression(expStr);
-            JexlContext context = new MapContext();
-            context.set("$" + OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
-            context.set("DVUtil", new DVUtil());
-            context.set("Math", new MathFunctionProxy());
-            context.set("e", Math.E);
-            context.set("pi", Math.PI);
-            Object obj = e.evaluate(context);
-            if (obj instanceof Double) {
-                obj = ((Double) obj).longValue(); //In dates we never need double value
-            }
-            currentDateTime = (DvDateTime) DataValueGenerator.createDV(currentDateTime, attribute, obj);
-            return currentDateTime;
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
+        String expStr = ExpressionUtil.getArithmeticExpressionStr(null, expressionItem, null);
+        date = (date != null ? date : Calendar.getInstance());
+        DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
+        JexlEngine engine = new JexlEngine();
+        engine.setStrict(true);
+        Expression e = engine.createExpression(expStr);
+        JexlContext context = new MapContext();
+        context.set("$" + OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
+        context.set("DVUtil", new DVUtil());
+        context.set("Math", new MathFunctionProxy());
+        context.set("e", Math.E);
+        context.set("pi", Math.PI);
+        Object obj = e.evaluate(context);
+        if (obj instanceof Double) {
+            obj = ((Double) obj).longValue(); //In dates we never need double value
         }
-        return dv;
+        currentDateTime = (DvDateTime) DataValueGenerator.createDV(currentDateTime, attribute, obj);
+        return currentDateTime;
     }
 
     private static DataValue getResolvedCodedText(DvCodedText dv, Collection<Guide> guides) {
@@ -313,7 +307,7 @@ public class ElementInstanceCollectionManager {
             String message = "No terminology binding for '" + dv + "' was found! (num guidelines=" + (guides == null ? "0" : guides.size()) + ")";
             //ExceptionHandler.handle(new InternalErrorException(new Exception(message)));
             LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn(message);
-        return null;
+            return null;
         } else {
             return dv;
         }

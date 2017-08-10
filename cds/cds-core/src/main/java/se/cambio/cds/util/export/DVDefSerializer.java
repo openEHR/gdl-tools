@@ -35,30 +35,35 @@ public class DVDefSerializer {
     public static String commaSplitPatternOutsideParenthesis = ",(?![^(]*\\))";
 
 
-    public static String getDVInstantiation(DataValue dataValue){
-        if (dataValue instanceof DvQuantity){
+    public static String getDVInstantiation(DataValue dataValue) {
+        if (dataValue instanceof DvQuantity) {
             StringBuilder sb = new StringBuilder();
             sb.append("\"");
-            sb.append(((DvQuantity)dataValue).getUnits());
+            sb.append(((DvQuantity) dataValue).getUnits());
             sb.append("\"");
             sb.append(",");
-            sb.append(((DvQuantity)dataValue).getMagnitude());
+            sb.append(((DvQuantity) dataValue).getMagnitude());
             sb.append(",");
-            sb.append(((DvQuantity)dataValue).getPrecision());
+            sb.append(((DvQuantity) dataValue).getPrecision());
             return getDVInstantiationWithoutQuotes(DvQuantity.class.getSimpleName(), sb.toString());
-        }if (dataValue instanceof DvDuration){
-            return getDVInstantiation(DvDuration.class.getSimpleName(), ((DvDuration)dataValue).getValue());
-        }if (dataValue instanceof DvDateTime){
-            DvDateTime dvDateTime = (DvDateTime)dataValue;
+        }
+        if (dataValue instanceof DvDuration) {
+            return getDVInstantiation(DvDuration.class.getSimpleName(), ((DvDuration) dataValue).getValue());
+        }
+        if (dataValue instanceof DvDateTime) {
+            DvDateTime dvDateTime = (DvDateTime) dataValue;
             return getDVInstantiation(DvDateTime.class.getSimpleName(), dvDateTime.toString());
-        }if (dataValue instanceof DvDate){
-            DvDate dvDate = (DvDate)dataValue;
+        }
+        if (dataValue instanceof DvDate) {
+            DvDate dvDate = (DvDate) dataValue;
             return getDVInstantiation(DvDate.class.getSimpleName(), dvDate.toString());
-        }if (dataValue instanceof DvTime){
-            DvTime dvTime = (DvTime)dataValue;
+        }
+        if (dataValue instanceof DvTime) {
+            DvTime dvTime = (DvTime) dataValue;
             return getDVInstantiation(DvTime.class.getSimpleName(), dvTime.toString());
-        }if (dataValue instanceof DvOrdinal){
-            DvOrdinal dvOrdinal = (DvOrdinal)dataValue;
+        }
+        if (dataValue instanceof DvOrdinal) {
+            DvOrdinal dvOrdinal = (DvOrdinal) dataValue;
             DvCodedText dvCodedText = dvOrdinal.getSymbol();
             StringBuilder sb = new StringBuilder();
             sb.append(dvOrdinal.getValue());
@@ -70,8 +75,9 @@ public class DVDefSerializer {
             sb.append(dvCodedText.getDefiningCode().getCodeString());
             sb.append("\"");
             return getDVInstantiationWithoutQuotes(DvOrdinal.class.getSimpleName(), sb.toString());
-        }if (dataValue instanceof DvCodedText){
-            DvCodedText dvCodedText = (DvCodedText)dataValue;
+        }
+        if (dataValue instanceof DvCodedText) {
+            DvCodedText dvCodedText = (DvCodedText) dataValue;
             StringBuilder sb = new StringBuilder();
             sb.append("\"");
             sb.append(dvCodedText.getValue());
@@ -81,17 +87,21 @@ public class DVDefSerializer {
             sb.append(dvCodedText.getDefiningCode().getCodeString());
             sb.append("\"");
             return getDVInstantiationWithoutQuotes(DvCodedText.class.getSimpleName(), sb.toString());
-        }if (dataValue instanceof DvCount){
+        }
+        if (dataValue instanceof DvCount) {
             StringBuilder sb = new StringBuilder();
-            sb.append(((DvCount)dataValue).getMagnitude());
+            sb.append(((DvCount) dataValue).getMagnitude());
             return getDVInstantiationWithoutQuotes(DvCount.class.getSimpleName(), sb.toString());
-        }if (dataValue instanceof DvText){
-            return getDVInstantiation(DvText.class.getSimpleName(), ((DvText)dataValue).getValue());
-        }if (dataValue instanceof DvBoolean){
+        }
+        if (dataValue instanceof DvText) {
+            return getDVInstantiation(DvText.class.getSimpleName(), ((DvText) dataValue).getValue());
+        }
+        if (dataValue instanceof DvBoolean) {
             StringBuilder sb = new StringBuilder();
             sb.append(((DvBoolean) dataValue).getValue());
             return getDVInstantiationWithoutQuotes(DvBoolean.class.getSimpleName(), sb.toString());
-        }if (dataValue instanceof DvProportion){
+        }
+        if (dataValue instanceof DvProportion) {
             DvProportion dvProportion = (DvProportion) dataValue;
             StringBuilder sb = new StringBuilder();
             sb.append(DVUtil.round(dvProportion.getNumerator(), dvProportion.getPrecision()));
@@ -102,8 +112,9 @@ public class DVDefSerializer {
             sb.append(",");
             sb.append(dvProportion.getPrecision());
             return getDVInstantiationWithoutQuotes(DvProportion.class.getSimpleName(), sb.toString());
-        }if (dataValue instanceof DvList){
-            Collection<DataValue> dataValues = ((DvList)dataValue).getDataValues();
+        }
+        if (dataValue instanceof DvList) {
+            Collection<DataValue> dataValues = ((DvList) dataValue).getDataValues();
             StringBuffer sb = new StringBuffer();
             String prefix = "";
             for (DataValue dataValueAux : dataValues) {
@@ -112,80 +123,81 @@ public class DVDefSerializer {
                 prefix = ", ";
             }
             return sb.toString();
-        }else{
+        } else {
             throw new IllegalArgumentException("Unknown data value '" + dataValue.getClass().getSimpleName() + "'");
         }
     }
 
-    public static String getDVInstantiation(String dvClassName, String dvDefinition){
-        if (dvDefinition.startsWith("'")){
-            dvDefinition = dvDefinition.substring(1, dvDefinition.length()-1);
+    public static String getDVInstantiation(String dvClassName, String dvDefinition) {
+        if (dvDefinition.startsWith("'")) {
+            dvDefinition = dvDefinition.substring(1, dvDefinition.length() - 1);
         }
         return "new " + dvClassName + "(\"" + dvDefinition + "\")";
     }
 
-    public static String getDVInstantiationWithoutQuotes(String dvClassName, String dvDefinition){
+    public static String getDVInstantiationWithoutQuotes(String dvClassName, String dvDefinition) {
         return "new " + dvClassName + "(" + dvDefinition + ")";
     }
 
-    public static String getDVDefinitionWithoutQuotes(String dvInstantiation){
-        if (dvInstantiation!=null){
+    public static String getDVDefinitionWithoutQuotes(String dvInstantiation) {
+        if (dvInstantiation != null) {
             Matcher m = dvDefinitionPatternWithOutQuotes.matcher(dvInstantiation.trim());
-            if(m.find()){
+            if (m.find()) {
                 return m.group(1);
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
-    public static String getDVDefinition(String dvInstantiation){
-        if (dvInstantiation != null){
+
+    public static String getDVDefinition(String dvInstantiation) {
+        if (dvInstantiation != null) {
             Matcher m = dvDefinitionPatternWithQuotes.matcher(dvInstantiation.trim());
-            if(m.find()){
+            if (m.find()) {
                 return m.group(1);
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
 
-    public static String getDVCloneInstanceName(String expression){
-        if (expression != null){
+    public static String getDVCloneInstanceName(String expression) {
+        if (expression != null) {
             Matcher m = clonePattern.matcher(expression.trim());
-            if(m.find()){
+            if (m.find()) {
                 return m.group(1);
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
 
-    public static boolean isDVExpression(String expression){
-        if (expression != null){
+    public static boolean isDVExpression(String expression) {
+        if (expression != null) {
             Matcher m = setLinePattern.matcher(expression.trim());
-            if(m.find()){
+            if (m.find()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
 
-    public static Calendar getCalendarFromDVDataTimeDef(String dvDefinition){
+    public static Calendar getCalendarFromDVDataTimeDef(String dvDefinition) {
         dvDefinition = dvDefinition.replace(":", "");
         DvDateTime dv = new DvDateTime(dvDefinition);
         Calendar cal = Calendar.getInstance();
         cal.set(
                 dv.getYear(),
-                dv.getMonth()-1,
+                dv.getMonth() - 1,
                 dv.getDay(),
                 dv.getHour(),
                 dv.getMinute(),
@@ -194,26 +206,26 @@ public class DVDefSerializer {
         return cal;
     }
 
-    public static ArrayList<String[]> getDVAssignationsFromExpression(String expression) throws InternalErrorException{
+    public static ArrayList<String[]> getDVAssignationsFromExpression(String expression) throws InternalErrorException {
         Matcher m = setLinePattern.matcher(expression.trim());
-        if(m.find()){
+        if (m.find()) {
             return getDVAssignationsFromSetLine(m.group(1));
-        }else{
-            throw new InternalErrorException(new IllegalArgumentException("Could not parse: "+expression));
+        } else {
+            throw new InternalErrorException(new IllegalArgumentException("Could not parse: " + expression));
         }
     }
 
-    public static ArrayList<String[]> getDVAssignationsFromSetLine(String setLine) throws InternalErrorException{
+    public static ArrayList<String[]> getDVAssignationsFromSetLine(String setLine) throws InternalErrorException {
         ArrayList<String[]> setLines = new ArrayList<String[]>();
-        if(!setLine.trim().isEmpty()){
+        if (!setLine.trim().isEmpty()) {
             setLine = setLine.trim().substring(1, setLine.length());
             String[] assignationLines = setLine.split(",[\\s]*@");
             for (String assignationLine : assignationLines) {
                 Matcher m = assignationLinePattern.matcher(assignationLine);
-                if(m.find()){
+                if (m.find()) {
                     setLines.add(new String[]{m.group(1), m.group(2), m.group(3)});
-                }else{
-                    throw new InternalErrorException(new IllegalArgumentException("Could not parse: "+assignationLine));
+                } else {
+                    throw new InternalErrorException(new IllegalArgumentException("Could not parse: " + assignationLine));
                 }
             }
         }
@@ -222,33 +234,29 @@ public class DVDefSerializer {
 
 
     public static String getReadableExpression(String expression) {
-        try{
-            ArrayList<String[]> assignations = getDVAssignationsFromExpression(expression);
-            String instanceName = getDVCloneInstanceName(expression);
-            if (assignations.isEmpty()){
-                return instanceName;
-            }else{
-                for (String[] assignation : assignations) {
-                    if ("magnitude".equals(assignation[0])){
-                        StringBuffer resulStr = new StringBuffer();
-                        if (assignation[1]!=null&&!assignation[1].isEmpty()){
-                            resulStr.append(instanceName+assignation[1]);
-                        }
-                        resulStr.append(getExpressionWithReadableReferences(assignation[2]));
-                        return resulStr.toString();
+        ArrayList<String[]> assignations = getDVAssignationsFromExpression(expression);
+        String instanceName = getDVCloneInstanceName(expression);
+        if (assignations.isEmpty()) {
+            return instanceName;
+        } else {
+            for (String[] assignation : assignations) {
+                if ("magnitude".equals(assignation[0])) {
+                    StringBuffer resulStr = new StringBuffer();
+                    if (assignation[1] != null && !assignation[1].isEmpty()) {
+                        resulStr.append(instanceName + assignation[1]);
                     }
+                    resulStr.append(getExpressionWithReadableReferences(assignation[2]));
+                    return resulStr.toString();
                 }
             }
-        }catch(InternalErrorException e){
-            ExceptionHandler.handle(e);
         }
         return OpenEHRLanguageManager.getMessage("Expression");
     }
 
-    private static String getExpressionWithReadableReferences(String stringWithReferences){
+    private static String getExpressionWithReadableReferences(String stringWithReferences) {
         Pattern regex = Pattern.compile("\\$([\\w]+)+\\Q.getDataValue()).get\\E([\\w]+)\\(\\)");
         Matcher m = regex.matcher(stringWithReferences);
-        while (m.find()){
+        while (m.find()) {
             String handle = m.group(1);
             String field = m.group(2);
             String ref = "\\(\\([\\w]+\\)\\Q$" + handle + ".getDataValue()).get" + field + "()\\E";
@@ -257,86 +265,86 @@ public class DVDefSerializer {
         return stringWithReferences;
     }
 
-    public static String getCodeFromDVInstantiation(String dvInstantiation){
+    public static String getCodeFromDVInstantiation(String dvInstantiation) {
         String dvDefinition = DVDefSerializer.getDVDefinitionWithoutQuotes(dvInstantiation);
-        if (dvDefinition!=null && dvDefinition.contains(",")){
+        if (dvDefinition != null && dvDefinition.contains(",")) {
             String[] splittedDVDefinition = dvDefinition.split(",");
-            dvDefinition = splittedDVDefinition[splittedDVDefinition.length-1];
+            dvDefinition = splittedDVDefinition[splittedDVDefinition.length - 1];
             dvDefinition = dvDefinition.replace("\"", "");
             return dvDefinition;
-        }else{
+        } else {
             return null;
         }
     }
 
-    public static String getDVClassName(String rmName){
+    public static String getDVClassName(String rmName) {
         return getDummyDV(rmName).getClass().getSimpleName();
     }
 
-    public static DataValue getDummyDV(String rmName){
+    public static DataValue getDummyDV(String rmName) {
         DataValue dv = dataValueMap.get(rmName);
-        if(dv == null) {
+        if (dv == null) {
             throw new IllegalArgumentException("unsupported RM class[" + rmName + "]");
-        }else{
+        } else {
             return dv;
         }
     }
 
-    public static String getReadableValue(DataValue dv, TermDefinition termDefinition){
-        if (dv instanceof DvCodedText){
-            CodePhrase cp = ((DvCodedText)dv).getDefiningCode();
+    public static String getReadableValue(DataValue dv, TermDefinition termDefinition) {
+        if (dv instanceof DvCodedText) {
+            CodePhrase cp = ((DvCodedText) dv).getDefiningCode();
             Term term = getTerm(termDefinition, cp);
-            if (term!=null){
+            if (term != null) {
                 return term.getText();
             }
-            return ((DvCodedText)dv).getValue();
-        }else if (dv instanceof DvOrdinal){
-            CodePhrase cp = ((DvOrdinal)dv).getSymbol().getDefiningCode();
+            return ((DvCodedText) dv).getValue();
+        } else if (dv instanceof DvOrdinal) {
+            CodePhrase cp = ((DvOrdinal) dv).getSymbol().getDefiningCode();
             Term term = getTerm(termDefinition, cp);
-            if (term!=null){
+            if (term != null) {
                 return term.getText();
-            }else{
-                return ((DvOrdinal)dv).getSymbol().getValue();
+            } else {
+                return ((DvOrdinal) dv).getSymbol().getValue();
             }
-        }else if (dv instanceof DvQuantity){
-            DvQuantity dvQuantity = ((DvQuantity)dv);
+        } else if (dv instanceof DvQuantity) {
+            DvQuantity dvQuantity = ((DvQuantity) dv);
             DecimalFormat format = getDecimalFormat(dvQuantity.getPrecision());
-            return format.format(dvQuantity.getMagnitude())+" "+dvQuantity.getUnits();
-        }else if (dv instanceof DvProportion){
-            DvProportion dvProportion = ((DvProportion)dv);
+            return format.format(dvQuantity.getMagnitude()) + " " + dvQuantity.getUnits();
+        } else if (dv instanceof DvProportion) {
+            DvProportion dvProportion = ((DvProportion) dv);
             DecimalFormat format = getDecimalFormat(dvProportion.getPrecision());
-            return format.format(dvProportion.getNumerator())+"/"+format.format(dvProportion.getDenominator());
-        }else if (dv instanceof DvDateTime){
+            return format.format(dvProportion.getNumerator()) + "/" + format.format(dvProportion.getDenominator());
+        } else if (dv instanceof DvDateTime) {
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-            Date date = ((DvDateTime)dv).getDateTime().toDate();
+            Date date = ((DvDateTime) dv).getDateTime().toDate();
             return df.format(date);
-        }else if (dv instanceof DvDate){
+        } else if (dv instanceof DvDate) {
             DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-            Date date = ((DvDate)dv).getDateTime().toDate();
+            Date date = ((DvDate) dv).getDateTime().toDate();
             return df.format(date);
-        }else if (dv instanceof DvTime){
+        } else if (dv instanceof DvTime) {
             DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
-            Date date = ((DvTime)dv).getDateTime().toDate();
+            Date date = ((DvTime) dv).getDateTime().toDate();
             return df.format(date);
-        }else if (dv instanceof DvText){
-            return "\""+dv.toString()+"\"";
-        }else if (dv!=null){
+        } else if (dv instanceof DvText) {
+            return "\"" + dv.toString() + "\"";
+        } else if (dv != null) {
             return dv.toString();
-        }else{
+        } else {
             return null;
         }
     }
 
-    private static Term getTerm( TermDefinition termDefinition, CodePhrase cp){
-        if (cp.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)){
-            if (termDefinition!=null){
+    private static Term getTerm(TermDefinition termDefinition, CodePhrase cp) {
+        if (cp.getTerminologyId().getValue().equals(OpenEHRConst.LOCAL)) {
+            if (termDefinition != null) {
                 return termDefinition.getTerms().get(cp.getCodeString());
             }
         }
         return null;
     }
 
-    private static DecimalFormat getDecimalFormat(int precision){
+    private static DecimalFormat getDecimalFormat(int precision) {
         return OpenEHRNumberFormat.getDecimalFormat(precision);
     }
 
@@ -357,7 +365,7 @@ public class DVDefSerializer {
         dataValueMap.put(OpenEHRDataValues.DV_TIME, new DvTime("12:00:00"));
         dataValueMap.put(OpenEHRDataValues.DV_DURATION, new DvDuration("P10D"));
         dataValueMap.put(OpenEHRDataValues.DV_BOOLEAN, new DvBoolean(Boolean.FALSE));
-        dataValueMap.put(OpenEHRDataValues.DV_PROPORTION, new DvProportion(1,1,ProportionKind.UNITARY,0));
+        dataValueMap.put(OpenEHRDataValues.DV_PROPORTION, new DvProportion(1, 1, ProportionKind.UNITARY, 0));
     }
 }
 /*

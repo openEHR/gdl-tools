@@ -1,10 +1,10 @@
 package se.cambio.cm.model.util;
 
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.PropertiesEx;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,29 +15,27 @@ import java.util.Map;
 public class CMConfigurationManager {
 
     private static final String CONFIGURATION_FILE = "cm-config.properties";
-    private static Map <Object,Object> parameters;
+    private static Map<Object, Object> parameters;
 
-    static{
-        parameters = Collections.synchronizedMap(new HashMap<Object,Object>());
+    private CMConfigurationManager() {
         try {
+            parameters = Collections.synchronizedMap(new HashMap<>());
             InputStream is = CMConfigurationManager.class.getClassLoader().getResourceAsStream(CONFIGURATION_FILE);
-            if (is!=null){
+            if (is != null) {
                 PropertiesEx properties = new PropertiesEx();
                 properties.load(is);
                 is.close();
                 parameters.putAll(properties);
             }
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
-    private CMConfigurationManager() {}
-
-    public static List<CMType> getAdditionalCMElements() throws MissingConfigurationParameterException, InternalErrorException {
-        List<CMType> cmTypes = new ArrayList<CMType>();
+    static List<CMType> getAdditionalCMElements() throws MissingConfigurationParameterException, InternalErrorException {
+        List<CMType> cmTypes = new ArrayList<>();
         List<String> cmElementIds = getAdditionalCMElementsIds();
-        for(String cmElementId: cmElementIds){
+        for (String cmElementId : cmElementIds) {
             Class clazz = getAdditionalCMElementClass(cmElementId);
             List<String> extensions = getAdditionalCMElementExtensions(cmElementId);
             cmTypes.add(new CMType(cmElementId, clazz, extensions));
@@ -50,7 +48,7 @@ public class CMConfigurationManager {
         List<String> cmElementIds = new ArrayList<String>();
         if (value != null) {
             String[] cmElementIdsAux = value.split(",");
-            for(String cmElementId: cmElementIdsAux){
+            for (String cmElementId : cmElementIdsAux) {
                 cmElementIds.add(cmElementId.trim());
             }
         }
@@ -72,10 +70,10 @@ public class CMConfigurationManager {
 
     private static List<String> getAdditionalCMElementExtensions(String cmElementId) {
         String value = (String) parameters.get(cmElementId + "/Extensions");
-        List<String> extensions = new ArrayList<String>();
+        List<String> extensions = new ArrayList<>();
         if (value != null) {
             String[] extensionsAux = value.split(",");
-            for(String extension: extensionsAux){
+            for (String extension : extensionsAux) {
                 extensions.add(extension.trim());
             }
         }

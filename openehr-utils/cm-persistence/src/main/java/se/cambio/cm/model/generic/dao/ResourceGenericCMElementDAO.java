@@ -1,10 +1,10 @@
 package se.cambio.cm.model.generic.dao;
 
 import org.apache.commons.io.IOUtils;
+import org.jberet.support.io.UnicodeBOMInputStream;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMTypeManager;
 import se.cambio.openehr.util.Resources;
-import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 

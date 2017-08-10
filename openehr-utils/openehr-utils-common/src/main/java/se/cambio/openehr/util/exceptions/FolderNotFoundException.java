@@ -1,10 +1,10 @@
 package se.cambio.openehr.util.exceptions;
 
-public class FolderNotFoundException extends InternalErrorException{
+public class FolderNotFoundException extends InternalErrorException {
     private static final long serialVersionUID = 1L;
 
-    public FolderNotFoundException(String folderPath){
-	super(new Exception("Folder '"+folderPath+"' not found."));
+    public FolderNotFoundException(String folderPath) {
+        super(new Exception("Folder '" + folderPath + "' not found."));
     }
 }
 /*

@@ -63,17 +63,9 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
                 label = selectedCodedText.getCode();
                 String terminologyId = ((DvCodedText) dataValue).getDefiningCode().getTerminologyId().getValue();
                 CodePhrase cp = new CodePhrase(terminologyId, selectedCodedText.getCode());
-                try {
-                    label = archetypeManager.getTerminologyService().retrieveTerm(cp, OpenEHRDataValuesUI.getLanguageCodePhrase());
-                } catch (Exception e) {
-                    ExceptionHandler.handle(e);
-                }
+                label = archetypeManager.getTerminologyService().retrieveTerm(cp, OpenEHRDataValuesUI.getLanguageCodePhrase());
                 if (label == null) {
-                    try {
-                        label = archetypeManager.getTerminologyService().retrieveTerm(cp, OpenEHRDataValuesUI.getDefaultLanguageCodePhrase());
-                    } catch (Exception e) {
-                        ExceptionHandler.handle(e);
-                    }
+                    label = archetypeManager.getTerminologyService().retrieveTerm(cp, OpenEHRDataValuesUI.getDefaultLanguageCodePhrase());
                 }
                 if (label == null) {
                     label = selectedCodedText.getCode();

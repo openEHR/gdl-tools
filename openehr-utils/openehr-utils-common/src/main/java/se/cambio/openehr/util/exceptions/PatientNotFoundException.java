@@ -2,15 +2,12 @@ package se.cambio.openehr.util.exceptions;
 
 public class PatientNotFoundException extends ModelException {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-    public PatientNotFoundException(String patientId){
-	super("Patient '"+patientId+"' not found.");
+    public PatientNotFoundException(String patientId) {
+        super("Patient '" + patientId + "' not found.");
     }
-    
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -9,7 +9,7 @@ import java.text.DecimalFormatSymbols;
 public class OpenEHRNumberFormat {
 
 
-    public static char DV_QUANTITY_DECIMAL_SEPARATOR = '.';
+    public static final char DV_QUANTITY_DECIMAL_SEPARATOR = '.';
 
     public static DecimalFormat getDecimalFormat() {
         return getDecimalFormat(null);

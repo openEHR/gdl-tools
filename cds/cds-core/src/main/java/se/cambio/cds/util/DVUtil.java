@@ -18,8 +18,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.TerminologyService;
-import se.cambio.openehr.util.BeanProvider;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
@@ -215,12 +213,7 @@ public class DVUtil {
                 codePhrases.add(getCodePhrase(dataValue));
             }
             if (a != null && !codePhrases.isEmpty()) {
-                try {
-                    return !getTerminologyService().isSubclassOf(a, codePhrases);
-                } catch (Exception exception) {
-                    ExceptionHandler.handle(exception);
-                    return false;
-                }
+                return !getTerminologyService().isSubclassOf(a, codePhrases);
             } else {
                 return false;
             }

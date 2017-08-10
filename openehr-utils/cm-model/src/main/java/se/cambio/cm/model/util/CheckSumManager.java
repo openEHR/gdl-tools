@@ -1,7 +1,6 @@
 package se.cambio.cm.model.util;
 
 import se.cambio.cm.model.util.comparators.CMElementComparator;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.UnsupportedEncodingException;
@@ -28,7 +27,7 @@ public class CheckSumManager {
             try {
                 md.update(cmElement.getSource().getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                ExceptionHandler.handle(e);
+                throw new RuntimeException(e);
             }
         }
         byte[] md5Bytes = md.digest();

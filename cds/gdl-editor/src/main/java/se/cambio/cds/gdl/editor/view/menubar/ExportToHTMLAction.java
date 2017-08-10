@@ -6,12 +6,12 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@Slf4j
 public class ExportToHTMLAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
@@ -61,10 +62,8 @@ public class ExportToHTMLAction extends AbstractAction {
                 BufferedWriter out = new BufferedWriter(fstream);
                 out.write(guideHTMLExporter.convertToHTML(guide, lang));
                 out.close();
-            } catch (IOException e) {
-                ExceptionHandler.handle(e);
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
+            } catch (IOException | InternalErrorException ex) {
+                log.error("Error exporting to HTML guideline: " + guide.getId(), ex);
             }
         }
     }

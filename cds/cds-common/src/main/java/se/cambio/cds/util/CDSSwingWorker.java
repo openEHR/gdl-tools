@@ -1,6 +1,5 @@
 package se.cambio.cds.util;
 
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
@@ -9,13 +8,7 @@ public abstract class CDSSwingWorker extends SwingWorker<Object, Object> {
 
     @Override
     protected final Object doInBackground() throws Exception {
-        try {
-            executeCDSSW();
-        } catch (InternalErrorException exception) {
-            ExceptionHandler.handle(exception);
-        } catch (Exception exception) {
-            ExceptionHandler.handle(exception);
-        }
+        executeCDSSW();
         return null;
     }
 

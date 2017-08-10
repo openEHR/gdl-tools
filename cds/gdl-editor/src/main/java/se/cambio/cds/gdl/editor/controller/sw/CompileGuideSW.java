@@ -1,13 +1,13 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+@Slf4j
 public class CompileGuideSW extends CDSSwingWorker {
     private String errorMsg = null;
     private byte[] compiledGuide = null;
@@ -27,8 +27,7 @@ public class CompileGuideSW extends CDSSwingWorker {
             }
         } catch (Throwable e) {
             errorMsg = e.getMessage();
-            LoggerFactory.getLogger(CompileGuideSW.class).warn("ERROR Compiling guide '" + gdlEditor.getEntity().getId() + "': " + e.getMessage());
-            ExceptionHandler.handle(e);
+            log.warn("ERROR Compiling guide '" + gdlEditor.getEntity().getId() + "': " + e.getMessage());
         }
     }
 

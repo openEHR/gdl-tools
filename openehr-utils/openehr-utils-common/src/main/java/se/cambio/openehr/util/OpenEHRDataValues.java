@@ -1,29 +1,24 @@
 package se.cambio.openehr.util;
 
-
-/**
- * @author iago.corbal
- *
- */
 public class OpenEHRDataValues {
 
 
     //DATA VALUES
-    public final static String DV_TEXT = "DV_TEXT";
-    public final static String DV_CODED_TEXT = "DV_CODED_TEXT";
-    public final static String DV_ORDINAL = "DV_ORDINAL";
-    public final static String DV_DURATION = "DV_DURATION";
-    public final static String DV_COUNT = "DV_COUNT";
-    public final static String DV_DATE_TIME = "DV_DATE_TIME";
-    public final static String DV_DATE = "DV_DATE";
-    public final static String DV_TIME = "DV_TIME";
-    public final static String DV_BOOLEAN = "DV_BOOLEAN";
-    public final static String DV_PROPORTION = "DV_PROPORTION";
-    public final static String DV_QUANTITY = "DV_QUANTITY";
-    public final static String DV_URI = "DV_URI";
-    public final static String DV_STATE = "DV_STATE";
-    public final static String DV_IDENTIFIER = "DV_IDENTIFIER";
-    public final static String DV_PARSABLE = "DV_PARSABLE";
+    public static final String DV_TEXT = "DV_TEXT";
+    public static final String DV_CODED_TEXT = "DV_CODED_TEXT";
+    public static final String DV_ORDINAL = "DV_ORDINAL";
+    public static final String DV_DURATION = "DV_DURATION";
+    public static final String DV_COUNT = "DV_COUNT";
+    public static final String DV_DATE_TIME = "DV_DATE_TIME";
+    public static final String DV_DATE = "DV_DATE";
+    public static final String DV_TIME = "DV_TIME";
+    public static final String DV_BOOLEAN = "DV_BOOLEAN";
+    public static final String DV_PROPORTION = "DV_PROPORTION";
+    public static final String DV_QUANTITY = "DV_QUANTITY";
+    public static final String DV_URI = "DV_URI";
+    public static final String DV_STATE = "DV_STATE";
+    public static final String DV_IDENTIFIER = "DV_IDENTIFIER";
+    public static final String DV_PARSABLE = "DV_PARSABLE";
 
     public enum DataValue {
         DV_TEXT, DV_CODED_TEXT, DV_ORDINAL,
@@ -32,6 +27,7 @@ public class OpenEHRDataValues {
         DV_QUANTITY, DV_URI, DV_STATE, DV_IDENTIFIER,
         DV_PARSABLE
     }
+
     //Functions
     public static final String FUNCTION_COUNT = "count";
 
@@ -58,7 +54,7 @@ public class OpenEHRDataValues {
     public static final String FRACTIONAL_SECOND_ATT = "fractionalSecond";
     public static final String TIMEZONE_ATT = "timeZone";
 
-    public static boolean isDataValue(String dataValueId){
+    public static boolean isDataValue(String dataValueId) {
         for (DataValue c : DataValue.values()) {
             if (c.name().equals(dataValueId)) {
                 return true;

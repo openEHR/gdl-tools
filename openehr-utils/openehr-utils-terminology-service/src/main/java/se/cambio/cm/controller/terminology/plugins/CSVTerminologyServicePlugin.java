@@ -1,5 +1,8 @@
 package se.cambio.cm.controller.terminology.plugins;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.StringUtils;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
@@ -9,7 +12,6 @@ import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.cm.util.exceptions.InvalidCodeException;
 import se.cambio.cm.util.exceptions.UnsupportedTerminologyException;
-import se.cambio.openehr.util.misc.CSVReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,29 +37,28 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
     @Override
     public void init(InputStream is) {
         try {
-            CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(is, "UTF-8")));
+            CSVParser csvParser = new CSVParser(new BufferedReader(new InputStreamReader(is, "UTF-8")), CSVFormat.DEFAULT.withDelimiter(';'));
             parentsMap = new HashMap<>();
             childrenMap = new HashMap<>();
             descriptionsMap = new HashMap<>();
-            csvReader.readHeaders();
-            processCsv(csvReader);
+            processCsv(csvParser);
         } catch (Exception e) {
             String message = format("Failed to initialize the terminology service '%s'", terminologyConfig.getTerminologyId());
             throw new RuntimeException(message, e);
         }
     }
 
-    private void processCsv(CSVReader csvReader) throws IOException {
-        while (csvReader.readRecord()) {
-            String id = csvReader.get("id");
-            String description = csvReader.get("text");
-            String parent = csvReader.get("parent");
+    private void processCsv(CSVParser csvParser) throws IOException {
+        for(CSVRecord csvRecord: csvParser.getRecords()) {
+            String id = csvRecord.get("id");
+            String description = csvRecord.get("text");
+            String parent = csvRecord.get("parent");
             log.debug("id: " + id + ", description: " + description);
             addTerm(id, description, parent, "");
-            for (String header : csvReader.getHeaders()) {
+            for (String header : csvParser.getHeaderMap().keySet()) {
                 if (header.startsWith("text_")) {
                     String language = StringUtils.substringAfter(header, "text_");
-                    description = csvReader.get(header);
+                    description = csvRecord.get(header);
                     addTerm(id, description, parent, language);
                 }
             }

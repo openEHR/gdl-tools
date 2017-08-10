@@ -1,7 +1,6 @@
 package se.cambio.cds.util.misc;
 
-import se.cambio.openehr.util.BeanProvider;
-import se.cambio.openehr.util.ExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
@@ -10,7 +9,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 
-
+@Slf4j
 public final class CDSLanguageManager {
 
 
@@ -37,11 +36,11 @@ public final class CDSLanguageManager {
         if (resourceBundle == null) {
             try {
                 resourceBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, new Locale(language, country), new UTF8Control());
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 if (!CDSLanguageManager.language.equals(language)) {
                     resourceBundle = getResourceBundle();
                 }
-                ExceptionHandler.handle(e);
+                log.error("Error getting resource bundle for language: " + language, ex);
             }
             if (resourceBundle != null) {
                 getDelegate().resourceMap.put(language, resourceBundle);
@@ -60,7 +59,7 @@ public final class CDSLanguageManager {
         try {
             return getResourceBundle(language).getString(key);
         } catch (MissingResourceException e) {
-            ExceptionHandler.handle(e);
+            log.error(format("Error getting resource bundle for language '%s' with key '%s'", language, key));
             return "ERROR: Text not Found!";
         }
     }

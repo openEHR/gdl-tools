@@ -1,13 +1,10 @@
 package se.cambio.cds.gdl.editor.util;
 
-import se.cambio.openehr.util.BeanProvider;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 
@@ -27,12 +24,7 @@ public final class GDLEditorLanguageManager {
     }
 
     public static String getMessage(String key) {
-        try {
-            return getDelegate().resource.getString(key);
-        } catch (MissingResourceException e) {
-            ExceptionHandler.handle(e);
-            return "ERROR: Text not Found!";
-        }
+        return getDelegate().resource.getString(key);
     }
 
     public static String getMessage(String key, String data1) {

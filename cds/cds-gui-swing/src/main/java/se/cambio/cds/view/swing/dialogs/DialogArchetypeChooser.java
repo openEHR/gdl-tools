@@ -184,13 +184,7 @@ public class DialogArchetypeChooser extends JDialog {
         }
 
         public void actionPerformed(ActionEvent e) {
-            try {
-                importManager.showImportArchetypeDialogAndAddToRepo(_dialog, null);
-            } catch (InternalErrorException e1) {
-                ExceptionHandler.handle(e1);
-            } catch (InstanceNotFoundException e1) {
-                ExceptionHandler.handle(e1);
-            }
+            importManager.showImportArchetypeDialogAndAddToRepo(_dialog, null);
             refreshArchetypeSelectionPanel();
         }
     }
@@ -228,13 +222,7 @@ public class DialogArchetypeChooser extends JDialog {
         }
 
         public void actionPerformed(ActionEvent e) {
-            try {
-                importManager.showImportTemplateDialog(_dialog, null);
-            } catch (InternalErrorException e1) {
-                ExceptionHandler.handle(e1);
-            } catch (InstanceNotFoundException e1) {
-                ExceptionHandler.handle(e1);
-            }
+            importManager.showImportTemplateDialog(_dialog, null);
             refreshTemplateSelectionPanel();
         }
     }
@@ -353,16 +341,12 @@ public class DialogArchetypeChooser extends JDialog {
                     .setName(OpenEHRLanguageManager.getMessage("Archetypes"))
                     .setIcon(Archetypes.ICON)
                     .createSelectableNode();
-            try {
-                Collection<String> archetypeIds = archetypeManager.getArchetypes().getAllIds();
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.OBSERVATION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ENTRY);
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
+            Collection<String> archetypeIds = archetypeManager.getArchetypes().getAllIds();
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.OBSERVATION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ENTRY);
         }
         return archetypeNode;
     }
@@ -402,12 +386,8 @@ public class DialogArchetypeChooser extends JDialog {
                 .setName(OpenEHRLanguageManager.getMessage("Templates"))
                 .setIcon(Templates.ICON)
                 .createSelectableNode();
-        try {
-            Collection<String> templateIds = archetypeManager.getTemplates().getAllIds();
-            insertTemplateNodes(templateNode, templateIds);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        Collection<String> templateIds = archetypeManager.getTemplates().getAllIds();
+        insertTemplateNodes(templateNode, templateIds);
         return templateNode;
     }
 
@@ -429,19 +409,12 @@ public class DialogArchetypeChooser extends JDialog {
 
     public CMElement getSelectedCMElement() {
         boolean isArchetypeTabSelected = getArchetypeTemplateTabbedPane().getSelectedIndex() == 0;
-        try {
-            String id = getSelectedId(isArchetypeTabSelected);
-            if (id == null) {
-                return null;
-            } else {
-                return getCmElement(id, isArchetypeTabSelected);
-            }
-        } catch (InternalErrorException e1) {
-            ExceptionHandler.handle(e1);
-        } catch (InstanceNotFoundException e1) {
-            ExceptionHandler.handle(e1);
+        String id = getSelectedId(isArchetypeTabSelected);
+        if (id == null) {
+            return null;
+        } else {
+            return getCmElement(id, isArchetypeTabSelected);
         }
-        return null;
     }
 
     private CMElement getCmElement(String id, boolean isArchetypeTabSelected) throws InstanceNotFoundException, InternalErrorException {

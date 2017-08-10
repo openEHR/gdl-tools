@@ -1,11 +1,12 @@
 package se.cambio.cm.model.generic.dao;
 
+import org.jberet.support.io.UnicodeBOMInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMTypeManager;
 import se.cambio.openehr.util.CmFolder;
-import se.cambio.openehr.util.ExceptionHandler;
 import org.apache.commons.io.IOUtils;
-import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.FolderNotFoundException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -25,6 +26,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     private Class<E> cmElementClass;
     private CmFolder cmFolder;
     private Collection<String> fileExtensions;
+    private Logger logger = LoggerFactory.getLogger(FileGenericCMElementDAO.class);
 
     public FileGenericCMElementDAO(Class<E> cmElementClass, CmFolder cmFolder) {
         this.cmElementClass = cmElementClass;
@@ -52,16 +54,16 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         Collection<String> ids = new ArrayList<String>();
         File[] listOfFiles = getFolder().listFiles();
 		if(listOfFiles != null) {
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].isFile()) {
-					String fileName = listOfFiles[i].getName();
-					String fileExtension = matchingFileExtension(fileName);
-					if (fileExtension!=null) {
-						String id = getId(fileName, fileExtension);
-						ids.add(id);
-					}
-				}
-			}
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile()) {
+                    String fileName = listOfFile.getName();
+                    String fileExtension = matchingFileExtension(fileName);
+                    if (fileExtension != null) {
+                        String id = getId(fileName, fileExtension);
+                        ids.add(id);
+                    }
+                }
+            }
 		}
         return ids;
     }
@@ -74,26 +76,22 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         }
         File[] listOfFiles = getFolder().listFiles();
 		if(listOfFiles != null) {
-			for (int i = 0; i < listOfFiles.length; i++) {
-				File file = listOfFiles[i];
-				if (file.isFile()) {
-					String fileName = file.getName();
-					String fileExtension = matchingFileExtension(fileName);
-					if (fileExtension!=null) {
-						try {
-							FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-							try {
-								E cmElement = getCMElement(fileName, fileExtension, fis, new Date(file.lastModified()));
-								cmElements.add(cmElement);
-							}finally{
-								fis.close();
-							}
-						} catch (Exception e) {
-							ExceptionHandler.handle(e);
-						}
-					}
-				}
-			}
+            for (File file : listOfFiles) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    String fileExtension = matchingFileExtension(fileName);
+                    if (fileExtension != null) {
+                        try {
+                            try (FileInputStream fis = new FileInputStream(file.getAbsolutePath())) {
+                                E cmElement = getCMElement(fileName, fileExtension, fis, new Date(file.lastModified()));
+                                cmElements.add(cmElement);
+                            }
+                        } catch (Exception ex) {
+                            logger.error("Reading file : " + fileName, ex);
+                        }
+                    }
+                }
+            }
 		}
         return cmElements;
     }

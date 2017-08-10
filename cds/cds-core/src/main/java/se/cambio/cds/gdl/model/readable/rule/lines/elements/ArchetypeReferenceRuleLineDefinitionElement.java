@@ -1,15 +1,16 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.util.ReadableArchetypeReferencesUtil;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+@Slf4j
 public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElementWithValue<ArchetypeReference> {
 
     public ArchetypeReferenceRuleLineDefinitionElement(ArchetypeInstantiationRuleLine ruleLine) {
@@ -46,18 +47,11 @@ public class ArchetypeReferenceRuleLineDefinitionElement extends RuleLineElement
     public String getLabelText(String lang) {
         if (getValue() != null) {
             String idArchetype = getValue().getIdArchetype();
-            ArchetypeDTO archetypeVO = null;
-            try {
-                archetypeVO = getArchetypeManager().getArchetypes().getCMElement(idArchetype);
-            } catch (InstanceNotFoundException e) {
-                ExceptionHandler.handle(e);
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
+            ArchetypeDTO archetypeVO = getArchetypeManager().getArchetypes().getCMElement(idArchetype);
             if (archetypeVO != null) {
                 return archetypeVO.getId();
             } else {
-                LoggerFactory.getLogger(this.getClass()).error("Archetype not found! (" + idArchetype + ")");
+                log.error("Archetype not found! (" + idArchetype + ")");
                 return "";
             }
         } else {

@@ -6,8 +6,8 @@
  */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
-
+@Slf4j
 public class ViewUserManualAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
@@ -40,7 +40,7 @@ public class ViewUserManualAction extends AbstractAction {
             File file = new File(path);
             Desktop.getDesktop().open(file);
         } catch (IOException e1) {
-            ExceptionHandler.handle(e1);
+            log.error("Error accessing user manual", e1);
         }
     }
 }

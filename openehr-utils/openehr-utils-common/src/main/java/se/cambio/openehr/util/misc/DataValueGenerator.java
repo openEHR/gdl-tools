@@ -27,7 +27,7 @@ import static se.cambio.openehr.util.OpenEHRDataValues.*;
 
 public class DataValueGenerator {
 
-    private final static Map<String, DataValue> dataValueMap;
+    private static final Map<String, DataValue> dataValueMap;
 
     private static Logger logger = LoggerFactory.getLogger(DataValueGenerator.class);
 
@@ -97,6 +97,7 @@ public class DataValueGenerator {
             case "precision":
                 precision = (Integer) value;
                 break;
+            default:
         }
         return new DvQuantity(units, magnitude, precision);
     }
@@ -117,7 +118,9 @@ public class DataValueGenerator {
         Calendar cal = Calendar.getInstance();
         if (value instanceof Integer) {
             setCalendar(cal, Calendar.YEAR, attributeName, (Integer) value, "year", dvDateTime.getYear());
-            setCalendar(cal, Calendar.MONTH, attributeName, ((Integer) value - 1), "month", dvDateTime.getMonth() - 1);   //We need to subtract one because calendar month starts at 0
+            setCalendar(cal, Calendar.MONTH, attributeName,
+                    //We need to subtract one because calendar month starts at 0
+                    ((Integer) value - 1), "month", dvDateTime.getMonth() - 1);
             setCalendar(cal, Calendar.DATE, attributeName, (Integer) value, "day", dvDateTime.getDay());
             setCalendar(cal, Calendar.HOUR_OF_DAY, attributeName, (Integer) value, "hour", dvDateTime.getHour());
             setCalendar(cal, Calendar.MINUTE, attributeName, (Integer) value, "minute", dvDateTime.getMinute());
@@ -134,10 +137,6 @@ public class DataValueGenerator {
         return toDvDateTime(cal);
     }
 
-    public static DvDateTime toDvDateTime(Calendar cal) {
-        return new DvDateTime(new DateTime(cal.getTimeInMillis()).toString());
-    }
-
     private static DvDate create(DvDate dvDate, String attributeName, Object value) throws InternalErrorException {
         Calendar cal = Calendar.getInstance();
         setCalendar(cal, Calendar.YEAR, attributeName, (Integer) value, "year", dvDate.getYear());
@@ -149,7 +148,7 @@ public class DataValueGenerator {
                 cal.get(Calendar.DATE));
     }
 
-    private static DvCount create(DvCount dvCount, String attributeName, Object value) throws InternalErrorException {
+    private static DvCount create(DvCount dvCount, String attributeName, Object value) {
         int magnitude = dvCount.getMagnitude();
         if (attributeName.equals("magnitude")) {
             if (value instanceof Integer) {
@@ -177,6 +176,7 @@ public class DataValueGenerator {
             case "code":
                 code = (String) value;
                 break;
+            default:
         }
         return new DvCodedText(codedTextvalue, terminologyId, code);
     }
@@ -211,6 +211,7 @@ public class DataValueGenerator {
             case "code":
                 code = (String) value;
                 break;
+            default:
         }
         return new DvOrdinal(ordinalValue, codedTextvalue, terminologyId, code);
     }
@@ -233,6 +234,7 @@ public class DataValueGenerator {
             case "type":
                 type = (ProportionKind) value;
                 break;
+            default:
         }
         return new DvProportion(numerator, denominator, type, precision);
     }
@@ -262,6 +264,10 @@ public class DataValueGenerator {
         if (currentAttributeName.equals(attributeName)) {
             cal.set(field, value);
         }
+    }
+
+    public static DvDateTime toDvDateTime(Calendar cal) {
+        return new DvDateTime(new DateTime(cal.getTimeInMillis()).toString());
     }
 
     public static DataValue getDummyDV(String rmName) {

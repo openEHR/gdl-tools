@@ -2,9 +2,10 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Units;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRNumberFormat;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class DVQuantityPanel extends DVGenericPanel {
     private JComboBox<String> unitsComboBox;
     private boolean _enableUnits = false;
     private ArchetypeManager archetypeManager;
+    private Logger logger = LoggerFactory.getLogger(DVQuantityPanel.class);
 
     public DVQuantityPanel(
             String idElement, String idTemplate,
@@ -141,8 +143,8 @@ public class DVQuantityPanel extends DVGenericPanel {
                         getUnitsComboBox().getSelectedItem().toString(),
                         OpenEHRNumberFormat.getDecimalFormat().parse(getMagnitudeTextField().getText()).doubleValue(),
                         getPrecision());
-            } catch (ParseException e) {
-                ExceptionHandler.handle(e);
+            } catch (ParseException ex) {
+                logger.error("Error parsing quantity: " + getMagnitudeTextField().getText(), ex);
                 return null;
             }
         }

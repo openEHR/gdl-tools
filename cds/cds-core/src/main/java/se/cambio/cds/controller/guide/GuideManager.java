@@ -1,11 +1,11 @@
 package se.cambio.cds.controller.guide;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.SerializationUtils;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
-import se.cambio.openehr.util.ExceptionHandler;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -13,42 +13,43 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class GuideManager extends SimpleGuideManager{
+@Slf4j
+public class GuideManager extends SimpleGuideManager {
 
-    private LinkedHashMap<String, GuideDTO> _allGuidesDTOMap = null;
+    private LinkedHashMap<String, GuideDTO> allGuidesDTOMap = null;
 
-    public GuideManager(Collection<GuideDTO> guideDTOs, ElementInstanceCollectionManager elementInstanceCollectionManager){
+    public GuideManager(Collection<GuideDTO> guideDTOs, ElementInstanceCollectionManager elementInstanceCollectionManager) {
         super(loadGuideDTOs(guideDTOs), elementInstanceCollectionManager);
-        _allGuidesDTOMap = new LinkedHashMap<>();
-        for (GuideDTO guideDTO: guideDTOs){
-            _allGuidesDTOMap.put(guideDTO.getId(), guideDTO);
+        allGuidesDTOMap = new LinkedHashMap<>();
+        for (GuideDTO guideDTO : guideDTOs) {
+            allGuidesDTOMap.put(guideDTO.getId(), guideDTO);
         }
     }
 
-    public static Collection<Guide> loadGuideDTOs(Collection<GuideDTO> guidesDTO){
+    public static Collection<Guide> loadGuideDTOs(Collection<GuideDTO> guidesDTO) {
         Collection<Guide> guides = new ArrayList<>();
         for (GuideDTO guideDTO : guidesDTO) {
             try {
                 Guide guide;
-                if (Guides.hasGuideObject(guideDTO)){
+                if (Guides.hasGuideObject(guideDTO)) {
                     guide = (Guide) SerializationUtils.deserialize(guideDTO.getGuideObject());
-                }else{
+                } else {
                     guide = GuideUtil.parseGuide(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                 }
                 guides.add(guide);
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
+            } catch (Exception ex) {
+                log.error("Error loading guideline: " + guideDTO.getId(), ex);
             }
         }
         return guides;
     }
 
-    public List<GuideDTO> getAllGuidesDTO(){
-        return new ArrayList<>(_allGuidesDTOMap.values());
+    public List<GuideDTO> getAllGuidesDTO() {
+        return new ArrayList<>(allGuidesDTOMap.values());
     }
 
-    public GuideDTO getGuideDTO(String idGuide){
-        return _allGuidesDTOMap.get(idGuide);
+    public GuideDTO getGuideDTO(String idGuide) {
+        return allGuidesDTOMap.get(idGuide);
     }
 }
 /*

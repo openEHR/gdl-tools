@@ -13,18 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@PropertySource(value = { "file:conf/UserConfig.properties", "file:${user.home}/.gdleditor/UserConfig.properties"}, ignoreResourceNotFound = true)
+@PropertySource(value = {"file:conf/UserConfig.properties", "file:${user.home}/.gdleditor/UserConfig.properties"}, ignoreResourceNotFound = true)
 public class UserConfiguration {
 
     @Autowired
     private Environment environment;
 
-    private static UserConfigurationManager userConfigurationManager;
+    private static UserConfigurationManager userConfigurationManager = new UserConfigurationManager();
 
     @Bean
     public UserConfigurationManager userConfigurationManager() {
-
-        userConfigurationManager = new UserConfigurationManager();
         String language = environment.getProperty(UserConfigurationManager.LANGUAGE, "en");
         userConfigurationManager.setLanguage(language);
         String country = environment.getProperty(UserConfigurationManager.COUNTRY, "EN");

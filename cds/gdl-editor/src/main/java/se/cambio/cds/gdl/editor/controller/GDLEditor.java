@@ -45,7 +45,6 @@ import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
 import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.TerminologyDialogManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -59,7 +58,10 @@ import se.cambio.openehr.view.util.WindowManager;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.List;
 
@@ -259,11 +261,7 @@ public class GDLEditor implements EditorController<Guide> {
                     protected void done() {
                         getController().compilationFinished(getErrorMsg());
                         if (getErrorMsg() == null) {
-                            try {
-                                generateDialogForm(getCompiledGuide(), getGuide());
-                            } catch (InternalErrorException e) {
-                                ExceptionHandler.handle(e);
-                            }
+                            generateDialogForm(getCompiledGuide(), getGuide());
                         }
                     }
                 };
@@ -460,13 +458,7 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public void editRuleElement(RuleLineElementWithValue<?> ruleLineElementWithValue) {
-        try {
-            getRuleElementEditor().edit(ruleLineElementWithValue);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        }
+        getRuleElementEditor().edit(ruleLineElementWithValue);
     }
 
     public void runIfOKToExit(final Runnable pendingRunnable) {
@@ -820,13 +812,7 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public void setEntity(Guide guide) {
-        try {
-            checkGuideArchetypesAndTemplates(guide);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        }
+        checkGuideArchetypesAndTemplates(guide);
         initGuideVars();
         if (guide.getId() != null) {
             guideId = guide.getId();
@@ -1007,13 +993,8 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     private void runIfOkWithEditorState(Runnable pendingRunnable) {
-        Component comp = null;
-        try {
-            comp = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);   //TODO
-        }
-        runIfOkWithEditorState(comp, pendingRunnable);
+        Component component = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
+        runIfOkWithEditorState(component, pendingRunnable);
     }
 
     private void runIfOkWithEditorState(Component currentPanel, Runnable pendingRunnable) {
@@ -1167,44 +1148,40 @@ public class GDLEditor implements EditorController<Guide> {
             idGuide = GDLEditorLanguageManager.getMessage("Guide");
         }
         if (compiledGuide != null) {
-            try {
-                String guideSource = getSerializedEntity();
-                if (guideSource != null) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            GDLEditorLanguageManager.getMessage("Guide"), "guide");
-                    fileChooser.setDialogTitle(GDLEditorLanguageManager
-                            .getMessage("SaveGuideAsObjectSD"));
-                    fileChooser.setFileFilter(filter);
-                    File file = new File(fileChooser.getFileSystemView()
-                            .getDefaultDirectory() + "/" + idGuide + ".guide");
-                    fileChooser.setSelectedFile(file);
-                    int result = fileChooser.showSaveDialog(windowManager.getMainWindow());
-                    File guideFile = fileChooser.getSelectedFile();
-                    if (result != JFileChooser.CANCEL_OPTION) {
-                        idGuide = guideFile.getName();
-                        if (idGuide.endsWith(".guide")) {
-                            idGuide = idGuide
-                                    .substring(0, idGuide.length() - 6);
-                        }
-                        GuideDTO guideDTO =
-                                new GuideDTOBuilder()
-                                        .setId(idGuide)
-                                        .setFormat(guideSource)
-                                        .setSource(CMTypeFormat.GDL_FORMAT.getFormat())
-                                        .setGuideObject(SerializationUtils.serialize(guide))
-                                        .setCompiledGuide(compiledGuide)
-                                        .setLastUpdate(Calendar.getInstance().getTime())
-                                        .createGuideDTO();
-                        try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)))) {
-                            output.writeObject(guideDTO);
-                        } catch (Exception e) {
-                            ExceptionHandler.handle(e);
-                        }
+            String guideSource = getSerializedEntity();
+            if (guideSource != null) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        GDLEditorLanguageManager.getMessage("Guide"), "guide");
+                fileChooser.setDialogTitle(GDLEditorLanguageManager
+                        .getMessage("SaveGuideAsObjectSD"));
+                fileChooser.setFileFilter(filter);
+                File file = new File(fileChooser.getFileSystemView()
+                        .getDefaultDirectory() + "/" + idGuide + ".guide");
+                fileChooser.setSelectedFile(file);
+                int result = fileChooser.showSaveDialog(windowManager.getMainWindow());
+                File guideFile = fileChooser.getSelectedFile();
+                if (result != JFileChooser.CANCEL_OPTION) {
+                    idGuide = guideFile.getName();
+                    if (idGuide.endsWith(".guide")) {
+                        idGuide = idGuide
+                                .substring(0, idGuide.length() - 6);
+                    }
+                    GuideDTO guideDTO =
+                            new GuideDTOBuilder()
+                                    .setId(idGuide)
+                                    .setFormat(guideSource)
+                                    .setSource(CMTypeFormat.GDL_FORMAT.getFormat())
+                                    .setGuideObject(SerializationUtils.serialize(guide))
+                                    .setCompiledGuide(compiledGuide)
+                                    .setLastUpdate(Calendar.getInstance().getTime())
+                                    .createGuideDTO();
+                    try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)))) {
+                        output.writeObject(guideDTO);
+                    } catch (Exception ex) {
+                        logger.error("Error building guideline: " + idGuide, ex);
                     }
                 }
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
             }
         }
     }

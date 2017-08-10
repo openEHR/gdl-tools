@@ -61,13 +61,7 @@ public class NodeDefinitionManager {
                 .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
                 .createSelectableNode();
         root.add(elementsNode);
-        try {
-            addElementInstanceToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        addElementInstanceToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
         root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
         return root;
     }
@@ -90,19 +84,13 @@ public class NodeDefinitionManager {
                 .setName(GDLEditorLanguageManager.getMessage("ArchetypeInstances"))
                 .setIcon(GDLEditorImageUtil.FOLDER_OBJECT_ICON)
                 .createSelectableNode();
-        try {
-            for (RuleLine ruleLine : definitionRuleLines.getRuleLines()) {
-                if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
-                    SelectableNode<Object> node = getArchetypeInstantiationRuleLineElementNode((ArchetypeInstantiationRuleLine) ruleLine, onlyCDSDomain, ar);
-                    if (node != null) {
-                        root.add(node);
-                    }
+        for (RuleLine ruleLine : definitionRuleLines.getRuleLines()) {
+            if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
+                SelectableNode<Object> node = getArchetypeInstantiationRuleLineElementNode((ArchetypeInstantiationRuleLine) ruleLine, onlyCDSDomain, ar);
+                if (node != null) {
+                    root.add(node);
                 }
             }
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
         }
         return root;
     }

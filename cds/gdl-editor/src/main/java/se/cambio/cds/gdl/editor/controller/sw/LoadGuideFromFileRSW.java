@@ -1,12 +1,12 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import se.cambio.cds.gdl.editor.controller.*;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.dialogs.DialogLongMessageNotice;
 import se.cambio.openehr.view.util.WindowManager;
@@ -15,7 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
-
+@Slf4j
 public class LoadGuideFromFileRSW extends CDSSwingWorker {
 
     private WindowManager windowManager;
@@ -67,7 +67,7 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuide"),
                     e.getCause().getMessage(),
                     DialogLongMessageNotice.MessageType.ERROR).setVisible(true);
-            ExceptionHandler.handle(e);
+            log.error("Error parsing guideline", e);
         }
     }
 

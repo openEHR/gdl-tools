@@ -4,15 +4,11 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 
-public abstract class OpenEHRUtilSwingWorker extends SwingWorker<Object, Object>{
+public abstract class OpenEHRUtilSwingWorker extends SwingWorker<Object, Object> {
 
     @Override
     protected final Object doInBackground() throws Exception {
-        try{
-            executeSW();
-        }catch(InternalErrorException e){
-            ExceptionHandler.handle(e);
-        }
+        executeSW();
         return null;
     }
 

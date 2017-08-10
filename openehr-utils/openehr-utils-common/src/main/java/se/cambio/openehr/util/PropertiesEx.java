@@ -8,23 +8,21 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class PropertiesEx extends Properties {
-	/**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
 
-	public void load(InputStream fis) throws IOException {
-	    Scanner in = new Scanner(fis);
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    public void load(InputStream fis) throws IOException {
+        Scanner in = new Scanner(fis, "UTF-8");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-	    while(in.hasNext()) {
-		out.write(in.nextLine().replace("\\\\","\\").replace("\\:", ":").replace("\\","\\\\").getBytes());
-		out.write("\n".getBytes());
-	    }
+        while (in.hasNext()) {
+            out.write(in.nextLine().replace("\\\\", "\\").replace("\\:", ":").replace("\\", "\\\\").getBytes("UTF-8"));
+            out.write("\n".getBytes("UTF-8"));
+        }
 
-	    InputStream is = new ByteArrayInputStream(out.toByteArray());
-	    super.load(is);
-	}
+        InputStream is = new ByteArrayInputStream(out.toByteArray());
+        super.load(is);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

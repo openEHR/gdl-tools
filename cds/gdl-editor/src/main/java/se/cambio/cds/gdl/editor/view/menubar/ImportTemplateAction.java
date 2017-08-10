@@ -8,7 +8,6 @@ package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.view.util.ImportManager;
@@ -23,7 +22,7 @@ public class ImportTemplateAction extends AbstractAction {
     private ImportManager importManager;
     private EditorManager editorManager;
 
-    ImportTemplateAction(ImportManager importManager, EditorManager editorManager){
+    ImportTemplateAction(ImportManager importManager, EditorManager editorManager) {
         super();
         this.importManager = importManager;
         this.editorManager = editorManager;
@@ -31,17 +30,11 @@ public class ImportTemplateAction extends AbstractAction {
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportTemplateD"));
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ImportTemplateD"));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
     }
 
     public void actionPerformed(ActionEvent e) {
-        try {
-            importManager.showImportTemplateDialog(editorManager.getActiveEditorWindow(), null);
-        } catch (InternalErrorException e1) {
-            ExceptionHandler.handle(e1);
-        } catch (InstanceNotFoundException e1) {
-            ExceptionHandler.handle(e1);
-        }
+        importManager.showImportTemplateDialog(editorManager.getActiveEditorWindow(), null);
     }
 }
 /*

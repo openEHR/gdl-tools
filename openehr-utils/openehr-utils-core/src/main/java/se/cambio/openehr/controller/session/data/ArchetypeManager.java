@@ -6,7 +6,6 @@ import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.util.TemplateAttributeMap;
 import se.cambio.cm.model.util.TemplateElementMap;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.PathUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -186,24 +185,12 @@ public class ArchetypeManager {
     }
 
     public void loadArchetypesIfNeeded(String archetypeId) {
-        try {
-            getArchetypes().getCMElement(archetypeId);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        getArchetypes().getCMElement(archetypeId);
     }
 
     public void loadTemplateIfNeeded(String templateId) {
-        try {
-            if (templateId != null) {
-                getTemplates().getCMElement(templateId);
-            }
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
+        if (templateId != null) {
+            getTemplates().getCMElement(templateId);
         }
     }
 

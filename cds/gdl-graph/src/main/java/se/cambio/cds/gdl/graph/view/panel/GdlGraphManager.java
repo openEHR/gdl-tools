@@ -1,14 +1,16 @@
 package se.cambio.cds.gdl.graph.view.panel;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.graph.controller.renderer.GraphRenderingException;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
 
 import java.util.Collections;
 
+@Slf4j
 public class GdlGraphManager {
 
     private ArchetypeManager archetypeManager;
@@ -26,6 +28,7 @@ public class GdlGraphManager {
 
 
     public DecisionGraphPanel generateDecisionGraphPanel(Guide guide, String language) {
+        Assert.notNull(guide, "Trying to generate decision graph panel on null guideline!");
         DecisionGraphPanel decisionGraphPanel = null;
         try {
             decisionGraphPanel =
@@ -36,8 +39,8 @@ public class GdlGraphManager {
                             archetypeManager,
                             archetypeReferencesManager,
                             elementInstanceCollectionManager);
-        } catch (GraphRenderingException e) {
-            ExceptionHandler.handle(e);
+        } catch (GraphRenderingException ex) {
+            log.error("Error rendering graph panel for guideline: " + guide.getId(), ex);
         }
         return decisionGraphPanel;
     }

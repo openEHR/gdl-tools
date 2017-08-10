@@ -6,7 +6,7 @@
  */
 package se.cambio.cds.util.misc;
 
-import se.cambio.openehr.util.ExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.openehr.util.exceptions.MissingConfigurationParameterException;
 
 import java.io.InputStream;
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Slf4j
 public class Version {
 
     private static String VERSION_PROPERTIES_FILE = "build.properties";
@@ -32,9 +33,9 @@ public class Version {
             Properties properties = new Properties();
             properties.load(inputStream);
             inputStream.close();
-            parameters = new HashMap<Object, Object>(properties);
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
+            parameters = new HashMap<>(properties);
+        } catch (Exception ex) {
+            log.error("Error loading version", ex);
         }
     }
 
@@ -50,8 +51,8 @@ public class Version {
     public static String getVersionNum() {
         try {
             return getParameter("projectVersion");
-        } catch (MissingConfigurationParameterException e) {
-            ExceptionHandler.handle(e);
+        } catch (MissingConfigurationParameterException ex) {
+            log.error("Error getting project version", ex);
             return "";
         }
     }
@@ -59,8 +60,8 @@ public class Version {
     public static String getBuildDate() {
         try {
             return getParameter("buildDate");
-        } catch (MissingConfigurationParameterException e) {
-            ExceptionHandler.handle(e);
+        } catch (MissingConfigurationParameterException ex) {
+            log.error("Error getting project build date", ex);
             return "";
         }
     }
@@ -73,8 +74,8 @@ public class Version {
             } else {
                 return null;
             }
-        } catch (MissingConfigurationParameterException e) {
-            ExceptionHandler.handle(e);
+        } catch (MissingConfigurationParameterException ex) {
+            log.error("Error getting project build number", ex);
             return "";
         }
     }
