@@ -4,6 +4,8 @@ import se.cambio.cm.model.archetype.vo.UnitVO;
 
 import java.util.*;
 
+import static java.lang.String.format;
+
 public class Units {
     private Map<String, Set<String>> registeredUnitsByElement = null;
     private Map<String, Map<String, Set<String>>> registeredUnitsByTemplate = null;
@@ -17,9 +19,26 @@ public class Units {
         registeredUnitsByTemplate = new HashMap<>();
     }
 
-    void loadUnits(Collection<UnitVO> unitVOs) {
+    void loadUnits(
+            String archetypeId,
+            String templateId,
+            Collection<UnitVO> unitVOs) {
+        cleanPreviousElements(archetypeId, templateId);
         for (UnitVO unitVO : unitVOs) {
             registerUnit(unitVO);
+        }
+    }
+
+    private void cleanPreviousElements(String archetypeId, String templateId) {
+        if (templateId != null) {
+            registeredUnitsByTemplate.remove(templateId);
+        } else {
+            Collection<String> ids = new ArrayList<>(registeredUnitsByElement.keySet());
+            for (String id : ids) {
+                if (id.startsWith(archetypeId)) {
+                    registeredUnitsByElement.remove(id);
+                }
+            }
         }
     }
 
@@ -45,36 +64,29 @@ public class Units {
     public Collection<String> getUnits(String idTemplate, String idElement) {
         Set<String> units;
         if (idTemplate == null) {
-            units = getUnitsByTemplate(idElement);
+            units = getUnitsByArchetype(idElement);
         } else {
-            units = getUnitsByElement(idTemplate, idElement);
+            units = getUnitsByTemplateAndElement(idTemplate, idElement);
         }
         return Collections.unmodifiableCollection(units);
     }
 
-    private Set<String> getUnitsByTemplate(String idElement) {
-        Set<String> units;
-        if (registeredUnitsByElement.containsKey(idElement)) {
-            units = registeredUnitsByElement.get(idElement);
-        } else {
-            units = new HashSet<>();
+    private Set<String> getUnitsByArchetype(String idElement) {
+        if (!registeredUnitsByElement.containsKey(idElement)) {
+            throw new RuntimeException(format("Could not find element '%s'", idElement));
         }
-        return units;
+        return registeredUnitsByElement.get(idElement);
     }
 
-    private Set<String> getUnitsByElement(String templateId, String elementId) {
-        Set<String> units;
-        if (registeredUnitsByTemplate.containsKey(templateId)) {
-            Map<String, Set<String>> unitsByTemplate = registeredUnitsByTemplate.get(templateId);
-            if (unitsByTemplate.containsKey(elementId)) {
-                units = unitsByTemplate.get(elementId);
-            } else {
-                units = new HashSet<>();
-            }
-        } else {
-            units = new HashSet<>();
+    private Set<String> getUnitsByTemplateAndElement(String templateId, String elementId) {
+        if (!registeredUnitsByTemplate.containsKey(templateId)) {
+            throw new RuntimeException(format("Could not find element '%s' in template '%s'", elementId, templateId));
         }
-        return units;
+        Map<String, Set<String>> unitsByTemplate = registeredUnitsByTemplate.get(templateId);
+        if (!unitsByTemplate.containsKey(elementId)) {
+            throw new RuntimeException(format("Could not find element '%s' in template '%s'", elementId, templateId));
+        }
+        return unitsByTemplate.get(elementId);
     }
 }
 /*

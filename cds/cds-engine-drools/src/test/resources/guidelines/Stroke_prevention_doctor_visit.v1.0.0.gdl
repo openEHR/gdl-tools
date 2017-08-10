@@ -36,7 +36,7 @@
 				domain = <"CDS">
 				elements = <
 					["gt0007"] = (ELEMENT_BINDING) <
-						path = <"/data[at0001]/items[at0054]">
+						path = <"/data[at0001]/items[at0002]">
 					>
 				>
 			>

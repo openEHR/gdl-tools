@@ -12,6 +12,7 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
     private Collection<OrdinalVO> ordinalVOs = null;
     private Collection<UnitVO> unitVOs = null;
     private Collection<ProportionTypeVO> proportionTypeVOs = null;
+    private Collection<ArchetypeTermVO> archetypeTermVOs = null;
 
     public ArchetypeObjectBundleCustomVO(
             Collection<ArchetypeElementVO> archetypeElementVOs,
@@ -19,7 +20,8 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
             Collection<CodedTextVO> codedTextVOs,
             Collection<OrdinalVO> ordinalVOs,
             Collection<UnitVO> unitVOs,
-            Collection<ProportionTypeVO> proportionTypeVOs) {
+            Collection<ProportionTypeVO> proportionTypeVOs,
+            Collection<ArchetypeTermVO> archetypeTermVOs) {
         super();
         this.archetypeElementVOs = archetypeElementVOs;
         this.clusterVOs = clusterVOs;
@@ -27,6 +29,7 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
         this.ordinalVOs = ordinalVOs;
         this.unitVOs = unitVOs;
         this.proportionTypeVOs = proportionTypeVOs;
+        this.archetypeTermVOs = archetypeTermVOs;
     }
 
     public Collection<ArchetypeElementVO> getArchetypeElementVOs() {
@@ -49,6 +52,9 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
     }
     public Collection<ProportionTypeVO> getProportionTypes() {
         return proportionTypeVOs;
+    }
+    public Collection<ArchetypeTermVO> getArchetypeTermVOs() {
+        return archetypeTermVOs;
     }
 }
 /*

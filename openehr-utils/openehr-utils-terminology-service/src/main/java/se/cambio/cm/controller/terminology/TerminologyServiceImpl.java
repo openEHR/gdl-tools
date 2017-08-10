@@ -12,9 +12,6 @@ import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 import se.cambio.cm.util.TerminologyConfigVO;
 import se.cambio.cm.util.TerminologyNodeVO;
 import se.cambio.cm.util.exceptions.UnsupportedTerminologyException;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,8 +23,7 @@ public class TerminologyServiceImpl implements TerminologyService {
 
     private Long lastUpdate = null;
     private static final long MAX_INTERVAL_BEFORE_UPLOAD = 5000;
-    private Map<String, TerminologyService> terminologyPlugins;
-    private Set<String> supportedTerminologies = null;
+    private Map<String, TerminologyService> terminologyServicesMap;
     private TerminologyServiceConfiguration terminologyServiceConfiguration;
     private ClinicalModelsService clinicalModelsService;
     private static Logger log = LoggerFactory.getLogger(TerminologyServiceImpl.class);
@@ -35,6 +31,8 @@ public class TerminologyServiceImpl implements TerminologyService {
     public TerminologyServiceImpl(TerminologyServiceConfiguration terminologyServiceConfiguration, ClinicalModelsService clinicalModelsService) {
         this.terminologyServiceConfiguration = terminologyServiceConfiguration;
         this.clinicalModelsService = clinicalModelsService;
+        this.terminologyServicesMap = new HashMap<>();
+
     }
 
     private TerminologyServicePlugin generateTerminologyService(TerminologyDTO terminologyDTO) {
@@ -90,7 +88,8 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     public boolean isTerminologySupported(String terminologyId) {
-        return getSupportedTerminologiesI().contains(terminologyId);
+        checkForUpdates();
+        return terminologyServicesMap.containsKey(terminologyId);
     }
 
     private void checkTerminologySupported(CodePhrase code) {
@@ -158,56 +157,46 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     private TerminologyService getTerminologyServicePlugin(String terminologyId) {
-        TerminologyService terminologyService = getTerminologyServicePluginMap().get(terminologyId);
-        if (terminologyService == null && isSupported(terminologyId)) {
-            try {
-                Collection<TerminologyDTO> terminologyDTOs = clinicalModelsService.searchCMElementsByIds(TerminologyDTO.class, Collections.singleton(terminologyId));
-                TerminologyDTO terminologyDTO = terminologyDTOs.iterator().next();
-                terminologyService = generateTerminologyService(terminologyDTO);
-                getTerminologyServicePluginMap().put(terminologyId, terminologyService);
-            } catch (InstanceNotFoundException e) {
-                ExceptionHandler.handle(e);
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
+        checkForUpdates();
+        if (!terminologyServicesMap.containsKey(terminologyId)) {
+            throw new RuntimeException(format("Terminology '%s' not supported!", terminologyId));
+        }
+        return terminologyServicesMap.get(terminologyId);
+    }
+
+    private void checkForUpdates() {
+        if (shouldUpdateTerminologies()) {
+            Collection<TerminologyDTO> terminologyDTOs = clinicalModelsService.getAllCMElements(TerminologyDTO.class);
+            for (TerminologyDTO terminologyDTO : terminologyDTOs) {
+                registerTerminology(terminologyDTO);
             }
         }
-        return terminologyService;
     }
 
-    private Map<String, TerminologyService> getTerminologyServicePluginMap() {
-        if (terminologyPlugins == null) {
-            terminologyPlugins = new HashMap<>();
-        }
-        return terminologyPlugins;
-    }
-
-    private boolean isSupported(String terminologyId) {
-        return getSupportedTerminologiesI().contains(terminologyId);
-    }
-
-    private Collection<String> getSupportedTerminologiesI() {
-        if (supportedTerminologies == null) {
-            supportedTerminologies = new HashSet<>();
-        }
-        if (shouldUpdateSupportedTerminologyIds()) {
-            try {
-                supportedTerminologies.clear();
-                supportedTerminologies.addAll(clinicalModelsService.getAllCMElementIds(TerminologyDTO.class));
-                lastUpdate = System.currentTimeMillis();
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
-        }
-        return supportedTerminologies;
+    private void registerTerminology(TerminologyDTO terminologyDTO) {
+        TerminologyService terminologyService = generateTerminologyService(terminologyDTO);
+        terminologyServicesMap.put(terminologyDTO.getId(), terminologyService);
     }
 
     public Collection<String> getSupportedTerminologies() {
-        return Collections.unmodifiableCollection(getSupportedTerminologiesI());
+        return Collections.unmodifiableCollection(terminologyServicesMap.keySet());
     }
 
-    private boolean shouldUpdateSupportedTerminologyIds() {
+    private boolean shouldUpdateTerminologies() {
         long currentTimeMinusWaitInterval = System.currentTimeMillis() - MAX_INTERVAL_BEFORE_UPLOAD;
-        return lastUpdate == null || lastUpdate < currentTimeMinusWaitInterval;
+        boolean shouldUpdate = false;
+        if (lastUpdate == null) {
+            shouldUpdate = true;
+        } else if (lastUpdate < currentTimeMinusWaitInterval) {
+            Date lastUpdateOnDB = clinicalModelsService.getLastUpdate(TerminologyDTO.class);
+            if (lastUpdateOnDB != null) {
+                shouldUpdate = lastUpdate < lastUpdateOnDB.getTime();
+            }
+        }
+        if (shouldUpdate) {
+            lastUpdate = System.currentTimeMillis();
+        }
+        return shouldUpdate;
     }
 }
 

@@ -3,7 +3,6 @@ package se.cambio.cds.controller.guide;
 import org.apache.commons.lang.SerializationUtils;
 import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.util.ExceptionHandler;

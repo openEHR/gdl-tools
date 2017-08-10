@@ -3,6 +3,7 @@ package se.cambio.openehr.controller.session.data;
 import org.apache.commons.lang.SerializationUtils;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.jaxb.am.FlatArchetype;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
@@ -12,7 +13,6 @@ import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.ArchetypeObjectBundleManager;
 import se.cambio.openehr.util.ArchetypeOnDemandMap;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRConstUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -20,27 +20,29 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 
-public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
+public class Archetypes extends AbstractCMManager<ArchetypeDTO> {
     public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
     private ArchetypeManager archetypeManager = null;
+    private ExecutorService executorService;
+    private Logger logger = LoggerFactory.getLogger(Archetypes.class);
 
     public Archetypes(
-            ArchetypeManager archetypeManager){
+            ArchetypeManager archetypeManager,
+            ExecutorService executorService) {
         super(archetypeManager.getClinicalModelsService());
         this.archetypeManager = archetypeManager;
+        this.executorService = executorService;
     }
 
     @Override
-    public void registerCMElementsInCache(Collection<ArchetypeDTO> cmElements){
+    public void registerCMElementsInCache(Collection<ArchetypeDTO> cmElements) {
         super.registerCMElementsInCache(cmElements);
-        try {
-            processArchetypes(cmElements);
-            registerArchetypeDTOs(cmElements);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        processArchetypes(cmElements);
+        registerArchetypeDTOs(cmElements);
     }
 
     @Override
@@ -48,64 +50,71 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
         return ArchetypeDTO.class;
     }
 
-    public void processArchetypes(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
-        for (ArchetypeDTO archetypeDTO: archetypeDTOs){
-            processArchetype(archetypeDTO);
+    public void processArchetypes(Collection<ArchetypeDTO> archetypeDTOs) {
+        Collection<Future> futures = new ArrayList<>();
+        for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
+            futures.add(executorService.submit(() -> processArchetype(archetypeDTO)));
+        }
+        try {
+            for (Future future: futures) {
+                future.get();
+            }
+        } catch (Exception ex) {
+                logger.error("Error processing archetypes", ex);
         }
     }
 
-    public void processArchetype(ArchetypeDTO archetypeDTO) throws InternalErrorException {
+    public void processArchetype(ArchetypeDTO archetypeDTO) {
         new ArchetypeObjectBundleManager(archetypeDTO, archetypeManager).buildArchetypeObjectBundleCustomVO();
     }
 
-    private void registerArchetypeDTOs(Collection<ArchetypeDTO> archetypeDTOs) throws InternalErrorException {
-        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+    private void registerArchetypeDTOs(Collection<ArchetypeDTO> archetypeDTOs) {
+        for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = getArchetypeObjectBundleCustomVO(archetypeDTO);
-            Archetype archetype = null;
-            if (CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {   //TODO Add support for ADLS format
-                archetype = getArchetypeAOM(archetypeDTO);
-            }
-            getArchetypeManager().registerArchetypeObjectBundle(archetypeObjectBundleCustomVO, archetype);
+            getArchetypeManager().registerArchetypeObjectBundle(
+                    archetypeDTO.getId(),
+                    null,
+                    archetypeObjectBundleCustomVO);
         }
     }
 
     public static ImageIcon getIcon(String archetypeId) {
         ImageIcon icon = null;
         String entryType = getEntryType(archetypeId);
-        if (entryType!=null) {
+        if (entryType != null) {
             icon = OpenEHRConstUI.getIcon(entryType);
         }
-        if (icon!=null){
+        if (icon != null) {
             return icon;
-        }else{
+        } else {
             return ICON;
         }
     }
 
-    public static String getEntryType(final String archetypeId){
+    public static String getEntryType(final String archetypeId) {
         final int i = archetypeId.indexOf('.');
-        if (i<0){
+        if (i < 0) {
             return null;
         }
-        final int j = archetypeId.substring(0,i).lastIndexOf('-');
-        if (j+1<i){
-            return archetypeId.substring(j+1,i);
+        final int j = archetypeId.substring(0, i).lastIndexOf('-');
+        if (j + 1 < i) {
+            return archetypeId.substring(j + 1, i);
         }
         return null;
     }
 
-    public Map<String, Archetype> getArchetypeMap(){
+    public Map<String, Archetype> getArchetypeMap() {
         return new ArchetypeOnDemandMap(this);
     }
 
-    public Archetype getArchetypeAOMById(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+    public Archetype getArchetypeAOMById(String archetypeId) {
         return getArchetypeAOMsByIds(Collections.singleton(archetypeId)).iterator().next();
     }
 
-    public Collection<Archetype> getArchetypeAOMsByIds(Collection<String> archetypeIds) throws InternalErrorException, InstanceNotFoundException {
+    public Collection<Archetype> getArchetypeAOMsByIds(Collection<String> archetypeIds) {
         Collection<ArchetypeDTO> archetypeDTOs = getCMElementByIds(archetypeIds);
-        Collection<Archetype> archetypes = new ArrayList<Archetype>();
-        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+        Collection<Archetype> archetypes = new ArrayList<>();
+        for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
             archetypes.add(getArchetypeAOM(archetypeDTO));
         }
         return archetypes;
@@ -118,76 +127,75 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO>{
 
 
     private Collection<Archetype> getArchetypeAOMsInCache(Collection<ArchetypeDTO> archetypeDTOs) throws InstanceNotFoundException, InternalErrorException {
-        Collection<Archetype> archetypes = new ArrayList<Archetype>();
-        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
+        Collection<Archetype> archetypes = new ArrayList<>();
+        for (ArchetypeDTO archetypeDTO : archetypeDTOs) {
             Archetype archetype = getArchetypeAOM(archetypeDTO);
-            if (archetype != null){
+            if (archetype != null) {
                 archetypes.add(archetype);
             }
         }
         return archetypes;
     }
 
-    public Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO) throws InternalErrorException {
-        if (!CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())){
-            LoggerFactory.getLogger(Archetypes.class).warn("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'");
+    private Archetype getArchetypeAOM(ArchetypeDTO archetypeDTO) {
+        if (!CMTypeFormat.ADL_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
             return null;
         }
-        if (archetypeDTO.getAom() == null){
+        if (archetypeDTO.getAom() == null) {
             processArchetype(archetypeDTO);
         }
-        return (Archetype)SerializationUtils.deserialize(archetypeDTO.getAom());
+        return (Archetype) SerializationUtils.deserialize(archetypeDTO.getAom());
     }
 
-    public FlatArchetype getArchetypeAOM2ById(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+    public FlatArchetype getArchetypeAOM2ById(String archetypeId) {
         Collection<ArchetypeDTO> archetypeDTOs = getCMElementByIds(Collections.singleton(archetypeId));
-        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
-            return getArchetypeAOM2(archetypeDTO);
+        if (archetypeDTOs.isEmpty()) {
+            throw new InstanceNotFoundException(archetypeId, ArchetypeDTO.class.getName());
         }
-        throw new InstanceNotFoundException(archetypeId, ArchetypeDTO.class.getName());
+        return getArchetypeAOM2(archetypeDTOs.iterator().next());
     }
 
 
-    public FlatArchetype getArchetypeAOM2(ArchetypeDTO archetypeDTO) throws InternalErrorException {
-        if (!CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())){
+    private FlatArchetype getArchetypeAOM2(ArchetypeDTO archetypeDTO) {
+        if (!CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
             throw new InternalErrorException(new Exception("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'"));
         }
-        if (archetypeDTO.getAom() == null){
+        if (archetypeDTO.getAom() == null) {
             processArchetype(archetypeDTO);
         }
-        return (FlatArchetype)SerializationUtils.deserialize(archetypeDTO.getAom());
+        return (FlatArchetype) SerializationUtils.deserialize(archetypeDTO.getAom());
     }
 
-    public ArchetypeObjectBundleCustomVO getArchetypeAOBCVOById(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+    public ArchetypeObjectBundleCustomVO getArchetypeAOBCVOById(String archetypeId) {
         Collection<ArchetypeDTO> archetypeDTOs = getCMElementByIds(Collections.singleton(archetypeId));
-        for(ArchetypeDTO archetypeDTO: archetypeDTOs){
-            return getArchetypeAOBCVO(archetypeDTO);
+        if (archetypeDTOs.isEmpty()) {
+            throw new InstanceNotFoundException(archetypeId, ArchetypeDTO.class.getName());
         }
-        throw new InstanceNotFoundException(archetypeId, ArchetypeDTO.class.getName());
+        return getArchetypeAOBCVO(archetypeDTOs.iterator().next());
     }
 
-    public ArchetypeObjectBundleCustomVO getArchetypeAOBCVO(ArchetypeDTO archetypeDTO) throws InternalErrorException {
-        if (archetypeDTO.getAobcVO() == null){
+    private ArchetypeObjectBundleCustomVO getArchetypeAOBCVO(ArchetypeDTO archetypeDTO) {
+        if (archetypeDTO.getAobcVO() == null) {
             processArchetype(archetypeDTO);
         }
         return (ArchetypeObjectBundleCustomVO) SerializationUtils.deserialize(archetypeDTO.getAobcVO());
     }
 
-    private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO){
-        return (ArchetypeObjectBundleCustomVO)SerializationUtils.deserialize(archetypeDTO.getAobcVO());
+    private static ArchetypeObjectBundleCustomVO getArchetypeObjectBundleCustomVO(ArchetypeDTO archetypeDTO) {
+        return (ArchetypeObjectBundleCustomVO) SerializationUtils.deserialize(archetypeDTO.getAobcVO());
     }
 
     public ArchetypeManager getArchetypeManager() {
         return archetypeManager;
     }
 
-    public TemplateMap generateTemplateMap(String archetypeId) throws InternalErrorException, InstanceNotFoundException {
+    public TemplateMap generateTemplateMap(String archetypeId) {
         Collection<ArchetypeElementVO> archetypeElementVOs =
                 getArchetypeManager().getArchetypeElements().getArchetypeElementsVO(archetypeId, null);
         Map<String, TemplateElementMap> templateElementMaps = new LinkedHashMap<>();
         TemplateMap templateMap = new TemplateMap(archetypeId, null, templateElementMaps);
-        Collection<String> elementMapIds = new ArrayList<String>();
-        for(ArchetypeElementVO archetypeElementVO: archetypeElementVOs){
+        Collection<String> elementMapIds = new ArrayList<>();
+        for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
             TemplateElementMap templateElementMap = getArchetypeManager().getTemplateElementMap(archetypeElementVO, elementMapIds);
             templateElementMaps.put(templateElementMap.getElementMapId(), templateElementMap);
         }

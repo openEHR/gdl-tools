@@ -15,12 +15,11 @@ public class DialogPredicateElementAttributeInstanceSelection extends DialogSele
 
     public DialogPredicateElementAttributeInstanceSelection(
             WindowManager windowManager, String archetypeId, String templateId,
-            ArchetypeManager archetypeManager,
             NodeDefinitionManager nodeDefinitionManager) {
         super(
                 windowManager.getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
-                nodeDefinitionManager.getNodeAttributesAndFunctions(archetypeId, templateId, archetypeManager),
+                nodeDefinitionManager.getNodeAttributesAndFunctions(archetypeId, templateId),
                 true,
                 new Dimension(500, 500), windowManager);
     }

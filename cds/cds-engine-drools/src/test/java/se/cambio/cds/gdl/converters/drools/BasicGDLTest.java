@@ -486,7 +486,7 @@ public class BasicGDLTest extends GDLTestCase {
         assertEquals(1, rer.getFiredRules().size());
         assertThat(rer.getArchetypeReferences().size(), is(1));
         ArchetypeReference archetypeReference = rer.getArchetypeReferences().iterator().next();
-        ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get("openEHR-EHR-EVALUATION.stroke_prevention_dashboard_utility.v1/data[at0001]/items[at0054]");
+        ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get("openEHR-EHR-EVALUATION.stroke_prevention_dashboard_utility.v1/data[at0001]/items[at0002]");
         assertThat(elementInstance, notNullValue());
         DataValue dataValue = elementInstance.getDataValue();
         assertThat(dataValue, instanceOf(DvDateTime.class));

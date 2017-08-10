@@ -51,6 +51,9 @@ public class ArchetypeElementVOBuilder {
     }
 
     public ArchetypeElementVO createArchetypeElementVO() {
-        return new ArchetypeElementVO(name, description, type, idArchetype, idTemplate, path);
+        ArchetypeElementVO archetypeElementVO = new ArchetypeElementVO(name, description, type, idArchetype, idTemplate, path);
+        archetypeElementVO.setLowerCardinality(lowerCardinality);
+        archetypeElementVO.setUpperCardinality(upperCardinality);
+        return archetypeElementVO;
     }
 }

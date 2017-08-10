@@ -98,24 +98,20 @@ public class DVProportionPanel extends DVGenericPanel {
     protected JComboBox getProportionTypeComboBox() {
         if (proportionTypeComboBox == null) {
             proportionTypeComboBox = new JComboBox();
-            //proportionTypeComboBox.setPreferredSize(new Dimension(60,18));
             proportionTypeComboBox.setRenderer(new ProportionTypeComboRenderer());
             for (ProportionKind proportionKind : getProportionTypes().getProportionTypes(getIdTemplate(), getIdElement())) {
                 proportionTypeComboBox.addItem(proportionKind);
             }
-            proportionTypeComboBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (ProportionKind.UNITARY.equals(proportionTypeComboBox.getSelectedItem())) {
-                        getDenominatorTextField().setValue(1);
-                        getDenominatorTextField().setEnabled(false);
-                    } else if (ProportionKind.PERCENT.equals(proportionTypeComboBox.getSelectedItem())) {
-                        getDenominatorTextField().setValue(100);
-                        getDenominatorTextField().setEnabled(false);
-                    } else {
-                        getDenominatorTextField().setEnabled(true);
-                        getDenominatorTextField().setText("");
-                    }
+            proportionTypeComboBox.addActionListener(e -> {
+                if (ProportionKind.UNITARY.equals(proportionTypeComboBox.getSelectedItem())) {
+                    getDenominatorTextField().setValue(1);
+                    getDenominatorTextField().setEnabled(false);
+                } else if (ProportionKind.PERCENT.equals(proportionTypeComboBox.getSelectedItem())) {
+                    getDenominatorTextField().setValue(100);
+                    getDenominatorTextField().setEnabled(false);
+                } else {
+                    getDenominatorTextField().setEnabled(true);
+                    getDenominatorTextField().setText("");
                 }
             });
             if (proportionTypeComboBox.getItemCount() > 0) {

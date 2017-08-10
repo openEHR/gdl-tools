@@ -4,7 +4,9 @@ import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.constraintmodel.*;
 import org.openehr.am.archetype.constraintmodel.primitive.CInteger;
 import org.openehr.am.archetype.constraintmodel.primitive.CPrimitive;
+import org.openehr.am.archetype.ontology.ArchetypeOntology;
 import org.openehr.am.archetype.ontology.ArchetypeTerm;
+import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.openehr.am.openehrprofile.datatypes.quantity.CDvOrdinal;
 import org.openehr.am.openehrprofile.datatypes.quantity.CDvQuantity;
 import org.openehr.am.openehrprofile.datatypes.quantity.CDvQuantityItem;
@@ -17,7 +19,6 @@ import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.cm.util.TerminologyNodeVO;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.*;
 
 import java.util.*;
@@ -60,13 +61,15 @@ public class GenericObjectBundleADLManager {
         init();
         setDefaultLanguage();
         loadArchetypeObjects();
+        Collection<ArchetypeTermVO> archetypeTermVOs = generateArchetypeTerms();
         return new ArchetypeObjectBundleCustomVO(
                 archetypeElementVOs,
                 clusterVOs,
                 codedTextVOs,
                 ordinalVOs,
                 unitVOs,
-                proportionTypeVOs);
+                proportionTypeVOs,
+                archetypeTermVOs);
     }
 
     private void setDefaultLanguage() {
@@ -89,7 +92,7 @@ public class GenericObjectBundleADLManager {
     public void loadArchetypeObjects() {
         String archId = ar.getArchetypeId().getValue();
         String rmEntry = ar.getArchetypeId().rmEntity();
-        proccessCObject(ar.getDefinition());
+        processCObject(ar.getDefinition());
         Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, templateId, rmEntry);
         for (ClusterVO clusterVO : clusterVOs) {
             if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")) {
@@ -100,7 +103,7 @@ public class GenericObjectBundleADLManager {
         archetypeElementVOs.addAll(rmArchetypeElements);
     }
 
-    private void proccessCObject(CObject cObject) {
+    private void processCObject(CObject cObject) {
         String path = cObject.path();
         String archetypeId = ar.getArchetypeId().getValue();
         if (!OpenEHRConst.PARSABLE_OPENEHR_RM_NAMES.contains(cObject.getRmTypeName())) {
@@ -142,7 +145,7 @@ public class GenericObjectBundleADLManager {
         //Recursive lookup
         for (CAttribute cAttribute : cComplexObject.getAttributes()) {
             for (CObject cObjectAux : cAttribute.getChildren()) {
-                proccessCObject(cObjectAux);
+                processCObject(cObjectAux);
             }
         }
     }
@@ -523,5 +526,24 @@ public class GenericObjectBundleADLManager {
         } else {
             return null;
         }
+    }
+
+    public Collection<ArchetypeTermVO> generateArchetypeTerms() {
+        Collection<ArchetypeTermVO> archetypeTermVOs = new ArrayList<>();
+        ArchetypeOntology ao = ar.getOntology();
+        List<OntologyDefinitions> ods = ao.getTermDefinitionsList();
+        for (OntologyDefinitions od : ods) {
+            String lang = od.getLanguage();
+            List<ArchetypeTerm> archetypeTerms = od.getDefinitions();
+            for (ArchetypeTerm archetypeTerm : archetypeTerms) {
+                archetypeTermVOs.add(
+                        new ArchetypeTermVO(ar.getArchetypeId().getValue(),
+                                archetypeTerm.getCode(),
+                                lang,
+                                archetypeTerm.getText(),
+                                archetypeTerm.getDescription()));
+            }
+        }
+        return archetypeTermVOs;
     }
 }

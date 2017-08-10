@@ -76,8 +76,8 @@ public class ArchetypeReferencesManager {
         for (String pathNode : pathArray) {
             if (!pathNode.isEmpty()) {
                 clusterPathSB.append("/").append(pathNode);
-                ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
-                if (clusterVO != null) {
+                if (archetypeManager.getClusters().isCluster(archetypeElementVO.getIdTemplate(), clusterPathSB.toString())) {
+                    ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
                     String name = null;
                     try {
                         name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());

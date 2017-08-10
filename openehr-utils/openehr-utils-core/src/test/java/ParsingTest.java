@@ -25,7 +25,7 @@ import java.util.Calendar;
 import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(classes = {ClinicalModelsCacheConfiguration.class})
-public class ParsingTest extends AbstractTestNGSpringContextTests{
+public class ParsingTest extends AbstractTestNGSpringContextTests {
 
     @Value("classpath:/archetypes")
     private Resource archetypesResource;

@@ -3,6 +3,7 @@ package se.cambio.openehr.controller;
 import org.openehr.jaxb.am.*;
 import org.openehr.jaxb.rm.CodePhrase;
 import org.openehr.jaxb.rm.DvOrdinal;
+import org.openehr.jaxb.rm.StringDictionaryItem;
 import org.openehr.jaxb.rm.TranslationDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.ArchetypeTermMapGenerator;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.ArchetypeProcessingException;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -42,13 +42,15 @@ public class GenericObjectBundleADLSManager {
         init();
         setDefaultLanguage();
         loadArchetypeObjects();
+        Collection<ArchetypeTermVO> archetypeTermVOs = generateArchetypeTerms();
         return new ArchetypeObjectBundleCustomVO(
                 archetypeElementVOs,
                 clusterVOs,
                 codedTextVOs,
                 ordinalVOs,
                 unitVOs,
-                proportionTypeVOs);
+                proportionTypeVOs,
+                archetypeTermVOs);
     }
 
     private void setDefaultLanguage() {
@@ -461,7 +463,7 @@ public class GenericObjectBundleADLSManager {
     }
 
     private List<String> getCStrings(List<CObject> cObjects) throws ArchetypeProcessingException {
-        List<String> cStrings = new ArrayList<String>();
+        List<String> cStrings = new ArrayList<>();
         for (CObject cObject : cObjects) {
             if (!(cObject instanceof CString)) {
                 throw new ArchetypeProcessingException("Expecting C_STRING but found '" + cObject.getRmTypeName() + "'");
@@ -472,7 +474,7 @@ public class GenericObjectBundleADLSManager {
     }
 
     private List<Integer> getCIntegers(CObject cObject) throws ArchetypeProcessingException {
-        List<Integer> cIntegers = new ArrayList<Integer>();
+        List<Integer> cIntegers = new ArrayList<>();
         if (!(cObject instanceof CInteger)) {
             throw new ArchetypeProcessingException("Expecting C_INTEGER but found '" + cObject.getRmTypeName() + "'");
         }
@@ -481,7 +483,7 @@ public class GenericObjectBundleADLSManager {
     }
 
     private List<CObject> getCObjectsFromTuple(CAttributeTuple cAttributeTuple, int index) {
-        List<CObject> cObjects = new ArrayList<CObject>();
+        List<CObject> cObjects = new ArrayList<>();
         for (CObjectTuple cObjectTuple : cAttributeTuple.getChildren()) {
             cObjects.add(cObjectTuple.getMembers().get(index));
         }
@@ -574,6 +576,34 @@ public class GenericObjectBundleADLSManager {
         } else {
             return rmName;
         }
+    }
 
+    public Collection<ArchetypeTermVO> generateArchetypeTerms() {
+        Collection<ArchetypeTermVO> archetypeTermVOs = new ArrayList<>();
+        ArchetypeOntology ao = ar.getOntology();
+        List<CodeDefinitionSet> termDefinitions = ao.getTermDefinitions();
+        for (CodeDefinitionSet codeDefinitionSet : termDefinitions) {
+            String lang = codeDefinitionSet.getLanguage();
+            for (ArchetypeTerm archetypeTerm : codeDefinitionSet.getItems()) {
+                String text = getDictionaryItem("text", archetypeTerm);
+                String description = getDictionaryItem("description", archetypeTerm);
+                archetypeTermVOs.add(
+                        new ArchetypeTermVO(ar.getArchetypeId().getValue(),
+                                archetypeTerm.getCode(),
+                                lang,
+                                text,
+                                description));
+            }
+        }
+        return archetypeTermVOs;
+    }
+
+    private String getDictionaryItem(String parameterName, ArchetypeTerm archetypeTerm) {
+        for (StringDictionaryItem dictionaryItem : archetypeTerm.getItems()) {
+            if (dictionaryItem.getId().equals(parameterName)) {
+                return dictionaryItem.getValue();
+            }
+        }
+        return null;
     }
 }

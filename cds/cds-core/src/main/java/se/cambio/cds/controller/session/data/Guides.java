@@ -1,6 +1,7 @@
 package se.cambio.cds.controller.session.data;
 
 import org.apache.commons.lang.SerializationUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
@@ -15,12 +16,15 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
+import static java.lang.String.format;
+
 
 public class Guides extends AbstractCMManager<GuideDTO> {
 
 
     private final RuleEngineService ruleEngineService;
     private GDLParser gdlParser;
+    private Logger logger = LoggerFactory.getLogger(Guides.class);
 
     public Guides(
             ClinicalModelsService clinicalModelsService,
@@ -48,19 +52,21 @@ public class Guides extends AbstractCMManager<GuideDTO> {
     }
 
     private void processGuide(GuideDTO guideDTO) {
+        long startTime = System.currentTimeMillis();
+        boolean parsed = false;
+        boolean compiled = false;
         if (!hasGuideObject(guideDTO)) {
-            LoggerFactory.getLogger(Guides.class).info("Parsing guideline '{}'...", guideDTO.getId());
-            long startTime = System.currentTimeMillis();
             parseGuide(guideDTO);
-            long endTime = System.currentTimeMillis();
-            LoggerFactory.getLogger(Guides.class).info("Done ({} ms)", (endTime - startTime));
+            parsed = true;
         }
         if (!isCompiled(guideDTO)) {
-            LoggerFactory.getLogger(Guides.class).info("Compiling guideline '{}'...", guideDTO.getId());
-            long startTime = System.currentTimeMillis();
             compileGuide(guideDTO);
-            long endTime = System.currentTimeMillis();
-            LoggerFactory.getLogger(Guides.class).info("Done ({} ms)", (endTime - startTime));
+            compiled = true;
+        }
+        long endTime = System.currentTimeMillis();
+        String actions = parsed && compiled ? "parsed and compiled" : (parsed ? "parsed" : (compiled ? "compiled" : ""));
+        if (parsed || compiled) {
+            logger.info(format("Guideline '%s' %s successfully (%s ms)", guideDTO.getId(), actions, endTime - startTime));
         }
     }
 
