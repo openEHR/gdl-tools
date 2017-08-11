@@ -1,9 +1,3 @@
-/*
- * Created on 02-nov-2006
- *
-
-
- */
 package se.cambio.openehr.view.util;
 
 import se.cambio.openehr.view.trees.SelectableNode;
@@ -15,46 +9,46 @@ import java.util.Enumeration;
 
 public class NodeConversor {
 
-    public enum SearchType{
+    public enum SearchType {
         SEARCH_ONLY_LEAVES, SEARCH_ONLY_PARENT, SEARCH_ALL
     }
 
-    public static void  setAllVisible(SelectableNode<?> rootNode){
+    public static void setAllVisible(SelectableNode<?> rootNode) {
         rootNode.setVisible(true);
-        Enumeration<?> e = rootNode.getAllchildren();
-        while (e.hasMoreElements()){
-            NodeConversor.setAllVisible((SelectableNode<?>)e.nextElement());
+        Enumeration<?> list = rootNode.getAllchildren();
+        while (list.hasMoreElements()) {
+            NodeConversor.setAllVisible((SelectableNode<?>) list.nextElement());
         }
     }
 
-    public static void filterByText(SelectableNode<?> rootNode, String filtro){
+    public static void filterByText(SelectableNode<?> rootNode, String filtro) {
         boolean visible = false;
-        if (rootNode.getName()!=null){
-            if (filtro.trim().length()>0){
+        if (rootNode.getName() != null) {
+            if (filtro.trim().length() > 0) {
                 String desc1 = Normalizer.normalize(rootNode.getName(), Normalizer.Form.NFD);
                 desc1 = FormatConverter.textWithoutPunctuation(desc1);
                 String desc2 = Normalizer.normalize(filtro, Normalizer.Form.NFD);
                 desc2 = FormatConverter.textWithoutPunctuation(desc2);
                 visible = desc1.contains(desc2);
-            }else{
+            } else {
                 visible = true;
             }
         }
-        if (rootNode.isSingleSelectionMode()){
+        if (rootNode.isSingleSelectionMode()) {
             rootNode.setSelected(false);
         }
         rootNode.setVisible(visible);
-        if (visible){
+        if (visible) {
             filtro = "";
         }
-        if (!rootNode.isLeaf()){
-            Enumeration<?> e = rootNode.getAllchildren();
-            while (e.hasMoreElements()){
+        if (!rootNode.isLeaf()) {
+            Enumeration<?> list = rootNode.getAllchildren();
+            while (list.hasMoreElements()) {
                 NodeConversor.filterByText(
-                        (SelectableNode<?>)e.nextElement(),
+                        (SelectableNode<?>) list.nextElement(),
                         filtro);
             }
-            if (rootNode.getChildCount()!=0) {
+            if (rootNode.getChildCount() != 0) {
                 rootNode.setVisible(true);
             }
         }
@@ -64,29 +58,29 @@ public class NodeConversor {
      * @deprecated use {@link #getSelectedElement()} instead
      */
     @Deprecated
-    public static Object getSelectedObject(SelectableNode<?> rootNode){
+    public static Object getSelectedObject(SelectableNode<?> rootNode) {
         SelectableNode<?> selectedNode = getSelectedNode(rootNode, false);
-        return selectedNode!=null?selectedNode.getObject():null;
+        return selectedNode != null ? selectedNode.getObject() : null;
     }
 
-    public static <E> E getSelectedElement(SelectableNode<E> rootNode){
-        SelectableNode<E> selectedNode = getSelectedNode(rootNode, false);
-        return selectedNode!=null?selectedNode.getObject():null;
-    }
-    
-    public static Object getSelectedObject(SelectableNode<?> rootNode, boolean allowParent){
+    public static Object getSelectedObject(SelectableNode<?> rootNode, boolean allowParent) {
         SelectableNode<?> selectedNode = getSelectedNode(rootNode, allowParent);
-        return selectedNode!=null?selectedNode.getObject():null;
+        return selectedNode != null ? selectedNode.getObject() : null;
     }
 
-    public static <K>SelectableNode<K> getSelectedNode(SelectableNode<K> rootNode, boolean allowParent){
-        Enumeration<?> e = rootNode.getAllchildren();
-        while (e.hasMoreElements()){
-            SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
-            if (node.isSelected() && (allowParent || node.isLeaf() || node.isMultipleSelectionMode())){
+    public static <E> E getSelectedElement(SelectableNode<E> rootNode) {
+        SelectableNode<E> selectedNode = getSelectedNode(rootNode, false);
+        return selectedNode != null ? selectedNode.getObject() : null;
+    }
+
+    public static <K> SelectableNode<K> getSelectedNode(SelectableNode<K> rootNode, boolean allowParent) {
+        Enumeration<?> list = rootNode.getAllchildren();
+        while (list.hasMoreElements()) {
+            SelectableNode<K> node = (SelectableNode<K>) list.nextElement();
+            if (node.isSelected() && (allowParent || node.isLeaf() || node.isMultipleSelectionMode())) {
                 return node;
-            }else {
-                if (!node.isLeaf() && node.hasChildrenSelected()){
+            } else {
+                if (!node.isLeaf() && node.hasChildrenSelected()) {
                     return getSelectedNode(node, allowParent);
                 }
             }
@@ -94,14 +88,14 @@ public class NodeConversor {
         return null;
     }
 
-    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> rootNode){
+    public static <K> Collection<K> getSelectedObjects(SelectableNode<K> rootNode) {
         return getSelectedObjects(rootNode, SearchType.SEARCH_ALL);
     }
 
-    public static <K>Collection<K> getSelectedObjects(SelectableNode<K> rootNode, SearchType searchType){
-        Collection<SelectableNode<K>> selectedNodes = new ArrayList<SelectableNode<K>>();
+    public static <K> Collection<K> getSelectedObjects(SelectableNode<K> rootNode, SearchType searchType) {
+        Collection<SelectableNode<K>> selectedNodes = new ArrayList<>();
         addSelectedNodes(rootNode, selectedNodes, searchType);
-        Collection<K> selectedObjects = new ArrayList<K>();
+        Collection<K> selectedObjects = new ArrayList<>();
         for (SelectableNode<K> node : selectedNodes) {
             if (node.getObject() != null) {
                 selectedObjects.add(node.getObject());
@@ -110,37 +104,36 @@ public class NodeConversor {
         return selectedObjects;
     }
 
-    public static <K>void addSelectedNodes(SelectableNode<K> rootNode, Collection<SelectableNode<K>> selectedNodes, SearchType searchType){
-        Enumeration<?> e = rootNode.getAllchildren();
-        while (e.hasMoreElements()){
-            SelectableNode<K> node = (SelectableNode<K>)e.nextElement();
-            if (node.isSelected()){
-                if (searchType!=SearchType.SEARCH_ONLY_LEAVES || node.isLeaf()){
+    public static <K> void addSelectedNodes(SelectableNode<K> rootNode, Collection<SelectableNode<K>> selectedNodes, SearchType searchType) {
+        Enumeration<?> list = rootNode.getAllchildren();
+        while (list.hasMoreElements()) {
+            SelectableNode<K> node = (SelectableNode<K>) list.nextElement();
+            if (node.isSelected()) {
+                if (searchType != SearchType.SEARCH_ONLY_LEAVES || node.isLeaf()) {
                     selectedNodes.add(node);
                 }
-                if (searchType!=SearchType.SEARCH_ONLY_PARENT){
+                if (searchType != SearchType.SEARCH_ONLY_PARENT) {
                     addSelectedNodes(node, selectedNodes, searchType);
                 }
-            }else if (node.hasChildrenSelected()){
-                if (searchType!=SearchType.SEARCH_ONLY_PARENT || !node.isLeaf()){
+            } else if (node.hasChildrenSelected()) {
+                if (searchType != SearchType.SEARCH_ONLY_PARENT || !node.isLeaf()) {
                     addSelectedNodes(node, selectedNodes, searchType);
                 }
             }
         }
     }
 
-
-    public static boolean selectObject(SelectableNode<?> rootNode, Object obj){
-        Enumeration<?> e = rootNode.getAllchildren();
-        while (e.hasMoreElements()){
-            SelectableNode<?> node = (SelectableNode<?>)e.nextElement();
-            if (obj.equals(node.getObject())){
+    public static boolean selectObject(SelectableNode<?> rootNode, Object obj) {
+        Enumeration<?> list = rootNode.getAllchildren();
+        while (list.hasMoreElements()) {
+            SelectableNode<?> node = (SelectableNode<?>) list.nextElement();
+            if (obj.equals(node.getObject())) {
                 node.setSelected(true);
                 node.stateChange(node);
                 return true;
-            }else{
+            } else {
                 boolean found = selectObject(node, obj);
-                if (found){
+                if (found) {
                     return true;
                 }
             }

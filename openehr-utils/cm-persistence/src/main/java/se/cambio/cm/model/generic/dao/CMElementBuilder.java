@@ -42,22 +42,22 @@ public class CMElementBuilder<E extends CMElement> {
             cmElement.setSource(source);
             cmElement.setLastUpdate(lastUpdate);
             return cmElement;
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+        } catch (Exception ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
     private void checkMissingAttributes() throws InternalErrorException {
-        if (id == null){
+        if (id == null) {
             throw new InternalErrorException(new Exception("No id specified for cmElement"));
         }
-        if (format == null){
+        if (format == null) {
             throw new InternalErrorException(new Exception("No format specified for cmElement"));
         }
-        if (source == null){
+        if (source == null) {
             throw new InternalErrorException(new Exception("No source specified for cmElement"));
         }
-        if (lastUpdate == null){
+        if (lastUpdate == null) {
             throw new InternalErrorException(new Exception("No lastUpdate specified for cmElement"));
         }
     }

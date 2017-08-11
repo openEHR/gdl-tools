@@ -19,21 +19,21 @@ public class DataValueCellVORenderer extends DefaultTableCellRenderer {
     public void setValue(Object value) {
         DataValueCellVO dvCellVO = null;
         DataValue dv = null;
-        if (value instanceof DataValueCellVO){
-            dvCellVO = (DataValueCellVO)value;
+        if (value instanceof DataValueCellVO) {
+            dvCellVO = (DataValueCellVO) value;
             dv = dvCellVO.getDv();
         }
-        if (dv!=null){
+        if (dv != null) {
             String dvStr = FormatConverter.getReadableValue(dv);
             setText(dvStr);
             setToolTipText(dvStr);
             //setIcon(null);
-        }else{
+        } else {
             setText(null);
             setToolTipText(null);
             setIcon(null);
         }
-        if (dvCellVO!=null && dvCellVO.isMandatory() && dv==null){
+        if (dvCellVO != null && dvCellVO.isMandatory() && dv == null) {
             setBorder(BorderFactory.createLineBorder(Color.RED));
         }
     }

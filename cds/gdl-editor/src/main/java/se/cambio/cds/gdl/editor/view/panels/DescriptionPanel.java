@@ -321,7 +321,7 @@ public class DescriptionPanel extends JPanel {
         String value = null;
         try {
             value = (String) context.getValue(xPath);
-        } catch (JXPathNotFoundException e) {
+        } catch (JXPathNotFoundException ex) {
             //Value not found
         }
         if (value != null) {
@@ -347,17 +347,17 @@ public class DescriptionPanel extends JPanel {
         }
 
         @Override
-        public void insertUpdate(DocumentEvent e) {
+        public void insertUpdate(DocumentEvent ev) {
             update();
         }
 
         @Override
-        public void removeUpdate(DocumentEvent e) {
+        public void removeUpdate(DocumentEvent ev) {
             update();
         }
 
         @Override
-        public void changedUpdate(DocumentEvent e) {
+        public void changedUpdate(DocumentEvent ev) {
             update();
         }
 

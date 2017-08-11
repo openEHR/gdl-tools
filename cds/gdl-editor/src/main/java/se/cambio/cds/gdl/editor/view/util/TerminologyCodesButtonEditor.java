@@ -38,12 +38,12 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
         });
         panel.getTextField().addFocusListener(new FocusListener() {
             @Override
-            public void focusLost(FocusEvent e) {
+            public void focusLost(FocusEvent ev) {
                 update();
             }
 
             @Override
-            public void focusGained(FocusEvent e) { }
+            public void focusGained(FocusEvent ev) { }
         });
 
         panel.getSearchButton().addActionListener(new SearchCodesActionListener(windowManager, terminologyDialogManager));
@@ -93,7 +93,7 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
 
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             String terminologyCodes = panel.getTextField().getText();
             Collection<String> selectedCodes = new ArrayList<>();
             if (!terminologyCodes.isEmpty()){

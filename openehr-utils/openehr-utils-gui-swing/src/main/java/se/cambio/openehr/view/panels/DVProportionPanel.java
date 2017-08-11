@@ -10,8 +10,6 @@ import se.cambio.openehr.util.ProportionTypesConst;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class DVProportionPanel extends DVGenericPanel {
     private JFormattedTextField numeratorTextField;
     private JFormattedTextField denominatorTextField;
     private JComboBox proportionTypeComboBox;
-    private static int DEFAULT_PRECISION = 0;
+    private static final int DEFAULT_PRECISION = 0;
 
     public DVProportionPanel(
             String idElement, String idTemplate,
@@ -47,16 +45,16 @@ public class DVProportionPanel extends DVGenericPanel {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected void processFocusEvent(final FocusEvent e) {
-                    if (e.isTemporary()) {
+                protected void processFocusEvent(final FocusEvent ev) {
+                    if (ev.isTemporary()) {
                         return;
                     }
-                    if (e.getID() == FocusEvent.FOCUS_LOST) {
+                    if (ev.getID() == FocusEvent.FOCUS_LOST) {
                         if (getText() == null || getText().isEmpty()) {
                             setValue(null);
                         }
                     }
-                    super.processFocusEvent(e);
+                    super.processFocusEvent(ev);
                 }
             };
             numeratorTextField.setPreferredSize(new Dimension(100, 18));
@@ -71,25 +69,21 @@ public class DVProportionPanel extends DVGenericPanel {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected void processFocusEvent(final FocusEvent e) {
-                    if (e.isTemporary()) {
+                protected void processFocusEvent(final FocusEvent ev) {
+                    if (ev.isTemporary()) {
                         return;
                     }
-                    if (e.getID() == FocusEvent.FOCUS_LOST) {
+                    if (ev.getID() == FocusEvent.FOCUS_LOST) {
                         if (getText() == null || getText().isEmpty()) {
                             setValue(null);
                         }
                     }
-                    super.processFocusEvent(e);
+                    super.processFocusEvent(ev);
                 }
             };
             denominatorTextField.setPreferredSize(new Dimension(100, 18));
             if (isRequestFocus()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        denominatorTextField.requestFocus();
-                    }
-                });
+                SwingUtilities.invokeLater(() -> denominatorTextField.requestFocus());
             }
         }
         return denominatorTextField;
@@ -126,9 +120,6 @@ public class DVProportionPanel extends DVGenericPanel {
     }
 
     private static class ProportionTypeComboRenderer extends JLabel implements ListCellRenderer {
-        /**
-         *
-         */
         private static final long serialVersionUID = 1L;
 
         public ProportionTypeComboRenderer() {
@@ -199,8 +190,8 @@ public class DVProportionPanel extends DVGenericPanel {
     }
 
     public DataValue getDataValue() {
-        if (!getNumeratorTextField().getText().isEmpty() &&
-                !getDenominatorTextField().getText().isEmpty()) {
+        if (!getNumeratorTextField().getText().isEmpty()
+                && !getDenominatorTextField().getText().isEmpty()) {
             return new DvProportion(
                     Double.parseDouble(getNumeratorTextField().getText()),
                     Double.parseDouble(getDenominatorTextField().getText()),
@@ -212,7 +203,7 @@ public class DVProportionPanel extends DVGenericPanel {
     }
 
     public Collection<JComponent> getJComponents() {
-        Collection<JComponent> components = new ArrayList<JComponent>();
+        Collection<JComponent> components = new ArrayList<>();
         components.add(getNumeratorTextField());
         components.add(getDenominatorTextField());
         components.add(getProportionTypeComboBox());

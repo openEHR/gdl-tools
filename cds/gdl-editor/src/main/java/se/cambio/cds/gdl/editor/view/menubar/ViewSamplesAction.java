@@ -32,7 +32,7 @@ public class ViewSamplesAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SamplesD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         try {
             String path =
                     userConfigurationManager.getDocumentsFolder().getFolder() +

@@ -9,19 +9,19 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 public class OpenEHRRMUtil {
-    public static String EVENT_TIME_PATH = "/data/events/time";
-    public static String EXPIRY_TIME_PATH = "/expiry_time";
-    public static String NARRATIVE_PATH =  "/narrative";
-    public static String TIME_PATH = "/time";
-    public static String TIMING_PATH = "/activities/timing";
-    public static String ISM_TRANSITION_PATH = "/ism_transition/current_state";
-    public static String TEMPLATE_ID_PATH = "/archetype_details/template_id";
-    public static String ARCHETYPE_DETAILS_PATH = "/archetype_details";
+    public static final String EVENT_TIME_PATH = "/data/events/time";
+    public static final String EXPIRY_TIME_PATH = "/expiry_time";
+    public static final String NARRATIVE_PATH = "/narrative";
+    public static final String TIME_PATH = "/time";
+    public static final String TIMING_PATH = "/activities/timing";
+    public static final String ISM_TRANSITION_PATH = "/ism_transition/current_state";
+    public static final String TEMPLATE_ID_PATH = "/archetype_details/template_id";
+    public static final String ARCHETYPE_DETAILS_PATH = "/archetype_details";
 
     private static Collection<String> rmPaths;
+
     static {
         rmPaths = new ArrayList<>();
         rmPaths.add(EVENT_TIME_PATH);
@@ -31,6 +31,7 @@ public class OpenEHRRMUtil {
         rmPaths.add(ISM_TRANSITION_PATH);
         rmPaths.add(TEMPLATE_ID_PATH);
     }
+
     public static Collection<ArchetypeElementVO> getRMElements(String idArchetype, String idTemplate, String entryType) {
         return getRMElements(idArchetype, idTemplate, entryType, "");
     }
@@ -49,7 +50,7 @@ public class OpenEHRRMUtil {
                             .setLowerCardinality(1)
                             .setUpperCardinality(1)
                             .setPath(parentPath + eventsTimePath).createArchetypeElementVO());
-        }else if (OpenEHRConst.INSTRUCTION.equals(entryType)){
+        } else if (OpenEHRConst.INSTRUCTION.equals(entryType)) {
             //Expiry Time
             rmArchetypeElements.add(
                     new ArchetypeElementVOBuilder()
@@ -85,7 +86,7 @@ public class OpenEHRRMUtil {
                             .setLowerCardinality(1)
                             .setUpperCardinality(1)
                             .createArchetypeElementVO());
-        }else if (OpenEHRConst.ACTION.equals(entryType)){
+        } else if (OpenEHRConst.ACTION.equals(entryType)) {
             //Date and time Action step performed
             rmArchetypeElements.add(
                     new ArchetypeElementVOBuilder()
@@ -143,7 +144,7 @@ public class OpenEHRRMUtil {
         return rmArchetypeClusters;
     }
 
-    public static Collection<String> getRmPaths(){
+    public static Collection<String> getRmPaths() {
         return rmPaths;
     }
 

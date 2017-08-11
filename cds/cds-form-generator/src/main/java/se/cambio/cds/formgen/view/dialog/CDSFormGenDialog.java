@@ -58,10 +58,10 @@ public class CDSFormGenDialog extends JDialog implements FormGeneratorViewer {
 
     public class CloseAction extends WindowAdapter{
 
-        public void windowOpened(WindowEvent e){
+        public void windowOpened(WindowEvent ev){
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             dispose();
         }
 

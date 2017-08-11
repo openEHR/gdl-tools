@@ -33,10 +33,10 @@ public class PathUtils {
         for (String elementInPath : elementsInPath) {
             if (elementInPath.contains("[") && elementInPath.contains("]")) {
                 String candidateArchetypeId = elementInPath.substring(elementInPath.indexOf("[") + 1, elementInPath.indexOf("]"));
-                if (candidateArchetypeId.contains("-" + OpenEHRConst.ACTION + ".") ||
-                        candidateArchetypeId.contains("-" + OpenEHRConst.INSTRUCTION + ".") ||
-                        candidateArchetypeId.contains("-" + OpenEHRConst.OBSERVATION + ".") ||
-                        candidateArchetypeId.contains("-" + OpenEHRConst.EVALUATION + ".")) {
+                if (candidateArchetypeId.contains("-" + OpenEHRConst.ACTION + ".")
+                        || candidateArchetypeId.contains("-" + OpenEHRConst.INSTRUCTION + ".")
+                        || candidateArchetypeId.contains("-" + OpenEHRConst.OBSERVATION + ".")
+                        || candidateArchetypeId.contains("-" + OpenEHRConst.EVALUATION + ".")) {
                     entryArchetypes.add(candidateArchetypeId);
                 }
             }

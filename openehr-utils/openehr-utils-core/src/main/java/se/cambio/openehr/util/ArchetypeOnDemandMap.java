@@ -3,7 +3,6 @@ package se.cambio.openehr.util;
 import org.openehr.am.archetype.Archetype;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
@@ -32,7 +31,7 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
         } else {
             try {
                 archetypes.getCMElementByIds(Collections.singleton((String) key));
-            } catch (InstanceNotFoundException e) {
+            } catch (InstanceNotFoundException ex) {
                 return false;
             }
             return archetypes.getAllIdsInCache().contains(key);
@@ -47,7 +46,7 @@ public class ArchetypeOnDemandMap extends AbstractMap<String, Archetype> {
                 return null;
             }
             return archetypesCollection.iterator().next();
-        } catch (InstanceNotFoundException e) {
+        } catch (InstanceNotFoundException ex) {
             return null;
         }
     }

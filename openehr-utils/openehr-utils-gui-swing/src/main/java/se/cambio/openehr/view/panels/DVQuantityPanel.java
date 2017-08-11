@@ -25,7 +25,7 @@ public class DVQuantityPanel extends DVGenericPanel {
     private static final long serialVersionUID = 1L;
     private JFormattedTextField magnitudeTextField;
     private JComboBox<String> unitsComboBox;
-    private boolean _enableUnits = false;
+    private boolean enableUnits = false;
     private ArchetypeManager archetypeManager;
     private Logger logger = LoggerFactory.getLogger(DVQuantityPanel.class);
 
@@ -34,7 +34,7 @@ public class DVQuantityPanel extends DVGenericPanel {
             boolean allowNull, boolean enableUnits, boolean requestFocus,
             ArchetypeManager archetypeManager) {
         super(idElement, idTemplate, allowNull, requestFocus);
-        _enableUnits = enableUnits;
+        this.enableUnits = enableUnits;
         this.archetypeManager = archetypeManager;
         this.setLayout(new BorderLayout());
         this.add(getMagnitudeTextField(), BorderLayout.CENTER);
@@ -48,17 +48,17 @@ public class DVQuantityPanel extends DVGenericPanel {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected void processFocusEvent(final FocusEvent e) {
-                    if (e.isTemporary()) {
+                protected void processFocusEvent(final FocusEvent ev) {
+                    if (ev.isTemporary()) {
                         return;
                     }
 
-                    if (e.getID() == FocusEvent.FOCUS_LOST) {
+                    if (ev.getID() == FocusEvent.FOCUS_LOST) {
                         if (getText() == null || getText().isEmpty()) {
                             setValue(null);
                         }
                     }
-                    super.processFocusEvent(e);
+                    super.processFocusEvent(ev);
                 }
             };
             magnitudeTextField.setPreferredSize(new Dimension(100, 20));
@@ -78,7 +78,7 @@ public class DVQuantityPanel extends DVGenericPanel {
             for (String unit : units.getUnits(getIdTemplate(), getIdElement())) {
                 unitsComboBox.addItem(unit);
             }
-            if (!_enableUnits) {
+            if (!enableUnits) {
                 unitsComboBox.setFocusable(false);
                 unitsComboBox.setUI(new DisabledComboUI());
                 ComboBoxEditor editor = unitsComboBox.getEditor();

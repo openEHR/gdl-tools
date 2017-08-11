@@ -58,7 +58,7 @@ public final class CDSLanguageManager {
     public static String getMessageWithLanguage(String key, String language) {
         try {
             return getResourceBundle(language).getString(key);
-        } catch (MissingResourceException e) {
+        } catch (MissingResourceException ex) {
             log.error(format("Error getting resource bundle for language '%s' with key '%s'", language, key));
             return "ERROR: Text not Found!";
         }

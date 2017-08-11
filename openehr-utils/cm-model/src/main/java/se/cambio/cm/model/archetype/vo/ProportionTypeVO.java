@@ -2,7 +2,7 @@ package se.cambio.cm.model.archetype.vo;
 
 import java.io.Serializable;
 
-public class ProportionTypeVO implements Serializable{
+public class ProportionTypeVO implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 25052012L;
     private String idTemplate = null;
@@ -19,24 +19,29 @@ public class ProportionTypeVO implements Serializable{
     public String getIdTemplate() {
         return idTemplate;
     }
+
     public void setIdTemplate(String idTemplate) {
         this.idTemplate = idTemplate;
     }
+
     public String getIdElement() {
         return idElement;
     }
+
     public void setIdElement(String idElement) {
         this.idElement = idElement;
     }
+
     public Integer getType() {
         return type;
     }
+
     public void setType(Integer type) {
         this.type = type;
     }
 
     @Override
-    public ProportionTypeVO clone(){
+    public ProportionTypeVO clone() {
         return new ProportionTypeVO(idTemplate, idElement, type);
     }
 }

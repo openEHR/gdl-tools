@@ -16,11 +16,11 @@ public class PluginTypeLinkListener implements ActionListener {
         this.ruleLinesPanel = ruleLinesPanel;
     }
 
-    public void actionPerformed(ActionEvent e) {
-        JLinkRuleElementLabel linkRuleLabel = (JLinkRuleElementLabel) e.getSource();
+    public void actionPerformed(ActionEvent ev) {
+        JLinkRuleElementLabel linkRuleLabel = (JLinkRuleElementLabel) ev.getSource();
         RuleLineElementWithValue<?> ruleLineElementWithValue = linkRuleLabel.getRuleLineElementWithValue();
         if (ruleLineElementWithValue != null) {
-            if (JLinkRuleElementLabel.ACTION_RIGHT_CLICK.equals(e.getActionCommand())) {
+            if (JLinkRuleElementLabel.ACTION_RIGHT_CLICK.equals(ev.getActionCommand())) {
                 /*Rename element*/
                 if (ruleLineElementWithValue instanceof ArchetypeElementRuleLineElement) {
                     ArchetypeElementRuleLineElement archetypeElementRuleLineElement = (ArchetypeElementRuleLineElement) ruleLineElementWithValue;

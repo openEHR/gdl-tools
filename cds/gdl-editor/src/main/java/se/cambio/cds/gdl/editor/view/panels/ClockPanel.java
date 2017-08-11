@@ -48,8 +48,8 @@ public final class ClockPanel extends JPanel {
                 SwingUtilities.invokeLater(() -> getShowTime().setText(dateTime));
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
             }
         });

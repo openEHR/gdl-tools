@@ -4,17 +4,16 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
 
-public class DisabledComboUI extends BasicComboBoxUI{
-    protected ComboPopup createPopup()
-    {
-        BasicComboPopup popup = (BasicComboPopup)super.createPopup();
+public class DisabledComboUI extends BasicComboBoxUI {
+    protected ComboPopup createPopup() {
+        BasicComboPopup popup = (BasicComboPopup) super.createPopup();
         popup.removeAll();
         return popup;
     }
 
     public void configureArrowButton() {
         super.configureArrowButton();
-        if ( arrowButton != null ) {
+        if (arrowButton != null) {
             arrowButton.setVisible(false);
         }
     }

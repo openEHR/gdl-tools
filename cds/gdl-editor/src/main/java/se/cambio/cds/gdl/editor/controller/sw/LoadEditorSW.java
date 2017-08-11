@@ -53,8 +53,8 @@ public class LoadEditorSW extends CDSSwingWorker {
                 dialog.setVisible(true);
             }
             editorManager.getActiveEditorWindow().setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

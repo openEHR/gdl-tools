@@ -4,9 +4,9 @@ package se.cambio.cm.util.exceptions;
 public class InvalidCodeException extends TerminologyServiceException {
     private static final long serialVersionUID = 1L;
 
-	public InvalidCodeException(String message) {
-		super(message);
-	}
+    public InvalidCodeException(String message) {
+        super(message);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

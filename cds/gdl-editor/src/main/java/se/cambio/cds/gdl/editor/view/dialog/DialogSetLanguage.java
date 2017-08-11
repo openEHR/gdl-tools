@@ -70,8 +70,8 @@ public class DialogSetLanguage extends DialogEditor {
         userConfigurationManager.setCountry(str[1]);
         try {
             userConfigurationManager.saveConfig();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", ex.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         JOptionPane.showMessageDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("MustRestartForChangesToTakeEffect"));

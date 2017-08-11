@@ -1,7 +1,6 @@
 package se.cambio.cm.model.archetype.vo;
 
 
-
 public class CodedTextVO extends PathableVO {
 
     private static final long serialVersionUID = 20120412L;
@@ -19,18 +18,21 @@ public class CodedTextVO extends PathableVO {
     public String getCode() {
         return code;
     }
+
     public void setCode(String code) {
         this.code = code;
     }
+
     public String getTerminology() {
         return terminology;
     }
+
     public void setTerminology(String terminology) {
         this.terminology = terminology;
     }
 
     @Override
-    public CodedTextVO clone(){
+    public CodedTextVO clone() {
         return new CodedTextVOBuilder()
                 .setName(getName())
                 .setDescription(getDescription())

@@ -132,7 +132,7 @@ public class ReadableRuleLineFactory {
             this.gdlEditor = gdlEditor;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             if (gdlEditor.checkRuleLineDelete(ruleLine)) {
                 int resp = JOptionPane.showConfirmDialog(
                         gdlEditor.getEditorWindow(),
@@ -175,7 +175,7 @@ public class ReadableRuleLineFactory {
             _ruleLinesPanel = ruleLinesPanel;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             _ruleLine.setCommented(!_ruleLine.isCommented());
             _ruleLinesPanel.refresh();
         }

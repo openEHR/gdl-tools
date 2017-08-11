@@ -69,7 +69,7 @@ public abstract class DraggablePanel extends JPanel implements MouseListener, Mo
         }
     }
 
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent ev) {
         mLastPoint = null;
         if (super.getParent() instanceof DropPanel) {
             ((DropPanel) super.getParent()).panelDragged(this);

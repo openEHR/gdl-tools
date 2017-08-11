@@ -34,7 +34,7 @@ public class FileSelectionAction extends AbstractAction {
         this.setEnabled(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         int response = fileChooser.showOpenDialog(editorManager.getActiveEditorWindow());
         if (response == JFileChooser.APPROVE_OPTION) {
             textField.setText(fileChooser.getSelectedFile().getAbsolutePath());

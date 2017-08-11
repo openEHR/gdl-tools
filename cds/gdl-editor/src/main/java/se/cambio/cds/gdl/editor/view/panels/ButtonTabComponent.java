@@ -78,7 +78,7 @@ class ButtonTabComponent extends JPanel {
             addActionListener(this);
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             int index = closableTabbebPane.getTabbedPane().indexOfTabComponent(ButtonTabComponent.this);
             closableTabbebPane.deleteTab(index);
         }
@@ -103,16 +103,16 @@ class ButtonTabComponent extends JPanel {
     }
 
     private final static MouseListener buttonMouseListener = new MouseAdapter() {
-        public void mouseEntered(MouseEvent e) {
-            Component component = e.getComponent();
+        public void mouseEntered(MouseEvent ev) {
+            Component component = ev.getComponent();
             if (component instanceof AbstractButton) {
                 AbstractButton button = (AbstractButton) component;
                 button.setBorderPainted(true);
             }
         }
 
-        public void mouseExited(MouseEvent e) {
-            Component component = e.getComponent();
+        public void mouseExited(MouseEvent ev) {
+            Component component = ev.getComponent();
             if (component instanceof AbstractButton) {
                 AbstractButton button = (AbstractButton) component;
                 button.setBorderPainted(false);

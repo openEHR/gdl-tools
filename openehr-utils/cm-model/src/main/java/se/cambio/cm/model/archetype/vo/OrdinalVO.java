@@ -20,24 +20,29 @@ public class OrdinalVO extends PathableVO {
     public Integer getValue() {
         return value;
     }
+
     public void setValue(Integer value) {
         this.value = value;
     }
+
     public String getCode() {
         return code;
     }
+
     public void setCode(String code) {
         this.code = code;
     }
+
     public String getTerminology() {
         return terminology;
     }
+
     public void setTerminology(String terminology) {
         this.terminology = terminology;
     }
 
     @Override
-    public OrdinalVO clone(){
+    public OrdinalVO clone() {
         return new OrdinalVOBuilder()
                 .setName(getName())
                 .setDescription(getDescription())

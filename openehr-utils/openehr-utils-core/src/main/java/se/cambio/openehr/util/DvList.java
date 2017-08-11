@@ -4,31 +4,29 @@ import java.util.Collection;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 
-public class DvList extends DataValue{
+public class DvList extends DataValue {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     Collection<DataValue> dataValues = null;
-    
-    public DvList(Collection<DataValue> dataValues){
-	this.dataValues = dataValues;
+
+    public DvList(Collection<DataValue> dataValues) {
+        this.dataValues = dataValues;
     }
-    
-    public Collection<DataValue> getDataValues(){
-	return dataValues;
+
+    public Collection<DataValue> getDataValues() {
+        return dataValues;
     }
+
     @Override
     public String getReferenceModelName() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public String serialise() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

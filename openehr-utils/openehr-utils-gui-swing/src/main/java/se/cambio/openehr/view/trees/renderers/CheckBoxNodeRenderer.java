@@ -15,11 +15,12 @@ import java.awt.event.ActionListener;
 
 public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     private JCheckBox leafRenderer = new JCheckBox();
-    private SelectableNode<E> selectableNode = new <E>SelectableNodeBuilder().createSelectableNode();
+    private SelectableNode selectableNode = new SelectableNodeBuilder().createSelectableNode();
 
-
-    private Color selectionForeground, selectionBackground,
-            textForeground, textBackground;
+    private Color selectionForeground;
+    private Color selectionBackground;
+    private Color textForeground;
+    private Color textBackground;
 
     public JCheckBox getLeafRenderer() {
         return leafRenderer;
@@ -44,16 +45,8 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean selected, boolean expanded, boolean leaf, int row,
                                                   boolean hasFocus) {
-
-        //Boolean visible = getNodoSeleccionable().getVisible();
-        //leafRenderer.setVisible(visible);
-        //if (!visible) return leafRenderer;
-        if (value instanceof SelectableNode<?>){
-	    /*
-			Object strValue = tree.convertValueToText(value, selected,
-					expanded, leaf, row, false);
-	     */
-            SelectableNode<?> nodo = (SelectableNode<?>)value;
+        if (value instanceof SelectableNode<?>) {
+            SelectableNode<?> nodo = (SelectableNode<?>) value;
             leafRenderer.setText(nodo.getName());
             leafRenderer.setToolTipText(nodo.getDescription());
             tree.setToolTipText(nodo.getDescription());
@@ -91,15 +84,15 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
                     Icon selectedIcon = OpenEHRImageUtil.ACCEPT_ICON;
                     Icon unSelectedIcon = OpenEHRImageUtil.UNACCEPT_ICON;
                     Icon halfSelectedIcon = OpenEHRImageUtil.HALF_ACCEPT_ICON;
-                    selectedIcon = new MultipleIcon( new Icon[]{
+                    selectedIcon = new MultipleIcon(new Icon[]{
                             selectedIcon,
-                            ((SelectableNode<?>)value).getIcon()});
-                    unSelectedIcon = new MultipleIcon( new Icon[]{
+                            ((SelectableNode<?>) value).getIcon()});
+                    unSelectedIcon = new MultipleIcon(new Icon[]{
                             unSelectedIcon,
-                            ((SelectableNode<?>)value).getIcon()});
-                    halfSelectedIcon = new MultipleIcon( new Icon[]{
+                            ((SelectableNode<?>) value).getIcon()});
+                    halfSelectedIcon = new MultipleIcon(new Icon[]{
                             halfSelectedIcon,
-                            ((SelectableNode<?>)value).getIcon()});
+                            ((SelectableNode<?>) value).getIcon()});
                     //leafRenderer.setIcon(new MultipleIcon(unSelectedicons));
                     leafRenderer.setSelectedIcon(selectedIcon);
                     leafRenderer.setDisabledSelectedIcon(unSelectedIcon);
@@ -111,7 +104,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
                         leafRenderer.setIcon(unSelectedIcon);
                     }
                 } else {
-                    Icon icon = ((SelectableNode<?>)value).getIcon();
+                    Icon icon = ((SelectableNode<?>) value).getIcon();
                     leafRenderer.setIcon(icon);
                     leafRenderer.setSelectedIcon(icon);
                     leafRenderer.setDisabledSelectedIcon(icon);
@@ -125,7 +118,7 @@ public class CheckBoxNodeRenderer<E> implements TreeCellRenderer {
     }
 
     class CheckBoxNodeActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             selectableNode.stateChange(selectableNode);
         }
     }

@@ -10,14 +10,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class DVGenericDateTimePanel extends DVGenericPanel{
+public abstract class DVGenericDateTimePanel extends DVGenericPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JDateChooser dateChooser;
-    public DVGenericDateTimePanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
+
+    public DVGenericDateTimePanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus) {
         super(idElement, idTemplate, allowNull, requestFocus);
         this.setLayout(new BorderLayout());
         this.add(getDateChooser(), BorderLayout.CENTER);
@@ -44,6 +42,7 @@ public abstract class DVGenericDateTimePanel extends DVGenericPanel{
     }
 
     public abstract String getDateConstraints();
+
     public abstract String getCalendarBlanks();
 }
 /*

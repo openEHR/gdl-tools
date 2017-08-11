@@ -8,10 +8,13 @@ import org.openehr.rm.datatypes.basic.DataValue;
 
 public interface DVPanelInterface {
 
-    public void setDataValue(DataValue dataValue);
-    public DataValue getDataValue();
-    public boolean isValidDV();
-    public Collection<JComponent> getJComponents();
+    void setDataValue(DataValue dataValue);
+
+    DataValue getDataValue();
+
+    boolean isValidDV();
+
+    Collection<JComponent> getJComponents();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

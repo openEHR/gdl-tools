@@ -17,7 +17,7 @@ public class CMConfigurationManager {
     private static final String CONFIGURATION_FILE = "cm-config.properties";
     private static Map<Object, Object> parameters;
 
-    private CMConfigurationManager() {
+    static {
         try {
             parameters = Collections.synchronizedMap(new HashMap<>());
             InputStream is = CMConfigurationManager.class.getClassLoader().getResourceAsStream(CONFIGURATION_FILE);
@@ -63,8 +63,8 @@ public class CMConfigurationManager {
         }
         try {
             return Class.forName(value);
-        } catch (ClassNotFoundException e) {
-            throw new InternalErrorException(e);
+        } catch (ClassNotFoundException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 

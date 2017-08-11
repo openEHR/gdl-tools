@@ -63,7 +63,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
             _dialog = dialog;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             boolean correctName;
             do {
                 correctName = true;

@@ -11,13 +11,13 @@ import javax.swing.plaf.TreeUI;
 
 /**
  * @author iago.corbal
- *
  */
-public class FilterTreeRSW extends OpenEHRUtilSwingWorker{
+public class FilterTreeRSW extends OpenEHRUtilSwingWorker {
 
     private WindowManager windowManager;
     private SelectionPanel selectionPanel = null;
     private TreeUI treeUI = null;
+
     public FilterTreeRSW(WindowManager windowManager, SelectionPanel selectionPanel) {
         super();
         this.windowManager = windowManager;
@@ -31,7 +31,7 @@ public class FilterTreeRSW extends OpenEHRUtilSwingWorker{
         filterNode(selectionPanel);
     }
 
-    public static void filterNode(SelectionPanel selectionPanel){
+    public static void filterNode(SelectionPanel selectionPanel) {
         NodeConversor.setAllVisible(selectionPanel.getNode());
         NodeConversor.filterByText(
                 selectionPanel.getNode(), selectionPanel.getTextWithCleanButtonPanel().getJTextField().getText());

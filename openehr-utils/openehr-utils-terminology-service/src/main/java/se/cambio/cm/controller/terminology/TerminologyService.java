@@ -10,23 +10,23 @@ import java.util.Set;
 
 public interface TerminologyService {
 
-	boolean isSubclassOf(CodePhrase a, CodePhrase b);
-	
-	boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes);
+    boolean isSubclassOf(CodePhrase codeA, CodePhrase codeB);
 
-	TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language);
+    boolean isSubclassOf(CodePhrase code, Set<CodePhrase> codes);
 
-	List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language);
+    TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language);
 
-	String retrieveTerm(CodePhrase concept, CodePhrase language);
+    List<TerminologyNodeVO> retrieveAll(String terminologyId, CodePhrase language);
 
-	DvCodedText translate(DvCodedText concept, CodePhrase language);
+    String retrieveTerm(CodePhrase concept, CodePhrase language);
 
-	boolean isTerminologySupported(String terminologyId);
+    DvCodedText translate(DvCodedText concept, CodePhrase language);
 
-	boolean isValidCodePhrase(CodePhrase codePhrase);
-	
-	Collection<String> getSupportedTerminologies();
+    boolean isTerminologySupported(String terminologyId);
+
+    boolean isValidCodePhrase(CodePhrase codePhrase);
+
+    Collection<String> getSupportedTerminologies();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

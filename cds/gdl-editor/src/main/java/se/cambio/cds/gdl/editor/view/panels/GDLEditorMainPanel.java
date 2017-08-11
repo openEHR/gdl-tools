@@ -83,7 +83,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
 
         private static final long serialVersionUID = -3085701867293096187L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             RulesPanel rulesPanel = getGuidePanel().getRulesPanel();
             getGuidePanel().getGuideEditorTabPane().setSelectedComponent(rulesPanel);
             rulesPanel.addRule();
@@ -209,7 +209,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
     public class BackToGuideAction extends AbstractAction {
         private static final long serialVersionUID = -3085701867293096187L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             controller.goBackToGuide();
         }
     }
@@ -229,7 +229,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
     public class GenerateFormAction extends AbstractAction {
         private static final long serialVersionUID = -3085701867293096187L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             generateFormAction();
         }
     }

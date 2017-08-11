@@ -84,8 +84,8 @@ public class SaveGuideOnFileRSW extends CDSSwingWorker {
                 //FileWriter always assumes default encoding is OK!
                 output.write(guideStr);
                 output.close();
-            } catch (IOException e) {
-                throw new InternalErrorException(e);
+            } catch (IOException ex) {
+                throw new InternalErrorException(ex);
             }
         } else {
             this.cancel(true);

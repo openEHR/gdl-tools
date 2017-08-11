@@ -211,7 +211,7 @@ public class GuideUtil {
         try {
             Integer.parseInt(value);
             return true;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ex) {
             return false;
         }
     }

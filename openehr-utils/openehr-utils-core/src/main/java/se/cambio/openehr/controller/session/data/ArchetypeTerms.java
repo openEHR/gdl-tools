@@ -1,12 +1,10 @@
 package se.cambio.openehr.controller.session.data;
 
-import org.openehr.am.archetype.Archetype;
-import org.openehr.am.archetype.ontology.ArchetypeOntology;
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
-import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ArchetypeTerms {
 

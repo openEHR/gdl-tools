@@ -23,7 +23,7 @@ public class ArchetypeTermMapGenerator {
     public Map<String, Map<String, String>> generateTermDefinitionsArchetypeTermMap() throws ArchetypeProcessingException {
         Map<String, Map<String, String>> archetypeTermMap = new HashMap<String, Map<String, String>>();
         List<ArchetypeTerm> archetypeTerms = getTermDefinitionsArchetypeTerms(language);
-        for(ArchetypeTerm archetypeTerm: archetypeTerms) {
+        for (ArchetypeTerm archetypeTerm : archetypeTerms) {
             Map<String, String> dictionaryItemsMap = generateStringDictionaryMap(archetypeTerm);
             archetypeTermMap.put(archetypeTerm.getCode(), dictionaryItemsMap);
         }
@@ -32,14 +32,14 @@ public class ArchetypeTermMapGenerator {
 
     private Map<String, String> generateStringDictionaryMap(ArchetypeTerm archetypeTerm) {
         Map<String, String> dictionaryItemsMap = new HashMap<String, String>();
-        for(StringDictionaryItem stringDictionaryItem: archetypeTerm.getItems()) {
+        for (StringDictionaryItem stringDictionaryItem : archetypeTerm.getItems()) {
             dictionaryItemsMap.put(stringDictionaryItem.getId(), stringDictionaryItem.getValue());
         }
         return dictionaryItemsMap;
     }
 
     private List<ArchetypeTerm> getTermDefinitionsArchetypeTerms(String language) throws ArchetypeProcessingException {
-        for (CodeDefinitionSet termDefinition: termDefinitions) {
+        for (CodeDefinitionSet termDefinition : termDefinitions) {
             if (language.equals(termDefinition.getLanguage())) {
                 return termDefinition.getItems();
             }

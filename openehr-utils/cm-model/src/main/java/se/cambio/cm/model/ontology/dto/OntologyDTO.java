@@ -4,7 +4,7 @@ import se.cambio.cm.model.util.CMElement;
 
 import java.util.Date;
 
-public class OntologyDTO implements CMElement{
+public class OntologyDTO implements CMElement {
     private String id = null;
     private String format;
     private String source = null;

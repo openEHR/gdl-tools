@@ -202,8 +202,8 @@ public class BasicGDLTest extends GDLTestCase {
                 elementInstanceSize += archetypeReference.getElementInstancesMap().size();
             }
             assertEquals(9, elementInstanceSize);
-        } catch (PatientNotFoundException | InternalErrorException e) {
-            e.printStackTrace();
+        } catch (PatientNotFoundException | InternalErrorException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -272,8 +272,8 @@ public class BasicGDLTest extends GDLTestCase {
             assertTrue(predicateForBValuesExists);
             assertTrue(predicateForGenericEqualsNullValuesExists);
             assertTrue(predicateForMinLastAdministrationExists);
-        } catch (PatientNotFoundException | InternalErrorException e) {
-            e.printStackTrace();
+        } catch (PatientNotFoundException | InternalErrorException ex) {
+            ex.printStackTrace();
         }
     }
 

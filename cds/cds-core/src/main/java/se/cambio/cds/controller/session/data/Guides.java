@@ -74,8 +74,8 @@ public class Guides extends AbstractCMManager<GuideDTO> {
         try {
             Guide guide = gdlParser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
             guideDTO.setGuideObject(SerializationUtils.serialize(guide));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

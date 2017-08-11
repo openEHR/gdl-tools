@@ -30,7 +30,7 @@ public class ChangeGuideLanguageAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, this.language/*TODO Add desc*/);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         editorManager.getActiveEditorController().changeLanguage(language);
         mainMenuBar.refreshLanguageMenu();
 

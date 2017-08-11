@@ -13,8 +13,8 @@ public class RuleLineElementItemListener<E> implements ItemListener {
     }
 
     @SuppressWarnings("unchecked")
-    public void itemStateChanged(ItemEvent e) {
-        ruleLineElementWithValue.setValue((E) e.getItem());
+    public void itemStateChanged(ItemEvent ev) {
+        ruleLineElementWithValue.setValue((E) ev.getItem());
     }
 
 }

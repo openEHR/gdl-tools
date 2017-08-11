@@ -168,7 +168,7 @@ public class DVUtil {
                 } else {
                     return null;
                 }
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 logger.warn("Unable to get CodePhrase from text '" + dv.toString() + "'");
                 return null;
             }
@@ -241,7 +241,7 @@ public class DVUtil {
                 boolean compatible = false;
                 try {
                     compatible = SimpleMeasurementService.getInstance().unitsComparable(unit1, unit2);
-                } catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException ex) {
                     logger.warn("Illegal argument comparing unit '" + unit1 + "' with '" + unit2 + "'");
                     return false;
                 }

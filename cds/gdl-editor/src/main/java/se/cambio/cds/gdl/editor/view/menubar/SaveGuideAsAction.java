@@ -31,7 +31,7 @@ public class SaveGuideAsAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         GDLEditor activeGDLEditor = editorManager.getActiveGDLEditor();
         assert activeGDLEditor != null;
         activeGDLEditor.saveAs();

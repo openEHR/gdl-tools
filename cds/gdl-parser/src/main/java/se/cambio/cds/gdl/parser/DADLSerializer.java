@@ -59,8 +59,8 @@ public class DADLSerializer {
             if (getter != null) {
                 try {
                     value = getter.invoke(obj);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                } catch (IllegalAccessException | InvocationTargetException ex) {
+                    throw new RuntimeException(ex);
                 }
                 addValue(indent, lines, name, value);
             }
@@ -323,7 +323,7 @@ public class DADLSerializer {
                 log.debug("{} with attributes: {}", key.toString(), attributes);
             }
             log.debug("{} class(es) loaded..", profile.size());
-        } catch (Exception e) {
+        } catch (Exception ex) {
             log.error("failed to load {}", "gdl.properties");
         }
     }

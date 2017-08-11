@@ -31,7 +31,7 @@ public class CleanFileSelectionAction extends AbstractAction {
         this.setEnabled(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         fileChooser.setSelectedFile(null);
         textField.setText("");
     }

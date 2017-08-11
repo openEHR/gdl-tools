@@ -41,7 +41,7 @@ public class ExportToHTMLAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         GDLEditor controller = editorManager.getActiveGDLEditor();
         Guide guide = controller.getEntity();
         exportToHTML(editorManager.getActiveEditorWindow(), guide, controller.getCurrentLanguageCode(), guideHTMLExporter);

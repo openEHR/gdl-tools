@@ -1,5 +1,6 @@
 package se.cambio.openehr.view.panels;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
@@ -7,15 +8,9 @@ import se.cambio.openehr.util.ProgressManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.Future;
 
-/**
- * User: Iago.Corbal
- * Date: 2013-10-31
- * Time: 17:51
- */
+@Slf4j
 public class ProgressBarPanel extends JPanel implements ProgressManager {
 
     private JProgressBar jProgressBar = null;
@@ -37,11 +32,11 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
 
     private JPanel getMainPanel() {
         if (mainPanel == null) {
-            GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
             mainPanel = new JPanel();
             mainPanel.setLayout(new GridBagLayout());
             mainPanel.setBackground(Color.WHITE);
             mainPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.LOWERED));
+            GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
             gridBagConstraints1.gridx = 0;
             gridBagConstraints1.gridy = 0;
             gridBagConstraints1.weightx = 1;
@@ -137,15 +132,13 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
             cancelButton.setBorder(BorderFactory.createEmptyBorder());
             cancelButton.setVisible(false);
             cancelButton.setFocusable(false);
-            cancelButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (_currentThread != null) {
-                        _currentThread.cancel(true);
-                    } else {
-                        LoggerFactory.getLogger(ProgressBarPanel.class).warn("Stopping progress, but currentThread is not set!");
-                    }
-                    stop();
+            cancelButton.addActionListener(e -> {
+                if (_currentThread != null) {
+                    _currentThread.cancel(true);
+                } else {
+                    LoggerFactory.getLogger(ProgressBarPanel.class).warn("Stopping progress, but currentThread is not set!");
                 }
+                stop();
             });
         }
         return cancelButton;
@@ -179,14 +172,21 @@ public class ProgressBarPanel extends JPanel implements ProgressManager {
 
         public void run() {
             while (isActive) {
-                if (up) _progressValue = _progressValue + 3;
-                else _progressValue = _progressValue - 3;
-                if (_progressValue >= 100) up = false;
-                else if (_progressValue <= 1) up = true;
+                if (up) {
+                    _progressValue = _progressValue + 3;
+                } else {
+                    _progressValue = _progressValue - 3;
+                }
+                if (_progressValue >= 100) {
+                    up = false;
+                } else if (_progressValue <= 1) {
+                    up = true;
+                }
                 stateUpdated();
                 try {
                     Thread.sleep(50);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ex) {
+                    log.error("Error waiting in thread",ex);
                 }
             }
         }

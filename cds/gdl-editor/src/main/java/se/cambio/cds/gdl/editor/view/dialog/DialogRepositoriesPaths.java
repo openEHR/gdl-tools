@@ -152,9 +152,9 @@ public class DialogRepositoriesPaths extends DialogEditor {
         }
         try {
             userConfigurationManager.saveConfig();
-        } catch (Exception e) {
-            logger.error("Error saving config file.", e);
-            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", e.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            logger.error("Error saving config file.", ex);
+            JOptionPane.showMessageDialog(null, format("Error saving config file: %s", ex.getMessage()), "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

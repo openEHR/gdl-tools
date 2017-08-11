@@ -9,8 +9,8 @@ public class InitCDSFormGenerator {
 	try {
 	    CDSFormGenFrame cdsFormGenFrame = new CDSFormGenFrame();
 	    cdsFormGenFrame.setVisible(true);
-	} catch (Exception e) {
-	    e.printStackTrace();
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
     }
 }

@@ -1,6 +1,3 @@
-/*
- * Creado el 04/01/2010
- */
 package se.cambio.openehr.view.dialogs;
 
 import org.openehr.rm.datatypes.basic.DataValue;
@@ -63,7 +60,6 @@ public class DVDialogEditor extends JDialog {
         this.setResizable(true);
         this.addWindowListener(getCancelChangesAction());
         this.setContentPane(getMainPanel());
-    /* Enter KeyStroke */
         KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
         getDVGenericPanel().registerKeyboardAction(getAcceptChangesAction(), enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
         KeyStroke esc = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true);
@@ -91,8 +87,8 @@ public class DVDialogEditor extends JDialog {
     private JTextPane getTextPane() {
         if (jTextPane == null) {
             jTextPane = new JTextPane();
-            StyledEditorKit m_kit = new StyledEditorKit();
-            jTextPane.setEditorKit(m_kit);
+            StyledEditorKit kit = new StyledEditorKit();
+            jTextPane.setEditorKit(kit);
             jTextPane.getDocument().putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n");
             jTextPane.setFont(new java.awt.Font("Dialog", java.awt.Font.BOLD, 12));
             jTextPane.setText(_archetypeElementVO.getDescription());
@@ -176,13 +172,13 @@ public class DVDialogEditor extends JDialog {
 
     protected class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e) {
+        public void windowOpened(WindowEvent ev) {
             if (_componentWithFirstFocus != null) {
                 _componentWithFirstFocus.requestFocus();
             }
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             exit();
         }
 
@@ -193,12 +189,9 @@ public class DVDialogEditor extends JDialog {
 
     public class AcceptChangesAction extends AbstractAction {
 
-        /**
-         * Comentario para <code>serialVersionUID</code>
-         */
         private static final long serialVersionUID = -8058749276509227718L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             accept();
         }
     }

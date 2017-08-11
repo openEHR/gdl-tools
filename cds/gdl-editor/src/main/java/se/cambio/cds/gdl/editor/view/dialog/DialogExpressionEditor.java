@@ -129,8 +129,8 @@ public class DialogExpressionEditor extends DialogEditor {
         selectionPanel.getJTree().expand(node);
         selectionPanel.getJTree().addExtraMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+            public void mouseClicked(MouseEvent ev) {
+                if (ev.getClickCount() == 2) {
                     Object obj = NodeConversor.getSelectedElement(getSelectionPanel().getNode());
                     if (obj instanceof AttributeFunctionContainerNode) {
                         AttributeFunctionContainerNode attNode = (AttributeFunctionContainerNode) obj;
@@ -181,17 +181,17 @@ public class DialogExpressionEditor extends DialogEditor {
             expressionEditorTextComponent.setLineWrap(true);
             expressionEditorTextComponent.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
-                public void removeUpdate(DocumentEvent e) {
+                public void removeUpdate(DocumentEvent ev) {
                     update();
                 }
 
                 @Override
-                public void insertUpdate(DocumentEvent e) {
+                public void insertUpdate(DocumentEvent ev) {
                     update();
                 }
 
                 @Override
-                public void changedUpdate(DocumentEvent e) {
+                public void changedUpdate(DocumentEvent ev) {
                     update();
                 }
 
@@ -207,8 +207,8 @@ public class DialogExpressionEditor extends DialogEditor {
         expressionItem = null;
         try {
             expressionItem = ((AssignmentExpression) parse(expression)).getAssignment();
-        } catch (Throwable e) {
-            LoggerFactory.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + e.getMessage());
+        } catch (Throwable ev) {
+            LoggerFactory.getLogger(DialogExpressionEditor.class).warn("Error parsing expression: " + ev.getMessage());
         }
         if (expressionItem != null) {
             String htmlStr = ExpressionUtil.convertToHTMLText(expressionRuleLineElement, expressionItem, userConfigurationManager.getLanguage());

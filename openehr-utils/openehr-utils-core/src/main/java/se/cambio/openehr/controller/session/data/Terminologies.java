@@ -6,7 +6,7 @@ import se.cambio.cm.model.terminology.dto.TerminologyDTO;
 
 public class Terminologies extends AbstractCMManager<TerminologyDTO> {
 
-    public Terminologies(ClinicalModelsService clinicalModelsService){
+    public Terminologies(ClinicalModelsService clinicalModelsService) {
         super(clinicalModelsService);
     }
 

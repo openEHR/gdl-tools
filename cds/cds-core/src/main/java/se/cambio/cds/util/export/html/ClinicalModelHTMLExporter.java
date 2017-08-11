@@ -58,11 +58,11 @@ public abstract class ClinicalModelHTMLExporter<E> {
             InputStream is = getInputStreamTemplate();
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             HTMLRenderer htmlRenderer = new HTMLRenderer(isr);
-            return htmlRenderer.proccess(getObjectsMap());
-        } catch (UnsupportedEncodingException e) {
-            throw new InternalErrorException(e);
-        } catch (InstanceNotFoundException e) {
-            throw new InternalErrorException(e);
+            return htmlRenderer.process(getObjectsMap());
+        } catch (UnsupportedEncodingException ex) {
+            throw new InternalErrorException(ex);
+        } catch (InstanceNotFoundException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 

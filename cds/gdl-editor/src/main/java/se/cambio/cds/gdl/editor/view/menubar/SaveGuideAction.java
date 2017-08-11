@@ -42,7 +42,7 @@ public class SaveGuideAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         if (gdlEditor == null) {
             gdlEditor = editorManager.getActiveGDLEditor();
         }

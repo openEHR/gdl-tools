@@ -1,5 +1,6 @@
 package se.cambio.openehr.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.constraintmodel.*;
 import org.openehr.am.archetype.constraintmodel.primitive.CInteger;
@@ -14,17 +15,20 @@ import org.openehr.am.openehrprofile.datatypes.quantity.Ordinal;
 import org.openehr.am.openehrprofile.datatypes.text.CCodePhrase;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import org.slf4j.LoggerFactory;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.util.OpenEHRRMUtil;
 import se.cambio.cm.util.TerminologyNodeVO;
-import se.cambio.openehr.util.*;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRDataValues;
+import se.cambio.openehr.util.OpenEHRDataValuesUI;
+import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.*;
 
+@Slf4j
 public class GenericObjectBundleADLManager {
-    private final static String SECTION_NAME = "name/value='";
+    private static final String SECTION_NAME = "name/value='";
     protected String templateId = null;
     private String language = null;
     private Archetype ar = null;
@@ -74,8 +78,8 @@ public class GenericObjectBundleADLManager {
 
     private void setDefaultLanguage() {
         language = userConfigurationManager.getLanguage();
-        if (!ar.getOriginalLanguage().getCodeString().equals(language) &&
-                (ar.getTranslations() == null || !ar.getTranslations().containsKey(language))) {
+        if (!ar.getOriginalLanguage().getCodeString().equals(language)
+                && (ar.getTranslations() == null || !ar.getTranslations().containsKey(language))) {
             language = ar.getOriginalLanguage().getCodeString();
         }
     }
@@ -103,25 +107,25 @@ public class GenericObjectBundleADLManager {
         archetypeElementVOs.addAll(rmArchetypeElements);
     }
 
-    private void processCObject(CObject cObject) {
-        String path = cObject.path();
+    private void processCObject(CObject constrainedObj) {
+        String path = constrainedObj.path();
         String archetypeId = ar.getArchetypeId().getValue();
-        if (!OpenEHRConst.PARSABLE_OPENEHR_RM_NAMES.contains(cObject.getRmTypeName())) {
+        if (!OpenEHRConst.PARSABLE_OPENEHR_RM_NAMES.contains(constrainedObj.getRmTypeName())) {
             return;
         }
-        if (cObject instanceof CComplexObject) {
-            processComplexObject(cObject, path, archetypeId);
-        } else if (cObject instanceof ArchetypeSlot) {
+        if (constrainedObj instanceof CComplexObject) {
+            processComplexObject(constrainedObj, path, archetypeId);
+        } else if (constrainedObj instanceof ArchetypeSlot) {
             //Skip
         }
     }
 
-    private void processComplexObject(CObject cObject, String path, String archetypeId) {
-        CComplexObject cComplexObject = ((CComplexObject) cObject);
-        CAttribute att = cComplexObject.getAttribute("value");
+    private void processComplexObject(CObject constrainedObj, String path, String archetypeId) {
+        CComplexObject complexConstrainedObject = ((CComplexObject) constrainedObj);
+        CAttribute att = complexConstrainedObject.getAttribute("value");
         Archetype localAOM = getLocalAOM(ar, path);
-        String text = getText(localAOM, cObject, language);
-        String desc = getDescription(localAOM, cObject, language);
+        String text = getText(localAOM, constrainedObj, language);
+        String desc = getDescription(localAOM, constrainedObj, language);
 
         //TODO ????
         if ("@ internal @".equals(desc) || text == null || text.startsWith("*")) {
@@ -132,34 +136,34 @@ public class GenericObjectBundleADLManager {
             }
         }
         CObject childCObject = getCChildCObject(att);
-        String type = getType(cObject, att);
-        if (hasCardinalityZero(cComplexObject)) {
+        String type = getType(constrainedObj, att);
+        if (hasCardinalityZero(complexConstrainedObject)) {
             return;
         }
         if (OpenEHRDataValues.isDataValue(type)) {
-            processDataValue(cObject, path, archetypeId, localAOM, text, desc, type, childCObject);
+            processDataValue(constrainedObj, path, archetypeId, localAOM, text, desc, type, childCObject);
         } else {
-            processSectionsAndClusters(cObject, path, archetypeId, text, desc, type);
+            processSectionsAndClusters(constrainedObj, path, archetypeId, text, desc, type);
         }
 
         //Recursive lookup
-        for (CAttribute cAttribute : cComplexObject.getAttributes()) {
-            for (CObject cObjectAux : cAttribute.getChildren()) {
-                processCObject(cObjectAux);
+        for (CAttribute constrainedAttribute : complexConstrainedObject.getAttributes()) {
+            for (CObject constrainedObjAux : constrainedAttribute.getChildren()) {
+                processCObject(constrainedObjAux);
             }
         }
     }
 
-    private String getType(CObject cObject, CAttribute att) {
+    private String getType(CObject constrainedObj, CAttribute att) {
         String type;
         if (att != null) {
             if (att.getChildren() != null && !att.getChildren().isEmpty()) {
                 type = att.getChildren().get(0).getRmTypeName();
             } else {
-                type = cObject.getRmTypeName();
+                type = constrainedObj.getRmTypeName();
             }
         } else {
-            type = cObject.getRmTypeName();
+            type = constrainedObj.getRmTypeName();
         }
         type = convertTypeIfQuantityOrOrdinal(type);
         return type;
@@ -173,10 +177,10 @@ public class GenericObjectBundleADLManager {
         return childCObject;
     }
 
-    private boolean hasCardinalityZero(CComplexObject cComplexObject) {
-        return (cComplexObject.getOccurrences() != null) &&
-                (cComplexObject.getOccurrences().getUpper() != null) &&
-                (cComplexObject.getOccurrences().getUpper() <= 0);
+    private boolean hasCardinalityZero(CComplexObject complexConstrainedObject) {
+        return (complexConstrainedObject.getOccurrences() != null)
+                && (complexConstrainedObject.getOccurrences().getUpper() != null)
+                && (complexConstrainedObject.getOccurrences().getUpper() <= 0);
     }
 
     private String convertTypeIfQuantityOrOrdinal(String type) {
@@ -190,7 +194,7 @@ public class GenericObjectBundleADLManager {
         return type;
     }
 
-    private void processSectionsAndClusters(CObject cObject, String path, String archetypeId, String text, String desc, String type) {
+    private void processSectionsAndClusters(CObject constrainedObj, String path, String archetypeId, String text, String desc, String type) {
         if (type.equals(OpenEHRConst.SECTION)) {
             String auxText = getSectionName(path);
             //If the user specifies a special name on the template designer
@@ -207,11 +211,14 @@ public class GenericObjectBundleADLManager {
                         .setIdTemplate(templateId)
                         .setPath(path)
                         .createClusterVO();
-        setCardinalities(clusterVO, cObject);
+        setCardinalities(clusterVO, constrainedObj);
         clusterVOs.add(clusterVO);
     }
 
-    private void processDataValue(CObject cObject, String path, String archetypeId, Archetype localAOM, String text, String desc, String type, CObject childCObject) {
+    private void processDataValue(
+            CObject constrainedObj, String path, String archetypeId,
+            Archetype localAOM, String text, String desc,
+            String type, CObject childCObject) {
         ArchetypeElementVO archetypeElementVO =
                 new ArchetypeElementVOBuilder()
                         .setName(text)
@@ -221,7 +228,7 @@ public class GenericObjectBundleADLManager {
                         .setIdTemplate(templateId)
                         .setPath(path)
                         .createArchetypeElementVO();
-        setCardinalities(archetypeElementVO, cObject);
+        setCardinalities(archetypeElementVO, constrainedObj);
         archetypeElementVOs.add(archetypeElementVO);
         if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)) {
             if (codedTextVOs != null) {
@@ -242,9 +249,9 @@ public class GenericObjectBundleADLManager {
         }
     }
 
-    private static void setCardinalities(PathableVO pathableVO, CObject cObject) {
-        pathableVO.setLowerCardinality(cObject.getOccurrences().getLower());
-        pathableVO.setUpperCardinality(cObject.getOccurrences().getUpper());
+    private static void setCardinalities(PathableVO pathableVO, CObject constrainedObj) {
+        pathableVO.setLowerCardinality(constrainedObj.getOccurrences().getLower());
+        pathableVO.setUpperCardinality(constrainedObj.getOccurrences().getUpper());
     }
 
     private void loadCodedTexts(
@@ -259,26 +266,26 @@ public class GenericObjectBundleADLManager {
         if (childCObject instanceof CComplexObject) {
             List<CAttribute> atts = ((CComplexObject) childCObject).getAttributes();
             if (atts != null) {
-                int i = 0;
+                int index = 0;
                 Iterator<CAttribute> atIt = atts.iterator();
                 while (atIt.hasNext() && !codedListFound) {
                     CAttribute att2 = atIt.next();
                     List<CObject> childAtts = att2.getChildren();
                     Iterator<CObject> childattsIt = childAtts.iterator();
                     while (childattsIt.hasNext() && !codedListFound) {
-                        CObject cObject = childattsIt.next();
-                        if (cObject instanceof CCodePhrase) {
-                            CCodePhrase cCodePhrase = ((CCodePhrase) cObject);
-                            if (cCodePhrase.getCodeList() != null) {
-                                for (String codedStr : cCodePhrase.getCodeList()) {
+                        CObject constrainedObj = childattsIt.next();
+                        if (constrainedObj instanceof CCodePhrase) {
+                            CCodePhrase consCodePhrase = ((CCodePhrase) constrainedObj);
+                            if (consCodePhrase.getCodeList() != null) {
+                                for (String codedStr : consCodePhrase.getCodeList()) {
                                     String text = codedStr;
                                     String desc = codedStr;
-                                    String terminologyId = cCodePhrase.getTerminologyId().getValue();
+                                    String terminologyId = consCodePhrase.getTerminologyId().getValue();
                                     CodedTextVO codedText =
                                             new CodedTextVOBuilder()
                                                     .setName(text)
                                                     .setDescription(desc)
-                                                    .setType(cCodePhrase.getRmTypeName())
+                                                    .setType(consCodePhrase.getRmTypeName())
                                                     .setIdArchetype(archetypeId)
                                                     .setIdTemplate(templateId)
                                                     .setPath(path)
@@ -292,7 +299,8 @@ public class GenericObjectBundleADLManager {
                                         addSubclassCodedTexts(codedText, codedTextVOs);
                                     }
                                     codedTextVOs.add(codedText);
-                                    if (!"local".equals(terminologyId) && i++ > 15) { //No need to load the whole terminology for external references
+                                    if (!"local".equals(terminologyId) && index++ > 15) {
+                                        //No need to load the whole terminology for external references
                                         return;
                                     }
                                 }
@@ -313,7 +321,7 @@ public class GenericObjectBundleADLManager {
                     new CodePhrase(codedTextVO.getTerminology(), codedTextVO.getCode()),
                     OpenEHRDataValuesUI.getLanguageCodePhrase());
             if (node == null) {
-                LoggerFactory.getLogger(GenericObjectBundleADLManager.class).warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
+                log.warn("Terminology code not found '" + codedTextVO.getCode() + "::" + codedTextVO.getTerminology() + "'.");
                 return;
             }
             DvCodedText ct = node.getValue();
@@ -362,9 +370,9 @@ public class GenericObjectBundleADLManager {
             String language,
             Collection<OrdinalVO> ordinalVOs) {
         if (childCObject instanceof CDvOrdinal) {
-            CDvOrdinal cDvOrdinal = (CDvOrdinal) childCObject;
-            if (cDvOrdinal.getList() != null) {
-                for (Ordinal ordinal : cDvOrdinal.getList()) {
+            CDvOrdinal consDvOrdinal = (CDvOrdinal) childCObject;
+            if (consDvOrdinal.getList() != null) {
+                for (Ordinal ordinal : consDvOrdinal.getList()) {
                     String codedStr = ordinal.getSymbol().getCodeString();
                     String text = codedStr;
                     String desc = codedStr;
@@ -372,14 +380,13 @@ public class GenericObjectBundleADLManager {
                         text = getText(ar, codedStr, language);
                         desc = getDescription(ar, codedStr, language);
                     } else {
-                        LoggerFactory.getLogger(GenericObjectBundleADLManager.class).error("Unknown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
-                        //TODO TERMINOLOGY SERVICE
+                        log.error("Unknown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
                     }
                     ordinalVOs.add(
                             new OrdinalVOBuilder()
                                     .setName(text)
                                     .setDescription(desc)
-                                    .setType(cDvOrdinal.getRmTypeName())
+                                    .setType(consDvOrdinal.getRmTypeName())
                                     .setIdArchetype(archetypeId)
                                     .setIdTemplate(templateId)
                                     .setPath(path)
@@ -399,10 +406,10 @@ public class GenericObjectBundleADLManager {
             CObject childCObject,
             Collection<UnitVO> unitVOs) {
         if (childCObject instanceof CDvQuantity) {
-            CDvQuantity cDvQuantity = (CDvQuantity) childCObject;
-            if (cDvQuantity.getList() != null) {
-                for (CDvQuantityItem cDvQuantityItem : cDvQuantity.getList()) {
-                    unitVOs.add(new UnitVO(templateId, idElement, cDvQuantityItem.getUnits()));
+            CDvQuantity consDvQuantity = (CDvQuantity) childCObject;
+            if (consDvQuantity.getList() != null) {
+                for (CDvQuantityItem consDvQuantityItem : consDvQuantity.getList()) {
+                    unitVOs.add(new UnitVO(templateId, idElement, consDvQuantityItem.getUnits()));
                 }
                 ;
             }
@@ -415,15 +422,15 @@ public class GenericObjectBundleADLManager {
             CObject childCObject,
             Collection<ProportionTypeVO> proportionTypeVOs) {
         if (childCObject instanceof CComplexObject) {
-            CComplexObject cComplexObject = (CComplexObject) childCObject;
-            CAttribute cAttribute = cComplexObject.getAttribute("type");
-            if (cAttribute != null) {
-                for (CObject cObject : cAttribute.getChildren()) {
-                    if (cObject instanceof CPrimitiveObject) {
-                        CPrimitive cPrimitive = ((CPrimitiveObject) cObject).getItem();
-                        if (cPrimitive instanceof CInteger) {
-                            CInteger cInteger = (CInteger) cPrimitive;
-                            for (Integer proportionType : cInteger.getList()) {
+            CComplexObject complexConstrainedObject = (CComplexObject) childCObject;
+            CAttribute constrainedAttribute = complexConstrainedObject.getAttribute("type");
+            if (constrainedAttribute != null) {
+                for (CObject constrainedObj : constrainedAttribute.getChildren()) {
+                    if (constrainedObj instanceof CPrimitiveObject) {
+                        CPrimitive consPrimitive = ((CPrimitiveObject) constrainedObj).getItem();
+                        if (consPrimitive instanceof CInteger) {
+                            CInteger consInteger = (CInteger) consPrimitive;
+                            for (Integer proportionType : consInteger.getList()) {
                                 proportionTypeVOs.add(new ProportionTypeVO(templateId, idElement, proportionType));
                             }
                         }
@@ -434,35 +441,18 @@ public class GenericObjectBundleADLManager {
         }
     }
 
-    private String getText(Archetype ar, CObject cObject, String language) {
-        String text = getText(ar, cObject.getNodeId(), language);
+    private String getText(Archetype ar, CObject constrainedObj, String language) {
+        String text = getText(ar, constrainedObj.getNodeId(), language);
         if (text != null) {
             return text;
         } else {
-            Archetype archetype = archetypeMap.get(cObject.getNodeId());
+            Archetype archetype = archetypeMap.get(constrainedObj.getNodeId());
             if (archetype != null) {
                 text = archetype.getConceptName(language);
             } else {
-                text = cObject.getNodeId();
+                text = constrainedObj.getNodeId();
             }
             return text;
-        }
-    }
-
-    private String getDescription(Archetype ar, CObject cObject, String language) {
-        String desc = getDescription(ar, cObject.getNodeId(), language);
-        if (desc != null) {
-            return desc;
-        } else {
-            Archetype archetype = archetypeMap.get(cObject.getNodeId());
-            if (archetype != null) {
-                String conceptCode = archetype.getConcept();
-                ArchetypeTerm term = archetype.getOntology().termDefinition(language, conceptCode);
-                desc = term.getDescription();
-            } else {
-                desc = cObject.getNodeId();
-            }
-            return desc;
         }
     }
 
@@ -472,6 +462,23 @@ public class GenericObjectBundleADLManager {
             return term.getText();
         } else {
             return null;
+        }
+    }
+
+    private String getDescription(Archetype ar, CObject constrainedObj, String language) {
+        String desc = getDescription(ar, constrainedObj.getNodeId(), language);
+        if (desc != null) {
+            return desc;
+        } else {
+            Archetype archetype = archetypeMap.get(constrainedObj.getNodeId());
+            if (archetype != null) {
+                String conceptCode = archetype.getConcept();
+                ArchetypeTerm term = archetype.getOntology().termDefinition(language, conceptCode);
+                desc = term.getDescription();
+            } else {
+                desc = constrainedObj.getNodeId();
+            }
+            return desc;
         }
     }
 
@@ -493,9 +500,9 @@ public class GenericObjectBundleADLManager {
     }
 
     public Archetype getLocalAOM(Archetype currentAOM, String path) {
-        int i = path.lastIndexOf("[");
-        while (i > 0) {
-            String idArchetype = path.substring(i + 1, path.lastIndexOf("]"));
+        int index = path.lastIndexOf("[");
+        while (index > 0) {
+            String idArchetype = path.substring(index + 1, path.lastIndexOf("]"));
             if (idArchetype.contains(" ")) {
                 idArchetype = idArchetype.split(" ")[0];
             }
@@ -506,8 +513,8 @@ public class GenericObjectBundleADLManager {
             if (archetype != null) {
                 return archetype;
             } else {
-                path = path.substring(0, i);
-                i = path.lastIndexOf("[");
+                path = path.substring(0, index);
+                index = path.lastIndexOf("[");
             }
         }
         ;

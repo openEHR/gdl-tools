@@ -45,8 +45,8 @@ public class TerminologyServiceImpl implements TerminologyService {
             if (clazz != null) {
                 try {
                     terminologyServicePlugin = (TerminologyServicePlugin) Class.forName(clazz).newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException("ERROR instantiating class '" + clazz + "'", e);
+                } catch (Exception ex) {
+                    throw new RuntimeException("ERROR instantiating class '" + clazz + "'", ex);
                 }
             } else {
                 terminologyServicePlugin = new CSVTerminologyServicePlugin(terminologyConfig);
@@ -55,20 +55,20 @@ public class TerminologyServiceImpl implements TerminologyService {
                 terminologyServicePlugin.init(input);
             }
             return terminologyServicePlugin;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load terminology '" + terminologyDTO.getId() + "'");
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to load terminology '" + terminologyDTO.getId() + "'", ex);
         }
     }
 
-    public boolean isSubclassOf(CodePhrase a, CodePhrase b) {
+    public boolean isSubclassOf(CodePhrase codeA, CodePhrase codeB) {
 
-        log.debug("Checking isSubclassOf (" + a + ", " + b + ")");
+        log.debug("Checking isSubclassOf (" + codeA + ", " + codeB + ")");
 
-        checkTerminologySupported(a);
-        checkTerminologySupported(b);
+        checkTerminologySupported(codeA);
+        checkTerminologySupported(codeB);
 
-        String terminologyId = a.getTerminologyId().getValue();
-        boolean ret = getTerminologyServicePlugin(terminologyId).isSubclassOf(a, b);
+        String terminologyId = codeA.getTerminologyId().getValue();
+        boolean ret = getTerminologyServicePlugin(terminologyId).isSubclassOf(codeA, codeB);
 
         log.debug("isSubclassOf: " + ret);
         return ret;
@@ -92,6 +92,10 @@ public class TerminologyServiceImpl implements TerminologyService {
         return terminologyServicesMap.containsKey(terminologyId);
     }
 
+    public boolean isTerminologySupported(CodePhrase code) {
+        return isTerminologySupported(code.getTerminologyId().getValue());
+    }
+
     private void checkTerminologySupported(CodePhrase code) {
         checkTerminologySupported(code.getTerminologyId().getValue());
     }
@@ -100,10 +104,6 @@ public class TerminologyServiceImpl implements TerminologyService {
         if (!isTerminologySupported(terminology)) {
             throw new UnsupportedTerminologyException(format("Unsupported terminology %s", terminology));
         }
-    }
-
-    public boolean isTerminologySupported(CodePhrase code) {
-        return isTerminologySupported(code.getTerminologyId().getValue());
     }
 
     public TerminologyNodeVO retrieveAllSubclasses(CodePhrase concept, CodePhrase language) {

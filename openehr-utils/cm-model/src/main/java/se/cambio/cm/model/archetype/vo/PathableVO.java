@@ -2,7 +2,7 @@ package se.cambio.cm.model.archetype.vo;
 
 import java.io.Serializable;
 
-public class PathableVO implements Serializable{
+public class PathableVO implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 25042012L;
     private java.lang.String name;
@@ -27,7 +27,7 @@ public class PathableVO implements Serializable{
     }
 
     public java.lang.String getId() {
-        return idArchetype+path;
+        return idArchetype + path;
     }
 
     public java.lang.String getParentId() {
@@ -42,51 +42,67 @@ public class PathableVO implements Serializable{
     public java.lang.String getName() {
         return name;
     }
+
     public void setName(java.lang.String name) {
         this.name = name;
     }
+
     public java.lang.String getDescription() {
         return description;
     }
+
     public void setDescription(java.lang.String description) {
         this.description = description;
     }
+
     public java.lang.String getRMType() {
         return type;
     }
+
     public void setType(java.lang.String type) {
         this.type = type;
     }
+
     public java.lang.String getIdArchetype() {
         return idArchetype;
     }
+
     public void setIdArchetype(java.lang.String idArchetype) {
         this.idArchetype = idArchetype;
     }
+
     public java.lang.String getIdTemplate() {
         return idTemplate;
     }
+
     public void setIdTemplate(java.lang.String idTemplate) {
         this.idTemplate = idTemplate;
     }
+
     public java.lang.String getPath() {
         return path;
     }
+
     public void setPath(java.lang.String path) {
         this.path = path;
     }
+
     public java.lang.Integer getLowerCardinality() {
         return lowerCardinality;
     }
+
     public void setLowerCardinality(java.lang.Integer lowerCardinality) {
         this.lowerCardinality = lowerCardinality;
     }
+
     public java.lang.Integer getUpperCardinality() {
         return upperCardinality;
     }
+
     public void setUpperCardinality(java.lang.Integer upperCardinality) {
         this.upperCardinality = upperCardinality;
     }
+
     public java.lang.String getType() {
         return type;
     }

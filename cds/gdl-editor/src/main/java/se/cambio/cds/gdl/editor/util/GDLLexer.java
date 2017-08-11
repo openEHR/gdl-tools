@@ -1132,7 +1132,7 @@ public final class GDLLexer extends DefaultJFlexLexer {
         String message;
         try {
             message = ZZ_ERROR_MSG[errorCode];
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException ex) {
             message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
         }
 

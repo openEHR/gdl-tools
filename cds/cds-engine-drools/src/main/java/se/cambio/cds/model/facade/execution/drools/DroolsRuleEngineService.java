@@ -113,7 +113,7 @@ public class DroolsRuleEngineService implements RuleEngineService {
             out.writeObject(compiledGuide);
             out.flush();
             return bos.toByteArray();
-        } catch (IOException e) {
+        } catch (IOException ex) {
             throw new RuntimeException(format("Error converting compiled guideline '%s' to byte array", guideId));
         }
     }

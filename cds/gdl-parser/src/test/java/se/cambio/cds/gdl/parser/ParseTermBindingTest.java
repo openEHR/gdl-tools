@@ -25,8 +25,8 @@ public class ParseTermBindingTest extends ExpressionTestBase {
 		try {
 			context.getValue("/ontology/termBindings/ATC/bindings/gt0010/codes[2]");
 			fail("Exception should be thrown at path pointing at the 2nd, duplicated element");
-		} catch(Exception e) {
-			assertTrue(e instanceof JXPathNotFoundException);
+		} catch(Exception ex) {
+			assertTrue(ex instanceof JXPathNotFoundException);
 		}
 	}
 	

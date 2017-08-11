@@ -168,8 +168,8 @@ public class ElementInstanceCollectionManager {
                             if (!isSubclass) {
                                 return false;
                             }
-                        } catch (Exception e) {
-                            LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn(e.getMessage());
+                        } catch (Exception ex) {
+                            LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn(ex.getMessage());
                             return false;
                         }
                     }

@@ -2,7 +2,7 @@ package se.cambio.cm.model.archetype.vo;
 
 import java.io.Serializable;
 
-public class UnitVO  implements Serializable{
+public class UnitVO implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 25052012L;
     private String idTemplate = null;
@@ -19,24 +19,29 @@ public class UnitVO  implements Serializable{
     public String getIdTemplate() {
         return idTemplate;
     }
+
     public void setIdTemplate(String idTemplate) {
         this.idTemplate = idTemplate;
     }
+
     public String getIdElement() {
         return idElement;
     }
+
     public void setIdElement(String idElement) {
         this.idElement = idElement;
     }
+
     public String getUnit() {
         return unit;
     }
+
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
     @Override
-    public UnitVO clone(){
+    public UnitVO clone() {
         return new UnitVO(idTemplate, idElement, unit);
     }
 }

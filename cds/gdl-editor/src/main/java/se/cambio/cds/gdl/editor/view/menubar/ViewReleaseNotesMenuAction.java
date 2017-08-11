@@ -31,7 +31,7 @@ public class ViewReleaseNotesMenuAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ReleaseNotesD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         try {
             String path =
                     userConfigurationManager.getDocumentsFolder().getFolder() +

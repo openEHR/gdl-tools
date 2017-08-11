@@ -60,7 +60,7 @@ class ElementInstanceGroupPanel extends JPanel {
             _archetypeReference = archetypeReference;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             createNewArchetypeReference(_archetypeReference);
         }
     }
@@ -90,7 +90,7 @@ class ElementInstanceGroupPanel extends JPanel {
             _archetypeReference = archetypeReference;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             removeArchetypeReference(_archetypeReference);
             if (getArchetypeReferencePanelMap().isEmpty()) {
                 createNewArchetypeReference(_archetypeReference);

@@ -31,7 +31,7 @@ public class ViewUserManualAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("UserManualD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         try {
             String path =
                     userConfigurationManager.getDocumentsFolder().getFolder() +

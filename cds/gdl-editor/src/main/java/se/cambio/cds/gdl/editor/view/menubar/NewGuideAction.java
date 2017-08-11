@@ -39,7 +39,7 @@ public class NewGuideAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         editorManager.runIfOkWithCurrentEditor(
                 () -> {
                     GDLEditor controller = gdlEditorFactory.createGdlEditor(

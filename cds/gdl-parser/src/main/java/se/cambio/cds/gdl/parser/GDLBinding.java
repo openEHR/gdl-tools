@@ -107,8 +107,7 @@ public class GDLBinding {
 
 		try {
 			return createModelClass(type, values);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
 			throw new BindingException("failed to create instance of " + type
 					+ ", with values: " + values);
 		}
@@ -201,7 +200,7 @@ public class GDLBinding {
 			Class klass = obj.getClass();
 			Method method = klass.getMethod("setId", key.getClass());
 			method.invoke(obj, key);
-		} catch(Exception e) {
+		} catch(Exception ex) {
 			log.warn("failed to setId for class: " + obj.getClass());
 		}
 	}
@@ -210,7 +209,7 @@ public class GDLBinding {
 		try {
 			Integer.parseInt(obj.getKey().getValue().toString());
 			return true;
-		} catch (Exception e) {
+		} catch (Exception ex) {
 			return false;
 		}
 	}	

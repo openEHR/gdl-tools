@@ -10,7 +10,7 @@ import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DialogEditorNullValue  extends JDialog {
+public class DialogEditorNullValue extends JDialog {
     private static final long serialVersionUID = 1L;
     private AceptarCambiosAction acceptChangesAction = null;
     private CancelChangesAction cancelChangesAction = null;
@@ -23,86 +23,83 @@ public class DialogEditorNullValue  extends JDialog {
     private JTextPane jTextPane;
     private JComboBox comboBox;
 
-    public DialogEditorNullValue(Window owner){
+    public DialogEditorNullValue(Window owner) {
         super(owner, OpenEHRLanguageManager.getMessage("NullValue"), ModalityType.APPLICATION_MODAL);
-        init(new Dimension(400,150));
+        init(new Dimension(400, 150));
     }
 
-    private void init(Dimension size){
+    private void init(Dimension size) {
         this.setSize(size);
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
         this.setResizable(false);
         this.addWindowListener(getCancelChangesAction());
         this.setContentPane(getMainPanel());
-	/* Enter KeyStroke */
-        KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
+    /* Enter KeyStroke */
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
         getComboBox().registerKeyboardAction(getAcceptChangesAction(), enter, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        KeyStroke esc = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE,0,true);
+        KeyStroke esc = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true);
         getComboBox().registerKeyboardAction(getCancelChangesAction(), esc, JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    private JPanel getMainPanel(){
-        if (mainPanel==null){
+    private JPanel getMainPanel() {
+        if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
             JPanel panelAux1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel label = new JLabel(OpenEHRLanguageManager.getMessage("NullValue")+":");
+            JLabel label = new JLabel(OpenEHRLanguageManager.getMessage("NullValue") + ":");
             label.setIcon(OpenEHRDataValuesUI.getIcon(OpenEHRDataValues.DV_CODED_TEXT));
             panelAux1.add(label);
             panelAux1.add(getComboBox());
             JPanel panelAux2 = new JPanel(new BorderLayout());
             panelAux2.add(getTextPane(), BorderLayout.CENTER);
             panelAux2.add(panelAux1, BorderLayout.SOUTH);
-            mainPanel.add(panelAux2,BorderLayout.CENTER);
-            mainPanel.add(getBottonPanel(),BorderLayout.SOUTH);
+            mainPanel.add(panelAux2, BorderLayout.CENTER);
+            mainPanel.add(getBottonPanel(), BorderLayout.SOUTH);
         }
         return mainPanel;
     }
 
-    private JTextPane getTextPane(){
-        if (jTextPane == null){
+    private JTextPane getTextPane() {
+        if (jTextPane == null) {
             jTextPane = new JTextPane();
-            StyledEditorKit m_kit = new StyledEditorKit();
-            jTextPane.setEditorKit(m_kit);
+            StyledEditorKit kit = new StyledEditorKit();
+            jTextPane.setEditorKit(kit);
             jTextPane.getDocument().putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n");
             jTextPane.setFont(new java.awt.Font("Dialog", java.awt.Font.BOLD, 12));
             jTextPane.setText(OpenEHRLanguageManager.getMessage("NullValueDesc"));
             jTextPane.setEditable(false);
             jTextPane.setBackground(null);
-            jTextPane.setPreferredSize(new java.awt.Dimension(250,70));
+            jTextPane.setPreferredSize(new java.awt.Dimension(250, 70));
         }
         return jTextPane;
     }
 
-    public void setNullValue(DvCodedText codedTextDV){
-        if (codedTextDV!=null){
+    public void setNullValue(DvCodedText codedTextDV) {
+        if (codedTextDV != null) {
             getComboBox().setSelectedItem(codedTextDV.getDefiningCode().getCodeString());
         }
     }
 
-    public DvCodedText getSelectedNullValue(){
+    public DvCodedText getSelectedNullValue() {
         return OpenEHRConstUI.NULL_FLAVOUR_MAP.get(getComboBox().getSelectedItem());
     }
 
-    protected JComboBox getComboBox(){
-        if (comboBox==null){
+    protected JComboBox getComboBox() {
+        if (comboBox == null) {
             comboBox = new JComboBox();
             comboBox.setRenderer(new DVComboBoxRendered());
             for (String nullFlavourCode : OpenEHRConstUI.NULL_FLAVOUR_MAP.keySet()) {
                 comboBox.addItem(nullFlavourCode);
             }
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    comboBox.requestFocus();
-                }
-            });
+            SwingUtilities.invokeLater(() -> comboBox.requestFocus());
         }
         return comboBox;
     }
 
-    private static class DVComboBoxRendered  extends JLabel implements ListCellRenderer{
+    private static class DVComboBoxRendered extends JLabel implements ListCellRenderer {
 
         private static final long serialVersionUID = 1L;
-        public DVComboBoxRendered(){
+
+        public DVComboBoxRendered() {
             setOpaque(true);
             setHorizontalAlignment(LEFT);
             setVerticalAlignment(CENTER);
@@ -118,11 +115,11 @@ public class DialogEditorNullValue  extends JDialog {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            if (OpenEHRConstUI.NULL_FLAVOUR_MAP.containsKey(value)){
+            if (OpenEHRConstUI.NULL_FLAVOUR_MAP.containsKey(value)) {
                 String desc = OpenEHRConstUI.NULL_FLAVOUR_MAP.get(value).getValue();
                 setText(desc);
                 setToolTipText(desc);
-            }else{
+            } else {
                 setText(" ");
                 setToolTipText("");
             }
@@ -130,14 +127,15 @@ public class DialogEditorNullValue  extends JDialog {
         }
     }
 
-    private JPanel getBottonPanel(){
-        if (bottonPanel==null){
+    private JPanel getBottonPanel() {
+        if (bottonPanel == null) {
             bottonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             bottonPanel.add(getAcceptButton());
             bottonPanel.add(getCancelButton());
         }
         return bottonPanel;
     }
+
     private JButton getAcceptButton() {
         if (acceptButton == null) {
             acceptButton = new JButton();
@@ -150,11 +148,6 @@ public class DialogEditorNullValue  extends JDialog {
         return acceptButton;
     }
 
-    /**
-     * This method initializes cancelButton	
-     *
-     * @return javax.swing.JButton
-     */
     private JButton getCancelButton() {
         if (cancelButton == null) {
             cancelButton = new JButton();
@@ -166,29 +159,29 @@ public class DialogEditorNullValue  extends JDialog {
         return cancelButton;
     }
 
-    protected AceptarCambiosAction getAcceptChangesAction(){
-        if (acceptChangesAction == null){
+    protected AceptarCambiosAction getAcceptChangesAction() {
+        if (acceptChangesAction == null) {
             acceptChangesAction = new AceptarCambiosAction();
         }
         return acceptChangesAction;
     }
 
-    protected CancelChangesAction getCancelChangesAction(){
-        if (cancelChangesAction == null){
+    protected CancelChangesAction getCancelChangesAction() {
+        if (cancelChangesAction == null) {
             cancelChangesAction = new CancelChangesAction();
         }
         return cancelChangesAction;
     }
 
-    protected class CancelChangesAction extends WindowAdapter implements ActionListener{
+    protected class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e){
-            if (_componentWithFirstFocus!=null){
+        public void windowOpened(WindowEvent ex) {
+            if (_componentWithFirstFocus != null) {
                 _componentWithFirstFocus.requestFocus();
             }
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ex) {
             exit();
         }
 
@@ -197,49 +190,46 @@ public class DialogEditorNullValue  extends JDialog {
         }
     }
 
-    public class AceptarCambiosAction extends AbstractAction{
+    public class AceptarCambiosAction extends AbstractAction {
 
-        /**
-         * Comentario para <code>serialVersionUID</code>
-         */
         private static final long serialVersionUID = -8058749276509227718L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ex) {
             accept();
         }
     }
 
-    protected final void accept(){
-        if (acceptDialog()){
+    protected final void accept() {
+        if (acceptDialog()) {
             _respuesta = true;
             setVisible(false);
         }
     }
 
-    protected final void exit(){
-        if (cancelDialog()){
+    protected final void exit() {
+        if (cancelDialog()) {
             _respuesta = false;
             setVisible(false);
         }
     }
 
-    public final boolean getAnswer(){
-        return  _respuesta;
+    public final boolean getAnswer() {
+        return _respuesta;
     }
 
-    protected void registerComponentWithFirstFocus(JComponent componentWithFirstFocus){
+    protected void registerComponentWithFirstFocus(JComponent componentWithFirstFocus) {
         _componentWithFirstFocus = componentWithFirstFocus;
     }
 
-    protected final void setRespuesta(boolean respuesta){
+    protected final void setRespuesta(boolean respuesta) {
         _respuesta = respuesta;
     }
 
-    protected boolean cancelDialog(){
+    protected boolean cancelDialog() {
         return true;
     }
 
-    protected boolean acceptDialog(){
+    protected boolean acceptDialog() {
         return true;
     }
 }

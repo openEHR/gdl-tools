@@ -31,7 +31,7 @@ public class ConfigLanguageAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SetEditorLanguageD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         new DialogSetLanguage(editorManager, userConfigurationManager).setVisible(true);
     }
 }

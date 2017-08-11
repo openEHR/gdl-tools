@@ -31,17 +31,17 @@ public class DVCountPanel extends DVGenericPanel {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected void processFocusEvent(final FocusEvent e) {
-                    if (e.isTemporary()) {
+                protected void processFocusEvent(final FocusEvent ev) {
+                    if (ev.isTemporary()) {
                         return;
                     }
 
-                    if (e.getID() == FocusEvent.FOCUS_LOST) {
+                    if (ev.getID() == FocusEvent.FOCUS_LOST) {
                         if (getText() == null || getText().isEmpty()) {
                             setValue(null);
                         }
                     }
-                    super.processFocusEvent(e);
+                    super.processFocusEvent(ev);
                 }
             };
             valueTextField.setPreferredSize(new Dimension(150, 18));

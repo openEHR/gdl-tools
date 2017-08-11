@@ -27,19 +27,19 @@ public class ImportManager {
     public int showImportArchetypeDialogAndAddToRepo(Window owner, File selectedFile) throws InternalErrorException, InstanceNotFoundException {
         JFileChooser fileChooser = getArchetypeFileChooser(selectedFile);
         int result = fileChooser.showOpenDialog(owner);
-        if (result != JFileChooser.CANCEL_OPTION){
+        if (result != JFileChooser.CANCEL_OPTION) {
             addArchetype(fileChooser.getSelectedFile());
         }
         return result;
     }
 
-    private static JFileChooser getArchetypeFileChooser(File selectedFile){
+    private static JFileChooser getArchetypeFileChooser(File selectedFile) {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 OpenEHRLanguageManager.getMessage("Archetype"), "adl");
         fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ImportArchetype"));
         fileChooser.setFileFilter(filter);
-        if (selectedFile!=null){
+        if (selectedFile != null) {
             fileChooser.setSelectedFile(selectedFile);
         }
         return fileChooser;
@@ -48,19 +48,19 @@ public class ImportManager {
     public int showImportTemplateDialog(Window owner, File selectedFile) throws InternalErrorException, InstanceNotFoundException {
         JFileChooser fileChooser = getTemplateFileChooser(selectedFile);
         int result = fileChooser.showOpenDialog(owner);
-        if (result != JFileChooser.CANCEL_OPTION){
+        if (result != JFileChooser.CANCEL_OPTION) {
             addTemplate(fileChooser.getSelectedFile());
         }
         return result;
     }
 
-    private JFileChooser getTemplateFileChooser(File selectedFile){
+    private JFileChooser getTemplateFileChooser(File selectedFile) {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 OpenEHRLanguageManager.getMessage("Template"), "oet");
         fileChooser.setDialogTitle(OpenEHRLanguageManager.getMessage("ImportTemplate"));
         fileChooser.setFileFilter(filter);
-        if (selectedFile!=null){
+        if (selectedFile != null) {
             fileChooser.setSelectedFile(selectedFile);
         }
         return fileChooser;
@@ -77,7 +77,7 @@ public class ImportManager {
         FileGenericCMElementDAO<ArchetypeDTO> dao =
                 new FileGenericCMElementDAO<>(ArchetypeDTO.class, cmFolder);
         String fileName = file.getName();
-        String archetypeId = fileName.substring(0, fileName.length()-".adl".length());
+        String archetypeId = fileName.substring(0, fileName.length() - ".adl".length());
         Collection<ArchetypeDTO> archetypeDTOs = dao.searchByIds(Collections.singleton(archetypeId));
         return archetypeDTOs.iterator().next();
     }
@@ -94,7 +94,7 @@ public class ImportManager {
         FileGenericCMElementDAO<TemplateDTO> dao =
                 new FileGenericCMElementDAO<>(TemplateDTO.class, cmFolder);
         String fileName = file.getName();
-        String templateId = fileName.substring(0, fileName.length()-".oet".length());
+        String templateId = fileName.substring(0, fileName.length() - ".oet".length());
         Collection<TemplateDTO> templateDTOs = dao.searchByIds(Collections.singleton(templateId));
         return templateDTOs.iterator().next();
     }

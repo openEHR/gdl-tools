@@ -173,7 +173,7 @@ public class DroolsExecutionManager {
                     in.close();
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException ex) {
             throw new RuntimeException(format("Error converting compiled guideline '%s' to byte array", guideId));
         }
     }

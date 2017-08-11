@@ -17,7 +17,7 @@ import java.util.*;
 
 
 public class Templates extends AbstractCMManager<TemplateDTO> {
-    public static ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
+    public static final ImageIcon ICON = OpenEHRImageUtil.TEMPLATE;
     private ArchetypeManager archetypeManager;
 
     public Templates(ArchetypeManager archetypeManager) {

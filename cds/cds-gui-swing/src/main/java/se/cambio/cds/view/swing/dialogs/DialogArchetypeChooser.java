@@ -183,7 +183,7 @@ public class DialogArchetypeChooser extends JDialog {
             _dialog = dialog;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             importManager.showImportArchetypeDialogAndAddToRepo(_dialog, null);
             refreshArchetypeSelectionPanel();
         }
@@ -221,7 +221,7 @@ public class DialogArchetypeChooser extends JDialog {
             _dialog = dialog;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             importManager.showImportTemplateDialog(_dialog, null);
             refreshTemplateSelectionPanel();
         }
@@ -242,8 +242,8 @@ public class DialogArchetypeChooser extends JDialog {
     }
 
     class DoubleClickMouseListener extends MouseAdapter {
-        public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() > 1) {
+        public void mouseClicked(MouseEvent ev) {
+            if (ev.getClickCount() > 1) {
                 CMElement cmElement = getSelectedCMElement();
                 if (cmElement != null) {
                     accept();
@@ -309,7 +309,7 @@ public class DialogArchetypeChooser extends JDialog {
     public class AcceptChangesAction extends AbstractAction {
         private static final long serialVersionUID = -8058749276509227718L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             accept();
         }
     }
@@ -323,10 +323,10 @@ public class DialogArchetypeChooser extends JDialog {
 
     private class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e) {
+        public void windowOpened(WindowEvent ev) {
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             exit();
         }
 

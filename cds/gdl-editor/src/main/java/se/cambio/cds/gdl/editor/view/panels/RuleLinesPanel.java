@@ -40,7 +40,7 @@ public abstract class RuleLinesPanel extends JLayeredPane implements Refreshable
 
     private void init(){
         addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
+            public void componentResized(ComponentEvent ev) {
                 getMainPanel().setBounds(0,0, getWidth(),getHeight());
                 revalidate();
                 repaint();

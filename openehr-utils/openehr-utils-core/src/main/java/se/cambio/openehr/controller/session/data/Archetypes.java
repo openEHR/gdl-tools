@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
 
 
 public class Archetypes extends AbstractCMManager<ArchetypeDTO> {
-    public static ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
+    public static final ImageIcon ICON = OpenEHRImageUtil.ARCHETYPE;
     private ArchetypeManager archetypeManager = null;
     private ExecutorService executorService;
     private Logger logger = LoggerFactory.getLogger(Archetypes.class);
@@ -56,11 +56,11 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO> {
             futures.add(executorService.submit(() -> processArchetype(archetypeDTO)));
         }
         try {
-            for (Future future: futures) {
+            for (Future future : futures) {
                 future.get();
             }
         } catch (Exception ex) {
-                logger.error("Error processing archetypes", ex);
+            logger.error("Error processing archetypes", ex);
         }
     }
 

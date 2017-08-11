@@ -615,7 +615,7 @@ public class GDLEditor implements EditorController<Guide> {
                     if (codeNum > termCount) {
                         termCount = codeNum;
                     }
-                } catch (Exception e) {
+                } catch (Exception ex) {
                     logger.warn("Unable to parse code '{}'", gtCode);
                 }
             }
@@ -800,12 +800,12 @@ public class GDLEditor implements EditorController<Guide> {
     public Guide getEntity() {
         try {
             return constructCurrentGuide();
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException ex) {
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     windowManager.getMainWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuideT"),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuide"),
-                    e.getMessage(), MessageType.ERROR);
+                    ex.getMessage(), MessageType.ERROR);
             dialog.setVisible(true);
             return null;
         }
@@ -848,8 +848,8 @@ public class GDLEditor implements EditorController<Guide> {
     private void updateReadableGuide(Guide guide) {
         try {
             readableGuide = guideImporter.importGuide(guide, getCurrentLanguageCode());
-        } catch (InternalErrorException e) {
-            throw new RuntimeException(e);
+        } catch (InternalErrorException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -1014,7 +1014,7 @@ public class GDLEditor implements EditorController<Guide> {
                 } else {
                     loadLastTab();
                 }
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 loadLastTab();
             }
         } else {
@@ -1242,7 +1242,7 @@ public class GDLEditor implements EditorController<Guide> {
             if (templateId == null) {
                 try {
                     archetypeManager.getArchetypes().getCMElement(archetypeId);
-                } catch (InstanceNotFoundException e) {
+                } catch (InstanceNotFoundException ex) {
                     File selectedFile = new File(archetypeId + ".adl");
                     int result = importManager.showImportArchetypeDialogAndAddToRepo(windowManager.getMainWindow(), selectedFile);
                     if (result == JFileChooser.CANCEL_OPTION) {
@@ -1252,7 +1252,7 @@ public class GDLEditor implements EditorController<Guide> {
             } else {
                 try {
                     archetypeManager.getTemplates().getCMElement(templateId);
-                } catch (InstanceNotFoundException e) {
+                } catch (InstanceNotFoundException ex) {
                     File selectedFile = new File(templateId + ".oet");
                     int result = importManager.showImportTemplateDialog(
                             windowManager.getMainWindow(), selectedFile);

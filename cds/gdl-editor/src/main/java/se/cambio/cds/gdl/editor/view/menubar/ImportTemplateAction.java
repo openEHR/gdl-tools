@@ -33,7 +33,7 @@ public class ImportTemplateAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         importManager.showImportTemplateDialog(editorManager.getActiveEditorWindow(), null);
     }
 }

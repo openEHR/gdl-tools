@@ -2,7 +2,7 @@ package se.cambio.cds.view.swing.dialogs;
 
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.view.util.CollapsablePanel;
+import se.cambio.openehr.view.util.CollapsiblePanel;
 import se.cambio.openehr.view.util.ScreenUtil;
 
 import javax.swing.*;
@@ -85,12 +85,12 @@ public class DialogRuleExecutionList extends JDialog {
             String ruleId;
             for (Map.Entry<String, String> entry : rulesMap.entrySet()) {
                 ruleId = entry.getKey();
-                CollapsablePanel collapsablePanel = new CollapsablePanel(ruleId);
-                collapsablePanel.getActionButton().addActionListener(new CollapsablePanelActionListener(collapsablePanel, i));
+                CollapsiblePanel collapsiblePanel = new CollapsiblePanel(ruleId);
+                collapsiblePanel.getActionButton().addActionListener(new CollapsablePanelActionListener(collapsiblePanel, i));
                 if (expandedRules.contains(i)) {
-                    collapsablePanel.setCollapsed(false);
+                    collapsiblePanel.setCollapsed(false);
                 }
-                JPanel aux = collapsablePanel.getContentPane();
+                JPanel aux = collapsiblePanel.getContentPane();
                 aux.setLayout(new BorderLayout());
                 JEditorPane editorPane = new JEditorPane();
                 editorPane.setContentType("text/html");
@@ -98,7 +98,7 @@ public class DialogRuleExecutionList extends JDialog {
                 text = text.replaceAll("(\r\n|\n)", "<br />");
                 editorPane.setText("<HTML>" + text + "</HTML>");
                 aux.add(editorPane, BorderLayout.CENTER);
-                rulesPanel.add(collapsablePanel);
+                rulesPanel.add(collapsiblePanel);
                 i++;
             }
         }
@@ -106,16 +106,16 @@ public class DialogRuleExecutionList extends JDialog {
     }
 
     private class CollapsablePanelActionListener implements ActionListener {
-        private CollapsablePanel collapsablePanel = null;
+        private CollapsiblePanel collapsiblePanel = null;
         private Integer index;
 
-        public CollapsablePanelActionListener(CollapsablePanel collapsablePanel, int index) {
-            this.collapsablePanel = collapsablePanel;
+        public CollapsablePanelActionListener(CollapsiblePanel collapsiblePanel, int index) {
+            this.collapsiblePanel = collapsiblePanel;
             this.index = index;
         }
 
-        public void actionPerformed(ActionEvent e) {
-            if (collapsablePanel.isCollapsed()) {
+        public void actionPerformed(ActionEvent ev) {
+            if (collapsiblePanel.isCollapsed()) {
                 expandedRules.add(index);
             } else {
                 expandedRules.remove(index);
@@ -151,7 +151,7 @@ public class DialogRuleExecutionList extends JDialog {
 
         private static final long serialVersionUID = -8058749276509227718L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             setVisible(false);
         }
     }

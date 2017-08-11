@@ -1,9 +1,3 @@
-/*
- * Creado el 11-dic-2007
- *
-
-
- */
 package se.cambio.openehr.view.trees.editors;
 
 import se.cambio.openehr.view.trees.SelectableNode;
@@ -20,59 +14,59 @@ import java.util.EventObject;
 
 public class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
-	private static final long serialVersionUID = -8830354408101728168L;
+    private static final long serialVersionUID = -8830354408101728168L;
 
-	private CheckBoxNodeRenderer<?> renderer = new CheckBoxNodeRenderer<>();
+    private CheckBoxNodeRenderer<?> renderer = new CheckBoxNodeRenderer<>();
 
-	  private JTree tree;
+    private JTree tree;
 
-	  public CheckBoxNodeEditor(JTree tree) {
-	    this.tree = tree;
-	  }
+    public CheckBoxNodeEditor(JTree tree) {
+        this.tree = tree;
+    }
 
-	  public Object getCellEditorValue() {
-	  	JCheckBox checkbox = renderer.getLeafRenderer();
-	  	renderer.getNodoSeleccionable().setAllSelected(checkbox.isSelected());
-	  	tree.setToolTipText(checkbox.getToolTipText());
-	  	tree.repaint();
-	  	return checkbox;
-	  }
+    public Object getCellEditorValue() {
+        JCheckBox checkbox = renderer.getLeafRenderer();
+        renderer.getNodoSeleccionable().setAllSelected(checkbox.isSelected());
+        tree.setToolTipText(checkbox.getToolTipText());
+        tree.repaint();
+        return checkbox;
+    }
 
-	  public boolean isCellEditable(EventObject event) {
-	    boolean returnValue = false;
-	    if (event instanceof MouseEvent) {
-	      MouseEvent mouseEvent = (MouseEvent) event;
-	      TreePath path = tree.getPathForLocation(mouseEvent.getX(),
-	          mouseEvent.getY());
-	      if (path != null) {
-	        Object node = path.getLastPathComponent();
-	        if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
-	          DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-	          returnValue = (treeNode instanceof SelectableNode<?>);
-	        }
-	      }
-	    }
-	    return returnValue;
-	  }
+    public boolean isCellEditable(EventObject event) {
+        boolean returnValue = false;
+        if (event instanceof MouseEvent) {
+            MouseEvent mouseEvent = (MouseEvent) event;
+            TreePath path = tree.getPathForLocation(mouseEvent.getX(),
+                    mouseEvent.getY());
+            if (path != null) {
+                Object node = path.getLastPathComponent();
+                if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
+                    DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
+                    returnValue = (treeNode instanceof SelectableNode<?>);
+                }
+            }
+        }
+        return returnValue;
+    }
 
-	  public Component getTreeCellEditorComponent(JTree tree, Object value,
-	      boolean selected, boolean expanded, boolean leaf, int row) {
+    public Component getTreeCellEditorComponent(JTree tree, Object value,
+                                                boolean selected, boolean expanded, boolean leaf, int row) {
+        Component editor =
+                renderer.getTreeCellRendererComponent(
+                        tree, value, true, expanded, leaf, row, true);
 
-	    Component editor = renderer.getTreeCellRendererComponent(tree, value,
-	        true, expanded, leaf, row, true);
-	    
-	    // editor always selected / focused
-	    ItemListener itemListener = itemEvent -> {
-          if (stopCellEditing()) {
-            fireEditingStopped();
-          }
+        ItemListener itemListener = itemEvent -> {
+            if (stopCellEditing()) {
+                fireEditingStopped();
+            }
         };
-	    if (editor instanceof JCheckBox) {
-	      ((JCheckBox) editor).addItemListener(itemListener);
-	    }
-	    return editor;
-	  }
-	}/*
+        if (editor instanceof JCheckBox) {
+            ((JCheckBox) editor).addItemListener(itemListener);
+        }
+        return editor;
+    }
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

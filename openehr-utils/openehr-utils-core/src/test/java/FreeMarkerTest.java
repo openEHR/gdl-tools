@@ -1,4 +1,3 @@
-import junit.framework.TestCase;
 import org.testng.annotations.Test;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.HTMLRenderer;
@@ -34,12 +33,12 @@ public class FreeMarkerTest {
         latest.put("testKey", "test1");
         try {
             HTMLRenderer cmHTMLr = new HTMLRenderer(new StringReader(src));
-            String result = cmHTMLr.proccess(root);
+            String result = cmHTMLr.process(root);
             assertThat(result, notNullValue());
             assertThat(result, containsString("Welcome Big Joe!"));
             assertThat(result, containsString("test1"));
-        } catch (InternalErrorException e) {
-            e.printStackTrace();
+        } catch (InternalErrorException ex) {
+            ex.printStackTrace();
         }
     }
 }

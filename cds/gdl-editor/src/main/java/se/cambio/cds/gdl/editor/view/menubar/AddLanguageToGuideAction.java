@@ -28,7 +28,7 @@ public class AddLanguageToGuideAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         boolean invalidCode = true;
         while (invalidCode) {
             String lang = JOptionPane.showInputDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));

@@ -51,34 +51,50 @@ public class WindowManager {
         });
     }
 
-    public void changeLoadingText(String description) {
-        this.description = description;
-        SwingUtilities.invokeLater(() -> getDefaultProgressManager().changeLoadingText(description));
+    public void setBusy(String progressKey, String description) {
+        getProgressManager(progressKey).changeLoadingText(description);
+        getProgressManager(progressKey).start();
     }
 
     public void changeBusyText(String description) {
         getDefaultProgressManager().changeLoadingText(description);
     }
 
-    public void setCurrentProgress(String msg, double progress) {
-        getDefaultProgressManager().setCurrentProgress(msg, progress);
+    public void changeBusyText(String progressKey, String description) {
+        getProgressManager(progressKey).changeLoadingText(description);
+    }
+
+    public void setCurrentThread(String progressKey, Future<?> currentThread) {
+        getProgressManager(progressKey).setCurrentThread(currentThread);
     }
 
     public void setCurrentThread(Future<?> currentThread) {
         getDefaultProgressManager().setCurrentThread(currentThread);
     }
 
+    public void setCurrentProgress(String msg, double progress) {
+        getDefaultProgressManager().setCurrentProgress(msg, progress);
+    }
+
+    public void setCurrentProgress(String progressKey, String msg, double progress) {
+        getProgressManager(progressKey).setCurrentProgress(msg, progress);
+    }
+
     public void setFree() {
         SwingUtilities.invokeLater(() -> getDefaultProgressManager().stop());
+    }
+
+    public void setFree(String progressKey) {
+        getProgressManager(progressKey).stop();
     }
 
     public void setFreeNow() {
         getDefaultProgressManager().stop();
     }
 
-    public void setBusy(String progressKey, String description) {
-        getProgressManager(progressKey).changeLoadingText(description);
-        getProgressManager(progressKey).start();
+    public void changeLoadingText(String description) {
+        this.description = description;
+        SwingUtilities.invokeLater(() -> getDefaultProgressManager().changeLoadingText(description));
     }
 
     public void changeLoadingText(final String progressKey, String description) {
@@ -89,22 +105,6 @@ public class WindowManager {
     public void changeLoadingTextNow(final String progressKey, String description) {
         this.description = description;
         getProgressManager(progressKey).changeLoadingText(this.description);
-    }
-
-    public void changeBusyText(String progressKey, String description) {
-        getProgressManager(progressKey).changeLoadingText(description);
-    }
-
-    public void setCurrentProgress(String progressKey, String msg, double progress) {
-        getProgressManager(progressKey).setCurrentProgress(msg, progress);
-    }
-
-    public void setCurrentThread(String progressKey, Future<?> currentThread) {
-        getProgressManager(progressKey).setCurrentThread(currentThread);
-    }
-
-    public void setFree(String progressKey) {
-        getProgressManager(progressKey).stop();
     }
 
     private ProgressManager getDefaultProgressManager() {

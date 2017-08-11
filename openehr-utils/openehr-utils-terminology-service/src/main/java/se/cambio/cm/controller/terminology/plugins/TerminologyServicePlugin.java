@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 public interface TerminologyServicePlugin extends TerminologyService {
     String getTerminologyId();
+
     void init(InputStream is) throws InternalErrorException;
 }
 /*

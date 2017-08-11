@@ -120,8 +120,8 @@ class ListPanel extends JPanel {
             jList.setBorder(BorderFactory.createEtchedBorder());
             jList.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() >= 2) {
+                public void mouseClicked(MouseEvent ev) {
+                    if (ev.getClickCount() >= 2) {
                         editItem(getJList().getSelectedIndex());
                     }
                 }

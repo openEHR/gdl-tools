@@ -20,27 +20,25 @@ public class HTMLRenderer {
         cfg.setIncompatibleImprovements(new Version(2, 3, 20));  // FreeMarker 2.3.20
         try {
             template = new Template(null, templateReader, cfg);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
+        } catch (IOException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
-    public String proccess(Map<String, Object> model) throws InternalErrorException {
+    public String process(Map<String, Object> model) throws InternalErrorException {
         try {
-            if (template == null){
+            if (template == null) {
                 throw new InternalErrorException(new Exception("No template defined!"));
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Writer w = new OutputStreamWriter(baos, "UTF-8");
-            Environment env = template.createProcessingEnvironment(model, w);
+            Writer writer = new OutputStreamWriter(baos, "UTF-8");
+            Environment env = template.createProcessingEnvironment(model, writer);
             env.setURLEscapingCharset("UTF-8");
             env.setOutputEncoding("UTF-8");
             env.process();
             return baos.toString("UTF-8");
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
-        } catch (TemplateException e) {
-            throw new InternalErrorException(e);
+        } catch (IOException | TemplateException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 }

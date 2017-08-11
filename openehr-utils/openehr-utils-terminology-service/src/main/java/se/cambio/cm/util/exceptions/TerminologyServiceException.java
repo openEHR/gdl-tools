@@ -3,9 +3,9 @@ package se.cambio.cm.util.exceptions;
 public class TerminologyServiceException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-	public TerminologyServiceException(String message) {
-		super(new Exception(message));
-	}
+    public TerminologyServiceException(String message) {
+        super(new Exception(message));
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

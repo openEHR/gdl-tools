@@ -76,36 +76,36 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent ev) {
         if (super.isEnabled()) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
+            if (ev.getButton() == MouseEvent.BUTTON1) {
                 mouseClickedAction(ACTION_LEFT_CLICK);
-            } else if (e.getButton() == MouseEvent.BUTTON3) {
+            } else if (ev.getButton() == MouseEvent.BUTTON3) {
                 mouseClickedAction(ACTION_RIGHT_CLICK);
             }
         }
     }
 
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent ev) {
         if (super.isEnabled()) {
             setForeground(pressColor);
         }
     }
 
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent ev) {
         if (super.isEnabled()) {
             setForeground(hoverColor);
         }
     }
 
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent ev) {
         if (super.isEnabled()) {
             setForeground(hoverColor);
             setCursor(Cursor.getPredefinedCursor(12));
         }
     }
 
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent ev) {
         refresh();
         setCursor(Cursor.getPredefinedCursor(0));
     }

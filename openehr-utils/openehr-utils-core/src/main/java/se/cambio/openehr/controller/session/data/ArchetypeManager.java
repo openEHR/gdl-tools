@@ -9,8 +9,6 @@ import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.PathUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -258,15 +256,15 @@ public class ArchetypeManager {
 
     public static String getIdentifier(String name, Collection<String> previousIds) {
         String elementMapId;
-        int i = 0;
+        int index = 0;
         do {
-            elementMapId = getIdentifier(name, i++);
+            elementMapId = getIdentifier(name, index++);
         } while (previousIds.contains(elementMapId));
         previousIds.add(elementMapId);
         return elementMapId;
     }
 
-    public static String getIdentifier(String str, int i) {
+    public static String getIdentifier(String str, int index) {
         StringBuilder sb = new StringBuilder();
         if (!Character.isJavaIdentifierStart(str.charAt(0))) {
             sb.append("_");
@@ -278,8 +276,8 @@ public class ArchetypeManager {
                 sb.append(Character.toLowerCase(c));
             }
         }
-        if (i > 0) {
-            sb.append(i);
+        if (index > 0) {
+            sb.append(index);
         }
         return sb.toString();
     }

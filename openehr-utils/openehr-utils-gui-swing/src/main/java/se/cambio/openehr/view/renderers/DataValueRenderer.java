@@ -12,27 +12,27 @@ import java.awt.*;
  * Date: 2013-11-17
  * Time: 12:50
  */
-public class DataValueRenderer  extends DefaultTableCellRenderer {
+public class DataValueRenderer extends DefaultTableCellRenderer {
 
     private boolean _mandatory = false;
 
-    public DataValueRenderer(boolean mandatory){
+    public DataValueRenderer(boolean mandatory) {
         _mandatory = mandatory;
     }
 
     @Override
     public void setValue(Object value) {
-        if (value instanceof DataValue){
-            DataValue dv = (DataValue)value;
+        if (value instanceof DataValue) {
+            DataValue dv = (DataValue) value;
             String dvStr = FormatConverter.getReadableValue(dv);
             setText(dvStr);
             setToolTipText(dvStr);
             //setIcon(null);
-        }else{
+        } else {
             setText(null);
             setToolTipText(null);
             setIcon(null);
-            if (_mandatory){
+            if (_mandatory) {
                 setBorder(BorderFactory.createLineBorder(Color.RED));
             }
         }

@@ -25,9 +25,9 @@ public class CompileGuideSW extends CDSSwingWorker {
             if (guide != null) {
                 compiledGuide = gdlEditor.getGuideExportPluginDirectory().compile(guide);
             }
-        } catch (Throwable e) {
-            errorMsg = e.getMessage();
-            log.warn("ERROR Compiling guide '" + gdlEditor.getEntity().getId() + "': " + e.getMessage());
+        } catch (Throwable ex) {
+            errorMsg = ex.getMessage();
+            log.warn("ERROR Compiling guide '" + gdlEditor.getEntity().getId() + "': " + ex.getMessage());
         }
     }
 

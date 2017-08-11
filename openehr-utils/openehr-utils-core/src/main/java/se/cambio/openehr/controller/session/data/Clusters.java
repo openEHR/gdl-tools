@@ -1,7 +1,5 @@
 package se.cambio.openehr.controller.session.data;
 
-import org.apache.commons.lang.StringUtils;
-import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import se.cambio.cm.model.archetype.vo.ArchetypeTermVO;
 import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.util.OpenEHRConst;
@@ -10,7 +8,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.*;
 
 import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 
 public class Clusters {
     private final ArchetypeManager archetypeManager;

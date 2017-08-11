@@ -60,14 +60,14 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
             } else {
                 this.cancel(true);
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
             new DialogLongMessageNotice(
                     editorManager.getActiveEditorWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuideT"),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuide"),
-                    e.getCause().getMessage(),
+                    ex.getCause().getMessage(),
                     DialogLongMessageNotice.MessageType.ERROR).setVisible(true);
-            log.error("Error parsing guideline", e);
+            log.error("Error parsing guideline", ex);
         }
     }
 

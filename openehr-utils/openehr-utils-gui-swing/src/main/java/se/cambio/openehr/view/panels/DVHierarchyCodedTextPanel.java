@@ -21,7 +21,7 @@ public class DVHierarchyCodedTextPanel extends DVGenericPanel implements Termino
     private Collection<DvCodedText> selectedDvCodeTexts;
     private JButton codedTextButton = null;
 
-    private final static String CODE_PROPERTY_CHANGE = "codeChange";
+    private static final String CODE_PROPERTY_CHANGE = "codeChange";
     private ArchetypeManager archetypeManager;
     private TerminologyDialogManager terminologyDialogManager;
     private WindowManager windowManager;

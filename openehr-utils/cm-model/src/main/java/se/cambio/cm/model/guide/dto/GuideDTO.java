@@ -14,7 +14,7 @@ public class GuideDTO implements CMElement {
     private byte[] compiledGuide;
     private Date lastUpdate;
 
-    public GuideDTO(){
+    public GuideDTO() {
 
     }
 
@@ -31,6 +31,7 @@ public class GuideDTO implements CMElement {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -48,18 +49,23 @@ public class GuideDTO implements CMElement {
     public String getSource() {
         return source;
     }
+
     public void setSource(String source) {
         this.source = source;
     }
+
     public byte[] getGuideObject() {
         return guideObject;
     }
+
     public void setGuideObject(byte[] guideObject) {
         this.guideObject = guideObject;
     }
+
     public byte[] getCompiledGuide() {
         return compiledGuide;
     }
+
     public void setCompiledGuide(byte[] compiledGuide) {
         this.compiledGuide = compiledGuide;
     }

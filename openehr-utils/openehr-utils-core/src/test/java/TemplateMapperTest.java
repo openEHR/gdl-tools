@@ -39,16 +39,16 @@ public class TemplateMapperTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldMapTemplate() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = archetypeManager.getTemplates().generateTemplateMap("medication_atc_indicator");
-        assertEquals(templateMap.getElementMaps().size(), 38);
+        assertEquals(38, templateMap.getElementMaps().size());
     }
 
     @Test
     public void shouldMapCodedTextAttributes() throws InternalErrorException, InstanceNotFoundException {
         TemplateMap templateMap = archetypeManager.getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.basic_demographic.v1");
-        assertEquals(templateMap.getElementMaps().size(), 8);
+        assertEquals(8, templateMap.getElementMaps().size());
         TemplateElementMap templateElementMap = templateMap.getElementMaps().get("gender");
         assertNotNull(templateElementMap);
-        assertEquals(templateElementMap.getAttributeMaps().size(), 2);
+        assertEquals(2, templateElementMap.getAttributeMaps().size());
         templateElementMap = templateMap.getElementMaps().get("event_time");
         assertNotNull(templateElementMap);
         //assertEquals(templateElementMap.getPath(), "/data[at0001]/events[at0002]/time");
@@ -58,10 +58,10 @@ public class TemplateMapperTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldMapOrdinalAttributes() throws InternalErrorException, InstanceNotFoundException {
         TemplateMap templateMap = archetypeManager.getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.chadsvas_score.v1");
-        assertEquals(templateMap.getElementMaps().size(), 10);
+        assertEquals(10, templateMap.getElementMaps().size());
         TemplateElementMap templateElementMap = templateMap.getElementMaps().get("diabetes");
         assertNotNull(templateElementMap);
-        assertEquals(templateElementMap.getAttributeMaps().size(), 2);
+        assertEquals(2, templateElementMap.getAttributeMaps().size());
     }
 
     @Test
@@ -69,13 +69,13 @@ public class TemplateMapperTest extends AbstractTestNGSpringContextTests {
         TemplateMap templateMap = archetypeManager.getTemplates().generateTemplateMap("stroke_prevention_treatment_review");
         assertTrue(templateMap.getElementMaps().containsKey("diabetes"));
         assertTrue(templateMap.getElementMaps().containsKey("diabetes1"));
-        assertEquals(templateMap.getElementMaps().size(), 30);
+        assertEquals(30, templateMap.getElementMaps().size());
     }
 
     @Test
     public void shouldMapOrdinalsWithSameValue() throws InstanceNotFoundException, InternalErrorException {
         TemplateMap templateMap = archetypeManager.getArchetypes().generateTemplateMap("openEHR-EHR-OBSERVATION.downton_fall_risk_index.v1");
-        assertEquals(templateMap.getElementMaps().size(), 8);
+        assertEquals(8, templateMap.getElementMaps().size());
         TemplateElementMap medications = templateMap.getElementMaps().get("medications");
         assertNotNull(medications);
         assertEquals(7, medications.getAttributeMaps().size());

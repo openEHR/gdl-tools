@@ -107,8 +107,8 @@ public class GDLSimpleDecisionGraph {
         BufferedImage img = graphRenderer.generateBufferedImage();
         try {
             ImageIO.write(img, "PNG", file);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
+        } catch (IOException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 

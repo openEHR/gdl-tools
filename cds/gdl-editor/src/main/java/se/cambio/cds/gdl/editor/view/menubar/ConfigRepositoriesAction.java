@@ -33,7 +33,7 @@ public class ConfigRepositoriesAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         new DialogRepositoriesPaths(editorManager, userConfigurationManager).setVisible(true);
     }
 }

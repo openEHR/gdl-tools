@@ -30,11 +30,11 @@ public class FormatConverter {
     private static long monthInMillis = dayInMillis * 30;
     private static long yearInMillis = dayInMillis * 365;
 
-    public static Integer toInt(String str) throws Exception{
-        try{
+    public static Integer toInt(String str) throws Exception {
+        try {
             return Integer.parseInt(str.trim());
-        }catch(NumberFormatException e){
-            throw new Exception(str);
+        } catch (NumberFormatException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -54,39 +54,38 @@ public class FormatConverter {
         return str;
     }
 
-    public static Short toShort(String str){
-        try{
+    public static Short toShort(String str) {
+        try {
             return Short.parseShort(str.trim());
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException ex) {
             return (short) 0;
         }
     }
 
-    public static Boolean toBoolean(String str){
-        try{
+    public static Boolean toBoolean(String str) {
+        try {
             return str.trim().equals("1");
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException ex) {
             return null;
         }
     }
 
-    public static Short getAge(Calendar birthDate){
+    public static Short getAge(Calendar birthDate) {
         Calendar fechaAct = Calendar.getInstance();
         boolean restaUno = false;
-        if (fechaAct.get(Calendar.DAY_OF_MONTH) -
-                birthDate.get(Calendar.DAY_OF_MONTH)<0){
+        if (fechaAct.get(Calendar.DAY_OF_MONTH) - birthDate.get(Calendar.DAY_OF_MONTH) < 0) {
             restaUno = true;
         }
-        restaUno = fechaAct.get(Calendar.MONTH) -
-                (birthDate.get(Calendar.MONTH) + (restaUno ? 1 : 0)) < 0;
-        return (short)
-                ((fechaAct.get(Calendar.YEAR) - (birthDate.get(Calendar.YEAR) + (restaUno ? 1 : 0))));
+        restaUno = fechaAct.get(Calendar.MONTH) - (birthDate.get(Calendar.MONTH) + (restaUno ? 1 : 0)) < 0;
+        return (short) ((fechaAct.get(Calendar.YEAR) - (birthDate.get(Calendar.YEAR) + (restaUno ? 1 : 0))));
     }
 
-    public static String toString(Properties properties){
+    public static String toString(Properties properties) {
         StringBuilder resultStr = new StringBuilder();
-        ArrayList<String> lista = new ArrayList<String>();
-        for (Object id : properties.keySet()) lista.add((String)id);
+        ArrayList<String> lista = new ArrayList<>();
+        for (Object id : properties.keySet()) {
+            lista.add((String) id);
+        }
         Collections.sort(lista);
         for (String id : lista) {
             Object value = properties.get(id);
@@ -95,33 +94,71 @@ public class FormatConverter {
         return resultStr.toString();
     }
 
-    public static Calendar toCalendar(Date date){
-        if (date==null) {
+    public static Calendar toCalendar(Date date) {
+        if (date == null) {
             return null;
         }
-        Calendar cDate = Calendar.getInstance();
-        cDate.setTime(date);
-        return cDate;
+        Calendar newDate = Calendar.getInstance();
+        newDate.setTime(date);
+        return newDate;
+    }
+
+
+    public static Calendar toCalendar(String date) {
+        String delimChar = "/";
+        if (date.indexOf("-") > 0) {
+            delimChar = "-";
+        }
+        return toCalendar(date, delimChar);
+    }
+
+
+    public static Calendar toCalendar(String date, String delimChar) throws InternalErrorException {
+        Calendar newDate = Calendar.getInstance();
+        try {
+            StringTokenizer st = new StringTokenizer(date, delimChar);
+
+            String str = null;
+
+            str = st.nextToken();
+            newDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(str));
+
+            str = st.nextToken();
+            newDate.set(Calendar.MONTH, Integer.parseInt(str) - 1);
+
+            str = st.nextToken();
+            newDate.set(Calendar.YEAR, Integer.parseInt(str));
+
+            return newDate;
+        } catch (Exception ex) {
+            try {
+                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+                newDate.setTime(dateFormat.parse(date));
+                return newDate;
+            } catch (Exception e2) {
+                throw new InternalErrorException(new Exception("Incorrect date: " + date));
+            }
+        }
     }
 
     public static String toCSVString(Calendar fecha) {
         return
-                ""+fecha.get(Calendar.DAY_OF_MONTH)+
-                        "/"+(fecha.get(Calendar.MONTH)+1)+
-                        "/"+fecha.get(Calendar.YEAR);
+                "" + fecha.get(Calendar.DAY_OF_MONTH)
+                        + "/" + (fecha.get(Calendar.MONTH) + 1)
+                        + "/" + fecha.get(Calendar.YEAR);
     }
 
-    public static Date toDate(Calendar cDate){
-        if (cDate==null) {
+    public static Date toDate(Calendar date) {
+        if (date == null) {
             return null;
         }
-        return cDate.getTime();
+        return date.getTime();
     }
 
     public static String toSorteableString(Calendar fecha) {
-        return 	""+fecha.get(Calendar.YEAR)+
-                "-"+fecha.get(Calendar.MONTH)+
-                "-"+(fecha.get(Calendar.DAY_OF_MONTH)<10?"0":"")+fecha.get(Calendar.DAY_OF_MONTH);
+        return "" + fecha.get(Calendar.YEAR)
+                + "-" + fecha.get(Calendar.MONTH)
+                + "-" + (fecha.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + fecha.get(Calendar.DAY_OF_MONTH);
     }
 
     public static String toStdMinString(Long time) {
@@ -156,135 +193,99 @@ public class FormatConverter {
         return DateFormat.getInstance().format(fecha);
     }
 
-    public static long anhosTranscurridosEntre(Calendar time1, Calendar time2){
-        if (time1!=null && time2!=null){
+    public static long anhosTranscurridosEntre(Calendar time1, Calendar time2) {
+        if (time1 != null && time2 != null) {
             long l1 = time1.getTime().getTime();
             long l2 = time2.getTime().getTime();
             long diff = l2 - l1;
             return diff / yearInMillis;
-        }else{
+        } else {
             return 0;
         }
     }
 
-    public static Calendar toCalendar(String date) throws InternalErrorException{
-        String delimChar = "/";
-        if (date.indexOf("-")>0){
-            delimChar="-";
-        }
-        return toCalendar(date, delimChar);
-    }
 
-    public static Calendar toCalendar(String date, String delimChar) throws InternalErrorException{
-        Calendar cDate = Calendar.getInstance();
-        try{
-            StringTokenizer st = new StringTokenizer(date,delimChar);
-
-            String str = null;
-
-            str = st.nextToken();
-            cDate.set(Calendar.DAY_OF_MONTH,Integer.parseInt(str));
-
-            str = st.nextToken();
-            cDate.set(Calendar.MONTH,Integer.parseInt(str)-1);
-
-            str = st.nextToken();
-            cDate.set(Calendar.YEAR,Integer.parseInt(str));
-
-            return cDate;
-        }catch(Exception e){
-            try{
-                DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-                cDate.setTime(dateFormat.parse(date));
-                return cDate;
-            }catch(Exception e2){
-                throw new InternalErrorException(new Exception("Incorrect date: "+date));
-            }
-        }
-    }
-
-
-    public static long mesesTranscurridosEntre(Calendar time1, Calendar time2){
-        if (time1!=null && time2!=null){
+    public static long mesesTranscurridosEntre(Calendar time1, Calendar time2) {
+        if (time1 != null && time2 != null) {
             long l1 = time1.getTime().getTime();
             long l2 = time2.getTime().getTime();
             long diff = l2 - l1;
             diff = diff % yearInMillis;
             return diff / monthInMillis;
-        }else{
+        } else {
             return 0;
         }
     }
 
 
-    public static long getNumDaysBetweenDates(Calendar time1, Calendar time2){
-        if (time1!=null && time2!=null){
+    public static long getNumDaysBetweenDates(Calendar time1, Calendar time2) {
+        if (time1 != null && time2 != null) {
             long l1 = time1.getTime().getTime();
             long l2 = time2.getTime().getTime();
             long diff = l2 - l1;
             diff = diff % yearInMillis;
             diff = diff % monthInMillis;
             return diff / dayInMillis;
-        }else{
+        } else {
             return 0;
         }
     }
 
-    public static boolean isSameDay(Calendar fecha1, Calendar fecha2){
-        return (fecha1.get(Calendar.YEAR) == fecha2.get(Calendar.YEAR)) &&
-                (fecha1.get(Calendar.MONTH) == fecha2.get(Calendar.MONTH)) &&
-                (fecha1.get(Calendar.DAY_OF_MONTH) == fecha2.get(Calendar.DAY_OF_MONTH));
+    public static boolean isSameDay(Calendar fecha1, Calendar fecha2) {
+        return (fecha1.get(Calendar.YEAR) == fecha2.get(Calendar.YEAR))
+                && (fecha1.get(Calendar.MONTH) == fecha2.get(Calendar.MONTH))
+                && (fecha1.get(Calendar.DAY_OF_MONTH) == fecha2.get(Calendar.DAY_OF_MONTH));
     }
 
-    public static boolean isBirthday(Calendar fecha){
+    public static boolean isBirthday(Calendar fecha) {
         Calendar today = Calendar.getInstance();
-        return (fecha.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
-                (fecha.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
+        return (fecha.get(Calendar.MONTH) == today.get(Calendar.MONTH))
+                && (fecha.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
     }
 
 
-    public static String textWithoutPunctuation(String str){
+    public static String textWithoutPunctuation(String str) {
         return Normalizer.normalize(str.toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 
-    public static String getReadableValue(DataValue dv){
-        if (dv instanceof DvCodedText){
-            CodePhrase cp = ((DvCodedText)dv).getDefiningCode();
-            return ((DvCodedText)dv).getValue();
-        }else if (dv instanceof DvOrdinal){
-            return ((DvOrdinal)dv).getSymbol().getValue();
-        }else if (dv instanceof DvQuantity){
-            DvQuantity dvQuantity = ((DvQuantity)dv);
+    public static String getReadableValue(DataValue dv) {
+        if (dv instanceof DvCodedText) {
+            CodePhrase cp = ((DvCodedText) dv).getDefiningCode();
+            return ((DvCodedText) dv).getValue();
+        } else if (dv instanceof DvOrdinal) {
+            return ((DvOrdinal) dv).getSymbol().getValue();
+        } else if (dv instanceof DvQuantity) {
+            DvQuantity dvQuantity = ((DvQuantity) dv);
             DecimalFormat format = getDecimalFormat(dvQuantity.getPrecision());
-            return format.format(dvQuantity.getMagnitude())+" "+dvQuantity.getUnits();
-        }else if (dv instanceof DvProportion){
-            DvProportion dvProportion = ((DvProportion)dv);
+            return format.format(dvQuantity.getMagnitude()) + " " + dvQuantity.getUnits();
+        } else if (dv instanceof DvProportion) {
+            DvProportion dvProportion = ((DvProportion) dv);
             DecimalFormat format = getDecimalFormat(dvProportion.getPrecision());
-            return format.format(dvProportion.getNumerator())+"/"+format.format(dvProportion.getDenominator());
-        }else if (dv instanceof DvDateTime){
+            return format.format(dvProportion.getNumerator()) + "/" + format.format(dvProportion.getDenominator());
+        } else if (dv instanceof DvDateTime) {
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
-            Date date = ((DvDateTime)dv).getDateTime().toDate();
+            Date date = ((DvDateTime) dv).getDateTime().toDate();
             return df.format(date);
-        }else if (dv instanceof DvDate){
+        } else if (dv instanceof DvDate) {
             DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-            Date date = ((DvDate)dv).getDateTime().toDate();
+            Date date = ((DvDate) dv).getDateTime().toDate();
             return df.format(date);
-        }else if (dv instanceof DvTime){
+        } else if (dv instanceof DvTime) {
             DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
-            Date date = ((DvTime)dv).getDateTime().toDate();
+            Date date = ((DvTime) dv).getDateTime().toDate();
             return df.format(date);
-        }else if (dv instanceof DvCount){
-            return ""+((DvCount)dv).getMagnitude();
-        }else if (dv instanceof DvText){
+        } else if (dv instanceof DvCount) {
+            return "" + ((DvCount) dv).getMagnitude();
+        } else if (dv instanceof DvText) {
             return dv.toString();
-        }else if (dv!=null){
+        } else if (dv != null) {
             return dv.toString();
-        }else{
+        } else {
             return null;
         }
     }
 
-    private static DecimalFormat getDecimalFormat(int precision){
+    private static DecimalFormat getDecimalFormat(int precision) {
         return OpenEHRNumberFormat.getDecimalFormat(precision);
     }
 }

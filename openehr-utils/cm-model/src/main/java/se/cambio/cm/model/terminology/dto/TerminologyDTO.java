@@ -4,7 +4,7 @@ import se.cambio.cm.model.util.CMElement;
 
 import java.util.Date;
 
-public class TerminologyDTO implements CMElement{
+public class TerminologyDTO implements CMElement {
 
     private static final long serialVersionUID = 2303245012L;
     private String id = null;

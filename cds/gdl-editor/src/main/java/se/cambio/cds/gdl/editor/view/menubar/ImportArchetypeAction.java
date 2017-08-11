@@ -34,7 +34,7 @@ public class ImportArchetypeAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         importManager.showImportArchetypeDialogAndAddToRepo(editorManager.getActiveEditorWindow(), null);
     }
 }

@@ -17,8 +17,8 @@ public class CheckSumManager {
             MessageDigest md = MessageDigest.getInstance("MD5");
             List<E> cmElementList = getSortedCMElementList(cmElements);
             return getMD5Checksum(md, cmElementList);
-        } catch (NoSuchAlgorithmException e) {
-            throw new InternalErrorException(e);
+        } catch (NoSuchAlgorithmException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
@@ -26,8 +26,8 @@ public class CheckSumManager {
         for (E cmElement : cmElementList) {
             try {
                 md.update(cmElement.getSource().getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException ex) {
+                throw new RuntimeException(ex);
             }
         }
         byte[] md5Bytes = md.digest();

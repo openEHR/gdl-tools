@@ -55,8 +55,8 @@ public class GenericObjectBundleADLSManager {
 
     private void setDefaultLanguage() {
         language = archetypeManager.getUserConfigurationManager().getLanguage();
-        if (!ar.getOriginalLanguage().getCodeString().equals(language) &&
-                (ar.getTranslations() == null || !containsLanguage(ar.getTranslations(), language))) {
+        if (!ar.getOriginalLanguage().getCodeString().equals(language)
+                && (ar.getTranslations() == null || !containsLanguage(ar.getTranslations(), language))) {
             language = ar.getOriginalLanguage().getCodeString();
         }
     }
@@ -84,13 +84,15 @@ public class GenericObjectBundleADLSManager {
         String archId = getArchetypeId();
         String rmEntry = ar.getDefinition().getRmTypeName();
         String path = "";
-        for (CAttribute cAttribute : ar.getDefinition().getAttributes()) {
-            processAttribute(cAttribute, path);
+        for (CAttribute consAttribute : ar.getDefinition().getAttributes()) {
+            processAttribute(consAttribute, path);
         }
-        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry); //TODO Send Archetype (to create long RM paths (data/events/time))
+        Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry);
+        //TODO Send Archetype (to create long RM paths (data/events/time))
         for (ClusterVO clusterVO : clusterVOs) {
             if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")) {
-                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath())); //TODO Send Archetype (to create long RM paths (data/events/time))
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath()));
+                //TODO Send Archetype (to create long RM paths (data/events/time))
             }
         }
         archetypeElementVOs.addAll(rmArchetypeElements);
@@ -101,25 +103,25 @@ public class GenericObjectBundleADLSManager {
     }
 
 
-    private void processCObject(CObject cObject, String path) throws ArchetypeProcessingException {
-        if (cObject instanceof CComplexObject) {
-            processCComplexObject((CComplexObject) cObject, path);
+    private void processCObject(CObject constrainedObject, String path) throws ArchetypeProcessingException {
+        if (constrainedObject instanceof CComplexObject) {
+            processCComplexObject((CComplexObject) constrainedObject, path);
         }
     }
 
-    private void processCComplexObject(CComplexObject cComplexObject, String path) throws ArchetypeProcessingException {
-        List<CAttribute> cAttributes = cComplexObject.getAttributes();
-        String currentPath = getCurrentPath(cComplexObject, path);
-        if (cComplexObject.getRmTypeName().equals("ELEMENT")) {
-            processElement(cComplexObject, currentPath);
-        } else if (cComplexObject instanceof CArchetypeRoot) {
-            String usedArchetypeId = ((CArchetypeRoot) cComplexObject).getArchetypeId().getValue();
+    private void processCComplexObject(CComplexObject constrainedComplexObject, String path) throws ArchetypeProcessingException {
+        List<CAttribute> consAttributes = constrainedComplexObject.getAttributes();
+        String currentPath = getCurrentPath(constrainedComplexObject, path);
+        if (constrainedComplexObject.getRmTypeName().equals("ELEMENT")) {
+            processElement(constrainedComplexObject, currentPath);
+        } else if (constrainedComplexObject instanceof CArchetypeRoot) {
+            String usedArchetypeId = ((CArchetypeRoot) constrainedComplexObject).getArchetypeId().getValue();
             processArchetypeReference(usedArchetypeId, currentPath);
         } else {
-            for (CAttribute cAttribute : cAttributes) {
-                processAttribute(cAttribute, currentPath);
+            for (CAttribute consAttribute : consAttributes) {
+                processAttribute(consAttribute, currentPath);
             }
-            processClusters(cComplexObject, currentPath);
+            processClusters(constrainedComplexObject, currentPath);
         }
     }
 
@@ -134,10 +136,10 @@ public class GenericObjectBundleADLSManager {
             processReferencedOrdinals(currentPath, archetypeObjectBundleCustomVO);
             processReferencedUnits(archetypeObjectBundleCustomVO);
             processReferencedProportionTypes(archetypeObjectBundleCustomVO);
-        } catch (InternalErrorException e) {
-            throw new ArchetypeProcessingException(e.getMessage());
-        } catch (InstanceNotFoundException e) {
-            throw new ArchetypeProcessingException(e.getMessage());
+        } catch (InternalErrorException ex) {
+            throw new ArchetypeProcessingException(ex.getMessage());
+        } catch (InstanceNotFoundException ex) {
+            throw new ArchetypeProcessingException(ex.getMessage());
         }
     }
 
@@ -201,19 +203,19 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private String getCurrentPath(CComplexObject cComplexObject, String path) {
-        if (cComplexObject.getNodeId() != null) {
-            return path + "[" + cComplexObject.getNodeId() + "]";
+    private String getCurrentPath(CComplexObject constrainedComplexObject, String path) {
+        if (constrainedComplexObject.getNodeId() != null) {
+            return path + "[" + constrainedComplexObject.getNodeId() + "]";
         } else {
             return path;
         }
     }
 
-    private void processElement(CComplexObject cComplexObject, String currentPath) throws ArchetypeProcessingException {
-        if (hasCardinalityZero(cComplexObject)) {
+    private void processElement(CComplexObject constrainedComplexObject, String currentPath) throws ArchetypeProcessingException {
+        if (hasCardinalityZero(constrainedComplexObject)) {
             return;
         }
-        String nodeId = cComplexObject.getNodeId();
+        String nodeId = constrainedComplexObject.getNodeId();
         Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(nodeId);
         if (termMap == null) {
             logger.warn("Archetype term not found for atCode '" + nodeId + "'");
@@ -221,7 +223,7 @@ public class GenericObjectBundleADLSManager {
         }
         String text = getTermDefinitionsArchetypeTermMap().get(nodeId).get("text");
         String description = termMap.get("description");
-        CObject elementDefinitionCObject = getElementDefinitionCObject(cComplexObject, currentPath, "value");
+        CObject elementDefinitionCObject = getElementDefinitionCObject(constrainedComplexObject, currentPath, "value");
         if (elementDefinitionCObject != null) {
             String rmType = elementDefinitionCObject.getRmTypeName();
             rmType = translateCIMIRM(rmType);
@@ -234,7 +236,7 @@ public class GenericObjectBundleADLSManager {
                             .setType(rmType)
                             .setPath(currentPath)
                             .createArchetypeElementVO();
-            setCardinalities(archetypeElementVO, cComplexObject);
+            setCardinalities(archetypeElementVO, constrainedComplexObject);
             archetypeElementVOs.add(archetypeElementVO);
             processAdditionalPathables(currentPath, elementDefinitionCObject, rmType);
         } else {
@@ -264,8 +266,8 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private void processCTerminologyCode(CTerminologyCode cTerminologyCode, String currentPath) throws ArchetypeProcessingException {
-        List<String> acCodes = cTerminologyCode.getCodeList();
+    private void processCTerminologyCode(CTerminologyCode constrainedTerminologyCode, String currentPath) throws ArchetypeProcessingException {
+        List<String> acCodes = constrainedTerminologyCode.getCodeList();
         for (String acCode : acCodes) {
             List<String> members = getValueSetsMap().get(acCode);
             if (members == null) {
@@ -278,21 +280,21 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private void processCodedTexts(CObject cObject, String currentPath) throws ArchetypeProcessingException {
-        if (cObject instanceof CComplexObject) {
-            CComplexObject cComplexObject = (CComplexObject) cObject;
-            CObject cObjectDefinedCode = getElementDefinitionCObject(cComplexObject, currentPath, "defining_code");
-            if (cObjectDefinedCode instanceof CTerminologyCode) {
-                CTerminologyCode cTerminologyCode = (CTerminologyCode) cObjectDefinedCode;
-                processCTerminologyCode(cTerminologyCode, currentPath);
+    private void processCodedTexts(CObject constrainedObject, String currentPath) throws ArchetypeProcessingException {
+        if (constrainedObject instanceof CComplexObject) {
+            CComplexObject constrainedComplexObject = (CComplexObject) constrainedObject;
+            CObject constrainedObjectDefinedCode = getElementDefinitionCObject(constrainedComplexObject, currentPath, "defining_code");
+            if (constrainedObjectDefinedCode instanceof CTerminologyCode) {
+                CTerminologyCode constrainedTerminologyCode = (CTerminologyCode) constrainedObjectDefinedCode;
+                processCTerminologyCode(constrainedTerminologyCode, currentPath);
             } else {
-                processCodedTextsWithoutDefiningCode(cComplexObject, currentPath);
+                processCodedTextsWithoutDefiningCode(constrainedComplexObject, currentPath);
             }
         }
     }
 
-    private void processCodedTextsWithoutDefiningCode(CComplexObject cComplexObject, String currentPath) throws ArchetypeProcessingException {
-        Map<String, List<String>> terminologyCodesMap = getTerminologyCodesMap(cComplexObject, currentPath);
+    private void processCodedTextsWithoutDefiningCode(CComplexObject constrainedComplexObject, String currentPath) throws ArchetypeProcessingException {
+        Map<String, List<String>> terminologyCodesMap = getTerminologyCodesMap(constrainedComplexObject, currentPath);
         for (Map.Entry<String, List<String>> entrySet : terminologyCodesMap.entrySet()) {
             for (String code : entrySet.getValue()) {
                 processCodedTextItem(entrySet.getKey(), currentPath, code);
@@ -300,12 +302,13 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private Map<String, List<String>> getTerminologyCodesMap(CComplexObject cComplexObject, String currentPath) throws ArchetypeProcessingException {
+    private Map<String, List<String>> getTerminologyCodesMap(CComplexObject constrainedComplexObject, String currentPath)
+            throws ArchetypeProcessingException {
         Map<String, List<String>> terminologyCodesMap = new HashMap<>();
-        CObject terminologyIdCObject = getElementDefinitionCObject(cComplexObject, currentPath, "terminology_id");
-        CObject termIdCObject = getElementDefinitionCObject(cComplexObject, currentPath, "term_id");
-        if (terminologyIdCObject instanceof CComplexObject &&
-                termIdCObject instanceof CString) {
+        CObject terminologyIdCObject = getElementDefinitionCObject(constrainedComplexObject, currentPath, "terminology_id");
+        CObject termIdCObject = getElementDefinitionCObject(constrainedComplexObject, currentPath, "term_id");
+        if (terminologyIdCObject instanceof CComplexObject
+                && termIdCObject instanceof CString) {
             CObject terminologyIdCString = getElementDefinitionCObject((CComplexObject) terminologyIdCObject, currentPath, "value");
             String terminologyId = null;
             if (terminologyIdCString instanceof CString) {
@@ -336,12 +339,12 @@ public class GenericObjectBundleADLSManager {
         codedTextVOs.add(codedTextVO);
     }
 
-    private void processOrdinals(CObject cObject, String currentPath) throws ArchetypeProcessingException {
-        if (cObject instanceof CComplexObject) {
-            CObject cObjectDefinedCode = getElementDefinitionCObject((CComplexObject) cObject, currentPath, "value");
-            if (cObjectDefinedCode instanceof CDvOrdinal) {
-                CDvOrdinal cDvOrdinal = (CDvOrdinal) cObjectDefinedCode;
-                for (DvOrdinal dvOrdinal : cDvOrdinal.getList()) {
+    private void processOrdinals(CObject constrainedObject, String currentPath) throws ArchetypeProcessingException {
+        if (constrainedObject instanceof CComplexObject) {
+            CObject constrainedObjectDefinedCode = getElementDefinitionCObject((CComplexObject) constrainedObject, currentPath, "value");
+            if (constrainedObjectDefinedCode instanceof CDvOrdinal) {
+                CDvOrdinal consDvOrdinal = (CDvOrdinal) constrainedObjectDefinedCode;
+                for (DvOrdinal dvOrdinal : consDvOrdinal.getList()) {
                     CodePhrase definingCode = dvOrdinal.getSymbol().getDefiningCode();
                     String code = definingCode.getCodeString();
                     Map<String, String> referenceTerm = getTermDefinitionsArchetypeTermMap().get(code);
@@ -352,7 +355,7 @@ public class GenericObjectBundleADLSManager {
                     OrdinalVO ordinalVO = new OrdinalVOBuilder()
                             .setName(referenceTerm.get("text"))
                             .setDescription(referenceTerm.get("description"))
-                            .setType(cObject.getRmTypeName())
+                            .setType(constrainedObject.getRmTypeName())
                             .setIdArchetype(getArchetypeId())
                             .setValue(dvOrdinal.getValue())
                             .setCode(code)
@@ -365,8 +368,8 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private void processClusters(CObject cObject, String path) throws ArchetypeProcessingException {
-        String nodeId = cObject.getNodeId();
+    private void processClusters(CObject constrainedObject, String path) throws ArchetypeProcessingException {
+        String nodeId = constrainedObject.getNodeId();
         Map<String, String> termMap = getTermDefinitionsArchetypeTermMap().get(nodeId);
         if (termMap == null) {
             logger.warn("Archetype term not found for atCode '" + nodeId + "'");
@@ -376,27 +379,27 @@ public class GenericObjectBundleADLSManager {
                 new ClusterVOBuilder()
                         .setName(termMap.get("text"))
                         .setDescription(termMap.get("description"))
-                        .setType(cObject.getRmTypeName())
+                        .setType(constrainedObject.getRmTypeName())
                         .setIdArchetype(getArchetypeId())
                         .setPath(path)
                         .createClusterVO();
-        setCardinalities(clusterVO, cObject);
+        setCardinalities(clusterVO, constrainedObject);
         clusterVOs.add(clusterVO);
     }
 
-    private static void setCardinalities(PathableVO pathableVO, CObject cObject) {
-        pathableVO.setLowerCardinality(cObject.getOccurrences().getLower());
-        pathableVO.setUpperCardinality(cObject.getOccurrences().getUpper());
+    private static void setCardinalities(PathableVO pathableVO, CObject constrainedObject) {
+        pathableVO.setLowerCardinality(constrainedObject.getOccurrences().getLower());
+        pathableVO.setUpperCardinality(constrainedObject.getOccurrences().getUpper());
     }
 
-    private void loadUnits(CObject cObject, String path) throws ArchetypeProcessingException {
-        if (cObject instanceof CComplexObject) {
-            CComplexObject cComplexObject = (CComplexObject) cObject;
-            List<CAttributeTuple> attributeTuples = cComplexObject.getAttributeTuples();
-            for (CAttributeTuple cAttributeTuple : attributeTuples) {
-                processUnits(path, cAttributeTuple);
+    private void loadUnits(CObject constrainedObject, String path) throws ArchetypeProcessingException {
+        if (constrainedObject instanceof CComplexObject) {
+            CComplexObject constrainedComplexObject = (CComplexObject) constrainedObject;
+            List<CAttributeTuple> attributeTuples = constrainedComplexObject.getAttributeTuples();
+            for (CAttributeTuple consAttributeTuple : attributeTuples) {
+                processUnits(path, consAttributeTuple);
             }
-            CObject elementDefinitionCObject = getElementDefinitionCObject(cComplexObject, path, "units");
+            CObject elementDefinitionCObject = getElementDefinitionCObject(constrainedComplexObject, path, "units");
             if (elementDefinitionCObject instanceof CTerminologyCode) {
                 List<String> codes = ((CTerminologyCode) elementDefinitionCObject).getCodeList();
                 List<String> units = new ArrayList<>();
@@ -415,8 +418,8 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private void processUnitsWithoutCTerminologyCode(CComplexObject cComplexObject, String path) throws ArchetypeProcessingException {
-        Map<String, List<String>> terminologyCodesMap = getTerminologyCodesMap(cComplexObject, path);
+    private void processUnitsWithoutCTerminologyCode(CComplexObject constrainedComplexObject, String path) throws ArchetypeProcessingException {
+        Map<String, List<String>> terminologyCodesMap = getTerminologyCodesMap(constrainedComplexObject, path);
         String elementId = getArchetypeId() + path;
         for (Map.Entry<String, List<String>> entrySet : terminologyCodesMap.entrySet()) {
             List<String> units = new ArrayList<>();
@@ -433,8 +436,8 @@ public class GenericObjectBundleADLSManager {
 
     }
 
-    private void processUnits(String path, CAttributeTuple cAttributeTuple) throws ArchetypeProcessingException {
-        List<String> units = getUnitsCStrings(cAttributeTuple);
+    private void processUnits(String path, CAttributeTuple consAttributeTuple) throws ArchetypeProcessingException {
+        List<String> units = getUnitsCStrings(consAttributeTuple);
         String elementId = getArchetypeId() + path;
         processUnits(elementId, units);
     }
@@ -446,9 +449,9 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private void processProportion(CObject cObject, String currentPath) throws ArchetypeProcessingException {
-        if (cObject instanceof CComplexObject) {
-            CObject elementDefinitionCObject = getElementDefinitionCObject((CComplexObject) cObject, currentPath, "type");
+    private void processProportion(CObject constrainedObject, String currentPath) throws ArchetypeProcessingException {
+        if (constrainedObject instanceof CComplexObject) {
+            CObject elementDefinitionCObject = getElementDefinitionCObject((CComplexObject) constrainedObject, currentPath, "type");
             List<Integer> proportionTypes = getCIntegers(elementDefinitionCObject);
             for (Integer proportionType : proportionTypes) {
                 proportionTypeVOs.add(new ProportionTypeVO(null, getArchetypeId() + currentPath, proportionType));
@@ -456,66 +459,67 @@ public class GenericObjectBundleADLSManager {
         }
     }
 
-    private List<String> getUnitsCStrings(CAttributeTuple cAttributeTuple) throws ArchetypeProcessingException {
-        int unitsIndex = getUnitsIndex(cAttributeTuple);
-        List<CObject> cObjects = getCObjectsFromTuple(cAttributeTuple, unitsIndex);
-        return getCStrings(cObjects);
+    private List<String> getUnitsCStrings(CAttributeTuple consAttributeTuple) throws ArchetypeProcessingException {
+        int unitsIndex = getUnitsIndex(consAttributeTuple);
+        List<CObject> constrainedObjects = getCObjectsFromTuple(consAttributeTuple, unitsIndex);
+        return getCStrings(constrainedObjects);
     }
 
-    private List<String> getCStrings(List<CObject> cObjects) throws ArchetypeProcessingException {
-        List<String> cStrings = new ArrayList<>();
-        for (CObject cObject : cObjects) {
-            if (!(cObject instanceof CString)) {
-                throw new ArchetypeProcessingException("Expecting C_STRING but found '" + cObject.getRmTypeName() + "'");
+    private List<String> getCStrings(List<CObject> constrainedObjects) throws ArchetypeProcessingException {
+        List<String> consStrings = new ArrayList<>();
+        for (CObject constrainedObject : constrainedObjects) {
+            if (!(constrainedObject instanceof CString)) {
+                throw new ArchetypeProcessingException("Expecting C_STRING but found '" + constrainedObject.getRmTypeName() + "'");
             }
-            cStrings.addAll(((CString) cObject).getList());
+            consStrings.addAll(((CString) constrainedObject).getList());
         }
-        return cStrings;
+        return consStrings;
     }
 
-    private List<Integer> getCIntegers(CObject cObject) throws ArchetypeProcessingException {
-        List<Integer> cIntegers = new ArrayList<>();
-        if (!(cObject instanceof CInteger)) {
-            throw new ArchetypeProcessingException("Expecting C_INTEGER but found '" + cObject.getRmTypeName() + "'");
+    private List<Integer> getCIntegers(CObject constrainedObject) throws ArchetypeProcessingException {
+        List<Integer> consIntegers = new ArrayList<>();
+        if (!(constrainedObject instanceof CInteger)) {
+            throw new ArchetypeProcessingException("Expecting C_INTEGER but found '" + constrainedObject.getRmTypeName() + "'");
         }
-        cIntegers.addAll(((CInteger) cObject).getList());
-        return cIntegers;
+        consIntegers.addAll(((CInteger) constrainedObject).getList());
+        return consIntegers;
     }
 
-    private List<CObject> getCObjectsFromTuple(CAttributeTuple cAttributeTuple, int index) {
-        List<CObject> cObjects = new ArrayList<>();
-        for (CObjectTuple cObjectTuple : cAttributeTuple.getChildren()) {
-            cObjects.add(cObjectTuple.getMembers().get(index));
+    private List<CObject> getCObjectsFromTuple(CAttributeTuple consAttributeTuple, int index) {
+        List<CObject> constrainedObjects = new ArrayList<>();
+        for (CObjectTuple constrainedObjectTuple : consAttributeTuple.getChildren()) {
+            constrainedObjects.add(constrainedObjectTuple.getMembers().get(index));
         }
-        return cObjects;
+        return constrainedObjects;
     }
 
-    private Integer getUnitsIndex(CAttributeTuple cAttributeTuple) {
-        Integer i = 0;
-        for (CAttribute cSingleAttribute : cAttributeTuple.getMembers()) {
-            if (cSingleAttribute.getRmAttributeName().equals("units")) {
-                return i;
+    private Integer getUnitsIndex(CAttributeTuple consAttributeTuple) {
+        Integer index = 0;
+        for (CAttribute consSingleAttribute : consAttributeTuple.getMembers()) {
+            if (consSingleAttribute.getRmAttributeName().equals("units")) {
+                return index;
             }
-            i++;
+            index++;
         }
         return null;
     }
 
-    private CObject getElementDefinitionCObject(CComplexObject cComplexObject, String path, String rmName) throws ArchetypeProcessingException {
-        for (CAttribute cAttribute : cComplexObject.getAttributes()) {
-            if (cAttribute.getRmAttributeName().equals(rmName)) {
-                if (cAttribute.getChildren().isEmpty()) {
-                    throw new ArchetypeProcessingException("Could not find cComplexObject for element at path '" + path + "'");
+    private CObject getElementDefinitionCObject(CComplexObject constrainedComplexObject, String path, String rmName)
+            throws ArchetypeProcessingException {
+        for (CAttribute consAttribute : constrainedComplexObject.getAttributes()) {
+            if (consAttribute.getRmAttributeName().equals(rmName)) {
+                if (consAttribute.getChildren().isEmpty()) {
+                    throw new ArchetypeProcessingException("Could not find constrainedComplexObject for element at path '" + path + "'");
                 }
-                return cAttribute.getChildren().iterator().next();
+                return consAttribute.getChildren().iterator().next();
             }
         }
         return null;
     }
 
-    private void processAttribute(CAttribute cAttribute, String path) throws ArchetypeProcessingException {
-        for (CObject cObject : cAttribute.getChildren()) {
-            processCObject(cObject, path + "/" + cAttribute.getRmAttributeName());
+    private void processAttribute(CAttribute consAttribute, String path) throws ArchetypeProcessingException {
+        for (CObject constrainedObject : consAttribute.getChildren()) {
+            processCObject(constrainedObject, path + "/" + consAttribute.getRmAttributeName());
         }
     }
 
@@ -542,10 +546,10 @@ public class GenericObjectBundleADLSManager {
         return valueSetMap;
     }
 
-    private boolean hasCardinalityZero(CComplexObject cComplexObject) {
-        return (cComplexObject.getOccurrences() != null) &&
-                (cComplexObject.getOccurrences().getUpper() != null) &&
-                (cComplexObject.getOccurrences().getUpper() <= 0);
+    private boolean hasCardinalityZero(CComplexObject constrainedComplexObject) {
+        return (constrainedComplexObject.getOccurrences() != null)
+                && (constrainedComplexObject.getOccurrences().getUpper() != null)
+                && (constrainedComplexObject.getOccurrences().getUpper() <= 0);
     }
 
     private String translateCIMIRM(String rmName) {

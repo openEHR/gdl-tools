@@ -117,7 +117,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel {
             _rule = rule;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             controller.changeCommentRule(_rule, !_rule.isCommented());
             refresh();
         }
@@ -139,7 +139,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel {
             _rule = rule;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             int resp = JOptionPane.showConfirmDialog(
                     controller.getEditorWindow(),
                     GDLEditorLanguageManager.getMessage("AskForRuleDeletionConfirmation"),
@@ -168,7 +168,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel {
             _rule = rule;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             DialogNameInsert dialog = new DialogNameInsert(
                     controller.getEditorWindow(),
                     GDLEditorLanguageManager.getMessage("EditRuleName"),
@@ -196,7 +196,7 @@ public class RulesPanel extends JPanel implements RefreshablePanel {
             _rule = rule;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             controller.ruleEdit(_rule);
         }
     }

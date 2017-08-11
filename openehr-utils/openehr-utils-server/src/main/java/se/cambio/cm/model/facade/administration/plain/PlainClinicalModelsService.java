@@ -43,7 +43,7 @@ public class PlainClinicalModelsService implements ClinicalModelsService {
         GenericCMElementDAO<E> dao = (GenericCMElementDAO<E>) getCmElementDAO(cmElement.getClass());
         try {
             dao.update(cmElement);
-        } catch (InstanceNotFoundException e) {
+        } catch (InstanceNotFoundException ex) {
             dao.insert(cmElement);
         }
     }

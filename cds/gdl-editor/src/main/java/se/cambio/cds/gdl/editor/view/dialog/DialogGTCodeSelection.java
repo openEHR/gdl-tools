@@ -55,7 +55,7 @@ public class DialogGTCodeSelection extends DialogSelection {
             _dialog = dialog;
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             DialogNameInsert dialog = new DialogNameInsert(_dialog, GDLEditorLanguageManager.getMessage("AddLocalTerm"), null);
             if (dialog.getAnswer()) {
                 codeCreated = controller.createNextLocalCode();

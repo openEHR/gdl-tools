@@ -34,8 +34,8 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
                 });
                 Thread.sleep(1000);
             }
-        } catch (InterruptedException e) {
-            throw new InternalErrorException(e);
+        } catch (InterruptedException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 

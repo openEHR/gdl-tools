@@ -29,7 +29,7 @@ public class AboutGDLEditorMenuAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AboutGDLEditorD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         new DialogSplash(editorManager.getActiveEditorWindow(), false).setVisible(true);
     }
 }

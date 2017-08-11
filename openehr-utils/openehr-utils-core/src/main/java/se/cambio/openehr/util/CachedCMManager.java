@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class CachedCMManager {
 
-    private final static long MAX_CHECK_WAITING_TIME_IN_MILLIS = 30000; //30 seg
+    private static final long MAX_CHECK_WAITING_TIME_IN_MILLIS = 30000; //30 seg
     private Date lastCheckForUpdates;
     private Date mostRecentLocalUpdate;
     private Class<? extends CMElement> cmElementClass;
@@ -49,15 +49,15 @@ public class CachedCMManager {
     private boolean isWaitingTimeForNextCheckReached() {
         boolean waitingTimeForNextCheckReached = false;
         long timeSinceLastCheck = System.currentTimeMillis() - lastCheckForUpdates.getTime();
-        if (timeSinceLastCheck >= MAX_CHECK_WAITING_TIME_IN_MILLIS){
+        if (timeSinceLastCheck >= MAX_CHECK_WAITING_TIME_IN_MILLIS) {
             waitingTimeForNextCheckReached = true;
             lastCheckForUpdates = Calendar.getInstance().getTime();
         }
         return waitingTimeForNextCheckReached;
     }
 
-    public void renewMostRecentLocalUpdate(Date lastUpdate){
-        if (lastUpdate!=null && lastUpdate.after(mostRecentLocalUpdate)){
+    public void renewMostRecentLocalUpdate(Date lastUpdate) {
+        if (lastUpdate != null && lastUpdate.after(mostRecentLocalUpdate)) {
             mostRecentLocalUpdate = lastUpdate;
         }
     }

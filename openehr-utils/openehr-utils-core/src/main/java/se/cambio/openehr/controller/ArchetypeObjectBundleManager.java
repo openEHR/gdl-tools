@@ -65,8 +65,8 @@ public class ArchetypeObjectBundleManager {
                             archetypeManager.getTerminologyService(), archetypeManager.getUserConfigurationManager());
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+        } catch (Exception ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
@@ -82,8 +82,8 @@ public class ArchetypeObjectBundleManager {
                     new GenericObjectBundleADLSManager(flatArchetype, archetypeManager);
             ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLSManager.generateObjectBundleCustomVO();
             archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+        } catch (Exception ex) {
+            throw new InternalErrorException(ex);
         }
     }
 

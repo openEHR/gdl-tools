@@ -8,30 +8,30 @@ import org.openehr.rm.datatypes.quantity.datetime.DvTime;
 
 public class DVConverter {
 
-    public static DvDateTime getDvDateTime(Calendar cal){
-	return new DvDateTime(
-		cal.get(Calendar.YEAR),
-		cal.get(Calendar.MONTH)+1,
-		cal.get(Calendar.DAY_OF_MONTH),
-		cal.get(Calendar.HOUR_OF_DAY),
-		cal.get(Calendar.MINUTE),
-		cal.get(Calendar.SECOND),
-		cal.getTimeZone());
+    public static DvDateTime getDvDateTime(Calendar cal) {
+        return new DvDateTime(
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH) + 1,
+                cal.get(Calendar.DAY_OF_MONTH),
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE),
+                cal.get(Calendar.SECOND),
+                cal.getTimeZone());
     }
 
-    public static DvDate getDvDate(Calendar cal){
-	return new DvDate(
-		cal.get(Calendar.YEAR),
-		cal.get(Calendar.MONTH)+1,
-		cal.get(Calendar.DAY_OF_MONTH));
+    public static DvDate getDvDate(Calendar cal) {
+        return new DvDate(
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH) + 1,
+                cal.get(Calendar.DAY_OF_MONTH));
     }
 
-    public static DvTime getDvTime(Calendar cal){
-	return new DvTime(
-		cal.get(Calendar.HOUR_OF_DAY),
-		cal.get(Calendar.MINUTE),
-		cal.get(Calendar.SECOND),
-		cal.getTimeZone());
+    public static DvTime getDvTime(Calendar cal) {
+        return new DvTime(
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE),
+                cal.get(Calendar.SECOND),
+                cal.getTimeZone());
     }
 }
 /*

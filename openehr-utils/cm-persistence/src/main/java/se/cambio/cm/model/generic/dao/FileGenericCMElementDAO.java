@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-public class FileGenericCMElementDAO <E extends CMElement> implements GenericCMElementDAO<E>{
+public class FileGenericCMElementDAO<E extends CMElement> implements GenericCMElementDAO<E> {
 
     private Class<E> cmElementClass;
     private CmFolder cmFolder;
@@ -53,7 +53,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         }
         Collection<String> ids = new ArrayList<String>();
         File[] listOfFiles = getFolder().listFiles();
-		if(listOfFiles != null) {
+        if (listOfFiles != null) {
             for (File listOfFile : listOfFiles) {
                 if (listOfFile.isFile()) {
                     String fileName = listOfFile.getName();
@@ -64,7 +64,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
                     }
                 }
             }
-		}
+        }
         return ids;
     }
 
@@ -75,7 +75,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
             throw new FolderNotFoundException(getFolder().getAbsolutePath());
         }
         File[] listOfFiles = getFolder().listFiles();
-		if(listOfFiles != null) {
+        if (listOfFiles != null) {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
                     String fileName = file.getName();
@@ -92,7 +92,7 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
                     }
                 }
             }
-		}
+        }
         return cmElements;
     }
 
@@ -101,12 +101,12 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         ubis.skipBOM();
         String id = getId(fileName, fileExtension);
         String src = IOUtils.toString(ubis, "UTF-8");
-        return (E)new CMElementBuilder<E>()
-                        .setId(id)
-                        .setFormat(fileExtension)
-                        .setSource(src)
-                        .setLastUpdate(date)
-                        .createCMElement(cmElementClass);
+        return (E) new CMElementBuilder<E>()
+                .setId(id)
+                .setFormat(fileExtension)
+                .setSource(src)
+                .setLastUpdate(date)
+                .createCMElement(cmElementClass);
     }
 
     private String getId(String fileName, String fileExtension) {
@@ -114,8 +114,8 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     }
 
     private String matchingFileExtension(String fileName) throws InternalErrorException {
-        for(String fileExtension: getFileExtensions()){
-            if (fileName.endsWith("."+fileExtension)){
+        for (String fileExtension : getFileExtensions()) {
+            if (fileName.endsWith("." + fileExtension)) {
                 return fileExtension;
             }
         }
@@ -139,8 +139,8 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         File file = new File(getFolder(), cmElement.getId() + "." + cmElement.getFormat());
         try {
             Files.write(Paths.get(file.toURI()), cmElement.getSource().getBytes("UTF-8"));
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
+        } catch (IOException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
@@ -156,16 +156,16 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
     @Override
     public void removeAll() throws InternalErrorException {
         File[] listOfFiles = getFolder().listFiles();
-		if(listOfFiles != null) {
-			for (int i = 0; i < listOfFiles.length; i++) {
-				File file = listOfFiles[i];
-				String matchingExtension = matchingFileExtension(file.getName());
-				if (matchingExtension != null){
-					String id = getId(file.getName(), matchingExtension);
-					remove(id);
-				}
-			}
-		}
+        if (listOfFiles != null) {
+            for (int i = 0; i < listOfFiles.length; i++) {
+                File file = listOfFiles[i];
+                String matchingExtension = matchingFileExtension(file.getName());
+                if (matchingExtension != null) {
+                    String id = getId(file.getName(), matchingExtension);
+                    remove(id);
+                }
+            }
+        }
     }
 
     @Override
@@ -175,15 +175,15 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
         }
         Date lastModifiedDate = null;
         File[] listOfFiles = getFolder().listFiles();
-		if(listOfFiles != null) {
-			for (int i = 0; i < listOfFiles.length; i++) {
-				File file = listOfFiles[i];
-				Date date = new Date(file.lastModified());
-				if (lastModifiedDate == null || date.after(lastModifiedDate)){
-					lastModifiedDate = date;
-				}
-			}
-		}
+        if (listOfFiles != null) {
+            for (int i = 0; i < listOfFiles.length; i++) {
+                File file = listOfFiles[i];
+                Date date = new Date(file.lastModified());
+                if (lastModifiedDate == null || date.after(lastModifiedDate)) {
+                    lastModifiedDate = date;
+                }
+            }
+        }
         return lastModifiedDate;
     }
 
@@ -193,11 +193,11 @@ public class FileGenericCMElementDAO <E extends CMElement> implements GenericCME
 
     private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {
         Collection<String> foundIds = new ArrayList<String>();
-        for (CMElement cmElement: cmElements){
+        for (CMElement cmElement : cmElements) {
             foundIds.add(cmElement.getId());
         }
-        for(String id: ids){
-            if (!foundIds.contains(id)){
+        for (String id : ids) {
+            if (!foundIds.contains(id)) {
                 throw new InstanceNotFoundException(id, getCMElementClassName());
             }
         }

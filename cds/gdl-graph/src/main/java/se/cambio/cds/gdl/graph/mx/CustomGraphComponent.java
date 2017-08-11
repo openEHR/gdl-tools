@@ -27,9 +27,9 @@ public class CustomGraphComponent extends mxGraphComponent {
     protected void installDoubleClickHandler() {
         graphControl.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e) {
-                if (nodeExploder != null && !e.isConsumed() && isEditEvent(e)) {
-                    Object cell = getCellAt(e.getX(), e.getY(), false);
+            public void mouseReleased(MouseEvent ev) {
+                if (nodeExploder != null && !ev.isConsumed() && isEditEvent(ev)) {
+                    Object cell = getCellAt(ev.getX(), ev.getY(), false);
                     if (cell != null && getGraph().isCellEditable(cell)) {
                         String nodeLabel = (String) graph.getModel().getValue(cell);
                         if (nodeLabel != null) {
