@@ -13,7 +13,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine{
+public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, PredicateRuleLine {
 
     private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
     private ExistenceOperatorRuleLineElement existenceOperatorRuleLineElement = null;
@@ -25,7 +25,7 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
                 OpenEHRLanguageManager.getMessage("ElementPredicateExistsDesc"));
         archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         existenceOperatorRuleLineElement = new ExistenceOperatorRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"WithElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(existenceOperatorRuleLineElement);
     }
@@ -36,8 +36,7 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
 
     @Override
     public ArchetypeReference getArchetypeReference() {
-        return getArchetypeInstantiationRuleLine().
-                getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeInstantiationRuleLine().getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
     @Override
@@ -45,20 +44,20 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
         return archetypeElementRuleLineDefinitionElement.getValue();
     }
 
-    public ExistenceOperatorRuleLineElement getExistenceOperatorRuleLineElement(){
+    public ExistenceOperatorRuleLineElement getExistenceOperatorRuleLineElement() {
         return existenceOperatorRuleLineElement;
     }
 
     public ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+        return (ArchetypeInstantiationRuleLine) getParentRuleLine();
     }
 
-    public ExpressionItem toExpressionItem() throws IllegalStateException{
+    public ExpressionItem toExpressionItem() throws IllegalStateException {
         ArchetypeElementVO archetypeElementVO = getArchetypeElement();
-        if (archetypeElementVO!=null){
-            String path =  archetypeElementVO.getPath();
+        if (archetypeElementVO != null) {
+            String path = archetypeElementVO.getPath();
             OperatorKind operatorKind = getExistenceOperatorRuleLineElement().getOperator();
-            if (operatorKind==null){
+            if (operatorKind == null) {
                 throw new IllegalStateException("No operator set");
             }
             String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
@@ -66,33 +65,34 @@ public class WithElementPredicateExistsDefinitionRuleLine extends ExpressionRule
                     new Variable(null, name, path),
                     new ConstantExpression(NULL_STR),
                     operatorKind);
-        }else{
-            throw new IllegalStateException("Element instance not found for"+ this.toString());
+        } else {
+            throw new IllegalStateException("Element instance not found for" + this.toString());
         }
     }
 
     @Override
     public String getPredicateDescription() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         ArchetypeElementRuleLineDefinitionElement aerlde = getArchetypeElementRuleLineDefinitionElement();
-        if (aerlde!=null){
+        if (aerlde != null) {
             ArchetypeElementVO archetypeElementVO = aerlde.getValue();
-            if (archetypeElementVO!=null){
+            if (archetypeElementVO != null) {
                 OperatorKind operator = getExistenceOperatorRuleLineElement().getOperator();
                 String opStr = "??";
-                if (operator!=null){
+                if (operator != null) {
                     opStr = operator.getSymbol();
                 }
                 String name = aerlde.getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
-                sb.append(name+opStr+"null");
-            }else{
-                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '"+aerlde.toString()+"'");
+                sb.append(name).append(opStr).append("null");
+            } else {
+                LoggerFactory.getLogger(ArchetypeReference.class).warn("Unknown predicate for AR '" + aerlde.toString() + "'");
                 sb.append("*UNKNOWN PREDICATE*");
             }
         }
         return sb.toString();
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

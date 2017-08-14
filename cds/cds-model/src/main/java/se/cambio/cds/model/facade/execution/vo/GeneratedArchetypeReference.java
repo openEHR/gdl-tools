@@ -3,24 +3,21 @@ package se.cambio.cds.model.facade.execution.vo;
 import se.cambio.cds.model.instance.ArchetypeReference;
 
 
-public class GeneratedArchetypeReference extends ArchetypeReference{
+public class GeneratedArchetypeReference extends ArchetypeReference implements Cloneable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-    
+
     public GeneratedArchetypeReference(String idDomain, String idArchetype,
-	    String idTemplate) {
-	super(idDomain, idArchetype, idTemplate);
+                                       String idTemplate) {
+        super(idDomain, idArchetype, idTemplate);
     }
-    
-    public String toString(){
-	    return "(G)"+super.toString();
+
+    public String toString() {
+        return "(G)" + super.toString();
     }
 
     @Override
-    public GeneratedArchetypeReference clone(){
+    public GeneratedArchetypeReference clone() {
         return new GeneratedArchetypeReference(getIdDomain(), getIdArchetype(), getIdTemplate());
     }
 }

@@ -25,7 +25,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.util.OpenEHRConst;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.util.*;
@@ -66,22 +65,22 @@ public class ElementInstanceCollectionManager {
         boolean matches = matches(ar1, ar2, guideMap, date);
         if (!matches) {
             return false;
-        }//else continue with the filling
-        if (ar2 instanceof GeneratedArchetypeReference) {
-            //Set AR to empty elementInstances found
-            for (String idElement : ar1.getElementInstancesMap().keySet()) {
-                ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
-                ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
-                if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2 == null) {
-                    ei2 = ei1.clone();
-                    emptyElementInstances.add(ei2);
+        } else {
+            if (ar2 instanceof GeneratedArchetypeReference) {
+                for (String idElement : ar1.getElementInstancesMap().keySet()) {
+                    ElementInstance ei1 = ar1.getElementInstancesMap().get(idElement);
+                    ElementInstance ei2 = ar2.getElementInstancesMap().get(idElement);
+                    if (!(ei1 instanceof PredicateGeneratedElementInstance) && ei2 == null) {
+                        ei2 = ei1.clone();
+                        emptyElementInstances.add(ei2);
+                    }
+                    if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance) {
+                        ((GeneratedElementInstance) ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
+                    }
                 }
-                if (ei1 instanceof GeneratedElementInstance && ei2 instanceof GeneratedElementInstance) {
-                    ((GeneratedElementInstance) ei2).getRuleReferences().addAll(((GeneratedElementInstance) ei1).getRuleReferences());
+                for (ElementInstance elementInstance : emptyElementInstances) {
+                    elementInstance.setArchetypeReference(ar2);
                 }
-            }
-            for (ElementInstance elementInstance : emptyElementInstances) {
-                elementInstance.setArchetypeReference(ar2);
             }
         }
         return true;
@@ -111,43 +110,6 @@ public class ElementInstanceCollectionManager {
             }
             return true;
         }
-    }
-
-    private static Collection<Guide> getGuides(Map<String, Guide> guideMap, Set<String> guideIds) {
-        Collection<Guide> guides = new ArrayList<>();
-        for (String guideId : guideIds) {
-            Guide guide = guideMap.get(guideId);
-            guides.add(guide);
-        }
-        return guides;
-    }
-
-    private static DataValue getResolveDataValueIfNeeded(Map<String, Guide> guideMap, Calendar date, ElementInstance ei, Set<String> guideIds) {
-        DataValue dv = ei.getDataValue();
-        if (ei instanceof PredicateGeneratedElementInstance) {
-            Set<String> localGuideIds = new HashSet<>();
-            PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance) ei);
-            for (RuleReference ruleReference : pgei.getRuleReferences()) {
-                Guide guide = guideMap.get(ruleReference.getGuideId());
-                if (guide == null) {
-                    LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn("Null guideline for rule reference '" + ruleReference + "'");
-                } else {
-                    localGuideIds.add(guide.getId());
-                }
-            }
-            Collection<Guide> localGuides = new ArrayList<>();
-            for (String guideId : localGuideIds) {
-                Guide guide = guideMap.get(guideId);
-                localGuides.add(guide);
-            }
-            if (pgei.getOperatorKind().equals(OperatorKind.IS_A)) {
-                dv = ei.getDataValue(); //We do not resolve here IS_A codes, we do that during the dv matching
-            } else {
-                dv = resolvePredicate(ei.getDataValue(), pgei.getOperatorKind(), localGuides, date);
-            }
-            guideIds.addAll(localGuideIds);
-        }
-        return dv;
     }
 
     public boolean matches(
@@ -183,44 +145,24 @@ public class ElementInstanceCollectionManager {
         } else if (OperatorKind.INEQUAL.equals(operatorKind)) {
             return !DVUtil.equalDVs(dv1, dv2);
         } else if (OperatorKind.MAX.equals(operatorKind) || (OperatorKind.MIN.equals(operatorKind))) {
-            if (dv2 == null) {
-                return false;
-            } else {
-                return true;
-            }
+            return dv2 != null;
         } else if (OperatorKind.GREATER_THAN.equals(operatorKind)) {
-            if (dv2 == null) {
-                return false;
-            } else {
-                return DVUtil.compareDVs(dv1, dv2) < 0;
-            }
+            return dv2 != null && DVUtil.compareDVs(dv1, dv2) < 0;
         } else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(operatorKind)) {
-            if (dv2 == null) {
-                return false;
-            } else {
-                return DVUtil.compareDVs(dv1, dv2) <= 0;
-            }
+            return dv2 != null && DVUtil.compareDVs(dv1, dv2) <= 0;
         } else if (OperatorKind.LESS_THAN.equals(operatorKind)) {
-            if (dv2 == null) {
-                return false;
-            } else {
-                return DVUtil.compareDVs(dv1, dv2) > 0;
-            }
+            return dv2 != null && DVUtil.compareDVs(dv1, dv2) > 0;
         } else if (OperatorKind.LESS_THAN_OR_EQUAL.equals(operatorKind)) {
-            if (dv2 == null) {
-                return false;
-            } else {
-                return DVUtil.compareDVs(dv1, dv2) >= 0;
-            }
+            return dv2 != null && DVUtil.compareDVs(dv1, dv2) >= 0;
         }
         return false;
     }
 
     private static Set<CodePhrase> getResolvedCodePhrases(Collection<Guide> guides, CodePhrase predicateCodePhrase) {
         if (!"local".equals(predicateCodePhrase.getTerminologyId().getValue())) {
-            return Collections.singleton(predicateCodePhrase); //Already resolved
+            return Collections.singleton(predicateCodePhrase);
         }
-        Set<CodePhrase> codePhrases = new HashSet<CodePhrase>();
+        Set<CodePhrase> codePhrases = new HashSet<>();
         if (guides != null) {
             for (Guide guide : guides) {
                 if (guide.getOntology().getTermBindings() != null) {
@@ -270,23 +212,23 @@ public class ElementInstanceCollectionManager {
     private static DataValue getResolvedCurrentDateTime(DataValue dv, Calendar date) {
         CurrentTimeExpressionDataValue ctedv = ((CurrentTimeExpressionDataValue) dv);
         ExpressionItem expressionItem = ctedv.getExpressionItem();
-        String attribute = ctedv.getAttrbute();
         String expStr = ExpressionUtil.getArithmeticExpressionStr(null, expressionItem, null);
         date = (date != null ? date : Calendar.getInstance());
         DvDateTime currentDateTime = DataValueGenerator.toDvDateTime(date);
         JexlEngine engine = new JexlEngine();
         engine.setStrict(true);
-        Expression e = engine.createExpression(expStr);
+        Expression expression = engine.createExpression(expStr);
         JexlContext context = new MapContext();
         context.set("$" + OpenEHRConst.CURRENT_DATE_TIME_ID, currentDateTime);
         context.set("DVUtil", new DVUtil());
         context.set("Math", new MathFunctionProxy());
         context.set("e", Math.E);
         context.set("pi", Math.PI);
-        Object obj = e.evaluate(context);
+        Object obj = expression.evaluate(context);
         if (obj instanceof Double) {
             obj = ((Double) obj).longValue(); //In dates we never need double value
         }
+        String attribute = ctedv.getAttribute();
         currentDateTime = (DvDateTime) DataValueGenerator.createDV(currentDateTime, attribute, obj);
         return currentDateTime;
     }
@@ -336,6 +278,45 @@ public class ElementInstanceCollectionManager {
             return dvCT;
         }
     }
+
+
+    private static Collection<Guide> getGuides(Map<String, Guide> guideMap, Set<String> guideIds) {
+        Collection<Guide> guides = new ArrayList<>();
+        for (String guideId : guideIds) {
+            Guide guide = guideMap.get(guideId);
+            guides.add(guide);
+        }
+        return guides;
+    }
+
+    private static DataValue getResolveDataValueIfNeeded(Map<String, Guide> guideMap, Calendar date, ElementInstance ei, Set<String> guideIds) {
+        DataValue dv = ei.getDataValue();
+        if (ei instanceof PredicateGeneratedElementInstance) {
+            Set<String> localGuideIds = new HashSet<>();
+            PredicateGeneratedElementInstance pgei = ((PredicateGeneratedElementInstance) ei);
+            for (RuleReference ruleReference : pgei.getRuleReferences()) {
+                Guide guide = guideMap.get(ruleReference.getGuideId());
+                if (guide == null) {
+                    LoggerFactory.getLogger(ElementInstanceCollectionManager.class).warn("Null guideline for rule reference '" + ruleReference + "'");
+                } else {
+                    localGuideIds.add(guide.getId());
+                }
+            }
+            Collection<Guide> localGuides = new ArrayList<>();
+            for (String guideId : localGuideIds) {
+                Guide guide = guideMap.get(guideId);
+                localGuides.add(guide);
+            }
+            if (pgei.getOperatorKind().equals(OperatorKind.IS_A)) {
+                dv = ei.getDataValue();
+            } else {
+                dv = resolvePredicate(ei.getDataValue(), pgei.getOperatorKind(), localGuides, date);
+            }
+            guideIds.addAll(localGuideIds);
+        }
+        return dv;
+    }
+
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

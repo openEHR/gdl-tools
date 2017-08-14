@@ -2,47 +2,52 @@ package se.cambio.cds.model.instance;
 
 import java.io.Serializable;
 
-public class ContainerInstance implements Serializable{
+public class ContainerInstance implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     private String id = null;
     private ContainerInstance parentContainerInstance = null;
 
     public ContainerInstance(String id, ContainerInstance parentContainerInstance) {
-	super();
-	this.id = id;
-	this.parentContainerInstance = parentContainerInstance;
+        super();
+        this.id = id;
+        this.parentContainerInstance = parentContainerInstance;
     }
+
     public String getId() {
-	return id;
+        return id;
     }
+
     public void setId(String id) {
-	this.id = id;
+        this.id = id;
     }
 
     public ContainerInstance getParentContainerInstance() {
-	return parentContainerInstance;
+        return parentContainerInstance;
     }
+
     public void setParentContainerInstance(ContainerInstance parentContainerInstance) {
-	this.parentContainerInstance = parentContainerInstance;
+        this.parentContainerInstance = parentContainerInstance;
     }
-    public ContainerInstance clone(){
-	return new ContainerInstance(id, parentContainerInstance);
+
+    public ContainerInstance clone() {
+        return new ContainerInstance(id, parentContainerInstance);
     }
-    public boolean containsOrContainedIn(ContainerInstance containerInstance){
-	if (containerInstance!=null){
-	    ContainerInstance containerInstance2 = this;
-	    if (this.getId().length()>containerInstance.getId().length()){
-		containerInstance2 = containerInstance;
-		containerInstance = this;
-	    }
-	    while(containerInstance!=null && !containerInstance.equals(containerInstance2)){
-		containerInstance = containerInstance.getParentContainerInstance();
-	    }
-	    return containerInstance!=null && containerInstance.equals(containerInstance2);
-	}else{
-	    return false;
-	}
+
+    public boolean containsOrContainedIn(ContainerInstance containerInstance) {
+        if (containerInstance != null) {
+            ContainerInstance containerInstance2 = this;
+            if (this.getId().length() > containerInstance.getId().length()) {
+                containerInstance2 = containerInstance;
+                containerInstance = this;
+            }
+            while (containerInstance != null && !containerInstance.equals(containerInstance2)) {
+                containerInstance = containerInstance.getParentContainerInstance();
+            }
+            return containerInstance != null && containerInstance.equals(containerInstance2);
+        } else {
+            return false;
+        }
     }
 }
 /*

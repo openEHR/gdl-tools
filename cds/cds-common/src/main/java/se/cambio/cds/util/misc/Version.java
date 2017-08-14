@@ -1,9 +1,3 @@
-/*
- * Creado el 12-sep-2007
- *
-
-
- */
 package se.cambio.cds.util.misc;
 
 import lombok.extern.slf4j.Slf4j;

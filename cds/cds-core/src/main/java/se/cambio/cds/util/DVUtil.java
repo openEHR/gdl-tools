@@ -19,7 +19,6 @@ import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cm.configuration.TerminologyServiceConfiguration;
 import se.cambio.cm.controller.terminology.TerminologyService;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 import se.cambio.openehr.util.misc.DataValueGenerator;
 
 import java.math.BigDecimal;
@@ -33,7 +32,8 @@ public class DVUtil {
 
     private static Logger logger = LoggerFactory.getLogger(DVUtil.class);
 
-    public static DataValue createDV(ElementInstance elementInstance, String rmName, String attributeName, Object value) throws InternalErrorException {
+    public static DataValue createDV(
+            ElementInstance elementInstance, String rmName, String attributeName, Object value) {
         DataValue dv = elementInstance.getDataValue();
         if (dv == null) {
             dv = DataValueGenerator.getDummyDV(rmName);
@@ -88,10 +88,10 @@ public class DVUtil {
         }
     }
 
-    public static boolean nullValueEquals(DvCodedText nullFlavour, Object o) {
-        if (o instanceof DvCodedText) {
+    public static boolean nullValueEquals(DvCodedText nullFlavour, Object obj) {
+        if (obj instanceof DvCodedText) {
             if (nullFlavour != null) {
-                return DVUtil.equalDVs(nullFlavour, (DataValue) o);
+                return DVUtil.equalDVs(nullFlavour, (DataValue) obj);
             } else {
                 return false;
             }
@@ -102,20 +102,39 @@ public class DVUtil {
 
 
     @Deprecated
-    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
+    public static boolean isSubClassOf(
+            boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap,
+            DataValue... dataValues) {
         return isSubClassOf(inPredicate, ei, bindingsMap, null, dataValues);
     }
 
-    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, String bindReference, DataValue... dataValues) {
+    public static boolean isSubClassOf(
+            boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap,
+            String bindReference, DataValue... dataValues) {
         return isSubClassOfCached(inPredicate, ei, bindingsMap, false, bindReference, dataValues);
     }
 
-    public static boolean isSubClassOfCached(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, boolean negation, String bindReference, DataValue... dataValues) {
-        Map<String, Boolean> bindingMapByElementInstance = bindingsMap.get(ei);
-        if (bindingMapByElementInstance == null) {
-            bindingMapByElementInstance = new HashMap<>();
-            bindingsMap.put(ei, bindingMapByElementInstance);
+    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues) {
+        if (!inPredicate && ei instanceof PredicateGeneratedElementInstance) {
+            return false;
+        } else {
+            CodePhrase codePhrase = getCodePhrase(ei.getDataValue());
+            Set<CodePhrase> codePhrases = new HashSet<>();
+            for (DataValue dataValue : dataValues) {
+                codePhrases.add(getCodePhrase(dataValue));
+            }
+            if (codePhrase != null && !codePhrases.isEmpty()) {
+                return getTerminologyService().isSubclassOf(codePhrase, codePhrases);
+            } else {
+                return false;
+            }
         }
+    }
+
+    public static boolean isSubClassOfCached(
+            boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap,
+            boolean negation, String bindReference, DataValue... dataValues) {
+        Map<String, Boolean> bindingMapByElementInstance = bindingsMap.computeIfAbsent(ei, k -> new HashMap<>());
         String dataValueKey;
         if (bindReference != null) {
             dataValueKey = negation + bindReference;
@@ -177,29 +196,14 @@ public class DVUtil {
         }
     }
 
-    public static boolean isSubClassOf(boolean inPredicate, ElementInstance ei, DataValue... dataValues) {
-        if (!inPredicate && ei instanceof PredicateGeneratedElementInstance) {
-            return false;
-        } else {
-            CodePhrase a = getCodePhrase(ei.getDataValue());
-            Set<CodePhrase> codePhrases = new HashSet<>();
-            for (DataValue dataValue : dataValues) {
-                codePhrases.add(getCodePhrase(dataValue));
-            }
-            if (a != null && !codePhrases.isEmpty()) {
-                return getTerminologyService().isSubclassOf(a, codePhrases);
-            } else {
-                return false;
-            }
-        }
-    }
-
     @Deprecated
-    public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
+    public static boolean isNotSubClassOf(
+            boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, DataValue... dataValues) {
         return isNotSubClassOf(inPredicate, ei, bindingsMap, null, dataValues);
     }
 
-    public static boolean isNotSubClassOf(boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, String bindReference, DataValue... dataValues) {
+    public static boolean isNotSubClassOf(
+            boolean inPredicate, ElementInstance ei, Map<ElementInstance, Map<String, Boolean>> bindingsMap, String bindReference, DataValue... dataValues) {
         return isSubClassOfCached(inPredicate, ei, bindingsMap, true, bindReference, dataValues);
     }
 
@@ -207,13 +211,13 @@ public class DVUtil {
         if (ei instanceof PredicateGeneratedElementInstance) {
             return true;
         } else {
-            CodePhrase a = getCodePhrase(ei.getDataValue());
+            CodePhrase codePhrase = getCodePhrase(ei.getDataValue());
             Set<CodePhrase> codePhrases = new HashSet<>();
             for (DataValue dataValue : dataValues) {
                 codePhrases.add(getCodePhrase(dataValue));
             }
-            if (a != null && !codePhrases.isEmpty()) {
-                return !getTerminologyService().isSubclassOf(a, codePhrases);
+            if (codePhrase != null && !codePhrases.isEmpty()) {
+                return !getTerminologyService().isSubclassOf(codePhrase, codePhrases);
             } else {
                 return false;
             }
@@ -252,12 +256,13 @@ public class DVUtil {
             } else {
                 return false;
             }
-        } else
+        } else {
             return dv1 instanceof DvCount && dv2 instanceof DvCount
                     || dv1 instanceof DvTemporal<?> && dv2 instanceof DvTemporal<?>
                     || dv1 instanceof DvDuration && dv2 instanceof DvDuration
                     || dv1 instanceof DvProportion && dv2 instanceof DvProportion
                     || dv1 instanceof DvOrdinal && dv2 instanceof DvOrdinal;
+        }
     }
 
     public static double round(double unroundedDouble, int precision) {
@@ -417,9 +422,12 @@ public class DVUtil {
             return operationDataValue.getDateTime();
         } else {
             if (operationDataValue == null) {
-                throw new IllegalArgumentException(format("Cannot use null data value to evaluate expression %s", value));
+                throw new IllegalArgumentException(
+                        format("Cannot use null data value to evaluate expression %s", value));
             } else {
-                throw new IllegalArgumentException(format("Cannot use data value with class %s to evaluate expression %s", operationDataValue.getClass().getName(), value));
+                throw new IllegalArgumentException(
+                        format("Cannot use data value with class %s to evaluate expression %s",
+                                operationDataValue.getClass().getName(), value));
             }
         }
     }

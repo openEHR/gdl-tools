@@ -1,156 +1,73 @@
 package se.cambio.cds.gdl.model.expression;
 
 
-/**
- * This class represents a binary expression that has two operands, 
- * left and right, and an operator.
- * 
- * @author rong.chen
- *
- */
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class BinaryExpression extends ExpressionItem {
-	
-	/**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
-	public static BinaryExpression create(ExpressionItem left, ExpressionItem right,
-			OperatorKind operator) {
-		return new BinaryExpression(left, right, operator);
-	}
-	
-	public BinaryExpression(ExpressionItem left, ExpressionItem right,
-			OperatorKind operator) {
-		this.left = left;
-		this.right = right;
-		this.operator = operator;
-	}
-	
-	/**
-	 * @return the left
-	 */
-	public ExpressionItem getLeft() {
-		return left;
-	}
-	/**
-	 * @param left the left to set
-	 */
-	public void setLeft(ExpressionItem left) {
-		this.left = left;
-	}
-	/**
-	 * @return the right
-	 */
-	public ExpressionItem getRight() {
-		return right;
-	}
-	/**
-	 * @param right the right to set
-	 */
-	public void setRight(ExpressionItem right) {
-		this.right = right;
-	}
-	/**
-	 * @return the operator
-	 */
-	public OperatorKind getOperator() {
-		return operator;
-	}
-	/**
-	 * @param operator the operator to set
-	 */
-	public void setOperator(OperatorKind operator) {
-		this.operator = operator;
-	}
-	
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		if(left instanceof BinaryExpression
-				|| left instanceof UnaryExpression
-				|| left instanceof FunctionalExpression) {
-			buf.append("(");
-			buf.append(left.toString());
-			buf.append(")");
-		} else {
-		    if (left!=null){
-			buf.append(left.toString());
-		    }else{
-			throw new IllegalStateException("Left item == null");
-		    }
-		}
-		
-		if(OperatorKind.IS_A == operator) {
-			buf.append(" ");
-		}
-		if (operator!=null){
-		    buf.append(operator.getSymbol());
-		}else{
-		    throw new IllegalStateException("Operator == null");
-		}
-		if(OperatorKind.IS_A == operator) {
-			buf.append(" ");
-		}
+    private ExpressionItem left;
+    private ExpressionItem right;
+    private OperatorKind operator;
 
-		if(right instanceof BinaryExpression
-				|| right instanceof UnaryExpression
-				|| right instanceof FunctionalExpression) {
-			buf.append("(");
-			buf.append(right.toString());
-			buf.append(")");
-		} else {
-		    if (right!=null){
-			buf.append(right.toString());
-		    }else{
-			throw new IllegalStateException("Right item == null");
-		    }
-		}
-		return buf.toString();
-	}
+    public static BinaryExpression create(ExpressionItem left, ExpressionItem right,
+                                          OperatorKind operator) {
+        return new BinaryExpression(left, right, operator);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((left == null) ? 0 : left.hashCode());
-		result = prime * result
-				+ ((operator == null) ? 0 : operator.hashCode());
-		result = prime * result + ((right == null) ? 0 : right.hashCode());
-		return result;
-	}
+    public BinaryExpression(ExpressionItem left, ExpressionItem right,
+                            OperatorKind operator) {
+        this.left = left;
+        this.right = right;
+        this.operator = operator;
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BinaryExpression other = (BinaryExpression) obj;
-		if (left == null) {
-			if (other.left != null)
-				return false;
-		} else if (!left.equals(other.left))
-			return false;
-		if (operator != other.operator)
-			return false;
-		if (right == null) {
-			if (other.right != null)
-				return false;
-		} else if (!right.equals(other.right))
-			return false;
-		return true;
-	}
-	
-	private ExpressionItem left;
-	private ExpressionItem right;
-	private OperatorKind operator;	
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        if (left instanceof BinaryExpression
+                || left instanceof UnaryExpression
+                || left instanceof FunctionalExpression) {
+            buf.append("(");
+            buf.append(left.toString());
+            buf.append(")");
+        } else {
+            if (left != null) {
+                buf.append(left.toString());
+            } else {
+                throw new IllegalStateException("Left item == null");
+            }
+        }
+
+        if (OperatorKind.IS_A == operator) {
+            buf.append(" ");
+        }
+        if (operator != null) {
+            buf.append(operator.getSymbol());
+        } else {
+            throw new IllegalStateException("Operator == null");
+        }
+        if (OperatorKind.IS_A == operator) {
+            buf.append(" ");
+        }
+
+        if (right instanceof BinaryExpression
+                || right instanceof UnaryExpression
+                || right instanceof FunctionalExpression) {
+            buf.append("(");
+            buf.append(right.toString());
+            buf.append(")");
+        } else {
+            if (right != null) {
+                buf.append(right.toString());
+            } else {
+                throw new IllegalStateException("Right item == null");
+            }
+        }
+        return buf.toString();
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -3,9 +3,9 @@ package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
 import se.cambio.cds.model.instance.ArchetypeReference;
 
 
-public interface ArchetypeReferenceRuleLine{
-    
-    public abstract ArchetypeReference getArchetypeReference();
+public interface ArchetypeReferenceRuleLine {
+
+    ArchetypeReference getArchetypeReference();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

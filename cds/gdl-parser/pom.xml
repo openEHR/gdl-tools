@@ -23,6 +23,14 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.4</version>
+				<configuration>
+					<onlyAnalyze>se.cambio.cds.gdl.parser</onlyAnalyze>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>

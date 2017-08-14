@@ -4,21 +4,18 @@ import org.openehr.rm.datatypes.quantity.DvQuantity;
 
 public class QuantityConstant extends ConstantExpression {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-	public QuantityConstant(DvQuantity quantity) {
-		super(quantity.toString());
-		this.quantity = quantity;
-	}
-	
-	public DvQuantity getQuantity() {
-		return new DvQuantity(this.quantity.getUnits(), this.quantity.getMagnitude(), this.quantity.getPrecision());
-	}
-	
-	private DvQuantity quantity;
+    public QuantityConstant(DvQuantity quantity) {
+        super(quantity.toString());
+        this.quantity = quantity;
+    }
+
+    public DvQuantity getQuantity() {
+        return new DvQuantity(this.quantity.getUnits(), this.quantity.getMagnitude(), this.quantity.getPrecision());
+    }
+
+    private DvQuantity quantity;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -72,9 +72,9 @@ public class EhrDataFilterManager {
         for (ArchetypeReference archetypeReference : ehrData) {
             boolean useAR = true;
             DateTime dateTime = dateTimeARFinder.getDateTime(archetypeReference);
-            if (dateTime == null ||
-                    endDateTime != null && dateTime.isAfter(endDateTime) ||
-                    startDateTime != null && dateTime.isBefore(startDateTime)) {
+            if (dateTime == null
+                    || endDateTime != null && dateTime.isAfter(endDateTime)
+                    || startDateTime != null && dateTime.isBefore(startDateTime)) {
                 useAR = false;
                 if (dateTime == null) {
                     LoggerFactory.getLogger(EhrDataFilterManager.class).warn("Date time for Archetype Reference " + archetypeReference.getIdArchetype() + " is null!");

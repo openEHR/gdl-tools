@@ -1,10 +1,13 @@
 package se.cambio.cds.model.instance;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ArchetypeReference implements Serializable{
+@Data
+public class ArchetypeReference implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     private String idDomain = null;
@@ -18,55 +21,44 @@ public class ArchetypeReference implements Serializable{
         this.idTemplate = idTemplate;
     }
 
-    protected void addElementInstance(ElementInstance ei){
+    protected void addElementInstance(ElementInstance ei) {
         getElementInstancesMap().put(ei.getId(), ei);
     }
 
-    protected void removeElementInstance(ElementInstance ei){
+    protected void removeElementInstance(ElementInstance ei) {
         getElementInstancesMap().remove(ei.getId());
     }
 
-    public Map<String,ElementInstance> getElementInstancesMap(){
+    public Map<String, ElementInstance> getElementInstancesMap() {
         if (elementInstancesMap == null) {
             elementInstancesMap = new HashMap<>();
         }
         return elementInstancesMap;
     }
 
-    public String getIdDomain() {
-        return idDomain;
+    @Override
+    public ArchetypeReference clone() {
+        try {
+            ArchetypeReference clone = (ArchetypeReference) super.clone();
+            clone.setIdArchetype(idArchetype);
+            clone.setIdTemplate(idTemplate);
+            clone.setIdDomain(idDomain);
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
-    public String getIdArchetype() {
-        return idArchetype;
-    }
-
-    public void setIdArchetype(String idArchetype) {
-        this.idArchetype = idArchetype;
-    }
-
-    public String getIdTemplate() {
-        return idTemplate;
-    }
-
-    public void setIdTemplate(String idTemplate) {
-        this.idTemplate = idTemplate;
-    }
-
-
-    public ArchetypeReference clone(){
-        return new ArchetypeReference(idDomain, idArchetype, idTemplate);
-    }
-
-    public String toString(){
-        StringBuffer sb = new StringBuffer();
-        sb.append(idArchetype+", "+idDomain);
-        if (idTemplate!=null){
-            sb.append(", "+idTemplate);
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(idArchetype).append(", ").append(idDomain);
+        if (idTemplate != null) {
+            sb.append(", " + idTemplate);
         }
         sb.append("\n");
         for (String idElement : getElementInstancesMap().keySet()) {
-            sb.append(getElementInstancesMap().get(idElement).toString()+"\n");
+            sb.append(getElementInstancesMap().get(idElement).toString() + "\n");
         }
         return sb.toString();
     }

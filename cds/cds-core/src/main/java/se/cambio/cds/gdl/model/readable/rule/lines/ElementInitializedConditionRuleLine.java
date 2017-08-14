@@ -9,7 +9,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ElementInitializedConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine{
+public class ElementInitializedConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ExistenceOperatorRuleLineElement existenceOperatorRuleLineElement = null;
@@ -20,26 +20,26 @@ public class ElementInitializedConditionRuleLine extends ExpressionRuleLine impl
                 OpenEHRLanguageManager.getMessage("ElementExistsDesc"));
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         existenceOperatorRuleLineElement = new ExistenceOperatorRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(existenceOperatorRuleLineElement);
     }
 
-    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
+    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement() {
         return archetypeElementRuleLineElement;
     }
 
-    public ExistenceOperatorRuleLineElement getExistenceOperatorRuleLineElement(){
+    public ExistenceOperatorRuleLineElement getExistenceOperatorRuleLineElement() {
         return existenceOperatorRuleLineElement;
     }
 
-    public ExpressionItem toExpressionItem() throws IllegalStateException{
+    public ExpressionItem toExpressionItem() throws IllegalStateException {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             String gtCode =
                     getArchetypeElementRuleLineElement().getValue().getValue();
             OperatorKind operatorKind = getExistenceOperatorRuleLineElement().getOperator();
-            if (operatorKind==null){
+            if (operatorKind == null) {
                 throw new IllegalStateException("No operator set");
             }
             String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
@@ -47,11 +47,12 @@ public class ElementInitializedConditionRuleLine extends ExpressionRuleLine impl
                     new Variable(gtCode, null, name),
                     new ConstantExpression(NULL_STR),
                     operatorKind);
-        }else{
-            throw new IllegalStateException("Element instance not found for"+ this.toString());
+        } else {
+            throw new IllegalStateException("Element instance not found for" + this.toString());
         }
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

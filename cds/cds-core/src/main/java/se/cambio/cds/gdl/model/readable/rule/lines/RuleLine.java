@@ -5,7 +5,6 @@ import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.RuleLineCollection;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
 
@@ -44,13 +43,13 @@ public abstract class RuleLine {
     }
 
     public String toString() {
-        String language = getLanguage(); //TODO Remove
+        String language = getLanguage();
         StringBuffer sb = new StringBuffer();
-        int i = 0;
+        int index = 0;
         for (RuleLineElement ruleLineElement : ruleLineElements) {
             sb.append(ruleLineElement.getLabelText(language));
-            i++;
-            if (i < ruleLineElements.size()) {
+            index++;
+            if (index < ruleLineElements.size()) {
                 sb.append(" ");
             }
         }
@@ -62,21 +61,21 @@ public abstract class RuleLine {
     }
 
     public String toHTMLString(int level, String lang) {
-        StringBuffer sb = new StringBuffer();
-        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
         sb.append(getLevelSpace(level));
         for (RuleLineElement ruleLineElement : ruleLineElements) {
             sb.append(ruleLineElement.getLabelTextHTML(lang));
-            i++;
-            if (i < ruleLineElements.size()) {
+            index++;
+            if (index < ruleLineElements.size()) {
                 sb.append(" ");
             }
         }
         return sb.toString();
     }
 
-    protected String getLevelSpace(int level) {
-        StringBuffer sb = new StringBuffer();
+    String getLevelSpace(int level) {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < level; i++) {
             sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
         }

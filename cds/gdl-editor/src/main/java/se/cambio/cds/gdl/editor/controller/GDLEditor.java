@@ -839,7 +839,6 @@ public class GDLEditor implements EditorController<Guide> {
         }
         guideOntology.setTermDefinitions(termDefinitions);
         guideOntology.setTermBindings(termBindings);
-        generateGTCodesForArchetypeBindings(guide);
         updateReadableGuide(guide);
         initResourceDescription();
         updateOriginal();
@@ -1073,24 +1072,6 @@ public class GDLEditor implements EditorController<Guide> {
         termBindings = null;
         readableGuide = null;
         ruleAtEdit = null;
-    }
-
-    private void generateGTCodesForArchetypeBindings(Guide guide) {
-        if (guide.getDefinition() != null && guide.getDefinition().getArchetypeBindings() != null) {
-            List<String> abCodes = new ArrayList<>();
-            abCodes.addAll(guide.getDefinition().getArchetypeBindings().keySet());
-            Collections.sort(abCodes);
-            int gtNum = getNextTermNumber();
-            for (String abCode : abCodes) {
-                if (abCode.startsWith(GuideDefinition.ARCHETYPE_BINDING_PREFIX)) {
-                    ArchetypeBinding archetypeBinding = guide.getDefinition().getArchetypeBindings().get(abCode);
-                    String gtCode = GT_HEADER + StringUtils.leftPad("" + (gtNum++), 4, "0");
-                    guide.getDefinition().getArchetypeBindings().remove(abCode);
-                    archetypeBinding.setId(gtCode);
-                    guide.getDefinition().getArchetypeBindings().put(gtCode, archetypeBinding);
-                }
-            }
-        }
     }
 
     public boolean isModified() {

@@ -53,14 +53,20 @@ public class ArchetypeReferencesManager {
 
         String path = getTotalPath(archetypeElementVO, archetypeDTO);
 
-        return "<html><table width=500>" +
-                "<tr><td><b>" + OpenEHRLanguageManager.getMessage("Name") + ": </b>" + elementName + "</td><td><b>" + OpenEHRLanguageManager.getMessage("Archetype") + ": </b>" + OpenEHRImageUtil.getImgHTMLTag(archetypeImageName) + "&nbsp;" + archetypeName + "</td></tr>" +
-                "<tr><td><b>" + OpenEHRLanguageManager.getMessage("DataValue") + ": </b>" + OpenEHRImageUtil.getImgHTMLTag(dataValueImageName) + "&nbsp;" + OpenEHRDataValuesUI.getName(archetypeElementVO.getRMType()) + "</td><td><b>" + OpenEHRLanguageManager.getMessage("Occurrences") + ": </b>" + cardinalityStr + "</td></tr>" +
-                (units != null ? "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Units") + ": </b>" + units + "</td></tr>" : "") +
-                "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Path") + ": </b>" + path + "</td></tr>" +
-                "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Description") + ": </b>" + elementDesc + "</td></tr>" +
-                (extraLines != null ? extraLines : "") +
-                "</table></html>";
+        return "<html><table width=500>"
+                + "<tr><td><b>" + OpenEHRLanguageManager.getMessage("Name") + ": </b>" + elementName + "</td><td><b>"
+                + OpenEHRLanguageManager.getMessage("Archetype") + ": </b>"
+                + OpenEHRImageUtil.getImgHTMLTag(archetypeImageName) + "&nbsp;" + archetypeName + "</td></tr>"
+                + "<tr><td><b>" + OpenEHRLanguageManager.getMessage("DataValue") + ": </b>"
+                + OpenEHRImageUtil.getImgHTMLTag(dataValueImageName) + "&nbsp;"
+                + OpenEHRDataValuesUI.getName(archetypeElementVO.getRMType()) + "</td><td><b>"
+                + OpenEHRLanguageManager.getMessage("Occurrences") + ": </b>" + cardinalityStr + "</td></tr>"
+                + (units != null ? "<tr><td colspan=2><b>"
+                        + OpenEHRLanguageManager.getMessage("Units") + ": </b>" + units + "</td></tr>" : "")
+                + "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Path") + ": </b>" + path + "</td></tr>"
+                + "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Description") + ": </b>" + elementDesc + "</td></tr>"
+                + (extraLines != null ? extraLines : "")
+                + "</table></html>";
     }
 
     private String getTotalPath(ArchetypeElementVO archetypeElementVO, ArchetypeDTO archetypeDTO) {

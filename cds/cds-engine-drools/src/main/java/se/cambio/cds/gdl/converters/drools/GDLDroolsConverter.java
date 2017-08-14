@@ -10,7 +10,6 @@ import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
-import se.cambio.openehr.controller.session.data.ArchetypeElements;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
@@ -46,7 +45,7 @@ public class GDLDroolsConverter {
     private int creationIndex;
     private String preconditionMVEL;
 
-    public static ArchetypeElementVO CURRENT_DATE_TIME =
+    public static final ArchetypeElementVO CURRENT_DATE_TIME =
             new ArchetypeElementVOBuilder()
                     .setName(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
                     .setDescription(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
@@ -68,7 +67,10 @@ public class GDLDroolsConverter {
     }
 
     private static String getComparisonString(String handle, String value) {
-        return "DVUtil.compatibleComparison(" + handle + getDataValueStrIfNeeded(handle) + ", $auxDV=" + value + getDataValueStrIfNeeded(value) + ") && " + "DVUtil.compareDVs(" + handle + ".getDataValue(), $auxDV)";
+        return "DVUtil.compatibleComparison("
+                + handle + getDataValueStrIfNeeded(handle)
+                + ", $auxDV=" + value + getDataValueStrIfNeeded(value)
+                + ") && " + "DVUtil.compareDVs(" + handle + ".getDataValue(), $auxDV)";
     }
 
     private static String getDataValueStrIfNeeded(String value) {
@@ -80,11 +82,11 @@ public class GDLDroolsConverter {
     }
 
     static boolean isString(String rmName, String attribute) {
-        return (OpenEHRDataValues.DV_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
-                (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute)) ||
-                OpenEHRDataValues.UNITS_ATT.equals(attribute) ||
-                OpenEHRDataValues.CODE_ATT.equals(attribute) ||
-                OpenEHRDataValues.TEMINOLOGYID_ATT.equals(attribute);
+        return (OpenEHRDataValues.DV_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute))
+                || (OpenEHRDataValues.DV_CODED_TEXT.equals(rmName) && OpenEHRDataValues.VALUE_ATT.equals(attribute))
+                || OpenEHRDataValues.UNITS_ATT.equals(attribute)
+                || OpenEHRDataValues.CODE_ATT.equals(attribute)
+                || OpenEHRDataValues.TEMINOLOGYID_ATT.equals(attribute);
     }
 
     protected Guide getGuide() {
@@ -157,14 +159,13 @@ public class GDLDroolsConverter {
     private void insertDefaultActionsRule() {
         List<AssignmentExpression> defaultActions = guide.getDefinition().getDefaultActionExpressions();
         if (!defaultActions.isEmpty()) {
-            Map<RefStat, Set<String>> ruleStats = initStats();
-            String defaultActionsStr = convertAssignmentExpressionsToMVEL(defaultActions, ruleStats);
-            String definition = getDefinitionForRule(ruleStats);
             sb.append(RULE + " \"").append(guide.getId()).append("/").append(DEFAULT_RULE_CODE).append("\"\n");
             String guideSalienceId = getGuideSalienceId(guide.getId());
             sb.append(SALIENCE + " ").append(guideSalienceId).append(" + 9999\n");
             sb.append(DEFAULT_CONFIG + "\n");
             sb.append(WHEN + "\n");
+            Map<RefStat, Set<String>> ruleStats = initStats();
+            String definition = getDefinitionForRule(ruleStats);
             sb.append(definition);
             String functionExtraCode = getFunctionExtraCode(ruleStats);
             if (functionExtraCode != null) {
@@ -173,6 +174,7 @@ public class GDLDroolsConverter {
             sb.append(preconditionMVEL);
             appendFiredRuleCondition(sb, true, DEFAULT_RULE_CODE);
             sb.append(THEN + "\n");
+            String defaultActionsStr = convertAssignmentExpressionsToMVEL(defaultActions, ruleStats);
             sb.append(defaultActionsStr);
             sb.append(getFiredRuleWMInsertion(DEFAULT_RULE_CODE));
             sb.append(END + "\n\n");
@@ -187,30 +189,28 @@ public class GDLDroolsConverter {
         String preconditionStr = preconditionMVEL;
         for (Rule rule : guide.getDefinition().getRules().values()) {
             Map<RefStat, Set<String>> ruleStats = initStats();
-            String whenStr = convertExpressionsToMVEL(rule.getWhenStatements(), ruleStats);
-            String thenStr = convertAssignmentExpressionsToMVEL(rule.getThenStatements(), ruleStats);
-            String definition = getDefinitionForRule(ruleStats);
             ruleStats.get(RefStat.ATT_SET_REF).remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
-            String hasValueChecks =
-                    getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
-            String functionExtraCode = getFunctionExtraCode(ruleStats);
-
             sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
             sb.append(DEFAULT_CONFIG + "\n");
             String guideSalienceId = getGuideSalienceId(guide.getId());
             int salienceModifier = guide.getDefinition().getRules().size() + 1 - rule.getPriority();
             sb.append(SALIENCE).append(" ").append(guideSalienceId).append(" - ").append(salienceModifier).append("\n");
             sb.append(WHEN + "\n");
+            String definition = getDefinitionForRule(ruleStats);
             sb.append(definition);
+            String functionExtraCode = getFunctionExtraCode(ruleStats);
             if (functionExtraCode != null) {
                 sb.append(functionExtraCode);
             }
+            String hasValueChecks = getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
             if (hasValueChecks != null) {
                 sb.append(hasValueChecks);
             }
             sb.append(preconditionStr);
+            String whenStr = convertExpressionsToMVEL(rule.getWhenStatements(), ruleStats);
             sb.append(whenStr);
             sb.append(THEN + "\n");
+            String thenStr = convertAssignmentExpressionsToMVEL(rule.getThenStatements(), ruleStats);
             sb.append(thenStr);
             sb.append(getFiredRuleWMInsertion(rule.getId()));
             sb.append(END + "\n\n");
@@ -260,7 +260,13 @@ public class GDLDroolsConverter {
                 ArchetypeElementVO value = archetypeManager.getArchetypeElements().getArchetypeElement(
                         archetypeBinding.getTemplateId(), idElement);
                 getElementMap().put(element.getId(), value);
-                elementDefinitionSB.append("ElementInstance(id==\"").append(idElement).append("\", archetypeReference==$").append(ARCHETYPE_REFERENCE_ID).append("_").append(archetypeReferenceGTCode).append(")");
+                elementDefinitionSB.append("ElementInstance(id==\"")
+                        .append(idElement)
+                        .append("\", archetypeReference==$")
+                        .append(ARCHETYPE_REFERENCE_ID)
+                        .append("_")
+                        .append(archetypeReferenceGTCode)
+                        .append(")");
                 _gtElementToDefinition.put(element.getId(), elementDefinitionSB.toString());
                 gtElementToArchetypeBindingGtCode.put(element.getId(), archetypeReferenceGTCode);
             }
@@ -414,8 +420,8 @@ public class GDLDroolsConverter {
             sb.append("forall(");
             processExpressionItem(sb, unaryExpression.getOperand(), stats);
             sb.append(")");
-        } else if (OperatorKind.FIRED.equals(unaryExpression.getOperator()) ||
-                OperatorKind.NOT_FIRED.equals(unaryExpression.getOperator())) {
+        } else if (OperatorKind.FIRED.equals(unaryExpression.getOperator())
+                || OperatorKind.NOT_FIRED.equals(unaryExpression.getOperator())) {
             if (!(unaryExpression.getOperand() instanceof Variable)) {
                 throw new RuntimeException(format("Expected variable inside fired() operation. Instead got '%s'", unaryExpression.getOperand().getClass().getSimpleName()));
             }
@@ -491,8 +497,19 @@ public class GDLDroolsConverter {
                         //Remove last ' and\n'+TAB
                         defAux = defAux.substring(0, defAux.length() - 5 - TAB.length());
                     }*/
-                    sb.append(TAB);
-                    sb.append("Number($").append(code).append(att).append(":intValue) from accumulate (\n").append(TAB).append(defAux).append(",\n").append(TAB).append(TAB).append("count($count_").append(code).append("))\n");
+                    sb.append(TAB)
+                            .append("Number($")
+                            .append(code)
+                            .append(att)
+                            .append(":intValue) from accumulate (\n")
+                            .append(TAB)
+                            .append(defAux)
+                            .append(",\n")
+                            .append(TAB)
+                            .append(TAB)
+                            .append("count($count_")
+                            .append(code)
+                            .append("))\n");
                 }
             }
         }
@@ -557,42 +574,25 @@ public class GDLDroolsConverter {
         }
     }
 
-    /*
-     * Parse code from string value and generate right
-     * code_phrase array for subClass evaluation
-     *
-     * possible values:
-     * 1. new DvCodedText("Dubois and Dubois","local","gt0008")
-     * 2. new DvText("local::gt0100")
-     * 2. new DvText("local::gt0100|Hypertension|")
-     */
     String parseCode(String value) {
-        int i = value.indexOf("local");
-
+        int index = value.indexOf("local");
         log.debug("value after IS_A: " + value);
-
-        if (i < 0) {
+        if (index < 0) {
             return value;
         }
-
         String code;
-
-
         if (value.contains("DvCodedText")) {
-            code = value.substring(i + 8, value.length() - 2);
+            code = value.substring(index + 8, value.length() - 2);
         } else if (value.contains("'")) { // due to a logic somewhere in gdl-editor introducing single quotation to code_phrase
-            code = value.substring(i + 7, value.length() - 3);
+            code = value.substring(index + 7, value.length() - 3);
         } else {
-            code = value.substring(i + 7, value.length() - 2);
+            code = value.substring(index + 7, value.length() - 2);
         }
-
-        int j = code.indexOf("|");
-        if (j > 0) {
-            code = code.substring(0, j);
+        int index2 = code.indexOf("|");
+        if (index2 > 0) {
+            code = code.substring(0, index2);
         }
-
         log.debug("code parsed from value: " + code);
-
         return code;
     }
 

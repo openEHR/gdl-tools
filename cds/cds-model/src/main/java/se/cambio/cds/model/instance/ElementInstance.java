@@ -5,7 +5,7 @@ import org.openehr.rm.datatypes.text.DvCodedText;
 
 import java.io.Serializable;
 
-public class ElementInstance implements Serializable{
+public class ElementInstance implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 2052012L;
     private String id = null;
@@ -26,33 +26,41 @@ public class ElementInstance implements Serializable{
         this.containerInstance = containerInstance;
         setArchetypeReference(archetypeReference);
     }
+
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public ArchetypeReference getArchetypeReference() {
         return archetypeReference;
     }
+
     public void setArchetypeReference(ArchetypeReference archetypeReference) {
-        if (this.archetypeReference!=null){
+        if (this.archetypeReference != null) {
             this.archetypeReference.removeElementInstance(this);
         }
         this.archetypeReference = archetypeReference;
-        if (archetypeReference!=null){
+        if (archetypeReference != null) {
             archetypeReference.addElementInstance(this);
         }
     }
+
     public ContainerInstance getContainerInstance() {
         return containerInstance;
     }
+
     public void setContainerInstance(ContainerInstance containerInstance) {
         this.containerInstance = containerInstance;
     }
+
     public DataValue getDataValue() {
         return dataValue;
     }
+
     public void setDataValue(DataValue dataValue) {
         this.dataValue = dataValue;
     }
@@ -65,31 +73,43 @@ public class ElementInstance implements Serializable{
         this.nullFlavour = nullFlavour;
     }
 
-    public boolean hasValue(){
-        return this.dataValue!=null;
+    public boolean hasValue() {
+        return this.dataValue != null;
     }
 
-    public boolean hasNoValue(){
-        return this.dataValue==null;
+    public boolean hasNoValue() {
+        return this.dataValue == null;
     }
 
-    public boolean hasNoValue(String gtCodeReference){
+    public boolean hasNoValue(String gtCodeReference) {
         return hasNoValue(); //We don't care about the code reference (see GeneratedElementInstance)
     }
 
-    public ElementInstance clone(){
-        return new ElementInstance(id, dataValue, archetypeReference.clone(), containerInstance, nullFlavour);
+    @Override
+    public ElementInstance clone() {
+        try {
+            ElementInstance clone = (ElementInstance) super.clone();
+            clone.setId(id);
+            clone.setDataValue(dataValue);
+            clone.setArchetypeReference(archetypeReference.clone());
+            clone.setContainerInstance(containerInstance);
+            clone.setNullFlavour(nullFlavour);
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
-    public boolean isPredicate(){
+    public boolean isPredicate() {
         return false;
     }
 
-    public String toString(){
-        return "id="+id+"\n"+
-                "dataValue="+dataValue+"\n"+
-                "containerInstance="+containerInstance+"\n"+
-                "nullFlavour="+nullFlavour;
+    @Override
+    public String toString() {
+        return "id=" + id + "\n"
+                + "dataValue=" + dataValue + "\n"
+                + "containerInstance=" + containerInstance + "\n"
+                + "nullFlavour=" + nullFlavour;
     }
 }
 /*

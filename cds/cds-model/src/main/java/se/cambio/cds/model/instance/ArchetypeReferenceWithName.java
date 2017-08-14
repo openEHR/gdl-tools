@@ -3,7 +3,7 @@ package se.cambio.cds.model.instance;
 import java.util.Collection;
 
 
-public class ArchetypeReferenceWithName extends ArchetypeReference{
+public class ArchetypeReferenceWithName extends ArchetypeReference {
 
     private static final long serialVersionUID = 1L;
     private String name = null;
@@ -16,7 +16,7 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
         this.rmName = rmName;
     }
 
-    public void init(){
+    public void init() {
     }
 
     public String getName() {
@@ -35,7 +35,7 @@ public class ArchetypeReferenceWithName extends ArchetypeReference{
         this.rmName = rmName;
     }
 
-    public String getId(){
+    public String getId() {
         return getIdArchetype();
     }
 

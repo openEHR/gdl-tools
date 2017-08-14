@@ -11,7 +11,6 @@ import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Map;
 import java.util.Set;

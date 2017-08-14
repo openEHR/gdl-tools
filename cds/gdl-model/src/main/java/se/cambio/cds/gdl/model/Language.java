@@ -1,100 +1,18 @@
 package se.cambio.cds.gdl.model;
 
+import lombok.Data;
 import org.openehr.rm.datatypes.text.CodePhrase;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Language implements Serializable{
+@Data
+public class Language implements Serializable {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private CodePhrase originalLanguage;
-    private Map<String, TranslationDetails> translations;
-
-	public Language(){
-
-	}
-	
-	public Language(CodePhrase originalLanguage,
-			Map<String, TranslationDetails> translations) {
-		this.originalLanguage = originalLanguage;
-		this.translations = translations;
-	}
-
-	/**
-	 * @return the originalLanguage
-	 */
-	public CodePhrase getOriginalLanguage() {
-        return originalLanguage;
-	}
-
-	/**
-	 * @return the translations
-	 */
-	public Map<String, TranslationDetails> getTranslations() {
-        if (translations == null) {
-            translations = new HashMap<String, TranslationDetails>();
-        }
-        return translations;
-	}
-	
-	/**
-	 * @param originalLanguage the originalLanguage to set
-	 */
-	public void setOriginalLanguage(CodePhrase originalLanguage) {
-		this.originalLanguage = originalLanguage;
-	}
-
-	/**
-	 * @param translations the translations to set
-	 */
-	public void setTranslations(Map<String, TranslationDetails> translations) {
-		this.translations = translations;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((originalLanguage == null) ? 0 : originalLanguage.hashCode());
-		result = prime * result
-				+ ((translations == null) ? 0 : translations.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Language other = (Language) obj;
-		if (originalLanguage == null) {
-			if (other.originalLanguage != null)
-				return false;
-		} else if (!originalLanguage.equals(other.originalLanguage))
-			return false;
-		if (translations == null) {
-			if (other.translations != null)
-				return false;
-		} else if (!translations.equals(other.translations))
-			return false;
-		return true;
-	}
+    private Map<String, TranslationDetails> translations = new HashMap<>();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

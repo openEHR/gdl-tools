@@ -1,20 +1,12 @@
 package se.cambio.cds.controller.guide;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.model.facade.execution.vo.ExecutionMode;
-import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.cds.model.instance.ElementInstance;
-import se.cambio.cds.util.Domains;
 import se.cambio.cds.util.ElementInstanceCollection;
 import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.GeneratedElementInstanceCollection;
-import se.cambio.cm.model.guide.dto.GuideDTO;
 
 import java.util.*;
-
-import static java.lang.String.format;
 
 public class SimpleGuideManager {
 

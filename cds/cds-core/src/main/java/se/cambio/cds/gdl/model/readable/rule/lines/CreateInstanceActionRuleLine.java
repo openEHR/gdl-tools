@@ -23,12 +23,12 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         super(CDSLanguageManager.getMessage("CreateInstance"),
                 CDSLanguageManager.getMessage("CreateInstanceDesc"));
         cdsEntryRuleLineElement = new CDSEntryRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"CreateInstanceRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "CreateInstanceRLE"));
         getRuleLineElements().add(cdsEntryRuleLineElement);
     }
 
-    public void setCDSEntryGTCodeRuleLineElementValue(GTCodeRuleLineElement value){
-        if (cdsEntryRuleLineElement!=null){
+    public void setCDSEntryGTCodeRuleLineElementValue(GTCodeRuleLineElement value) {
+        if (cdsEntryRuleLineElement != null) {
             cdsEntryRuleLineElement.setValue(value);
         }
     }
@@ -44,20 +44,20 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
                 cdsEntryRuleLineElement.getValue().getValue(),
                 null, name, CreateInstanceExpression.FUNCTION_CREATE_NAME);
         List<AssignmentExpression> assignmentExpressions = new ArrayList<>();
-        if (!getChildrenRuleLines().getRuleLines().isEmpty()){
-            for(RuleLine childRuleLine: getChildrenRuleLines().getRuleLines()){
-                AssignmentExpressionRuleLine assignmentExpressionRuleLine = (AssignmentExpressionRuleLine)childRuleLine;
+        if (!getChildrenRuleLines().getRuleLines().isEmpty()) {
+            for (RuleLine childRuleLine : getChildrenRuleLines().getRuleLines()) {
+                AssignmentExpressionRuleLine assignmentExpressionRuleLine = (AssignmentExpressionRuleLine) childRuleLine;
                 assignmentExpressions.add(assignmentExpressionRuleLine.toAssignmentExpression());
             }
-        }else{
-            throw new IllegalStateException("No assignments set into '"+name+"'");
+        } else {
+            throw new IllegalStateException("No assignments set into '" + name + "'");
         }
         return new CreateInstanceExpression(
                 var,
                 assignmentExpressions);
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
@@ -67,22 +67,23 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
         return sb.toString();
     }
 
-    public String toHTMLString(int level, String lang){
+    public String toHTMLString(int level, String lang) {
         StringBuilder sb = new StringBuilder();
         sb.append(toHTMLStringSingle(level, lang)).append("<br/>");
         String prefix = "";
         for (RuleLine ruleLine : getChildrenRuleLines().getRuleLines()) {
             sb.append(prefix);
-            sb.append(ruleLine.toHTMLString(level+1, lang));
+            sb.append(ruleLine.toHTMLString(level + 1, lang));
             prefix = "<br/>";
         }
         return sb.toString();
     }
 
-    private String toHTMLStringSingle(int level, String lang){
+    private String toHTMLStringSingle(int level, String lang) {
         return super.toHTMLString(level, lang);
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

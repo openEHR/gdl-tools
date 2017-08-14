@@ -1,130 +1,74 @@
 package se.cambio.cds.gdl.model.expression;
 
-import java.util.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-/**
- * This represents an expression that use built-in functions with optionally a
- * list of variables
- * 
- * @author rong.chen
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class FunctionalExpression extends ExpressionItem {
-	private static final long serialVersionUID = 1L;
-	private Function function;
-	private List<ExpressionItem> items;
-	public static FunctionalExpression create(Function function) {
-		return new FunctionalExpression(function);
-	}
-	
-	public static FunctionalExpression create(Function function, ExpressionItem item) {
-		List<ExpressionItem> items = new ArrayList<ExpressionItem>();
-		items.add(item);
-		return new FunctionalExpression(function, items);
-	}
-	
-	public static FunctionalExpression create(Function function, List<ExpressionItem> items) {
-		return new FunctionalExpression(function, items);
-	}
-	
-	public FunctionalExpression(Function function) {
-		this(function, null);
-	}
-	public FunctionalExpression(Function function, List<ExpressionItem> items) {
-		if(function == null) {
-			throw new IllegalArgumentException("null function");
-		}
-		this.function = function;
-		if(items != null) {
-			this.items = new ArrayList<>(items);
-		}
-	}
+    private static final long serialVersionUID = 1L;
+    private Function function;
+    private List<ExpressionItem> items = new ArrayList<>();
 
-	/**
-	 * @return the function
-	 */
-	public Function getFunction() {
-		return function;
-	}
-	
-	
-	/**
-	 * String representation of this expression using the following format:
-	 * 
-	 * function() without any variables
-	 * 
-	 * or
-	 * 
-	 * function(var1, var2..)
-	 * 
-	 */
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append(function);
-		buf.append("(");
-		ExpressionItem item  = null;
-		if(items != null) {
-			for(int i = 0, j = items.size(); i < j; i++) {
-				item = items.get(i);
-				if(item instanceof BinaryExpression) {
-					buf.append("(");
-					buf.append(item.toString());
-					buf.append(")");
-				} else {
-					buf.append(item.toString());
-				}
-				if(i != j -1) {
-					buf.append(",");
-				}
-			}
-		}
-		buf.append(")");
-		return buf.toString();
-	}
+    public static FunctionalExpression create(Function function) {
+        return new FunctionalExpression(function);
+    }
 
-	/**
-	 * @return the items
-	 */
-	public List<ExpressionItem> getItems() {
-		return Collections.unmodifiableList(items);
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((function == null) ? 0 : function.hashCode());
-		result = prime * result + ((items == null) ? 0 : items.hashCode());
-		return result;
-	}
+    public static FunctionalExpression create(Function function, ExpressionItem item) {
+        List<ExpressionItem> items = new ArrayList<>();
+        items.add(item);
+        return new FunctionalExpression(function, items);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		FunctionalExpression other = (FunctionalExpression) obj;
-		if (function == null) {
-			if (other.function != null)
-				return false;
-		} else if (!function.equals(other.function))
-			return false;
-		if (items == null) {
-			if (other.items != null)
-				return false;
-		} else if (!items.equals(other.items))
-			return false;
-		return true;
-	}
+    public static FunctionalExpression create(Function function, List<ExpressionItem> items) {
+        return new FunctionalExpression(function, items);
+    }
+
+    public FunctionalExpression(Function function) {
+        this(function, null);
+    }
+
+    public FunctionalExpression(Function function, List<ExpressionItem> items) {
+        if (function == null) {
+            throw new IllegalArgumentException("null function");
+        }
+        this.function = function;
+        if (items != null) {
+            this.items = new ArrayList<>(items);
+        }
+    }
+
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        buf.append(function);
+        buf.append("(");
+        ExpressionItem item;
+        if (items != null) {
+            for (int i = 0, j = items.size(); i < j; i++) {
+                item = items.get(i);
+                if (item instanceof BinaryExpression) {
+                    buf.append("(");
+                    buf.append(item.toString());
+                    buf.append(")");
+                } else {
+                    buf.append(item.toString());
+                }
+                if (i != j - 1) {
+                    buf.append(",");
+                }
+            }
+        }
+        buf.append(")");
+        return buf.toString();
+    }
+
+    public List<ExpressionItem> getItems() {
+        return Collections.unmodifiableList(items);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

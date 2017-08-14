@@ -13,15 +13,15 @@ public class ReadableGuide {
     private RuleLineCollection definitionRuleLines = null;
     private RuleLineCollection preconditionRuleLines = null;
     private RuleLineCollection defaultActions = null;
-    private TermDefinition _termDefinition = null;
+    private TermDefinition termDefinition = null;
     private ArchetypeReferencesManager archetypeReferencesManager;
     private ArchetypeManager archetypeManager;
 
     public ReadableGuide(
             TermDefinition termDefinition,
             ArchetypeManager archetypeManager,
-            ArchetypeReferencesManager archetypeReferencesManager){
-        _termDefinition = termDefinition;
+            ArchetypeReferencesManager archetypeReferencesManager) {
+        this.termDefinition = termDefinition;
         this.archetypeReferencesManager = archetypeReferencesManager;
         renderableRules = new LinkedHashMap<>();
         this.archetypeManager = archetypeManager;
@@ -35,8 +35,8 @@ public class ReadableGuide {
         return archetypeReferencesManager;
     }
 
-    public String getLanguage(){
-        return _termDefinition.getId();
+    public String getLanguage() {
+        return termDefinition.getId();
     }
 
     public LinkedHashMap<String, ReadableRule> getReadableRules() {
@@ -65,7 +65,7 @@ public class ReadableGuide {
     }
 
     public TermDefinition getTermDefinition() {
-        return _termDefinition;
+        return termDefinition;
     }
 }
 /*

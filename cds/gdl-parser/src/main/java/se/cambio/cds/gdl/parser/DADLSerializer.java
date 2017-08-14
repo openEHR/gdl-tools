@@ -36,9 +36,9 @@ public class DADLSerializer {
         if (size == 0) {
             lines.add(typeHeader);
         } else {
-            String l = lines.get(size - 1);
-            l += typeHeader;
-            lines.set(size - 1, l);
+            String line = lines.get(size - 1);
+            line += typeHeader;
+            lines.set(size - 1, line);
         }
         Collection<String> attributes = attributeList(obj.getClass());
 
@@ -119,7 +119,7 @@ public class DADLSerializer {
         lines.add(sb.toString());
     }
 
-    private void addMapObject(int indent, List<String> lines, Map<Object,Object> valueMap, StringBuilder buf) {
+    private void addMapObject(int indent, List<String> lines, Map<Object, Object> valueMap, StringBuilder buf) {
         if (!valueMap.isEmpty()) {
             buf.append("<");
             lines.add(buf.toString());
@@ -238,7 +238,8 @@ public class DADLSerializer {
 
     private Method getter(String attributeName, Class klass) {
         Method[] methods = klass.getMethods();
-        String name = "get" + attributeName.substring(0, 1).toUpperCase()
+        String name = "get"
+                + attributeName.substring(0, 1).toUpperCase()
                 + attributeName.substring(1);
 
         log.debug("search getter method of name '{}'", name);
@@ -291,9 +292,9 @@ public class DADLSerializer {
         String[] array = StringUtils.splitByCharacterTypeCamelCase(camelCase);
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
-            String s = array[i];
-            buf.append(s.substring(0, 1).toLowerCase());
-            buf.append(s.substring(1));
+            String str = array[i];
+            buf.append(str.substring(0, 1).toLowerCase());
+            buf.append(str.substring(1));
             if (i != array.length - 1) {
                 buf.append("_");
             }

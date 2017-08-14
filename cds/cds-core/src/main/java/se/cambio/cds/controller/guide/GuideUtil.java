@@ -61,7 +61,8 @@ public class GuideUtil {
         return getGeneratedArchetypeReference(archetypeBinding, guideId, null, null, false);
     }
 
-    private static GeneratedArchetypeReference getGeneratedArchetypeReference(ArchetypeBinding archetypeBinding, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates) {
+    private static GeneratedArchetypeReference getGeneratedArchetypeReference(
+            ArchetypeBinding archetypeBinding, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates) {
         GeneratedArchetypeReference ar =
                 new GeneratedArchetypeReference(
                         archetypeBinding.getDomain(),
@@ -84,7 +85,8 @@ public class GuideUtil {
         return ar;
     }
 
-    public static void generatePredicateElements(ArchetypeBinding archetypeBinding, ArchetypeReference ar, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates) {
+    public static void generatePredicateElements(
+            ArchetypeBinding archetypeBinding, ArchetypeReference ar, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates) {
         if (archetypeBinding.getPredicateStatements() != null) {
             for (ExpressionItem expressionItem : archetypeBinding.getPredicateStatements()) {
                 if (expressionItem instanceof BinaryExpression) {
@@ -96,29 +98,33 @@ public class GuideUtil {
         }
     }
 
-    private static void generatePredicateElementsForUnaryExpression(ArchetypeBinding archetypeBinding, ArchetypeReference ar, Guide guide, DateTime dateTime, boolean resolvePredicates, UnaryExpression expressionItem) {
+    private static void generatePredicateElementsForUnaryExpression(
+            ArchetypeBinding archetypeBinding, ArchetypeReference ar, Guide guide, DateTime dateTime,
+            boolean resolvePredicates, UnaryExpression expressionItem) {
         UnaryExpression ue = expressionItem;
         OperatorKind op = ue.getOperator();
-        ExpressionItem o = ue.getOperand();
-        if (o instanceof Variable) {
+        ExpressionItem operand = ue.getOperand();
+        if (operand instanceof Variable) {
             String idElement =
-                    archetypeBinding.getArchetypeId() + ((Variable) o).getPath();
+                    archetypeBinding.getArchetypeId() + ((Variable) operand).getPath();
             DataValue dv = null;
             generateElementInstanceForPredicate(ar, op, idElement, dv, guide, dateTime, resolvePredicates);
             //TODO No rule references added (no gt codes)
         }
     }
 
-    private static void generatePredicateElementsForBinaryExpression(ArchetypeBinding archetypeBinding, ArchetypeReference ar, String guideId, Guide guide, DateTime dateTime, boolean resolvePredicates, BinaryExpression expressionItem) {
+    private static void generatePredicateElementsForBinaryExpression(
+            ArchetypeBinding archetypeBinding, ArchetypeReference ar, String guideId, Guide guide,
+            DateTime dateTime, boolean resolvePredicates, BinaryExpression expressionItem) {
         BinaryExpression be = expressionItem;
-        ExpressionItem l = be.getLeft();
-        ExpressionItem r = be.getRight();
-        if (l instanceof Variable) {
-            String path = ((Variable) l).getPath();
-            if (r instanceof ConstantExpression) {
+        ExpressionItem left = be.getLeft();
+        ExpressionItem right = be.getRight();
+        if (left instanceof Variable) {
+            String path = ((Variable) left).getPath();
+            if (right instanceof ConstantExpression) {
                 String idElement =
                         archetypeBinding.getArchetypeId() + path;
-                ConstantExpression ce = (ConstantExpression) r;
+                ConstantExpression ce = (ConstantExpression) right;
                 DataValue dv = null;
                 if (!"null".equals(ce.getValue())) {
                     dv = getDataValue(ce);
@@ -129,11 +135,11 @@ public class GuideUtil {
                 if (gtCode != null) {
                     ei.getRuleReferences().add(new RuleReference(guideId, gtCode));
                 }
-            } else if (r != null) {
+            } else if (right != null) {
                 String attribute = path.substring(path.lastIndexOf("/value/") + 7, path.length());
                 path = path.substring(0, path.length() - attribute.length() - 7);
                 String idElement = archetypeBinding.getArchetypeId() + path;
-                DataValue dv = new CurrentTimeExpressionDataValue(r, attribute);
+                DataValue dv = new CurrentTimeExpressionDataValue(right, attribute);
                 generateElementInstanceForPredicate(ar, be.getOperator(), idElement, dv, guide, dateTime, resolvePredicates);
                 //TODO No rule references added (no gt codes)
             }
@@ -162,8 +168,10 @@ public class GuideUtil {
         return null;
     }
 
-    private static PredicateGeneratedElementInstance generateElementInstanceForPredicate(ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv, Guide guide, DateTime dateTime, boolean resolvePredicates) {
-        Collection<RuleReference> previousRuleReferences = new ArrayList<RuleReference>();
+    private static PredicateGeneratedElementInstance generateElementInstanceForPredicate(
+            ArchetypeReference ar, OperatorKind op, String idElement, DataValue dv,
+            Guide guide, DateTime dateTime, boolean resolvePredicates) {
+        Collection<RuleReference> previousRuleReferences = new ArrayList<>();
         ElementInstance elementInstance = ar.getElementInstancesMap().get(idElement);
         if (elementInstance instanceof GeneratedElementInstance) {
             GeneratedElementInstance generatedElementInstance = (GeneratedElementInstance) elementInstance;
@@ -217,7 +225,7 @@ public class GuideUtil {
     }
 
     public static List<RuleReference> getRuleReferences(List<String> firedRules) {
-        List<RuleReference> ruleReferences = new ArrayList<RuleReference>();
+        List<RuleReference> ruleReferences = new ArrayList<>();
         if (firedRules != null) {
             for (String firedRule : firedRules) {
                 if (!firedRule.endsWith("/default")) {
@@ -243,7 +251,7 @@ public class GuideUtil {
     }
 
     public static Set<String> getGTCodesInReads(Guide guide) {
-        Set<String> gtCodes = new HashSet<String>();
+        Set<String> gtCodes = new HashSet<>();
         if (guide.getDefinition() == null || guide.getDefinition().getRules() == null) {
             return gtCodes;
         }
@@ -251,20 +259,6 @@ public class GuideUtil {
         addGtCodesForPreconditions(guide, gtCodes);
         addGtCodesForDefaultActions(guide, gtCodes);
         return gtCodes;
-    }
-
-    private static void addGtCodesForDefaultActions(Guide guide, Set<String> gtCodes) {
-        gtCodes.addAll(getDefaultActionGTCodesInReads(guide));
-    }
-
-    private static void addGtCodesForPreconditions(Guide guide, Set<String> gtCodes) {
-        gtCodes.addAll(getPreconditionGTCodesInReads(guide));
-    }
-
-    private static void addGtCodesForRules(Guide guide, Set<String> gtCodes) {
-        for (Rule rule : guide.getDefinition().getRules().values()) {
-            gtCodes.addAll(getGTCodesInReads(rule));
-        }
     }
 
     public static Set<String> getGTCodesInReads(Rule rule) {
@@ -280,6 +274,20 @@ public class GuideUtil {
             }
         }
         return gtCodes;
+    }
+
+    private static void addGtCodesForDefaultActions(Guide guide, Set<String> gtCodes) {
+        gtCodes.addAll(getDefaultActionGTCodesInReads(guide));
+    }
+
+    private static void addGtCodesForPreconditions(Guide guide, Set<String> gtCodes) {
+        gtCodes.addAll(getPreconditionGTCodesInReads(guide));
+    }
+
+    private static void addGtCodesForRules(Guide guide, Set<String> gtCodes) {
+        for (Rule rule : guide.getDefinition().getRules().values()) {
+            gtCodes.addAll(getGTCodesInReads(rule));
+        }
     }
 
     public static Set<String> getPreconditionGTCodesInReads(Guide guide) {
@@ -360,7 +368,7 @@ public class GuideUtil {
 
     private static void addGTCodesInWrites(ExpressionItem expressionItem, Set<String> gtCodes) {
         if (expressionItem instanceof CreateInstanceExpression) {
-            MultipleAssignmentExpression multipleAssignmentExpression = ((CreateInstanceExpression) expressionItem).getAssigment();
+            MultipleAssignmentExpression multipleAssignmentExpression = ((CreateInstanceExpression) expressionItem).getAssignment();
             for (AssignmentExpression assignmentExpression : multipleAssignmentExpression.getAssignmentExpressions()) {
                 addGTCodesInWrites(assignmentExpression, gtCodes);
             }

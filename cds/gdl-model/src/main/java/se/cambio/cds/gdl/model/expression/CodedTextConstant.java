@@ -4,18 +4,18 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
 public class CodedTextConstant extends ConstantExpression {
-	private static final long serialVersionUID = 1L;
-	private DvCodedText codedText;
+    private static final long serialVersionUID = 1L;
+    private DvCodedText codedText;
 
-	public CodedTextConstant(String value, CodePhrase code) {
-		super(code.toString() + "|" + value + "|");
-		this.codedText = new DvCodedText(value, code);
-	}
+    public CodedTextConstant(String value, CodePhrase code) {
+        super(code.toString() + "|" + value + "|");
+        this.codedText = new DvCodedText(value, code);
+    }
 
-	public DvCodedText getCodedText() {
-		return new DvCodedText(this.codedText.getValue(),
-				this.codedText.getTerminologyId(), this.codedText.getCode());
-	}
+    public DvCodedText getCodedText() {
+        return new DvCodedText(this.codedText.getValue(),
+                this.codedText.getTerminologyId(), this.codedText.getCode());
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

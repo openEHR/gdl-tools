@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model;
 
+import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ExpressionItem;
@@ -10,170 +11,63 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuideDefinition implements Serializable{
+@Data
+public class GuideDefinition implements Serializable {
 
-    private Map<String, ArchetypeBinding> archetypeBindings;
-    private List<String> preConditions;
-    private List<String> defaultActions;
-    private Map<String,Rule> rules;
-    private List<ExpressionItem> preConditionExpressions;
-    private List<AssignmentExpression> defaultActionExpressions;
+    private Map<String, ArchetypeBinding> archetypeBindings = new HashMap<>();
+    private List<String> preConditions = new ArrayList<>();
+    private List<String> defaultActions = new ArrayList<>();
+    private Map<String, Rule> rules = new HashMap<>();
+    private List<ExpressionItem> preConditionExpressions = new ArrayList<>();
+    private List<AssignmentExpression> defaultActionExpressions = new ArrayList<>();
 
-    public static String ARCHETYPE_BINDING_PREFIX = "ab";
+    public static final String ARCHETYPE_BINDING_PREFIX = "ab";
 
     private static final long serialVersionUID = 1L;
-    public GuideDefinition() {
-    }
 
-    /**
-     * @return the archetypeBindings
-     */
-    public Map<String, ArchetypeBinding> getArchetypeBindings() {
-        if (archetypeBindings == null) {
-            archetypeBindings = new HashMap<String, ArchetypeBinding>();
-        }
-        return archetypeBindings;
-    }
-
-    /**
-     * @return the preConditions, list of pre-conditions joined by default AND operator
-     */
     public List<String> getPreConditions() {
-        if(getPreConditionExpressions().isEmpty()) {
+        if (getPreConditionExpressions().isEmpty()) {
             return preConditions;
         }
-        List<String> lines = new ArrayList<String>();
-        for(ExpressionItem item : preConditionExpressions) {
+        List<String> lines = new ArrayList<>();
+        for (ExpressionItem item : preConditionExpressions) {
             lines.add(item.toString());
         }
         return lines;
     }
 
-    /**
-     * @return the rules
-     */
-    public Map<String,Rule> getRules() {
-        if (rules == null) {
-            rules = new HashMap<String, Rule>();
-        }
-        return rules;
-    }
-
-    /**
-     * @param archetypeBindings the archetypeBindings to set
-     */
     public void setArchetypeBindings(Object archetypeBindings) {
-        if (archetypeBindings instanceof Map){
-            changeArchetypeBindings((Map)archetypeBindings);
-        }else if (archetypeBindings instanceof List){
-            changeArchetypeBindings((List)archetypeBindings);
-        }else{
-            throw new InternalError("Archetype bindings could not be set (unknown type '"+archetypeBindings.getClass().getName()+"').");
+        if (archetypeBindings instanceof Map) {
+            changeArchetypeBindings((Map) archetypeBindings);
+        } else if (archetypeBindings instanceof List) {
+            changeArchetypeBindings((List) archetypeBindings);
+        } else {
+            throw new InternalError("Archetype bindings could not be set (unknown type '" + archetypeBindings.getClass().getName() + "').");
         }
     }
-
-
 
     public void changeArchetypeBindings(Map<String, ArchetypeBinding> archetypeBindings) {
         this.archetypeBindings = archetypeBindings;
     }
 
-
-    //Support for old version, generate gt codes
     public void changeArchetypeBindings(List<ArchetypeBinding> archetypeBindings) {
-        Map<String, ArchetypeBinding> archetypeBindingsAux = new HashMap<String, ArchetypeBinding>();
-        int i = 1;
-        for(ArchetypeBinding archetypeBinding: archetypeBindings){
-            String abCode = ARCHETYPE_BINDING_PREFIX+ StringUtils.leftPad("" + (i++), 4, "0");
+        Map<String, ArchetypeBinding> archetypeBindingsAux = new HashMap<>();
+        int index = 1;
+        for (ArchetypeBinding archetypeBinding : archetypeBindings) {
+            String abCode = ARCHETYPE_BINDING_PREFIX + StringUtils.leftPad("" + (index++), 4, "0");
             archetypeBinding.setId(abCode);
-            archetypeBindingsAux.put(abCode,archetypeBinding);
+            archetypeBindingsAux.put(abCode, archetypeBinding);
         }
         this.archetypeBindings = archetypeBindingsAux;
     }
 
-
-    /**
-     * @param preConditions the preConditions to set
-     */
-    public void setPreConditions(List<String> preConditions) {
-        this.preConditions = preConditions;
-    }
-
-    /**
-     * @param rules the rules to set
-     */
-    public void setRules(Map<String,Rule> rules) {
-        this.rules = rules;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime
-                * result
-                + ((archetypeBindings == null) ? 0 : archetypeBindings
-                .hashCode());
-        result = prime * result
-                + ((preConditions == null) ? 0 : preConditions.hashCode());
-        result = prime * result + ((rules == null) ? 0 : rules.hashCode());
-        return result;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        GuideDefinition other = (GuideDefinition) obj;
-        if (archetypeBindings == null) {
-            if (other.archetypeBindings != null)
-                return false;
-        } else if (!archetypeBindings.equals(other.archetypeBindings))
-            return false;
-        if (preConditions == null) {
-            if (other.preConditions != null)
-                return false;
-        } else if (!preConditions.equals(other.preConditions))
-            return false;
-        if (rules == null) {
-            if (other.rules != null)
-                return false;
-        } else if (!rules.equals(other.rules))
-            return false;
-        return true;
-    }
-
-
-    /**
-     * @return the preConditionExpressions
-     */
-    public List<ExpressionItem> getPreConditionExpressions() {
-        if (preConditionExpressions == null) {
-            preConditionExpressions = new ArrayList<ExpressionItem>();
-        }
-        return preConditionExpressions;
-    }
-
-    /**
-     * @param preConditionExpressions the preConditionExpressions to set
-     */
     public void setPreConditionExpressions(List<ExpressionItem> preConditionExpressions) {
         this.preConditionExpressions = preConditionExpressions;
-        List<String> lines = new ArrayList<String>();
-        if (preConditionExpressions != null){
-            for(ExpressionItem item : preConditionExpressions) {
+        List<String> lines = new ArrayList<>();
+        if (preConditionExpressions != null) {
+            for (ExpressionItem item : preConditionExpressions) {
                 String str = item.toString();
-                if (str!=null){
+                if (str != null) {
                     lines.add(str);
                 }
             }
@@ -182,34 +76,23 @@ public class GuideDefinition implements Serializable{
     }
 
     public List<String> getDefaultActions() {
-        if(getDefaultActionExpressions().isEmpty()) {
+        if (getDefaultActionExpressions().isEmpty()) {
             return defaultActions;
         }
-        List<String> lines = new ArrayList<String>();
-        for(ExpressionItem item : defaultActionExpressions) {
+        List<String> lines = new ArrayList<>();
+        for (ExpressionItem item : defaultActionExpressions) {
             lines.add(item.toString());
         }
         return lines;
     }
 
-    public void setDefaultActions(List<String> defaultActions) {
-        this.defaultActions = defaultActions;
-    }
-
-    public List<AssignmentExpression> getDefaultActionExpressions() {
-        if (defaultActionExpressions == null) {
-            defaultActionExpressions = new ArrayList<AssignmentExpression>();
-        }
-        return defaultActionExpressions;
-    }
-
     public void setDefaultActionExpressions(List<AssignmentExpression> defaultActionExpressions) {
         this.defaultActionExpressions = defaultActionExpressions;
-        List<String> lines = new ArrayList<String>();
-        if (defaultActionExpressions != null){
-            for(ExpressionItem item : defaultActionExpressions) {
+        List<String> lines = new ArrayList<>();
+        if (defaultActionExpressions != null) {
+            for (ExpressionItem item : defaultActionExpressions) {
                 String str = item.toString();
-                if (str!=null){
+                if (str != null) {
                     lines.add(str);
                 }
             }

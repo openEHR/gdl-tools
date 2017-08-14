@@ -10,7 +10,7 @@ public class CdsGsonBuilderFactory {
     public CdsGsonBuilderFactory() {
     }
 
-    public GsonBuilder getGsonBuilder(){
+    public GsonBuilder getGsonBuilder() {
         return new GsonBuilder()
                 .registerTypeAdapter(DataValue.class, new DataValueJsonSerializer())
                 .registerTypeAdapter(ArchetypeReference.class, new ArchetypeReferenceJsonSerializer())
@@ -18,8 +18,8 @@ public class CdsGsonBuilderFactory {
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .setExclusionStrategies(new ExclusionStrategy() {
                     @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getName().equals("archetypeReference");
+                    public boolean shouldSkipField(FieldAttributes reference) {
+                        return reference.getName().equals("archetypeReference");
                     }
 
                     @Override

@@ -15,7 +15,8 @@ public class AttributeComparisonOperatorRuleLineElement extends AbstractComparis
         addOperator(OperatorKind.GREATER_THAN);
         addOperator(OperatorKind.GREATER_THAN_OR_EQUAL);
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

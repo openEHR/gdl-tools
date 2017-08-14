@@ -59,15 +59,15 @@ public abstract class ClinicalModelHTMLExporter<E> {
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             HTMLRenderer htmlRenderer = new HTMLRenderer(isr);
             return htmlRenderer.process(getObjectsMap());
-        } catch (UnsupportedEncodingException ex) {
-            throw new InternalErrorException(ex);
-        } catch (InstanceNotFoundException ex) {
+        } catch (UnsupportedEncodingException | InstanceNotFoundException ex) {
             throw new InternalErrorException(ex);
         }
     }
 
     public abstract Map<String, Object> getEntityObjectsMap() throws InternalErrorException, InstanceNotFoundException;
+
     public abstract Map<String, String> getEntityTextMap();
+
     public abstract InputStream getInputStreamTemplate();
 
     public String addText(Map<String, String> textsMap, String textId) {

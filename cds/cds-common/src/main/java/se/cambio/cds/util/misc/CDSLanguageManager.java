@@ -55,6 +55,14 @@ public final class CDSLanguageManager {
         return getMessageWithLanguage(key, getDelegate().getLanguage());
     }
 
+    public static String getMessage(String key, String data1) {
+        return getMessageWithLanguage(key, data1, getDelegate().getLanguage());
+    }
+
+    public static String getMessage(String key, String[] data) {
+        return getMessageWithLanguage(key, data, getDelegate().getLanguage());
+    }
+
     public static String getMessageWithLanguage(String key, String language) {
         try {
             return getResourceBundle(language).getString(key);
@@ -64,33 +72,27 @@ public final class CDSLanguageManager {
         }
     }
 
-    public static String getMessage(String key, String data1) {
-        return getMessageWithLanguage(key, data1, getDelegate().getLanguage());
-    }
-
     public static String getMessageWithLanguage(String key, String data1, String language) {
-        String s = getResourceBundle(language).getString(key);
-        int i = s.indexOf("$0");
-        if (i >= 0 && i < s.length()) {
-            String s1 = s.substring(0, i);
-            String s2 = s.substring(i + 2, s.length());
+        String str = getResourceBundle(language).getString(key);
+        int index = str.indexOf("$0");
+        if (index >= 0 && index < str.length()) {
+            String s1 = str.substring(0, index);
+            String s2 = str.substring(index + 2, str.length());
             return s1 + data1 + s2;
-        } else return s;
-    }
-
-    public static String getMessage(String key, String[] data) {
-        return getMessageWithLanguage(key, data, getDelegate().getLanguage());
+        } else {
+            return str;
+        }
     }
 
     public static String getMessageWithLanguage(String key, String[] data, String language) {
-        String s = getResourceBundle(language).getString(key);
-        for (int i = 0; i < data.length && i < 10; i++) {
-            int index = s.indexOf("$" + i);
-            String s1 = s.substring(0, index);
-            String s2 = s.substring(index + 2, s.length());
-            s = s1 + data[i] + s2;
+        String str = getResourceBundle(language).getString(key);
+        for (int index2 = 0; index2 < data.length && index2 < 10; index2++) {
+            int index = str.indexOf("$" + index2);
+            String s1 = str.substring(0, index);
+            String s2 = str.substring(index + 2, str.length());
+            str = s1 + data[index2] + s2;
         }
-        return s;
+        return str;
     }
 
     private static CDSLanguageManager getDelegate() {
@@ -99,7 +101,6 @@ public final class CDSLanguageManager {
         }
         return instance;
     }
-
 
     public String getLanguage() {
         return language;

@@ -25,14 +25,15 @@ import java.util.regex.Pattern;
 
 public class DVDefSerializer {
 
-    private static Pattern clonePattern = Pattern.compile("\\.createDV\\([\\s]*\\$([^\\,\"]+),");
-    private static Pattern setLinePattern = Pattern.compile("\\.createDV\\([^\\,]+,[\\s]*\"(.*)\"\\)$");
-    private static Pattern assignationLinePattern = Pattern.compile("([^\\Q+-*/=\\E]+)([\\Q+-*/\\E]?)\\=\"\\+\\((.*)\\)\\+\"$");
-    public static Pattern dvReferencePattern = Pattern.compile("\\$([\\w]+)+\\Q.getDataValue()).get\\E([\\w]+)\\(\\)");
-    public static Pattern dvDefinitionPatternWithOutQuotes = Pattern.compile("new [a-zA-Z]+\\((.*)\\)$");
-    public static Pattern dvDefinitionPatternWithQuotes = Pattern.compile("new [a-zA-Z]+\\(\"(.*)\"\\)$");
-    public static Pattern dvDefinitionPattern = Pattern.compile("(new [a-zA-Z]+\\(.*\\))");
-    public static String commaSplitPatternOutsideParenthesis = ",(?![^(]*\\))";
+    private static final Pattern clonePattern = Pattern.compile("\\.createDV\\([\\s]*\\$([^\\,\"]+),");
+    private static final Pattern setLinePattern = Pattern.compile("\\.createDV\\([^\\,]+,[\\s]*\"(.*)\"\\)$");
+    private static final Pattern assignationLinePattern = Pattern.compile("([^\\Q+-*/=\\E]+)([\\Q+-*/\\E]?)\\=\"\\+\\((.*)\\)\\+\"$");
+    public static final Pattern dvReferencePattern = Pattern.compile("\\$([\\w]+)+\\Q.getDataValue()).get\\E([\\w]+)\\(\\)");
+    public static final Pattern dvDefinitionPatternWithOutQuotes = Pattern.compile("new [a-zA-Z]+\\((.*)\\)$");
+    public static final Pattern dvDefinitionPatternWithQuotes = Pattern.compile("new [a-zA-Z]+\\(\"(.*)\"\\)$");
+    public static final Pattern dvDefinitionPattern = Pattern.compile("(new [a-zA-Z]+\\(.*\\))");
+    public static final String commaSplitPatternOutsideParenthesis = ",(?![^(]*\\))";
+    private static final Map<String, DataValue> dataValueMap;
 
 
     public static String getDVInstantiation(DataValue dataValue) {
@@ -115,7 +116,7 @@ public class DVDefSerializer {
         }
         if (dataValue instanceof DvList) {
             Collection<DataValue> dataValues = ((DvList) dataValue).getDataValues();
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             String prefix = "";
             for (DataValue dataValueAux : dataValues) {
                 sb.append(prefix);
@@ -141,9 +142,9 @@ public class DVDefSerializer {
 
     public static String getDVDefinitionWithoutQuotes(String dvInstantiation) {
         if (dvInstantiation != null) {
-            Matcher m = dvDefinitionPatternWithOutQuotes.matcher(dvInstantiation.trim());
-            if (m.find()) {
-                return m.group(1);
+            Matcher matcher = dvDefinitionPatternWithOutQuotes.matcher(dvInstantiation.trim());
+            if (matcher.find()) {
+                return matcher.group(1);
             } else {
                 return null;
             }
@@ -154,9 +155,9 @@ public class DVDefSerializer {
 
     public static String getDVDefinition(String dvInstantiation) {
         if (dvInstantiation != null) {
-            Matcher m = dvDefinitionPatternWithQuotes.matcher(dvInstantiation.trim());
-            if (m.find()) {
-                return m.group(1);
+            Matcher matcher = dvDefinitionPatternWithQuotes.matcher(dvInstantiation.trim());
+            if (matcher.find()) {
+                return matcher.group(1);
             } else {
                 return null;
             }
@@ -167,9 +168,9 @@ public class DVDefSerializer {
 
     public static String getDVCloneInstanceName(String expression) {
         if (expression != null) {
-            Matcher m = clonePattern.matcher(expression.trim());
-            if (m.find()) {
-                return m.group(1);
+            Matcher matcher = clonePattern.matcher(expression.trim());
+            if (matcher.find()) {
+                return matcher.group(1);
             } else {
                 return null;
             }
@@ -180,8 +181,8 @@ public class DVDefSerializer {
 
     public static boolean isDVExpression(String expression) {
         if (expression != null) {
-            Matcher m = setLinePattern.matcher(expression.trim());
-            if (m.find()) {
+            Matcher matcher = setLinePattern.matcher(expression.trim());
+            if (matcher.find()) {
                 return true;
             } else {
                 return false;
@@ -207,23 +208,23 @@ public class DVDefSerializer {
     }
 
     public static ArrayList<String[]> getDVAssignationsFromExpression(String expression) throws InternalErrorException {
-        Matcher m = setLinePattern.matcher(expression.trim());
-        if (m.find()) {
-            return getDVAssignationsFromSetLine(m.group(1));
+        Matcher matcher = setLinePattern.matcher(expression.trim());
+        if (matcher.find()) {
+            return getDVAssignationsFromSetLine(matcher.group(1));
         } else {
             throw new InternalErrorException(new IllegalArgumentException("Could not parse: " + expression));
         }
     }
 
     public static ArrayList<String[]> getDVAssignationsFromSetLine(String setLine) throws InternalErrorException {
-        ArrayList<String[]> setLines = new ArrayList<String[]>();
+        ArrayList<String[]> setLines = new ArrayList<>();
         if (!setLine.trim().isEmpty()) {
             setLine = setLine.trim().substring(1, setLine.length());
             String[] assignationLines = setLine.split(",[\\s]*@");
             for (String assignationLine : assignationLines) {
-                Matcher m = assignationLinePattern.matcher(assignationLine);
-                if (m.find()) {
-                    setLines.add(new String[]{m.group(1), m.group(2), m.group(3)});
+                Matcher matcher = assignationLinePattern.matcher(assignationLine);
+                if (matcher.find()) {
+                    setLines.add(new String[]{matcher.group(1), matcher.group(2), matcher.group(3)});
                 } else {
                     throw new InternalErrorException(new IllegalArgumentException("Could not parse: " + assignationLine));
                 }
@@ -241,7 +242,7 @@ public class DVDefSerializer {
         } else {
             for (String[] assignation : assignations) {
                 if ("magnitude".equals(assignation[0])) {
-                    StringBuffer resulStr = new StringBuffer();
+                    StringBuilder resulStr = new StringBuilder();
                     if (assignation[1] != null && !assignation[1].isEmpty()) {
                         resulStr.append(instanceName + assignation[1]);
                     }
@@ -255,10 +256,10 @@ public class DVDefSerializer {
 
     private static String getExpressionWithReadableReferences(String stringWithReferences) {
         Pattern regex = Pattern.compile("\\$([\\w]+)+\\Q.getDataValue()).get\\E([\\w]+)\\(\\)");
-        Matcher m = regex.matcher(stringWithReferences);
-        while (m.find()) {
-            String handle = m.group(1);
-            String field = m.group(2);
+        Matcher matcher = regex.matcher(stringWithReferences);
+        while (matcher.find()) {
+            String handle = matcher.group(1);
+            String field = matcher.group(2);
             String ref = "\\(\\([\\w]+\\)\\Q$" + handle + ".getDataValue()).get" + field + "()\\E";
             stringWithReferences = stringWithReferences.replaceAll(ref, handle);
         }
@@ -347,8 +348,6 @@ public class DVDefSerializer {
     private static DecimalFormat getDecimalFormat(int precision) {
         return OpenEHRNumberFormat.getDecimalFormat(precision);
     }
-
-    private final static Map<String, DataValue> dataValueMap;
 
     /*
      * Initiate the mapping between ReferenceModelName and concrete dataValue 

@@ -4,28 +4,26 @@ import org.openehr.rm.datatypes.quantity.DvOrdinal;
 import org.openehr.rm.datatypes.text.CodePhrase;
 import org.openehr.rm.datatypes.text.DvCodedText;
 
-public class OrdinalConstant extends ConstantExpression  {
-	/**
-     * 
-     */
+public class OrdinalConstant extends ConstantExpression {
+
     private static final long serialVersionUID = 1L;
 
-	public OrdinalConstant(int order, String value, CodePhrase code) {
-		super(order + "|" + code.toString() + "|" + value + "|");
-		this.ordinal = new DvOrdinal(order, new DvCodedText(value, code));
-	}
+    public OrdinalConstant(int order, String value, CodePhrase code) {
+        super(order + "|" + code.toString() + "|" + value + "|");
+        this.ordinal = new DvOrdinal(order, new DvCodedText(value, code));
+    }
 
-	public OrdinalConstant(DvOrdinal ordinal) {
-		super(ordinal.toString());
-		this.ordinal = ordinal;
-	}
-	
-	public DvOrdinal getOrdinal() {
-		return new DvOrdinal(this.ordinal.getValue(), this.ordinal.getSymbol().getValue(),
-				this.ordinal.getTerminologyId(), this.ordinal.getSymbol().getCode());
-	}
-	
-	private DvOrdinal ordinal;
+    public OrdinalConstant(DvOrdinal ordinal) {
+        super(ordinal.toString());
+        this.ordinal = ordinal;
+    }
+
+    public DvOrdinal getOrdinal() {
+        return new DvOrdinal(this.ordinal.getValue(), this.ordinal.getSymbol().getValue(),
+                this.ordinal.getTerminologyId(), this.ordinal.getSymbol().getCode());
+    }
+
+    private DvOrdinal ordinal;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

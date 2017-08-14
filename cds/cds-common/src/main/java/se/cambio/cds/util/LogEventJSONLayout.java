@@ -9,7 +9,6 @@ public class LogEventJSONLayout extends Layout {
     @Override
     public String format(LoggingEvent le) {
         if (le.getMessage() instanceof LogEventVO) {
-            LogEventVO logEventVO = (LogEventVO) le.getMessage();
             JsonObject eventContainer = new JsonObject();
             eventContainer.addProperty("id", 1000L);
             eventContainer.addProperty("createTimestamp", le.timeStamp);
@@ -27,6 +26,7 @@ public class LogEventJSONLayout extends Layout {
             JsonObject event = new JsonObject();
             eventContainer.add("event", event);
             event.addProperty("timestamp", le.timeStamp);
+            LogEventVO logEventVO = (LogEventVO) le.getMessage();
             event.addProperty("context", logEventVO.getContext());
             event.addProperty("action", logEventVO.getActionName());
             event.addProperty("label", "CDS Execution");
@@ -37,9 +37,7 @@ public class LogEventJSONLayout extends Layout {
             for (String key : logEventVO.getParameters().keySet()) {
                 parameters.addProperty(key, logEventVO.getParameters().get(key));
             }
-
-            String str = eventContainer + "\n";
-            return str;
+            return eventContainer + "\n";
         }
         return null;
     }

@@ -9,20 +9,21 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ForAllOperatorRuleLine extends ExpressionRuleLine implements ConditionRuleLine, OperatorRuleLine{
+public class ForAllOperatorRuleLine extends ExpressionRuleLine implements ConditionRuleLine, OperatorRuleLine {
 
     public ForAllOperatorRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("ForAllOperator"), 
-		OpenEHRLanguageManager.getMessage("ForAllOperatorDesc"));
-	getRuleLineElements().add(new StaticTextRuleLineElement(this,"ForAllRLE"));
+        super(OpenEHRLanguageManager.getMessage("ForAllOperator"),
+                OpenEHRLanguageManager.getMessage("ForAllOperatorDesc"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ForAllRLE"));
     }
-    
-    public ExpressionItem toExpressionItem(){
-	return new UnaryExpression(
-		    convertToExpressionItem(getChildrenRuleLines().getRuleLines(),0),
-		    OperatorKind.FOR_ALL);
+
+    public ExpressionItem toExpressionItem() {
+        return new UnaryExpression(
+                convertToExpressionItem(getChildrenRuleLines().getRuleLines(), 0),
+                OperatorKind.FOR_ALL);
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

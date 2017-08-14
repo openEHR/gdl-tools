@@ -4,12 +4,12 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.GTCodeRuleLineElemen
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.GTCodeDefiner;
 
 
-public class FiredRuleInstantiationRuleLine extends RuleLine implements GTCodeDefiner{
+public class FiredRuleInstantiationRuleLine extends RuleLine implements GTCodeDefiner {
 
     private GTCodeRuleLineElement _gtCodeRuleLineElement = null;
 
     public FiredRuleInstantiationRuleLine() {
-        super("","");
+        super("", "");
         _gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
     }
 
@@ -24,7 +24,8 @@ public class FiredRuleInstantiationRuleLine extends RuleLine implements GTCodeDe
     public void setGTCode(String term) {
         getGTCodeRuleLineElement().setValue(term);
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

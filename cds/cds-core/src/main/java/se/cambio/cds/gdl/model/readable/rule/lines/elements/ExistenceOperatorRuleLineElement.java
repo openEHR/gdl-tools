@@ -16,7 +16,7 @@ public class ExistenceOperatorRuleLineElement extends RuleLineElementWithValue<S
 
     public ExistenceOperatorRuleLineElement(RuleLine ruleLine) {
         super(ruleLine, null);
-        _codes = new ArrayList<String>();
+        _codes = new ArrayList<>();
         _codes.add(HAS_VALUE);
         _codes.add(HAS_NO_VALUE);
     }

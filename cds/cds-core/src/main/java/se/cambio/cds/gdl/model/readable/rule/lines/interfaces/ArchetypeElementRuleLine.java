@@ -3,9 +3,9 @@ package se.cambio.cds.gdl.model.readable.rule.lines.interfaces;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 
 
-public interface ArchetypeElementRuleLine extends ArchetypeReferenceRuleLine{
+public interface ArchetypeElementRuleLine extends ArchetypeReferenceRuleLine {
 
-    public ArchetypeElementVO getArchetypeElement();
+    ArchetypeElementVO getArchetypeElement();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

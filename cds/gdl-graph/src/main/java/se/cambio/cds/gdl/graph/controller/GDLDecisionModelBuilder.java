@@ -282,7 +282,7 @@ class GDLDecisionModelBuilder {
     private void addSimpleAssignmentFromExpressionItems(AssignmentExpression assignmentExpression, Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems) {
         if (assignmentExpression instanceof CreateInstanceExpression) {
             CreateInstanceExpression createInstanceExpression = (CreateInstanceExpression) assignmentExpression;
-            simpleAssignmentsFromExpressionItems.addAll(createInstanceExpression.getAssigment().getAssignmentExpressions());
+            simpleAssignmentsFromExpressionItems.addAll(createInstanceExpression.getAssignment().getAssignmentExpressions());
         } else {
             simpleAssignmentsFromExpressionItems.add(assignmentExpression);
         }

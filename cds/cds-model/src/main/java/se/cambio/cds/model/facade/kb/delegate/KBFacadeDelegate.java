@@ -6,14 +6,10 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 import java.util.Collection;
 
 
-/**
- * @author iago.corbal
- *
- */
 public interface KBFacadeDelegate {
 
-    public Collection<ElementInstance> getKBElementsByIdTemplate(Collection<String> idTemplates)
-	    throws InternalErrorException;
+    Collection<ElementInstance> getKBElementsByIdTemplate(Collection<String> idTemplates)
+            throws InternalErrorException;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

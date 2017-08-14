@@ -1,5 +1,10 @@
 package se.cambio.cds.gdl.model.expression;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class MathConstant extends ConstantExpression {
     private Constant constant;
 
@@ -9,13 +14,9 @@ public class MathConstant extends ConstantExpression {
     }
 
     public static MathConstant create(Constant constant) {
-        if(constant == null) {
+        if (constant == null) {
             throw new IllegalArgumentException("null constant");
         }
         return new MathConstant(constant);
-    }
-
-    public Constant getConstant() {
-        return constant;
     }
 }

@@ -2,11 +2,8 @@ package se.cambio.cds.gdl.model.expression;
 
 import java.io.Serializable;
 
-public abstract class ExpressionItem implements Serializable{
+public abstract class ExpressionItem implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
 }

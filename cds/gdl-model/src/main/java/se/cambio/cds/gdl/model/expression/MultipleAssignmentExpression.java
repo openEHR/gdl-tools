@@ -1,71 +1,37 @@
 package se.cambio.cds.gdl.model.expression;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class MultipleAssignmentExpression extends ExpressionItem {
 
-	/**
-     *
-     */
+    private List<AssignmentExpression> assignmentExpressions = new ArrayList<>();
     private static final long serialVersionUID = 1L;
-	public MultipleAssignmentExpression(List<AssignmentExpression> assignmentExpressions) {
-		super();
+
+    MultipleAssignmentExpression(List<AssignmentExpression> assignmentExpressions) {
+        super();
         this.assignmentExpressions = assignmentExpressions;
-	}
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((assignmentExpressions == null) ? 0 : assignmentExpressions.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MultipleAssignmentExpression other = (MultipleAssignmentExpression) obj;
-		if (assignmentExpressions == null) {
-			if (other.assignmentExpressions != null)
-				return false;
-		} else if (!assignmentExpressions.equals(other.assignmentExpressions))
-			return false;
-		return true;
-	}
-	
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
         buf.append("(");
-        if (assignmentExpressions!=null){
+        if (assignmentExpressions != null) {
             String prefix = "";
-            for(AssignmentExpression assignmentExpression: assignmentExpressions){
+            for (AssignmentExpression assignmentExpression : assignmentExpressions) {
                 buf.append(prefix);
                 buf.append(assignmentExpression);
                 prefix = ";";
             }
         }
         buf.append(")");
-		return buf.toString();
-	}
-
-    public List<AssignmentExpression> getAssignmentExpressions() {
-        return assignmentExpressions;
+        return buf.toString();
     }
-
-    public void setAssignmentExpressions(List<AssignmentExpression> assignmentExpressions) {
-        this.assignmentExpressions = assignmentExpressions;
-    }
-
-    private List<AssignmentExpression> assignmentExpressions;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

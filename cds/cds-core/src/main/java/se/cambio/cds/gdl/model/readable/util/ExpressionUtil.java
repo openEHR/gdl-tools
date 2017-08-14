@@ -6,9 +6,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.elements.RuleLineElementWithV
 public class ExpressionUtil {
 
     public static String convertToHTMLText(RuleLineElementWithValue<ExpressionItem> ruleLineElement, ExpressionItem expressionItem, String language) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(toString(ruleLineElement, expressionItem, language));
-        return sb.toString();
+        return toString(ruleLineElement, expressionItem, language);
     }
 
     public static String toString(RuleLineElementWithValue<ExpressionItem> ruleLineElement, ExpressionItem expressionItem, String language) {
@@ -24,7 +22,7 @@ public class ExpressionUtil {
             FunctionalExpression fe = (FunctionalExpression) expressionItem;
             StringBuilder sb = new StringBuilder();
             String postFix = "";
-            for(ExpressionItem ei : fe.getItems()) {
+            for (ExpressionItem ei : fe.getItems()) {
                 sb.append(postFix)
                         .append(toString(ruleLineElement, ei, language));
                 postFix = ",";
@@ -62,7 +60,7 @@ public class ExpressionUtil {
             FunctionalExpression fe = (FunctionalExpression) expressionItem;
             StringBuilder sb = new StringBuilder();
             String postFix = "";
-            for(ExpressionItem ei : fe.getItems()) {
+            for (ExpressionItem ei : fe.getItems()) {
                 sb.append(postFix)
                         .append(getEditableExpressionString(ei));
                 postFix = ", ";

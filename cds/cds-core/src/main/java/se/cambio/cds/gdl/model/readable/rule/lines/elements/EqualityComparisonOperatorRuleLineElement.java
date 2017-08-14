@@ -3,7 +3,6 @@ package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +14,7 @@ public class EqualityComparisonOperatorRuleLineElement extends RuleLineElementWi
 
     public EqualityComparisonOperatorRuleLineElement(RuleLine ruleLine) {
         super(ruleLine, null);
-        _operators = new ArrayList<OperatorKind>();
+        _operators = new ArrayList<>();
         _operators.add(OperatorKind.EQUALITY);
         _operators.add(OperatorKind.INEQUAL);
     }

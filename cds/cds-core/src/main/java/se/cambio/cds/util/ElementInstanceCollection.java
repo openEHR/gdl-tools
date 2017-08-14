@@ -13,8 +13,8 @@ import java.util.*;
 
 public class ElementInstanceCollection {
 
-    public final static String EMPTY_CODE = "*EMPTY*";
-    private Map<String, Map<String, Map<String, Set<ArchetypeReference>>>> _archetypeReferenceMap = null;
+    public static final String EMPTY_CODE = "*EMPTY*";
+    private Map<String, Map<String, Map<String, Set<ArchetypeReference>>>> archetypeReferenceMap = null;
     private ElementInstanceCollectionManager elementInstanceCollectionManager;
 
     public ElementInstanceCollection(ElementInstanceCollectionManager elementInstanceCollectionManager) {
@@ -23,20 +23,6 @@ public class ElementInstanceCollection {
 
     public void add(ElementInstance elementInstance) {
         add(elementInstance.getArchetypeReference(), null, null);
-    }
-
-    public void addAll(Collection<ElementInstance> elementInstances) {
-        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
-        for (ElementInstance elementInstance : elementInstances) {
-            archetypeReferences.add(elementInstance.getArchetypeReference());
-        }
-        addAll(archetypeReferences, null);
-    }
-
-    public void addAll(Collection<ArchetypeReference> archetypeReferences, GuideManager guideManager) {
-        for (ArchetypeReference archetypeReferenceToAdd : archetypeReferences) {
-            add(archetypeReferenceToAdd, guideManager, null);
-        }
     }
 
     public void add(ArchetypeReference archetypeReferenceToAdd) {
@@ -92,6 +78,20 @@ public class ElementInstanceCollection {
         archetypeReferencesInCollection.add(archetypeReferenceToAdd);
     }
 
+    public void addAll(Collection<ElementInstance> elementInstances) {
+        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
+        for (ElementInstance elementInstance : elementInstances) {
+            archetypeReferences.add(elementInstance.getArchetypeReference());
+        }
+        addAll(archetypeReferences, null);
+    }
+
+    public void addAll(Collection<ArchetypeReference> archetypeReferences, GuideManager guideManager) {
+        for (ArchetypeReference archetypeReferenceToAdd : archetypeReferences) {
+            add(archetypeReferenceToAdd, guideManager, null);
+        }
+    }
+
     private Collection<Guide> getGuides(GuideManager guideManager, GeneratedElementInstance predicateOriginalEI, DataValue dv) {
         Collection<Guide> guides = new ArrayList<>();
         Set<String> guideIds = getReferenceGuideIds(dv, predicateOriginalEI.getRuleReferences());
@@ -129,9 +129,9 @@ public class ElementInstanceCollection {
 
     public boolean matches(GeneratedArchetypeReference generatedArchetypeReference, Map<String, Guide> guideMap, Calendar date) {
         boolean matches = false;
-        Iterator<ArchetypeReference> i = getArchetypeReferences(generatedArchetypeReference).iterator();
-        while (i.hasNext() && !matches) {
-            ArchetypeReference ar = i.next();
+        Iterator<ArchetypeReference> iterator = getArchetypeReferences(generatedArchetypeReference).iterator();
+        while (iterator.hasNext() && !matches) {
+            ArchetypeReference ar = iterator.next();
             matches = elementInstanceCollectionManager.matchAndFill(generatedArchetypeReference, ar, guideMap, date);
         }
         return matches;
@@ -152,14 +152,6 @@ public class ElementInstanceCollection {
             elementInstances.addAll(ar.getElementInstancesMap().values());
         }
         return elementInstances;
-    }
-
-    public Set<ArchetypeReference> getAllArchetypeReferences() {
-        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
-        for (String idArchetype : getArchetypeReferenceMap().keySet()) {
-            archetypeReferences.addAll(getAllArchetypeReferences(idArchetype));
-        }
-        return archetypeReferences;
     }
 
     public Set<ElementInstance> getAllElementInstancesByDomain(String idDomain) {
@@ -188,6 +180,13 @@ public class ElementInstanceCollection {
         return getArchetypeReferences(archetypeReference.getIdArchetype(), idDomain, idAux);
     }
 
+    private Set<ArchetypeReference> getArchetypeReferences(String idArchetype, String idDomain, String idAux) {
+        if (idAux == null) {
+            LoggerFactory.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferences with idAux=='null'");
+        }
+        return getArchetypeReferenceMap(idArchetype, idDomain).computeIfAbsent(idAux, k -> new HashSet<>());
+    }
+
     private Set<ArchetypeReference> getAllArchetypeReferences(String idArchetype) {
         Set<ArchetypeReference> archetypeReferences = new HashSet<>();
         for (String idDomain : getArchetypeReferenceMap(idArchetype).keySet()) {
@@ -205,11 +204,12 @@ public class ElementInstanceCollection {
         return archetypeReferences;
     }
 
-    private Set<ArchetypeReference> getArchetypeReferences(String idArchetype, String idDomain, String idAux) {
-        if (idAux == null) {
-            LoggerFactory.getLogger(ElementInstanceCollection.class).warn("Call to getArchetypeReferences with idAux=='null'");
+    public Set<ArchetypeReference> getAllArchetypeReferences() {
+        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
+        for (String idArchetype : getArchetypeReferenceMap().keySet()) {
+            archetypeReferences.addAll(getAllArchetypeReferences(idArchetype));
         }
-        return getArchetypeReferenceMap(idArchetype, idDomain).computeIfAbsent(idAux, k -> new HashSet<>());
+        return archetypeReferences;
     }
 
     private Map<String, Set<ArchetypeReference>> getArchetypeReferenceMap(String idArchetype, String idDomain) {
@@ -223,19 +223,19 @@ public class ElementInstanceCollection {
         return getArchetypeReferenceMap().computeIfAbsent(idArchetype, k -> new HashMap<>());
     }
 
+    private Map<String, Map<String, Map<String, Set<ArchetypeReference>>>> getArchetypeReferenceMap() {
+        if (archetypeReferenceMap == null) {
+            archetypeReferenceMap = new HashMap<>();
+        }
+        return archetypeReferenceMap;
+    }
+
     public Collection<ArchetypeReference> getAllArchetypeReferencesByDomain(String domainId) {
         Collection<ArchetypeReference> ars = new ArrayList<>();
         for (String idArchetype : getArchetypeReferenceMap().keySet()) {
             ars.addAll(getAllArchetypeReferences(idArchetype, domainId));
         }
         return ars;
-    }
-
-    private Map<String, Map<String, Map<String, Set<ArchetypeReference>>>> getArchetypeReferenceMap() {
-        if (_archetypeReferenceMap == null) {
-            _archetypeReferenceMap = new HashMap<>();
-        }
-        return _archetypeReferenceMap;
     }
 
     public String toString() {
@@ -247,9 +247,9 @@ public class ElementInstanceCollection {
                 sb.append("-Domain=").append(idDomain).append("\n");
                 for (String idAux : getArchetypeReferenceMap(idArchetype, idDomain).keySet()) {
                     sb.append("--idAux=").append(idAux).append("\n");
-                    int i = 1;
+                    int index = 1;
                     for (ArchetypeReference ar : getArchetypeReferences(idArchetype, idDomain, idAux)) {
-                        sb.append("---[").append(i).append("]\n");
+                        sb.append("---[").append(index).append("]\n");
                         for (String idElement : ar.getElementInstancesMap().keySet()) {
                             sb.append("----").append(idElement).append("");
                             ElementInstance ei = ar.getElementInstancesMap().get(idElement);

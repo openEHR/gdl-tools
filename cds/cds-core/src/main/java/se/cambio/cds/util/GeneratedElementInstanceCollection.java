@@ -1,6 +1,6 @@
 package se.cambio.cds.util;
 
-public class GeneratedElementInstanceCollection extends ElementInstanceCollection{
+public class GeneratedElementInstanceCollection extends ElementInstanceCollection {
     public GeneratedElementInstanceCollection(ElementInstanceCollectionManager elementInstanceCollectionManager) {
         super(elementInstanceCollectionManager);
     }

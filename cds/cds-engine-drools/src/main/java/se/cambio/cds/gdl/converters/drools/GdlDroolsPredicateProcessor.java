@@ -128,12 +128,12 @@ public class GdlDroolsPredicateProcessor {
                 archetypeBinding.getTemplateId(),
                 idElement);
         if (archetypeElement != null) {
-            String rmName = archetypeElement.getRMType();
             String arithmeticExpressionStr = ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItem, null);
             arithmeticExpressionStr = "(" + arithmeticExpressionStr + ")";
             sb.append(TAB);
             sb.append("eval(");
             Variable var = new Variable(predicateHandle, predicateHandle, path, attribute);
+            String rmName = archetypeElement.getRMType();
             String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName, var);
             sb.append("(");
             if (GDLDroolsConverter.isString(rmName, attribute)) {

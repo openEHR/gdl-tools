@@ -1,7 +1,7 @@
 package se.cambio.cds.gdl.model;
 
 public enum Domain {
-	CDS, EHR;
+    CDS, EHR
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

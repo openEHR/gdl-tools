@@ -9,7 +9,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class SetElementWithElementActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine{
+public class SetElementWithElementActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement2 = null;
@@ -21,15 +21,15 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
         archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
         archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"SetElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "SetElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ToRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ToRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement2);
     }
 
-    public AssignmentExpression toAssignmentExpression() throws IllegalStateException{
+    public AssignmentExpression toAssignmentExpression() throws IllegalStateException {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-        if (archetypeElementVO==null){
+        if (archetypeElementVO == null) {
             throw new IllegalStateException("No variable set");
         }
         String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
@@ -37,7 +37,7 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
                 archetypeElementRuleLineElement.getValue().getValue(),
                 null, name);
         ArchetypeElementVO archetypeElementVO2 = getSecondArchetypeElementRuleLineElement().getArchetypeElementVO();
-        if (archetypeElementVO2==null){
+        if (archetypeElementVO2 == null) {
             throw new IllegalStateException("No variable to assign set");
         }
         Variable varAux = new Variable(
@@ -45,7 +45,8 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
                 null, name);
         return new AssignmentExpression(var, varAux);//TODO
     }
-    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
+
+    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement() {
         return archetypeElementRuleLineElement;
     }
 
@@ -53,7 +54,8 @@ public class SetElementWithElementActionRuleLine extends AssignmentExpressionRul
         return archetypeElementRuleLineElement2;
     }
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

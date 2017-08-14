@@ -1,7 +1,7 @@
 package se.cambio.cds.controller.cds;
 
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.slf4j.LoggerFactory;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.model.facade.ehr.delegate.EhrService;
 import se.cambio.cds.model.facade.execution.vo.GeneratedArchetypeReference;
@@ -17,6 +17,7 @@ import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
+@Slf4j
 public class CdsDataManager {
 
     private DateTimeARFinder dateTimeARFinder;
@@ -62,7 +63,9 @@ public class CdsDataManager {
         return eic.getAllElementInstances();
     }
 
-    private ElementInstanceCollection queryEHRForElements(String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager, Calendar date, GeneratedElementInstanceCollection completeEIC) {
+    private ElementInstanceCollection queryEHRForElements(
+            String ehrId, Collection<ArchetypeReference> data, GuideManager guideManager,
+            Calendar date, GeneratedElementInstanceCollection completeEIC) {
         ElementInstanceCollection eic = new ElementInstanceCollection(elementInstanceCollectionManager);
         if (data != null) {
             if (filterArchetypeReferences) {
@@ -86,7 +89,8 @@ public class CdsDataManager {
         return eic;
     }
 
-    private Map<String, Collection<ArchetypeReference>> getFilteredEhrDataMap(Map<String, Collection<ArchetypeReference>> ehrDataMap, Calendar date, GuideManager guideManager) {
+    private Map<String, Collection<ArchetypeReference>> getFilteredEhrDataMap(
+            Map<String, Collection<ArchetypeReference>> ehrDataMap, Calendar date, GuideManager guideManager) {
         Map<String, Collection<ArchetypeReference>> filteredEhrDataMap = new HashMap<>();
         for (Map.Entry<String, Collection<ArchetypeReference>> entry : ehrDataMap.entrySet()) {
             String ehrId = entry.getKey();
@@ -97,7 +101,8 @@ public class CdsDataManager {
         return filteredEhrDataMap;
     }
 
-    private Set<ArchetypeReference> filterEhrData(GuideManager guideManager, String ehrId, Collection<ArchetypeReference> archetypeReferences, Calendar date) {
+    private Set<ArchetypeReference> filterEhrData(
+            GuideManager guideManager, String ehrId, Collection<ArchetypeReference> archetypeReferences, Calendar date) {
         DateTime ehrDate = new DateTime(date);
         return ehrDataFilterManager.filterEHRDataByGuides(ehrId, ehrDate, guideManager.getAllGuides(), archetypeReferences);
     }
@@ -115,7 +120,8 @@ public class CdsDataManager {
         return ars;
     }
 
-    private Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date) {
+    private Collection<ArchetypeReference> getArchetypeReferencesAndCheckMissing(
+            ElementInstanceCollection eic, GeneratedElementInstanceCollection completeEIC, GuideManager guideManager, Calendar date) {
         checkForMissingElements(eic, completeEIC, guideManager, date);
         return eic.getAllArchetypeReferences();
     }
@@ -191,8 +197,8 @@ public class CdsDataManager {
                     ElementInstance prevEI = arPrev.getElementInstancesMap().get(pgeiNew.getId());
                     if (prevEI instanceof PredicateGeneratedElementInstance) {
                         PredicateGeneratedElementInstance pgeiPrev = (PredicateGeneratedElementInstance) prevEI;
-                        if (!pgeiNew.getOperatorKind().equals(pgeiPrev.getOperatorKind()) ||
-                                DVUtil.compareDVs(pgeiNew.getDataValue(), pgeiPrev.getDataValue()) != 0) {
+                        if (!pgeiNew.getOperatorKind().equals(pgeiPrev.getOperatorKind())
+                                || DVUtil.compareDVs(pgeiNew.getDataValue(), pgeiPrev.getDataValue()) != 0) {
                             //TODO Find a predicate (if possible) that includes both
                             //Incompatible predicates found, we remove data value and operation
                             new PredicateGeneratedElementInstanceBuilder()
@@ -204,7 +210,6 @@ public class CdsDataManager {
                     }
                 }
                 if (eiAux instanceof GeneratedElementInstance && newEI instanceof GeneratedElementInstance) {
-                    //Add new rule references
                     GeneratedElementInstance gei = (GeneratedElementInstance) eiAux;
                     GeneratedElementInstance gei2 = (GeneratedElementInstance) newEI;
                     gei.getRuleReferences().addAll(gei2.getRuleReferences());
@@ -255,11 +260,11 @@ public class CdsDataManager {
             if (eventTimePath != null) {
                 String eventTimeElementId = archetypeReference.getIdArchetype() + eventTimePath;
                 if (!archetypeReference.getElementInstancesMap().containsKey(eventTimeElementId)) {
-                    LoggerFactory.getLogger(CdsDataManager.class).info("Adding event path '" + eventTimeElementId + "' for archetype '" + archetypeReference.getIdArchetype() + "'!");
+                    log.info("Adding event path '" + eventTimeElementId + "' for archetype '" + archetypeReference.getIdArchetype() + "'!");
                     new GeneratedElementInstance(eventTimeElementId, null, archetypeReference, null, OpenEHRConstUI.NULL_FLAVOUR_CODE_NO_INFO);
                 }
             } else {
-                LoggerFactory.getLogger(CdsDataManager.class).warn("Could not find event path for archetype '" + archetypeReference.getIdArchetype() + "'!");
+                log.warn("Could not find event path for archetype '" + archetypeReference.getIdArchetype() + "'!");
             }
         }
     }
