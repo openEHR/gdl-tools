@@ -6,12 +6,12 @@ import se.cambio.cds.formgen.view.frame.CDSFormGenFrame;
 public class InitCDSFormGenerator {
 
     public static void main(String[] args) {
-	try {
-	    CDSFormGenFrame cdsFormGenFrame = new CDSFormGenFrame();
-	    cdsFormGenFrame.setVisible(true);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
+        try {
+            CDSFormGenFrame cdsFormGenFrame = new CDSFormGenFrame();
+            cdsFormGenFrame.setVisible(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
 /*

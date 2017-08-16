@@ -35,18 +35,14 @@ public class OpenEHRNumberFormat {
             int numDecimals = strValue.length() - strValue.indexOf(".") - 1;
             if (numDecimals != precision) {
                 if (numDecimals > precision) {
-                    if (precision > 0) {
-                        DecimalFormat format = new DecimalFormat();
-                        format.setMinimumFractionDigits(precision);
-                        format.setMaximumFractionDigits(precision);
-                        DecimalFormatSymbols dfs = format.getDecimalFormatSymbols();
-                        dfs.setDecimalSeparator(DvQuantity.DECIMAL_SEPARATOR);
-                        format.setDecimalFormatSymbols(dfs);
-                        format.setGroupingUsed(false);
-                        return format.format(value);
-                    } else {
-                        return strValue.substring(0, strValue.indexOf("."));
-                    }
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMinimumFractionDigits(precision);
+                    format.setMaximumFractionDigits(precision);
+                    DecimalFormatSymbols dfs = format.getDecimalFormatSymbols();
+                    dfs.setDecimalSeparator(DvQuantity.DECIMAL_SEPARATOR);
+                    format.setDecimalFormatSymbols(dfs);
+                    format.setGroupingUsed(false);
+                    return format.format(value);
                 } else {
                     StringBuilder roundSB = new StringBuilder();
                     roundSB.append(strValue.substring(0, strValue.indexOf(".")))

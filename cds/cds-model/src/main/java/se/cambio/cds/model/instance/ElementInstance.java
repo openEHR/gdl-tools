@@ -91,7 +91,7 @@ public class ElementInstance implements Serializable, Cloneable {
             ElementInstance clone = (ElementInstance) super.clone();
             clone.setId(id);
             clone.setDataValue(dataValue);
-            clone.setArchetypeReference(archetypeReference.clone());
+            clone.archetypeReference = archetypeReference.clone();
             clone.setContainerInstance(containerInstance);
             clone.setNullFlavour(nullFlavour);
             return clone;

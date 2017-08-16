@@ -15,62 +15,63 @@ public class PanelWithButtons extends JPanel {
     private Map<JLabel, DVGenericPanel> _dvGenericPanelsMap = null;
     private JButton _removeButton = null;
     private JButton _addButton = null;
-    public PanelWithButtons(String name, Map<JLabel, DVGenericPanel> dvGenericPanelsMap, JButton addButton, JButton removeButton){
-	this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-	_dvGenericPanelsMap = dvGenericPanelsMap;
-	_addButton = addButton;
-	_removeButton = removeButton;
-	JPanel panelAux = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-	panelAux.setLayout(new BoxLayout(panelAux, BoxLayout.Y_AXIS));
-	this.add(panelAux);
-	this.setBorder(BorderFactory.createTitledBorder(name));
-	for (Map.Entry<JLabel, DVGenericPanel> dvGenericPanelEntry : dvGenericPanelsMap.entrySet()) {
-	    JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-	    panelAux2.add(dvGenericPanelEntry.getKey());
-        panelAux2.add(Box.createHorizontalStrut(5));
-        panelAux2.add(new JLabel("="));
-        panelAux2.add(Box.createHorizontalStrut(5));
-	    panelAux2.add(dvGenericPanelEntry.getValue());
-	    panelAux.add(panelAux2);
-	}
-	if (_addButton!=null){
-	    this.add(_addButton);
-	}
-	if (_removeButton!=null){
-	    this.add(_removeButton);
-	}
-	this.revalidate();
-	this.repaint();
+
+    public PanelWithButtons(String name, Map<JLabel, DVGenericPanel> dvGenericPanelsMap, JButton addButton, JButton removeButton) {
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        _dvGenericPanelsMap = dvGenericPanelsMap;
+        _addButton = addButton;
+        _removeButton = removeButton;
+        JPanel panelAux = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelAux.setLayout(new BoxLayout(panelAux, BoxLayout.Y_AXIS));
+        this.add(panelAux);
+        this.setBorder(BorderFactory.createTitledBorder(name));
+        for (Map.Entry<JLabel, DVGenericPanel> dvGenericPanelEntry : dvGenericPanelsMap.entrySet()) {
+            JPanel panelAux2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            panelAux2.add(dvGenericPanelEntry.getKey());
+            panelAux2.add(Box.createHorizontalStrut(5));
+            panelAux2.add(new JLabel("="));
+            panelAux2.add(Box.createHorizontalStrut(5));
+            panelAux2.add(dvGenericPanelEntry.getValue());
+            panelAux.add(panelAux2);
+        }
+        if (_addButton != null) {
+            this.add(_addButton);
+        }
+        if (_removeButton != null) {
+            this.add(_removeButton);
+        }
+        this.revalidate();
+        this.repaint();
     }
 
-    private Collection<JComponent> getJComponents(){
-	Collection<JComponent> components = new ArrayList<JComponent>();
-	for (DVGenericPanel dvGenericPanel : _dvGenericPanelsMap.values()) {
-	    components.addAll(dvGenericPanel.getJComponents());
-	}
-	return components;
+    private Collection<JComponent> getJComponents() {
+        Collection<JComponent> components = new ArrayList<JComponent>();
+        for (DVGenericPanel dvGenericPanel : _dvGenericPanelsMap.values()) {
+            components.addAll(dvGenericPanel.getJComponents());
+        }
+        return components;
     }
 
-    protected void setEditableComponents(boolean editable){
-	for (JComponent comp : getJComponents()) {
-	    if (editable){
-		DvSwingManager.enable(comp);
-		if (_addButton!=null){
-		    _addButton.setVisible(true);
-		}
-		if (_removeButton!=null){
-		    _removeButton.setVisible(true);
-		}
-	    }else{
-		DvSwingManager.disable(comp);
-		if (_addButton!=null){
-		    _addButton.setVisible(false);
-		}
-		if (_removeButton!=null){
-		    _removeButton.setVisible(false);
-		}
-	    }
-	}
+    protected void setEditableComponents(boolean editable) {
+        for (JComponent comp : getJComponents()) {
+            if (editable) {
+                DvSwingManager.enable(comp);
+                if (_addButton != null) {
+                    _addButton.setVisible(true);
+                }
+                if (_removeButton != null) {
+                    _removeButton.setVisible(true);
+                }
+            } else {
+                DvSwingManager.disable(comp);
+                if (_addButton != null) {
+                    _addButton.setVisible(false);
+                }
+                if (_removeButton != null) {
+                    _removeButton.setVisible(false);
+                }
+            }
+        }
     }
 }
 /*

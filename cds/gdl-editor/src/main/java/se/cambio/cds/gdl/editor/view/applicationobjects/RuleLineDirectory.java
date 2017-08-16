@@ -81,9 +81,9 @@ public class RuleLineDirectory {
     }
 
     public static boolean isDirectoryRuleLine(RuleLine ruleLine) {
-        return getSelectableDefinitions().contains(ruleLine) ||
-                getSelectableConditions().contains(ruleLine) ||
-                getSelectableActions().contains(ruleLine);
+        return getSelectableDefinitions().contains(ruleLine)
+                || getSelectableConditions().contains(ruleLine)
+                || getSelectableActions().contains(ruleLine);
     }
 
     public static ImageIcon getIconForRuleLine(RuleLine ruleLine) {
@@ -107,11 +107,11 @@ public class RuleLineDirectory {
 
     public static boolean checkRuleLineCompatibility(RuleLine ruleLine, RuleLine ruleLineParent) {
         if (ruleLineParent == null) {
-            return !(ruleLine instanceof ArchetypeElementInstantiationRuleLine ||
-                    ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine ||
-                    ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine ||
-                    ruleLine instanceof WithElementPredicateExistsDefinitionRuleLine ||
-                    ruleLine instanceof WithElementPredicateFunctionDefinitionRuleLine);
+            return !(ruleLine instanceof ArchetypeElementInstantiationRuleLine
+                    || ruleLine instanceof WithElementPredicateAttributeDefinitionRuleLine
+                    || ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine
+                    || ruleLine instanceof WithElementPredicateExistsDefinitionRuleLine
+                    || ruleLine instanceof WithElementPredicateFunctionDefinitionRuleLine);
         } else if (ruleLine instanceof ArchetypeInstantiationRuleLine) {
             return false;
         } else if (ruleLine instanceof ArchetypeElementInstantiationRuleLine) {
@@ -120,8 +120,9 @@ public class RuleLineDirectory {
             return ruleLineParent instanceof ArchetypeInstantiationRuleLine;
         } else if (ruleLine instanceof WithElementPredicateExpressionDefinitionRuleLine) {
             return ruleLineParent instanceof ArchetypeInstantiationRuleLine;
-        } else
+        } else {
             return !(ruleLineParent instanceof CreateInstanceActionRuleLine) || !(ruleLine instanceof CreateInstanceActionRuleLine);
+        }
     }
 }
 /*

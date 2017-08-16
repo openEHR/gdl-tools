@@ -45,9 +45,9 @@ class ButtonTabComponent extends JPanel {
             private static final long serialVersionUID = 1L;
 
             public String getText() {
-                int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-                if (i != -1) {
-                    return pane.getTitleAt(i);
+                int index = pane.indexOfTabComponent(ButtonTabComponent.this);
+                if (index != -1) {
+                    return pane.getTitleAt(index);
                 }
                 return null;
             }
@@ -86,9 +86,9 @@ class ButtonTabComponent extends JPanel {
         public void updateUI() {
         }
 
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g.create();
+        protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            Graphics2D g2 = (Graphics2D) graphics.create();
             if (getModel().isPressed()) {
                 g2.translate(1, 1);
             }
@@ -102,7 +102,7 @@ class ButtonTabComponent extends JPanel {
         }
     }
 
-    private final static MouseListener buttonMouseListener = new MouseAdapter() {
+    private static MouseListener buttonMouseListener = new MouseAdapter() {
         public void mouseEntered(MouseEvent ev) {
             Component component = ev.getComponent();
             if (component instanceof AbstractButton) {
@@ -119,7 +119,8 @@ class ButtonTabComponent extends JPanel {
             }
         }
     };
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

@@ -1,7 +1,6 @@
 
 package se.cambio.cds.gdl.editor.view.util;
 
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.view.dialog.DialogGTCodeSelection;
 import se.cambio.cds.gdl.editor.view.tables.BindingTable;

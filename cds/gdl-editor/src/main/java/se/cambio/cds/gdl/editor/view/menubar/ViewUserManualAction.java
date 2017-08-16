@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +28,9 @@ public class ViewUserManualAction extends AbstractAction {
     public void actionPerformed(ActionEvent ev) {
         try {
             String path =
-                    userConfigurationManager.getDocumentsFolder().getFolder() +
-                            File.separator +
-                            "user-manual.pdf";
+                    userConfigurationManager.getDocumentsFolder().getFolder()
+                            + File.separator
+                            + "user-manual.pdf";
             File file = new File(path);
             Desktop.getDesktop().open(file);
         } catch (IOException e1) {

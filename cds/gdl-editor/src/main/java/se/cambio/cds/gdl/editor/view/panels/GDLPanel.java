@@ -9,7 +9,7 @@ import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class GDLPanel extends JPanel implements RefreshablePanel{
+public class GDLPanel extends JPanel implements RefreshablePanel {
 
     private static final long serialVersionUID = 1L;
     private JScrollPane mainScrollPanel;
@@ -18,12 +18,12 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
     private JPanel mainPanel;
     private JLabel statusLabel;
 
-    GDLPanel(GDLEditor controller){
+    GDLPanel(GDLEditor controller) {
         this.controller = controller;
         init();
     }
 
-    public void init(){
+    public void init() {
         this.setLayout(new BorderLayout());
         DefaultSyntaxKit.initKit();
         DefaultSyntaxKit.registerContentType("text/gdl", GDLSyntaxKit.class.getCanonicalName());
@@ -40,27 +40,27 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
         return mainPanel;
     }
 
-    private JScrollPane getMainScrollPanel(){
-        if (mainScrollPanel==null){
+    private JScrollPane getMainScrollPanel() {
+        if (mainScrollPanel == null) {
             mainScrollPanel = new JScrollPane(getEditorPane());
         }
         return mainScrollPanel;
     }
 
-    private JEditorPane getEditorPane(){
-        if (editorPane ==null){
+    private JEditorPane getEditorPane() {
+        if (editorPane == null) {
             editorPane = new JEditorPane();
             editorPane.setEditable(true);
         }
         return editorPane;
     }
 
-    public String getGuideStr(){
+    public String getGuideStr() {
         return getEditorPane().getText();
     }
 
-    public void refresh(){
-        if (mainPanel != null){
+    public void refresh() {
+        if (mainPanel != null) {
             remove(mainPanel);
             mainPanel = null;
             mainScrollPanel = null;
@@ -69,7 +69,7 @@ public class GDLPanel extends JPanel implements RefreshablePanel{
         this.add(getMainPanel());
         getEditorPane().setContentType("text/gdl");
         String gdlStr = controller.getSerializedEntity();
-        if (gdlStr != null){
+        if (gdlStr != null) {
             getEditorPane().setText(gdlStr);
         }
         this.repaint();

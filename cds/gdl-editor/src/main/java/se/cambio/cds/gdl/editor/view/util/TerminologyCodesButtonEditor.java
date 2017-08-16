@@ -43,13 +43,14 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
             }
 
             @Override
-            public void focusGained(FocusEvent ev) { }
+            public void focusGained(FocusEvent ev) {
+            }
         });
 
         panel.getSearchButton().addActionListener(new SearchCodesActionListener(windowManager, terminologyDialogManager));
     }
 
-    public void update(){
+    public void update() {
         bindingTable.getModel().setValueAt(panel.getTextField().getText(), row, 1);
         bindingTable.updateResults();
     }
@@ -59,9 +60,9 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (String terminologyCode : terminologyCodes) {
-            if (!first){
+            if (!first) {
                 sb.append(", ");
-            }else{
+            } else {
                 first = false;
             }
             sb.append(terminologyCode);
@@ -73,12 +74,12 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
 
     public Component getTableCellEditorComponent(JTable table, Object value,
                                                  boolean isSelected, int row, int column) {
-        panel.getTextField().setText((String)value);
+        panel.getTextField().setText((String) value);
         this.row = row;
         return panel;
     }
 
-    private TerminologyCodesManager getTerminologyCodesManager(){
+    private TerminologyCodesManager getTerminologyCodesManager() {
         return this;
     }
 
@@ -96,7 +97,7 @@ public class TerminologyCodesButtonEditor extends DefaultCellEditor implements T
         public void actionPerformed(ActionEvent ev) {
             String terminologyCodes = panel.getTextField().getText();
             Collection<String> selectedCodes = new ArrayList<>();
-            if (!terminologyCodes.isEmpty()){
+            if (!terminologyCodes.isEmpty()) {
                 String[] codes = terminologyCodes.split(",");
                 for (String code : codes) {
                     selectedCodes.add(code.trim());

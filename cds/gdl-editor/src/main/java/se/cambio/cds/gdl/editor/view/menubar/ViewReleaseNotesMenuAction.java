@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +28,9 @@ public class ViewReleaseNotesMenuAction extends AbstractAction {
     public void actionPerformed(ActionEvent ev) {
         try {
             String path =
-                    userConfigurationManager.getDocumentsFolder().getFolder() +
-                            File.separator +
-                            "release-notes.txt";
+                    userConfigurationManager.getDocumentsFolder().getFolder()
+                            + File.separator
+                            + "release-notes.txt";
             Desktop.getDesktop().open(new File(path));
         } catch (IOException e1) {
             log.error("Error accessing release notes", e1);

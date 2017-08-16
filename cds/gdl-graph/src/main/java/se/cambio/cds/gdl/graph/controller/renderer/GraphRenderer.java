@@ -9,8 +9,12 @@ import java.awt.image.BufferedImage;
 
 public interface GraphRenderer {
     void insertGraphNode(GraphNode graphNode) throws GraphRenderingException;
+
     void insertGraphEdge(GraphEdge graphEdge) throws GraphRenderingException;
+
     JComponent generateGraphComponent();
+
     BufferedImage generateBufferedImage();
+
     void setNodeExploder(NodeExploder nodeExploder);
 }

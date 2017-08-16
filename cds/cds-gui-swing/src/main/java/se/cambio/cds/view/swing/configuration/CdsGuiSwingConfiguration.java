@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Import;
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.view.swing.DvSwingManager;
 import se.cambio.openehr.configuration.OpenEhrSwingConfiguration;
-import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.view.util.DVPanelFactory;
 

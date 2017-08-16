@@ -1,4 +1,5 @@
 package se.cambio.cds.gdl.editor.view.panels;
+
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -7,7 +8,7 @@ import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class RulePanel extends JPanel implements RefreshablePanel{
+public class RulePanel extends JPanel implements RefreshablePanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -16,18 +17,18 @@ public class RulePanel extends JPanel implements RefreshablePanel{
 
     private ConditionsAndActionsPanel conditionsAndActionsPanel;
 
-    RulePanel(GDLEditor controller){
-        this.controller =controller;
+    RulePanel(GDLEditor controller) {
+        this.controller = controller;
         initialize();
     }
 
-    private void initialize(){
+    private void initialize() {
         this.setLayout(new BorderLayout());
         this.add(getRuleEditorTabPane());
     }
 
-    private JTabbedPane getRuleEditorTabPane(){
-        if (ruleEditorTabPane == null){
+    private JTabbedPane getRuleEditorTabPane() {
+        if (ruleEditorTabPane == null) {
             ruleEditorTabPane = new JTabbedPane();
             ruleEditorTabPane.addTab(
                     GDLEditorLanguageManager.getMessage("ConditionsAndActions"),
@@ -37,8 +38,8 @@ public class RulePanel extends JPanel implements RefreshablePanel{
         return ruleEditorTabPane;
     }
 
-    private ConditionsAndActionsPanel getConditionsAndActionsPanel(){
-        if (conditionsAndActionsPanel==null){
+    private ConditionsAndActionsPanel getConditionsAndActionsPanel() {
+        if (conditionsAndActionsPanel == null) {
             conditionsAndActionsPanel = new ConditionsAndActionsPanel(controller);
         }
         return conditionsAndActionsPanel;

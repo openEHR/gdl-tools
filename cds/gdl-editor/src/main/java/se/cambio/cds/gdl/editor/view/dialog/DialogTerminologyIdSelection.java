@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class DialogTerminologyIdSelection extends DialogSelection{
+public class DialogTerminologyIdSelection extends DialogSelection {
 
     private static final long serialVersionUID = 1L;
     private JButton addTerminologyButton;
@@ -24,12 +24,12 @@ public class DialogTerminologyIdSelection extends DialogSelection{
                 GDLEditorLanguageManager.getMessage("AddTerminologyDesc"),
                 NodeDefinitionManager.getNodeTerminologyIds(terminologyIds),
                 true,
-                new Dimension(500,500), windowManager);
+                new Dimension(500, 500), windowManager);
         getSelectionPanel().getFilterPanel().add(getAddTerminologyButton());
     }
 
-    private JButton getAddTerminologyButton(){
-        if (addTerminologyButton==null){
+    private JButton getAddTerminologyButton() {
+        if (addTerminologyButton == null) {
             addTerminologyButton = new JButton(GDLEditorLanguageManager.getMessage("AddTerminology"));
             addTerminologyButton.setIcon(OpenEHRImageUtil.ADD_ICON);
             addTerminologyButton.addActionListener(new AddTerminologyActionListener(this));
@@ -37,11 +37,11 @@ public class DialogTerminologyIdSelection extends DialogSelection{
         return addTerminologyButton;
     }
 
-    public String getSelectedObject(){
-        if (terminologyIdCreated !=null){
+    public String getSelectedObject() {
+        if (terminologyIdCreated != null) {
             return terminologyIdCreated;
-        }else{
-            return (String)super.getSelectedObject();
+        } else {
+            return (String) super.getSelectedObject();
         }
     }
 
@@ -49,7 +49,7 @@ public class DialogTerminologyIdSelection extends DialogSelection{
         if (value.isEmpty()) {
             return false;
         }
-        for(Character character: value.toCharArray()) {
+        for (Character character : value.toCharArray()) {
             if (!Character.isJavaIdentifierPart(character)) {
                 return false;
             }
@@ -57,9 +57,10 @@ public class DialogTerminologyIdSelection extends DialogSelection{
         return true;
     }
 
-    private class AddTerminologyActionListener implements ActionListener{
+    private class AddTerminologyActionListener implements ActionListener {
         private JDialog _dialog = null;
-        AddTerminologyActionListener(JDialog dialog){
+
+        AddTerminologyActionListener(JDialog dialog) {
             _dialog = dialog;
         }
 
@@ -75,7 +76,10 @@ public class DialogTerminologyIdSelection extends DialogSelection{
                         terminologyIdCreated = value;
                         accept();
                     } else {
-                        JOptionPane.showMessageDialog(_dialog, GDLEditorLanguageManager.getMessage("InvalidId"), GDLEditorLanguageManager.getMessage("InvalidId"), JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(
+                                _dialog, GDLEditorLanguageManager.getMessage("InvalidId"),
+                                GDLEditorLanguageManager.getMessage("InvalidId"),
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
             } while (!correctName);

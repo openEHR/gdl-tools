@@ -3,7 +3,6 @@ package se.cambio.cds.gdl.editor.view.panels;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathNotFoundException;
 import se.cambio.cds.formgen.view.util.SpringUtilities;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 
@@ -281,46 +280,46 @@ public class DescriptionPanel extends JPanel {
     }
 
     private class ComponentFocusAdapter extends FocusAdapter {
-        private String xPath = null;
+        private String path = null;
         private JXPathContext context = null;
 
-        ComponentFocusAdapter(JXPathContext context, String xPath) {
-            this.xPath = xPath;
+        ComponentFocusAdapter(JXPathContext context, String path) {
+            this.path = path;
             this.context = context;
         }
 
         public void focusLost(FocusEvent ev) {
             if (ev.getSource() instanceof JTextComponent) {
                 JTextComponent textComponent = (JTextComponent) ev.getSource();
-                saveText(context, xPath, textComponent);
+                saveText(context, path, textComponent);
             } else if (ev.getSource() instanceof JComboBox) {
                 JComboBox comboBox = (JComboBox) ev.getSource();
                 String text = (String) comboBox.getSelectedItem();
-                context.setValue(xPath, text);
+                context.setValue(path, text);
             }
         }
 
 
     }
 
-    private void saveText(JXPathContext context, String xPath, JTextComponent textComponent) {
+    private void saveText(JXPathContext context, String xpath, JTextComponent textComponent) {
         String text = textComponent.getText();
         if (text != null) {
             text = text.replace("\"", "\\\"");
         }
-        context.setValue(xPath, text);
+        context.setValue(xpath, text);
     }
 
-    private void connect(JXPathContext context, String xPath, JComponent component) {
+    private void connect(JXPathContext context, String xpath, JComponent component) {
         if (component instanceof JTextComponent) {
             JTextComponent textComponent = (JTextComponent) component;
-            textComponent.getDocument().addDocumentListener(new DescriptionDocumentListener(context, xPath, textComponent));
+            textComponent.getDocument().addDocumentListener(new DescriptionDocumentListener(context, xpath, textComponent));
         } else {
-            component.addFocusListener(new ComponentFocusAdapter(context, xPath));
+            component.addFocusListener(new ComponentFocusAdapter(context, xpath));
         }
         String value = null;
         try {
-            value = (String) context.getValue(xPath);
+            value = (String) context.getValue(xpath);
         } catch (JXPathNotFoundException ex) {
             //Value not found
         }
@@ -337,11 +336,11 @@ public class DescriptionPanel extends JPanel {
 
     private class DescriptionDocumentListener implements DocumentListener {
         private JXPathContext context;
-        private String xPath = null;
+        private String xpath = null;
         private JTextComponent textComponent;
 
-        DescriptionDocumentListener(JXPathContext context, String xPath, JTextComponent textComponent) {
-            this.xPath = xPath;
+        DescriptionDocumentListener(JXPathContext context, String xpath, JTextComponent textComponent) {
+            this.xpath = xpath;
             this.context = context;
             this.textComponent = textComponent;
         }
@@ -362,7 +361,7 @@ public class DescriptionPanel extends JPanel {
         }
 
         private void update() {
-            saveText(context, xPath, textComponent);
+            saveText(context, xpath, textComponent);
         }
     }
 }

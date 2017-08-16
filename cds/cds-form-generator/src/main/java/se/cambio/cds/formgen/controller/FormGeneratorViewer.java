@@ -4,13 +4,13 @@ import javax.swing.SwingWorker;
 
 public interface FormGeneratorViewer {
 
-    public void setBusy(String description, SwingWorker<?, ?> sw);
+    void setBusy(String description, SwingWorker<?, ?> sw);
 
-    public void setBusy(String description);
+    void setBusy(String description);
 
-    public void changeBusyText(String description);
-    
-    public void setFree();
+    void changeBusyText(String description);
+
+    void setFree();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

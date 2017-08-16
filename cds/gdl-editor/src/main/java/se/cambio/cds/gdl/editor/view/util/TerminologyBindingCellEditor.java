@@ -26,7 +26,8 @@ public class TerminologyBindingCellEditor extends DefaultCellEditor {
 
     private static final long serialVersionUID = 1L;
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

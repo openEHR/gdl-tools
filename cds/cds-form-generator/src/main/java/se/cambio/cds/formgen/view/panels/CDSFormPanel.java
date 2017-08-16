@@ -133,10 +133,10 @@ public class CDSFormPanel extends JPanel {
     private JPanel getExecutionButtonPanel() {
         if (executionButtonPanel == null) {
             executionButtonPanel = new JPanel();
-            JButton jButton = new JButton(OpenEHRLanguageManager.getMessage("Execute"));
-            jButton.setIcon(OpenEHRImageUtil.LIGHTNING_ICON);
-            jButton.addActionListener(new ExecutionActionListener());
-            executionButtonPanel.add(jButton);
+            JButton button = new JButton(OpenEHRLanguageManager.getMessage("Execute"));
+            button.setIcon(OpenEHRImageUtil.LIGHTNING_ICON);
+            button.addActionListener(new ExecutionActionListener());
+            executionButtonPanel.add(button);
             executionButtonPanel.add(Box.createHorizontalStrut(10));
             executionButtonPanel.add(getExecutedRulesLabel());
         }
@@ -205,7 +205,7 @@ public class CDSFormPanel extends JPanel {
             for (RuleReference ruleReference : result.getFiredRules()) {
                 ReadableGuide readableGuide =
                         formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get(lang);
-                if (readableGuide == null) {//Language does not exist, fall back to English
+                if (readableGuide == null) {
                     readableGuide =
                             formGenerator.getReadableGuideMap().get(ruleReference.getGuideId()).get("en");
                 }

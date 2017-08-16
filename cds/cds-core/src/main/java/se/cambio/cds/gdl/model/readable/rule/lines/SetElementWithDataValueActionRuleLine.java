@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.ConstantExpression;
@@ -14,7 +15,7 @@ import se.cambio.cds.util.DVUtil;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-
+@Slf4j
 public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionRuleLine implements ArchetypeElementRuleLine, ActionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
@@ -54,7 +55,8 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
     public AssignmentExpression toAssignmentExpression() throws IllegalStateException {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
         if (archetypeElementVO == null) {
-            throw new IllegalStateException("No variable set");
+            log.debug("No variable set on assignment expression");
+            return null;
         }
         String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
         Variable var = new Variable(
@@ -65,7 +67,8 @@ public class SetElementWithDataValueActionRuleLine extends AssignmentExpressionR
         if (dataValue != null) {
             constantExpression = DVUtil.convertToExpression(dataValue);
         } else {
-            throw new IllegalStateException("No data value set");
+            log.debug("No data value set");
+            return null;
         }
         return new AssignmentExpression(
                 var,

@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
@@ -15,20 +9,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 
-
 public class SaveGuideAsAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
     private EditorManager editorManager;
 
-    SaveGuideAsAction(EditorManager editorManager){
+    SaveGuideAsAction(EditorManager editorManager) {
         super();
         this.editorManager = editorManager;
-        putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAs")+"...");
+        putValue(NAME, GDLEditorLanguageManager.getMessage("SaveGuideAs") + "...");
         putValue(SMALL_ICON, null);
         putValue(SHORT_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsSD"));
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("SaveGuideAsD"));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
     }
 
     public void actionPerformed(ActionEvent ev) {

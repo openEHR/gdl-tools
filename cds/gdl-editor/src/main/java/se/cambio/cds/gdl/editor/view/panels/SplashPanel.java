@@ -21,22 +21,22 @@ public class SplashPanel extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        g.drawImage(img, 0, 0, this);
-        g.setColor(new Color(56, 114, 57));
-        g.setFont(new Font("Arial", Font.BOLD, 17));
-        g.setColor(new Color(255, 255, 255));
-        g.setFont(new Font("Verdana", Font.BOLD, 12));
-        g.setColor(Color.white);
+    public void paintComponent(Graphics graphics) {
+        graphics.drawImage(img, 0, 0, this);
+        graphics.setColor(new Color(56, 114, 57));
+        graphics.setFont(new Font("Arial", Font.BOLD, 17));
+        graphics.setColor(new Color(255, 255, 255));
+        graphics.setFont(new Font("Verdana", Font.BOLD, 12));
+        graphics.setColor(Color.white);
         String versionNum = Version.getVersionNum();
         String buildNum = Version.getBuildNum();
         buildNum = (buildNum == null ? "" : buildNum);
         if (versionNum != null) {
-            g.drawString("v" + versionNum + " (" + buildNum + ")", 47, 281);
+            graphics.drawString("v" + versionNum + " (" + buildNum + ")", 47, 281);
         }
-        g.drawString(GDLEditorLanguageManager.getMessage("Developers") + ": Iago Corbal, Rong Chen", 47, 297);
-        g.drawString(GDLEditorLanguageManager.getMessage("Contributors") + ": Konstantinos Kalliamvakos, Mihindu Wijesena", 47, 313);
-        g.drawString(GDLEditorLanguageManager.getMessage("FundedBy") + ": Cambio Healthcare Systems (cambio.se)", 47, 329);
+        graphics.drawString(GDLEditorLanguageManager.getMessage("Developers") + ": Iago Corbal, Rong Chen", 47, 297);
+        graphics.drawString(GDLEditorLanguageManager.getMessage("Contributors") + ": Konstantinos Kalliamvakos, Mihindu Wijesena", 47, 313);
+        graphics.drawString(GDLEditorLanguageManager.getMessage("FundedBy") + ": Cambio Healthcare Systems (cambio.se)", 47, 329);
     }
 }
 /*

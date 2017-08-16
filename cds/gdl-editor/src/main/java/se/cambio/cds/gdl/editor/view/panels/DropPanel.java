@@ -7,12 +7,12 @@ public class DropPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private GridBagConstraints gridBagConstraints = null;
 
-    public DropPanel() {
+    DropPanel() {
         super();
         super.setLayout(new GridBagLayout());
     }
 
-    public GridBagConstraints getGBC() {
+    GridBagConstraints getGBC() {
         if (gridBagConstraints == null) {
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.weightx = 1;
@@ -55,11 +55,12 @@ public class DropPanel extends JPanel {
         this.validate();
     }
 
-    public void add(JComponent c) {
-        this.add(c, getGBC());
+    public void add(JComponent component) {
+        this.add(component, getGBC());
         getGBC().gridy++;
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

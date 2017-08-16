@@ -190,12 +190,13 @@ public class GuideImporter {
             if (guide.getOntology().getTermDefinitions() != null) {
                 termDefinition = guide.getOntology().getTermDefinitions().get(lang);
                 if (termDefinition == null) {
-                    termDefinition = guide.getOntology().getTermDefinitions().get(guide.getLanguage().getOriginalLanguage().getCodeString());
+                    termDefinition = guide.getOntology().getTermDefinitions().get(lang);
                 }
             }
         }
         if (termDefinition == null) {
             termDefinition = new TermDefinition();
+            guide.getOntology().getTermDefinitions().put(lang, termDefinition);
         }
         return termDefinition;
     }

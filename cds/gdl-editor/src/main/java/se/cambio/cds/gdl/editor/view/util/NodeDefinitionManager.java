@@ -313,22 +313,6 @@ public class NodeDefinitionManager {
                 .createSelectableNode();
     }
 
-    public SelectableNode<Object> getNodeAttributesAndFunctions(GDLEditor gdlEditor, boolean onlyCDSDomain, ArchetypeReference ar) {
-        RuleLineCollection definitionRuleLines = gdlEditor.getDefinitionRuleLines();
-        SelectableNode<Object> root = getSingleNodeAttributesAndFunctions();
-        SelectableNode<Object> elementsNode = getElementsNode();
-        root.add(elementsNode);
-        addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
-        if (!onlyCDSDomain) {
-            SelectableNode<Object> currentDateTimeNode = getCurrentTimeNodeWithAttributes();
-            elementsNode.add(currentDateTimeNode);
-        }
-        SelectableNode<GTCodeRuleLineElement> rulesNode = getGTCodeRuleLineElementNodes(gdlEditor.getRenderableRules(), true);
-        root.add(rulesNode);
-        root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
-        return root;
-    }
-
     private SelectableNode<Object> getCurrentTimeNodeWithAttributes() {
         GTCodeRuleLineElement currentDateTimeGTCodeRuleLineElement = getCurrentDateTimeGTCodeRuleLineElement();
         SelectableNode<Object> currentDateTimeNode =
@@ -344,6 +328,22 @@ public class NodeDefinitionManager {
                 .createSelectableNode();
         SelectableNode<Object> currentDateTimeNode = getCurrentTimeNodeWithAttributes();
         root.add(currentDateTimeNode);
+        return root;
+    }
+
+    public SelectableNode<Object> getNodeAttributesAndFunctions(GDLEditor gdlEditor, boolean onlyCDSDomain, ArchetypeReference ar) {
+        RuleLineCollection definitionRuleLines = gdlEditor.getDefinitionRuleLines();
+        SelectableNode<Object> root = getSingleNodeAttributesAndFunctions();
+        SelectableNode<Object> elementsNode = getElementsNode();
+        root.add(elementsNode);
+        addElementInstanceAttributesAndFunctionsToNode(definitionRuleLines, elementsNode, onlyCDSDomain, ar);
+        if (!onlyCDSDomain) {
+            SelectableNode<Object> currentDateTimeNode = getCurrentTimeNodeWithAttributes();
+            elementsNode.add(currentDateTimeNode);
+        }
+        SelectableNode<GTCodeRuleLineElement> rulesNode = getGTCodeRuleLineElementNodes(gdlEditor.getRenderableRules(), true);
+        root.add(rulesNode);
+        root.add(getArchetypeInstancesSelectionNodes(definitionRuleLines, onlyCDSDomain, ar));
         return root;
     }
 

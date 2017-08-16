@@ -14,13 +14,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, ClosableTabbebPane{
+public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, ClosableTabbebPane {
     private static final long serialVersionUID = 8349466066595869612L;
     private GDLEditor controller;
     private JTabbedPane termsTabPane = null;
     private ArrayList<BindingPanel> bindingPanels = new ArrayList<>();
 
-    MultipleBindingsPanel(GDLEditor controller){
+    MultipleBindingsPanel(GDLEditor controller) {
         this.controller = controller;
         init();
     }
@@ -31,14 +31,14 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
         refresh();
     }
 
-    public void refresh(){
+    public void refresh() {
         this.removeAll();
         termsTabPane = null;
         bindingPanels.clear();
-        if (controller.getTermBindings().isEmpty()){
+        if (controller.getTermBindings().isEmpty()) {
             this.setBorder(new EmptyBorder(10, 10, 10, 10));
             this.add(new JLabel(GDLEditorLanguageManager.getMessage("NoBindingsYetUseAddBindingButtonMsg")), BorderLayout.NORTH);
-        }else{
+        } else {
             this.setBorder(null);
             this.add(getTabbedPane(), BorderLayout.CENTER);
         }
@@ -46,25 +46,25 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
         this.validate();
     }
 
-    public JTabbedPane getTabbedPane(){
-        if (termsTabPane == null){
+    public JTabbedPane getTabbedPane() {
+        if (termsTabPane == null) {
             termsTabPane = new JTabbedPane();
             termsTabPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
 
             Set<String> bindingsCodes = controller.getTermBindings().keySet();
             if (bindingsCodes.size() > 0) {
-                int i = 0;
-                for (String tabName: bindingsCodes) {
-                    termsTabPane.addTab(tabName, null,getNewBindingPanel(tabName));
-                    termsTabPane.setTabComponentAt(i, new ButtonTabComponent(this, GDLEditorLanguageManager.getMessage("DeleteTerminologyDesc")));
-                    i++;
+                int index = 0;
+                for (String tabName : bindingsCodes) {
+                    termsTabPane.addTab(tabName, null, getNewBindingPanel(tabName));
+                    termsTabPane.setTabComponentAt(index, new ButtonTabComponent(this, GDLEditorLanguageManager.getMessage("DeleteTerminologyDesc")));
+                    index++;
                 }
             }
         }
         return termsTabPane;
     }
 
-    private BindingPanel getNewBindingPanel(String tabId){
+    private BindingPanel getNewBindingPanel(String tabId) {
         BindingPanel newBindingPanel = new BindingPanel(controller, tabId);
         bindingPanels.add(newBindingPanel);
         return newBindingPanel;
@@ -72,7 +72,7 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
 
     void addTermTab() throws InternalErrorException {
         String terminologyId = createNewTerminologyBinding();
-        if (terminologyId != null){
+        if (terminologyId != null) {
             refresh();
             selectTerminologyId(terminologyId);
         }
@@ -101,9 +101,9 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
         }
     }
 
-    private Collection<String> getTerminologyIdsUsed(){
+    private Collection<String> getTerminologyIdsUsed() {
         Collection<String> terminologyIdsUsed = new ArrayList<>();
-        for (BindingPanel bindingPanel: bindingPanels) {
+        for (BindingPanel bindingPanel : bindingPanels) {
             terminologyIdsUsed.add(bindingPanel.getOwnerTabName());
         }
         return terminologyIdsUsed;
@@ -113,7 +113,7 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
         if (index > -1) {
             String titleRef = getTabbedPane().getTitleAt(index);
             int selection = JOptionPane.showConfirmDialog(this,
-                    GDLEditorLanguageManager.getMessage("DeleteTerminologyBindingMessage",titleRef),
+                    GDLEditorLanguageManager.getMessage("DeleteTerminologyBindingMessage", titleRef),
                     GDLEditorLanguageManager.getMessage("DeleteTermPopupTitle"),
                     JOptionPane.YES_NO_OPTION);
             if (selection == JOptionPane.YES_OPTION) {
@@ -129,7 +129,7 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
     }
 
 
-    private void removeReference(String removeRef){
+    private void removeReference(String removeRef) {
         controller.getTermBindings().remove(removeRef);
     }
 
@@ -137,8 +137,8 @@ public class MultipleBindingsPanel extends JPanel implements RefreshablePanel, C
         List<String> terminologyIdsAvailable = new ArrayList<>();
         Collection<String> supportedTerminologiesIds = controller.getTerminologyService().getSupportedTerminologies();
         Collection<String> terminologyIdsUsed = getTerminologyIdsUsed();
-        for(String terminologyId: supportedTerminologiesIds){
-            if (!terminologyIdsUsed.contains(terminologyId)){
+        for (String terminologyId : supportedTerminologiesIds) {
+            if (!terminologyIdsUsed.contains(terminologyId)) {
                 terminologyIdsAvailable.add(terminologyId);
             }
         }

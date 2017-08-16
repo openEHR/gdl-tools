@@ -1,7 +1,5 @@
 package se.cambio.cds.gdl.editor.controller.interfaces;
 
-import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
-
 import javax.swing.*;
 
 

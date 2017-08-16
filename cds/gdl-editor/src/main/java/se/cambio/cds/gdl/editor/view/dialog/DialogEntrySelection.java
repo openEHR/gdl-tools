@@ -9,28 +9,29 @@ import se.cambio.openehr.view.dialogs.DialogSelection;
 import javax.swing.*;
 import java.awt.*;
 
-public class DialogEntrySelection extends DialogSelection{
+public class DialogEntrySelection extends DialogSelection {
 
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
-    private GDLEditor _controller = null;
-    private Object _selectedObject = null;
-    private boolean _onlyCDSDomain;
+    private GDLEditor controller = null;
+    private Object selectedObject = null;
+    private boolean onlyCDSDomain;
+
     public DialogEntrySelection(GDLEditor controller, boolean onlyCDSDomain) {
         super(controller.getWindowManager().getMainWindow(),
                 GDLEditorLanguageManager.getMessage("SelectEntry"),
                 NodeDefinitionManager.getArchetypeInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, null),
                 true,
-                new Dimension(500,500), controller.getWindowManager());
-        _controller = controller;
-        _onlyCDSDomain = onlyCDSDomain;
+                new Dimension(500, 500), controller.getWindowManager());
+        this.controller = controller;
+        this.onlyCDSDomain = onlyCDSDomain;
         getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());
     }
 
-    public Object getSelectedObject(){
-        if (_selectedObject!=null){
-            return _selectedObject;
-        }else{
+    public Object getSelectedObject() {
+        if (selectedObject != null) {
+            return selectedObject;
+        } else {
             return super.getSelectedObject();
         }
     }
@@ -44,8 +45,8 @@ public class DialogEntrySelection extends DialogSelection{
             addArchetypeReferenceButton.setEnabled(true);
             addArchetypeReferenceButton.addActionListener(e -> {
                 accept();
-                _selectedObject =
-                        _controller.addArchetypeReference(_onlyCDSDomain);
+                selectedObject =
+                        controller.addArchetypeReference(onlyCDSDomain);
             });
         }
         return addArchetypeReferenceButton;

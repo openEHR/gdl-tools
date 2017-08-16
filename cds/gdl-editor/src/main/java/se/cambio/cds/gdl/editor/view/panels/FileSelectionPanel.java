@@ -1,6 +1,3 @@
-/*
- * Creado el 03/07/2008
- */
 package se.cambio.cds.gdl.editor.view.panels;
 
 import java.awt.BorderLayout;
@@ -20,7 +17,7 @@ import se.cambio.cds.gdl.editor.view.menubar.FileSelectionAction;
 public class FileSelectionPanel extends JPanel {
 
     private static final long serialVersionUID = 8614448310448465673L;
-    private JPanel jPanel;
+    private JPanel panel;
     private JFileChooser fileChooser = null;
     private EditorManager editorManager;
     private JTextField fileNameJTextField = null;
@@ -41,23 +38,23 @@ public class FileSelectionPanel extends JPanel {
 
 
     private JPanel getPanel() {
-        if (jPanel == null) {
-            jPanel = new JPanel(new GridBagLayout());
+        if (panel == null) {
+            panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.weightx = 1.0;
             gbc.insets = new Insets(5, 5, 5, 5);
             gbc.fill = java.awt.GridBagConstraints.BOTH;
-            jPanel.add(getFileNameJTextField(), gbc);
+            panel.add(getFileNameJTextField(), gbc);
             gbc.gridx++;
             gbc.weightx = 0;
-            jPanel.add(getSelectFileButton(), gbc);
+            panel.add(getSelectFileButton(), gbc);
             gbc.gridx++;
             gbc.weightx = 0;
-            jPanel.add(getCleanSelectionButton(), gbc);
+            panel.add(getCleanSelectionButton(), gbc);
         }
-        return jPanel;
+        return panel;
     }
 
     public JTextField getFileNameJTextField() {

@@ -4,7 +4,9 @@ import java.awt.*;
 
 public class GraphEdge {
 
-    public enum Style {NORMAL, DASHED};
+    public enum Style {
+        NORMAL, DASHED
+    }
 
     private Color color;
     private String label;

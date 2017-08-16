@@ -12,7 +12,7 @@ import java.awt.event.MouseMotionListener;
 public abstract class DraggablePanel extends JPanel implements MouseListener, MouseMotionListener {
     private static final long serialVersionUID = 1L;
     private Point mLastPoint;
-    private JLabel _dragLabel = null;
+    private JLabel dragLabel = null;
 
     public DraggablePanel(JComponent component) {
         super(new BorderLayout());
@@ -26,34 +26,35 @@ public abstract class DraggablePanel extends JPanel implements MouseListener, Mo
     }
 
     private JLabel getDragLabel() {
-        if (_dragLabel == null) {
-            _dragLabel = new JLabel();
-            _dragLabel.setIcon(GDLEditorImageUtil.DRAG_ICON);
-            _dragLabel.setToolTipText(GDLEditorLanguageManager.getMessage("MoveLine"));
+        if (dragLabel == null) {
+            dragLabel = new JLabel();
+            dragLabel.setIcon(GDLEditorImageUtil.DRAG_ICON);
+            dragLabel.setToolTipText(GDLEditorLanguageManager.getMessage("MoveLine"));
         }
-        return _dragLabel;
+        return dragLabel;
     }
 
-    public void mouseDragged(MouseEvent event_) {
-        int x, y;
+    public void mouseDragged(MouseEvent event) {
+        int valueX;
+        int valueY;
         if (mLastPoint != null) {
-            x = 0;
-            y = super.getY() + (event_.getY() - (int) mLastPoint.getY());
-            super.setLocation(x, y);
+            valueX = 0;
+            valueY = super.getY() + (event.getY() - (int) mLastPoint.getY());
+            super.setLocation(valueX, valueY);
         }
     }
 
-    public void mouseMoved(MouseEvent event_) {
-        setCursorType(event_.getPoint());
+    public void mouseMoved(MouseEvent event) {
+        setCursorType(event.getPoint());
     }
 
-    public void mouseClicked(MouseEvent event_) {
+    public void mouseClicked(MouseEvent event) {
     }
 
-    public void mouseEntered(MouseEvent event_) {
+    public void mouseEntered(MouseEvent event) {
     }
 
-    public void mouseExited(MouseEvent event_) {
+    public void mouseExited(MouseEvent event) {
         if (mLastPoint == null) {
             super.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
@@ -76,11 +77,11 @@ public abstract class DraggablePanel extends JPanel implements MouseListener, Mo
         }
     }
 
-    private void setCursorType(Point p) {
+    private void setCursorType(Point point) {
         Point loc = super.getLocation();
         Dimension size = super.getSize();
 
-        if ((p.y + 4 < loc.y + size.height) && (p.x + 4 < p.x + size.width)) {
+        if ((point.y + 4 < loc.y + size.height) && (point.x + 4 < point.x + size.width)) {
             super.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }

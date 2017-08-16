@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +13,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class ExportToHTMLAction extends AbstractAction {
@@ -58,8 +50,8 @@ public class ExportToHTMLAction extends AbstractAction {
         if (result != JFileChooser.CANCEL_OPTION) {
             try {
                 selectedFile = fileChooser.getSelectedFile();
-                FileWriter fstream = new FileWriter(selectedFile);
-                BufferedWriter out = new BufferedWriter(fstream);
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(selectedFile), StandardCharsets.UTF_8);
+                BufferedWriter out = new BufferedWriter(writer);
                 out.write(guideHTMLExporter.convertToHTML(guide, lang));
                 out.close();
             } catch (IOException | InternalErrorException ex) {

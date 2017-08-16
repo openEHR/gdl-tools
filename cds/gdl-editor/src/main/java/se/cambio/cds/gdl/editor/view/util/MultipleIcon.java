@@ -1,9 +1,3 @@
-/*
- * Creado el 14-dic-2007
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.util;
 
 import java.awt.Component;
@@ -25,11 +19,11 @@ public class MultipleIcon extends ImageIcon {
         this.fileIcons = fileIcons;
     }
 
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        xPos = x;
+    public void paintIcon(Component component, Graphics graphics, int posX, int posY) {
+        xPos = posX;
         for (Icon fileIcon : fileIcons) {
-            yPos = y;
-            fileIcon.paintIcon(c, g, xPos, yPos);
+            yPos = posY;
+            fileIcon.paintIcon(component, graphics, xPos, yPos);
             xPos = xPos + fileIcon.getIconWidth();
         }
     }

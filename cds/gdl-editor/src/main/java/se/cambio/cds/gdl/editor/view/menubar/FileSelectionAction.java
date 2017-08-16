@@ -1,9 +1,3 @@
-/*
- * Created on 13-dic-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import java.awt.event.ActionEvent;

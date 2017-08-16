@@ -56,7 +56,8 @@ class RuleElementEditor {
         this.dvPanelFactory = dvPanelFactory;
         this.gdlEditor = gdlEditor;
         this.importManager = importManager;
-        this.nodeDefinitionManager = new NodeDefinitionManager(archetypeManager, archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
+        this.nodeDefinitionManager = new NodeDefinitionManager(
+                archetypeManager, archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
     }
 
     void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
@@ -161,8 +162,14 @@ class RuleElementEditor {
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
                         Term term = gdlEditor.getTerm(gtCode);
                         if (term.getText() == null || term.getText().isEmpty()) {
-                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
-                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
+                            String name =
+                                    aerlde.getArchetypeManager()
+                                    .getArchetypeElements()
+                                    .getText(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
+                            String desc =
+                                    aerlde.getArchetypeManager()
+                                            .getArchetypeElements()
+                                            .getDescription(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
                             term.setText(name);
                             term.setDescription(desc);
                         }
@@ -381,7 +388,9 @@ class RuleElementEditor {
             }
             ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
             DialogExpressionEditor dialog =
-                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, nodeDefinitionManager, archetypeManager.getUserConfigurationManager());
+                    new DialogExpressionEditor(
+                            windowManager, arle, inPredicate, ar, gdlEditor,
+                            nodeDefinitionManager, archetypeManager.getUserConfigurationManager());
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
                 ExpressionItem expressionItem = dialog.getExpressionItem();

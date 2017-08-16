@@ -20,7 +20,7 @@ public class GdlGraphManager {
     public GdlGraphManager(
             ArchetypeManager archetypeManager,
             ArchetypeReferencesManager archetypeReferencesManager,
-            ElementInstanceCollectionManager elementInstanceCollectionManager){
+            ElementInstanceCollectionManager elementInstanceCollectionManager) {
         this.archetypeManager = archetypeManager;
         this.archetypeReferencesManager = archetypeReferencesManager;
         this.elementInstanceCollectionManager = elementInstanceCollectionManager;
@@ -33,7 +33,7 @@ public class GdlGraphManager {
         try {
             decisionGraphPanel =
                     new DecisionGraphPanel(
-                    Collections.singleton(guide),
+                            Collections.singleton(guide),
                             true,
                             language,
                             archetypeManager,

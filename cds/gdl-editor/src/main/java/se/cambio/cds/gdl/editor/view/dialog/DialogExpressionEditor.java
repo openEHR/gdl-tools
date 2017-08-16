@@ -1,4 +1,3 @@
-
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,10 @@ public class DialogExpressionEditor extends DialogEditor {
             GDLEditor gdlEditor,
             NodeDefinitionManager nodeDefinitionManager,
             UserConfigurationManager userConfigurationManager) {
-        super(gdlEditor.getEditorWindow(), GDLEditorLanguageManager.getMessage("ExpressionEditor"), new Dimension(700, 400), true, true);
+        super(gdlEditor.getEditorWindow(),
+                GDLEditorLanguageManager.getMessage("ExpressionEditor"),
+                new Dimension(700, 400),
+                true, true);
         this.windowManager = windowManager;
         this.expressionRuleLineElement = expressionRuleLineElement;
         this.gdlEditor = gdlEditor;
@@ -146,10 +148,10 @@ public class DialogExpressionEditor extends DialogEditor {
         if (renderedExpressionPanel == null) {
             renderedExpressionPanel = new JPanel(new BorderLayout());
             renderedExpressionPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionViewer")));
-            JScrollPane jScrollPane = new JScrollPane();
-            jScrollPane.setViewportView(getRenderedExpressionTextComponent());
-            jScrollPane.setPreferredSize(new Dimension(300, 150));
-            renderedExpressionPanel.add(jScrollPane, BorderLayout.CENTER);
+            JScrollPane scrollPane = new JScrollPane();
+            scrollPane.setViewportView(getRenderedExpressionTextComponent());
+            scrollPane.setPreferredSize(new Dimension(300, 150));
+            renderedExpressionPanel.add(scrollPane, BorderLayout.CENTER);
         }
         return renderedExpressionPanel;
     }
@@ -168,9 +170,9 @@ public class DialogExpressionEditor extends DialogEditor {
         if (expressionEditorPanel == null) {
             expressionEditorPanel = new JPanel(new BorderLayout());
             expressionEditorPanel.setBorder(BorderFactory.createTitledBorder(GDLEditorLanguageManager.getMessage("ExpressionEditor")));
-            JScrollPane jScrollPane = new JScrollPane();
-            jScrollPane.setViewportView(getExpressionEditorTextComponent());
-            expressionEditorPanel.add(jScrollPane, BorderLayout.CENTER);
+            JScrollPane scrollPane = new JScrollPane();
+            scrollPane.setViewportView(getExpressionEditorTextComponent());
+            expressionEditorPanel.add(scrollPane, BorderLayout.CENTER);
         }
         return expressionEditorPanel;
     }
@@ -271,7 +273,11 @@ public class DialogExpressionEditor extends DialogEditor {
         if (expressionItem != null) {
             return true;
         } else {
-            JOptionPane.showMessageDialog(this, GDLEditorLanguageManager.getMessage("EmptyExpressionErrorMsg"), GDLEditorLanguageManager.getMessage("EmptyExpressionErrorTitle"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    GDLEditorLanguageManager.getMessage("EmptyExpressionErrorMsg"),
+                    GDLEditorLanguageManager.getMessage("EmptyExpressionErrorTitle"),
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }

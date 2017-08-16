@@ -6,9 +6,10 @@ import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.util.*;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
@@ -64,7 +65,7 @@ public class DialogArchetypeChooser extends JDialog {
             if (domainId == null) {
                 domainId = ANY_DOMAIN;
             }
-            if (!Domains.EHR_ID.equals(domainId)) {//Select only if it is not EHR (the one by default) because it will activate the 'Last' ComboBox
+            if (!Domains.EHR_ID.equals(domainId)) {
                 getDomainSelector().setSelectedItem(domainId);
             }
         }
@@ -197,7 +198,10 @@ public class DialogArchetypeChooser extends JDialog {
         if (getArchetypeTemplateTabbedPane().getTabCount() > 0) {
             getArchetypeTemplateTabbedPane().removeTabAt(0);
         }
-        getArchetypeTemplateTabbedPane().insertTab(OpenEHRLanguageManager.getMessage("Archetypes"), Archetypes.ICON, getArchetypeSelectionPanel(), OpenEHRLanguageManager.getMessage("Archetypes"), 0);
+        getArchetypeTemplateTabbedPane().insertTab(
+                OpenEHRLanguageManager.getMessage("Archetypes"),
+                Archetypes.ICON, getArchetypeSelectionPanel(),
+                OpenEHRLanguageManager.getMessage("Archetypes"), 0);
         getArchetypeTemplateTabbedPane().setSelectedIndex(0);
     }
 
@@ -417,7 +421,7 @@ public class DialogArchetypeChooser extends JDialog {
         }
     }
 
-    private CMElement getCmElement(String id, boolean isArchetypeTabSelected) throws InstanceNotFoundException, InternalErrorException {
+    private CMElement getCmElement(String id, boolean isArchetypeTabSelected) {
         if (isArchetypeTabSelected) {
             return archetypeManager.getArchetypes().getCMElement(id);
         } else {

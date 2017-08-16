@@ -182,8 +182,8 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
         if (titleLabel == null) {
             titleLabel = new JLabel();
             titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-            Font f = new Font("Dialog", Font.BOLD, 18);
-            titleLabel.setFont(f);
+            Font font = new Font("Dialog", Font.BOLD, 18);
+            titleLabel.setFont(font);
         }
         return titleLabel;
     }
@@ -238,7 +238,8 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
         controller.generateForm();
     }
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

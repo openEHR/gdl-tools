@@ -15,9 +15,9 @@ public class DefinitionDependencyChecker {
     public static boolean isBeingUsed(ArchetypeInstantiationRuleLine airl, GDLEditor controller) {
         boolean found = false;
         ArchetypeReference ar = airl.getArchetypeReference();
-        Iterator<RuleLine> i = controller.getReadableGuide().getPreconditionRuleLines().getRuleLines().iterator();
-        while (i.hasNext() && !found) {
-            if (isBeingReferenced(ar, i.next())) {
+        Iterator<RuleLine> iterator = controller.getReadableGuide().getPreconditionRuleLines().getRuleLines().iterator();
+        while (iterator.hasNext() && !found) {
+            if (isBeingReferenced(ar, iterator.next())) {
                 found = true;
             }
         }
@@ -40,11 +40,39 @@ public class DefinitionDependencyChecker {
         return found;
     }
 
+    public static boolean isBeingUsed(ArchetypeElementInstantiationRuleLine aeirl, GDLEditor controller) {
+        boolean found = false;
+        String gtCode = aeirl.getGTCode();
+        Iterator<RuleLine> iterator = controller.getReadableGuide().getPreconditionRuleLines().getRuleLines().iterator();
+        while (iterator.hasNext() && !found) {
+            if (isBeingReferenced(gtCode, iterator.next())) {
+                found = true;
+            }
+        }
+        Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
+        while (i2.hasNext() && !found) {
+            ReadableRule rr = i2.next();
+            Iterator<RuleLine> i3 = rr.getConditionRuleLines().getRuleLines().iterator();
+            while (i3.hasNext() && !found) {
+                if (isBeingReferenced(gtCode, i3.next())) {
+                    found = true;
+                }
+            }
+            i3 = rr.getActionRuleLines().getRuleLines().iterator();
+            while (i3.hasNext() && !found) {
+                if (isBeingReferenced(gtCode, i3.next())) {
+                    found = true;
+                }
+            }
+        }
+        return found;
+    }
+
     private static boolean isBeingReferenced(ArchetypeReference ar, RuleLine ruleLine) {
         boolean found = false;
-        Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
-        while (i.hasNext() && !found) {
-            if (isBeingReferenced(ar, i.next())) {
+        Iterator<RuleLineElement> iterator = ruleLine.getRuleLineElements().iterator();
+        while (iterator.hasNext() && !found) {
+            if (isBeingReferenced(ar, iterator.next())) {
                 found = true;
             }
         }
@@ -69,39 +97,11 @@ public class DefinitionDependencyChecker {
         return arAux != null && arAux.equals(ar);
     }
 
-    public static boolean isBeingUsed(ArchetypeElementInstantiationRuleLine aeirl, GDLEditor controller) {
-        boolean found = false;
-        String gtCode = aeirl.getGTCode();
-        Iterator<RuleLine> i = controller.getReadableGuide().getPreconditionRuleLines().getRuleLines().iterator();
-        while (i.hasNext() && !found) {
-            if (isBeingReferenced(gtCode, i.next())) {
-                found = true;
-            }
-        }
-        Iterator<ReadableRule> i2 = controller.getReadableGuide().getReadableRules().values().iterator();
-        while (i2.hasNext() && !found) {
-            ReadableRule rr = i2.next();
-            Iterator<RuleLine> i3 = rr.getConditionRuleLines().getRuleLines().iterator();
-            while (i3.hasNext() && !found) {
-                if (isBeingReferenced(gtCode, i3.next())) {
-                    found = true;
-                }
-            }
-            i3 = rr.getActionRuleLines().getRuleLines().iterator();
-            while (i3.hasNext() && !found) {
-                if (isBeingReferenced(gtCode, i3.next())) {
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
     private static boolean isBeingReferenced(String gtCode, RuleLine ruleLine) {
         boolean found = false;
-        Iterator<RuleLineElement> i = ruleLine.getRuleLineElements().iterator();
-        while (i.hasNext() && !found) {
-            if (isBeingReferenced(gtCode, i.next())) {
+        Iterator<RuleLineElement> iterator = ruleLine.getRuleLineElements().iterator();
+        while (iterator.hasNext() && !found) {
+            if (isBeingReferenced(gtCode, iterator.next())) {
                 found = true;
             }
         }

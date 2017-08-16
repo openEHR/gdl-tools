@@ -81,11 +81,11 @@ public class RulesPanel extends JPanel implements RefreshablePanel {
     }
 
     private JPanel createRulePanel(ReadableRule rule) {
-        JPanel rulePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JLinkLabel linkLabel = new JLinkLabel();
         linkLabel.setText(controller.getGTName(rule.getGTCode()));
         linkLabel.setIcon(GDLEditorImageUtil.RULE_ICON);
         linkLabel.addActionListener(new LoadRuleAction(rule));
+        JPanel rulePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         rulePanel.add(linkLabel);
         linkLabel.setCommented(rule.isCommented());
         rulePanel.add(Box.createHorizontalStrut(5));

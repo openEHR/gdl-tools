@@ -18,122 +18,107 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.view.dialogs.InfoDialog;
 
 
+public class CDSFormGenFrame extends JFrame implements FormGeneratorViewer {
 
-/**
- * @author iago.corbal
- *
- */
-
-public class CDSFormGenFrame extends JFrame implements FormGeneratorViewer{
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private JScrollPane jScrollPane;
     private InfoDialog _infoDialog = null;
     private JTabbedPane tabbedPane = null;
     private boolean _exitOnClose = true;
 
-    /**
-     * This is the default constructor
-     */
     public CDSFormGenFrame() {
-	super(OpenEHRLanguageManager.getMessage("CDSCalculator"));
-	initialize();
+        super(OpenEHRLanguageManager.getMessage("CDSCalculator"));
+        initialize();
     }
 
-    /**
-     * This method initializes this
-     */
     private void initialize() {
-	Dimension screenSize =
-		Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension labelSize = this.getSize();
-	this.setSize(new Dimension(500, 700));
-	int locx = (screenSize.width/2) - (labelSize.width/2) - (this.getWidth()/2);
-	int locy = (screenSize.height/2) - (labelSize.height/2) - (this.getHeight()/2);
-	this.setLocation(locx,locy);
-	this.setResizable(true);
-	this.addWindowListener(new CloseAction());
-	this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-	this.setContentPane(getJScrollPane());
+        Dimension screenSize =
+                Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension labelSize = this.getSize();
+        this.setSize(new Dimension(500, 700));
+        int locx = (screenSize.width / 2) - (labelSize.width / 2) - (this.getWidth() / 2);
+        int locy = (screenSize.height / 2) - (labelSize.height / 2) - (this.getHeight() / 2);
+        this.setLocation(locx, locy);
+        this.setResizable(true);
+        this.addWindowListener(new CloseAction());
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.setContentPane(getJScrollPane());
     }
 
-    public void addFormGeneratorController(FormGeneratorController controller){
-	jScrollPane = null;
-	getJTabbedPane().addTab(
-		controller.getName(), 
-		OpenEHRImageUtil.RULE_ICON,
-		controller.getCDSFormPanel(),
-		controller.getDescription());
-	controller.setViewer(this);
+    public void addFormGeneratorController(FormGeneratorController controller) {
+        jScrollPane = null;
+        getJTabbedPane().addTab(
+                controller.getName(),
+                OpenEHRImageUtil.RULE_ICON,
+                controller.getCDSFormPanel(),
+                controller.getDescription());
+        controller.setViewer(this);
 
     }
 
-    private JTabbedPane getJTabbedPane(){
-	if (tabbedPane==null){
-	    tabbedPane = new JTabbedPane();
-	}
-	return tabbedPane;
+    private JTabbedPane getJTabbedPane() {
+        if (tabbedPane == null) {
+            tabbedPane = new JTabbedPane();
+        }
+        return tabbedPane;
     }
 
-    public class CloseAction extends WindowAdapter{
+    public class CloseAction extends WindowAdapter {
 
-	public void windowOpened(WindowEvent ev){
-	}
+        public void windowOpened(WindowEvent ev) {
+        }
 
-	public void actionPerformed(ActionEvent ev) {
-	    dispose();
-	    if (_exitOnClose){
-		System.exit(0);
-	    }
-	}
+        public void actionPerformed(ActionEvent ev) {
+            dispose();
+            if (_exitOnClose) {
+                System.exit(0);
+            }
+        }
 
-	public void windowClosing(WindowEvent we) {
-	    dispose();
-	    if (_exitOnClose){
-		System.exit(0);
-	    }
-	}
+        public void windowClosing(WindowEvent we) {
+            dispose();
+            if (_exitOnClose) {
+                System.exit(0);
+            }
+        }
     }
 
 
-    public void setBusy(String description, SwingWorker<?, ?> sw){
-	getInfoDialog().setCurrentThread(sw);
-	setBusy(description);
+    public void setBusy(String description, SwingWorker<?, ?> sw) {
+        getInfoDialog().setCurrentThread(sw);
+        setBusy(description);
     }
 
-    public void setBusy(String description){
-	getInfoDialog().changeLoadingText(description);
-	getInfoDialog().start();
+    public void setBusy(String description) {
+        getInfoDialog().changeLoadingText(description);
+        getInfoDialog().start();
     }
 
-    public void changeBusyText(String description){
-	getInfoDialog().changeLoadingText(description);
+    public void changeBusyText(String description) {
+        getInfoDialog().changeLoadingText(description);
     }
 
-    private InfoDialog getInfoDialog(){
-	if (_infoDialog==null){
-	    _infoDialog = new InfoDialog(this);
-	}
-	return _infoDialog;
+    private InfoDialog getInfoDialog() {
+        if (_infoDialog == null) {
+            _infoDialog = new InfoDialog(this);
+        }
+        return _infoDialog;
     }
 
-    public void setFree(){
-	getInfoDialog().stop();
+    public void setFree() {
+        getInfoDialog().stop();
     }
 
-    private JScrollPane getJScrollPane(){
-	if (jScrollPane==null){
-	    jScrollPane = new JScrollPane();
-	    jScrollPane.setViewportView(getJTabbedPane());
-	}
-	return jScrollPane;
+    private JScrollPane getJScrollPane() {
+        if (jScrollPane == null) {
+            jScrollPane = new JScrollPane();
+            jScrollPane.setViewportView(getJTabbedPane());
+        }
+        return jScrollPane;
     }
 
-    public void setExitOnClose(boolean exitOnClose){
-	_exitOnClose = exitOnClose;
+    public void setExitOnClose(boolean exitOnClose) {
+        _exitOnClose = exitOnClose;
     }
 } 
 /*

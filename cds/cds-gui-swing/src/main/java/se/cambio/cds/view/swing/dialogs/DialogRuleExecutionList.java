@@ -18,18 +18,18 @@ public class DialogRuleExecutionList extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private JPanel jPanel;
-    private Map<String, Map<String, String>> _rulesViewMap = null;
+    private Map<String, Map<String, String>> rulesViewMap = null;
     private JComboBox<String> languageComboBox;
     private JPanel rulesPanel;
     private JPanel mainPanel;
     private Collection<Integer> expandedRules = new ArrayList<Integer>();
-    private boolean _isAlert = false;
+    private boolean isAlert = false;
     private String language;
 
     public DialogRuleExecutionList(Window owner, Map<String, Map<String, String>> rulesViewMap, boolean isAlert, String language) {
         super(owner, ModalityType.APPLICATION_MODAL);
-        _rulesViewMap = rulesViewMap;
-        _isAlert = isAlert;
+        this.rulesViewMap = rulesViewMap;
+        this.isAlert = isAlert;
         this.language = language;
         init();
     }
@@ -55,7 +55,7 @@ public class DialogRuleExecutionList extends JDialog {
             auxPanel.add(new JLabel(OpenEHRLanguageManager.getMessage("Language") + ":"));
             auxPanel.add(getLanguageComboBox());
             topPanel.add(auxPanel, BorderLayout.EAST);
-            if (_isAlert) {
+            if (isAlert) {
                 JLabel label = new JLabel(OpenEHRLanguageManager.getMessage("Alerts"));
                 label.setIcon(OpenEHRImageUtil.WARNING_ICON);
                 topPanel.add(label, BorderLayout.WEST);
@@ -80,14 +80,14 @@ public class DialogRuleExecutionList extends JDialog {
         if (rulesPanel == null) {
             rulesPanel = new JPanel();
             rulesPanel.setLayout(new BoxLayout(rulesPanel, BoxLayout.Y_AXIS));
-            Map<String, String> rulesMap = _rulesViewMap.get(getSelectedLanguage());
-            int i = 0;
+            Map<String, String> rulesMap = rulesViewMap.get(getSelectedLanguage());
+            int index = 0;
             String ruleId;
             for (Map.Entry<String, String> entry : rulesMap.entrySet()) {
                 ruleId = entry.getKey();
                 CollapsiblePanel collapsiblePanel = new CollapsiblePanel(ruleId);
-                collapsiblePanel.getActionButton().addActionListener(new CollapsablePanelActionListener(collapsiblePanel, i));
-                if (expandedRules.contains(i)) {
+                collapsiblePanel.getActionButton().addActionListener(new CollapsablePanelActionListener(collapsiblePanel, index));
+                if (expandedRules.contains(index)) {
                     collapsiblePanel.setCollapsed(false);
                 }
                 JPanel aux = collapsiblePanel.getContentPane();
@@ -99,7 +99,7 @@ public class DialogRuleExecutionList extends JDialog {
                 editorPane.setText("<HTML>" + text + "</HTML>");
                 aux.add(editorPane, BorderLayout.CENTER);
                 rulesPanel.add(collapsiblePanel);
-                i++;
+                index++;
             }
         }
         return rulesPanel;
@@ -130,7 +130,7 @@ public class DialogRuleExecutionList extends JDialog {
     public JComboBox getLanguageComboBox() {
         if (languageComboBox == null) {
             languageComboBox = new JComboBox<>();
-            for (String lang : _rulesViewMap.keySet()) {
+            for (String lang : rulesViewMap.keySet()) {
                 languageComboBox.addItem(lang);
             }
             languageComboBox.setSelectedItem(language);

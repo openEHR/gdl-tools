@@ -23,9 +23,9 @@ public class ClusterNodesUtil {
         if (idCluster != null && !idCluster.endsWith("/")) {
             ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(idTemplate, idCluster);
             if (clusterVO != null) {
-                if ((simplifiedTree &&
-                        !OpenEHRConst.SECTION.equals(clusterVO.getRMType()) &&
-                        !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))) {
+                if ((simplifiedTree
+                        && !OpenEHRConst.SECTION.equals(clusterVO.getRMType())
+                        && !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))) {
                     return getClusterNode(idTemplate, clusterVO.getParentId(),
                             rootNode, clusters, singleSelection, true, archetypeManager);
                 }

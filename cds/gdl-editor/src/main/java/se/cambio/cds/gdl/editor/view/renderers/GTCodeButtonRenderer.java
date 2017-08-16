@@ -2,7 +2,6 @@
 package se.cambio.cds.gdl.editor.view.renderers;
 
 import org.slf4j.LoggerFactory;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Term;
@@ -49,7 +48,8 @@ public class GTCodeButtonRenderer extends JButton implements TableCellRenderer {
         }
         return this;
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

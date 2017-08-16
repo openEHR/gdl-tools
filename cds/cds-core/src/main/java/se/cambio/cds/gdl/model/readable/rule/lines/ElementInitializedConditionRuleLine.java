@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeElementRuleLineElement;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ExistenceOperatorRuleLineElement;
@@ -8,7 +9,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-
+@Slf4j
 public class ElementInitializedConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
@@ -40,7 +41,8 @@ public class ElementInitializedConditionRuleLine extends ExpressionRuleLine impl
                     getArchetypeElementRuleLineElement().getValue().getValue();
             OperatorKind operatorKind = getExistenceOperatorRuleLineElement().getOperator();
             if (operatorKind == null) {
-                throw new IllegalStateException("No operator set");
+                log.debug("No operator set");
+                return null;
             }
             String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
             return new BinaryExpression(
@@ -48,7 +50,8 @@ public class ElementInitializedConditionRuleLine extends ExpressionRuleLine impl
                     new ConstantExpression(NULL_STR),
                     operatorKind);
         } else {
-            throw new IllegalStateException("Element instance not found for" + this.toString());
+            log.debug("Element instance not found for" + this.toString());
+            return null;
         }
     }
 }

@@ -1,12 +1,7 @@
 package se.cambio.cds.gdl.model.expression;
 
-import org.openehr.rm.datatypes.text.CodePhrase;
-
-import se.cambio.cds.gdl.model.expression.BinaryExpression;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.OperatorKind;
-import se.cambio.cds.gdl.model.expression.Variable;
 import junit.framework.TestCase;
+import org.openehr.rm.datatypes.text.CodePhrase;
 
 public class LogicalExpressionTest extends TestCase {
 

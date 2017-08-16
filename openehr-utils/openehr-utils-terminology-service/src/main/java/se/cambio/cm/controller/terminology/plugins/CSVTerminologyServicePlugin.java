@@ -40,7 +40,8 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             parentsMap = new HashMap<>();
             childrenMap = new HashMap<>();
             descriptionsMap = new HashMap<>();
-            CSVParser csvParser = new CSVParser(new BufferedReader(new InputStreamReader(is, "UTF-8")), CSVFormat.DEFAULT.withFirstRecordAsHeader());
+            CSVParser csvParser =
+                    new CSVParser(new BufferedReader(new InputStreamReader(is, "UTF-8")), CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreSurroundingSpaces());
             processCsv(csvParser);
         } catch (Exception ex) {
             String message = format("Failed to initialize the terminology service '%s'", terminologyConfig.getTerminologyId());
@@ -50,7 +51,14 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
 
     private void processCsv(CSVParser csvParser) throws IOException {
         for (CSVRecord csvRecord : csvParser.getRecords()) {
+            if (!csvRecord.isSet("id")) {
+                throw new RuntimeException(format("Error reading terminology '%s'. Term found without id!", terminologyConfig.getTerminologyId()));
+            }
             String id = csvRecord.get("id");
+            if (!csvRecord.isSet("text")) {
+                throw new RuntimeException(format("Error reading terminology '%s'. Term '%s' does not have description!",
+                        terminologyConfig.getTerminologyId(), id));
+            }
             String description = csvRecord.get("text");
             String parent = null;
             if (csvRecord.isSet("parent")) {
@@ -61,8 +69,10 @@ public class CSVTerminologyServicePlugin implements TerminologyServicePlugin {
             for (String header : csvParser.getHeaderMap().keySet()) {
                 if (header.startsWith("text_")) {
                     String language = StringUtils.substringAfter(header, "text_");
-                    description = csvRecord.get(header);
-                    addTerm(id, description, parent, language);
+                    if (csvRecord.isSet(header)) {
+                        description = csvRecord.get(header);
+                        addTerm(id, description, parent, language);
+                    }
                 }
             }
         }

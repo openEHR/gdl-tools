@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import org.apache.commons.jxpath.JXPathContext;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogNameInsert;
@@ -18,16 +17,16 @@ class ListPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private final Window window;
     private String title;
-    private String xPath;
+    private String xpath;
     private JXPathContext context;
-    private JList<String> jList;
+    private JList<String> list;
 
-    ListPanel(String title, String xPath, JXPathContext context, Window window) {
+    ListPanel(String title, String xpath, JXPathContext context, Window window) {
         this.title = title;
-        this.xPath = xPath;
+        this.xpath = xpath;
         this.context = context;
         this.window = window;
-        Object obj = context.getValue(xPath);
+        Object obj = context.getValue(xpath);
         if (obj instanceof List) {
             DefaultListModel<String> dlm = ((DefaultListModel<String>) getJList().getModel());
             for (Object objAux : (List<?>) obj) {
@@ -115,10 +114,10 @@ class ListPanel extends JPanel {
     }
 
     private JList<String> getJList() {
-        if (jList == null) {
-            jList = new JList<>(new DefaultListModel<String>());
-            jList.setBorder(BorderFactory.createEtchedBorder());
-            jList.addMouseListener(new MouseAdapter() {
+        if (list == null) {
+            list = new JList<>(new DefaultListModel<String>());
+            list.setBorder(BorderFactory.createEtchedBorder());
+            list.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent ev) {
                     if (ev.getClickCount() >= 2) {
@@ -127,7 +126,7 @@ class ListPanel extends JPanel {
                 }
             });
         }
-        return jList;
+        return list;
     }
 
     private void updateListModel(DefaultListModel dlm) {
@@ -139,7 +138,7 @@ class ListPanel extends JPanel {
             }
             elements.add(value);
         }
-        context.setValue(xPath, elements);
+        context.setValue(xpath, elements);
     }
 }
 /*

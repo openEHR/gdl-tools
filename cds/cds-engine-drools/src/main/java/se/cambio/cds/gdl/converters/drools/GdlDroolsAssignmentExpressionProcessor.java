@@ -118,13 +118,13 @@ public class GdlDroolsAssignmentExpressionProcessor {
                     throw new RuntimeException(format("GTCode '%s' not found. (guideId='%s')", gtCode, guideId));
                 }
                 Map<RefStat, Set<String>> statsAux = gdlDroolsConverter.initStats();
+                String arithmeticExpStr =
+                        ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItemAux, statsAux);
                 stats.get(RefStat.REFERENCE).addAll(statsAux.get(RefStat.REFERENCE));
                 stats.get(RefStat.REFERENCE).addAll(statsAux.get(RefStat.ATT_FUNCTIONS_REF));
                 stats.get(RefStat.ATT_SET_REF).addAll(statsAux.get(RefStat.REFERENCE));
                 stats.get(RefStat.ATT_FUNCTIONS).addAll(statsAux.get(RefStat.ATT_FUNCTIONS));
                 String rmName = archetypeElementVO.getRMType();
-                String arithmeticExpStr =
-                        ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItemAux, statsAux);
                 stringBuffer.append("$")
                         .append(eiId)
                         .append(".")

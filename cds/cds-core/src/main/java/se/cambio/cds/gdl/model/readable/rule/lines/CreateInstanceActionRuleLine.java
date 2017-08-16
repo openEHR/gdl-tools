@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 import se.cambio.cds.gdl.model.expression.CreateInstanceExpression;
 import se.cambio.cds.gdl.model.expression.Variable;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Slf4j
 public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine, InstantiationRuleLine {
 
     private CDSEntryRuleLineElement cdsEntryRuleLineElement = null;
@@ -39,22 +41,29 @@ public class CreateInstanceActionRuleLine extends AssignmentExpressionRuleLine i
 
     @Override
     public AssignmentExpression toAssignmentExpression() throws IllegalStateException {
-        String name = getArchetypeReference().getIdArchetype();
-        Variable var = new Variable(
-                cdsEntryRuleLineElement.getValue().getValue(),
-                null, name, CreateInstanceExpression.FUNCTION_CREATE_NAME);
-        List<AssignmentExpression> assignmentExpressions = new ArrayList<>();
-        if (!getChildrenRuleLines().getRuleLines().isEmpty()) {
-            for (RuleLine childRuleLine : getChildrenRuleLines().getRuleLines()) {
-                AssignmentExpressionRuleLine assignmentExpressionRuleLine = (AssignmentExpressionRuleLine) childRuleLine;
-                assignmentExpressions.add(assignmentExpressionRuleLine.toAssignmentExpression());
+        ArchetypeReference archetypeReference = getArchetypeReference();
+        if (archetypeReference != null) {
+            String name = archetypeReference.getIdArchetype();
+            Variable var = new Variable(
+                    cdsEntryRuleLineElement.getValue().getValue(),
+                    null, name, CreateInstanceExpression.FUNCTION_CREATE_NAME);
+            List<AssignmentExpression> assignmentExpressions = new ArrayList<>();
+            if (!getChildrenRuleLines().getRuleLines().isEmpty()) {
+                for (RuleLine childRuleLine : getChildrenRuleLines().getRuleLines()) {
+                    AssignmentExpressionRuleLine assignmentExpressionRuleLine = (AssignmentExpressionRuleLine) childRuleLine;
+                    assignmentExpressions.add(assignmentExpressionRuleLine.toAssignmentExpression());
+                }
+            } else {
+                log.debug("No assignment rules on create instance action rule");
+                return null;
             }
+            return new CreateInstanceExpression(
+                    var,
+                    assignmentExpressions);
         } else {
-            throw new IllegalStateException("No assignments set into '" + name + "'");
+            log.debug("No archetype reference set on create instance action rule");
+            return null;
         }
-        return new CreateInstanceExpression(
-                var,
-                assignmentExpressions);
     }
 
     public String toString() {

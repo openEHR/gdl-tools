@@ -42,15 +42,15 @@ public class ReadableRuleLineFactory {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static JPanel createRuleLinePanel(RuleLinesPanel ruleLinesPanel, RuleLine ruleLine, GDLEditor gdlEditor) {
-        JPanel jPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JLabel iconLabel = new JLabel(RuleLineDirectory.getIconForRuleLine(ruleLine));
         if (ruleLine.isCommented()) {
             iconLabel.setEnabled(false);
         }
-        jPanel.add(iconLabel);
-        jPanel.add(Box.createHorizontalStrut(3));
-        jPanel.addMouseListener(ruleLinesPanel.getSelectableRuleLineDragMouseListener());
-        jPanel.addMouseMotionListener(ruleLinesPanel.getSelectableRuleLineDragMouseListener());
+        panel.add(iconLabel);
+        panel.add(Box.createHorizontalStrut(3));
+        panel.addMouseListener(ruleLinesPanel.getSelectableRuleLineDragMouseListener());
+        panel.addMouseMotionListener(ruleLinesPanel.getSelectableRuleLineDragMouseListener());
 
         for (RuleLineElement ruleLineElement : ruleLine.getRuleLineElements()) {
             String language = gdlEditor.getCurrentLanguageCode();
@@ -72,7 +72,7 @@ public class ReadableRuleLineFactory {
                     }
                     comboBox.setRenderer(new SingleSelectionRuleElementRenderer(ssre, language));
                     comboBox.addItemListener(new RuleLineElementItemListener(ruleLineElementWithValue));
-                    jPanel.add(comboBox);
+                    panel.add(comboBox);
                 } else {
                     JLinkRuleElementLabel linkLabel =
                             new JLinkRuleElementLabel(ruleLineElementWithValue, language);
@@ -80,17 +80,17 @@ public class ReadableRuleLineFactory {
                     linkLabel.setCommented(ruleLine.isCommented());
                     linkLabel.refresh();
                     linkLabel.addActionListener(new PluginTypeLinkListener(ruleLinesPanel));
-                    jPanel.add(linkLabel);
+                    panel.add(linkLabel);
                 }
             } else {
-                jPanel.add(createLabel(ruleLine, ruleLineElement, language));
+                panel.add(createLabel(ruleLine, ruleLineElement, language));
             }
-            jPanel.add(Box.createHorizontalStrut(4));
+            panel.add(Box.createHorizontalStrut(4));
         }
-        jPanel.add(createCommentButton(ruleLine, ruleLinesPanel));
-        jPanel.add(Box.createHorizontalStrut(2));
-        jPanel.add(createDeleteButton(ruleLine, ruleLinesPanel, gdlEditor));
-        return jPanel;
+        panel.add(createCommentButton(ruleLine, ruleLinesPanel));
+        panel.add(Box.createHorizontalStrut(2));
+        panel.add(createDeleteButton(ruleLine, ruleLinesPanel, gdlEditor));
+        return panel;
     }
 
     private static JLabel createLabel(RuleLine ruleLine, RuleLineElement ruleLineElement, String language) {

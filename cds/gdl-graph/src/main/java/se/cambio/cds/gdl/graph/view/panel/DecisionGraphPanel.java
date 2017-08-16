@@ -11,7 +11,6 @@ import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.misc.CDSLanguageManager;
 import se.cambio.cds.view.swing.CDSImageUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

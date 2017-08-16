@@ -1,27 +1,26 @@
 package se.cambio.cds.view.swing.applicationobjects;
 
-import javax.swing.ImageIcon;
-
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.Domains;
-import se.cambio.cds.view.swing.applicationobjects.DomainsUI;
 import se.cambio.openehr.util.OpenEHRImageUtil;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
+
+import javax.swing.*;
 
 
 public class DomainsUI {
 
-    public static String ANY_NAME = OpenEHRLanguageManager.getMessage("ANY");
-    public static String EHR_NAME = OpenEHRLanguageManager.getMessage("EHR");
-    public static String CDS_NAME = OpenEHRLanguageManager.getMessage("CDS");
+    public static final String ANY_NAME = OpenEHRLanguageManager.getMessage("ANY");
+    public static final String EHR_NAME = OpenEHRLanguageManager.getMessage("EHR");
+    public static final String CDS_NAME = OpenEHRLanguageManager.getMessage("CDS");
 
-    private static String ANY_DESC = OpenEHRLanguageManager.getMessage("ANY");
-    private static String EHR_DESC = OpenEHRLanguageManager.getMessage("EHR");
-    private static String CDS_DESC = OpenEHRLanguageManager.getMessage("CDS");
+    private static final String ANY_DESC = OpenEHRLanguageManager.getMessage("ANY");
+    private static final String EHR_DESC = OpenEHRLanguageManager.getMessage("EHR");
+    private static final String CDS_DESC = OpenEHRLanguageManager.getMessage("CDS");
 
-    public static ImageIcon EHR_ICON = OpenEHRImageUtil.EHR_LABEL_ICON;
-    public static ImageIcon CDS_ICON = OpenEHRImageUtil.CDS_LABEL_ICON;
-    public static ImageIcon ANY_ICON = OpenEHRImageUtil.ANY_LABEL_ICON;
+    public static final ImageIcon EHR_ICON = OpenEHRImageUtil.EHR_LABEL_ICON;
+    public static final ImageIcon CDS_ICON = OpenEHRImageUtil.CDS_LABEL_ICON;
+    public static final ImageIcon ANY_ICON = OpenEHRImageUtil.ANY_LABEL_ICON;
 
     public static ImageIcon getGroupIconFromArchetypeReference(ArchetypeReference ar) {
         return getIcon(ar.getIdDomain());

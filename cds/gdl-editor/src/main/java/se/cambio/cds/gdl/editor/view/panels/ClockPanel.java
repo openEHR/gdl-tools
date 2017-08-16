@@ -80,7 +80,8 @@ public final class ClockPanel extends JPanel {
     public void setOff() {
         on = false;
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

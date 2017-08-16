@@ -12,7 +12,7 @@ import se.cambio.openehr.view.dialogs.DialogSelection;
 import javax.swing.*;
 import java.awt.*;
 
-public class DialogElementInstanceSelection extends DialogSelection{
+public class DialogElementInstanceSelection extends DialogSelection {
 
     private static final long serialVersionUID = 1L;
     private JButton addArchetypeReferenceButton;
@@ -25,16 +25,16 @@ public class DialogElementInstanceSelection extends DialogSelection{
                 GDLEditorLanguageManager.getMessage("SelectElementInstance"),
                 nodeDefinitionManager.getElementInstancesSelectionNodes(controller.getDefinitionRuleLines(), onlyCDSDomain, ar),
                 true,
-                new Dimension(500,500), controller.getWindowManager());
+                new Dimension(500, 500), controller.getWindowManager());
         this.controller = controller;
         this.onlyCDSDomain = onlyCDSDomain;
         getSelectionPanel().getFilterPanel().add(getAddArchetypeReferenceButton());
     }
 
-    public Object getSelectedObject(){
-        if (selectedObject != null){
+    public Object getSelectedObject() {
+        if (selectedObject != null) {
             return selectedObject;
-        }else{
+        } else {
             return super.getSelectedObject();
         }
     }
@@ -50,10 +50,10 @@ public class DialogElementInstanceSelection extends DialogSelection{
                 accept();
                 ArchetypeInstantiationRuleLine airl =
                         controller.addArchetypeReference(onlyCDSDomain);
-                if (airl!=null){
+                if (airl != null) {
                     ArchetypeElementInstantiationRuleLine aeirl =
                             controller.addArchetypeElement(airl);
-                    if (aeirl!=null){
+                    if (aeirl != null) {
                         selectedObject = aeirl.getGTCodeRuleLineElement();
                     }
                 }

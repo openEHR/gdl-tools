@@ -1,9 +1,3 @@
-/*
- * Creado el 07-sep-2007
- *
-
-
- */
 package se.cambio.cds.gdl.editor.util;
 
 import javax.swing.*;

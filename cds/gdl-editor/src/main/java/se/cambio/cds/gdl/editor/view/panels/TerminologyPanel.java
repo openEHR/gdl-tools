@@ -1,7 +1,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import org.apache.commons.jxpath.JXPathContext;
-import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -79,11 +78,11 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
         Collections.sort(gtCodes);
         for (String gtCode : gtCodes) {
             Term term = termMap.get(gtCode);
-            Vector<String> v = new Vector<>();
-            v.add(term.getId());
-            v.add(term.getText());
-            v.add(term.getDescription());
-            ttm.addRow(v);
+            Vector<String> vector = new Vector<>();
+            vector.add(term.getId());
+            vector.add(term.getText());
+            vector.add(term.getDescription());
+            ttm.addRow(vector);
         }
         getMainPanel().revalidate();
         getMainPanel().repaint();
@@ -114,11 +113,11 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
     }
 
     private void addTermDefinitionInModel() {
-        Vector<String> v = new Vector<>();
-        v.add(controller.createNextLocalCode());
-        v.add("");
-        v.add("");
-        getTerminologyTable().getTerminologyTableModel().addRow(v);
+        Vector<String> vector = new Vector<>();
+        vector.add(controller.createNextLocalCode());
+        vector.add("");
+        vector.add("");
+        getTerminologyTable().getTerminologyTableModel().addRow(vector);
     }
 
     private JButton getDeleteBindingButton() {
@@ -155,7 +154,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
 
         if (selection == JOptionPane.YES_OPTION) {
             ttm = getTerminologyTable().getTerminologyTableModel();
-            int rows[] = getTerminologyTable().getSelectedRows();
+            int[] rows = getTerminologyTable().getSelectedRows();
             if (ttm != null) {
                 if (rows.length > 0) {
                     for (int i = rows.length - 1; i >= 0; i--) {
@@ -171,7 +170,7 @@ public class TerminologyPanel extends JPanel implements RefreshablePanel {
     private Collection<String> getSelectedGTCodes() {
         Collection<String> gtCodes = new ArrayList<>();
         TerminologyTableModel ttm = getTerminologyTable().getTerminologyTableModel();
-        int rows[] = getTerminologyTable().getSelectedRows();
+        int[] rows = getTerminologyTable().getSelectedRows();
         if (ttm != null) {
             if (rows.length > 0) {
                 for (int i = rows.length - 1; i >= 0; i--) {

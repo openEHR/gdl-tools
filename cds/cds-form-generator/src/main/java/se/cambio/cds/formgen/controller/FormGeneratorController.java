@@ -170,22 +170,22 @@ public class FormGeneratorController {
     public Map<String, Map<String, ReadableGuide>> getReadableGuideMap() {
         if (readableGuideMap == null) {
             readableGuideMap = new HashMap<>();
-                GDLParser parser = new GDLParser();
-                for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
-                    Map<String, ReadableGuide> auxMap = new HashMap<>();
-                    readableGuideMap.put(guideDTO.getId(), auxMap);
-                    try {
-                        Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
-                        Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
-                        for (TermDefinition termDefinition : termDefinitions.values()) {
-                            String lang = termDefinition.getId();
-                            ReadableGuide readableGuide = guideImporter.importGuide(guide, lang);
-                            auxMap.put(lang, readableGuide);
-                        }
-                    } catch (UnsupportedEncodingException ex) {
-                        log.error("Error parsing guideline: " + guideDTO.getId(), ex);
+            GDLParser parser = new GDLParser();
+            for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
+                Map<String, ReadableGuide> auxMap = new HashMap<>();
+                readableGuideMap.put(guideDTO.getId(), auxMap);
+                try {
+                    Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
+                    Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
+                    for (TermDefinition termDefinition : termDefinitions.values()) {
+                        String lang = termDefinition.getId();
+                        ReadableGuide readableGuide = guideImporter.importGuide(guide, lang);
+                        auxMap.put(lang, readableGuide);
                     }
+                } catch (UnsupportedEncodingException ex) {
+                    log.error("Error parsing guideline: " + guideDTO.getId(), ex);
                 }
+            }
         }
         return readableGuideMap;
     }

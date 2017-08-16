@@ -34,7 +34,7 @@ public class GDLDroolsConverter {
     private final ArchetypeManager archetypeManager;
     private Guide guide;
     private Map<String, String> _gtElementToWholeDefinition = new HashMap<>();
-    private Map<String, String> _gtElementToDefinition = new HashMap<>();
+    private Map<String, String> gtElementToDefinition = new HashMap<>();
     private Map<String, ArchetypeReference> archetypeReferenceMap;
     private Map<String, ArchetypeElementVO> elementMap;
     private Map<String, String> archetypeBindingGtCodeToDefinition;
@@ -159,26 +159,30 @@ public class GDLDroolsConverter {
     private void insertDefaultActionsRule() {
         List<AssignmentExpression> defaultActions = guide.getDefinition().getDefaultActionExpressions();
         if (!defaultActions.isEmpty()) {
-            sb.append(RULE + " \"").append(guide.getId()).append("/").append(DEFAULT_RULE_CODE).append("\"\n");
-            String guideSalienceId = getGuideSalienceId(guide.getId());
-            sb.append(SALIENCE + " ").append(guideSalienceId).append(" + 9999\n");
-            sb.append(DEFAULT_CONFIG + "\n");
-            sb.append(WHEN + "\n");
             Map<RefStat, Set<String>> ruleStats = initStats();
-            String definition = getDefinitionForRule(ruleStats);
-            sb.append(definition);
-            String functionExtraCode = getFunctionExtraCode(ruleStats);
-            if (functionExtraCode != null) {
-                sb.append(functionExtraCode);
-            }
-            sb.append(preconditionMVEL);
-            appendFiredRuleCondition(sb, true, DEFAULT_RULE_CODE);
-            sb.append(THEN + "\n");
             String defaultActionsStr = convertAssignmentExpressionsToMVEL(defaultActions, ruleStats);
-            sb.append(defaultActionsStr);
-            sb.append(getFiredRuleWMInsertion(DEFAULT_RULE_CODE));
-            sb.append(END + "\n\n");
+            String definition = getDefinitionForRule(ruleStats);
+            printDefaultActionRule(ruleStats, defaultActionsStr, definition);
         }
+    }
+
+    private void printDefaultActionRule(Map<RefStat, Set<String>> ruleStats, String defaultActionsStr, String definition) {
+        sb.append(RULE + " \"").append(guide.getId()).append("/").append(DEFAULT_RULE_CODE).append("\"\n");
+        String guideSalienceId = getGuideSalienceId(guide.getId());
+        sb.append(SALIENCE + " ").append(guideSalienceId).append(" + 9999\n");
+        sb.append(DEFAULT_CONFIG + "\n");
+        sb.append(WHEN + "\n");
+        sb.append(definition);
+        String functionExtraCode = getFunctionExtraCode(ruleStats);
+        if (functionExtraCode != null) {
+            sb.append(functionExtraCode);
+        }
+        sb.append(preconditionMVEL);
+        appendFiredRuleCondition(sb, true, DEFAULT_RULE_CODE);
+        sb.append(THEN + "\n");
+        sb.append(defaultActionsStr);
+        sb.append(getFiredRuleWMInsertion(DEFAULT_RULE_CODE));
+        sb.append(END + "\n\n");
     }
 
     private String getGuideSalienceId(String guideId) {
@@ -189,32 +193,38 @@ public class GDLDroolsConverter {
         String preconditionStr = preconditionMVEL;
         for (Rule rule : guide.getDefinition().getRules().values()) {
             Map<RefStat, Set<String>> ruleStats = initStats();
-            ruleStats.get(RefStat.ATT_SET_REF).remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
-            sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
-            sb.append(DEFAULT_CONFIG + "\n");
-            String guideSalienceId = getGuideSalienceId(guide.getId());
-            int salienceModifier = guide.getDefinition().getRules().size() + 1 - rule.getPriority();
-            sb.append(SALIENCE).append(" ").append(guideSalienceId).append(" - ").append(salienceModifier).append("\n");
-            sb.append(WHEN + "\n");
-            String definition = getDefinitionForRule(ruleStats);
-            sb.append(definition);
-            String functionExtraCode = getFunctionExtraCode(ruleStats);
-            if (functionExtraCode != null) {
-                sb.append(functionExtraCode);
-            }
-            String hasValueChecks = getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
-            if (hasValueChecks != null) {
-                sb.append(hasValueChecks);
-            }
-            sb.append(preconditionStr);
             String whenStr = convertExpressionsToMVEL(rule.getWhenStatements(), ruleStats);
-            sb.append(whenStr);
-            sb.append(THEN + "\n");
             String thenStr = convertAssignmentExpressionsToMVEL(rule.getThenStatements(), ruleStats);
-            sb.append(thenStr);
-            sb.append(getFiredRuleWMInsertion(rule.getId()));
-            sb.append(END + "\n\n");
+            String definition = getDefinitionForRule(ruleStats);
+            ruleStats.get(RefStat.ATT_SET_REF).remove(OpenEHRConst.CURRENT_DATE_TIME_ID);
+            String hasValueChecks =
+                    getHasValueStr(ruleStats.get(RefStat.ATT_SET_REF));
+            String functionExtraCode = getFunctionExtraCode(ruleStats);
+            printRule(preconditionStr, rule, whenStr, thenStr, definition, hasValueChecks, functionExtraCode);
         }
+    }
+
+    private void printRule(
+            String preconditionStr, Rule rule, String whenStr, String thenStr, String definition, String hasValueChecks, String functionExtraCode) {
+        sb.append(RULE + " \"").append(guide.getId()).append("/").append(rule.getId()).append("\"\n");
+        sb.append(DEFAULT_CONFIG + "\n");
+        String guideSalienceId = getGuideSalienceId(guide.getId());
+        int salienceModifier = guide.getDefinition().getRules().size() + 1 - rule.getPriority();
+        sb.append(SALIENCE).append(" ").append(guideSalienceId).append(" - ").append(salienceModifier).append("\n");
+        sb.append(WHEN + "\n");
+        sb.append(definition);
+        if (functionExtraCode != null) {
+            sb.append(functionExtraCode);
+        }
+        if (hasValueChecks != null) {
+            sb.append(hasValueChecks);
+        }
+        sb.append(preconditionStr);
+        sb.append(whenStr);
+        sb.append(THEN + "\n");
+        sb.append(thenStr);
+        sb.append(getFiredRuleWMInsertion(rule.getId()));
+        sb.append(END + "\n\n");
     }
 
     private String getFunctionExtraCode(Map<RefStat, Set<String>> ruleStats) {
@@ -267,7 +277,7 @@ public class GDLDroolsConverter {
                         .append("_")
                         .append(archetypeReferenceGTCode)
                         .append(")");
-                _gtElementToDefinition.put(element.getId(), elementDefinitionSB.toString());
+                gtElementToDefinition.put(element.getId(), elementDefinitionSB.toString());
                 gtElementToArchetypeBindingGtCode.put(element.getId(), archetypeReferenceGTCode);
             }
         }
@@ -295,7 +305,7 @@ public class GDLDroolsConverter {
                     archetypeDefinitions.put(gtCodeArchetypeBinding, definition);
                 }
                 definition.append(TAB);
-                definition.append("$").append(elementGtCode).append(":").append(_gtElementToDefinition.get(elementGtCode)).append("\n");
+                definition.append("$").append(elementGtCode).append(":").append(gtElementToDefinition.get(elementGtCode)).append("\n");
             }
         }
 
@@ -546,7 +556,7 @@ public class GDLDroolsConverter {
             return "DVUtil.isSubClassOf(" + inPredicate + ", " + handle + ", $bindingMap, \"" + getGuide().getId() + "/" + code + "\", " + getTermBindings(value) + ")";
         } else if (OperatorKind.IS_NOT_A.equals(ok)) {
             String code = parseCode(value);
-            return "DVUtil.isNotSubClassOf(" + inPredicate + ", " + handle + ", $bindingMap, \"" + getGuide().getId() + "/" + code + "\", "  + getTermBindings(value) + ")";
+            return "DVUtil.isNotSubClassOf(" + inPredicate + ", " + handle + ", $bindingMap, \"" + getGuide().getId() + "/" + code + "\", " + getTermBindings(value) + ")";
         } else if (OperatorKind.GREATER_THAN.equals(ok)) {
             return getComparisonString(handle, value) + ">0";
         } else if (OperatorKind.GREATER_THAN_OR_EQUAL.equals(ok)) {

@@ -39,7 +39,7 @@ class GDLDecisionModelBuilder {
         }
     }
 
-    Collection<GuideAssignmentExpression> getAssignmentDependencies(String guideId, ExpressionItem expressionItem) throws InternalErrorException {
+    Collection<GuideAssignmentExpression> getAssignmentDependencies(String guideId, ExpressionItem expressionItem) {
         if (expressionItem instanceof BinaryExpression) {
             GuideBinaryExpressionItem guideBinaryExpressionItem =
                     new GuideBinaryExpressionItem(guideId, (BinaryExpression) expressionItem);
@@ -75,7 +75,7 @@ class GDLDecisionModelBuilder {
         return decisionMap;
     }
 
-    private boolean matches(GuideBinaryExpressionItem guideBinaryExpressionItem, GuideAssignmentExpression guideAssignmentExpression, Calendar cal) throws InternalErrorException {
+    private boolean matches(GuideBinaryExpressionItem guideBinaryExpressionItem, GuideAssignmentExpression guideAssignmentExpression, Calendar cal) {
         String gtCode = ((Variable) guideBinaryExpressionItem.getBinaryExpression().getLeft()).getCode();
         RuleReference ruleReference = new RuleReference(guideBinaryExpressionItem.getGuideId(), gtCode);
         ElementInstance conditionElementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
@@ -114,7 +114,10 @@ class GDLDecisionModelBuilder {
             return false;
         }
         Collection<Guide> guides = Collections.singleton(guideMap.get(guideBinaryExpressionItem.getGuideId()));
-        return !(dv1 != null && dv2 != null && !dv1.getClass().equals(dv2.getClass())) && elementInstanceCollectionManager.matches(dv1, dv2, guideBinaryExpressionItem.getBinaryExpression().getOperator(), guides);
+        return !(dv1 != null
+                && dv2 != null
+                && !dv1.getClass().equals(dv2.getClass()))
+                && elementInstanceCollectionManager.matches(dv1, dv2, guideBinaryExpressionItem.getBinaryExpression().getOperator(), guides);
     }
 
     private Map<RuleReference, ElementInstance> getElementInstanceByRuleReferenceMap() {
@@ -196,9 +199,9 @@ class GDLDecisionModelBuilder {
             if (guide.getDefinition() != null) {
                 if (guide.getDefinition() != null) {
                     for (Rule rule : guide.getDefinition().getRules().values()) {
-                        Collection<AssignmentExpression> simpleAssingmentsFromExpressionItems =
+                        Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems =
                                 getSimpleAssignmentsFromExpressionItems(rule.getThenStatements());
-                        for (AssignmentExpression assignmentExpression : simpleAssingmentsFromExpressionItems) {
+                        for (AssignmentExpression assignmentExpression : simpleAssignmentsFromExpressionItems) {
                             Variable variable = assignmentExpression.getVariable();
                             RuleReference ruleReference = new RuleReference(guide.getId(), variable.getCode());
                             ElementInstance elementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
@@ -234,8 +237,8 @@ class GDLDecisionModelBuilder {
     private void addSimpleConditionsFromExpressionItems(ExpressionItem expressionItem, Collection<BinaryExpression> simpleConditionsExpressionItems) {
         if (expressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expressionItem;
-            if (OperatorKind.AND.equals(binaryExpression.getOperator()) ||
-                    OperatorKind.OR.equals(binaryExpression.getOperator())) {
+            if (OperatorKind.AND.equals(binaryExpression.getOperator())
+                    || OperatorKind.OR.equals(binaryExpression.getOperator())) {
                 addSimpleConditionsFromExpressionItems(binaryExpression.getLeft(), simpleConditionsExpressionItems);
                 addSimpleConditionsFromExpressionItems(binaryExpression.getRight(), simpleConditionsExpressionItems);
                 return;
@@ -265,13 +268,14 @@ class GDLDecisionModelBuilder {
     }
 
     private boolean isArithmeticOperator(OperatorKind operator) {
-        return OperatorKind.ADDITION.equals(operator) ||
-                OperatorKind.SUBSTRATION.equals(operator) ||
-                OperatorKind.MULTIPLICATION.equals(operator) ||
-                OperatorKind.DIVISION.equals(operator);
+        return OperatorKind.ADDITION.equals(operator)
+                || OperatorKind.SUBSTRATION.equals(operator)
+                || OperatorKind.MULTIPLICATION.equals(operator)
+                || OperatorKind.DIVISION.equals(operator);
     }
 
-    private Collection<AssignmentExpression> getSimpleAssignmentsFromExpressionItems(List<AssignmentExpression> assignmentExpressionItems) {
+    private Collection<AssignmentExpression> getSimpleAssignmentsFromExpressionItems(
+            List<AssignmentExpression> assignmentExpressionItems) {
         Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems = new ArrayList<>();
         for (AssignmentExpression assignmentExpression : assignmentExpressionItems) {
             addSimpleAssignmentFromExpressionItems(assignmentExpression, simpleAssignmentsFromExpressionItems);
@@ -279,7 +283,8 @@ class GDLDecisionModelBuilder {
         return simpleAssignmentsFromExpressionItems;
     }
 
-    private void addSimpleAssignmentFromExpressionItems(AssignmentExpression assignmentExpression, Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems) {
+    private void addSimpleAssignmentFromExpressionItems(
+            AssignmentExpression assignmentExpression, Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems) {
         if (assignmentExpression instanceof CreateInstanceExpression) {
             CreateInstanceExpression createInstanceExpression = (CreateInstanceExpression) assignmentExpression;
             simpleAssignmentsFromExpressionItems.addAll(createInstanceExpression.getAssignment().getAssignmentExpressions());
@@ -306,10 +311,14 @@ class GDLDecisionModelBuilder {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof GuideBinaryExpressionItem)) return false;
-            GuideBinaryExpressionItem that = (GuideBinaryExpressionItem) o;
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof GuideBinaryExpressionItem)) {
+                return false;
+            }
+            GuideBinaryExpressionItem that = (GuideBinaryExpressionItem) obj;
             return binaryExpression.equals(that.binaryExpression) && guideId.equals(that.guideId);
         }
 
@@ -322,10 +331,10 @@ class GDLDecisionModelBuilder {
 
         @Override
         public String toString() {
-            return "GuideBinaryExpressionItem{" +
-                    "guideId='" + guideId + '\'' +
-                    ", binaryExpression=" + binaryExpression +
-                    '}';
+            return "GuideBinaryExpressionItem{"
+                    + "guideId='" + guideId + '\''
+                    + ", binaryExpression=" + binaryExpression
+                    + "}";
         }
     }
 
@@ -347,10 +356,14 @@ class GDLDecisionModelBuilder {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof GuideAssignmentExpression)) return false;
-            GuideAssignmentExpression that = (GuideAssignmentExpression) o;
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof GuideAssignmentExpression)) {
+                return false;
+            }
+            GuideAssignmentExpression that = (GuideAssignmentExpression) obj;
             return assignmentExpression.equals(that.assignmentExpression) && guideId.equals(that.guideId);
         }
 
@@ -363,10 +376,10 @@ class GDLDecisionModelBuilder {
 
         @Override
         public String toString() {
-            return "GuideAssignmentExpression{" +
-                    "guideId='" + guideId + '\'' +
-                    ", assignmentExpression=" + assignmentExpression +
-                    '}';
+            return "GuideAssignmentExpression{"
+                    + "guideId='" + guideId + '\''
+                    + ", assignmentExpression=" + assignmentExpression
+                    + "}";
         }
     }
 }

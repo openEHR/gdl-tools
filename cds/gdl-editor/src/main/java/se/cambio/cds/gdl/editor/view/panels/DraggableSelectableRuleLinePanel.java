@@ -20,7 +20,8 @@ public class DraggableSelectableRuleLinePanel extends JLabel {
     public RuleLine getRuleLine() {
         return ruleLine;
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *
