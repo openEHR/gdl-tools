@@ -1,49 +1,18 @@
 package se.cambio.cm.model.archetype.vo;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.io.Serializable;
 
-public class UnitVO implements Serializable, Cloneable {
+@Data
+@Builder(toBuilder = true)
+public class UnitVO implements Serializable {
 
     private static final long serialVersionUID = 25052012L;
     private String idTemplate = null;
     private String idElement = null;
     private String unit = null;
-
-    public UnitVO(String idTemplate, String idElement, String unit) {
-        super();
-        this.idTemplate = idTemplate;
-        this.idElement = idElement;
-        this.unit = unit;
-    }
-
-    public String getIdTemplate() {
-        return idTemplate;
-    }
-
-    public void setIdTemplate(String idTemplate) {
-        this.idTemplate = idTemplate;
-    }
-
-    public String getIdElement() {
-        return idElement;
-    }
-
-    public void setIdElement(String idElement) {
-        this.idElement = idElement;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    @Override
-    public UnitVO clone() {
-        return new UnitVO(idTemplate, idElement, unit);
-    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

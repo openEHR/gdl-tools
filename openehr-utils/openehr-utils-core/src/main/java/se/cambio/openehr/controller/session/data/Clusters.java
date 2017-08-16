@@ -109,7 +109,7 @@ public class Clusters {
     public Collection<ClusterVO> getSections(String templateId) {
         Collection<ClusterVO> sections = new ArrayList<>();
         for (ClusterVO clusterVO : getClusterVOMap(templateId).values()) {
-            if (clusterVO.getRMType().equals(OpenEHRConst.SECTION)) {
+            if (clusterVO.getType().equals(OpenEHRConst.SECTION)) {
                 sections.add(clusterVO);
             }
         }

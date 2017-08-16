@@ -21,8 +21,18 @@ public class ArchetypeElementsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new ArchetypeElementVO(null, "elementIdTest1", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/archetypeElementPath1"),
-                        new ArchetypeElementVO(null, "elementIdTest2", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/archetypeElementPath2")));
+                        ArchetypeElementVO.builder()
+                                .description("elementIdTest1")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .build(),
+                        ArchetypeElementVO.builder()
+                                .description("elementIdTest2")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .build()));
         ArchetypeElementVO archetypeElementVO = archetypeElements.getArchetypeElement(null, TEST_ARCHETYPE_ID + "/archetypeElementPath1");
         assertThat(archetypeElementVO.getDescription(), equalTo("elementIdTest1"));
         archetypeElementVO = archetypeElements.getArchetypeElement(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2");
@@ -43,12 +53,22 @@ public class ArchetypeElementsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ArchetypeElementVO(null, "elementIdTest1", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/archetypeElementPath1")));
+                        ArchetypeElementVO.builder()
+                                .description("elementIdTest1")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .build()));
         archetypeElements.loadArchetypeElements(
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ArchetypeElementVO(null, "elementIdTest2", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/archetypeElementPath2")));
+                        ArchetypeElementVO.builder()
+                                .description("elementIdTest2")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .build()));
         ArchetypeElementVO archetypeElementVO = archetypeElements.getArchetypeElement(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2");
         assertThat(archetypeElementVO.getDescription(), equalTo("elementIdTest2"));
     }
@@ -60,12 +80,22 @@ public class ArchetypeElementsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ArchetypeElementVO(null, "elementIdTest1", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/archetypeElementPath1")));
+                        ArchetypeElementVO.builder()
+                                .description("elementIdTest1")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .build()));
         archetypeElements.loadArchetypeElements(
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ArchetypeElementVO(null, "elementIdTest2", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/archetypeElementPath2")));
+                        ArchetypeElementVO.builder()
+                                .description("elementIdTest2")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .build()));
         archetypeElements.getArchetypeElement(null, TEST_ARCHETYPE_ID + "/archetypeElementPath1");
     }
 }

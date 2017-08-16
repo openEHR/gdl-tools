@@ -42,7 +42,7 @@ public class ArchetypeReferencesManager {
         String idDomain = getDomainId(ar);
 
         String archetypeImageName = getArchetypeImageName(ar);
-        String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
+        String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getType());
 
         String elementName = getElementName(archetypeElementVO);
         String elementDesc = getElementDescription(archetypeElementVO);
@@ -59,7 +59,7 @@ public class ArchetypeReferencesManager {
                 + OpenEHRImageUtil.getImgHTMLTag(archetypeImageName) + "&nbsp;" + archetypeName + "</td></tr>"
                 + "<tr><td><b>" + OpenEHRLanguageManager.getMessage("DataValue") + ": </b>"
                 + OpenEHRImageUtil.getImgHTMLTag(dataValueImageName) + "&nbsp;"
-                + OpenEHRDataValuesUI.getName(archetypeElementVO.getRMType()) + "</td><td><b>"
+                + OpenEHRDataValuesUI.getName(archetypeElementVO.getType()) + "</td><td><b>"
                 + OpenEHRLanguageManager.getMessage("Occurrences") + ": </b>" + cardinalityStr + "</td></tr>"
                 + (units != null ? "<tr><td colspan=2><b>"
                         + OpenEHRLanguageManager.getMessage("Units") + ": </b>" + units + "</td></tr>" : "")
@@ -83,7 +83,7 @@ public class ArchetypeReferencesManager {
                 if (archetypeManager.getClusters().isCluster(archetypeElementVO.getIdTemplate(), clusterPathSB.toString())) {
                     ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
                     String name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
-                    pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getRMType()))).append("&nbsp;").append(name).append(" / ");
+                    pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getType()))).append("&nbsp;").append(name).append(" / ");
                 }
             }
         }
@@ -132,7 +132,7 @@ public class ArchetypeReferencesManager {
 
     private String getUnitsDescription(ArchetypeElementVO archetypeElementVO) {
         String units = null;
-        if (OpenEHRDataValues.DV_QUANTITY.equals(archetypeElementVO.getRMType())) {
+        if (OpenEHRDataValues.DV_QUANTITY.equals(archetypeElementVO.getType())) {
             StringBuilder unitsSB = new StringBuilder();
             for (String unit : archetypeManager.getUnits().getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId())) {
                 unitsSB.append(unit).append(", ");

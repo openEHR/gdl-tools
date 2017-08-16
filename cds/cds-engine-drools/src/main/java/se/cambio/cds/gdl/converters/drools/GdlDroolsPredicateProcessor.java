@@ -133,7 +133,7 @@ public class GdlDroolsPredicateProcessor {
             sb.append(TAB);
             sb.append("eval(");
             Variable var = new Variable(predicateHandle, predicateHandle, path, attribute);
-            String rmName = archetypeElement.getRMType();
+            String rmName = archetypeElement.getType();
             String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName, var);
             sb.append("(");
             if (GDLDroolsConverter.isString(rmName, attribute)) {
@@ -173,7 +173,7 @@ public class GdlDroolsPredicateProcessor {
             String guideId = gdlDroolsConverter.getGuide().getId();
             throw new RuntimeException(format("Guide=%s, Element not found '%s' %s", guideId, idElement, templateId));
         }
-        String rmType = archetypeElement.getRMType();
+        String rmType = archetypeElement.getType();
         sb.append(TAB);
         String dvStr = "null";
         if (!constantExpression.getValue().equals("null")) {
@@ -207,7 +207,7 @@ public class GdlDroolsPredicateProcessor {
                     ArchetypeElements archetypeElements = gdlDroolsConverter.getArchetypeManager().getArchetypeElements();
                     ArchetypeElementVO archetypeElement = archetypeElements.getArchetypeElement(archetypeBinding.getTemplateId(), idElement);
                     if (archetypeElement != null) {
-                        String rmType = archetypeElement.getRMType();
+                        String rmType = archetypeElement.getType();
                         String dvStr = "null";
                         if (!"null".equals(constantExpression.getValue())) {
                             dvStr = DVDefSerializer.getDVInstantiation(DataValue.parseValue(rmType + "," + constantExpression.getValue()));

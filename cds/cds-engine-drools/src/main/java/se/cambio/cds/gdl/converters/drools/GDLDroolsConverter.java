@@ -9,7 +9,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
-import se.cambio.cm.model.archetype.vo.ArchetypeElementVOBuilder;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
@@ -46,11 +45,11 @@ public class GDLDroolsConverter {
     private String preconditionMVEL;
 
     public static final ArchetypeElementVO CURRENT_DATE_TIME =
-            new ArchetypeElementVOBuilder()
-                    .setName(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
-                    .setDescription(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
-                    .setType(OpenEHRDataValues.DV_DATE_TIME)
-                    .createArchetypeElementVO();
+            ArchetypeElementVO.builder()
+                    .name(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
+                    .description(OpenEHRLanguageManager.getMessage("CurrentDateTime"))
+                    .type(OpenEHRDataValues.DV_DATE_TIME)
+                    .build();
 
     public GDLDroolsConverter(Guide guide, ArchetypeManager archetypeManager) {
         this.guide = guide;

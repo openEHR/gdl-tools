@@ -122,7 +122,7 @@ public class GuideImporter {
                         WithElementPredicateAttributeDefinitionRuleLine wepdrl = new WithElementPredicateAttributeDefinitionRuleLine();
                         airl.addChildRuleLine(wepdrl);
                         wepdrl.getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
-                        String rmType = archetypeElementVO.getRMType();
+                        String rmType = archetypeElementVO.getType();
                         if (OpenEHRDataValues.DV_TEXT.equals(rmType)
                                 && (OperatorKind.IS_A.equals(binaryExpression.getOperator()) || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))) {
                             rmType = OpenEHRDataValues.DV_CODED_TEXT;
@@ -296,7 +296,7 @@ public class GuideImporter {
                 }
                 log.debug("processAssignmentExpression for variable: " + gtCode);
 
-                String rmType = archetypeElementVO.getRMType();
+                String rmType = archetypeElementVO.getType();
                 String dvStr = ((ConstantExpression) expressionItemAux).getValue();
                 DataValue dv = parseDataValue(rmType, dvStr, archetypeElementVO);
                 ArchetypeDataValueRuleLineElement archetypeDataValueRuleLineElement = sedvar.getArchetypeDataValueRuleLineElement();
@@ -402,7 +402,7 @@ public class GuideImporter {
                             if (archetypeElementVO == null) {
                                 throw new InternalErrorException(new Exception("Archetype element not found for gtCode '" + gtCodeRuleLineElement.getValue() + "'"));
                             }
-                            rmType = archetypeElementVO.getRMType();
+                            rmType = archetypeElementVO.getType();
                             if (OpenEHRDataValues.DV_TEXT.equals(rmType)
                                     && (OperatorKind.IS_A.equals(binaryExpression.getOperator())
                                             || OperatorKind.IS_NOT_A.equals(binaryExpression.getOperator()))) {

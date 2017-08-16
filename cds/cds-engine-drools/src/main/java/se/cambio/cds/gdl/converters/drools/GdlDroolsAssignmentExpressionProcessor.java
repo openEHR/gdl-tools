@@ -73,7 +73,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
                     String guideId = gdlDroolsConverter.getGuide().getId();
                     throw new RuntimeException(format("Guide=%s, Unknown element for gtCode '%s'", guideId, gtCode));
                 }
-                String rmType = archetypeElementVO.getRMType();
+                String rmType = archetypeElementVO.getType();
                 DataValue dv = DataValue.parseValue(rmType + "," + dvStr);
                 stringBuffer.append("$").append(eiId).append(".setDataValue(").append(DVDefSerializer.getDVInstantiation(dv)).append(");");
                 stringBuffer.append("$").append(eiId).append(".setNullFlavour(null);");
@@ -124,7 +124,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 stats.get(RefStat.REFERENCE).addAll(statsAux.get(RefStat.ATT_FUNCTIONS_REF));
                 stats.get(RefStat.ATT_SET_REF).addAll(statsAux.get(RefStat.REFERENCE));
                 stats.get(RefStat.ATT_FUNCTIONS).addAll(statsAux.get(RefStat.ATT_FUNCTIONS));
-                String rmName = archetypeElementVO.getRMType();
+                String rmName = archetypeElementVO.getType();
                 stringBuffer.append("$")
                         .append(eiId)
                         .append(".")

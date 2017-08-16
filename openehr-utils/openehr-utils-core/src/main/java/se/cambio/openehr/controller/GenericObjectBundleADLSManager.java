@@ -14,8 +14,6 @@ import se.cambio.openehr.util.ArchetypeTermMapGenerator;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.exceptions.ArchetypeProcessingException;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
@@ -90,8 +88,8 @@ public class GenericObjectBundleADLSManager {
         Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, null, rmEntry);
         //TODO Send Archetype (to create long RM paths (data/events/time))
         for (ClusterVO clusterVO : clusterVOs) {
-            if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")) {
-                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getRMType(), clusterVO.getPath()));
+            if (OpenEHRConst.isEntry(clusterVO.getType()) && !clusterVO.getPath().equals("/")) {
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, null, clusterVO.getType(), clusterVO.getPath()));
                 //TODO Send Archetype (to create long RM paths (data/events/time))
             }
         }
@@ -127,25 +125,19 @@ public class GenericObjectBundleADLSManager {
 
     private void processArchetypeReference(String usedArchetypeId, String path) throws ArchetypeProcessingException {
         String currentPath = path + "[" + usedArchetypeId + "]";
-        try {
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO =
-                    archetypeManager.getArchetypes().getArchetypeAOBCVOById(usedArchetypeId);
-            processReferencedArcehtypeElements(currentPath, archetypeObjectBundleCustomVO);
-            processReferencedClusters(currentPath, archetypeObjectBundleCustomVO);
-            processReferencedCodedTexts(currentPath, archetypeObjectBundleCustomVO);
-            processReferencedOrdinals(currentPath, archetypeObjectBundleCustomVO);
-            processReferencedUnits(archetypeObjectBundleCustomVO);
-            processReferencedProportionTypes(archetypeObjectBundleCustomVO);
-        } catch (InternalErrorException ex) {
-            throw new ArchetypeProcessingException(ex.getMessage());
-        } catch (InstanceNotFoundException ex) {
-            throw new ArchetypeProcessingException(ex.getMessage());
-        }
+        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO =
+                archetypeManager.getArchetypes().getArchetypeAOBCVOById(usedArchetypeId);
+        processReferencedArcehtypeElements(currentPath, archetypeObjectBundleCustomVO);
+        processReferencedClusters(currentPath, archetypeObjectBundleCustomVO);
+        processReferencedCodedTexts(currentPath, archetypeObjectBundleCustomVO);
+        processReferencedOrdinals(currentPath, archetypeObjectBundleCustomVO);
+        processReferencedUnits(archetypeObjectBundleCustomVO);
+        processReferencedProportionTypes(archetypeObjectBundleCustomVO);
     }
 
     private void processReferencedProportionTypes(ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
         for (ProportionTypeVO proportionTypeVO : archetypeObjectBundleCustomVO.getProportionTypes()) {
-            ProportionTypeVO proportionTypeVO1 = proportionTypeVO.clone();
+            ProportionTypeVO proportionTypeVO1 = proportionTypeVO.toBuilder().build();
             String elementId = proportionTypeVO1.getIdElement();
             int indexOfFirstSlash = elementId.indexOf("/");
             String elementPath = elementId.substring(indexOfFirstSlash, elementId.length());
@@ -157,7 +149,7 @@ public class GenericObjectBundleADLSManager {
 
     private void processReferencedUnits(ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
         for (UnitVO unitVO : archetypeObjectBundleCustomVO.getUnitVOs()) {
-            UnitVO unitVO1 = unitVO.clone();
+            UnitVO unitVO1 = unitVO.toBuilder().build();
             String elementId = unitVO.getIdElement();
             int indexOfFirstSlash = elementId.indexOf("/");
             String elementPath = elementId.substring(indexOfFirstSlash, elementId.length());
@@ -169,7 +161,7 @@ public class GenericObjectBundleADLSManager {
 
     private void processReferencedOrdinals(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
         for (OrdinalVO ordinalVO : archetypeObjectBundleCustomVO.getOrdinalVOs()) {
-            OrdinalVO ordinalVO1 = ordinalVO.clone();
+            OrdinalVO ordinalVO1 = ordinalVO.toBuilder().build();
             ordinalVO1.setIdArchetype(getArchetypeId());
             ordinalVO1.setPath(currentPath + ordinalVO.getPath());
             ordinalVOs.add(ordinalVO1);
@@ -178,7 +170,7 @@ public class GenericObjectBundleADLSManager {
 
     private void processReferencedCodedTexts(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
         for (CodedTextVO codedTextVO : archetypeObjectBundleCustomVO.getCodedTextVOs()) {
-            CodedTextVO codedTextVO1 = codedTextVO.clone();
+            CodedTextVO codedTextVO1 = codedTextVO.toBuilder().build();
             codedTextVO1.setIdArchetype(getArchetypeId());
             codedTextVO1.setPath(currentPath + codedTextVO.getPath());
             codedTextVOs.add(codedTextVO1);
@@ -187,7 +179,7 @@ public class GenericObjectBundleADLSManager {
 
     private void processReferencedClusters(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
         for (ClusterVO clusterVO : archetypeObjectBundleCustomVO.getClusterVOs()) {
-            ClusterVO clusterVO1 = clusterVO.clone();
+            ClusterVO clusterVO1 = clusterVO.toBuilder().build();
             clusterVO1.setIdArchetype(getArchetypeId());
             clusterVO1.setPath(currentPath + clusterVO.getPath());
             clusterVOs.add(clusterVO1);
@@ -196,7 +188,7 @@ public class GenericObjectBundleADLSManager {
 
     private void processReferencedArcehtypeElements(String currentPath, ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO) {
         for (ArchetypeElementVO archetypeElementVO : archetypeObjectBundleCustomVO.getArchetypeElementVOs()) {
-            ArchetypeElementVO archetypeElementVO1 = archetypeElementVO.clone();
+            ArchetypeElementVO archetypeElementVO1 = archetypeElementVO.toBuilder().build();
             archetypeElementVO1.setIdArchetype(getArchetypeId());
             archetypeElementVO1.setPath(currentPath + archetypeElementVO.getPath());
             archetypeElementVOs.add(archetypeElementVO1);
@@ -229,13 +221,13 @@ public class GenericObjectBundleADLSManager {
             rmType = translateCIMIRM(rmType);
             rmType = mapToKnowRMType(rmType);
             ArchetypeElementVO archetypeElementVO =
-                    new ArchetypeElementVOBuilder()
-                            .setName(text)
-                            .setDescription(description)
-                            .setIdArchetype(getArchetypeId())
-                            .setType(rmType)
-                            .setPath(currentPath)
-                            .createArchetypeElementVO();
+                    ArchetypeElementVO.builder()
+                            .name(text)
+                            .description(description)
+                            .idArchetype(getArchetypeId())
+                            .type(rmType)
+                            .path(currentPath)
+                            .build();
             setCardinalities(archetypeElementVO, constrainedComplexObject);
             archetypeElementVOs.add(archetypeElementVO);
             processAdditionalPathables(currentPath, elementDefinitionCObject, rmType);
@@ -327,15 +319,15 @@ public class GenericObjectBundleADLSManager {
             logger.warn("Archetype term not found for atCode '" + code + "'");
             return;
         }
-        CodedTextVO codedTextVO = new CodedTextVOBuilder()
-                .setName(termMap.get("text"))
-                .setDescription(termMap.get("description"))
-                .setType(OpenEHRDataValues.DV_CODED_TEXT)
-                .setIdArchetype(getArchetypeId())
-                .setCode(code)
-                .setTerminology(terminologyId)
-                .setPath(currentPath)
-                .createCodedTextVO();
+        CodedTextVO codedTextVO = CodedTextVO.builder()
+                .name(termMap.get("text"))
+                .description(termMap.get("description"))
+                .type(OpenEHRDataValues.DV_CODED_TEXT)
+                .idArchetype(getArchetypeId())
+                .code(code)
+                .terminology(terminologyId)
+                .path(currentPath)
+                .build();
         codedTextVOs.add(codedTextVO);
     }
 
@@ -352,16 +344,16 @@ public class GenericObjectBundleADLSManager {
                         logger.warn("Archetype term not found for atCode '" + code + "'");
                         continue;
                     }
-                    OrdinalVO ordinalVO = new OrdinalVOBuilder()
-                            .setName(referenceTerm.get("text"))
-                            .setDescription(referenceTerm.get("description"))
-                            .setType(constrainedObject.getRmTypeName())
-                            .setIdArchetype(getArchetypeId())
-                            .setValue(dvOrdinal.getValue())
-                            .setCode(code)
-                            .setTerminology(definingCode.getTerminologyId().getValue())
-                            .setPath(currentPath)
-                            .createOrdinalVO();
+                    OrdinalVO ordinalVO = OrdinalVO.builder()
+                            .name(referenceTerm.get("text"))
+                            .description(referenceTerm.get("description"))
+                            .type(constrainedObject.getRmTypeName())
+                            .idArchetype(getArchetypeId())
+                            .value(dvOrdinal.getValue())
+                            .code(code)
+                            .terminology(definingCode.getTerminologyId().getValue())
+                            .path(currentPath)
+                            .build();
                     ordinalVOs.add(ordinalVO);
                 }
             }
@@ -375,14 +367,13 @@ public class GenericObjectBundleADLSManager {
             logger.warn("Archetype term not found for atCode '" + nodeId + "'");
             return;
         }
-        ClusterVO clusterVO =
-                new ClusterVOBuilder()
-                        .setName(termMap.get("text"))
-                        .setDescription(termMap.get("description"))
-                        .setType(constrainedObject.getRmTypeName())
-                        .setIdArchetype(getArchetypeId())
-                        .setPath(path)
-                        .createClusterVO();
+        ClusterVO clusterVO = ClusterVO.builder()
+                .name(termMap.get("text"))
+                .description(termMap.get("description"))
+                .type(constrainedObject.getRmTypeName())
+                .idArchetype(getArchetypeId())
+                .path(path)
+                .build();
         setCardinalities(clusterVO, constrainedObject);
         clusterVOs.add(clusterVO);
     }
@@ -444,7 +435,10 @@ public class GenericObjectBundleADLSManager {
 
     private void processUnits(String elementId, List<String> units) {
         for (String unit : units) {
-            UnitVO unitVO = new UnitVO(null, elementId, unit);
+            UnitVO unitVO = UnitVO.builder()
+                    .idElement(elementId)
+                    .unit(unit)
+                    .build();
             unitVOs.add(unitVO);
         }
     }
@@ -454,7 +448,11 @@ public class GenericObjectBundleADLSManager {
             CObject elementDefinitionCObject = getElementDefinitionCObject((CComplexObject) constrainedObject, currentPath, "type");
             List<Integer> proportionTypes = getCIntegers(elementDefinitionCObject);
             for (Integer proportionType : proportionTypes) {
-                proportionTypeVOs.add(new ProportionTypeVO(null, getArchetypeId() + currentPath, proportionType));
+                proportionTypeVOs.add(
+                        ProportionTypeVO.builder()
+                                .idElement(getArchetypeId() + currentPath)
+                                .type(proportionType)
+                                .build());
             }
         }
     }
@@ -591,12 +589,12 @@ public class GenericObjectBundleADLSManager {
             for (ArchetypeTerm archetypeTerm : codeDefinitionSet.getItems()) {
                 String text = getDictionaryItem("text", archetypeTerm);
                 String description = getDictionaryItem("description", archetypeTerm);
-                archetypeTermVOs.add(
-                        new ArchetypeTermVO(ar.getArchetypeId().getValue(),
-                                archetypeTerm.getCode(),
-                                lang,
-                                text,
-                                description));
+                archetypeTermVOs.add(ArchetypeTermVO.builder()
+                        .archetypeId(ar.getArchetypeId().getValue())
+                        .language(lang)
+                        .text(text)
+                        .description(description)
+                        .build());
             }
         }
         return archetypeTermVOs;

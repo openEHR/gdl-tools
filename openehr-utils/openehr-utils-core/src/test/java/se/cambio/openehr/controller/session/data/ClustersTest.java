@@ -22,8 +22,18 @@ public class ClustersTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new ClusterVO(null, "elementIdTest1", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/clusterPath1"),
-                        new ClusterVO(null, "elementIdTest2", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/clusterPath2")));
+                        ClusterVO.builder()
+                                .description("elementIdTest1")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/clusterPath1")
+                                .build(),
+                        ClusterVO.builder()
+                                .description("elementIdTest2")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/clusterPath2")
+                                .build()));
         ClusterVO clusterVO = clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath1");
         assertThat(clusterVO.getDescription(), equalTo("elementIdTest1"));
         clusterVO = clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath2");
@@ -44,12 +54,22 @@ public class ClustersTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ClusterVO(null, "elementIdTest1", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/clusterPath1")));
+                        ClusterVO.builder()
+                                .description("elementIdTest1")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/clusterPath1")
+                                .build()));
         clusters.loadClusters(
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ClusterVO(null, "elementIdTest2", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/clusterPath2")));
+                        ClusterVO.builder()
+                                .description("elementIdTest2")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/clusterPath2")
+                                .build()));
         ClusterVO clusterVO = clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath2");
         assertThat(clusterVO.getDescription(), equalTo("elementIdTest2"));
     }
@@ -61,12 +81,22 @@ public class ClustersTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ClusterVO(null, "elementIdTest1", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/clusterPath1")));
+                        ClusterVO.builder()
+                                .description("elementIdTest1")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/clusterPath1")
+                                .build()));
         clusters.loadClusters(
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new ClusterVO(null, "elementIdTest2", "DV_TEXT", TEST_ARCHETYPE_ID, null, "/clusterPath2")));
+                        ClusterVO.builder()
+                                .description("elementIdTest2")
+                                .type("DV_TEXT")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/clusterPath2")
+                                .build()));
         clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath1");
     }
 }

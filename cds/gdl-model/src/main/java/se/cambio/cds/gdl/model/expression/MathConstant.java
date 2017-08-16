@@ -3,7 +3,7 @@ package se.cambio.cds.gdl.model.expression;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class MathConstant extends ConstantExpression {
     private Constant constant;

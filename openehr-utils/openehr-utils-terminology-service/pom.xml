@@ -10,7 +10,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>openehr-rm-core</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>

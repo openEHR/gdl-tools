@@ -177,7 +177,7 @@ public class NodeDefinitionManager {
     private static ImageIcon getIconsArchetypeElement(ArchetypeElementRuleLineDefinitionElement aerlde) {
         String archetypeId = aerlde.getValue().getIdArchetype();
         String archReferenceRM = Archetypes.getEntryType(archetypeId);
-        String archElementRM = aerlde.getValue().getRMType();
+        String archElementRM = aerlde.getValue().getType();
         return new MultipleIcon(
                 new Icon[]{
                         DomainsUI.getGroupIconFromArchetypeReference(aerlde.getArchetypeReference()),
@@ -240,7 +240,7 @@ public class NodeDefinitionManager {
                 .setName(name)
                 .setDescription(desc)
                 .setSelectionMode(selectionMode)
-                .setIcon(OpenEHRDataValuesUI.getIcon(archetypeElementVO.getRMType()))
+                .setIcon(OpenEHRDataValuesUI.getIcon(archetypeElementVO.getType()))
                 .setObject(archetypeElementVO)
                 .createSelectableNode();
     }
@@ -259,7 +259,7 @@ public class NodeDefinitionManager {
                     if (nodeAux != null) {
                         GTCodeRuleLineElement gtCodeRuleLineElement =
                                 (GTCodeRuleLineElement) nodeAux.getObject();
-                        addFieldsToNode(nodeAux, aeirl.getArchetypeElement().getRMType(), gtCodeRuleLineElement);
+                        addFieldsToNode(nodeAux, aeirl.getArchetypeElement().getType(), gtCodeRuleLineElement);
                         addFunctionsToNode(nodeAux, gtCodeRuleLineElement);
                         node.add(nodeAux);
                     }
@@ -357,7 +357,7 @@ public class NodeDefinitionManager {
         for (ArchetypeElementVO archetypeElementVO : archetypeElementVOs) {
             SelectableNode<Object> elementNode = createElementNode(archetypeElementVO, SelectableNode.SelectionMode.SINGLE);
             String[] fieldNames =
-                    OpenEHRDataValuesUI.getFieldNames(archetypeElementVO.getRMType());
+                    OpenEHRDataValuesUI.getFieldNames(archetypeElementVO.getType());
             for (String fieldName : fieldNames) {
                 PredicateAttributeVO predicateAttributeVO = new PredicateAttributeVO(archetypeElementVO, fieldName);
                 SelectableNode<Object> fieldNode =

@@ -99,8 +99,8 @@ public class GenericObjectBundleADLManager {
         processCObject(ar.getDefinition());
         Collection<ArchetypeElementVO> rmArchetypeElements = OpenEHRRMUtil.getRMElements(archId, templateId, rmEntry);
         for (ClusterVO clusterVO : clusterVOs) {
-            if (OpenEHRConst.isEntry(clusterVO.getRMType()) && !clusterVO.getPath().equals("/")) {
-                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, templateId, clusterVO.getRMType(), clusterVO.getPath()));
+            if (OpenEHRConst.isEntry(clusterVO.getType()) && !clusterVO.getPath().equals("/")) {
+                rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, templateId, clusterVO.getType(), clusterVO.getPath()));
             }
         }
         clusterVOs.addAll(OpenEHRRMUtil.getRMClusters(archId, templateId));
@@ -202,15 +202,14 @@ public class GenericObjectBundleADLManager {
                 text = auxText;
             }
         }
-        ClusterVO clusterVO =
-                new ClusterVOBuilder()
-                        .setName(text)
-                        .setDescription(desc)
-                        .setType(type)
-                        .setIdArchetype(archetypeId)
-                        .setIdTemplate(templateId)
-                        .setPath(path)
-                        .createClusterVO();
+        ClusterVO clusterVO = ClusterVO.builder()
+                .name(text)
+                .description(desc)
+                .type(type)
+                .idArchetype(archetypeId)
+                .idTemplate(templateId)
+                .path(path)
+                .build();
         setCardinalities(clusterVO, constrainedObj);
         clusterVOs.add(clusterVO);
     }
@@ -219,15 +218,14 @@ public class GenericObjectBundleADLManager {
             CObject constrainedObj, String path, String archetypeId,
             Archetype localAOM, String text, String desc,
             String type, CObject childCObject) {
-        ArchetypeElementVO archetypeElementVO =
-                new ArchetypeElementVOBuilder()
-                        .setName(text)
-                        .setDescription(desc)
-                        .setType(type)
-                        .setIdArchetype(archetypeId)
-                        .setIdTemplate(templateId)
-                        .setPath(path)
-                        .createArchetypeElementVO();
+        ArchetypeElementVO archetypeElementVO = ArchetypeElementVO.builder()
+                .name(text)
+                .description(desc)
+                .type(type)
+                .idArchetype(archetypeId)
+                .idTemplate(templateId)
+                .path(path)
+                .build();
         setCardinalities(archetypeElementVO, constrainedObj);
         archetypeElementVOs.add(archetypeElementVO);
         if (OpenEHRDataValues.DV_CODED_TEXT.equals(type)) {
@@ -281,17 +279,16 @@ public class GenericObjectBundleADLManager {
                                     String text = codedStr;
                                     String desc = codedStr;
                                     String terminologyId = consCodePhrase.getTerminologyId().getValue();
-                                    CodedTextVO codedText =
-                                            new CodedTextVOBuilder()
-                                                    .setName(text)
-                                                    .setDescription(desc)
-                                                    .setType(consCodePhrase.getRmTypeName())
-                                                    .setIdArchetype(archetypeId)
-                                                    .setIdTemplate(templateId)
-                                                    .setPath(path)
-                                                    .setTerminology(terminologyId)
-                                                    .setCode(codedStr)
-                                                    .createCodedTextVO();
+                                    CodedTextVO codedText = CodedTextVO.builder()
+                                            .name(text)
+                                            .description(desc)
+                                            .type(consCodePhrase.getRmTypeName())
+                                            .idArchetype(archetypeId)
+                                            .idTemplate(templateId)
+                                            .path(path)
+                                            .terminology(terminologyId)
+                                            .code(codedStr)
+                                            .build();
                                     if (terminologyId.equals(OpenEHRConst.LOCAL)) {
                                         codedText.setName(getText(ar, codedStr, language));
                                         codedText.setDescription(getDescription(ar, codedStr, language));
@@ -340,17 +337,16 @@ public class GenericObjectBundleADLManager {
         }
         for (TerminologyNodeVO node : root.getChildren()) {
             DvCodedText ct = node.getValue();
-            CodedTextVO codedTextVO =
-                    new CodedTextVOBuilder()
-                            .setName(getValidCodedTextName(ct.getValue()))
-                            .setDescription(getValidCodedTextName(ct.getValue()))
-                            .setType(OpenEHRDataValues.DV_CODED_TEXT)
-                            .setIdArchetype(rootCodedTextVO.getIdArchetype())
-                            .setIdTemplate(rootCodedTextVO.getIdTemplate())
-                            .setPath(rootCodedTextVO.getPath())
-                            .setTerminology(ct.getDefiningCode().getTerminologyId().getValue())
-                            .setCode(ct.getDefiningCode().getCodeString())
-                            .createCodedTextVO();
+            CodedTextVO codedTextVO = CodedTextVO.builder()
+                    .name(getValidCodedTextName(ct.getValue()))
+                    .description(getValidCodedTextName(ct.getValue()))
+                    .type(OpenEHRDataValues.DV_CODED_TEXT)
+                    .idArchetype(rootCodedTextVO.getIdArchetype())
+                    .idTemplate(rootCodedTextVO.getIdTemplate())
+                    .path(rootCodedTextVO.getPath())
+                    .terminology(ct.getDefiningCode().getTerminologyId().getValue())
+                    .code(ct.getDefiningCode().getCodeString())
+                    .build();
             codedTextVOs.add(codedTextVO);
             addCodedTextVOs(node, codedTextVO, codedTextVOs);
         }
@@ -383,17 +379,17 @@ public class GenericObjectBundleADLManager {
                         log.error("Unknown terminology: '" + ordinal.getSymbol().getTerminologyId().getValue() + "', skipping...");
                     }
                     ordinalVOs.add(
-                            new OrdinalVOBuilder()
-                                    .setName(text)
-                                    .setDescription(desc)
-                                    .setType(consDvOrdinal.getRmTypeName())
-                                    .setIdArchetype(archetypeId)
-                                    .setIdTemplate(templateId)
-                                    .setPath(path)
-                                    .setValue(ordinal.getValue())
-                                    .setTerminology(ordinal.getSymbol().getTerminologyId().getValue())
-                                    .setCode(ordinal.getSymbol().getCodeString())
-                                    .createOrdinalVO());
+                            OrdinalVO.builder()
+                                    .name(text)
+                                    .description(desc)
+                                    .type(consDvOrdinal.getRmTypeName())
+                                    .idArchetype(archetypeId)
+                                    .idTemplate(templateId)
+                                    .path(path)
+                                    .value(ordinal.getValue())
+                                    .terminology(ordinal.getSymbol().getTerminologyId().getValue())
+                                    .code(ordinal.getSymbol().getCodeString())
+                                    .build());
                 }
                 ;
             }
@@ -409,7 +405,11 @@ public class GenericObjectBundleADLManager {
             CDvQuantity consDvQuantity = (CDvQuantity) childCObject;
             if (consDvQuantity.getList() != null) {
                 for (CDvQuantityItem consDvQuantityItem : consDvQuantity.getList()) {
-                    unitVOs.add(new UnitVO(templateId, idElement, consDvQuantityItem.getUnits()));
+                    unitVOs.add(UnitVO.builder()
+                            .idTemplate(templateId)
+                            .idElement(idElement)
+                            .unit(consDvQuantityItem.getUnits())
+                            .build());
                 }
                 ;
             }
@@ -431,7 +431,12 @@ public class GenericObjectBundleADLManager {
                         if (consPrimitive instanceof CInteger) {
                             CInteger consInteger = (CInteger) consPrimitive;
                             for (Integer proportionType : consInteger.getList()) {
-                                proportionTypeVOs.add(new ProportionTypeVO(templateId, idElement, proportionType));
+                                proportionTypeVOs.add(
+                                        ProportionTypeVO.builder()
+                                                .idTemplate(templateId)
+                                                .idElement(idElement)
+                                                .type(proportionType)
+                                                .build());
                             }
                         }
                     }
@@ -540,11 +545,13 @@ public class GenericObjectBundleADLManager {
             List<ArchetypeTerm> archetypeTerms = od.getDefinitions();
             for (ArchetypeTerm archetypeTerm : archetypeTerms) {
                 archetypeTermVOs.add(
-                        new ArchetypeTermVO(ar.getArchetypeId().getValue(),
-                                archetypeTerm.getCode(),
-                                lang,
-                                archetypeTerm.getText(),
-                                archetypeTerm.getDescription()));
+                        ArchetypeTermVO.builder()
+                                .archetypeId(ar.getArchetypeId().getValue())
+                                .code(archetypeTerm.getCode())
+                                .language(lang)
+                                .text(archetypeTerm.getText())
+                                .description(archetypeTerm.getDescription())
+                                .build());
             }
         }
         return archetypeTermVOs;

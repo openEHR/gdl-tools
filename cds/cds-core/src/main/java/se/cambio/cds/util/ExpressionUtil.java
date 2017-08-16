@@ -95,7 +95,7 @@ public class ExpressionUtil {
                 throw new RuntimeException(format("Archetype element not found for gtcode '%s'", var.getCode()));
             }
             if (aeVO != null) {
-                rmName = aeVO.getRMType();
+                rmName = aeVO.getType();
             }
         }
         return rmName;

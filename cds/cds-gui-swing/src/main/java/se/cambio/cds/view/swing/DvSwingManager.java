@@ -78,7 +78,7 @@ public class DvSwingManager {
                 archetypeReferencesManager.getHTMLTooltip(
                         archetypeElement,
                         elementInstance.getArchetypeReference()));
-        Icon dvIcon = OpenEHRDataValuesUI.getIcon(archetypeElement.getRMType());
+        Icon dvIcon = OpenEHRDataValuesUI.getIcon(archetypeElement.getType());
         Icon domainIcon =
                 DomainsUI.getGroupIconFromArchetypeReference(elementInstance.getArchetypeReference());
         label.setIcon(new MultipleIcon(new Icon[]{domainIcon, dvIcon}));
@@ -117,7 +117,7 @@ public class DvSwingManager {
                 archetypeManager.getArchetypeElements().getArchetypeElement(
                         idTemplate,
                         idElement);
-        String rmType = archetypeElement.getRMType();
+        String rmType = archetypeElement.getType();
         DVGenericPanel dvGenericPanel = dvPanelFactory.createDVPanel(idElement, idTemplate, rmType, true, true, false);
         if (dvGenericPanel != null) {
             dvGenericPanel.setDataValue(elementInstance.getDataValue());

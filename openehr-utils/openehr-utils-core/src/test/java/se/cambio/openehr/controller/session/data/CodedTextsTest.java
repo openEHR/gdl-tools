@@ -1,10 +1,8 @@
 package se.cambio.openehr.controller.session.data;
 
 import org.testng.annotations.Test;
-import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,9 +24,24 @@ public class CodedTextsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new CodedTextVO(null, "codedTextDescTest1a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", TEST_TERMINOLOGY_ID, "testCode1a"),
-                        new CodedTextVO(null, "codedTextDescTest1b", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", TEST_TERMINOLOGY_ID, "testCode1b"),
-                        new CodedTextVO(null, "codedTextDescTest2a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath2", TEST_TERMINOLOGY_ID, "testCode2a")));
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest1a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1a").build(),
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest1b")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1b").build(),
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest2a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode2a").build()));
         CodedTextVO codedTextVO = codedTexts.getCodedTextVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath1", "testCode1b");
         assertThat(codedTextVO.getDescription(), equalTo("codedTextDescTest1b"));
         codedTextVO = codedTexts.getCodedTextVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2", "testCode2a");
@@ -53,13 +66,28 @@ public class CodedTextsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new CodedTextVO(null, "codedTextDescTest2a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath2", TEST_TERMINOLOGY_ID, "testCode2a")));
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest2a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode2a").build()));
         codedTexts.loadCodedTexts(
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new CodedTextVO(null, "codedTextDescTest1a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", TEST_TERMINOLOGY_ID, "testCode1a"),
-                        new CodedTextVO(null, "codedTextDescTest1b", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", TEST_TERMINOLOGY_ID, "testCode1b")));
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest1a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1a").build(),
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest1b")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1b").build()));
         List<CodedTextVO> codedTextVOs = codedTexts.getCodedTextVOs(null, TEST_ARCHETYPE_ID + "/archetypeElementPath1");
         assertThat(codedTextVOs.size(), equalTo(2));
     }
@@ -71,15 +99,30 @@ public class CodedTextsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new CodedTextVO(null, "codedTextDescTest2a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath2", TEST_TERMINOLOGY_ID, "testCode2a")));
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest2a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode2a").build()));
         CodedTextVO codedTextVO = codedTexts.getCodedTextVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2", "testCode2a");
         assertThat(codedTextVO.getDescription(), equalTo("codedTextDescTest2a"));
         codedTexts.loadCodedTexts(
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new CodedTextVO(null, "codedTextDescTest1a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", TEST_TERMINOLOGY_ID, "testCode1a"),
-                        new CodedTextVO(null, "codedTextDescTest1b", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", TEST_TERMINOLOGY_ID, "testCode1b")));
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest1a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1a").build(),
+                        CodedTextVO.builder()
+                                .description("codedTextDescTest1b")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1b").build()));
         codedTexts.getCodedTextVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2", "testCode2a");
     }
 }

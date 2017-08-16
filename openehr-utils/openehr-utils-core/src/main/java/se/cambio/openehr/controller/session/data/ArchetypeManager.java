@@ -199,10 +199,10 @@ public class ArchetypeManager {
     }
 
     private Map<String, TemplateAttributeMap> getTemplateAttributeMaps(ArchetypeElementVO archetypeElementVO) {
-        if (OpenEHRDataValues.DV_CODED_TEXT.equals(archetypeElementVO.getRMType())) {
+        if (OpenEHRDataValues.DV_CODED_TEXT.equals(archetypeElementVO.getType())) {
             return getCodedTextsAttributeMaps(archetypeElementVO);
         }
-        if (OpenEHRDataValues.DV_ORDINAL.equals(archetypeElementVO.getRMType())) {
+        if (OpenEHRDataValues.DV_ORDINAL.equals(archetypeElementVO.getType())) {
             return getOrdinalsAttributeMaps(archetypeElementVO);
         }
         return null;

@@ -18,22 +18,22 @@
 			<version>1.8.1</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>adl-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>oet-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>rm-skeleton</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.openehr</groupId>
             <artifactId>openehr-aom</artifactId>
             <version>${openehr-java-libs-version}</version>
         </dependency>

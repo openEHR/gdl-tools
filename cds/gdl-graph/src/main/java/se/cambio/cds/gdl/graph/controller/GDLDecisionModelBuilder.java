@@ -159,24 +159,22 @@ class GDLDecisionModelBuilder {
         Map<String, Collection<GuideBinaryExpressionItem>> allConditionsByElementId = new HashMap<>();
         for (Guide guide : guideMap.values()) {
             if (guide.getDefinition() != null) {
-                if (guide.getDefinition() != null) {
-                    for (Rule rule : guide.getDefinition().getRules().values()) {
-                        Collection<BinaryExpression> simpleConditionsFromExpressionItems =
-                                getSimpleConditionsFromExpressionItems(guide, rule);
-                        for (BinaryExpression binaryExpression : simpleConditionsFromExpressionItems) {
-                            if (binaryExpression.getLeft() instanceof Variable) {
-                                Variable variable = (Variable) binaryExpression.getLeft();
-                                RuleReference ruleReference = new RuleReference(guide.getId(), variable.getCode());
-                                ElementInstance elementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
-                                if (elementInstance == null) {
-                                    if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(ruleReference.getGtCode())) {
-                                        logger.warn("ElementInstance not found for " + ruleReference);
-                                    }
-                                } else {
-                                    Collection<GuideBinaryExpressionItem> guideBinaryExpressionItems =
-                                            allConditionsByElementId.computeIfAbsent(elementInstance.getId(), k -> new ArrayList<>());
-                                    guideBinaryExpressionItems.add(new GuideBinaryExpressionItem(guide.getId(), binaryExpression));
+                for (Rule rule : guide.getDefinition().getRules().values()) {
+                    Collection<BinaryExpression> simpleConditionsFromExpressionItems =
+                            getSimpleConditionsFromExpressionItems(guide, rule);
+                    for (BinaryExpression binaryExpression : simpleConditionsFromExpressionItems) {
+                        if (binaryExpression.getLeft() instanceof Variable) {
+                            Variable variable = (Variable) binaryExpression.getLeft();
+                            RuleReference ruleReference = new RuleReference(guide.getId(), variable.getCode());
+                            ElementInstance elementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
+                            if (elementInstance == null) {
+                                if (!OpenEHRConst.CURRENT_DATE_TIME_ID.equals(ruleReference.getGtCode())) {
+                                    logger.warn("ElementInstance not found for " + ruleReference);
                                 }
+                            } else {
+                                Collection<GuideBinaryExpressionItem> guideBinaryExpressionItems =
+                                        allConditionsByElementId.computeIfAbsent(elementInstance.getId(), k -> new ArrayList<>());
+                                guideBinaryExpressionItems.add(new GuideBinaryExpressionItem(guide.getId(), binaryExpression));
                             }
                         }
                     }
@@ -197,21 +195,19 @@ class GDLDecisionModelBuilder {
         Map<String, Collection<GuideAssignmentExpression>> allAssignmentsByElementId = new HashMap<>();
         for (Guide guide : guideMap.values()) {
             if (guide.getDefinition() != null) {
-                if (guide.getDefinition() != null) {
-                    for (Rule rule : guide.getDefinition().getRules().values()) {
-                        Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems =
-                                getSimpleAssignmentsFromExpressionItems(rule.getThenStatements());
-                        for (AssignmentExpression assignmentExpression : simpleAssignmentsFromExpressionItems) {
-                            Variable variable = assignmentExpression.getVariable();
-                            RuleReference ruleReference = new RuleReference(guide.getId(), variable.getCode());
-                            ElementInstance elementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
-                            if (elementInstance == null) {
-                                logger.warn("ElementInstance not found for " + ruleReference);
-                            } else {
-                                Collection<GuideAssignmentExpression> guideAssignmentExpression =
-                                        allAssignmentsByElementId.computeIfAbsent(elementInstance.getId(), k -> new ArrayList<>());
-                                guideAssignmentExpression.add(new GuideAssignmentExpression(guide.getId(), assignmentExpression));
-                            }
+                for (Rule rule : guide.getDefinition().getRules().values()) {
+                    Collection<AssignmentExpression> simpleAssignmentsFromExpressionItems =
+                            getSimpleAssignmentsFromExpressionItems(rule.getThenStatements());
+                    for (AssignmentExpression assignmentExpression : simpleAssignmentsFromExpressionItems) {
+                        Variable variable = assignmentExpression.getVariable();
+                        RuleReference ruleReference = new RuleReference(guide.getId(), variable.getCode());
+                        ElementInstance elementInstance = getElementInstanceByRuleReferenceMap().get(ruleReference);
+                        if (elementInstance == null) {
+                            logger.warn("ElementInstance not found for " + ruleReference);
+                        } else {
+                            Collection<GuideAssignmentExpression> guideAssignmentExpression =
+                                    allAssignmentsByElementId.computeIfAbsent(elementInstance.getId(), k -> new ArrayList<>());
+                            guideAssignmentExpression.add(new GuideAssignmentExpression(guide.getId(), assignmentExpression));
                         }
                     }
                 }

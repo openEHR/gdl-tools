@@ -1,26 +1,25 @@
 package se.cambio.cm.model.archetype.vo;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class ArchetypeElementVO extends PathableVO {
-
     private static final long serialVersionUID = 23032012L;
 
-    public ArchetypeElementVO(
-            String name, String description, String type,
-            String idArchetype, String idTemplate, String path) {
-        super(name, description, type, idArchetype, idTemplate, path);
-    }
-
-    @Override
-    public ArchetypeElementVO clone() {
-        return new ArchetypeElementVOBuilder()
-                .setName(getName())
-                .setDescription(getDescription())
-                .setType(getType())
-                .setIdArchetype(getIdArchetype())
-                .setIdTemplate(getIdTemplate())
-                .setPath(getPath())
-                .createArchetypeElementVO();
+    @Builder(toBuilder = true)
+    private ArchetypeElementVO(
+            String name,
+            String description,
+            String type,
+            String idArchetype,
+            String idTemplate,
+            String path,
+            Integer lowerCardinality,
+            Integer upperCardinality) {
+        super(name, description, type, idArchetype, idTemplate, path, lowerCardinality, upperCardinality);
     }
 }
 /*

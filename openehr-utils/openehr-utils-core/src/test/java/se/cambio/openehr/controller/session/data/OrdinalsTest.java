@@ -24,9 +24,30 @@ public class OrdinalsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new OrdinalVO(null, "ordinalDescTest1a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", 1, TEST_TERMINOLOGY_ID, "testCode1a"),
-                        new OrdinalVO(null, "ordinalDescTest1b", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", 2, TEST_TERMINOLOGY_ID, "testCode1b"),
-                        new OrdinalVO(null, "ordinalDescTest2a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath2", 1, TEST_TERMINOLOGY_ID, "testCode2a")));
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest1a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .lowerCardinality(1)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1a")
+                                .build(),
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest1b")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .lowerCardinality(2)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1b")
+                                .build(),
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest2a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .lowerCardinality(1)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode2a")
+                                .build()));
         OrdinalVO ordinalVO = ordinals.getOrdinalVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath1", "testCode1b");
         assertThat(ordinalVO.getDescription(), equalTo("ordinalDescTest1b"));
         ordinalVO = ordinals.getOrdinalVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2", "testCode2a");
@@ -51,13 +72,34 @@ public class OrdinalsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new OrdinalVO(null, "ordinalDescTest2a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath2", 2, TEST_TERMINOLOGY_ID, "testCode2a")));
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest2a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .lowerCardinality(2)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode2a")
+                                .build()));
         ordinals.loadOrdinals(
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new OrdinalVO(null, "ordinalDescTest1a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", 1, TEST_TERMINOLOGY_ID, "testCode1a"),
-                        new OrdinalVO(null, "ordinalDescTest1b", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", 2, TEST_TERMINOLOGY_ID, "testCode1b")));
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest1a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .lowerCardinality(1)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1a")
+                                .build(),
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest1b")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .lowerCardinality(2)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1b")
+                                .build()));
         List<OrdinalVO> ordinalVOs = ordinals.getOrdinalVOs(null, TEST_ARCHETYPE_ID + "/archetypeElementPath1");
         assertThat(ordinalVOs.size(), equalTo(2));
     }
@@ -69,15 +111,36 @@ public class OrdinalsTest {
                 TEST_ARCHETYPE_ID,
                 null,
                 Collections.singletonList(
-                        new OrdinalVO(null, "ordinalDescTest2a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath2", 2, TEST_TERMINOLOGY_ID, "testCode2a")));
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest2a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath2")
+                                .lowerCardinality(2)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode2a")
+                                .build()));
         OrdinalVO ordinalVO = ordinals.getOrdinalVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2", "testCode2a");
         assertThat(ordinalVO.getDescription(), equalTo("ordinalDescTest2a"));
         ordinals.loadOrdinals(
                 TEST_ARCHETYPE_ID,
                 null,
                 Arrays.asList(
-                        new OrdinalVO(null, "ordinalDescTest1a", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", 1, TEST_TERMINOLOGY_ID, "testCode1a"),
-                        new OrdinalVO(null, "ordinalDescTest1b", null, TEST_ARCHETYPE_ID, null, "/archetypeElementPath1", 2, TEST_TERMINOLOGY_ID, "testCode1b")));
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest1a")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .lowerCardinality(1)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1a")
+                                .build(),
+                        OrdinalVO.builder()
+                                .description("ordinalDescTest1b")
+                                .idArchetype(TEST_ARCHETYPE_ID)
+                                .path("/archetypeElementPath1")
+                                .lowerCardinality(2)
+                                .terminology(TEST_TERMINOLOGY_ID)
+                                .code("testCode1b")
+                                .build()));
         ordinals.getOrdinalVO(null, TEST_ARCHETYPE_ID + "/archetypeElementPath2", "testCode2a");
     }
 }

@@ -7,7 +7,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.archetype.vo.CodedTextVO;
-import se.cambio.cm.model.facade.configuration.ClinicalModelsConfiguration;
 import se.cambio.cm.model.util.TemplateElementMap;
 import se.cambio.cm.model.util.TemplateMap;
 import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;
@@ -76,29 +75,29 @@ public class RMElementsTest extends AbstractTestNGSpringContextTests {
     public void shouldParseBasicTypesForOpenEHRCM() throws InstanceNotFoundException, InternalErrorException {
         ArchetypeElementVO archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-EVALUATION.problem.v1.0.0/data[id2]/items[id3]");
-        assertEquals(OpenEHRDataValues.DV_TEXT, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_TEXT, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-EVALUATION.problem.v1.0.0/data[id2]/items[id4]");
-        assertEquals(OpenEHRDataValues.DV_DATE, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_DATE, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-EVALUATION.problem.v1.0.0/data[id2]/items[id5]");
-        assertEquals(OpenEHRDataValues.DV_DURATION, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_DURATION, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-EVALUATION.problem.v1.0.0/data[id2]/items[id19]/items[id20]");
-        assertEquals(OpenEHRDataValues.DV_QUANTITY, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_QUANTITY, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-EVALUATION.problem.v1.0.0/data[id2]/items[id19]/items[id26]");
-        assertEquals(OpenEHRDataValues.DV_COUNT, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_COUNT, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-EVALUATION.problem.v1.0.0/protocol[id33]/items[id34]/items[id36]");
-        assertEquals(OpenEHRDataValues.DV_URI, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_URI, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-CLUSTER.device_details.v1.0.0/items[id2]");
-        assertEquals(OpenEHRDataValues.DV_IDENTIFIER, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_IDENTIFIER, archetypeElementVO.getType());
 
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "openEHR-EHR-CLUSTER.ambient_oxygen.v1.0.0/items[id53]");
-        assertEquals(OpenEHRDataValues.DV_PROPORTION, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_PROPORTION, archetypeElementVO.getType());
 
         Collection<ProportionKind> proportionKinds =
                 archetypeManager.getProportionTypes().getProportionTypes(null, "openEHR-EHR-CLUSTER.ambient_oxygen.v1.0.0/items[id53]");
@@ -110,37 +109,37 @@ public class RMElementsTest extends AbstractTestNGSpringContextTests {
     public void shouldParseBasicTypesForCIMCM() throws InstanceNotFoundException, InternalErrorException {
         ArchetypeElementVO archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.finding.v1/item[id3]");
-        assertEquals(OpenEHRDataValues.DV_TEXT, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_TEXT, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.finding.v1/item[id7]");
-        assertEquals(OpenEHRDataValues.DV_COUNT, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_COUNT, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.action.v1/item[id4]");
-        assertEquals(OpenEHRDataValues.DV_DATE_TIME, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_DATE_TIME, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.action.v1/item[id3]");
-        assertEquals(OpenEHRDataValues.DV_IDENTIFIER, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_IDENTIFIER, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.action.v1/item[id2]");
-        assertEquals(OpenEHRDataValues.DV_CODED_TEXT, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_CODED_TEXT, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.action.v1/item[id6]");
-        assertEquals(OpenEHRDataValues.DV_DURATION, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_DURATION, archetypeElementVO.getType());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.5]/item[at0.0.32]");
-        assertEquals(OpenEHRDataValues.DV_CODED_TEXT, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_CODED_TEXT, archetypeElementVO.getType());
         Collection<CodedTextVO> codedTextVOs =
                 archetypeManager.getCodedTexts().getCodedTextVOs(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.5]/item[at0.0.32]");
         assertEquals(7, codedTextVOs.size());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.9]/item[at0.16.1]");
-        assertEquals(OpenEHRDataValues.DV_QUANTITY, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_QUANTITY, archetypeElementVO.getType());
         Collection<String> units =
                 archetypeManager.getUnits().getUnits(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.9]/item[at0.16.1]");
         assertEquals(1, units.size());
         assertEquals("beats/min", units.iterator().next());
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.9]/item[at0.16.2]");
-        assertEquals(OpenEHRDataValues.DV_BOOLEAN, archetypeElementVO.getRMType());
+        assertEquals(OpenEHRDataValues.DV_BOOLEAN, archetypeElementVO.getType());
     }
 }
