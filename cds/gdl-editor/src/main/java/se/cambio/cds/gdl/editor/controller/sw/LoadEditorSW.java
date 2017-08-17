@@ -4,7 +4,6 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
-import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.controller.InitialLoadingObservable;
@@ -16,12 +15,10 @@ import java.util.Collection;
 
 public class LoadEditorSW extends CDSSwingWorker {
 
-    private DialogSplash dialog = null;
     private GdlEditorFactory gdlEditorFactory;
     private EditorManager editorManager;
 
-    public LoadEditorSW(DialogSplash dialog, GdlEditorFactory gdlEditorFactory, EditorManager editorManager) {
-        this.dialog = dialog;
+    public LoadEditorSW(GdlEditorFactory gdlEditorFactory, EditorManager editorManager) {
         this.gdlEditorFactory = gdlEditorFactory;
         this.editorManager = editorManager;
     }
@@ -31,31 +28,26 @@ public class LoadEditorSW extends CDSSwingWorker {
     }
 
     protected void done() {
-        try {
-            GDLEditor controller = gdlEditorFactory.createGdlEditor(
-                    new Guide(),
-                    editorManager.getActiveEditorViewer());
-            editorManager.initController(controller);
-            dialog.stop();
-            Collection<InternalErrorException> internalErrorExceptions =
-                    InitialLoadingObservable.getLoadingExceptions();
-            if (!internalErrorExceptions.isEmpty()) {
-                StringBuilder errorsSB = new StringBuilder();
-                for (InternalErrorException internalErrorException : internalErrorExceptions) {
-                    errorsSB.append(internalErrorException.toString()).append("\n");
-                }
-                DialogLongMessageNotice dialog =
-                        new DialogLongMessageNotice(
-                                editorManager.getActiveEditorWindow(),
-                                GDLEditorLanguageManager.getMessage("ErrorsFoundLoading"),
-                                GDLEditorLanguageManager.getMessage("ErrorsFoundLoadingD"),
-                                errorsSB.toString(), MessageType.ERROR);
-                dialog.setVisible(true);
+        GDLEditor controller = gdlEditorFactory.createGdlEditor(
+                new Guide(),
+                editorManager.getActiveEditorViewer());
+        editorManager.initController(controller);
+        Collection<InternalErrorException> internalErrorExceptions =
+                InitialLoadingObservable.getLoadingExceptions();
+        if (!internalErrorExceptions.isEmpty()) {
+            StringBuilder errorsSB = new StringBuilder();
+            for (InternalErrorException internalErrorException : internalErrorExceptions) {
+                errorsSB.append(internalErrorException.toString()).append("\n");
             }
-            editorManager.getActiveEditorWindow().setVisible(true);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            DialogLongMessageNotice dialog =
+                    new DialogLongMessageNotice(
+                            editorManager.getActiveEditorWindow(),
+                            GDLEditorLanguageManager.getMessage("ErrorsFoundLoading"),
+                            GDLEditorLanguageManager.getMessage("ErrorsFoundLoadingD"),
+                            errorsSB.toString(), MessageType.ERROR);
+            dialog.setVisible(true);
         }
+        editorManager.getActiveEditorWindow().setVisible(true);
     }
 }
 /*

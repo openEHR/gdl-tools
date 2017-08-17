@@ -13,17 +13,28 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.editor.configuration.GdlEditorConfiguration;
+import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
+import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
+import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
+import se.cambio.cds.gdl.editor.view.InitGDLEditor;
+import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
+import se.cambio.openehr.controller.InitialLoadingObservable;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.Collection;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,6 +60,12 @@ public class GDLEditorMainTest {
     @Autowired
     ClinicalModelsService clinicalModelsService;
 
+    @Autowired
+    EditorManager editorManager;
+
+    @Autowired
+    GdlEditorFactory gdlEditorFactory;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
@@ -70,10 +87,22 @@ public class GDLEditorMainTest {
             if (file.getName().endsWith(".gdl")) {
                 LoggerFactory.getLogger(GDLEditorMainTest.class).info("Testing guideline '" + file.getName() + "'");
                 String originalGuideStr = readGuideFile(file);
-                String output = parseAndReserializeGuide(originalGuideStr);
+                String output = parseAndSerializeGuide(originalGuideStr);
                 assertEquals(originalGuideStr, output);
             }
         }
+    }
+
+    @Test
+    public void testCreatingGdlEditor() throws IOException, InterruptedException {
+        editorManager.setEditorViewer(new EditorFrame(editorManager, null));
+        GDLEditor controller = gdlEditorFactory.createGdlEditor(
+                new Guide(),
+                editorManager.getActiveEditorViewer());
+        editorManager.initController(controller);
+        Collection<InternalErrorException> internalErrorExceptions =
+                InitialLoadingObservable.getLoadingExceptions();
+        assertTrue(internalErrorExceptions.isEmpty());
     }
 
     private static String readGuideFile(File file) throws IOException {
@@ -82,7 +111,7 @@ public class GDLEditorMainTest {
         return IOUtils.toString(in).replaceAll("\\r\\n", "\n");
     }
 
-    private static String parseAndReserializeGuide(String guideStr) throws Exception {
+    private static String parseAndSerializeGuide(String guideStr) throws Exception {
         Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes("UTF-8")));
         return GuideUtil.serializeGuide(guide);
     }

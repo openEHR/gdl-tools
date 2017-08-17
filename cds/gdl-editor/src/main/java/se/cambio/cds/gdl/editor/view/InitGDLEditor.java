@@ -1,6 +1,7 @@
 package se.cambio.cds.gdl.editor.view;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.ConfigurableEnvironment;
 import se.cambio.cds.gdl.editor.controller.EditorInitializer;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
@@ -16,12 +17,14 @@ import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.view.dialogs.InfoDialog;
 import se.cambio.openehr.view.util.WindowManager;
 
+import javax.swing.*;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+@Slf4j
 public class InitGDLEditor {
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         ConfigurableEnvironment environment = BeanProvider.getBean(ConfigurableEnvironment.class);
         UserConfigurationManager userConfigurationManager = UserConfiguration.getInstanceUserConfigurationManager();
         String activeRuleEngine = userConfigurationManager.getActiveRuleEngine();
@@ -31,23 +34,48 @@ public class InitGDLEditor {
 
         EditorInitializer editorInitializer = BeanProvider.getBean(EditorInitializer.class);
         EditorFrame ef = editorInitializer.createEditorFrame();
-        DialogSplash dialog = new DialogSplash(ef, true);
 
         WindowManager windowManager = BeanProvider.getBean(WindowManager.class);
         windowManager.registerMainWindow(ef);
         windowManager.registerProgressManager(new InfoDialog(ef));
 
-
         GdlEditorFactory gdlEditorFactory = BeanProvider.getBean(GdlEditorFactory.class);
         EditorManager editorManager = BeanProvider.getBean(EditorManager.class);
-        new LoadEditorSW(dialog, gdlEditorFactory, editorManager).execute();
-        dialog.setVisible(true);
+
 
         RuleEngineService ruleEngineService = BeanProvider.getBean(RuleEngineService.class);
         ruleEngineService.setUseCache(false);
 
+        GuidelineLoadManager guidelineLoadManager = BeanProvider.getBean(GuidelineLoadManager.class);
+
+        showSplashDialog(ef);
+
+        initGdlEditor(args, guidelineLoadManager, gdlEditorFactory, editorManager);
+    }
+
+    private static void showSplashDialog(EditorFrame ef) {
+        DialogSplash dialog = new DialogSplash(ef, true);
+        new Thread(() -> {
+            dialog.setVisible(true);
+        }).start();
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                log.error("Error waiting for dialog to close", ex);
+            }
+            dialog.stop();
+        }).start();
+    }
+
+    public static void initGdlEditor(
+            String[] args,
+            GuidelineLoadManager guidelineLoadManager,
+            GdlEditorFactory gdlEditorFactory,
+            EditorManager editorManager) {
+        new LoadEditorSW(gdlEditorFactory, editorManager).execute();
+
         if (args.length > 0) {
-            GuidelineLoadManager guidelineLoadManager = BeanProvider.getBean(GuidelineLoadManager.class);
             guidelineLoadManager.loadGuide(new File(args[0]));
         }
     }
