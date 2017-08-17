@@ -17,6 +17,7 @@ import se.cambio.cds.gdl.editor.configuration.GdlEditorConfiguration;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
+import se.cambio.cds.gdl.editor.controller.GuidelineEditorManager;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
@@ -60,6 +61,9 @@ public class GDLEditorMainTest {
     @Autowired
     GdlEditorFactory gdlEditorFactory;
 
+    @Autowired
+    GuidelineEditorManager guidelineEditorManager;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
@@ -96,6 +100,19 @@ public class GDLEditorMainTest {
                 guide,
                 editorManager.getActiveEditorViewer());
         assertTrue("test_id".equals(gdlEditor.getEntityId()));
+    }
+
+    @Test
+    public void testLoadingGuidelineOnGdlEditor() throws IOException, InterruptedException {
+        File guideFile = new File(guidelinesResource.getFile(), "CHA2DS2VASc_Score_calculation.v1.1.gdl");
+        FileInputStream fis = new FileInputStream(guideFile);
+        String guideStr = IOUtils.toString(fis, "UTF8");
+        Guide guide = guidelineEditorManager.parseGuide(new ByteArrayInputStream(guideStr.getBytes("UTF8")));
+        editorManager.setEditorViewer(Mockito.mock(EditorFrame.class));
+        GDLEditor gdlEditor = gdlEditorFactory.createGdlEditor(
+                guide,
+                editorManager.getActiveEditorViewer());
+        assertTrue("CHA2DS2VASc_Score_calculation.v1.1".equals(gdlEditor.getEntityId()));
     }
 
     private static String readGuideFile(File file) throws IOException {

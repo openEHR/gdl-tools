@@ -4,6 +4,8 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class OpenEHRConst {
@@ -48,8 +50,8 @@ public class OpenEHRConst {
 
     public static String CURRENT_DATE_TIME_ID = "currentDateTime";
 
-    public static final Collection<String> PARSABLE_OPENEHR_RM_NAMES = new ArrayList<String>();
-    public static final Collection<String> ENTRY_RM_NAMES = new ArrayList<String>();
+    public static final Set<String> PARSABLE_OPENEHR_RM_NAMES = new HashSet<>();
+    public static final Set<String> ENTRY_RM_NAMES = new HashSet<>();
 
     static {
         PARSABLE_OPENEHR_RM_NAMES.add(ELEMENT);
