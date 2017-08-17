@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +17,6 @@ import se.cambio.cds.gdl.editor.configuration.GdlEditorConfiguration;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
-import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
-import se.cambio.cds.gdl.editor.controller.interfaces.EditorController;
-import se.cambio.cds.gdl.editor.view.InitGDLEditor;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
@@ -27,7 +25,6 @@ import se.cambio.openehr.controller.InitialLoadingObservable;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
-import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -95,14 +92,13 @@ public class GDLEditorMainTest {
 
     @Test
     public void testCreatingGdlEditor() throws IOException, InterruptedException {
-        editorManager.setEditorViewer(new EditorFrame(editorManager, null));
-        GDLEditor controller = gdlEditorFactory.createGdlEditor(
-                new Guide(),
+        editorManager.setEditorViewer(Mockito.mock(EditorFrame.class));
+        Guide guide = new Guide();
+        guide.setId("test_id");
+        GDLEditor gdlEditor = gdlEditorFactory.createGdlEditor(
+                guide,
                 editorManager.getActiveEditorViewer());
-        editorManager.initController(controller);
-        Collection<InternalErrorException> internalErrorExceptions =
-                InitialLoadingObservable.getLoadingExceptions();
-        assertTrue(internalErrorExceptions.isEmpty());
+        assertTrue("test_id".equals(gdlEditor.getEntityId()));
     }
 
     private static String readGuideFile(File file) throws IOException {
