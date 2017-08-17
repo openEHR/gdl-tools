@@ -140,45 +140,6 @@ public class UnitsTest {
         assertThat(unitsAtElement1, containsInAnyOrder("g", "kg"));
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
-    public void should_find_empty_list_for_missing_element_id() {
-        Units units = new Units();
-        units.loadUnits(
-                "testArchetype",
-                null,
-                Arrays.asList(
-                        UnitVO.builder()
-                                .idElement("elementIdTest1")
-                                .unit("cm")
-                                .build(),
-                        UnitVO.builder()
-                                .idTemplate("templateIdTest1")
-                                .idElement("elementIdTest1")
-                                .unit("cm")
-                                .build()));
-        units.getUnits(null, "elementIdTest2");
-    }
-
-    @Test(expectedExceptions = RuntimeException.class)
-    public void should_find_throw_exception_for_missing_template_id() {
-        Units units = new Units();
-        units.loadUnits(
-                "testArchetype",
-                null,
-                Arrays.asList(
-                        UnitVO.builder()
-                                .idElement("elementIdTest1")
-                                .unit("cm")
-                                .build(),
-                        UnitVO.builder()
-                                .idTemplate("templateIdTest1")
-                                .idElement("elementIdTest1")
-                                .unit("cm")
-                                .build()));
-        Collection<String> unitsAtElement1 = units.getUnits("templateIdTest2", "elementIdTest2");
-        assertThat(unitsAtElement1, empty());
-    }
-
     @Test
     public void should_find_units_in_after_second_load() {
         Units units = new Units();

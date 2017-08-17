@@ -21,18 +21,15 @@ import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
-import se.cambio.openehr.controller.InitialLoadingObservable;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.Collection;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {GdlEditorConfiguration.class})
