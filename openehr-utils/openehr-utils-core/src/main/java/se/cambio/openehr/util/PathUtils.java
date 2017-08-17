@@ -18,6 +18,29 @@ public class PathUtils {
         return archetypeIds;
     }
 
+    public static String getLastArchetypeInPath(String path) {
+        List<String> archetypeIds = getArchetypesInPath(path);
+        if (archetypeIds.isEmpty()) {
+            return null;
+        } else {
+            return archetypeIds.get(archetypeIds.size() - 1);
+        }
+    }
+
+    public static List<String> getArchetypesInPath(String path) {
+        List<String> archetypeIds = new ArrayList<>();
+        String[] elementsInPath = path.split("/");
+        for (String elementInPath : elementsInPath) {
+            if (elementInPath.contains("[") && elementInPath.contains("]")) {
+                String candidateArchetypeId = elementInPath.substring(elementInPath.indexOf("[") + 1, elementInPath.indexOf("]"));
+                if (candidateArchetypeId.toLowerCase().startsWith("openehr-ehr-")) {
+                    archetypeIds.add(candidateArchetypeId);
+                }
+            }
+        }
+        return archetypeIds;
+    }
+
     public static String getLastEntryArchetypeInPath(String path) {
         List<String> entryArchetypes = getEntryArchetypesInPath(path);
         if (entryArchetypes.isEmpty()) {

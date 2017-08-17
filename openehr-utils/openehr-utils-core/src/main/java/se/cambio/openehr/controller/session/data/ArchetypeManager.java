@@ -143,7 +143,7 @@ public class ArchetypeManager {
                 archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
             }
         } else {
-            String archetypeId = PathUtils.getLastEntryArchetypeInPath(idElement);
+            String archetypeId = PathUtils.getLastArchetypeInPath(idElement);
             if (archetypeId == null) {
                 archetypeId = StringUtils.substringBefore(idElement, "/");
             }
