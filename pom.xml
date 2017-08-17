@@ -40,7 +40,13 @@
         <module>openehr-utils</module>
         <module>cds</module>
     </modules>
-
+   <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.11</version>
+        </dependency>
+    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
