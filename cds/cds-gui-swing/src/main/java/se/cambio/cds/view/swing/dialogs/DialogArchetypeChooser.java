@@ -40,7 +40,7 @@ public class DialogArchetypeChooser extends JDialog {
     private SelectionPanel templateSelectionPanel;
     private SelectableNode<String> archetypeNode = null;
     private SelectableNode<String> templateNode = null;
-    private JComboBox domainComboBox;
+    private JComboBox<String> domainComboBox;
     private JTabbedPane tabbedPane;
 
     private String ANY_DOMAIN = "*";
@@ -114,17 +114,17 @@ public class DialogArchetypeChooser extends JDialog {
 
     private JComboBox getDomainSelector() {
         if (domainComboBox == null) {
-            domainComboBox = new JComboBox();
+            domainComboBox = new JComboBox<>();
             domainComboBox.addItem(ANY_DOMAIN);
             domainComboBox.addItem(Domains.EHR_ID);
             domainComboBox.addItem(Domains.CDS_ID);
-            domainComboBox.setRenderer(new DomainComboBoxRenderer());
+            domainComboBox.setRenderer(new DomainComboBoxRenderer<>());
             domainComboBox.setSelectedItem(Domains.EHR_ID);
         }
         return domainComboBox;
     }
 
-    private class DomainComboBoxRenderer extends JLabel implements ListCellRenderer {
+    private class DomainComboBoxRenderer<E> extends JLabel implements ListCellRenderer<E> {
 
         private static final long serialVersionUID = 1L;
 
@@ -180,7 +180,7 @@ public class DialogArchetypeChooser extends JDialog {
     private class ImportArchetypeActionListener implements ActionListener {
         private DialogArchetypeChooser _dialog = null;
 
-        public ImportArchetypeActionListener(DialogArchetypeChooser dialog) {
+        ImportArchetypeActionListener(DialogArchetypeChooser dialog) {
             _dialog = dialog;
         }
 
@@ -191,7 +191,7 @@ public class DialogArchetypeChooser extends JDialog {
     }
 
 
-    public void refreshArchetypeSelectionPanel() {
+    private void refreshArchetypeSelectionPanel() {
         archetypeSelectionPanel = null;
         archetypeNode = null;
         getArchetypeSelectionPanel();
@@ -221,7 +221,7 @@ public class DialogArchetypeChooser extends JDialog {
     private class ImportTemplateActionListener implements ActionListener {
         private DialogArchetypeChooser _dialog = null;
 
-        public ImportTemplateActionListener(DialogArchetypeChooser dialog) {
+        ImportTemplateActionListener(DialogArchetypeChooser dialog) {
             _dialog = dialog;
         }
 
@@ -231,7 +231,7 @@ public class DialogArchetypeChooser extends JDialog {
         }
     }
 
-    public void refreshTemplateSelectionPanel() {
+    private void refreshTemplateSelectionPanel() {
         templateSelectionPanel = null;
         templateNode = null;
         getTemplateSelectionPanel();
@@ -256,12 +256,12 @@ public class DialogArchetypeChooser extends JDialog {
         }
     }
 
-    protected final void accept() {
+    private void accept() {
         _answer = true;
         setVisible(false);
     }
 
-    protected final void exit() {
+    private void exit() {
         _answer = false;
         setVisible(false);
     }
@@ -287,11 +287,6 @@ public class DialogArchetypeChooser extends JDialog {
         return acceptButton;
     }
 
-    /**
-     * This method initializes cancelButton
-     *
-     * @return javax.swing.JButton
-     */
     private JButton getCancelButton() {
         if (cancelButton == null) {
             cancelButton = new JButton();
@@ -339,7 +334,7 @@ public class DialogArchetypeChooser extends JDialog {
         }
     }
 
-    public SelectableNode<String> getArchetypeNode() {
+    private SelectableNode<String> getArchetypeNode() {
         if (archetypeNode == null) {
             archetypeNode = new SelectableNodeBuilder<String>()
                     .setName(OpenEHRLanguageManager.getMessage("Archetypes"))
@@ -357,7 +352,7 @@ public class DialogArchetypeChooser extends JDialog {
 
     private static void insertArchetypeNodes(SelectableNode<String> root, Collection<String> archetypeIds, String rmName) {
 
-        SelectableNode<Object> entryRoot = new SelectableNodeBuilder<Object>()
+        SelectableNode<Object> entryRoot = new SelectableNodeBuilder<>()
                 .setName(OpenEHRConstUI.getName(rmName))
                 .setDescription(OpenEHRConstUI.getDescription(rmName))
                 .setIcon(OpenEHRConstUI.getIcon(rmName))
@@ -378,15 +373,15 @@ public class DialogArchetypeChooser extends JDialog {
 
     }
 
-    public SelectableNode<String> getTemplateNode() {
+    private SelectableNode<String> getTemplateNode() {
         if (templateNode == null) {
             templateNode = generateTemplateNode();
         }
         return templateNode;
     }
 
-    public SelectableNode<String> generateTemplateNode() {
-        SelectableNode templateNode = new SelectableNodeBuilder<String>()
+    private SelectableNode<String> generateTemplateNode() {
+        SelectableNode<String> templateNode = new SelectableNodeBuilder<String>()
                 .setName(OpenEHRLanguageManager.getMessage("Templates"))
                 .setIcon(Templates.ICON)
                 .createSelectableNode();
@@ -443,13 +438,6 @@ public class DialogArchetypeChooser extends JDialog {
             idDomain = null;
         }
         return idDomain;
-    }
-
-    public void setVisibleDomainSelector(boolean isVisible) {
-        getDomainLabel().setVisible(isVisible);
-        getDomainSelector().setVisible(isVisible);
-        this.revalidate();
-        this.repaint();
     }
 }
 /*

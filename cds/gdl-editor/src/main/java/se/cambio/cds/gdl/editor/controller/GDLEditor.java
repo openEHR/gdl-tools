@@ -466,7 +466,16 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     public void editRuleElement(RuleLineElementWithValue<?> ruleLineElementWithValue) {
-        getRuleElementEditor().edit(ruleLineElementWithValue);
+        try {
+            getRuleElementEditor().edit(ruleLineElementWithValue);
+        } catch (Exception ex) {
+            DialogLongMessageNotice dialog = new DialogLongMessageNotice(
+                    windowManager.getMainWindow(),
+                    GDLEditorLanguageManager.getMessage("ErrorEditingRuleElementT"),
+                    GDLEditorLanguageManager.getMessage("ErrorEditingRuleElement"),
+                    ex.getMessage(), MessageType.ERROR);
+            dialog.setVisible(true);
+        }
     }
 
     public void runIfOKToExit(final Runnable pendingRunnable) {

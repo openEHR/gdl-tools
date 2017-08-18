@@ -103,7 +103,7 @@ public class GenericObjectBundleADLManager {
                 rmArchetypeElements.addAll(OpenEHRRMUtil.getRMElements(archId, templateId, clusterVO.getType(), clusterVO.getPath()));
             }
         }
-        clusterVOs.addAll(OpenEHRRMUtil.getRMClusters(archId, templateId));
+        clusterVOs.addAll(OpenEHRRMUtil.getRMClusters(archId, templateId, rmEntry));
         archetypeElementVOs.addAll(rmArchetypeElements);
     }
 

@@ -15,6 +15,7 @@ public class OpenEHRRMUtil {
     public static final String NARRATIVE_PATH = "/narrative";
     public static final String TIME_PATH = "/time";
     public static final String TIMING_PATH = "/activities/timing";
+    public static final String ACTIVITIES_PATH = "/activities";
     public static final String ISM_TRANSITION_PATH = "/ism_transition/current_state";
     public static final String TEMPLATE_ID_PATH = "/archetype_details/template_id";
     public static final String ARCHETYPE_DETAILS_PATH = "/archetype_details";
@@ -131,7 +132,7 @@ public class OpenEHRRMUtil {
         return rmArchetypeElements;
     }
 
-    public static Collection<ClusterVO> getRMClusters(String idArchetype, String idTemplate) {
+    public static Collection<ClusterVO> getRMClusters(String idArchetype, String idTemplate, String entryType) {
         Collection<ClusterVO> rmArchetypeClusters = new ArrayList<>();
         ClusterVO clusterVO = ClusterVO.builder()
                 .name(OpenEHRLanguageManager.getMessage("ArchetypeDetails"))
@@ -142,6 +143,17 @@ public class OpenEHRRMUtil {
                 .path(ARCHETYPE_DETAILS_PATH)
                 .build();
         rmArchetypeClusters.add(clusterVO);
+        if (OpenEHRConst.INSTRUCTION.equals(entryType)) {
+            clusterVO = ClusterVO.builder()
+                    .name(OpenEHRLanguageManager.getMessage("Activity"))
+                    .description(OpenEHRLanguageManager.getMessage("ActivityDesc"))
+                    .type(OpenEHRConst.CLUSTER)
+                    .idArchetype(idArchetype)
+                    .idTemplate(idTemplate)
+                    .path(ACTIVITIES_PATH)
+                    .build();
+            rmArchetypeClusters.add(clusterVO);
+        }
         return rmArchetypeClusters;
     }
 
