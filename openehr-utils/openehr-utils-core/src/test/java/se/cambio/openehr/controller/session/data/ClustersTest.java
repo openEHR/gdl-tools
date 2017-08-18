@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
 public class ClustersTest {
@@ -41,10 +41,11 @@ public class ClustersTest {
 
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test
     public void should_not_find_cluster() {
         Clusters clusters = new Clusters(mock(ArchetypeManager.class));
-        clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath1");
+        ClusterVO clusterVO = clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath1");
+        assertThat(clusterVO, is(nullValue()));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class ClustersTest {
         assertThat(clusterVO.getDescription(), equalTo("elementIdTest2"));
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test
     public void should_not_find_cluster_after_second_load() {
         Clusters clusters = new Clusters(mock(ArchetypeManager.class));
         clusters.loadClusters(
@@ -97,6 +98,7 @@ public class ClustersTest {
                                 .idArchetype(TEST_ARCHETYPE_ID)
                                 .path("/clusterPath2")
                                 .build()));
-        clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath1");
+        ClusterVO clusterVO = clusters.getClusterVO(null, TEST_ARCHETYPE_ID + "/clusterPath1");
+        assertThat(clusterVO, is(nullValue()));
     }
 }

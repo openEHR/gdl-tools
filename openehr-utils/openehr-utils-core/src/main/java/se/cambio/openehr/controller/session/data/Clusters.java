@@ -7,8 +7,6 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 
-import static java.lang.String.format;
-
 public class Clusters {
     private final ArchetypeManager archetypeManager;
     private Map<String, ClusterVO> clustersById = null;
@@ -69,7 +67,7 @@ public class Clusters {
         if (!clusterMap.containsKey(clusterId)) {
             String complexClusterId = findComplexClusterId(clusterId, clusterMap);
             if (complexClusterId == null) {
-                throw new RuntimeException(format("Could not find cluster '%s' in template '%s'", clusterId, templateId));
+                return null;
             } else {
                 clusterId = complexClusterId;
             }
