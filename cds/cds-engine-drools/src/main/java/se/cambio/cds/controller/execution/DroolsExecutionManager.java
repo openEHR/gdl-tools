@@ -36,7 +36,7 @@ public class DroolsExecutionManager {
 
     public DroolsExecutionManager(ArchetypeManager archetypeManager) {
         this.archetypeManager = archetypeManager;
-        knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
+        this.knowledgeBaseCache = Collections.synchronizedMap(new LinkedHashMap<String, KieBase>());
     }
 
     public ArchetypeManager getArchetypeManager() {

@@ -4,17 +4,17 @@ import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 
 public class CachedCMManager {
 
-    private static final long MAX_CHECK_WAITING_TIME_IN_MILLIS = 30000; //30 seg
+    private static final long MAX_CHECK_WAITING_TIME_IN_MILLIS = 10000; //10 seg
     private Date lastCheckForUpdates;
-    private Date mostRecentLocalUpdate;
+    private Date lastUpdateDate;
     private Class<? extends CMElement> cmElementClass;
     private ClinicalModelsService clinicalModelsService;
-
 
     public CachedCMManager(
             Class<? extends CMElement> cmElementClass,
@@ -22,28 +22,19 @@ public class CachedCMManager {
         this.cmElementClass = cmElementClass;
         this.clinicalModelsService = clinicalModelsService;
         Date currentTime = Calendar.getInstance().getTime();
-        mostRecentLocalUpdate = currentTime;
+        lastUpdateDate = currentTime;
         lastCheckForUpdates = currentTime;
     }
 
-    public boolean isDataChanged() throws InternalErrorException {
-        boolean changesDetected = false;
+    public boolean isDataChangedSince(Instant instant) throws InternalErrorException {
         if (isWaitingTimeForNextCheckReached()) {
-            changesDetected = checkIfDataChanged();
+            updateLastUpdateDate();
         }
-        return changesDetected;
+        return lastUpdateDate.after(Date.from(instant));
     }
 
-    private boolean checkIfDataChanged() throws InternalErrorException {
-        boolean changesDetected = false;
-        Date lastUpdateDateOnServer = this.clinicalModelsService.getLastUpdate(cmElementClass);
-        if (lastUpdateDateOnServer != null) {
-            if (lastUpdateDateOnServer.getTime() > mostRecentLocalUpdate.getTime()) {
-                changesDetected = true;
-                mostRecentLocalUpdate = lastUpdateDateOnServer;
-            }
-        }
-        return changesDetected;
+    private void updateLastUpdateDate() throws InternalErrorException {
+        lastUpdateDate = this.clinicalModelsService.getLastUpdate(cmElementClass);
     }
 
     private boolean isWaitingTimeForNextCheckReached() {
@@ -56,9 +47,9 @@ public class CachedCMManager {
         return waitingTimeForNextCheckReached;
     }
 
-    public void renewMostRecentLocalUpdate(Date lastUpdate) {
-        if (lastUpdate != null && lastUpdate.after(mostRecentLocalUpdate)) {
-            mostRecentLocalUpdate = lastUpdate;
+    public void renewLastUpdateDate(Date lastUpdate) {
+        if (lastUpdate != null && lastUpdate.after(lastUpdateDate)) {
+            lastUpdateDate = lastUpdate;
         }
     }
 }

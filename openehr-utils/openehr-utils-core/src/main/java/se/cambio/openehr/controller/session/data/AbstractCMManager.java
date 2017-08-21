@@ -9,6 +9,7 @@ import se.cambio.openehr.util.CachedCMManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
+import java.time.Instant;
 import java.util.*;
 
 public abstract class AbstractCMManager<E extends CMElement> {
@@ -18,10 +19,12 @@ public abstract class AbstractCMManager<E extends CMElement> {
     private Logger logger = LoggerFactory.getLogger(AbstractCMManager.class);
     private CachedCMManager cachedCMManager;
     private ClinicalModelsService clinicalModelsService;
+    private Instant lastCheckForChanges;
 
     public AbstractCMManager(ClinicalModelsService clinicalModelsService) {
         this.clinicalModelsService = clinicalModelsService;
         this.cachedCMManager = new CachedCMManager(getCMElementClass(), clinicalModelsService);
+        this.lastCheckForChanges = Instant.now();
     }
 
     public void initialize() {
@@ -32,18 +35,18 @@ public abstract class AbstractCMManager<E extends CMElement> {
         return getCmElementMap().values();
     }
 
-    public Collection<String> getAllIds() throws InternalErrorException {
+    public Collection<String> getAllIds() {
         return clinicalModelsService.getAllCMElementIds(getCMElementClass());
     }
 
-    public Collection<String> getAllIdsInCache() throws InternalErrorException {
+    public Collection<String> getAllIdsInCache() {
         if (!useCache) {
             throw new InternalErrorException(new UnsupportedOperationException("Cannot cache, it is not active."));
         }
         return getCmElementMap().keySet();
     }
 
-    public void loadAll() throws InternalErrorException {
+    public void loadAll() {
         if (!useCache) {
             throw new InternalErrorException(new UnsupportedOperationException("Cannot load into cache, it is not active."));
         }
@@ -51,7 +54,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         registerCMElementsInCache(cmElements);
     }
 
-    public E getCMElement(final String id) throws InstanceNotFoundException, InternalErrorException {
+    public E getCMElement(final String id) {
         Iterator<E> iterator = getCMElementByIds(Collections.singletonList(id)).iterator();
         if (!iterator.hasNext()) {
             throw new InstanceNotFoundException(id, getCMElementClass().getSimpleName());
@@ -59,7 +62,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         return iterator.next();
     }
 
-    public Collection<E> getCMElementsInCache(final Collection<String> ids) throws InstanceNotFoundException, InternalErrorException {
+    public Collection<E> getCMElementsInCache(final Collection<String> ids) {
         Collection<E> cmElements = new ArrayList<E>();
         for (String id : ids) {
             cmElements.add(getCMElementInCache(id));
@@ -67,7 +70,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         return cmElements;
     }
 
-    public E getCMElementInCache(final String id) throws InstanceNotFoundException, InternalErrorException {
+    public E getCMElementInCache(final String id) {
         if (!useCache) {
             throw new InternalErrorException(new UnsupportedOperationException("Cannot load cache, it is not active."));
         }
@@ -78,7 +81,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         return cmElement;
     }
 
-    public Collection<E> getCMElementByIds(final Collection<String> ids) throws InstanceNotFoundException, InternalErrorException {
+    public Collection<E> getCMElementByIds(final Collection<String> ids) {
         if (ids == null) {
             throw new IllegalArgumentException("ids cannot have null value");
         }
@@ -100,7 +103,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         return foundCMElementsList;
     }
 
-    private void findCMElementsInCache(Collection<String> ids, Collection<String> idsNotInCache, Map<String, E> foundCMElements) throws InternalErrorException {
+    private void findCMElementsInCache(Collection<String> ids, Collection<String> idsNotInCache, Map<String, E> foundCMElements) {
         checkForCacheUpdate();
         for (String id : ids) {
             E cmElement = getCmElementMap().get(id);
@@ -112,14 +115,15 @@ public abstract class AbstractCMManager<E extends CMElement> {
         }
     }
 
-    public void checkForCacheUpdate() throws InternalErrorException {
-        if (cachedCMManager.isDataChanged()) {
+    public void checkForCacheUpdate() {
+        if (cachedCMManager.isDataChangedSince(lastCheckForChanges)) {
+            lastCheckForChanges = Instant.now();
             logger.info("Detected changes on " + getCMElementClass().getSimpleName() + "). Initializing cache...");
             initialize();
         }
     }
 
-    private void findCMElementsNotInCache(final Collection<String> idsNotInCache, final Map<String, E> foundCMElements) throws InternalErrorException, InstanceNotFoundException {
+    private void findCMElementsNotInCache(final Collection<String> idsNotInCache, final Map<String, E> foundCMElements) {
         if (!idsNotInCache.isEmpty()) {
             Collection<E> cmElementsNotFoundInCache = clinicalModelsService.searchCMElementsByIds(getCMElementClass(), idsNotInCache);
             for (E cmElementNotFoundInCache : cmElementsNotFoundInCache) {
@@ -133,25 +137,24 @@ public abstract class AbstractCMManager<E extends CMElement> {
         if (useCache) {
             for (E cmElement : cmElements) {
                 getCmElementMap().put(cmElement.getId(), cmElement);
-                cachedCMManager.renewMostRecentLocalUpdate(cmElement.getLastUpdate());
+                cachedCMManager.renewLastUpdateDate(cmElement.getLastUpdate());
             }
         }
     }
 
-    public void remove(String id) throws InstanceNotFoundException, InternalErrorException {
+    public void remove(String id) {
         clinicalModelsService.removeCMElement(getCMElementClass(), id);
     }
 
-    public void upsert(E cmElement) throws InternalErrorException {
-        clinicalModelsService.upsertCMElement(cmElement);
+    public void upsert(E cmElement) {
         registerCMElementsInCache(Collections.singleton(cmElement));
     }
 
-    public String getServerChecksum() throws InternalErrorException {
+    public String getServerChecksum() {
         return clinicalModelsService.getChecksumForCMElements(getCMElementClass());
     }
 
-    public String getCachedChecksum() throws InternalErrorException {
+    public String getCachedChecksum() {
         if (!useCache) {
             throw new InternalErrorException(new UnsupportedOperationException("Cannot return checksum from cache if it is not used."));
         }
@@ -166,8 +169,8 @@ public abstract class AbstractCMManager<E extends CMElement> {
         return cmElementMap;
     }
 
-    public boolean isDataChanged() {
-        return cachedCMManager.isDataChanged();
+    public boolean isDataChangedSince(Instant instant) {
+        return cachedCMManager.isDataChangedSince(instant);
     }
 
     public void setUseCache(boolean useCache) {
