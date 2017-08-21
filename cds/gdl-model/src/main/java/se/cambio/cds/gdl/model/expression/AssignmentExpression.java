@@ -1,88 +1,37 @@
 package se.cambio.cds.gdl.model.expression;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class AssignmentExpression extends ExpressionItem {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-	public AssignmentExpression(Variable variable, ExpressionItem assignment) {
-		super();
-		this.variable = variable;
-		this.assignment = assignment;
-	}
+    private Variable variable;
+    private ExpressionItem assignment;
 
-	/**
-	 * @return the variable
-	 */
-	public Variable getVariable() {
-		return variable;
-	}
+    public AssignmentExpression(Variable variable, ExpressionItem assignment) {
+        super();
+        this.variable = variable;
+        this.assignment = assignment;
+    }
 
-	/**
-	 * @return the assignment
-	 */
-	public ExpressionItem getAssignment() {
-		return assignment;
-	}
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        buf.append(variable);
+        buf.append("=");
+        boolean isComplexExpression = assignment instanceof BinaryExpression || assignment instanceof UnaryExpression || assignment instanceof FunctionalExpression;
+        if (isComplexExpression) {
+            buf.append("(");
+        }
+        buf.append(assignment);
+        if (isComplexExpression) {
+            buf.append(")");
+        }
+        return buf.toString();
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((assignment == null) ? 0 : assignment.hashCode());
-		result = prime * result
-				+ ((variable == null) ? 0 : variable.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AssignmentExpression other = (AssignmentExpression) obj;
-		if (assignment == null) {
-			if (other.assignment != null)
-				return false;
-		} else if (!assignment.equals(other.assignment))
-			return false;
-		if (variable == null) {
-			if (other.variable != null)
-				return false;
-		} else if (!variable.equals(other.variable))
-			return false;
-		return true;
-	}
-	
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append(variable);
-		buf.append("=");
-		boolean isComplexExpression = assignment instanceof BinaryExpression || assignment instanceof UnaryExpression || assignment instanceof FunctionalExpression;
-		if(isComplexExpression) {
-			buf.append("(");
-		}
-		buf.append(assignment);
-		if(isComplexExpression) {
-			buf.append(")");
-		}
-		return buf.toString();
-	}	
-
-	private Variable variable;
-	private ExpressionItem assignment;
-	
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

@@ -20,17 +20,17 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class mxGraphRendererImpl implements GraphRenderer{
+public class GraphRendererImpl implements GraphRenderer {
 
     private mxGraph graph;
     private Map<GraphNode, Object> graphNodeObjectMap;
     private NodeExploder nodeExploder;
 
-    mxGraphRendererImpl() {
+    GraphRendererImpl() {
     }
 
 
-    private mxGraph getGraph(){
+    private mxGraph getGraph() {
         if (graph == null) {
             mxGraphModel model = new mxGraphModel();
             graph = new mxGraph(model);
@@ -51,11 +51,6 @@ public class mxGraphRendererImpl implements GraphRenderer{
 
     @Override
     public void insertGraphNode(GraphNode graphNode) throws GraphRenderingException {
-        String label = graphNode.getLabel();
-        mxRectangle rectangle = mxUtils.getSizeForHtml(label, new HashMap<>(), 1, 0);
-        double w = rectangle.getWidth() + 35;
-        double h = rectangle.getHeight() + 25;
-        Object node = getGraph().insertVertex(getGraph().getDefaultParent(), null, label, 0, 0, w, h);
         StringBuilder styleSB = new StringBuilder();
         if (graphNode.getShape() != null) {
             String mxShape = getMxShape(graphNode.getShape());
@@ -66,10 +61,15 @@ public class mxGraphRendererImpl implements GraphRenderer{
             styleSB.append(mxConstants.STYLE_ALIGN).append("=").append(getMxAlignment(textAlignment)).append(";");
         }
         Color color = graphNode.getFillColor();
-        if (color != null){
+        if (color != null) {
             String hexColor = "#" + Integer.toHexString(color.getRGB()).substring(2);
             styleSB.append(mxConstants.STYLE_FILLCOLOR).append("=").append(hexColor).append(";");
         }
+        String label = graphNode.getLabel();
+        mxRectangle rectangle = mxUtils.getSizeForHtml(label, new HashMap<>(), 1, 0);
+        double width = rectangle.getWidth() + 35;
+        double height = rectangle.getHeight() + 25;
+        Object node = getGraph().insertVertex(getGraph().getDefaultParent(), null, label, 0, 0, width, height);
         getGraph().getModel().setStyle(node, styleSB.toString());
         getGraphNodeObjectMap().put(graphNode, node);
     }
@@ -82,7 +82,7 @@ public class mxGraphRendererImpl implements GraphRenderer{
         } else if (GraphNode.Shape.HEXAGON.equals(shape)) {
             return mxConstants.SHAPE_HEXAGON;
         } else {
-           throw new GraphRenderingException("Unknown shape " + shape + "'.");
+            throw new GraphRenderingException("Unknown shape " + shape + "'.");
         }
     }
 
@@ -91,7 +91,7 @@ public class mxGraphRendererImpl implements GraphRenderer{
             return mxConstants.ALIGN_CENTER;
         } else if (GraphNode.Alignment.LEFT.equals(alignment)) {
             return mxConstants.ALIGN_LEFT;
-        }else if (GraphNode.Alignment.RIGHT.equals(alignment)) {
+        } else if (GraphNode.Alignment.RIGHT.equals(alignment)) {
             return mxConstants.ALIGN_RIGHT;
         } else {
             throw new GraphRenderingException("Unknown alignment '" + alignment + "'");
@@ -100,7 +100,6 @@ public class mxGraphRendererImpl implements GraphRenderer{
 
     @Override
     public void insertGraphEdge(GraphEdge graphEdge) throws GraphRenderingException {
-        String label = graphEdge.getLabel();
         Object nodeA = getGraphNodeObjectMap().get(graphEdge.getGraphNodeA());
         if (nodeA == null) {
             throw new GraphRenderingException("First node from edge has not been inserted yet.");
@@ -109,7 +108,6 @@ public class mxGraphRendererImpl implements GraphRenderer{
         if (nodeB == null) {
             throw new GraphRenderingException("Second node from edge has not been inserted yet.");
         }
-        Object edge = getGraph().insertEdge(getGraph().getDefaultParent(), null, label, nodeA, nodeB);
         StringBuilder styleSB = new StringBuilder();
         if (graphEdge.getColor() != null) {
             styleSB.append(mxConstants.STYLE_STROKECOLOR).append("=").append(graphEdge.getColor()).append(";");
@@ -119,6 +117,8 @@ public class mxGraphRendererImpl implements GraphRenderer{
         }
         styleSB.append(mxConstants.STYLE_ROUNDED).append("=true;");
         styleSB.append(mxConstants.STYLE_EDGE).append("=").append(mxConstants.EDGESTYLE_ENTITY_RELATION);
+        String label = graphEdge.getLabel();
+        Object edge = getGraph().insertEdge(getGraph().getDefaultParent(), null, label, nodeA, nodeB);
         getGraph().getModel().setStyle(edge, styleSB.toString());
     }
 
@@ -130,13 +130,13 @@ public class mxGraphRendererImpl implements GraphRenderer{
         return graphComponent;
     }
 
-    public static void layout(mxGraphComponent graphComponent){
+    public static void layout(mxGraphComponent graphComponent) {
         final mxGraph graph = graphComponent.getGraph();
         final mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
         graph.getModel().beginUpdate();
-        try{
+        try {
             layout.execute(graph.getDefaultParent());
-        }finally{
+        } finally {
             graph.getModel().endUpdate();
         }
     }
@@ -147,7 +147,7 @@ public class mxGraphRendererImpl implements GraphRenderer{
         return mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE, true, null, createGraphComponent(graph).getCanvas());
     }
 
-    private static mxGraphComponent createGraphComponent(mxGraph graph){
+    private static mxGraphComponent createGraphComponent(mxGraph graph) {
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         new mxRubberband(graphComponent);
         layout(graphComponent);

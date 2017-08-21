@@ -2,10 +2,10 @@ package se.cambio.cds.gdl.model.readable.rule.lines;
 
 import se.cambio.cds.gdl.model.expression.AssignmentExpression;
 
-public abstract class AssignmentExpressionRuleLine extends RuleLine{
+public abstract class AssignmentExpressionRuleLine extends RuleLine {
 
     public AssignmentExpressionRuleLine(String name, String description) {
-	super(name, description);
+        super(name, description);
     }
 
     public abstract AssignmentExpression toAssignmentExpression() throws IllegalStateException;

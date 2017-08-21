@@ -1,14 +1,14 @@
 package se.cambio.cds.gdl.model.readable.rule;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.model.Term;
 import se.cambio.cds.gdl.model.TermDefinition;
 import se.cambio.cds.gdl.model.readable.ReadableGuide;
 import se.cambio.cds.gdl.model.readable.rule.lines.FiredRuleInstantiationRuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 
+@Slf4j
 public class ReadableRule {
 
     private final ReadableGuide readableGuide;
@@ -74,7 +74,7 @@ public class ReadableRule {
         if (term != null) {
             return term.getText();
         } else {
-            ExceptionHandler.handle(new Exception("Unknown term for gtCode='" + gtCode + "'"));
+            log.error("Unknown term for gtCode='" + gtCode + "'");
             return "*UNKNOWN*";
         }
     }

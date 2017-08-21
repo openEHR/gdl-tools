@@ -45,7 +45,6 @@ import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.cm.model.guide.dto.GuideDTOBuilder;
 import se.cambio.cm.model.util.CMTypeFormat;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.TerminologyDialogManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
@@ -59,7 +58,10 @@ import se.cambio.openehr.view.util.WindowManager;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.List;
 
@@ -67,7 +69,7 @@ public class GDLEditor implements EditorController<Guide> {
 
     private static String UNKNOWN_GUIDE_ID = "unknown";
     private static String GT_HEADER = "gt";
-    public static Collection<String> SUPPORTED_EXTENSIONS = Collections.singleton("gdl");
+    private static Collection<String> SUPPORTED_EXTENSIONS = Collections.singleton("gdl");
     private GDLEditorMainPanel gdlEditorMainPanel = null;
     private ResourceDescription resourceDescription = null;
     private GuideOntology guideOntology = null;
@@ -225,14 +227,18 @@ public class GDLEditor implements EditorController<Guide> {
 
     public GDLEditorMainPanel getEditorPanel() {
         if (gdlEditorMainPanel == null) {
-            gdlEditorMainPanel = new GDLEditorMainPanel(this, guidelineLoadManager, guideHTMLExporter, gdlGraphManager, guideExportPlugin);
+            gdlEditorMainPanel =
+                    new GDLEditorMainPanel(
+                            this, guidelineLoadManager, guideHTMLExporter, gdlGraphManager, guideExportPlugin);
         }
         return gdlEditorMainPanel;
     }
 
     public void saveAs() {
         gdlEditorMainPanel.requestFocus();
-        runIfOkWithEditorState(() -> new SaveGuideOnFileRSW(windowManager, null, this, editorFileManager).execute());
+        runIfOkWithEditorState(() ->
+                new SaveGuideOnFileRSW(
+                        windowManager, null, this, editorFileManager).execute());
     }
 
     @Override
@@ -243,14 +249,19 @@ public class GDLEditor implements EditorController<Guide> {
 
     public void save() {
         gdlEditorMainPanel.requestFocus();
-        runIfOkWithEditorState(() -> new SaveGuideOnFileRSW(windowManager, editorFileManager.getLastFileLoaded(), this, editorFileManager).execute());
+        runIfOkWithEditorState(() ->
+                new SaveGuideOnFileRSW(
+                        windowManager, editorFileManager.getLastFileLoaded(), this, editorFileManager).execute());
     }
 
     public void generateForm() {
         gdlEditorMainPanel.requestFocus();
         Runnable runnable = () -> {
             if (!hasActiveRules()) {
-                JOptionPane.showMessageDialog(windowManager.getMainWindow(), GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"), GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        windowManager.getMainWindow(),
+                        GDLEditorLanguageManager.getMessage("PleaseInsertRulesBeforeGeneratingForm"),
+                        GDLEditorLanguageManager.getMessage("GenerateForm"), JOptionPane.WARNING_MESSAGE);
                 return;
             }
             String gdlGuide = getSerializedEntity();
@@ -259,11 +270,7 @@ public class GDLEditor implements EditorController<Guide> {
                     protected void done() {
                         getController().compilationFinished(getErrorMsg());
                         if (getErrorMsg() == null) {
-                            try {
-                                generateDialogForm(getCompiledGuide(), getGuide());
-                            } catch (InternalErrorException e) {
-                                ExceptionHandler.handle(e);
-                            }
+                            generateDialogForm(getCompiledGuide(), getGuide());
                         }
                     }
                 };
@@ -340,9 +347,9 @@ public class GDLEditor implements EditorController<Guide> {
 
     private boolean hasActiveRules() {
         boolean hasActiveRules = false;
-        Iterator<ReadableRule> i = getRenderableRules().values().iterator();
-        while (i.hasNext() && !hasActiveRules) {
-            hasActiveRules = !i.next().isCommented();
+        Iterator<ReadableRule> iterator = getRenderableRules().values().iterator();
+        while (iterator.hasNext() && !hasActiveRules) {
+            hasActiveRules = !iterator.next().isCommented();
         }
         return hasActiveRules;
     }
@@ -358,8 +365,7 @@ public class GDLEditor implements EditorController<Guide> {
     public ResourceDescription getResourceDescription() {
         if (resourceDescription == null) {
             resourceDescription = new ResourceDescription();
-            String DRAFT = "Author draft";
-            resourceDescription.setLifecycleState(DRAFT);
+            resourceDescription.setLifecycleState("Author draft");
             initResourceDescription();
         }
         return resourceDescription;
@@ -410,17 +416,17 @@ public class GDLEditor implements EditorController<Guide> {
         return resourceDescriptionItem;
     }
 
+    private ResourceDescriptionItem getResourceDescriptionItem() {
+        return getResourceDescription().getDetails()
+                .computeIfAbsent(getCurrentLanguageCode(), k -> new ResourceDescriptionItem());
+    }
+
     private Map<String, String> getOtherDetails() {
         if (otherDetails == null) {
             otherDetails = new HashMap<>();
             getResourceDescription().setOtherDetails(otherDetails);
         }
         return otherDetails;
-    }
-
-    private ResourceDescriptionItem getResourceDescriptionItem() {
-        return getResourceDescription().getDetails()
-                .computeIfAbsent(getCurrentLanguageCode(), k -> new ResourceDescriptionItem());
     }
 
     public List<String> getKeywords() {
@@ -462,10 +468,13 @@ public class GDLEditor implements EditorController<Guide> {
     public void editRuleElement(RuleLineElementWithValue<?> ruleLineElementWithValue) {
         try {
             getRuleElementEditor().edit(ruleLineElementWithValue);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
+        } catch (Exception ex) {
+            DialogLongMessageNotice dialog = new DialogLongMessageNotice(
+                    windowManager.getMainWindow(),
+                    GDLEditorLanguageManager.getMessage("ErrorEditingRuleElementT"),
+                    GDLEditorLanguageManager.getMessage("ErrorEditingRuleElement"),
+                    ex.getMessage(), MessageType.ERROR);
+            dialog.setVisible(true);
         }
     }
 
@@ -573,9 +582,8 @@ public class GDLEditor implements EditorController<Guide> {
     private String getOriginalLanguageCode() {
         CodePhrase originalLanuageCodePhrase = getLanguage().getOriginalLanguage();
         if (originalLanuageCodePhrase == null) {
-            String LANGUAGE_TERMINOLOGY = "ISO_639-1";
             originalLanuageCodePhrase = new CodePhrase(
-                    LANGUAGE_TERMINOLOGY, archetypeManager.getUserConfigurationManager().getLanguage());
+                    "ISO_639-1", archetypeManager.getUserConfigurationManager().getLanguage());
             getLanguage().setOriginalLanguage(originalLanuageCodePhrase);
         }
         return getLanguage().getOriginalLanguage().getCodeString();
@@ -623,7 +631,7 @@ public class GDLEditor implements EditorController<Guide> {
                     if (codeNum > termCount) {
                         termCount = codeNum;
                     }
-                } catch (Exception e) {
+                } catch (Exception ex) {
                     logger.warn("Unable to parse code '{}'", gtCode);
                 }
             }
@@ -689,14 +697,14 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     private Guide constructCurrentGuide() throws IllegalStateException {
-        GuideDefinition guideDefinition = getGuideDefinition();
+        GuideDefinition guideDefinition = generateGuideDefinition();
         insertPreconditions(guideDefinition);
         insertDefaultActions(guideDefinition);
         insertRules(guideDefinition);
         return getGuide(guideDefinition);
     }
 
-    private GuideDefinition getGuideDefinition() {
+    private GuideDefinition generateGuideDefinition() {
         GuideDefinition guideDefinition = new GuideDefinition();
         for (RuleLine ruleLine : getDefinitionRuleLines().getRuleLines()) {
             if (!ruleLine.isCommented()) {
@@ -730,7 +738,8 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    private void insertElementInstantiationRuleLinesAndPredicates(Map<String, ElementBinding> elementMap, List<ExpressionItem> predicateStatements, RuleLine ruleLineAux) {
+    private void insertElementInstantiationRuleLinesAndPredicates(
+            Map<String, ElementBinding> elementMap, List<ExpressionItem> predicateStatements, RuleLine ruleLineAux) {
         if (ruleLineAux instanceof ArchetypeElementInstantiationRuleLine) {
             ArchetypeElementInstantiationRuleLine aeirl = (ArchetypeElementInstantiationRuleLine) ruleLineAux;
             ArchetypeElementVO archetypeElementVO = aeirl
@@ -762,8 +771,7 @@ public class GDLEditor implements EditorController<Guide> {
         Guide guide = new Guide();
         guide.setId(getEntityId());
 
-        String GDL_VERSION = "0.1";
-        guide.setGdlVersion(GDL_VERSION);
+        guide.setGdlVersion("0.1");
         guide.setLanguage(getLanguage());
         guide.setConcept(getConceptGTCode());
         guide.setDescription(getResourceDescription());
@@ -808,25 +816,19 @@ public class GDLEditor implements EditorController<Guide> {
     public Guide getEntity() {
         try {
             return constructCurrentGuide();
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException ex) {
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     windowManager.getMainWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuideT"),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuide"),
-                    e.getMessage(), MessageType.ERROR);
+                    ex.getMessage(), MessageType.ERROR);
             dialog.setVisible(true);
             return null;
         }
     }
 
     public void setEntity(Guide guide) {
-        try {
-            checkGuideArchetypesAndTemplates(guide);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        }
+        checkGuideArchetypesAndTemplates(guide);
         initGuideVars();
         if (guide.getId() != null) {
             guideId = guide.getId();
@@ -853,7 +855,6 @@ public class GDLEditor implements EditorController<Guide> {
         }
         guideOntology.setTermDefinitions(termDefinitions);
         guideOntology.setTermBindings(termBindings);
-        generateGTCodesForArchetypeBindings(guide);
         updateReadableGuide(guide);
         initResourceDescription();
         updateOriginal();
@@ -862,8 +863,8 @@ public class GDLEditor implements EditorController<Guide> {
     private void updateReadableGuide(Guide guide) {
         try {
             readableGuide = guideImporter.importGuide(guide, getCurrentLanguageCode());
-        } catch (InternalErrorException e) {
-            throw new RuntimeException(e);
+        } catch (InternalErrorException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -961,7 +962,9 @@ public class GDLEditor implements EditorController<Guide> {
         }
     }
 
-    private void copyResourceDescriptionItemContent(ResourceDescriptionItem originalResourceDescriptionItem, ResourceDescriptionItem resourceDescriptionItem) {
+    private void copyResourceDescriptionItemContent(
+            ResourceDescriptionItem originalResourceDescriptionItem,
+            ResourceDescriptionItem resourceDescriptionItem) {
         if (originalResourceDescriptionItem.equals(resourceDescriptionItem)) {
             return;
         }
@@ -1007,13 +1010,8 @@ public class GDLEditor implements EditorController<Guide> {
     }
 
     private void runIfOkWithEditorState(Runnable pendingRunnable) {
-        Component comp = null;
-        try {
-            comp = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);   //TODO
-        }
-        runIfOkWithEditorState(comp, pendingRunnable);
+        Component component = getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
+        runIfOkWithEditorState(component, pendingRunnable);
     }
 
     private void runIfOkWithEditorState(Component currentPanel, Runnable pendingRunnable) {
@@ -1033,7 +1031,7 @@ public class GDLEditor implements EditorController<Guide> {
                 } else {
                     loadLastTab();
                 }
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 loadLastTab();
             }
         } else {
@@ -1094,24 +1092,6 @@ public class GDLEditor implements EditorController<Guide> {
         ruleAtEdit = null;
     }
 
-    private void generateGTCodesForArchetypeBindings(Guide guide) {
-        if (guide.getDefinition() != null && guide.getDefinition().getArchetypeBindings() != null) {
-            List<String> abCodes = new ArrayList<>();
-            abCodes.addAll(guide.getDefinition().getArchetypeBindings().keySet());
-            Collections.sort(abCodes);
-            int gtNum = getNextTermNumber();
-            for (String abCode : abCodes) {
-                if (abCode.startsWith(GuideDefinition.ARCHETYPE_BINDING_PREFIX)) {
-                    ArchetypeBinding archetypeBinding = guide.getDefinition().getArchetypeBindings().get(abCode);
-                    String gtCode = GT_HEADER + StringUtils.leftPad("" + (gtNum++), 4, "0");
-                    guide.getDefinition().getArchetypeBindings().remove(abCode);
-                    archetypeBinding.setId(gtCode);
-                    guide.getDefinition().getArchetypeBindings().put(gtCode, archetypeBinding);
-                }
-            }
-        }
-    }
-
     public boolean isModified() {
         String serializedGuide = null;
         try {
@@ -1167,44 +1147,40 @@ public class GDLEditor implements EditorController<Guide> {
             idGuide = GDLEditorLanguageManager.getMessage("Guide");
         }
         if (compiledGuide != null) {
-            try {
-                String guideSource = getSerializedEntity();
-                if (guideSource != null) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            GDLEditorLanguageManager.getMessage("Guide"), "guide");
-                    fileChooser.setDialogTitle(GDLEditorLanguageManager
-                            .getMessage("SaveGuideAsObjectSD"));
-                    fileChooser.setFileFilter(filter);
-                    File file = new File(fileChooser.getFileSystemView()
-                            .getDefaultDirectory() + "/" + idGuide + ".guide");
-                    fileChooser.setSelectedFile(file);
-                    int result = fileChooser.showSaveDialog(windowManager.getMainWindow());
-                    File guideFile = fileChooser.getSelectedFile();
-                    if (result != JFileChooser.CANCEL_OPTION) {
-                        idGuide = guideFile.getName();
-                        if (idGuide.endsWith(".guide")) {
-                            idGuide = idGuide
-                                    .substring(0, idGuide.length() - 6);
-                        }
-                        GuideDTO guideDTO =
-                                new GuideDTOBuilder()
-                                        .setId(idGuide)
-                                        .setFormat(guideSource)
-                                        .setSource(CMTypeFormat.GDL_FORMAT.getFormat())
-                                        .setGuideObject(SerializationUtils.serialize(guide))
-                                        .setCompiledGuide(compiledGuide)
-                                        .setLastUpdate(Calendar.getInstance().getTime())
-                                        .createGuideDTO();
-                        try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)))) {
-                            output.writeObject(guideDTO);
-                        } catch (Exception e) {
-                            ExceptionHandler.handle(e);
-                        }
+            String guideSource = getSerializedEntity();
+            if (guideSource != null) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        GDLEditorLanguageManager.getMessage("Guide"), "guide");
+                fileChooser.setDialogTitle(GDLEditorLanguageManager
+                        .getMessage("SaveGuideAsObjectSD"));
+                fileChooser.setFileFilter(filter);
+                File file = new File(fileChooser.getFileSystemView()
+                        .getDefaultDirectory() + "/" + idGuide + ".guide");
+                fileChooser.setSelectedFile(file);
+                int result = fileChooser.showSaveDialog(windowManager.getMainWindow());
+                File guideFile = fileChooser.getSelectedFile();
+                if (result != JFileChooser.CANCEL_OPTION) {
+                    idGuide = guideFile.getName();
+                    if (idGuide.endsWith(".guide")) {
+                        idGuide = idGuide
+                                .substring(0, idGuide.length() - 6);
+                    }
+                    GuideDTO guideDTO =
+                            new GuideDTOBuilder()
+                                    .setId(idGuide)
+                                    .setFormat(guideSource)
+                                    .setSource(CMTypeFormat.GDL_FORMAT.getFormat())
+                                    .setGuideObject(SerializationUtils.serialize(guide))
+                                    .setCompiledGuide(compiledGuide)
+                                    .setLastUpdate(Calendar.getInstance().getTime())
+                                    .createGuideDTO();
+                    try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(guideFile)))) {
+                        output.writeObject(guideDTO);
+                    } catch (Exception ex) {
+                        logger.error("Error building guideline: " + idGuide, ex);
                     }
                 }
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
             }
         }
     }
@@ -1265,9 +1241,11 @@ public class GDLEditor implements EditorController<Guide> {
             if (templateId == null) {
                 try {
                     archetypeManager.getArchetypes().getCMElement(archetypeId);
-                } catch (InstanceNotFoundException e) {
+                } catch (InstanceNotFoundException ex) {
                     File selectedFile = new File(archetypeId + ".adl");
-                    int result = importManager.showImportArchetypeDialogAndAddToRepo(windowManager.getMainWindow(), selectedFile);
+                    int result =
+                            importManager.showImportArchetypeDialogAndAddToRepo(
+                                    windowManager.getMainWindow(), selectedFile);
                     if (result == JFileChooser.CANCEL_OPTION) {
                         throw new InternalErrorException(new Exception("Archetype '" + archetypeId + "' not found."));
                     }
@@ -1275,7 +1253,7 @@ public class GDLEditor implements EditorController<Guide> {
             } else {
                 try {
                     archetypeManager.getTemplates().getCMElement(templateId);
-                } catch (InstanceNotFoundException e) {
+                } catch (InstanceNotFoundException ex) {
                     File selectedFile = new File(templateId + ".oet");
                     int result = importManager.showImportTemplateDialog(
                             windowManager.getMainWindow(), selectedFile);

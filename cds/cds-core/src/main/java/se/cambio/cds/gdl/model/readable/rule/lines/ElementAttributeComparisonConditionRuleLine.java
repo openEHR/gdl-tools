@@ -42,8 +42,8 @@ public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleL
     }
 
     public ExpressionItem toExpressionItem() throws IllegalStateException {
-        if (archetypeElementAttributeRuleLineElement != null &&
-                getArchetypeElementAttributeRuleLineElement().getValue() != null) {
+        if (archetypeElementAttributeRuleLineElement != null
+                && getArchetypeElementAttributeRuleLineElement().getValue() != null) {
             String gtCode =
                     getArchetypeElementAttributeRuleLineElement().getValue().getValue().getValue();
             ExpressionRuleLineElement expressionRuleLineElement =
@@ -70,11 +70,11 @@ public class ElementAttributeComparisonConditionRuleLine extends ExpressionRuleL
     public String toHTMLString(int level, String lang) {
         StringBuilder sb = new StringBuilder();
         sb.append(getLevelSpace(level));
-        int i = 0;
+        int index = 0;
         for (RuleLineElement ruleLineElement : getRuleLineElements()) {
             sb.append(ruleLineElement.getLabelTextHTML(lang));
-            i++;
-            if (i < getRuleLineElements().size()) {
+            index++;
+            if (index < getRuleLineElements().size()) {
                 sb.append(" ");
             }
         }

@@ -1,12 +1,16 @@
 package se.cambio.cds.gdl.parser;
 
 public class BindingException extends Exception {
-	public BindingException(String msg) {
-		super(msg);
-	}
-	
-	public BindingException() {		
-	}
+    public BindingException(String msg) {
+        super(msg);
+    }
+
+    public BindingException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    public BindingException() {
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

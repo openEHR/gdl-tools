@@ -3,14 +3,14 @@ package se.cambio.openehr.util.exceptions;
 public class MissingConfigurationParameterException extends Exception {
 
 
-	private static final long serialVersionUID = -8925943932667548794L;
-	private String parameterName;
+    private static final long serialVersionUID = -8925943932667548794L;
+    private String parameterName;
 
     public MissingConfigurationParameterException(String parameterName) {
         super("Error Missing Configuration Parameter: '" + parameterName + "'");
         this.parameterName = parameterName;
     }
-    
+
     public String getParameterName() {
         return parameterName;
     }

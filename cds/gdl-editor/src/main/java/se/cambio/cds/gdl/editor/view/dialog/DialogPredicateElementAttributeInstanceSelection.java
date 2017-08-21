@@ -2,7 +2,6 @@ package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.util.NodeDefinitionManager;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.view.dialogs.DialogSelection;
 import se.cambio.openehr.view.util.WindowManager;
 

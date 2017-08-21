@@ -1,4 +1,3 @@
-
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
@@ -12,16 +11,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.Future;
 
 public class DialogSplash extends JDialog implements Observer {
 
     private static final long serialVersionUID = -2310821412359230220L;
     private JProgressBar jProgressBar = null;
-    private JPanel jPanel1 = null;
-    private JLabel jLabel2 = null;
+    private JPanel panel1 = null;
+    private JLabel label2 = null;
 
-    private Future<?> currentThread = null;
     private int progressValue = 0;
     private String description = null;
     private JButton cancelButton;
@@ -69,10 +66,10 @@ public class DialogSplash extends JDialog implements Observer {
 
 
     private JLabel getSplashLabel() {
-        if (jLabel2 == null) {
-            jLabel2 = new JLabel();
+        if (label2 == null) {
+            label2 = new JLabel();
         }
-        return jLabel2;
+        return label2;
     }
 
     private JProgressBar getJProgressBar() {
@@ -94,22 +91,22 @@ public class DialogSplash extends JDialog implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable observable, Object arg) {
         description = GDLLoadingUtility.getCurrentLoadingStageName();
         update();
     }
 
     private JPanel getJPanel1() {
-        if (jPanel1 == null) {
-            jPanel1 = new JPanel(new BorderLayout());
-            jPanel1.setBackground(Color.WHITE);
+        if (panel1 == null) {
+            panel1 = new JPanel(new BorderLayout());
+            panel1.setBackground(Color.WHITE);
             Container container = this.getContentPane();
             container.add(new SplashPanel());
             pack();
-            jPanel1.add(container, BorderLayout.CENTER);
+            panel1.add(container, BorderLayout.CENTER);
             JPanel panelAux = new JPanel(new BorderLayout(5, 5));
             panelAux.setBackground(Color.WHITE);
-            jPanel1.add(panelAux, BorderLayout.SOUTH);
+            panel1.add(panelAux, BorderLayout.SOUTH);
             panelAux.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
             if (loading) {
                 panelAux.add(getSplashLabel(), BorderLayout.NORTH);
@@ -122,7 +119,7 @@ public class DialogSplash extends JDialog implements Observer {
                 panelAux.add(panelAux2, BorderLayout.CENTER);
             }
         }
-        return jPanel1;
+        return panel1;
     }
 
     private JButton getCloseButton() {

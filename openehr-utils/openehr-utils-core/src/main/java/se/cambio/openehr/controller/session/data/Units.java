@@ -72,21 +72,23 @@ public class Units {
     }
 
     private Set<String> getUnitsByArchetype(String idElement) {
-        if (!registeredUnitsByElement.containsKey(idElement)) {
-            throw new RuntimeException(format("Could not find element '%s'", idElement));
+        if (registeredUnitsByElement.containsKey(idElement)) {
+            return registeredUnitsByElement.get(idElement);
+        } else {
+            return Collections.emptySet();
         }
-        return registeredUnitsByElement.get(idElement);
     }
 
     private Set<String> getUnitsByTemplateAndElement(String templateId, String elementId) {
-        if (!registeredUnitsByTemplate.containsKey(templateId)) {
-            throw new RuntimeException(format("Could not find element '%s' in template '%s'", elementId, templateId));
+        if (registeredUnitsByTemplate.containsKey(templateId)) {
+            Map<String, Set<String>> unitsByTemplate = registeredUnitsByTemplate.get(templateId);
+            if (!unitsByTemplate.containsKey(elementId)) {
+                throw new RuntimeException(format("Could not find units for element '%s' in template '%s'", elementId, templateId));
+            }
+            return unitsByTemplate.get(elementId);
+        } else {
+            return Collections.emptySet();
         }
-        Map<String, Set<String>> unitsByTemplate = registeredUnitsByTemplate.get(templateId);
-        if (!unitsByTemplate.containsKey(elementId)) {
-            throw new RuntimeException(format("Could not find element '%s' in template '%s'", elementId, templateId));
-        }
-        return unitsByTemplate.get(elementId);
     }
 }
 /*

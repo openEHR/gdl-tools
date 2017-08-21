@@ -3,8 +3,6 @@ package se.cambio.cds.model.facade.ehr.delegate;
 import org.joda.time.DateTime;
 import se.cambio.cds.model.facade.ehr.util.EHRDataStream;
 import se.cambio.cds.model.instance.ArchetypeReference;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.*;
 
@@ -16,9 +14,9 @@ public interface EhrService {
     EHRDataStream queryStream(String sql);
 
     Map<String, Collection<ArchetypeReference>> queryEHRElements(
-	    Collection<String> ehrIds,
-	    Collection<ArchetypeReference> archetypeReferences,
-        Calendar date);
+            Collection<String> ehrIds,
+            Collection<ArchetypeReference> archetypeReferences,
+            Calendar date);
 
     Set<String> fetchEhrIds(
             DateTime beforeTimestamp,

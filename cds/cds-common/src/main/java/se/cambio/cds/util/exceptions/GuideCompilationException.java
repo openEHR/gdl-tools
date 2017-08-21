@@ -6,8 +6,8 @@ public class GuideCompilationException extends InternalErrorException {
     private static final long serialVersionUID = 1L;
     private String _guideId = null;
 
-    public GuideCompilationException(String guideId, Exception e) {
-        super(e);
+    public GuideCompilationException(String guideId, Exception ex) {
+        super(ex);
         _guideId = guideId;
     }
 

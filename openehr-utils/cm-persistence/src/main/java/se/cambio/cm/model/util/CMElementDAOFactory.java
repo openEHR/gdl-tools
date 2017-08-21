@@ -6,7 +6,7 @@ import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class CMElementDAOFactory {
 
-    private final static String DAO_POSTFIX = "DAO";
+    private static final String DAO_POSTFIX = "DAO";
 
     private ApplicationContext applicationContext;
 
@@ -14,7 +14,7 @@ public class CMElementDAOFactory {
         this.applicationContext = applicationContext;
     }
 
-    public <DTO extends CMElement> GenericCMElementDAO getDAO(Class<DTO> cmElementClass)
+    public <E extends CMElement> GenericCMElementDAO getDAO(Class<E> cmElementClass)
             throws InternalErrorException {
         String daoName = getDaoName(cmElementClass);
         return applicationContext.getBean(daoName, GenericCMElementDAO.class);

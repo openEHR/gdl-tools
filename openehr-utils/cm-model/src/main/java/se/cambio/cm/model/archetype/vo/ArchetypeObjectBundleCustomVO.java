@@ -35,24 +35,31 @@ public class ArchetypeObjectBundleCustomVO implements Serializable {
     public Collection<ArchetypeElementVO> getArchetypeElementVOs() {
         return archetypeElementVOs;
     }
+
     public Collection<ClusterVO> getClusterVOs() {
         return clusterVOs;
     }
+
     public Collection<CodedTextVO> getCodedTextVOs() {
         return codedTextVOs;
     }
+
     public Collection<OrdinalVO> getOrdinalVOs() {
         return ordinalVOs;
     }
+
     public Collection<UnitVO> getUnitVOs() {
         return unitVOs;
     }
+
     public void setUnits(Collection<UnitVO> unitVOs) {
         this.unitVOs = unitVOs;
     }
+
     public Collection<ProportionTypeVO> getProportionTypes() {
         return proportionTypeVOs;
     }
+
     public Collection<ArchetypeTermVO> getArchetypeTermVOs() {
         return archetypeTermVOs;
     }

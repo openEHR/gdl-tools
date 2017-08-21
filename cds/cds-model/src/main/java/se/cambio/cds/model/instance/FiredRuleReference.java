@@ -2,7 +2,7 @@ package se.cambio.cds.model.instance;
 
 import se.cambio.cds.model.facade.execution.vo.RuleReference;
 
-public class FiredRuleReference extends RuleReference{
+public class FiredRuleReference extends RuleReference {
 
     public FiredRuleReference(String guideId, String gtCode) {
         super(guideId, gtCode);

@@ -12,22 +12,22 @@ public class RuleLineCloner {
     private Cloner cloner;
     private GDLEditor gdlEditor;
 
-    public RuleLineCloner(GDLEditor gdlEditor){
+    public RuleLineCloner(GDLEditor gdlEditor) {
         this.gdlEditor = gdlEditor;
         this.cloner = new Cloner();
     }
 
-    public RuleLine clone(RuleLine ruleLine){
-        ReadableGuide readableGuide = ruleLine.getReadableGuide();
+    public RuleLine clone(RuleLine ruleLine) {
         ruleLine.setReadableGuide(null);
         RuleLine clonedRuleLine = cloner.deepClone(ruleLine);
-        if (ruleLine instanceof GTCodeDefiner){
-            GTCodeDefiner tdRuleLine = (GTCodeDefiner)clonedRuleLine;
+        if (ruleLine instanceof GTCodeDefiner) {
+            GTCodeDefiner tdRuleLine = (GTCodeDefiner) clonedRuleLine;
             boolean generateTerm = !(ruleLine instanceof ArchetypeInstantiationRuleLine);
             String gtCode = gdlEditor.createNextGTCode(generateTerm);
             tdRuleLine.setGTCode(gtCode);
         }
         clonedRuleLine.setReadableGuide(gdlEditor.getReadableGuide());
+        ReadableGuide readableGuide = ruleLine.getReadableGuide();
         ruleLine.setReadableGuide(readableGuide);
         return clonedRuleLine;
     }

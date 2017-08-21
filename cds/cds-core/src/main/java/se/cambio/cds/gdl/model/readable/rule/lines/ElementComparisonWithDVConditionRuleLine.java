@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.model.readable.rule.lines;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openehr.rm.datatypes.basic.DataValue;
 import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.gdl.model.readable.rule.lines.elements.ArchetypeDataValueRuleLineElement;
@@ -13,8 +14,8 @@ import se.cambio.cds.util.DVUtil;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
-
-public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, ConditionRuleLine{
+@Slf4j
+public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine implements ArchetypeElementRuleLine, ConditionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ElementComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
@@ -28,13 +29,13 @@ public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine
         comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
         archetypeDataValueRuleLineElement = new ArchetypeDataValueRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(archetypeDataValueRuleLineElement);
     }
 
-    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
+    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement() {
         return archetypeElementRuleLineElement;
     }
 
@@ -48,43 +49,47 @@ public class ElementComparisonWithDVConditionRuleLine extends ExpressionRuleLine
         return archetypeElementRuleLineElement.getArchetypeElementVO();
     }
 
-    public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement(){
+    public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement() {
         return comparisonOperatorRuleLineElement;
     }
 
-    public ArchetypeDataValueRuleLineElement getArchetypeDataValueRuleLineElement(){
+    public ArchetypeDataValueRuleLineElement getArchetypeDataValueRuleLineElement() {
         return archetypeDataValueRuleLineElement;
     }
 
-    public ExpressionItem toExpressionItem() throws IllegalStateException{
+    public ExpressionItem toExpressionItem() throws IllegalStateException {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             String gtCode =
                     getArchetypeElementRuleLineElement().getValue().getValue();
             DataValue dataValue =
                     getArchetypeDataValueRuleLineElement().getValue();
             ConstantExpression constantExpression;
-            if (dataValue!=null){
+            if (dataValue != null) {
                 constantExpression = DVUtil.convertToExpression(dataValue);
-            }else{
-                throw new IllegalStateException("No data value set");
+            } else {
+                log.debug("No data value set");
+                return null;
             }
             OperatorKind operatorKind =
                     getComparisonOperatorRuleLineElement().getValue();
-            if (operatorKind==null){
-                throw new IllegalStateException("No operator set");
+            if (operatorKind == null) {
+                log.debug("No operator set");
+                return null;
             }
             String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
             return new BinaryExpression(
-                    new Variable(gtCode,null, name),
+                    new Variable(gtCode, null, name),
                     constantExpression,
                     operatorKind);
-        }else{
-            throw new IllegalStateException("Element instance not found for"+ this.toString());
+        } else {
+            log.debug("Element instance not found for " + this.toString());
+            return null;
         }
     }
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

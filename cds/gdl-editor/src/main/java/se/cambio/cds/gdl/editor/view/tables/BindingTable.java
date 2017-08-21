@@ -85,12 +85,12 @@ public class BindingTable extends JTable {
 
     private List<CodePhrase> getCodePhrases(String value) {
         List<CodePhrase> codePhrases = new ArrayList<>();
-        String[] multipleDataCodePhrase = value.split(",");
-        for (String aMultipleDataCodePhrase : multipleDataCodePhrase) {
-            if (!aMultipleDataCodePhrase.trim().isEmpty()) {
+        String[] multipleDataCodePhrases = value.split(",");
+        for (String multipleDataCodePhrase : multipleDataCodePhrases) {
+            if (!multipleDataCodePhrase.trim().isEmpty()) {
                 CodePhrase phrase = new CodePhrase(
                         terminologyId,
-                        aMultipleDataCodePhrase.trim());
+                        multipleDataCodePhrase.trim());
                 codePhrases.add(phrase);
             }
         }

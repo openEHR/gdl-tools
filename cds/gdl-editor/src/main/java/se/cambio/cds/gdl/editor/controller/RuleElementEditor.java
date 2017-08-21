@@ -1,5 +1,6 @@
 package se.cambio.cds.gdl.editor.controller;
 
+import org.openehr.am.archetype.Archetype;
 import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.editor.util.DefinitionDependencyChecker;
 import se.cambio.cds.gdl.editor.view.dialog.*;
@@ -21,6 +22,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
+import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
@@ -34,6 +36,8 @@ import se.cambio.openehr.view.util.WindowManager;
 
 import java.awt.*;
 import java.util.Collection;
+
+import static java.lang.String.format;
 
 class RuleElementEditor {
 
@@ -56,7 +60,8 @@ class RuleElementEditor {
         this.dvPanelFactory = dvPanelFactory;
         this.gdlEditor = gdlEditor;
         this.importManager = importManager;
-        this.nodeDefinitionManager = new NodeDefinitionManager(archetypeManager, archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
+        this.nodeDefinitionManager = new NodeDefinitionManager(
+                archetypeManager, archetypeReferencesManager, gdlEditor, archetypeManager.getUserConfigurationManager());
     }
 
     void edit(RuleLineElementWithValue<?> ruleLineElementWithValue) throws InternalErrorException, InstanceNotFoundException {
@@ -111,6 +116,7 @@ class RuleElementEditor {
             } else if (cmElement instanceof TemplateDTO) {
                 idArchetype = ((TemplateDTO) cmElement).getArchetypeId();
                 idTemplate = cmElement.getId();
+                checkTemplateIsEntry(idTemplate);
             }
             if (idArchetype == null) {
                 if (ar != null) {
@@ -123,6 +129,15 @@ class RuleElementEditor {
                 ar = new ArchetypeReference(idDomain, idArchetype, idTemplate);
                 arrlde.setValue(ar);
             }
+        }
+    }
+
+    private void checkTemplateIsEntry(String idTemplate) {
+        Archetype templateAOM = archetypeManager.getTemplates().getTemplateAOM(idTemplate);
+        String type = templateAOM.getDefinition().getRmTypeName();
+        if (!OpenEHRConst.isEntry(type)) {
+            throw new RuntimeException(
+                    format("Template with entry type '%s' is not allowed.\nOnly ENTRY type templates are allowed\n(OBSERVATION, EVALUATION, INSTRUCTION and ACTIONS)", type));
         }
     }
 
@@ -161,8 +176,14 @@ class RuleElementEditor {
                         String gtCode = aeirl.getGTCodeRuleLineElement().getValue();
                         Term term = gdlEditor.getTerm(gtCode);
                         if (term.getText() == null || term.getText().isEmpty()) {
-                            String name = aerlde.getArchetypeManager().getArchetypeElements().getText(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
-                            String desc = aerlde.getArchetypeManager().getArchetypeElements().getDescription(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
+                            String name =
+                                    aerlde.getArchetypeManager()
+                                    .getArchetypeElements()
+                                    .getText(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
+                            String desc =
+                                    aerlde.getArchetypeManager()
+                                            .getArchetypeElements()
+                                            .getDescription(aerlde.getValue(), archetypeManager.getUserConfigurationManager().getLanguage());
                             term.setText(name);
                             term.setDescription(desc);
                         }
@@ -381,7 +402,9 @@ class RuleElementEditor {
             }
             ArchetypeReference ar = getArchetypeReferenceFromCreateInstanceRuleLine(arle, true);
             DialogExpressionEditor dialog =
-                    new DialogExpressionEditor(windowManager, arle, inPredicate, ar, gdlEditor, nodeDefinitionManager, archetypeManager.getUserConfigurationManager());
+                    new DialogExpressionEditor(
+                            windowManager, arle, inPredicate, ar, gdlEditor,
+                            nodeDefinitionManager, archetypeManager.getUserConfigurationManager());
             dialog.setVisible(true);
             if (dialog.getAnswer()) {
                 ExpressionItem expressionItem = dialog.getExpressionItem();

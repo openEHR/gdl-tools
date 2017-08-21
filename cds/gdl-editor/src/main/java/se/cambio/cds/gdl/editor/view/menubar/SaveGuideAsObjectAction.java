@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
@@ -30,7 +24,7 @@ public class SaveGuideAsObjectAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.ALT_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         GDLEditor gdlEditor = editorManager.getActiveGDLEditor();
         CompileGuideSW sw = new CompileGuideSW(gdlEditor) {
             protected void done() {

@@ -4,19 +4,18 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 
 public class CodePhraseConstant extends ConstantExpression {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-	public CodePhraseConstant(CodePhrase code) {
-		super(code.toString());
-		this.codePhrase = code;
-	}
 
-	public CodePhrase getCodePhrase() {
-		return new CodePhrase(this.codePhrase.getTerminologyId(), this.codePhrase.getCodeString());
-	}
-	private CodePhrase codePhrase;
+    public CodePhraseConstant(CodePhrase code) {
+        super(code.toString());
+        this.codePhrase = code;
+    }
+
+    public CodePhrase getCodePhrase() {
+        return new CodePhrase(this.codePhrase.getTerminologyId(), this.codePhrase.getCodeString());
+    }
+
+    private CodePhrase codePhrase;
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

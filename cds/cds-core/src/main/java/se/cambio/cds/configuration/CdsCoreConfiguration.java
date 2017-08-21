@@ -19,8 +19,7 @@ import se.cambio.openehr.controller.session.data.ArchetypeManager;
 @PropertySources({
         @PropertySource(value = "classpath:default-date-time-path.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/date-time-path.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:date-time-path.properties", ignoreResourceNotFound = true)
-})
+        @PropertySource(value = "classpath:date-time-path.properties", ignoreResourceNotFound = true)})
 @Import({ClinicalModelsCacheConfiguration.class, EhrDummyServiceConfiguration.class})
 public class CdsCoreConfiguration {
 

@@ -8,7 +8,7 @@ public class RulePriorityComparator implements Comparator<Rule> {
 
     @Override
     public int compare(Rule o1, Rule o2) {
-	return o2.getPriority()-o1.getPriority();
+        return o2.getPriority() - o1.getPriority();
     }
 
 }

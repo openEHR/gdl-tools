@@ -18,15 +18,15 @@ public class SelectCodeActionListener implements ActionListener {
     public SelectCodeActionListener(
             WindowManager windowManager,
             DVHierarchyCodedTextPanel panel,
-            TerminologyDialogManager terminologyDialogManager){
+            TerminologyDialogManager terminologyDialogManager) {
         this.windowManager = windowManager;
         this.panel = panel;
         this.terminologyDialogManager = terminologyDialogManager;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (enable){
+    public void actionPerformed(ActionEvent ev) {
+        if (enable) {
             new LoadTerminologyViewerRSW(
                     windowManager, panel, panel.getTerminologyId(),
                     null, SelectableNode.SelectionMode.SINGLE,
@@ -34,7 +34,7 @@ public class SelectCodeActionListener implements ActionListener {
         }
     }
 
-    public void setEnable(boolean enable){
+    public void setEnable(boolean enable) {
         this.enable = enable;
     }
 }

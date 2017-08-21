@@ -1,9 +1,3 @@
-/*
- * Created on 26-oct-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import java.awt.BorderLayout;
@@ -33,14 +27,14 @@ public class DialogNameInsert extends DialogEditor {
     private void initialize() {
         registerComponentWithFirstFocus(getValueTextField());
         getJPanel().setLayout(new BorderLayout());
-        JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        jPanel1.add(new JLabel(GDLEditorLanguageManager.getMessage("Name") + ":"));
-        jPanel1.add(getValueTextField());
-        getJPanel().add(jPanel1, BorderLayout.CENTER);
-        JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        jPanel2.add(getAcceptButton());
-        jPanel2.add(getCancelButton());
-        getJPanel().add(jPanel2, BorderLayout.SOUTH);
+        JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel1.add(new JLabel(GDLEditorLanguageManager.getMessage("Name") + ":"));
+        panel1.add(getValueTextField());
+        getJPanel().add(panel1, BorderLayout.CENTER);
+        JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel2.add(getAcceptButton());
+        panel2.add(getCancelButton());
+        getJPanel().add(panel2, BorderLayout.SOUTH);
         setVisible(true);
     }
 
@@ -61,8 +55,6 @@ public class DialogNameInsert extends DialogEditor {
     }
 
 }
-
-
 /*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1

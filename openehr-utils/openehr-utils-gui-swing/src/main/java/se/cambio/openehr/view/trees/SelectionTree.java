@@ -1,9 +1,3 @@
-/*
- * Creado el 11-dic-2007
- *
-
-
- */
 package se.cambio.openehr.view.trees;
 
 import java.awt.event.MouseListener;
@@ -19,86 +13,77 @@ import se.cambio.openehr.view.trees.editors.CheckBoxNodeEditor;
 import se.cambio.openehr.view.trees.renderers.CheckBoxNodeRenderer;
 
 
-/**
- * @author icorram
- *
-
-
- */
 public class SelectionTree extends JTree {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2328164272744518752L;
+    private static final long serialVersionUID = -2328164272744518752L;
 
-	private ArrayList<MouseListener> _mouseListeners = null;
-	private ArrayList<TreeSelectionListener> _treeSelectionListeners = null;
+    private ArrayList<MouseListener> _mouseListeners = null;
+    private ArrayList<TreeSelectionListener> _treeSelectionListeners = null;
 
-	public SelectionTree(DefaultMutableTreeNode dmtn){
-		super(dmtn);
-		init(false);
-	}
+    public SelectionTree(DefaultMutableTreeNode dmtn) {
+        super(dmtn);
+        init(false);
+    }
 
-	public SelectionTree(DefaultMutableTreeNode dmtn, boolean useEditor){
-		super(dmtn);
-		init(useEditor);
-	}
+    public SelectionTree(DefaultMutableTreeNode dmtn, boolean useEditor) {
+        super(dmtn);
+        init(useEditor);
+    }
 
-	private void init(boolean useEditor){
-		this.setCellRenderer(new CheckBoxNodeRenderer<Object>());
-		if (useEditor){
-			this.setCellEditor(new CheckBoxNodeEditor(this));
-			this.setEditable(true);
-		}
-	}
+    private void init(boolean useEditor) {
+        this.setCellRenderer(new CheckBoxNodeRenderer<>());
+        if (useEditor) {
+            this.setCellEditor(new CheckBoxNodeEditor(this));
+            this.setEditable(true);
+        }
+    }
 
-	public CheckBoxNodeRenderer<?> getCheckBoxNodeRenderer(){
-		return ((CheckBoxNodeRenderer<?>)getCellRenderer());
-	}
+    public CheckBoxNodeRenderer<?> getCheckBoxNodeRenderer() {
+        return ((CheckBoxNodeRenderer<?>) getCellRenderer());
+    }
 
-	public synchronized void addExtraMouseListener(MouseListener l) {
-		super.addMouseListener(l);
-		getExtraMouseListeners().add(l);
-	}
+    public synchronized void addExtraMouseListener(MouseListener listener) {
+        super.addMouseListener(listener);
+        getExtraMouseListeners().add(listener);
+    }
 
-	public synchronized void addExtraTreeSelectionListener(TreeSelectionListener l) {
-		super.addTreeSelectionListener(l);
-		getExtraTreeSelectionListeners().add(l);
-	}
+    public synchronized void addExtraTreeSelectionListener(TreeSelectionListener listener) {
+        super.addTreeSelectionListener(listener);
+        getExtraTreeSelectionListeners().add(listener);
+    }
 
-	public ArrayList<MouseListener> getExtraMouseListeners(){
-		if (_mouseListeners==null){
-			_mouseListeners =  new ArrayList<MouseListener>();
-		}
-		return _mouseListeners;
-	}
+    public ArrayList<MouseListener> getExtraMouseListeners() {
+        if (_mouseListeners == null) {
+            _mouseListeners = new ArrayList<>();
+        }
+        return _mouseListeners;
+    }
 
-	public ArrayList<TreeSelectionListener> getExtraTreeSelectionListeners(){
-		if (_treeSelectionListeners==null){
-			_treeSelectionListeners =  new ArrayList<TreeSelectionListener>();
-		}
-		return _treeSelectionListeners;
-	}
+    public ArrayList<TreeSelectionListener> getExtraTreeSelectionListeners() {
+        if (_treeSelectionListeners == null) {
+            _treeSelectionListeners = new ArrayList<>();
+        }
+        return _treeSelectionListeners;
+    }
 
-	public void expand(SelectableNode<?> node){
-		expandPath(new TreePath(node.getPath()));
-		Enumeration<?> e = node.children();
-		while(e.hasMoreElements()){
-			SelectableNode<?> childNode = (SelectableNode<?>)e.nextElement();
-			if (!node.isLeaf()){
-				expand(childNode);
-			}
-		}
-	}
+    public void expand(SelectableNode<?> node) {
+        expandPath(new TreePath(node.getPath()));
+        Enumeration<?> list = node.children();
+        while (list.hasMoreElements()) {
+            SelectableNode<?> childNode = (SelectableNode<?>) list.nextElement();
+            if (!node.isLeaf()) {
+                expand(childNode);
+            }
+        }
+    }
 
-	public void collapse(SelectableNode<?> node){
-		int row = this.getRowCount() - 1;
-		while (row >= 1) {
-			this.collapseRow(row);
-			row--;
-		}
-	}
+    public void collapse(SelectableNode<?> node) {
+        int row = this.getRowCount() - 1;
+        while (row >= 1) {
+            this.collapseRow(row);
+            row--;
+        }
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

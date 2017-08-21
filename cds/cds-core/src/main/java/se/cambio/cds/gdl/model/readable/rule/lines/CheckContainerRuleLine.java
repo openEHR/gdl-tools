@@ -21,7 +21,8 @@ public class CheckContainerRuleLine extends RuleLine implements DefinitionsRuleL
         getRuleLineElements().add(archetypeElementRuleLineElement2);
         getRuleLineElements().add(new StaticTextRuleLineElement(this, "areOnTheSameContainerRLE"));
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

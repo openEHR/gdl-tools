@@ -1,12 +1,13 @@
 package se.cambio.cds.controller.guide;
 
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public interface GuideExportPlugin {
 
     String getPluginName();
+
     byte[] compile(Guide guide);
+
     String getSource(Guide guide);
 }
 /*

@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.cambio.cds.controller.guide.GuideUtil;
 import se.cambio.cds.gdl.editor.configuration.GdlEditorConfiguration;
+import se.cambio.cds.gdl.editor.controller.EditorManager;
+import se.cambio.cds.gdl.editor.controller.GDLEditor;
+import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
+import se.cambio.cds.gdl.editor.controller.GuidelineEditorManager;
+import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.gdl.parser.GDLParser;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
@@ -24,7 +30,7 @@ import java.net.URISyntaxException;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertEquals;
-
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {GdlEditorConfiguration.class})
@@ -49,6 +55,15 @@ public class GDLEditorMainTest {
     @Autowired
     ClinicalModelsService clinicalModelsService;
 
+    @Autowired
+    EditorManager editorManager;
+
+    @Autowired
+    GdlEditorFactory gdlEditorFactory;
+
+    @Autowired
+    GuidelineEditorManager guidelineEditorManager;
+
     @Before
     public void loadCM() throws InternalErrorException, URISyntaxException, IOException {
         userConfigurationManager.setArchetypesFolderPath(archetypesResource.getFile().getPath());
@@ -70,10 +85,34 @@ public class GDLEditorMainTest {
             if (file.getName().endsWith(".gdl")) {
                 LoggerFactory.getLogger(GDLEditorMainTest.class).info("Testing guideline '" + file.getName() + "'");
                 String originalGuideStr = readGuideFile(file);
-                String output = parseAndReserializeGuide(originalGuideStr);
+                String output = parseAndSerializeGuide(originalGuideStr);
                 assertEquals(originalGuideStr, output);
             }
         }
+    }
+
+    @Test
+    public void testCreatingGdlEditor() throws IOException, InterruptedException {
+        editorManager.setEditorViewer(Mockito.mock(EditorFrame.class));
+        Guide guide = new Guide();
+        guide.setId("test_id");
+        GDLEditor gdlEditor = gdlEditorFactory.createGdlEditor(
+                guide,
+                editorManager.getActiveEditorViewer());
+        assertTrue("test_id".equals(gdlEditor.getEntityId()));
+    }
+
+    @Test
+    public void testLoadingGuidelineOnGdlEditor() throws IOException, InterruptedException {
+        File guideFile = new File(guidelinesResource.getFile(), "CHA2DS2VASc_Score_calculation.v1.1.gdl");
+        FileInputStream fis = new FileInputStream(guideFile);
+        String guideStr = IOUtils.toString(fis, "UTF8");
+        Guide guide = guidelineEditorManager.parseGuide(new ByteArrayInputStream(guideStr.getBytes("UTF8")));
+        editorManager.setEditorViewer(Mockito.mock(EditorFrame.class));
+        GDLEditor gdlEditor = gdlEditorFactory.createGdlEditor(
+                guide,
+                editorManager.getActiveEditorViewer());
+        assertTrue("CHA2DS2VASc_Score_calculation.v1.1".equals(gdlEditor.getEntityId()));
     }
 
     private static String readGuideFile(File file) throws IOException {
@@ -82,7 +121,7 @@ public class GDLEditorMainTest {
         return IOUtils.toString(in).replaceAll("\\r\\n", "\n");
     }
 
-    private static String parseAndReserializeGuide(String guideStr) throws Exception {
+    private static String parseAndSerializeGuide(String guideStr) throws Exception {
         Guide guide = new GDLParser().parse(new ByteArrayInputStream(guideStr.getBytes("UTF-8")));
         return GuideUtil.serializeGuide(guide);
     }

@@ -214,8 +214,8 @@ public abstract class GDLTestCase extends AbstractTestNGSpringContextTests {
             long execTime = (System.currentTimeMillis() - startTime);
             System.out.println("Executed in: " + execTime + " ms");
             System.out.println("Rules fired: " + rer.getFiredRules().size());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return rer;
     }

@@ -8,54 +8,52 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DVDurationPanel extends DVGenericPanel{
+public class DVDurationPanel extends DVGenericPanel {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private JTextField valueTextField;
-    public DVDurationPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
-	super(idElement, idTemplate, allowNull, requestFocus);
-	this.setLayout(new BorderLayout());
-	this.add(getValueTextField(), BorderLayout.CENTER);
+
+    public DVDurationPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus) {
+        super(idElement, idTemplate, allowNull, requestFocus);
+        this.setLayout(new BorderLayout());
+        this.add(getValueTextField(), BorderLayout.CENTER);
     }
 
-    protected JTextField getValueTextField(){
-	if (valueTextField==null){
-	    valueTextField = new JTextField();
-	    valueTextField.setPreferredSize(new Dimension(150,18));
-	    if (isRequestFocus()){
-		SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
-			valueTextField.requestFocus();
-		    }
-		});
-	    }
-	}
-	return valueTextField;
+    protected JTextField getValueTextField() {
+        if (valueTextField == null) {
+            valueTextField = new JTextField();
+            valueTextField.setPreferredSize(new Dimension(150, 18));
+            if (isRequestFocus()) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        valueTextField.requestFocus();
+                    }
+                });
+            }
+        }
+        return valueTextField;
     }
 
     public void setDataValue(DataValue dataValue) {
-	String value = "";
-	if (dataValue instanceof DvDuration){
-	    value = ((DvDuration)dataValue).getValue();
-	}
-	getValueTextField().setText(value);
+        String value = "";
+        if (dataValue instanceof DvDuration) {
+            value = ((DvDuration) dataValue).getValue();
+        }
+        getValueTextField().setText(value);
     }
 
-    public DataValue getDataValue(){
-	if (getValueTextField().getText().isEmpty()){
-	    return null;
-	}else{
-	    return new DvDuration(getValueTextField().getText());
-	}
+    public DataValue getDataValue() {
+        if (getValueTextField().getText().isEmpty()) {
+            return null;
+        } else {
+            return new DvDuration(getValueTextField().getText());
+        }
     }
 
     public Collection<JComponent> getJComponents() {
-	Collection<JComponent> components = new ArrayList<JComponent>();
-	components.add(getValueTextField());
-	return components;
+        Collection<JComponent> components = new ArrayList<JComponent>();
+        components.add(getValueTextField());
+        return components;
     }
 }
 /*

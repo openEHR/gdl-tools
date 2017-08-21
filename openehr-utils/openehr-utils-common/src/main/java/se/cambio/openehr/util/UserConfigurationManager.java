@@ -14,16 +14,16 @@ import static java.lang.String.format;
 
 public class UserConfigurationManager {
 
-    public static String ARCHETYPES_FOLDER = "ArchetypesFolder";
-    public static String TEMPLATES_FOLDER = "TemplatesFolder";
-    public static String GUIDELINES_FOLDER = "GuidesFolder";
-    public static String TERMINOLOGIES_FOLDER = "TerminologiesFolder";
-    public static String DOCUMENTS_FOLDER = "DocumentsFolder";
-    public static String CURRENT_DATE_TIME = "CurrentDateTime";
-    public static String LANGUAGE = "Messages/Language";
-    public static String COUNTRY = "Messages/Country";
-    public static String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
-    private static File DEFAULT_REPO_FOLDER = new File(System.getProperty("user.home"), "clinical-models");
+    public static final String ARCHETYPES_FOLDER = "ArchetypesFolder";
+    public static final String TEMPLATES_FOLDER = "TemplatesFolder";
+    public static final String GUIDELINES_FOLDER = "GuidesFolder";
+    public static final String TERMINOLOGIES_FOLDER = "TerminologiesFolder";
+    public static final String DOCUMENTS_FOLDER = "DocumentsFolder";
+    public static final String CURRENT_DATE_TIME = "CurrentDateTime";
+    public static final String LANGUAGE = "Messages/Language";
+    public static final String COUNTRY = "Messages/Country";
+    public static final String ACTIVE_RULE_ENGINE = "cds-execution.engine.active";
+    private File DEFAULT_REPO_FOLDER = new File(System.getProperty("user.home"), "clinical-models");
 
     private Map<String, CmFolder> cmFolderMap = new HashMap<>();
     private String activeRuleEngine;
@@ -155,7 +155,7 @@ public class UserConfigurationManager {
     }
 
     public void saveConfig() {
-        File configFile = new File(System.getProperty("user.home"),".gdleditor/UserConfig.properties");
+        File configFile = new File(System.getProperty("user.home"), ".gdleditor/UserConfig.properties");
         configFile.getParentFile().mkdirs();
         try {
             configFile.createNewFile();
@@ -173,9 +173,9 @@ public class UserConfigurationManager {
                 properties.put(ACTIVE_RULE_ENGINE, getActiveRuleEngine());
                 properties.store(out, "User Config");
             }
-        } catch (Exception e) {
-            logger.error("Error saving", e);
-            throw new IllegalArgumentException(format("Error saving configuration file %s : %s", configFile.getAbsolutePath(), e.getMessage()));
+        } catch (Exception ex) {
+            logger.error("Error saving", ex);
+            throw new IllegalArgumentException(format("Error saving configuration file %s : %s", configFile.getAbsolutePath(), ex.getMessage()));
         }
     }
 }

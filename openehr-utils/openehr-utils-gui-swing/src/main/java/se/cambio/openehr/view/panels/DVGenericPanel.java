@@ -4,18 +4,15 @@ import org.openehr.rm.datatypes.basic.DataValue;
 
 import javax.swing.*;
 
-public abstract class DVGenericPanel extends JPanel implements DVPanelInterface{
+public abstract class DVGenericPanel extends JPanel implements DVPanelInterface {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     protected String _idElement = null;
     protected String _idTemplate = null;
     protected boolean _allowsNull;
     protected boolean _requestFocus;
 
-    public DVGenericPanel(String idElement, String idTemplate, boolean allowsNull, boolean requestFocus){
+    public DVGenericPanel(String idElement, String idTemplate, boolean allowsNull, boolean requestFocus) {
         _idElement = idElement;
         _idTemplate = idTemplate;
         _allowsNull = allowsNull;
@@ -30,11 +27,11 @@ public abstract class DVGenericPanel extends JPanel implements DVPanelInterface{
         this._idElement = idElement;
     }
 
-    public String getIdTemplate(){
+    public String getIdTemplate() {
         return _idTemplate;
     }
 
-    public void setIdTemplate(String idTemplate){
+    public void setIdTemplate(String idTemplate) {
         _idTemplate = idTemplate;
     }
 
@@ -50,15 +47,15 @@ public abstract class DVGenericPanel extends JPanel implements DVPanelInterface{
         return _requestFocus;
     }
 
-    public boolean isValidDV(){
-        try{
+    public boolean isValidDV() {
+        try {
             DataValue dv = getDataValue();
-            if (dv!=null || _allowsNull){
+            if (dv != null || _allowsNull) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }catch(Exception e){
+        } catch (Exception ex) {
             return false;
         }
     }

@@ -3,12 +3,13 @@ package se.cambio.cds.gdl.model.readable.rule.lines;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ConditionRuleLine;
 
 
-public class BranchRuleLine extends RuleLine implements ConditionRuleLine{
-    
+public class BranchRuleLine extends RuleLine implements ConditionRuleLine {
+
     public BranchRuleLine() {
-	super("Branch", "Branch");
+        super("Branch", "Branch");
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

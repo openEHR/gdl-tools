@@ -21,6 +21,7 @@ public class DataValuesGroupVO {
     public Map<String, DataValue> getDataValueMap() {
         return dataValueMap;
     }
+
     /*
     public void setDataValueMap(Map<String, DataValue> dataValueMap) {
         this.dataValueMap = dataValueMap;

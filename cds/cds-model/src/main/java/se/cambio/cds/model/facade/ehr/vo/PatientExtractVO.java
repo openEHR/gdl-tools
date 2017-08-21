@@ -1,45 +1,24 @@
 package se.cambio.cds.model.facade.ehr.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 
-public class PatientExtractVO implements Serializable{
+@Data
+public class PatientExtractVO implements Serializable {
 
 
     private static final long serialVersionUID = 16042012L;
     private String idPatient;
     private Calendar date;
     private Collection<ExtractItemVO> items;
-    
+
     public PatientExtractVO(String idPatient, Calendar date, Collection<ExtractItemVO> items) {
-	super();
-	this.idPatient = idPatient;
-	this.date = date;
-	this.items = items;
-    }
-
-    public String getIdPatient() {
-        return idPatient;
-    }
-
-    public void setIdPatient(String idPatient) {
+        super();
         this.idPatient = idPatient;
-    }
-
-    public Calendar getDate() {
-        return date;
-    }
-
-    public void setDate(Calendar date) {
         this.date = date;
-    }
-
-    public Collection<ExtractItemVO> getItems() {
-        return items;
-    }
-
-    public void setItems(Collection<ExtractItemVO> items) {
         this.items = items;
     }
 }

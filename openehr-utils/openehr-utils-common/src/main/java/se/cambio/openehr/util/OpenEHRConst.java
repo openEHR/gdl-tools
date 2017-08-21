@@ -4,38 +4,38 @@ import org.openehr.rm.datatypes.text.CodePhrase;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class OpenEHRConst {
 
-    public final static String ELEMENT = "ELEMENT";
-    public final static String CLUSTER = "CLUSTER";
-    public final static String SECTION = "SECTION";
-    public final static String STRUCTURE = "STRUCTURE";
-    public final static String ACTIVITY = "ACTIVITY";
-    public final static String ITEM_TREE = "ITEM_TREE";
-    public final static String ITEM_LIST = "ITEM_LIST";
-    public final static String ITEM_TABLE = "ITEM_TABLE";
-    public final static String ITEM_SINGLE = "ITEM_SINGLE";
-    public final static String PARTICIPATION = "PARTICIPATION";
-    public final static String COMPOSITION = "COMPOSITION";
-    public final static String POINT_EVENT = "POINT_EVENT";
-    public final static String HISTORY = "HISTORY";
-    public final static String EVENT = "EVENT";
+    public static final String ELEMENT = "ELEMENT";
+    public static final String CLUSTER = "CLUSTER";
+    public static final String SECTION = "SECTION";
+    public static final String STRUCTURE = "STRUCTURE";
+    public static final String ACTIVITY = "ACTIVITY";
+    public static final String ITEM_TREE = "ITEM_TREE";
+    public static final String ITEM_LIST = "ITEM_LIST";
+    public static final String ITEM_TABLE = "ITEM_TABLE";
+    public static final String ITEM_SINGLE = "ITEM_SINGLE";
+    public static final String PARTICIPATION = "PARTICIPATION";
+    public static final String COMPOSITION = "COMPOSITION";
+    public static final String POINT_EVENT = "POINT_EVENT";
+    public static final String HISTORY = "HISTORY";
+    public static final String EVENT = "EVENT";
 
     //Entries
-    public final static String OBSERVATION = "OBSERVATION";
-    public final static String EVALUATION = "EVALUATION";
-    public final static String INSTRUCTION = "INSTRUCTION";
-    public final static String ACTION = "ACTION";
-    public final static String ENTRY = "ENTRY";
+    public static final String OBSERVATION = "OBSERVATION";
+    public static final String EVALUATION = "EVALUATION";
+    public static final String INSTRUCTION = "INSTRUCTION";
+    public static final String ACTION = "ACTION";
+    public static final String ENTRY = "ENTRY";
 
-    public final static String ITEMS = "items";
-    public final static String DATA = "data";
-    public final static String VALUE = "value";
-    public final static String DEFINING_CODE = "defining_code";
+    public static final String ITEMS = "items";
+    public static final String DATA = "data";
+    public static final String VALUE = "value";
+    public static final String DEFINING_CODE = "defining_code";
 
 
     //TODO Change
@@ -45,13 +45,14 @@ public class OpenEHRConst {
     public static String NULL_FLAVOR_ATTRIBUTE = "null_flavor";
 
 
-    public static CodePhrase DEFAULT_LANGUAGE_CODE_PHRASE = new CodePhrase("ISO_639-1",  "en");
+    public static CodePhrase DEFAULT_LANGUAGE_CODE_PHRASE = new CodePhrase("ISO_639-1", "en");
 
 
     public static String CURRENT_DATE_TIME_ID = "currentDateTime";
 
-    public static final Collection<String> PARSABLE_OPENEHR_RM_NAMES = new ArrayList<String>();
-    public static final Collection<String> ENTRY_RM_NAMES = new ArrayList<String>();
+    public static final Set<String> PARSABLE_OPENEHR_RM_NAMES = new HashSet<>();
+    public static final Set<String> ENTRY_RM_NAMES = new HashSet<>();
+
     static {
         PARSABLE_OPENEHR_RM_NAMES.add(ELEMENT);
         PARSABLE_OPENEHR_RM_NAMES.add(CLUSTER);
@@ -72,6 +73,7 @@ public class OpenEHRConst {
     }
 
     public static final Collection<String> ARCHETYPES_RM_NAMES = new ArrayList<String>();
+
     static {
         PARSABLE_OPENEHR_RM_NAMES.add(CLUSTER);
         PARSABLE_OPENEHR_RM_NAMES.add(ITEM_TREE);
@@ -87,7 +89,7 @@ public class OpenEHRConst {
         ENTRY_RM_NAMES.add(ACTION);
     }
 
-    public static boolean isEntry(String rmName){
+    public static boolean isEntry(String rmName) {
         return ENTRY_RM_NAMES.contains(rmName);
     }
 

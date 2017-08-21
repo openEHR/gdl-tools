@@ -17,7 +17,8 @@ public class ElementComparisonOperatorRuleLineElement extends AbstractComparison
         addOperator(OperatorKind.IS_A);
         addOperator(OperatorKind.IS_NOT_A);
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

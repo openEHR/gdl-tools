@@ -1,9 +1,3 @@
-/*
- * Created on 26-oct-2006
- *
-
-
- */
 package se.cambio.openehr.view.panels;
 
 import se.cambio.openehr.controller.sw.ExpandTreeRSW;
@@ -134,7 +128,7 @@ public class SelectionPanel extends JPanel {
     private class ExpandTreeAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             if (bigList) {
                 new ExpandTreeRSW(windowManager, getSelectionPanel()).execute();
             } else {
@@ -163,16 +157,11 @@ public class SelectionPanel extends JPanel {
 
         private static final long serialVersionUID = 1L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             getJTree().collapse(rootNode);
         }
     }
 
-    /**
-     * This method initializes jTable
-     *
-     * @return javax.swing.JTable
-     */
     public SelectionTree getJTree() {
         if (jTree == null) {
             jTree = new SelectionTree(rootNode, useEditor);
@@ -180,11 +169,6 @@ public class SelectionPanel extends JPanel {
         return jTree;
     }
 
-    /**
-     * This method initializes jScrollPane
-     *
-     * @return javax.swing.JScrollPane
-     */
     public JScrollPane getJScrollPane() {
         if (jScrollPane == null) {
             jScrollPane = new JScrollPane();
@@ -196,13 +180,13 @@ public class SelectionPanel extends JPanel {
     public void changeRootNode(SelectableNode<?> node) {
         rootNode = node;
 
-        ArrayList<MouseListener> mListeners = getJTree().getExtraMouseListeners();
-        ArrayList<TreeSelectionListener> tsListeners = getJTree().getExtraTreeSelectionListeners();
+        ArrayList<MouseListener> listeners = getJTree().getExtraMouseListeners();
         jTree = null;
         getJScrollPane().remove(getJTree());
-        for (MouseListener listener : mListeners) {
+        for (MouseListener listener : listeners) {
             getJTree().addExtraMouseListener(listener);
         }
+        ArrayList<TreeSelectionListener> tsListeners = getJTree().getExtraTreeSelectionListeners();
         for (TreeSelectionListener listener : tsListeners) {
             getJTree().addExtraTreeSelectionListener(listener);
         }
@@ -213,14 +197,14 @@ public class SelectionPanel extends JPanel {
 
     public class FilerSelectionKeyListener implements KeyListener {
 
-        public void keyPressed(KeyEvent e) {
+        public void keyPressed(KeyEvent ev) {
         }
 
-        public void keyReleased(KeyEvent e) {
+        public void keyReleased(KeyEvent ev) {
             filter();
         }
 
-        public void keyTyped(KeyEvent e) {
+        public void keyTyped(KeyEvent ev) {
 
         }
     }

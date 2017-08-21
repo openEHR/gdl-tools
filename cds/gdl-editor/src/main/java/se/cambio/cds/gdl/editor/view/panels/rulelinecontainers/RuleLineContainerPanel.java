@@ -1,14 +1,12 @@
 package se.cambio.cds.gdl.editor.view.panels.rulelinecontainers;
 
-import javax.swing.JPanel;
-
-import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
+import javax.swing.*;
 
 
-public abstract class RuleLineContainerPanel extends JPanel implements RuleLineContainer{
+public abstract class RuleLineContainerPanel extends JPanel implements RuleLineContainer {
     private static final long serialVersionUID = 1L;
 
-    void ruleLineAdded(){
+    void ruleLineAdded() {
     }
 }
 /*

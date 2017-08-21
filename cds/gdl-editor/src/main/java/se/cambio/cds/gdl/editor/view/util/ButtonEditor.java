@@ -1,16 +1,10 @@
 
 package se.cambio.cds.gdl.editor.view.util;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JTable;
-
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+
+import javax.swing.*;
+import java.awt.*;
 
 public abstract class ButtonEditor extends DefaultCellEditor {
 
@@ -45,7 +39,8 @@ public abstract class ButtonEditor extends DefaultCellEditor {
     public abstract Object getCellEditorValue();
 
     public abstract void performAction(int row);
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

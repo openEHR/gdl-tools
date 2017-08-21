@@ -5,7 +5,6 @@ import se.cambio.cds.gdl.model.Term;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 

@@ -11,8 +11,6 @@ import se.cambio.cds.gdl.graph.view.panel.GdlGraphManager;
 import se.cambio.cds.gdl.model.readable.rule.ReadableRule;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,7 +83,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
 
         private static final long serialVersionUID = -3085701867293096187L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             RulesPanel rulesPanel = getGuidePanel().getRulesPanel();
             getGuidePanel().getGuideEditorTabPane().setSelectedComponent(rulesPanel);
             rulesPanel.addRule();
@@ -101,11 +99,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
             createBinding.addActionListener(e -> {
                 MultipleBindingsPanel bindingPanel = getGuidePanel().getBindingPanel();
                 getGuidePanel().getGuideEditorTabPane().setSelectedComponent(bindingPanel);
-                try {
-                    bindingPanel.addTermTab();
-                } catch (InternalErrorException e1) {
-                    ExceptionHandler.handle(e1);
-                }
+                bindingPanel.addTermTab();
             });
         }
         return createBinding;
@@ -188,8 +182,8 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
         if (titleLabel == null) {
             titleLabel = new JLabel();
             titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-            Font f = new Font("Dialog", Font.BOLD, 18);
-            titleLabel.setFont(f);
+            Font font = new Font("Dialog", Font.BOLD, 18);
+            titleLabel.setFont(font);
         }
         return titleLabel;
     }
@@ -215,7 +209,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
     public class BackToGuideAction extends AbstractAction {
         private static final long serialVersionUID = -3085701867293096187L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             controller.goBackToGuide();
         }
     }
@@ -235,7 +229,7 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
     public class GenerateFormAction extends AbstractAction {
         private static final long serialVersionUID = -3085701867293096187L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             generateFormAction();
         }
     }
@@ -244,7 +238,8 @@ public class GDLEditorMainPanel extends JPanel implements RefreshablePanel {
         controller.generateForm();
     }
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

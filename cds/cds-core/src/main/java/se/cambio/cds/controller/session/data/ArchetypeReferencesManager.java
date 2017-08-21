@@ -7,8 +7,6 @@ import se.cambio.cm.model.archetype.vo.ClusterVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.util.*;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 public class ArchetypeReferencesManager {
 
@@ -44,7 +42,7 @@ public class ArchetypeReferencesManager {
         String idDomain = getDomainId(ar);
 
         String archetypeImageName = getArchetypeImageName(ar);
-        String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getRMType());
+        String dataValueImageName = OpenEHRDataValuesUI.getDVIconName(archetypeElementVO.getType());
 
         String elementName = getElementName(archetypeElementVO);
         String elementDesc = getElementDescription(archetypeElementVO);
@@ -55,14 +53,20 @@ public class ArchetypeReferencesManager {
 
         String path = getTotalPath(archetypeElementVO, archetypeDTO);
 
-        return "<html><table width=500>" +
-                "<tr><td><b>" + OpenEHRLanguageManager.getMessage("Name") + ": </b>" + elementName + "</td><td><b>" + OpenEHRLanguageManager.getMessage("Archetype") + ": </b>" + OpenEHRImageUtil.getImgHTMLTag(archetypeImageName) + "&nbsp;" + archetypeName + "</td></tr>" +
-                "<tr><td><b>" + OpenEHRLanguageManager.getMessage("DataValue") + ": </b>" + OpenEHRImageUtil.getImgHTMLTag(dataValueImageName) + "&nbsp;" + OpenEHRDataValuesUI.getName(archetypeElementVO.getRMType()) + "</td><td><b>" + OpenEHRLanguageManager.getMessage("Occurrences") + ": </b>" + cardinalityStr + "</td></tr>" +
-                (units != null ? "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Units") + ": </b>" + units + "</td></tr>" : "") +
-                "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Path") + ": </b>" + path + "</td></tr>" +
-                "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Description") + ": </b>" + elementDesc + "</td></tr>" +
-                (extraLines != null ? extraLines : "") +
-                "</table></html>";
+        return "<html><table width=500>"
+                + "<tr><td><b>" + OpenEHRLanguageManager.getMessage("Name") + ": </b>" + elementName + "</td><td><b>"
+                + OpenEHRLanguageManager.getMessage("Archetype") + ": </b>"
+                + OpenEHRImageUtil.getImgHTMLTag(archetypeImageName) + "&nbsp;" + archetypeName + "</td></tr>"
+                + "<tr><td><b>" + OpenEHRLanguageManager.getMessage("DataValue") + ": </b>"
+                + OpenEHRImageUtil.getImgHTMLTag(dataValueImageName) + "&nbsp;"
+                + OpenEHRDataValuesUI.getName(archetypeElementVO.getType()) + "</td><td><b>"
+                + OpenEHRLanguageManager.getMessage("Occurrences") + ": </b>" + cardinalityStr + "</td></tr>"
+                + (units != null ? "<tr><td colspan=2><b>"
+                        + OpenEHRLanguageManager.getMessage("Units") + ": </b>" + units + "</td></tr>" : "")
+                + "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Path") + ": </b>" + path + "</td></tr>"
+                + "<tr><td colspan=2><b>" + OpenEHRLanguageManager.getMessage("Description") + ": </b>" + elementDesc + "</td></tr>"
+                + (extraLines != null ? extraLines : "")
+                + "</table></html>";
     }
 
     private String getTotalPath(ArchetypeElementVO archetypeElementVO, ArchetypeDTO archetypeDTO) {
@@ -78,13 +82,8 @@ public class ArchetypeReferencesManager {
                 clusterPathSB.append("/").append(pathNode);
                 if (archetypeManager.getClusters().isCluster(archetypeElementVO.getIdTemplate(), clusterPathSB.toString())) {
                     ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(archetypeElementVO.getIdTemplate(), clusterPathSB.toString());
-                    String name = null;
-                    try {
-                        name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
-                    } catch (InternalErrorException e) {
-                        ExceptionHandler.handle(e);
-                    }
-                    pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getRMType()))).append("&nbsp;").append(name).append(" / ");
+                    String name = archetypeManager.getClusters().getText(clusterVO, archetypeManager.getUserConfigurationManager().getLanguage());
+                    pathSB.append(OpenEHRImageUtil.getImgHTMLTag(OpenEHRConstUI.getIconName(clusterVO.getType()))).append("&nbsp;").append(name).append(" / ");
                 }
             }
         }
@@ -96,15 +95,7 @@ public class ArchetypeReferencesManager {
     }
 
     private ArchetypeDTO getArchetypeDTO(ArchetypeElementVO archetypeElementVO) {
-        ArchetypeDTO archetypeVO = null;
-        try {
-            archetypeVO = archetypeManager.getArchetypes().getCMElement(archetypeElementVO.getIdArchetype());
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
-        return archetypeVO;
+        return archetypeManager.getArchetypes().getCMElement(archetypeElementVO.getIdArchetype());
     }
 
     private static String getDomainId(ArchetypeReference ar) {
@@ -141,7 +132,7 @@ public class ArchetypeReferencesManager {
 
     private String getUnitsDescription(ArchetypeElementVO archetypeElementVO) {
         String units = null;
-        if (OpenEHRDataValues.DV_QUANTITY.equals(archetypeElementVO.getRMType())) {
+        if (OpenEHRDataValues.DV_QUANTITY.equals(archetypeElementVO.getType())) {
             StringBuilder unitsSB = new StringBuilder();
             for (String unit : archetypeManager.getUnits().getUnits(archetypeElementVO.getIdTemplate(), archetypeElementVO.getId())) {
                 unitsSB.append(unit).append(", ");

@@ -1,8 +1,11 @@
 package se.cambio.cds.model.facade.execution.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
-public class RuleReference implements Serializable{
+@Data
+public class RuleReference implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String guideId = null;
@@ -20,29 +23,8 @@ public class RuleReference implements Serializable{
         this.gtCode = gtCode;
     }
 
-    public String getGuideId() {
-        return guideId;
-    }
-    public void setGuideId(String guideId) {
-        this.guideId = guideId;
-    }
-    public String getGtCode() {
-        return gtCode;
-    }
-    public void setGtCode(String gtCode) {
-        this.gtCode = gtCode;
-    }
-
-    public int hashCode(){
-        return toString().hashCode();
-    }
-
-    public boolean equals(Object o){
-        return (o!=null && o.hashCode()==this.hashCode());
-    }
-
-    public String toString(){
-        return guideId+"/"+gtCode;
+    public String toString() {
+        return guideId + "/" + gtCode;
     }
 }
 /*

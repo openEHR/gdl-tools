@@ -10,27 +10,27 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>adl-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>oet-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>openehr-aom</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>openehr-ap</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>openehr-rm-domain</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
@@ -40,22 +40,22 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>dadl-binding</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>xml-binding</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>adl-serializer</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.openehr</groupId>
 			<artifactId>rm-skeleton</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>

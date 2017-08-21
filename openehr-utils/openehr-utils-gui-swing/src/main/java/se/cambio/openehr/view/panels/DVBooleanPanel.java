@@ -7,9 +7,6 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 public class DVBooleanPanel extends DVComboBoxPanel implements DVPanelInterface {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public DVBooleanPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus) {

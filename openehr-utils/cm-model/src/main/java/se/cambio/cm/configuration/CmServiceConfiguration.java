@@ -1,7 +1,8 @@
 package se.cambio.cm.configuration;
 
-import org.openehr.rm.support.terminology.TerminologyService;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ComponentScan({"se.cambio.cm.model", "se.cambio.openehr.model"})

@@ -6,9 +6,10 @@ import se.cambio.cm.model.util.CMElement;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Archetypes;
 import se.cambio.openehr.controller.session.data.Templates;
-import se.cambio.openehr.util.*;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
+import se.cambio.openehr.util.OpenEHRConst;
+import se.cambio.openehr.util.OpenEHRConstUI;
+import se.cambio.openehr.util.OpenEHRImageUtil;
+import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.view.panels.SelectionPanel;
 import se.cambio.openehr.view.trees.SelectableNode;
 import se.cambio.openehr.view.trees.SelectableNodeBuilder;
@@ -39,7 +40,7 @@ public class DialogArchetypeChooser extends JDialog {
     private SelectionPanel templateSelectionPanel;
     private SelectableNode<String> archetypeNode = null;
     private SelectableNode<String> templateNode = null;
-    private JComboBox domainComboBox;
+    private JComboBox<String> domainComboBox;
     private JTabbedPane tabbedPane;
 
     private String ANY_DOMAIN = "*";
@@ -64,7 +65,7 @@ public class DialogArchetypeChooser extends JDialog {
             if (domainId == null) {
                 domainId = ANY_DOMAIN;
             }
-            if (!Domains.EHR_ID.equals(domainId)) {//Select only if it is not EHR (the one by default) because it will activate the 'Last' ComboBox
+            if (!Domains.EHR_ID.equals(domainId)) {
                 getDomainSelector().setSelectedItem(domainId);
             }
         }
@@ -113,17 +114,17 @@ public class DialogArchetypeChooser extends JDialog {
 
     private JComboBox getDomainSelector() {
         if (domainComboBox == null) {
-            domainComboBox = new JComboBox();
+            domainComboBox = new JComboBox<>();
             domainComboBox.addItem(ANY_DOMAIN);
             domainComboBox.addItem(Domains.EHR_ID);
             domainComboBox.addItem(Domains.CDS_ID);
-            domainComboBox.setRenderer(new DomainComboBoxRenderer());
+            domainComboBox.setRenderer(new DomainComboBoxRenderer<>());
             domainComboBox.setSelectedItem(Domains.EHR_ID);
         }
         return domainComboBox;
     }
 
-    private class DomainComboBoxRenderer extends JLabel implements ListCellRenderer {
+    private class DomainComboBoxRenderer<E> extends JLabel implements ListCellRenderer<E> {
 
         private static final long serialVersionUID = 1L;
 
@@ -179,31 +180,28 @@ public class DialogArchetypeChooser extends JDialog {
     private class ImportArchetypeActionListener implements ActionListener {
         private DialogArchetypeChooser _dialog = null;
 
-        public ImportArchetypeActionListener(DialogArchetypeChooser dialog) {
+        ImportArchetypeActionListener(DialogArchetypeChooser dialog) {
             _dialog = dialog;
         }
 
-        public void actionPerformed(ActionEvent e) {
-            try {
-                importManager.showImportArchetypeDialogAndAddToRepo(_dialog, null);
-            } catch (InternalErrorException e1) {
-                ExceptionHandler.handle(e1);
-            } catch (InstanceNotFoundException e1) {
-                ExceptionHandler.handle(e1);
-            }
+        public void actionPerformed(ActionEvent ev) {
+            importManager.showImportArchetypeDialogAndAddToRepo(_dialog, null);
             refreshArchetypeSelectionPanel();
         }
     }
 
 
-    public void refreshArchetypeSelectionPanel() {
+    private void refreshArchetypeSelectionPanel() {
         archetypeSelectionPanel = null;
         archetypeNode = null;
         getArchetypeSelectionPanel();
         if (getArchetypeTemplateTabbedPane().getTabCount() > 0) {
             getArchetypeTemplateTabbedPane().removeTabAt(0);
         }
-        getArchetypeTemplateTabbedPane().insertTab(OpenEHRLanguageManager.getMessage("Archetypes"), Archetypes.ICON, getArchetypeSelectionPanel(), OpenEHRLanguageManager.getMessage("Archetypes"), 0);
+        getArchetypeTemplateTabbedPane().insertTab(
+                OpenEHRLanguageManager.getMessage("Archetypes"),
+                Archetypes.ICON, getArchetypeSelectionPanel(),
+                OpenEHRLanguageManager.getMessage("Archetypes"), 0);
         getArchetypeTemplateTabbedPane().setSelectedIndex(0);
     }
 
@@ -223,23 +221,17 @@ public class DialogArchetypeChooser extends JDialog {
     private class ImportTemplateActionListener implements ActionListener {
         private DialogArchetypeChooser _dialog = null;
 
-        public ImportTemplateActionListener(DialogArchetypeChooser dialog) {
+        ImportTemplateActionListener(DialogArchetypeChooser dialog) {
             _dialog = dialog;
         }
 
-        public void actionPerformed(ActionEvent e) {
-            try {
-                importManager.showImportTemplateDialog(_dialog, null);
-            } catch (InternalErrorException e1) {
-                ExceptionHandler.handle(e1);
-            } catch (InstanceNotFoundException e1) {
-                ExceptionHandler.handle(e1);
-            }
+        public void actionPerformed(ActionEvent ev) {
+            importManager.showImportTemplateDialog(_dialog, null);
             refreshTemplateSelectionPanel();
         }
     }
 
-    public void refreshTemplateSelectionPanel() {
+    private void refreshTemplateSelectionPanel() {
         templateSelectionPanel = null;
         templateNode = null;
         getTemplateSelectionPanel();
@@ -254,8 +246,8 @@ public class DialogArchetypeChooser extends JDialog {
     }
 
     class DoubleClickMouseListener extends MouseAdapter {
-        public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() > 1) {
+        public void mouseClicked(MouseEvent ev) {
+            if (ev.getClickCount() > 1) {
                 CMElement cmElement = getSelectedCMElement();
                 if (cmElement != null) {
                     accept();
@@ -264,12 +256,12 @@ public class DialogArchetypeChooser extends JDialog {
         }
     }
 
-    protected final void accept() {
+    private void accept() {
         _answer = true;
         setVisible(false);
     }
 
-    protected final void exit() {
+    private void exit() {
         _answer = false;
         setVisible(false);
     }
@@ -295,11 +287,6 @@ public class DialogArchetypeChooser extends JDialog {
         return acceptButton;
     }
 
-    /**
-     * This method initializes cancelButton
-     *
-     * @return javax.swing.JButton
-     */
     private JButton getCancelButton() {
         if (cancelButton == null) {
             cancelButton = new JButton();
@@ -321,7 +308,7 @@ public class DialogArchetypeChooser extends JDialog {
     public class AcceptChangesAction extends AbstractAction {
         private static final long serialVersionUID = -8058749276509227718L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             accept();
         }
     }
@@ -335,10 +322,10 @@ public class DialogArchetypeChooser extends JDialog {
 
     private class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e) {
+        public void windowOpened(WindowEvent ev) {
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             exit();
         }
 
@@ -347,29 +334,25 @@ public class DialogArchetypeChooser extends JDialog {
         }
     }
 
-    public SelectableNode<String> getArchetypeNode() {
+    private SelectableNode<String> getArchetypeNode() {
         if (archetypeNode == null) {
             archetypeNode = new SelectableNodeBuilder<String>()
                     .setName(OpenEHRLanguageManager.getMessage("Archetypes"))
                     .setIcon(Archetypes.ICON)
                     .createSelectableNode();
-            try {
-                Collection<String> archetypeIds = archetypeManager.getArchetypes().getAllIds();
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.OBSERVATION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
-                insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ENTRY);
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
-            }
+            Collection<String> archetypeIds = archetypeManager.getArchetypes().getAllIds();
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.OBSERVATION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ACTION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.EVALUATION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.INSTRUCTION);
+            insertArchetypeNodes(archetypeNode, archetypeIds, OpenEHRConst.ENTRY);
         }
         return archetypeNode;
     }
 
     private static void insertArchetypeNodes(SelectableNode<String> root, Collection<String> archetypeIds, String rmName) {
 
-        SelectableNode<Object> entryRoot = new SelectableNodeBuilder<Object>()
+        SelectableNode<Object> entryRoot = new SelectableNodeBuilder<>()
                 .setName(OpenEHRConstUI.getName(rmName))
                 .setDescription(OpenEHRConstUI.getDescription(rmName))
                 .setIcon(OpenEHRConstUI.getIcon(rmName))
@@ -390,24 +373,20 @@ public class DialogArchetypeChooser extends JDialog {
 
     }
 
-    public SelectableNode<String> getTemplateNode() {
+    private SelectableNode<String> getTemplateNode() {
         if (templateNode == null) {
             templateNode = generateTemplateNode();
         }
         return templateNode;
     }
 
-    public SelectableNode<String> generateTemplateNode() {
-        SelectableNode templateNode = new SelectableNodeBuilder<String>()
+    private SelectableNode<String> generateTemplateNode() {
+        SelectableNode<String> templateNode = new SelectableNodeBuilder<String>()
                 .setName(OpenEHRLanguageManager.getMessage("Templates"))
                 .setIcon(Templates.ICON)
                 .createSelectableNode();
-        try {
-            Collection<String> templateIds = archetypeManager.getTemplates().getAllIds();
-            insertTemplateNodes(templateNode, templateIds);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        Collection<String> templateIds = archetypeManager.getTemplates().getAllIds();
+        insertTemplateNodes(templateNode, templateIds);
         return templateNode;
     }
 
@@ -429,22 +408,15 @@ public class DialogArchetypeChooser extends JDialog {
 
     public CMElement getSelectedCMElement() {
         boolean isArchetypeTabSelected = getArchetypeTemplateTabbedPane().getSelectedIndex() == 0;
-        try {
-            String id = getSelectedId(isArchetypeTabSelected);
-            if (id == null) {
-                return null;
-            } else {
-                return getCmElement(id, isArchetypeTabSelected);
-            }
-        } catch (InternalErrorException e1) {
-            ExceptionHandler.handle(e1);
-        } catch (InstanceNotFoundException e1) {
-            ExceptionHandler.handle(e1);
+        String id = getSelectedId(isArchetypeTabSelected);
+        if (id == null) {
+            return null;
+        } else {
+            return getCmElement(id, isArchetypeTabSelected);
         }
-        return null;
     }
 
-    private CMElement getCmElement(String id, boolean isArchetypeTabSelected) throws InstanceNotFoundException, InternalErrorException {
+    private CMElement getCmElement(String id, boolean isArchetypeTabSelected) {
         if (isArchetypeTabSelected) {
             return archetypeManager.getArchetypes().getCMElement(id);
         } else {
@@ -466,13 +438,6 @@ public class DialogArchetypeChooser extends JDialog {
             idDomain = null;
         }
         return idDomain;
-    }
-
-    public void setVisibleDomainSelector(boolean isVisible) {
-        getDomainLabel().setVisible(isVisible);
-        getDomainSelector().setVisible(isVisible);
-        this.revalidate();
-        this.repaint();
     }
 }
 /*

@@ -14,19 +14,19 @@ public class TabTableAction extends AbstractAction {
     private Action _oldTabAction = null;
     private JTable _table = null;
 
-    public TabTableAction(JTable table, Action oldTabAction){
+    public TabTableAction(JTable table, Action oldTabAction) {
         _oldTabAction = oldTabAction;
         _table = table;
     }
 
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent ev) {
         int row = _table.getSelectedRow();
         int col = _table.getSelectedColumn();
-        if (_oldTabAction!=null){
-            _oldTabAction.actionPerformed(e);
+        if (_oldTabAction != null) {
+            _oldTabAction.actionPerformed(ev);
         }
         int rowCount = _table.getRowCount();
-        if (row<rowCount-1){
+        if (row < rowCount - 1) {
             row++;
         }
         _table.changeSelection(row, col, false, false);

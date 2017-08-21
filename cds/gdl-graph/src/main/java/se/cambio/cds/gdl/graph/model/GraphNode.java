@@ -9,8 +9,13 @@ public class GraphNode {
     private String label;
     private Shape shape;
 
-    public enum Alignment {LEFT, RIGHT, CENTER};
-    public enum Shape {RECTANGLE, ELLIPSE, HEXAGON}
+    public enum Alignment {
+        LEFT, RIGHT, CENTER
+    }
+
+    public enum Shape {
+        RECTANGLE, ELLIPSE, HEXAGON
+    }
 
     public GraphNode(Color fillColor, String label, Shape shape, Alignment textAlignment) {
         this.fillColor = fillColor;

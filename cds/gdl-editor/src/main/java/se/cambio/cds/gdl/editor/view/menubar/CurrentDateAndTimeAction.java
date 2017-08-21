@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import java.awt.event.ActionEvent;
@@ -31,7 +25,7 @@ public class CurrentDateAndTimeAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("CurrenDateAndTimeD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         new DialogCurrentTimeSelection(editorManager, userConfigurationManager).setVisible(true);
     }
 }

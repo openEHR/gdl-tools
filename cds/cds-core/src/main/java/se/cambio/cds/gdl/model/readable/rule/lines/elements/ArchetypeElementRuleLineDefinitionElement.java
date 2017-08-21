@@ -1,6 +1,5 @@
 package se.cambio.cds.gdl.model.readable.rule.lines.elements;
 
-import se.cambio.cds.controller.session.data.ArchetypeReferencesManager;
 import se.cambio.cds.gdl.model.readable.rule.lines.RuleLine;
 import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ArchetypeReferenceRuleLine;
 import se.cambio.cds.model.instance.ArchetypeReference;

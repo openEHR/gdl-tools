@@ -1,6 +1,3 @@
-/*
- * Creado el 07/11/2008
- */
 package se.cambio.cds.gdl.editor.view.labels;
 
 import se.cambio.cds.gdl.model.readable.rule.lines.ArchetypeElementInstantiationRuleLine;
@@ -29,8 +26,8 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
     private Color hoverColor;
     private Color pressColor;
     private java.util.List<ActionListener> listeners;
-    public final static String ACTION_RIGHT_CLICK = "LINK_ACTION_RIGHT_CLICK";
-    private final static String ACTION_LEFT_CLICK = "LINK_ACTION_LEFT_CLICK";
+    public static final String ACTION_RIGHT_CLICK = "LINK_ACTION_RIGHT_CLICK";
+    private static final String ACTION_LEFT_CLICK = "LINK_ACTION_LEFT_CLICK";
     private RuleLineElementWithValue<?> ruleLineElementWithValue = null;
     private String language;
 
@@ -71,41 +68,41 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
     private void mouseClickedAction(String actionCommand) {
         ActionEvent event = new ActionEvent(this, 0, actionCommand);
         ActionListener listener;
-        for (Iterator<ActionListener> i$ = listeners.iterator(); i$.hasNext(); listener.actionPerformed(event)) {
-            listener = i$.next();
+        for (Iterator<ActionListener> iterator = listeners.iterator(); iterator.hasNext(); listener.actionPerformed(event)) {
+            listener = iterator.next();
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent ev) {
         if (super.isEnabled()) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
+            if (ev.getButton() == MouseEvent.BUTTON1) {
                 mouseClickedAction(ACTION_LEFT_CLICK);
-            } else if (e.getButton() == MouseEvent.BUTTON3) {
+            } else if (ev.getButton() == MouseEvent.BUTTON3) {
                 mouseClickedAction(ACTION_RIGHT_CLICK);
             }
         }
     }
 
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent ev) {
         if (super.isEnabled()) {
             setForeground(pressColor);
         }
     }
 
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent ev) {
         if (super.isEnabled()) {
             setForeground(hoverColor);
         }
     }
 
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent ev) {
         if (super.isEnabled()) {
             setForeground(hoverColor);
             setCursor(Cursor.getPredefinedCursor(12));
         }
     }
 
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent ev) {
         refresh();
         setCursor(Cursor.getPredefinedCursor(0));
     }
@@ -145,7 +142,8 @@ public class JLinkRuleElementLabel extends JLabel implements MouseListener {
             setForeground(linkColorVarUnSet);
         }
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

@@ -9,14 +9,18 @@ import java.util.Vector;
 
 public class SelectableNode<E> extends DefaultMutableTreeNode {
 
-    public enum SelectionMode {SINGLE, MULTIPLE}
-    public enum SelectionPropagationMode {HIERARCHICAL, NONE}
+    public enum SelectionMode {
+        SINGLE, MULTIPLE
+    }
+
+    public enum SelectionPropagationMode {
+        HIERARCHICAL, NONE
+    }
 
     private static final long serialVersionUID = 1;
     private boolean selected = false;
     private boolean childrenSelected = false;
     private boolean visible = true;
-
     private String name = null;
     private String description = null;
     private SelectionMode selectionMode = SelectionMode.SINGLE;
@@ -28,9 +32,12 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     private Icon icon = null;
 
     private SelectableNode<?> parent = null;
-    private Vector<SelectableNode<?>> visibleChildren = new Vector<SelectableNode<?>>();
+    private Vector<SelectableNode<?>> visibleChildren = new Vector<>();
 
-    protected SelectableNode(String name, String description, E object, SelectionMode selectionMode, SelectionPropagationMode selectionPropagationMode, boolean selected, boolean bold, boolean italic, Color foregroundColor, Icon icon) {
+    protected SelectableNode(
+            String name, String description, E object, SelectionMode selectionMode,
+            SelectionPropagationMode selectionPropagationMode, boolean selected, boolean bold, boolean italic,
+            Color foregroundColor, Icon icon) {
         super(name);
         this.name = name;
         this.description = description;
@@ -52,10 +59,6 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         return selectionMode;
     }
 
-    public void setSelected(Boolean selected) {
-        this.selected = selected;
-    }
-
     public boolean hasChildrenSelected() {
         return this.childrenSelected;
     }
@@ -71,11 +74,11 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     public void setAllSelected(Boolean selected, boolean force) {
         this.selected = selected;
         this.childrenSelected = selected;
-        if (isHierarchicalSelectionPropagationMode() || force){
-            if (isMultipleSelectionMode() || !selected){
-                Enumeration<?> e = children();
-                while (e.hasMoreElements()){
-                    ((SelectableNode<?>)e.nextElement()).setAllSelected(selected, force);
+        if (isHierarchicalSelectionPropagationMode() || force) {
+            if (isMultipleSelectionMode() || !selected) {
+                Enumeration<?> list = children();
+                while (list.hasMoreElements()) {
+                    ((SelectableNode<?>) list.nextElement()).setAllSelected(selected, force);
                 }
             }
         }
@@ -87,12 +90,12 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
-        if (this.parent!=null){
-            if (visible){
-                if (!this.parent.getVisibleChildren().contains(this)){
+        if (this.parent != null) {
+            if (visible) {
+                if (!this.parent.getVisibleChildren().contains(this)) {
                     this.parent.getVisibleChildren().add(this);
                 }
-            }else{
+            } else {
                 this.parent.getVisibleChildren().remove(this);
             }
         }
@@ -162,63 +165,63 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         return italic;
     }
 
-    public void stateChange(SelectableNode<?> selectableNode){
-        if (isSingleSelectionMode() && this.equals(selectableNode)){
+    public void stateChange(SelectableNode<?> selectableNode) {
+        if (isSingleSelectionMode() && this.equals(selectableNode)) {
             SelectableNode<E> rootNode = this;
-            while (rootNode.getParent()!=null){
-                rootNode = (SelectableNode)rootNode.getParent();
+            while (rootNode.getParent() != null) {
+                rootNode = (SelectableNode) rootNode.getParent();
             }
 
             //Delete all previous selections
             rootNode.setAllSelected(false);
-            if (!this.equals(rootNode)){
-                if (isHierarchicalSelectionPropagationMode()){
+            if (!this.equals(rootNode)) {
+                if (isHierarchicalSelectionPropagationMode()) {
                     this.setSelected(true);
                 }
                 this.setChildrenSelected(true);
             }
         }
-        if (this.children !=null && this.children.contains(selectableNode)){
-            boolean selected = isMultipleSelectionMode() && getChildCount()>0;
+        if (this.children != null && this.children.contains(selectableNode)) {
+            boolean selected = isMultipleSelectionMode() && getChildCount() > 0;
             boolean containsSelected = false;
-            Enumeration<?> e = getAllchildren();
-            while (e.hasMoreElements()){
-                SelectableNode<?> child = ((SelectableNode<?>)e.nextElement());
-                if (!child.isSelected()){
+            Enumeration<?> list = getAllchildren();
+            while (list.hasMoreElements()) {
+                SelectableNode<?> child = ((SelectableNode<?>) list.nextElement());
+                if (!child.isSelected()) {
                     selected = false;
                 }
-                if (child.hasChildrenSelected() || child.isSelected()){
+                if (child.hasChildrenSelected() || child.isSelected()) {
                     containsSelected = true;
                 }
             }
             selectableNode = this;
-            if (isHierarchicalSelectionPropagationMode()){
+            if (isHierarchicalSelectionPropagationMode()) {
                 this.selected = selected;
             }
             this.childrenSelected = containsSelected;
         }
-        if (getParent() instanceof SelectableNode<?>){
-            ((SelectableNode<E>)getParent()).stateChange(selectableNode);
+        if (getParent() instanceof SelectableNode<?>) {
+            ((SelectableNode<E>) getParent()).stateChange(selectableNode);
         }
     }
 
     public void add(SelectableNode<?> newChild) {
         super.add(newChild);
-        if (newChild.isSelected()){
-            if (isHierarchicalSelectionPropagationMode() && getChildCount() == 1 && isSingleSelectionMode()){
+        if (newChild.isSelected()) {
+            if (isHierarchicalSelectionPropagationMode() && getChildCount() == 1 && isSingleSelectionMode()) {
                 this.selected = true;
             }
             this.childrenSelected = true;
-        }else{
-            if (isHierarchicalSelectionPropagationMode()){
+        } else {
+            if (isHierarchicalSelectionPropagationMode()) {
                 this.selected = false;
             }
-            if (newChild.hasChildrenSelected()){
+            if (newChild.hasChildrenSelected()) {
                 this.childrenSelected = true;
             }
         }
         newChild.setParentNode(this);
-        if (newChild.getVisible()){
+        if (newChild.getVisible()) {
             getVisibleChildren().add(newChild);
         }
     }
@@ -235,11 +238,11 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         return SelectionPropagationMode.HIERARCHICAL.equals(selectionPropagationMode);
     }
 
-    public void setParentNode(SelectableNode<?> parent){
+    public void setParentNode(SelectableNode<?> parent) {
         this.parent = parent;
     }
 
-    private Vector<SelectableNode<?>> getVisibleChildren(){
+    private Vector<SelectableNode<?>> getVisibleChildren() {
         return this.visibleChildren;
     }
 
@@ -260,8 +263,8 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
         }
     }
 
-    public boolean isLeaf(){
-        return !(children!=null && children.size() > 0);
+    public boolean isLeaf() {
+        return !(children != null && children.size() > 0);
     }
 
     public TreeNode getChildAt(int index) {
@@ -289,14 +292,14 @@ public class SelectableNode<E> extends DefaultMutableTreeNode {
     }
 
 
-    public int getIndex(TreeNode aChild) {
-        if (aChild == null) {
+    public int getIndex(TreeNode child) {
+        if (child == null) {
             throw new IllegalArgumentException("argument is null");
         }
-        if (!isNodeChild(aChild)) {
+        if (!isNodeChild(child)) {
             return -1;
         }
-        return getVisibleChildren().indexOf(aChild);
+        return getVisibleChildren().indexOf(child);
     }
 }
 

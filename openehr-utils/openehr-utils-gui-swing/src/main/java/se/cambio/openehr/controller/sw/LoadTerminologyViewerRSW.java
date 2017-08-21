@@ -37,11 +37,7 @@ public class LoadTerminologyViewerRSW extends OpenEHRUtilSwingWorker {
     }
 
     protected void executeSW() throws InternalErrorException {
-        try {
-            _dialog = terminologyDialogManager.getTerminologyDialog(windowManager.getMainWindow(), _terminologyId, selectionMode, _selectedCodes);
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
-        }
+        _dialog = terminologyDialogManager.getTerminologyDialog(windowManager.getMainWindow(), _terminologyId, selectionMode, _selectedCodes);
     }
 
 

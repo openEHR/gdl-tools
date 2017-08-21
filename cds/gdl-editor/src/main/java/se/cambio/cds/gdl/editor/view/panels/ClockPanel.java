@@ -48,8 +48,8 @@ public final class ClockPanel extends JPanel {
                 SwingUtilities.invokeLater(() -> getShowTime().setText(dateTime));
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -80,7 +80,8 @@ public final class ClockPanel extends JPanel {
     public void setOff() {
         on = false;
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

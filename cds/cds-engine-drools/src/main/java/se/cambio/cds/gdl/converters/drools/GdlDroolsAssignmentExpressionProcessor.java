@@ -1,12 +1,7 @@
 package se.cambio.cds.gdl.converters.drools;
 
 import org.openehr.rm.datatypes.basic.DataValue;
-import se.cambio.cds.gdl.model.expression.AssignmentExpression;
-import se.cambio.cds.gdl.model.expression.ConstantExpression;
-import se.cambio.cds.gdl.model.expression.CreateInstanceExpression;
-import se.cambio.cds.gdl.model.expression.ExpressionItem;
-import se.cambio.cds.gdl.model.expression.MultipleAssignmentExpression;
-import se.cambio.cds.gdl.model.expression.Variable;
+import se.cambio.cds.gdl.model.expression.*;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.ExpressionUtil;
 import se.cambio.cds.util.RefStat;
@@ -14,7 +9,6 @@ import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +24,8 @@ public class GdlDroolsAssignmentExpressionProcessor {
     private StringBuffer stringBuffer;
     private static final String TAB = "\t";
 
-    public GdlDroolsAssignmentExpressionProcessor(GDLDroolsConverter gdlDroolsConverter, AssignmentExpression assignmentExpression, Map<RefStat, Set<String>> stats) {
+    public GdlDroolsAssignmentExpressionProcessor(
+            GDLDroolsConverter gdlDroolsConverter, AssignmentExpression assignmentExpression, Map<RefStat, Set<String>> stats) {
         this.gdlDroolsConverter = gdlDroolsConverter;
         this.assignmentExpression = assignmentExpression;
         this.stats = stats;
@@ -59,9 +54,18 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 Variable var2 = (Variable) expressionItemAux;
                 String gtCodeAux = var2.getCode();
                 stats.get(RefStat.REFERENCE).add(gtCodeAux);
-                stringBuffer.append("$").append(eiId).append(".setDataValue($").append(gtCodeAux).append(ExpressionUtil.getDataValueMethod(gtCode)).append(");");
-                stringBuffer.append("$").append(eiId).append(".setNullFlavour(null);");
-                stringBuffer.append("$executionLogger.addLog(drools, $").append(eiId).append(");");
+                stringBuffer.append("$")
+                        .append(eiId)
+                        .append(".setDataValue($")
+                        .append(gtCodeAux)
+                        .append(ExpressionUtil.getDataValueMethod(gtCode))
+                        .append(");")
+                        .append("$")
+                        .append(eiId)
+                        .append(".setNullFlavour(null);")
+                        .append("$executionLogger.addLog(drools, $")
+                        .append(eiId)
+                        .append(");");
             } else if (expressionItemAux instanceof ConstantExpression) {
                 String dvStr = ((ConstantExpression) expressionItemAux).getValue();
                 ArchetypeElementVO archetypeElementVO = gdlDroolsConverter.getElementMap().get(gtCode);
@@ -69,7 +73,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
                     String guideId = gdlDroolsConverter.getGuide().getId();
                     throw new RuntimeException(format("Guide=%s, Unknown element for gtCode '%s'", guideId, gtCode));
                 }
-                String rmType = archetypeElementVO.getRMType();
+                String rmType = archetypeElementVO.getType();
                 DataValue dv = DataValue.parseValue(rmType + "," + dvStr);
                 stringBuffer.append("$").append(eiId).append(".setDataValue(").append(DVDefSerializer.getDVInstantiation(dv)).append(");");
                 stringBuffer.append("$").append(eiId).append(".setNullFlavour(null);");
@@ -82,16 +86,29 @@ public class GdlDroolsAssignmentExpressionProcessor {
             if (attribute.equals(OpenEHRConst.NULL_FLAVOR_ATTRIBUTE)) {
                 String dvStr = ((ConstantExpression) expressionItemAux).getValue();
                 DataValue dv = DataValue.parseValue(OpenEHRDataValues.DV_CODED_TEXT + "," + dvStr);
-                stringBuffer.append("$" + eiId + ".setDataValue(null);");
-                stringBuffer.append("$" + eiId + ".setNullFlavour(" + DVDefSerializer.getDVInstantiation(dv) + ");");
-                stringBuffer.append("$executionLogger.addLog(drools, $" + eiId + ");");
+                stringBuffer.append("$")
+                        .append(eiId)
+                        .append(".setDataValue(null);")
+                        .append("$")
+                        .append(eiId)
+                        .append(".setNullFlavour(")
+                        .append(DVDefSerializer.getDVInstantiation(dv))
+                        .append(");")
+                        .append("$executionLogger.addLog(drools, $")
+                        .append(eiId).append(");");
             } else if (attribute.equals(CreateInstanceExpression.FUNCTION_CREATE_NAME)) {
                 ArchetypeReference ar = gdlDroolsConverter.getArchetypeReferenceMap().get(gtCode);
                 int creationIndex = gdlDroolsConverter.getCreationIndex();
                 String arId = "newAR" + creationIndex;
-                stringBuffer.append("ArchetypeReference " + arId + " = new ArchetypeReference(\"CDS\", \"" + ar.getIdArchetype() + "\"," + (ar.getIdTemplate() != null ? "\"" + ar.getIdTemplate() + "\"" : "null") + ");\n");
-                stringBuffer.append(TAB);
-                stringBuffer.append("insert(" + arId + ");\n");
+                stringBuffer.append("ArchetypeReference ")
+                        .append(arId).append(" = new ArchetypeReference(\"CDS\", \"")
+                        .append(ar.getIdArchetype())
+                        .append("\",")
+                        .append(ar.getIdTemplate() != null ? "\"" + ar.getIdTemplate() + "\"" : "null").append(");\n")
+                        .append(TAB)
+                        .append("insert(")
+                        .append(arId)
+                        .append(");\n");
                 insertAssignments(arId, expressionItemAux);
                 gdlDroolsConverter.increaseCreationIndex();
             } else {
@@ -100,7 +117,6 @@ public class GdlDroolsAssignmentExpressionProcessor {
                     String guideId = gdlDroolsConverter.getGuide().getId();
                     throw new RuntimeException(format("GTCode '%s' not found. (guideId='%s')", gtCode, guideId));
                 }
-                String rmName = archetypeElementVO.getRMType();
                 Map<RefStat, Set<String>> statsAux = gdlDroolsConverter.initStats();
                 String arithmeticExpStr =
                         ExpressionUtil.getArithmeticExpressionStr(gdlDroolsConverter.getElementMap(), expressionItemAux, statsAux);
@@ -108,9 +124,18 @@ public class GdlDroolsAssignmentExpressionProcessor {
                 stats.get(RefStat.REFERENCE).addAll(statsAux.get(RefStat.ATT_FUNCTIONS_REF));
                 stats.get(RefStat.ATT_SET_REF).addAll(statsAux.get(RefStat.REFERENCE));
                 stats.get(RefStat.ATT_FUNCTIONS).addAll(statsAux.get(RefStat.ATT_FUNCTIONS));
-                stringBuffer.append("$" + eiId + "." + GDLDroolsConverter.getAttributeSettingStr(eiId, rmName, attribute, arithmeticExpStr) + ";");
-                stringBuffer.append("$" + eiId + ".setNullFlavour(null);");
-                stringBuffer.append("$executionLogger.addLog(drools, $" + eiId + ");");
+                String rmName = archetypeElementVO.getType();
+                stringBuffer.append("$")
+                        .append(eiId)
+                        .append(".")
+                        .append(GDLDroolsConverter.getAttributeSettingStr(eiId, rmName, attribute, arithmeticExpStr))
+                        .append(";")
+                        .append("$")
+                        .append(eiId)
+                        .append(".setNullFlavour(null);")
+                        .append("$executionLogger.addLog(drools, $")
+                        .append(eiId)
+                        .append(");");
             }
         }
     }
@@ -123,7 +148,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
             throw new RuntimeException(format("Guide=%s, Incorrect expression inside creation expression '%s'", guideId, expressionItem));
         }
         MultipleAssignmentExpression multipleAssignmentExpression = (MultipleAssignmentExpression) expressionItem;
-        int i = 0;
+        int index = 0;
         Map<String, String> elementIdsMap = new HashMap<>();
         for (AssignmentExpression assignmentExpressionAux : multipleAssignmentExpression.getAssignmentExpressions()) {
             String gtCode = assignmentExpressionAux.getVariable().getCode();
@@ -136,7 +161,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
             String eiId = elementIdsMap.get(elementId);
             if (eiId == null) {
                 int creationIndex = gdlDroolsConverter.getCreationIndex();
-                eiId = "ei" + creationIndex + "_" + i;
+                eiId = "ei" + creationIndex + "_" + index;
                 elementIdsMap.put(elementId, eiId);
                 stringBuffer.append(TAB);
                 stringBuffer.append(format("ElementInstance $%s = new ElementInstance(\"%s\", null, %s, null, null);\n", eiId, elementId, arId));
@@ -147,7 +172,7 @@ public class GdlDroolsAssignmentExpressionProcessor {
             String attribute = assignmentExpressionAux.getVariable().getAttribute();
             processAssignmentExpression(gtCode, eiId, attribute, assignmentExpressionAux.getAssignment(), true);
             stringBuffer.append("insert($").append(eiId).append(");");
-            i++;
+            index++;
         }
     }
 }

@@ -5,9 +5,9 @@ public class UnsupportedTerminologyException extends TerminologyServiceException
 
     private static final long serialVersionUID = 1L;
 
-	public UnsupportedTerminologyException(String message) {
-		super(message);
-	}
+    public UnsupportedTerminologyException(String message) {
+        super(message);
+    }
 
 }
 /*

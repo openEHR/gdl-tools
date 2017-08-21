@@ -1,9 +1,3 @@
-/*
- * Creado el 14-dic-2007
- *
-
-
- */
 package se.cambio.openehr.view.util;
 
 import java.awt.Component;
@@ -12,81 +6,43 @@ import java.awt.Graphics;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-/**
- * @author icorram
- *
+public class MultipleIcon extends ImageIcon {
+    private static final long serialVersionUID = -1451706192925963084L;
 
+    private int posX;
 
- */
-public class MultipleIcon extends ImageIcon{
-	/**
-	 * Comentario para <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = -1451706192925963084L;
+    private int posY;
 
-	/**
-	 * the x position of the icon
-	 */
-	private int x_pos;
-	
-	/**
-	 * the y position of the icon
-	 */
-	private int y_pos;
-	
-	/**
-	 * the additional fileicon
-	 */
-	private Icon [] fileIcons;
-	
-	/**
-	 * Creates a new instance of <code>CloseTabIcon</code>
-	 * @param fileIcons the additional fileicons, if there is one set
-	 */
-	
-	public MultipleIcon(Icon [] fileIcons) {
-		this.fileIcons = fileIcons;
-	}
-	
-	/**
-	 * Draw the icon at the specified location. Icon implementations may use the
-	 * Component argument to get properties useful for painting, e.g. the
-	 * foreground or background color.
-	 * @param c the component which the icon belongs to
-	 * @param g the graphic object to draw on
-	 * @param x the upper left point of the icon in the x direction
-	 * @param y the upper left point of the icon in the y direction
-	 */
-	public void paintIcon(Component c, Graphics g, int x, int y) {
-		x_pos = x;
-		for (int i=0;i<fileIcons.length;i++){
-			y_pos = y;
-			fileIcons[i].paintIcon(c, g, x_pos, y_pos);
-			x_pos = x_pos + fileIcons[i].getIconWidth();
-		}
-	}
+    private Icon[] fileIcons;
 
-	/* (sin Javadoc)
-	 * @see javax.swing.Icon#getIconWidth()
-	 */
-	public int getIconWidth() {
-		int totalWidth = 0;
-		for (int i=0;i<fileIcons.length;i++){
-			totalWidth = totalWidth + fileIcons[i].getIconWidth();
-		}
-		return totalWidth;
-	}
+    public MultipleIcon(Icon[] fileIcons) {
+        this.fileIcons = fileIcons;
+    }
 
-	/* (sin Javadoc)
-	 * @see javax.swing.Icon#getIconHeight()
-	 */
-	public int getIconHeight() {
-		int maxHeight = 0;
-		for (int i=0;i<fileIcons.length;i++){
-			maxHeight = Math.max(maxHeight, fileIcons[i].getIconHeight());
-		}
-		return maxHeight;
-	}
+    public void paintIcon(Component comp, Graphics graph, int newPosX, int newPosY) {
+        posX = newPosX;
+        for (Icon fileIcon : fileIcons) {
+            posY = newPosY;
+            fileIcon.paintIcon(comp, graph, posX, posY);
+            posX = posX + fileIcon.getIconWidth();
+        }
+    }
+
+    public int getIconWidth() {
+        int totalWidth = 0;
+        for (Icon fileIcon : fileIcons) {
+            totalWidth = totalWidth + fileIcon.getIconWidth();
+        }
+        return totalWidth;
+    }
+
+    public int getIconHeight() {
+        int maxHeight = 0;
+        for (Icon fileIcon : fileIcons) {
+            maxHeight = Math.max(maxHeight, fileIcon.getIconHeight());
+        }
+        return maxHeight;
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

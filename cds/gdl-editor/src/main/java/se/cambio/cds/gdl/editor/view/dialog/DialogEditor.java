@@ -1,9 +1,3 @@
-/*
- * Created on 26-oct-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.dialog;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;

@@ -1,33 +1,22 @@
 package se.cambio.cds.model.facade.ehr.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
-public class ExtractItemVO implements Serializable{
+@Data
+public class ExtractItemVO implements Serializable {
 
 
     private static final long serialVersionUID = 16042012L;
     private Integer idElement;
     private String value;
+
     public ExtractItemVO(Integer idElement, String value) {
-	super();
-	this.idElement = idElement;
-	this.value = value;
+        super();
+        this.idElement = idElement;
+        this.value = value;
     }
-    public Integer getIdElement() {
-	return idElement;
-    }
-    public void setIdElement(Integer idElement) {
-	this.idElement = idElement;
-    }
-    public String getValue() {
-	return value;
-    }
-    public void setValue(String value) {
-	this.value = value;
-    }
-
-
-
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

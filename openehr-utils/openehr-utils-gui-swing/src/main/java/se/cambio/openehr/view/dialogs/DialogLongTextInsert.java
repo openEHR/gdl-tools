@@ -1,82 +1,62 @@
-/*
- * Created on 26-oct-2006
- *
-
-
- */
 package se.cambio.openehr.view.dialogs;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-/**
- * @author icorram
- *
 
-
- */
 public class DialogLongTextInsert extends DialogEditor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 2562412853124970610L;
-    private String _oldValue = null;
+    private String oldValue = null;
     private JTextArea valueTextArea = null;
     private String _valueName = null;
     private JScrollPane jScrollPane;
 
-    /**
-     * This is the default constructor
-     */
     public DialogLongTextInsert(Window owner, String title, String valueName, String oldValue) {
         super(owner, title, new Dimension(400, 200), true);
-        _oldValue = oldValue;
+        this.oldValue = oldValue;
         _valueName = valueName;
         initialize();
     }
-    /**
-     * This method initializes this
 
-     */
-    private  void initialize() {
+    private void initialize() {
         registerComponentWithFirstFocus(getValueTextArea());
         getJPanel().setLayout(new BorderLayout());
         getJPanel().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        JPanel jPanel1 = new JPanel(new BorderLayout());
-        if (_valueName!=null){
-            jPanel1.add(new JLabel(_valueName+":"), BorderLayout.NORTH);
+        JPanel panel1 = new JPanel(new BorderLayout());
+        if (_valueName != null) {
+            panel1.add(new JLabel(_valueName + ":"), BorderLayout.NORTH);
         }
-        jPanel1.add(getJScrollPane(), BorderLayout.CENTER);
-        getJPanel().add(jPanel1, BorderLayout.CENTER);
-        JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        jPanel2.add(getAcceptButton());
-        jPanel2.add(getCancelButton());
-        getJPanel().add(jPanel2, BorderLayout.SOUTH);
-        KeyStroke enter = KeyStroke.getKeyStroke( KeyEvent.VK_ENTER,0,true);
+        panel1.add(getJScrollPane(), BorderLayout.CENTER);
+        getJPanel().add(panel1, BorderLayout.CENTER);
+        JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel2.add(getAcceptButton());
+        panel2.add(getCancelButton());
+        getJPanel().add(panel2, BorderLayout.SOUTH);
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true);
         getJPanel().unregisterKeyboardAction(enter);
         this.setResizable(true);
         setVisible(true);
     }
 
-    public String getValue(){
+    public String getValue() {
         return getValueTextArea().getText();
     }
 
-    private JScrollPane getJScrollPane(){
-        if (jScrollPane==null){
+    private JScrollPane getJScrollPane() {
+        if (jScrollPane == null) {
             jScrollPane = new JScrollPane();
             jScrollPane.setViewportView(getValueTextArea());
         }
         return jScrollPane;
     }
 
-    private JTextArea getValueTextArea(){
-        if (valueTextArea==null){
+    private JTextArea getValueTextArea() {
+        if (valueTextArea == null) {
             valueTextArea = new JTextArea();
             valueTextArea.setBorder(BorderFactory.createEtchedBorder());
-            if (_oldValue!=null){
-                valueTextArea.setText(_oldValue);
+            if (oldValue != null) {
+                valueTextArea.setText(oldValue);
             }
         }
         return valueTextArea;

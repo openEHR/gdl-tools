@@ -2,43 +2,47 @@ package se.cambio.cds.util;
 
 public class MathFunctionProxy {
 
-    public int abs(int a) {
-        return Math.abs(a);
-    }
-    public long abs(long a) {
-        return Math.abs(a);
-    }
-    public float abs(float a) {
-        return Math.abs(a);
-    }
-    public double abs(double a) {
-        return Math.abs(a);
+    public int abs(int value) {
+        return Math.abs(value);
     }
 
-    public double round(double a) {
-        return Math.round(a);
-    }
-    public float round(float a) {
-        return Math.round(a);
+    public long abs(long value) {
+        return Math.abs(value);
     }
 
-    public double floor(double a) {
-        return Math.floor(a);
+    public float abs(float value) {
+        return Math.abs(value);
     }
 
-    public double ceil(double a) {
-        return Math.ceil(a);
+    public double abs(double value) {
+        return Math.abs(value);
     }
 
-    public double log(double a) {
-        return Math.log(a);
+    public double round(double value) {
+        return Math.round(value);
     }
 
-    public double log10(double a) {
-        return Math.log10(a);
+    public float round(float value) {
+        return Math.round(value);
     }
 
-    public double log1p(double a) {
-        return Math.log1p(a);
+    public double floor(double value) {
+        return Math.floor(value);
+    }
+
+    public double ceil(double value) {
+        return Math.ceil(value);
+    }
+
+    public double log(double value) {
+        return Math.log(value);
+    }
+
+    public double log10(double value) {
+        return Math.log10(value);
+    }
+
+    public double log1p(double value) {
+        return Math.log1p(value);
     }
 }

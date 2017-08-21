@@ -12,7 +12,7 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ElementComparisonWithElementConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine{
+public class ElementComparisonWithElementConditionRuleLine extends ExpressionRuleLine implements ConditionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private ElementComparisonOperatorRuleLineElement comparisonOperatorRuleLineElement = null;
@@ -26,37 +26,37 @@ public class ElementComparisonWithElementConditionRuleLine extends ExpressionRul
         comparisonOperatorRuleLineElement = new ElementComparisonOperatorRuleLineElement(this);
         archetypeElementRuleLineElement2 = new ArchetypeElementRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineElement);
         getRuleLineElements().add(comparisonOperatorRuleLineElement);
         getRuleLineElements().add(archetypeElementRuleLineElement2);
     }
 
-    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
+    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement() {
         return archetypeElementRuleLineElement;
     }
 
-    public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement(){
+    public ElementComparisonOperatorRuleLineElement getComparisonOperatorRuleLineElement() {
         return comparisonOperatorRuleLineElement;
     }
 
-    public ArchetypeElementRuleLineElement getSecondArchetypeElementRuleLineElement(){
+    public ArchetypeElementRuleLineElement getSecondArchetypeElementRuleLineElement() {
         return archetypeElementRuleLineElement2;
     }
 
-    public ExpressionItem toExpressionItem() throws IllegalStateException{
+    public ExpressionItem toExpressionItem() throws IllegalStateException {
         ArchetypeElementVO archetypeElementVO = getArchetypeElementRuleLineElement().getArchetypeElementVO();
-        if (archetypeElementVO!=null){
+        if (archetypeElementVO != null) {
             String gtCode =
                     getArchetypeElementRuleLineElement().getValue().getValue();
-            if (getSecondArchetypeElementRuleLineElement().getValue()==null){
+            if (getSecondArchetypeElementRuleLineElement().getValue() == null) {
                 throw new IllegalStateException("No expression set");
             }
             String secondGtCode =
                     getSecondArchetypeElementRuleLineElement().getValue().getValue();
             OperatorKind operatorKind =
                     getComparisonOperatorRuleLineElement().getValue();
-            if (operatorKind==null){
+            if (operatorKind == null) {
                 throw new IllegalStateException("No operator kind set");
             }
             String name = getArchetypeManager().getArchetypeElements().getText(archetypeElementVO, getLanguage());
@@ -64,11 +64,12 @@ public class ElementComparisonWithElementConditionRuleLine extends ExpressionRul
                     new Variable(gtCode, null, name),
                     new Variable(secondGtCode),
                     operatorKind);
-        }else{
-            throw new IllegalStateException("Invalid rule line: "+getArchetypeElementRuleLineElement());
+        } else {
+            throw new IllegalStateException("Invalid rule line: " + getArchetypeElementRuleLineElement());
         }
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

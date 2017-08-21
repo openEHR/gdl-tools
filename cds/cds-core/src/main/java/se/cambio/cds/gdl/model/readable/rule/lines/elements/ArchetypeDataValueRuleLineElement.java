@@ -15,29 +15,29 @@ public class ArchetypeDataValueRuleLineElement extends DataValueRuleLineElement 
         super(ruleLine);
     }
 
-    public void setArchetypeElementVO(ArchetypeElementVO archetypeElementVO){
+    public void setArchetypeElementVO(ArchetypeElementVO archetypeElementVO) {
         _archetypeElementVO = archetypeElementVO;
     }
 
     public String getDvText(String lang) {
-        if (getValue()!=null){
-            if (getValue() instanceof DvCodedText && _archetypeElementVO!=null){
-                DvCodedText codedText = (DvCodedText)getValue();
+        if (getValue() != null) {
+            if (getValue() instanceof DvCodedText && _archetypeElementVO != null) {
+                DvCodedText codedText = (DvCodedText) getValue();
                 String text = getArchetypeManager().getCodedTexts().getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), codedText.getCode(), lang);
                 if (text != null) {
                     return text;
                 } else {
                     return codedText.getValue();
                 }
-            }else if (getValue() instanceof DvOrdinal && _archetypeElementVO!=null){
-                DvOrdinal ordinal = (DvOrdinal)getValue();
+            } else if (getValue() instanceof DvOrdinal && _archetypeElementVO != null) {
+                DvOrdinal ordinal = (DvOrdinal) getValue();
                 String text = getArchetypeManager().getOrdinals().getText(_archetypeElementVO.getIdTemplate(), _archetypeElementVO.getId(), ordinal.getCode(), lang);
                 if (text != null) {
                     return text;
                 } else {
                     return ordinal.getSymbol().getValue();
                 }
-            }else{
+            } else {
                 return DVDefSerializer.getReadableValue(getValue(), getParentRuleLine().getTermDefinition());
             }
         }
@@ -45,13 +45,13 @@ public class ArchetypeDataValueRuleLineElement extends DataValueRuleLineElement 
     }
 
     @Override
-    public String getLabelText(String lang){
+    public String getLabelText(String lang) {
         return getDvText(lang);
     }
 
     @Override
     public String getLabelTextHTML(String lang) {
-        return "<font color='#00803a'><b>"+getDvText(lang)+"</b></font>";
+        return "<font color='#00803a'><b>" + getDvText(lang) + "</b></font>";
     }
 }
 /*

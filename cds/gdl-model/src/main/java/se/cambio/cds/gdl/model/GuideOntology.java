@@ -1,90 +1,17 @@
 package se.cambio.cds.gdl.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GuideOntology implements Serializable{
-	
-	/**
-     * 
-     */
+@Data
+public class GuideOntology implements Serializable {
+
     private static final long serialVersionUID = 1L;
-	private Map<String, TermDefinition> termDefinitions;
-	private Map<String, TermBinding> termBindings;
-
-    public GuideOntology() {
-    }
-
-    /**
-	 * @return the termDefinitions
-	 */
-	public Map<String, TermDefinition> getTermDefinitions() {
-        if (termDefinitions == null) {
-            termDefinitions = new HashMap<String, TermDefinition>();
-        }
-        return termDefinitions;
-	}
-	/**
-	 * @param termDefinitions the termDefinitions to set
-	 */
-	public void setTermDefinitions(Map<String, TermDefinition> termDefinitions) {
-		this.termDefinitions = termDefinitions;
-	}
-	/**
-	 * @return the termBindings
-	 */
-	public Map<String, TermBinding> getTermBindings() {
-        if (termBindings == null) {
-            termBindings = new HashMap<String, TermBinding>();
-        }
-        return termBindings;
-	}
-	/**
-	 * @param termBindings the termBindings to set
-	 */
-	public void setTermBindings(Map<String, TermBinding> termBindings) {
-		this.termBindings = termBindings;
-	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((termBindings == null) ? 0 : termBindings.hashCode());
-		result = prime * result
-				+ ((termDefinitions == null) ? 0 : termDefinitions.hashCode());
-		return result;
-	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GuideOntology other = (GuideOntology) obj;
-		if (termBindings == null) {
-			if (other.termBindings != null)
-				return false;
-		} else if (!termBindings.equals(other.termBindings))
-			return false;
-		if (termDefinitions == null) {
-			if (other.termDefinitions != null)
-				return false;
-		} else if (!termDefinitions.equals(other.termDefinitions))
-			return false;
-		return true;
-	}
-	
-	
+    private Map<String, TermDefinition> termDefinitions = new HashMap<>();
+    private Map<String, TermBinding> termBindings = new HashMap<>();
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

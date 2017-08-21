@@ -30,13 +30,13 @@ public class GuidelineEditorManager {
     String serializeGuide(Guide guide) {
         try {
             return GuideUtil.serializeGuide(guide);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     windowManager.getMainWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuideT"),
                     GDLEditorLanguageManager.getMessage("ErrorSerializingGuide"),
-                    e.getMessage(), DialogLongMessageNotice.MessageType.ERROR);
+                    ex.getMessage(), DialogLongMessageNotice.MessageType.ERROR);
             dialog.setVisible(true);
             return null;
         }
@@ -45,13 +45,13 @@ public class GuidelineEditorManager {
     public Guide parseGuide(InputStream input) {
         try {
             return GuideUtil.parseGuide(input);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
             DialogLongMessageNotice dialog = new DialogLongMessageNotice(
                     windowManager.getMainWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuideT"),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuide"),
-                    e.getMessage(), DialogLongMessageNotice.MessageType.ERROR);
+                    ex.getMessage(), DialogLongMessageNotice.MessageType.ERROR);
             dialog.setVisible(true);
             return null;
         }

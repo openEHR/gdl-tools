@@ -32,27 +32,6 @@ public class DateTimeARFinder {
         }
     }
 
-    public String getEventTimePath(String archetypeId) {
-        String rmName = Archetypes.getEntryType(archetypeId);
-        if (OpenEHRConst.OBSERVATION.equals(rmName)) {
-            return OpenEHRRMUtil.EVENT_TIME_PATH;
-        } else if (OpenEHRConst.ACTION.equals(rmName)) {
-            return OpenEHRRMUtil.TIME_PATH;
-        } else {
-            if (OpenEHRConst.EVALUATION.equals(rmName) ||
-                    OpenEHRConst.INSTRUCTION.equals(rmName)) {
-                String dateTimePath = environment.getProperty(archetypeId);
-                if (dateTimePath == null) {
-                    logger.warn("Unregistered DvDateTime for '" + archetypeId + "', please add the path to 'date-time-path.properties'");
-                }
-                return dateTimePath;
-            } else {
-                logger.warn("Unknown RM '" + rmName + "'");
-                return null;
-            }
-        }
-    }
-
     private DateTime getDateTime(ElementInstance ei) {
         if (ei != null) {
             if (ei.getDataValue() instanceof DvDateTime) {
@@ -70,5 +49,26 @@ public class DateTimeARFinder {
             logger.debug("Element instance null");
         }
         return null;
+    }
+
+    public String getEventTimePath(String archetypeId) {
+        String rmName = Archetypes.getEntryType(archetypeId);
+        if (OpenEHRConst.OBSERVATION.equals(rmName)) {
+            return OpenEHRRMUtil.EVENT_TIME_PATH;
+        } else if (OpenEHRConst.ACTION.equals(rmName)) {
+            return OpenEHRRMUtil.TIME_PATH;
+        } else {
+            if (OpenEHRConst.EVALUATION.equals(rmName)
+                    || OpenEHRConst.INSTRUCTION.equals(rmName)) {
+                String dateTimePath = environment.getProperty(archetypeId);
+                if (dateTimePath == null) {
+                    logger.warn("Unregistered DvDateTime for '" + archetypeId + "', please add the path to 'date-time-path.properties'");
+                }
+                return dateTimePath;
+            } else {
+                logger.warn("Unknown RM '" + rmName + "'");
+                return null;
+            }
+        }
     }
 }

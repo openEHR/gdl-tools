@@ -17,7 +17,7 @@ import static org.springframework.util.StringUtils.capitalize;
 
 public class ExpressionUtil {
 
-    public static String CODE_FUNCTION_SEPARATOR = "#";
+    public static final String CODE_FUNCTION_SEPARATOR = "#";
 
     public static String getArithmeticExpressionStr(
             Map<String, ArchetypeElementVO> elementMap,
@@ -95,7 +95,7 @@ public class ExpressionUtil {
                 throw new RuntimeException(format("Archetype element not found for gtcode '%s'", var.getCode()));
             }
             if (aeVO != null) {
-                rmName = aeVO.getRMType();
+                rmName = aeVO.getType();
             }
         }
         return rmName;
@@ -144,8 +144,8 @@ public class ExpressionUtil {
 
     private static boolean hasLeftVariableName(
             ExpressionItem parentExpressionItem) {
-        return (parentExpressionItem instanceof BinaryExpression) &&
-                ((BinaryExpression) parentExpressionItem).getLeft() instanceof Variable;
+        return (parentExpressionItem instanceof BinaryExpression)
+                && ((BinaryExpression) parentExpressionItem).getLeft() instanceof Variable;
     }
 
     private static String getLeftVariableNameFromExpression(

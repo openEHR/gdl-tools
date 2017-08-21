@@ -41,15 +41,16 @@ public class TerminologyNodeVO implements Serializable {
         return Collections.unmodifiableList(children);
     }
 
-    public boolean equals(Object o) {
-        if (this == o)
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
-        if (!(o instanceof TerminologyNodeVO))
+        } else if (!(obj instanceof TerminologyNodeVO)) {
             return false;
-        if (!super.equals(o))
+        } else if (!super.equals(obj)) {
             return false;
+        }
 
-        final TerminologyNodeVO node = (TerminologyNodeVO) o;
+        final TerminologyNodeVO node = (TerminologyNodeVO) obj;
 
         return new EqualsBuilder().append(value, node.value)
                 .append(children, node.children)

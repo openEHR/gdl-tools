@@ -1,10 +1,10 @@
 package se.cambio.cm.model.generic.dao;
 
 import org.apache.commons.io.IOUtils;
+import org.jberet.support.io.UnicodeBOMInputStream;
 import se.cambio.cm.model.util.CMElement;
 import se.cambio.cm.model.util.CMTypeManager;
 import se.cambio.openehr.util.Resources;
-import se.cambio.openehr.util.UnicodeBOMInputStream;
 import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -15,12 +15,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
-public class ResourceGenericCMElementDAO <E extends CMElement> implements GenericCMElementDAO<E>{
+public class ResourceGenericCMElementDAO<E extends CMElement> implements GenericCMElementDAO<E> {
 
     private Class<E> cmElementClass;
     private Collection<String> fileExtensions;
 
-    public ResourceGenericCMElementDAO(Class<E> cmElementClass){
+    public ResourceGenericCMElementDAO(Class<E> cmElementClass) {
         this.cmElementClass = cmElementClass;
     }
 
@@ -28,21 +28,21 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     public Collection<E> searchByIds(Collection<String> ids) throws InternalErrorException, InstanceNotFoundException {
         Collection<E> cmElements = new ArrayList<E>();
         InputStream is = getInputStreamForResourceList();
-        if (is!=null) {
+        if (is != null) {
             Collection<String> resourceFileNamesIdsMap = getResourceFileNames(is);
             for (String resourceFileName : resourceFileNamesIdsMap) {
-                try{
+                try {
                     String fileExtension = matchingFileExtension(resourceFileName);
                     String id = resourceFileName.substring(resourceFileName.lastIndexOf("/") + 1, resourceFileName.length() - fileExtension.length() - 1);
                     if (ids.contains(id)) {
                         E cmElement = getCMElement(resourceFileName);
                         cmElements.add(cmElement);
                     }
-                }catch(Exception e){
-                    throw new InternalErrorException(e);
+                } catch (Exception ex) {
+                    throw new InternalErrorException(ex);
                 }
             }
-        }else{
+        } else {
             throw new InternalErrorException(new Exception("Resource list not found!"));
         }
         checkMissingInstance(ids, cmElements);
@@ -53,17 +53,17 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     public Collection<E> searchAll() throws InternalErrorException {
         Collection<E> cmElements = new ArrayList<E>();
         InputStream is = getInputStreamForResourceList();
-        if (is!=null) {
+        if (is != null) {
             Collection<String> resourceFileNamesIdsMap = getResourceFileNames(is);
             for (String resourceFileName : resourceFileNamesIdsMap) {
-                try{
+                try {
                     E cmElement = getCMElement(resourceFileName);
                     cmElements.add(cmElement);
-                }catch(Exception e){
-                    throw new InternalErrorException(e);
+                } catch (Exception ex) {
+                    throw new InternalErrorException(ex);
                 }
             }
-        }else{
+        } else {
             throw new InternalErrorException(new Exception("Resource list not found!"));
         }
         return cmElements;
@@ -76,7 +76,7 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
         String fileExtension = matchingFileExtension(resourceFileName);
         String id = resourceFileName.substring(resourceFileName.lastIndexOf("/") + 1, resourceFileName.length() - fileExtension.length() - 1);
         String source = IOUtils.toString(ubis, "UTF-8");
-        E cmElement = (E)new CMElementBuilder<E>()
+        E cmElement = (E) new CMElementBuilder<E>()
                 .setId(id)
                 .setFormat(fileExtension)
                 .setSource(source)
@@ -102,20 +102,20 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
                     resourceFileNames.add(resourceFileName.substring(1, resourceFileName.length()));
                 }
             }
-        }catch (IOException e){
-            throw new InternalErrorException(e);
+        } catch (IOException ex) {
+            throw new InternalErrorException(ex);
         }
         return resourceFileNames;
     }
 
     @Override
     public Collection<String> searchAllIds() throws InternalErrorException {
-        Collection<String> ids = new ArrayList<String>();
+        Collection<String> ids = new ArrayList<>();
         InputStream is = getInputStreamForResourceList();
         Collection<String> resourceFileNames = getResourceFileNames(is);
         for (String resourceFileName : resourceFileNames) {
             String fileExtension = matchingFileExtension(resourceFileName);
-            String id = resourceFileName.substring(resourceFileName.lastIndexOf("/")+1,resourceFileName.length()-fileExtension.length()-1);
+            String id = resourceFileName.substring(resourceFileName.lastIndexOf("/") + 1, resourceFileName.length() - fileExtension.length() - 1);
             ids.add(id);
         }
         return ids;
@@ -147,8 +147,8 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
     }
 
     private String matchingFileExtension(String fileName) throws InternalErrorException {
-        for(String fileExtension: getFileExtensions()){
-            if (fileName.endsWith("."+fileExtension)){
+        for (String fileExtension : getFileExtensions()) {
+            if (fileName.endsWith("." + fileExtension)) {
                 return fileExtension;
             }
         }
@@ -157,11 +157,11 @@ public class ResourceGenericCMElementDAO <E extends CMElement> implements Generi
 
     private void checkMissingInstance(Collection<String> ids, Collection<E> cmElements) throws InstanceNotFoundException {
         Collection<String> foundIds = new ArrayList<>();
-        for (CMElement cmElement: cmElements){
+        for (CMElement cmElement : cmElements) {
             foundIds.add(cmElement.getId());
         }
-        for(String id: ids){
-            if (!foundIds.contains(id)){
+        for (String id : ids) {
+            if (!foundIds.contains(id)) {
                 throw new InstanceNotFoundException(id, getCMElementClassName());
             }
         }

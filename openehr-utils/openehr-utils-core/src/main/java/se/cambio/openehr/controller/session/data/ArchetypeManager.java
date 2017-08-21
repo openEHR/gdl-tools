@@ -6,12 +6,9 @@ import se.cambio.cm.model.archetype.vo.*;
 import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.util.TemplateAttributeMap;
 import se.cambio.cm.model.util.TemplateElementMap;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRDataValues;
 import se.cambio.openehr.util.PathUtils;
 import se.cambio.openehr.util.UserConfigurationManager;
-import se.cambio.openehr.util.exceptions.InstanceNotFoundException;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -146,7 +143,7 @@ public class ArchetypeManager {
                 archetypeTerm = getArchetypeTerms().getArchetypeTerm(archetypeId, lang, atCode);
             }
         } else {
-            String archetypeId = PathUtils.getLastEntryArchetypeInPath(idElement);
+            String archetypeId = PathUtils.getLastArchetypeInPath(idElement);
             if (archetypeId == null) {
                 archetypeId = StringUtils.substringBefore(idElement, "/");
             }
@@ -186,24 +183,12 @@ public class ArchetypeManager {
     }
 
     public void loadArchetypesIfNeeded(String archetypeId) {
-        try {
-            getArchetypes().getCMElement(archetypeId);
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        getArchetypes().getCMElement(archetypeId);
     }
 
     public void loadTemplateIfNeeded(String templateId) {
-        try {
-            if (templateId != null) {
-                getTemplates().getCMElement(templateId);
-            }
-        } catch (InstanceNotFoundException e) {
-            ExceptionHandler.handle(e);
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
+        if (templateId != null) {
+            getTemplates().getCMElement(templateId);
         }
     }
 
@@ -214,10 +199,10 @@ public class ArchetypeManager {
     }
 
     private Map<String, TemplateAttributeMap> getTemplateAttributeMaps(ArchetypeElementVO archetypeElementVO) {
-        if (OpenEHRDataValues.DV_CODED_TEXT.equals(archetypeElementVO.getRMType())) {
+        if (OpenEHRDataValues.DV_CODED_TEXT.equals(archetypeElementVO.getType())) {
             return getCodedTextsAttributeMaps(archetypeElementVO);
         }
-        if (OpenEHRDataValues.DV_ORDINAL.equals(archetypeElementVO.getRMType())) {
+        if (OpenEHRDataValues.DV_ORDINAL.equals(archetypeElementVO.getType())) {
             return getOrdinalsAttributeMaps(archetypeElementVO);
         }
         return null;
@@ -271,15 +256,15 @@ public class ArchetypeManager {
 
     public static String getIdentifier(String name, Collection<String> previousIds) {
         String elementMapId;
-        int i = 0;
+        int index = 0;
         do {
-            elementMapId = getIdentifier(name, i++);
+            elementMapId = getIdentifier(name, index++);
         } while (previousIds.contains(elementMapId));
         previousIds.add(elementMapId);
         return elementMapId;
     }
 
-    public static String getIdentifier(String str, int i) {
+    public static String getIdentifier(String str, int index) {
         StringBuilder sb = new StringBuilder();
         if (!Character.isJavaIdentifierStart(str.charAt(0))) {
             sb.append("_");
@@ -291,8 +276,8 @@ public class ArchetypeManager {
                 sb.append(Character.toLowerCase(c));
             }
         }
-        if (i > 0) {
-            sb.append(i);
+        if (index > 0) {
+            sb.append(index);
         }
         return sb.toString();
     }

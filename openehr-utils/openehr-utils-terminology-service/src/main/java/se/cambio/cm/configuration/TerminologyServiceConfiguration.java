@@ -19,8 +19,7 @@ import java.util.Map;
         @PropertySource(value = "classpath:default-terminology-service-config.properties"),
         @PropertySource(value = "file:${CDS_CONFIG_DIR:/opt/cds-config}/terminology-service-config.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "file:conf/terminology-service-config.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)
-})
+        @PropertySource(value = "classpath:terminology-service-config.properties", ignoreResourceNotFound = true)})
 @Import({UserConfigurationManager.class, ClinicalModelsConfiguration.class})
 public class TerminologyServiceConfiguration {
 
@@ -33,8 +32,9 @@ public class TerminologyServiceConfiguration {
     private static final String SIMPLE_PARENT_CHECK_PROPERTY_POSTFIX = ".simple-parent-check";
     private static final String CODE_EXISTENCE_CHECK_PROPERTY_POSTFIX = ".code-existence-check";
     private static final String CLASS_PROPERTY_POSTFIX = ".class";
+    private TerminologyService terminologyService;
+    private static TerminologyServiceConfiguration instance;
 
-    private static TerminologyService terminologyService;
 
     public TerminologyServiceConfiguration() {
         this.terminologyConfigMap = new HashMap<>();
@@ -46,11 +46,13 @@ public class TerminologyServiceConfiguration {
 
     @Bean
     public TerminologyService terminologyService(ClinicalModelsService clinicalModelsService) {
-        return terminologyService = new TerminologyServiceImpl(this, clinicalModelsService);
+        TerminologyServiceImpl terminologyService = new TerminologyServiceImpl(this, clinicalModelsService);
+        getInstance().terminologyService = terminologyService;
+        return terminologyService;
     }
 
-    public static TerminologyService getTerminologyServiceInstance(){
-        return terminologyService;
+    public static TerminologyService getTerminologyServiceInstance() {
+        return getInstance().terminologyService;
     }
 
     private TerminologyConfigVO getTerminologyConfigFromProperties(String terminologyId) {
@@ -60,6 +62,13 @@ public class TerminologyServiceConfiguration {
         Boolean cleanCodes = environment.getProperty(terminologyPrefix + CLEAN_CODES_PROPERTY_POSTFIX, Boolean.class, false);
         String clazz = environment.getProperty(terminologyPrefix + CLASS_PROPERTY_POSTFIX);
         return new TerminologyConfigVO(terminologyId, simpleParentCheck, codeExistenceCheck, cleanCodes, clazz);
+    }
+
+    private static TerminologyServiceConfiguration getInstance() {
+        if (instance == null) {
+            instance = new TerminologyServiceConfiguration();
+        }
+        return instance;
     }
 }
 /*

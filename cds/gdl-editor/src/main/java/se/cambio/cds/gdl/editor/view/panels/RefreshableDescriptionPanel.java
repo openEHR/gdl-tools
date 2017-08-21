@@ -6,7 +6,7 @@ import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
 import javax.swing.*;
 import java.awt.*;
 
-public class RefreshableDescriptionPanel extends JPanel implements RefreshablePanel{
+public class RefreshableDescriptionPanel extends JPanel implements RefreshablePanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -14,13 +14,13 @@ public class RefreshableDescriptionPanel extends JPanel implements RefreshablePa
     private Window window;
     private DescriptionPanel descriptionPanel = null;
 
-    public RefreshableDescriptionPanel(EditorController controller, Window window){
+    public RefreshableDescriptionPanel(EditorController controller, Window window) {
         this.controller = controller;
         this.window = window;
         init();
     }
 
-    public void init(){
+    public void init() {
         this.setLayout(new BorderLayout());
         refresh();
     }
@@ -34,8 +34,8 @@ public class RefreshableDescriptionPanel extends JPanel implements RefreshablePa
         this.repaint();
     }
 
-    private DescriptionPanel getDescriptionPanel(){
-        if (descriptionPanel==null){
+    private DescriptionPanel getDescriptionPanel() {
+        if (descriptionPanel == null) {
             descriptionPanel = new DescriptionPanel(controller, window);
         }
         return descriptionPanel;

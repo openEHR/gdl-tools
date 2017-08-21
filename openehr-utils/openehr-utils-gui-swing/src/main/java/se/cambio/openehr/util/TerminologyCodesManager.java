@@ -8,6 +8,7 @@ import java.util.Collection;
  * Time: 14:25
  */
 public interface TerminologyCodesManager {
-    public void update();
-    public void setSelectedTerminologyCodes(Collection<String> terminologyCodes);
+    void update();
+
+    void setSelectedTerminologyCodes(Collection<String> terminologyCodes);
 }

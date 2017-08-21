@@ -9,7 +9,7 @@ public enum CMTypeFormat {
 
     private final String format;
 
-    CMTypeFormat(String format){
+    CMTypeFormat(String format) {
         this.format = format;
     }
 

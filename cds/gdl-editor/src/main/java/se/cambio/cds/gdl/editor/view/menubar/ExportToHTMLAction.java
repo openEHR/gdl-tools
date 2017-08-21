@@ -1,17 +1,11 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
@@ -19,11 +13,10 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
+@Slf4j
 public class ExportToHTMLAction extends AbstractAction {
 
     private static final long serialVersionUID = -3561842193285119707L;
@@ -40,7 +33,7 @@ public class ExportToHTMLAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("ExportToHTMLD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         GDLEditor controller = editorManager.getActiveGDLEditor();
         Guide guide = controller.getEntity();
         exportToHTML(editorManager.getActiveEditorWindow(), guide, controller.getCurrentLanguageCode(), guideHTMLExporter);
@@ -57,14 +50,12 @@ public class ExportToHTMLAction extends AbstractAction {
         if (result != JFileChooser.CANCEL_OPTION) {
             try {
                 selectedFile = fileChooser.getSelectedFile();
-                FileWriter fstream = new FileWriter(selectedFile);
-                BufferedWriter out = new BufferedWriter(fstream);
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(selectedFile), StandardCharsets.UTF_8);
+                BufferedWriter out = new BufferedWriter(writer);
                 out.write(guideHTMLExporter.convertToHTML(guide, lang));
                 out.close();
-            } catch (IOException e) {
-                ExceptionHandler.handle(e);
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
+            } catch (IOException | InternalErrorException ex) {
+                log.error("Error exporting to HTML guideline: " + guide.getId(), ex);
             }
         }
     }

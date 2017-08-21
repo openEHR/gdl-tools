@@ -32,12 +32,12 @@ public class GDLOutputTest extends TestCase {
 	public void testOutputEmptyMap() throws Exception {
 		parse("test001.dadl");
 		
-		guide.getLanguage().setTranslations(new HashMap<String,TranslationDetails>());
+		guide.getLanguage().setTranslations(new HashMap<>());
 		List<String> list = serializer.toDADL(guide);		
 		//write(list, "output2.dadl");
 		
 		Guide actual = parse(list);
-		guide.getLanguage().setTranslations(null);
+		guide.getLanguage().setTranslations(new HashMap<>());
 		assertEquals(guide, actual);
 	}
 	

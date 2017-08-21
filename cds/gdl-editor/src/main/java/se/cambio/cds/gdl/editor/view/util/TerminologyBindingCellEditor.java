@@ -15,18 +15,19 @@ public class TerminologyBindingCellEditor extends DefaultCellEditor {
         super(new JTextField());
         bindingTable = bt;
         this.addCellEditorListener(new CellEditorListener() {
-            public void editingStopped(ChangeEvent e) {
+            public void editingStopped(ChangeEvent ev) {
                 bindingTable.updateResults();
             }
 
-            public void editingCanceled(ChangeEvent e) {
+            public void editingCanceled(ChangeEvent ev) {
             }
         });
     }
 
     private static final long serialVersionUID = 1L;
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

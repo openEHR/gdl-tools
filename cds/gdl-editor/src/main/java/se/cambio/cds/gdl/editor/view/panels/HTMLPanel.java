@@ -3,9 +3,6 @@ package se.cambio.cds.gdl.editor.view.panels;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.util.export.html.GuideHTMLExporter;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,13 +39,9 @@ public class HTMLPanel extends JPanel implements RefreshablePanel {
             editorPanel = new JEditorPane();
             editorPanel.setContentType("text/html");
             editorPanel.setEditable(false);
-            try {
-                String html = guideHTMLExporter.convertToHTML(controller.getEntity(), controller.getCurrentLanguageCode());
-                if (html != null) {
-                    editorPanel.setText(html);
-                }
-            } catch (InternalErrorException e) {
-                ExceptionHandler.handle(e);
+            String html = guideHTMLExporter.convertToHTML(controller.getEntity(), controller.getCurrentLanguageCode());
+            if (html != null) {
+                editorPanel.setText(html);
             }
         }
         return editorPanel;

@@ -5,12 +5,7 @@ import com.google.common.collect.ListMultimap;
 import org.openehr.rm.datatypes.quantity.ProportionKind;
 import se.cambio.cm.model.archetype.vo.ProportionTypeVO;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.lang.String.format;
+import java.util.*;
 
 public class ProportionTypes {
     private ListMultimap<String, ProportionKind> proportionTypesByIdElement;
@@ -63,15 +58,17 @@ public class ProportionTypes {
 
     public Collection<ProportionKind> getProportionTypes(String idTemplate, String elementId) {
         if (idTemplate == null) {
-            if (!proportionTypesByIdElement.containsKey(elementId)) {
-                throw new RuntimeException(format("Could not find element '%s'", elementId));
+            if (proportionTypesByIdElement.containsKey(elementId)) {
+                return getProportionTypes(elementId);
+            } else {
+                return Collections.emptySet();
             }
-            return getProportionTypes(elementId);
         } else {
-            if (!getProportionTypesInTemplate(idTemplate).containsKey(elementId)) {
-                throw new RuntimeException(format("Could not find element '%s' with template '%s'", elementId, idTemplate));
+            if (getProportionTypesInTemplate(idTemplate).containsKey(elementId)) {
+                return getProportionTypesInTemplate(idTemplate).get(elementId);
+            } else {
+                return Collections.emptySet();
             }
-            return getProportionTypesInTemplate(idTemplate).get(elementId);
         }
     }
 

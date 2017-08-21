@@ -1,25 +1,21 @@
 package se.cambio.cm.model.archetype.vo;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class ClusterVO  extends PathableVO {
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class ClusterVO extends PathableVO {
 
     private static final long serialVersionUID = 25042012L;
 
-    public ClusterVO(String name, String description,  String type,
-                     String idArchetype, String idTemplate, String path) {
-        super(name, description, type, idArchetype, idTemplate, path);
-    }
-
-    @Override
-    public ClusterVO clone(){
-        return new ClusterVOBuilder()
-                .setName(getName())
-                .setDescription(getDescription())
-                .setType(getType())
-                .setIdArchetype(getIdArchetype())
-                .setIdTemplate(getIdTemplate())
-                .setPath(getPath())
-                .createClusterVO();
+    @Builder(toBuilder = true)
+    private ClusterVO(
+            String name, String description, String type,
+            String idArchetype, String idTemplate, String path,
+            Integer lowerCardinality, Integer upperCardinality) {
+        super(name, description, type, idArchetype, idTemplate, path, lowerCardinality, upperCardinality);
     }
 }
 /*

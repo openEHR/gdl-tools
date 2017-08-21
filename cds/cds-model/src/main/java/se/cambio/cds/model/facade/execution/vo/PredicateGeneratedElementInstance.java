@@ -1,13 +1,14 @@
 package se.cambio.cds.model.facade.execution.vo;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
-import org.slf4j.LoggerFactory;
 import se.cambio.cds.gdl.model.expression.OperatorKind;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ContainerInstance;
 
-public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
+@Slf4j
+public class PredicateGeneratedElementInstance extends GeneratedElementInstance {
 
     private static final long serialVersionUID = 1L;
     private OperatorKind operatorKind = null;
@@ -23,7 +24,7 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
         this.operatorKind = operatorKind;
     }
 
-    public OperatorKind getOperatorKind(){
+    public OperatorKind getOperatorKind() {
         return operatorKind;
     }
 
@@ -31,15 +32,11 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
         this.operatorKind = operatorKind;
     }
 
-    /**
-     * METHODS FOR THE RULE ENGINE!!
-     * Do not use inside core (unless totally necessary)
-     */
     public void setDataValue(DataValue dataValue) {
-        LoggerFactory.getLogger(PredicateGeneratedElementInstance.class).warn("Attempt to change data value of generated element (from '"+getDataValue()+"' to '"+dataValue+"')");
+        log.warn("Attempt to change data value of generated element (from '" + getDataValue() + "' to '" + dataValue + "')");
     }
 
-    public PredicateGeneratedElementInstance clone(){
+    public PredicateGeneratedElementInstance clone() {
         PredicateGeneratedElementInstance predicateGeneratedElementInstance =
                 new PredicateGeneratedElementInstanceBuilder()
                         .setId(getId())
@@ -53,32 +50,28 @@ public class PredicateGeneratedElementInstance extends GeneratedElementInstance{
         return predicateGeneratedElementInstance;
     }
 
-    public boolean hasValue(){
+    public boolean hasValue() {
         return false;
     }
 
-    public boolean isPredicate(){
+    public boolean isPredicate() {
         return true;
     }
 
-    public boolean hasNoValue(String gtCodeReference){
+    public boolean hasNoValue(String gtCodeReference) {
         return hasNoValue();
     }
 
-    public boolean hasNoValue(){
+    public boolean hasNoValue() {
         return true;
     }
 
-    public String toString(){
-        return "(P)"+super.toString();
+    public String toString() {
+        return "(P)" + super.toString();
     }
 
     public String getPredicateContent() {
-        return new StringBuilder()
-                .append(getId())
-                .append(getDataValue())
-                .append(getOperatorKind())
-                .append(getNullFlavour()).toString();
+        return getId() + getDataValue() + getOperatorKind() + getNullFlavour();
     }
 }
 /*

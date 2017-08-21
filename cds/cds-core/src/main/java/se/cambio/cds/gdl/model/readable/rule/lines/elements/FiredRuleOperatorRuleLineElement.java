@@ -7,7 +7,7 @@ import se.cambio.cds.util.misc.CDSLanguageManager;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class FiredRuleOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind>{
+public class FiredRuleOperatorRuleLineElement extends RuleLineElementWithValue<OperatorKind> implements SingleSelectionRuleElement<OperatorKind> {
 
     public FiredRuleOperatorRuleLineElement(RuleLine ruleLine) {
         super(ruleLine, null);
@@ -15,9 +15,9 @@ public class FiredRuleOperatorRuleLineElement extends RuleLineElementWithValue<O
 
     @Override
     public String getResolvedName(OperatorKind operatorKind, String lang) {
-        if (OperatorKind.FIRED.equals(operatorKind)){
+        if (OperatorKind.FIRED.equals(operatorKind)) {
             return CDSLanguageManager.getMessageWithLanguage("HasBeenFiredRLE", lang);
-        }else if (OperatorKind.NOT_FIRED.equals(operatorKind)){
+        } else if (OperatorKind.NOT_FIRED.equals(operatorKind)) {
             return CDSLanguageManager.getMessageWithLanguage("HasNotBeenFiredRLE", lang);
         } else {
             throw new RuntimeException("Unknown operator '" + operatorKind + "'");
@@ -38,10 +38,10 @@ public class FiredRuleOperatorRuleLineElement extends RuleLineElementWithValue<O
     }
 
     @Override
-    public String getLabelText(String language){
-        if (getValue() != null){
+    public String getLabelText(String language) {
+        if (getValue() != null) {
             return getResolvedName(getValue(), language);
-        }else{
+        } else {
             return super.getLabelText(language);
         }
     }

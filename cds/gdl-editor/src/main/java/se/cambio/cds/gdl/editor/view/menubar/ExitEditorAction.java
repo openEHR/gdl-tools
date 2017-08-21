@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import java.awt.event.ActionEvent;
@@ -30,7 +24,7 @@ public class ExitEditorAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         editorManager.closeEditor();
     }
 }

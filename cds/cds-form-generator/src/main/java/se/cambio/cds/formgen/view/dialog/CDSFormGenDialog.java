@@ -13,33 +13,18 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-
-/**
- * @author iago.corbal
- *
- */
-
 public class CDSFormGenDialog extends JDialog implements FormGeneratorViewer {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-    private JScrollPane jScrollPane;
-    private InfoDialog _infoDialog = null;
+    private JScrollPane scrollPane;
+    private InfoDialog infoDialog = null;
 
 
-    /**
-     * This is the default constructor
-     */
     public CDSFormGenDialog(Window owner) {
         super(owner, OpenEHRLanguageManager.getMessage("CDSCalculator"));
         initialize();
     }
 
-    /**
-     * This method initializes this
-     */
     private void initialize() {
         this.setSize(new Dimension(500, 700));
         ScreenUtil.centerComponentOnScreen(this, this.getOwner());
@@ -48,20 +33,20 @@ public class CDSFormGenDialog extends JDialog implements FormGeneratorViewer {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
-    public void setFormGeneratorController(FormGeneratorController controller){
-        jScrollPane = null;
+    public void setFormGeneratorController(FormGeneratorController controller) {
+        scrollPane = null;
         getJScrollPane().setViewportView(controller.getCDSFormPanel());
         this.setContentPane(getJScrollPane());
         controller.setViewer(this);
         this.setTitle(controller.getName());
     }
 
-    public class CloseAction extends WindowAdapter{
+    public class CloseAction extends WindowAdapter {
 
-        public void windowOpened(WindowEvent e){
+        public void windowOpened(WindowEvent ev) {
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ev) {
             dispose();
         }
 
@@ -70,36 +55,36 @@ public class CDSFormGenDialog extends JDialog implements FormGeneratorViewer {
         }
     }
 
-    public void setBusy(String description, SwingWorker<?, ?> sw){
+    public void setBusy(String description, SwingWorker<?, ?> sw) {
         getInfoDialog().setCurrentThread(sw);
         setBusy(description);
     }
 
-    public void setBusy(String description){
+    public void setBusy(String description) {
         getInfoDialog().changeLoadingText(description);
         getInfoDialog().start();
     }
 
-    public void changeBusyText(String description){
+    public void changeBusyText(String description) {
         getInfoDialog().changeLoadingText(description);
     }
 
-    private InfoDialog getInfoDialog(){
-        if (_infoDialog==null){
-            _infoDialog = new InfoDialog(this);
+    private InfoDialog getInfoDialog() {
+        if (infoDialog == null) {
+            infoDialog = new InfoDialog(this);
         }
-        return _infoDialog;
+        return infoDialog;
     }
 
-    public void setFree(){
+    public void setFree() {
         getInfoDialog().stop();
     }
 
-    private JScrollPane getJScrollPane(){
-        if (jScrollPane==null){
-            jScrollPane = new JScrollPane();
+    private JScrollPane getJScrollPane() {
+        if (scrollPane == null) {
+            scrollPane = new JScrollPane();
         }
-        return jScrollPane;
+        return scrollPane;
     }
 } 
 /*

@@ -31,8 +31,8 @@ public class CMTypeManager {
             for (CMType cmType : CMConfigurationManager.getAdditionalCMElements()) {
                 registerCMType(cmType);
             }
-        } catch (MissingConfigurationParameterException e) {
-            throw new RuntimeException(e);
+        } catch (MissingConfigurationParameterException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

@@ -17,16 +17,16 @@ public class TerminologyDialogManager {
     private WindowManager windowManager;
     private TerminologyNodeManager terminologyNodeManager;
 
-    public TerminologyDialogManager(WindowManager windowManager, TerminologyNodeManager terminologyNodeManager){
+    public TerminologyDialogManager(WindowManager windowManager, TerminologyNodeManager terminologyNodeManager) {
         this.windowManager = windowManager;
         this.terminologyNodeManager = terminologyNodeManager;
         terminologySelectableNodes = new HashMap<>();
     }
 
-    public DialogSelection getTerminologyDialog(Window owner, String terminologyId, SelectableNode.SelectionMode selectionMode, Collection<String> selectedCodes){
+    public DialogSelection getTerminologyDialog(Window owner, String terminologyId, SelectableNode.SelectionMode selectionMode, Collection<String> selectedCodes) {
         DialogSelection dialog = terminologySelectableNodes.get(terminologyId);
         SelectableNode<?> rootNode;
-        if (dialog==null || (owner != dialog.getOwner())){
+        if (dialog == null || (owner != dialog.getOwner())) {
             rootNode = terminologyNodeManager.getNodeAllTerminologyCodes(terminologyId, selectionMode);
             dialog = new DialogSelection(
                     owner,
@@ -40,8 +40,8 @@ public class TerminologyDialogManager {
         rootNode = dialog.getNode();
         NodeConversor.setAllVisible(rootNode);
         rootNode.setAllSelected(false, true); //Force cleaning all selection
-        if (selectedCodes!=null){
-            for (String selectedCode: selectedCodes){
+        if (selectedCodes != null) {
+            for (String selectedCode : selectedCodes) {
                 TerminologyNodeManager.selectCodesWith(rootNode, selectedCode, false);
             }
         }

@@ -16,9 +16,9 @@ public class RuleExecutionWMLogger extends DefaultAgendaEventListener {
         getFiredRules().add(ruleName);
     }
 
-    public ArrayList<String> getFiredRules(){
-        if (_firedRules == null){
-            _firedRules = new  ArrayList<>();
+    public ArrayList<String> getFiredRules() {
+        if (_firedRules == null) {
+            _firedRules = new ArrayList<>();
         }
         return _firedRules;
     }

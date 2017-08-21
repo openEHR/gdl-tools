@@ -8,24 +8,22 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DVTextPanel extends DVGenericPanel{
+public class DVTextPanel extends DVGenericPanel {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JTextField valueTextField;
-    public DVTextPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
+
+    public DVTextPanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus) {
         super(idElement, idTemplate, allowNull, requestFocus);
         this.setLayout(new BorderLayout());
         this.add(getValueTextField(), BorderLayout.CENTER);
     }
 
-    protected JTextField getValueTextField(){
-        if (valueTextField==null){
+    protected JTextField getValueTextField() {
+        if (valueTextField == null) {
             valueTextField = new JTextField();
-            valueTextField.setPreferredSize(new Dimension(250,18));
-            if (isRequestFocus()){
+            valueTextField.setPreferredSize(new Dimension(250, 18));
+            if (isRequestFocus()) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         valueTextField.requestFocus();
@@ -38,16 +36,16 @@ public class DVTextPanel extends DVGenericPanel{
 
     public void setDataValue(DataValue dataValue) {
         String value = "";
-        if (dataValue instanceof DvText){
-            value = ((DvText)dataValue).getValue();
+        if (dataValue instanceof DvText) {
+            value = ((DvText) dataValue).getValue();
         }
         getValueTextField().setText(value);
     }
 
-    public DataValue getDataValue(){
-        if (getValueTextField().getText().isEmpty()){
+    public DataValue getDataValue() {
+        if (getValueTextField().getText().isEmpty()) {
             return null;
-        }else{
+        } else {
             return new DvText(getValueTextField().getText());
         }
     }

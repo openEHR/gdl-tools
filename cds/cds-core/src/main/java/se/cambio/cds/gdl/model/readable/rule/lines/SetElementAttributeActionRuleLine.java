@@ -9,7 +9,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.ActionRuleLine;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine{
+public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine {
 
     private ArchetypeElementAttributeRuleLineElement archetypeElementAttributeRuleLineElement = null;
     private ExpressionRuleLineElement expressionRuleLineElement = null;
@@ -20,9 +20,9 @@ public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleL
                 OpenEHRLanguageManager.getMessage("SetElementAttributeDesc"));
         archetypeElementAttributeRuleLineElement = new ArchetypeElementAttributeRuleLineElement(this);
         expressionRuleLineElement = new ExpressionRuleLineElement(this);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"SetElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "SetElementRLE"));
         getRuleLineElements().add(archetypeElementAttributeRuleLineElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"ToRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ToRLE"));
         getRuleLineElements().add(expressionRuleLineElement);
     }
 
@@ -37,8 +37,8 @@ public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleL
     }
 
 
-    public AssignmentExpression toAssignmentExpression() throws IllegalStateException{
-        if (archetypeElementAttributeRuleLineElement.getValue()==null || archetypeElementAttributeRuleLineElement.getValue().getValue()==null){
+    public AssignmentExpression toAssignmentExpression() throws IllegalStateException {
+        if (archetypeElementAttributeRuleLineElement.getValue() == null || archetypeElementAttributeRuleLineElement.getValue().getValue() == null) {
             throw new IllegalStateException("No variable set");
         }
         Variable var = new Variable(
@@ -51,7 +51,8 @@ public class SetElementAttributeActionRuleLine extends AssignmentExpressionRuleL
                 expressionRuleLineElement.getValue());
     }
 
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

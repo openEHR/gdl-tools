@@ -6,31 +6,31 @@ import java.io.PrintWriter;
 
 public class InternalErrorException extends RuntimeException {
 
-	private static final long serialVersionUID = -916751219990677911L;
-	private Exception encapsulatedException;
+    private static final long serialVersionUID = -916751219990677911L;
+    private Exception encapsulatedException;
 
     public InternalErrorException(Exception exception) {
         encapsulatedException = exception;
     }
 
     public String getMessage() {
-    	return "Internal error : "+encapsulatedException.getMessage();
+        return "Internal error : " + encapsulatedException.getMessage();
     }
-    
+
     public Exception getEncapsulatedException() {
         return encapsulatedException;
     }
-    
+
     public void printStackTrace() {
         printStackTrace(System.err);
     }
-    
+
     public void printStackTrace(PrintStream printStream) {
         super.printStackTrace(printStream);
         printStream.println("***Information about encapsulated exception***");
         encapsulatedException.printStackTrace(printStream);
     }
-    
+
     public void printStackTrace(PrintWriter printWriter) {
         super.printStackTrace(printWriter);
         printWriter.println("***Information about encapsulated exception***");

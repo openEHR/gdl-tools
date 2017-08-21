@@ -5,7 +5,7 @@ import se.cambio.cm.model.util.CMElement;
 import java.util.Date;
 
 
-public class ArchetypeDTO implements CMElement{
+public class ArchetypeDTO implements CMElement {
 
     private java.lang.String id;
     private String format;

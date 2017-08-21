@@ -4,7 +4,7 @@ import se.cambio.cm.model.util.CMElement;
 
 import java.util.Date;
 
-public class TemplateDTO implements CMElement{
+public class TemplateDTO implements CMElement {
     private java.lang.String id;
     private java.lang.String archetypeId;
     private String format;
@@ -89,7 +89,7 @@ public class TemplateDTO implements CMElement{
 
     @Override
     public void setLastUpdate(Date lastUpdate) {
-         this.lastUpdate = lastUpdate;
+        this.lastUpdate = lastUpdate;
     }
 }
 /*

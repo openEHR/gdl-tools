@@ -1,9 +1,3 @@
-/*
- * Created on 13-dic-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import java.awt.event.ActionEvent;
@@ -34,7 +28,7 @@ public class FileSelectionAction extends AbstractAction {
         this.setEnabled(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         int response = fileChooser.showOpenDialog(editorManager.getActiveEditorWindow());
         if (response == JFileChooser.APPROVE_OPTION) {
             textField.setText(fileChooser.getSelectedFile().getAbsolutePath());

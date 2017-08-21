@@ -8,7 +8,7 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionRuleLine, OperatorRuleLine{
+public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionRuleLine, OperatorRuleLine {
 
     private BranchRuleLine leftRuleLineBranch = null;
     private BranchRuleLine rightRuleLineBranch = null;
@@ -29,26 +29,27 @@ public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionR
     public BranchRuleLine getRightRuleLineBranch() {
         return rightRuleLineBranch;
     }
-    public void setCommented(boolean commented){
+
+    public void setCommented(boolean commented) {
         super.setCommented(commented);
         getLeftRuleLineBranch().setCommented(commented);
         getRightRuleLineBranch().setCommented(commented);
     }
 
-    public ExpressionItem toExpressionItem(){
+    public ExpressionItem toExpressionItem() {
         return new BinaryExpression(
-                convertToExpressionItem(getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines(),0),
-                convertToExpressionItem(getRightRuleLineBranch().getChildrenRuleLines().getRuleLines(),0),
+                convertToExpressionItem(getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines(), 0),
+                convertToExpressionItem(getRightRuleLineBranch().getChildrenRuleLines().getRuleLines(), 0),
                 OperatorKind.OR);
     }
 
-    public String toString(){
+    public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("((");
         for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toString());
         }
-        sb.append(") "+OpenEHRLanguageManager.getMessage("OrRLE")+" (");
+        sb.append(") " + OpenEHRLanguageManager.getMessage("OrRLE") + " (");
         for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
             sb.append(ruleLine.toString());
         }
@@ -56,20 +57,21 @@ public class OrOperatorRuleLine extends ExpressionRuleLine implements ConditionR
         return sb.toString();
     }
 
-    public String toHTMLString(int level, String lang){
+    public String toHTMLString(int level, String lang) {
         StringBuffer sb = new StringBuffer();
-        sb.append(getLevelSpace(level)+"((<br>");
+        sb.append(getLevelSpace(level) + "((<br>");
         for (RuleLine ruleLine : getLeftRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
-            sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
+            sb.append(ruleLine.toHTMLString(level + 1, lang) + "<br>");
         }
-        sb.append(getLevelSpace(level)+")"+getLevelSpace(level)+"<b>"+OpenEHRLanguageManager.getMessage("OrRLE")+"</b> (<br>");
+        sb.append(getLevelSpace(level) + ")" + getLevelSpace(level) + "<b>" + OpenEHRLanguageManager.getMessage("OrRLE") + "</b> (<br>");
         for (RuleLine ruleLine : getRightRuleLineBranch().getChildrenRuleLines().getRuleLines()) {
-            sb.append(ruleLine.toHTMLString(level+1, lang)+"<br>");
+            sb.append(ruleLine.toHTMLString(level + 1, lang) + "<br>");
         }
-        sb.append(getLevelSpace(level)+"))");
+        sb.append(getLevelSpace(level) + "))");
         return sb.toString();
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

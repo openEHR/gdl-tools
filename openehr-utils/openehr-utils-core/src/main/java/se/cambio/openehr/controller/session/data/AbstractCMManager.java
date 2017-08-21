@@ -147,7 +147,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
         registerCMElementsInCache(Collections.singleton(cmElement));
     }
 
-    public <E extends CMElement> String getServerChecksum() throws InternalErrorException {
+    public String getServerChecksum() throws InternalErrorException {
         return clinicalModelsService.getChecksumForCMElements(getCMElementClass());
     }
 
@@ -161,7 +161,7 @@ public abstract class AbstractCMManager<E extends CMElement> {
 
     private synchronized Map<String, E> getCmElementMap() {
         if (cmElementMap == null) {
-            cmElementMap = new HashMap<String, E>();
+            cmElementMap = new HashMap<>();
         }
         return cmElementMap;
     }

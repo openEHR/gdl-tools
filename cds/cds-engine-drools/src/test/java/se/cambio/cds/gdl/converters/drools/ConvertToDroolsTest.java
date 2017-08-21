@@ -97,8 +97,8 @@ public class ConvertToDroolsTest extends GDLTestCase{
                 fail("failed to compile guide..");
                 throw new RuntimeException("Build Errors:\n" + kieBuilder.getResults().toString());
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
             fail("failed to compile guide..");
         }
         return null;

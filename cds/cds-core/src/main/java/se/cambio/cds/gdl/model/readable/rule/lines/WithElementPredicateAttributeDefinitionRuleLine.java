@@ -43,8 +43,7 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
 
     @Override
     public ArchetypeReference getArchetypeReference() {
-        return getArchetypeInstantiationRuleLine().
-                getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeInstantiationRuleLine().getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
     @Override
@@ -103,7 +102,8 @@ public class WithElementPredicateAttributeDefinitionRuleLine extends ExpressionR
         }
         return sb.toString();
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

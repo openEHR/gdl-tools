@@ -1,5 +1,6 @@
 package se.cambio.cds.formgen.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.controller.cds.CdsDataManager;
 import se.cambio.cds.controller.guide.GuideManager;
 import se.cambio.cds.formgen.view.panels.CDSFormPanel;
@@ -19,12 +20,13 @@ import se.cambio.cds.util.GuideImporter;
 import se.cambio.cds.view.swing.DvSwingManager;
 import se.cambio.cm.model.guide.dto.GuideDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+@Slf4j
 public class FormGeneratorController {
 
     private GuideDTO guideDTO = null;
@@ -117,11 +119,7 @@ public class FormGeneratorController {
 
     public Guide getGuide() {
         if (guide == null) {
-            try {
-                guide = getGuideManager().getGuide(getGuideDTO().getId());
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
-            }
+            guide = getGuideManager().getGuide(getGuideDTO().getId());
         }
         return guide;
     }
@@ -172,11 +170,11 @@ public class FormGeneratorController {
     public Map<String, Map<String, ReadableGuide>> getReadableGuideMap() {
         if (readableGuideMap == null) {
             readableGuideMap = new HashMap<>();
-            try {
-                GDLParser parser = new GDLParser();
-                for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
-                    Map<String, ReadableGuide> auxMap = new HashMap<>();
-                    readableGuideMap.put(guideDTO.getId(), auxMap);
+            GDLParser parser = new GDLParser();
+            for (GuideDTO guideDTO : getGuideManager().getAllGuidesDTO()) {
+                Map<String, ReadableGuide> auxMap = new HashMap<>();
+                readableGuideMap.put(guideDTO.getId(), auxMap);
+                try {
                     Guide guide = parser.parse(new ByteArrayInputStream(guideDTO.getSource().getBytes("UTF-8")));
                     Map<String, TermDefinition> termDefinitions = guide.getOntology().getTermDefinitions();
                     for (TermDefinition termDefinition : termDefinitions.values()) {
@@ -184,9 +182,9 @@ public class FormGeneratorController {
                         ReadableGuide readableGuide = guideImporter.importGuide(guide, lang);
                         auxMap.put(lang, readableGuide);
                     }
+                } catch (UnsupportedEncodingException ex) {
+                    log.error("Error parsing guideline: " + guideDTO.getId(), ex);
                 }
-            } catch (Exception e) {
-                ExceptionHandler.handle(e);
             }
         }
         return readableGuideMap;

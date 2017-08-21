@@ -31,8 +31,8 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
     public void mousePressed(MouseEvent me) {
         RuleLine ruleLine = null;
         JComponent clickedJComponent = (JComponent) me.getSource();
-        Point p = me.getPoint();
-        p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
+        Point point = me.getPoint();
+        point = SwingUtilities.convertPoint(clickedJComponent, point, ruleLinesPanel);
         if (clickedJComponent instanceof DraggableSelectableRuleLinePanel) {
             ruleLine = ((DraggableSelectableRuleLinePanel) clickedJComponent).getRuleLine();
             draggedPanel = ReadableRuleLineFactory.createRuleLineContainer(ruleLinesPanel, ruleLine, gdlEditor);
@@ -50,10 +50,10 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
         }
         if (draggedPanel != null) {
             ruleLinesPanel.add(draggedPanel, JLayeredPane.DRAG_LAYER);
-            Dimension d = draggedPanel.getPreferredSize();
-            Rectangle r = new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight());
-            draggedPanel.setBounds(r);
-            draggedPanel.setLocation(p);
+            Dimension dimension = draggedPanel.getPreferredSize();
+            Rectangle rectangle = new Rectangle(0, 0, (int) dimension.getWidth(), (int) dimension.getHeight());
+            draggedPanel.setBounds(rectangle);
+            draggedPanel.setLocation(point);
             ruleLinesPanel.showCompatibility(ruleLine);
             if (me.getClickCount() >= 2) {
                 clearRuleLineDraggableLayer(ruleLinesPanel);
@@ -68,13 +68,13 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
             return;
         }
         JComponent clickedJComponent = (JComponent) me.getSource();
-        Point p = me.getPoint();
-        p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
-        draggedPanel.setLocation(p);
-        if (p.getY() > ruleLinesPanel.getHeight()) {
+        Point point = me.getPoint();
+        point = SwingUtilities.convertPoint(clickedJComponent, point, ruleLinesPanel);
+        draggedPanel.setLocation(point);
+        if (point.getY() > ruleLinesPanel.getHeight()) {
             JScrollBar scrollBar = ruleLinesPanel.getRuleLinesJScrollPane().getVerticalScrollBar();
             scrollBar.setValue(scrollBar.getValue() + 3);
-        } else if (p.getY() < 0) {
+        } else if (point.getY() < 0) {
             JScrollBar scrollBar = ruleLinesPanel.getRuleLinesJScrollPane().getVerticalScrollBar();
             scrollBar.setValue(scrollBar.getValue() - 3);
         }
@@ -86,10 +86,10 @@ public class SelectableRuleLineDragMouseListener extends MouseAdapter {
             return;
         }
         JComponent clickedJComponent = (JComponent) me.getSource();
-        Point p = me.getPoint();
-        p = SwingUtilities.convertPoint(clickedJComponent, p, ruleLinesPanel);
+        Point point = me.getPoint();
+        point = SwingUtilities.convertPoint(clickedJComponent, point, ruleLinesPanel);
         clearRuleLineDraggableLayer(ruleLinesPanel);
-        Component comp = ruleLinesPanel.findComponentAt(p);
+        Component comp = ruleLinesPanel.findComponentAt(point);
         addToComponent(comp);
     }
 

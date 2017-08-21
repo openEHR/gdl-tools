@@ -60,7 +60,8 @@ public class PredicateFilterManager {
         return archetypeReferences;
     }
 
-    private void filterEhrData(Collection<ArchetypeReference> ehrArchetypeReferences, Calendar date, PredicateGeneratedElementInstance predicate) {
+    private void filterEhrData(
+            Collection<ArchetypeReference> ehrArchetypeReferences, Calendar date, PredicateGeneratedElementInstance predicate) {
         if (OperatorKind.MAX.equals(predicate.getOperatorKind())) {
             filterMaxMin(predicate.getId(), ehrArchetypeReferences, true);
         } else if (OperatorKind.MIN.equals(predicate.getOperatorKind())) {
@@ -80,7 +81,8 @@ public class PredicateFilterManager {
         }
     }
 
-    private void filterEquals(PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
+    private void filterEquals(
+            PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         for (ArchetypeReference archetypeReference : ehrArchetypeReferences) {
             ElementInstance elementInstance = archetypeReference.getElementInstancesMap().get(predicate.getId());
@@ -160,7 +162,8 @@ public class PredicateFilterManager {
         }
     }
 
-    private void filterIsA(PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
+    private void filterIsA(
+            PredicateGeneratedElementInstance predicate, Collection<ArchetypeReference> ehrArchetypeReferences, boolean negation) {
         final Set<ArchetypeReference> archetypeReferencesToRemove = new HashSet<>();
         final Set<CodePhrase> codePhrases = getCodePhrases(predicate);
         ElementInstance elementInstance;
@@ -188,7 +191,9 @@ public class PredicateFilterManager {
 
     }
 
-    private void filterIsALocalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) {
+    private void filterIsALocalTerminology(
+            boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases,
+            ElementInstance elementInstance, CodePhrase codePhrase) {
         boolean isA = simpleIsACheck(codePhrase, codePhrases);
         if ((!isA && !negation) || (isA && negation)) {
             archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
@@ -204,7 +209,9 @@ public class PredicateFilterManager {
         return false;
     }
 
-    private void filterIsAExternalTerminology(boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases, ElementInstance elementInstance, CodePhrase codePhrase) {
+    private void filterIsAExternalTerminology(
+            boolean negation, Set<ArchetypeReference> archetypeReferencesToRemove, Set<CodePhrase> codePhrases,
+            ElementInstance elementInstance, CodePhrase codePhrase) {
         boolean isA = terminologyService.isSubclassOf(codePhrase, codePhrases);
         if ((!isA && !negation) || (isA && negation)) {
             archetypeReferencesToRemove.add(elementInstance.getArchetypeReference());
@@ -256,7 +263,8 @@ public class PredicateFilterManager {
         return predicates;
     }
 
-    private Collection<ArchetypeReference> getFilteredEhrData(ArchetypeReference archetypeReference, Calendar date, Collection<ArchetypeReference> ehrArchetypeReferences) {
+    private Collection<ArchetypeReference> getFilteredEhrData(
+            ArchetypeReference archetypeReference, Calendar date, Collection<ArchetypeReference> ehrArchetypeReferences) {
         Collection<ArchetypeReference> ehrData = new ArrayList<>();
         ehrData.addAll(ehrArchetypeReferences);
         List<PredicateGeneratedElementInstance> predicates = getSortedPredicates(archetypeReference);

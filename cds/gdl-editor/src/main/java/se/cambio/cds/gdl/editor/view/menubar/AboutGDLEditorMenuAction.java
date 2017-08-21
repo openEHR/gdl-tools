@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import java.awt.event.ActionEvent;
@@ -29,7 +23,7 @@ public class AboutGDLEditorMenuAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AboutGDLEditorD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         new DialogSplash(editorManager.getActiveEditorWindow(), false).setVisible(true);
     }
 }

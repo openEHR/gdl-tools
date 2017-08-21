@@ -28,7 +28,7 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
         functionRuleLineElement = new PredicateComparisonFunctionRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"WithElementRLE"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "WithElementRLE"));
         getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
         getRuleLineElements().add(functionRuleLineElement);
     }
@@ -39,8 +39,7 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
 
     @Override
     public ArchetypeReference getArchetypeReference() {
-        return getArchetypeInstantiationRuleLine().
-                getArchetypeReferenceRuleLineDefinitionElement().getValue();
+        return getArchetypeInstantiationRuleLine().getArchetypeReferenceRuleLineDefinitionElement().getValue();
     }
 
     @Override
@@ -84,7 +83,8 @@ public class WithElementPredicateFunctionDefinitionRuleLine extends ExpressionRu
         }
         return sb.toString();
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

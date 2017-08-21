@@ -23,8 +23,8 @@ public class TemplateDTOBuilder {
         return this;
     }
 
-    public TemplateDTOBuilder setArcehtypeId(String arcehtypeId) {
-        this.arcehtypeId = arcehtypeId;
+    public TemplateDTOBuilder setArchetypeId(String archetypeId) {
+        this.arcehtypeId = archetypeId;
         return this;
     }
 
@@ -54,16 +54,16 @@ public class TemplateDTOBuilder {
     }
 
     private void checkMissingAttributes() throws InternalErrorException {
-        if (id == null){
+        if (id == null) {
             throw new InternalErrorException(new Exception("No id specified for cmElement"));
         }
-        if (format == null){
+        if (format == null) {
             throw new InternalErrorException(new Exception("No format specified for cmElement"));
         }
-        if (source == null){
+        if (source == null) {
             throw new InternalErrorException(new Exception("No source specified for cmElement"));
         }
-        if (lastUpdate == null){
+        if (lastUpdate == null) {
             throw new InternalErrorException(new Exception("No lastUpdate specified for cmElement"));
         }
     }

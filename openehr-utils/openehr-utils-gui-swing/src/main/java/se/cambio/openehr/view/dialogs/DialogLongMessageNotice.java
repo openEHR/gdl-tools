@@ -6,33 +6,33 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class DialogLongMessageNotice extends DialogEditor{
-    /**
-     *
-     */
+public class DialogLongMessageNotice extends DialogEditor {
+
     private static final long serialVersionUID = 1L;
-    public static enum MessageType{
+
+    public static enum MessageType {
         NORMAL,
         WARNING,
         WARNING_WITH_CANCEL,
         ERROR
     }
+
     private JPanel panelMsg = null;
     private JPanel panelException = null;
     private JPanel panelButtons = null;
-    private String _msg = null;
-    private String _longMsg = null;
-    private MessageType _type = null;
+    private String msg = null;
+    private String longMsg = null;
+    private MessageType type = null;
 
     public DialogLongMessageNotice(Window owner, String title, String msg, String longMsg, MessageType type) {
         super(owner, title, new Dimension(400, 400), true, true);
-        _msg = msg;
-        _longMsg = longMsg;
-        _type = type;
+        this.msg = msg;
+        this.longMsg = longMsg;
+        this.type = type;
         init();
     }
 
-    private void init(){
+    private void init() {
         getJPanel().setLayout(new BorderLayout());
         getJPanel().add(getPanelMsg(), BorderLayout.NORTH);
         getJPanel().add(getPanelException(), BorderLayout.CENTER);
@@ -40,14 +40,14 @@ public class DialogLongMessageNotice extends DialogEditor{
     }
 
 
-    private JPanel getPanelMsg(){
-        if(panelMsg==null){
+    private JPanel getPanelMsg() {
+        if (panelMsg == null) {
             panelMsg = new JPanel(new BorderLayout());
             JPanel aux = new JPanel();
             aux.add(new JLabel(getImageIcon()));
             panelMsg.add(aux, BorderLayout.WEST);
             JTextPane textPane = new JTextPane();
-            textPane.setText(_msg);
+            textPane.setText(msg);
             textPane.setFont(textPane.getFont().deriveFont(Font.BOLD));
             textPane.setBackground(null);
             textPane.setEditable(false);
@@ -56,40 +56,40 @@ public class DialogLongMessageNotice extends DialogEditor{
         return panelMsg;
     }
 
-    private JPanel getPanelException(){
-        if(panelException==null){
+    private JPanel getPanelException() {
+        if (panelException == null) {
             panelException = new JPanel();
             panelException = new JPanel(new BorderLayout());
-            JScrollPane scrollPane = new JScrollPane();
             JTextPane textPane = new JTextPane();
-            textPane.setText(_longMsg);
+            textPane.setText(longMsg);
             textPane.setEditable(false);
-            JPanel noWrapPanel = new JPanel( new BorderLayout() );
+            JPanel noWrapPanel = new JPanel(new BorderLayout());
             noWrapPanel.add(textPane);
             textPane.setBackground(null);
+            JScrollPane scrollPane = new JScrollPane();
             scrollPane.setViewportView(noWrapPanel);
             panelException.add(scrollPane);
         }
         return panelException;
     }
 
-    private JPanel getPanelButtons(){
-        if(panelButtons==null){
+    private JPanel getPanelButtons() {
+        if (panelButtons == null) {
             panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
             panelButtons.add(getAcceptButton());
-            if (MessageType.WARNING_WITH_CANCEL.equals(_type)){
+            if (MessageType.WARNING_WITH_CANCEL.equals(type)) {
                 panelButtons.add(getCancelButton());
             }
         }
         return panelButtons;
     }
 
-    private ImageIcon getImageIcon(){
-        if (MessageType.ERROR.equals(_type)){
+    private ImageIcon getImageIcon() {
+        if (MessageType.ERROR.equals(type)) {
             return OpenEHRImageUtil.CANCEL_ICON;
-        }else if (MessageType.WARNING.equals(_type)|| MessageType.WARNING_WITH_CANCEL.equals(_type)){
+        } else if (MessageType.WARNING.equals(type) || MessageType.WARNING_WITH_CANCEL.equals(type)) {
             return OpenEHRImageUtil.WARNING_ICON;
-        }else{
+        } else {
             return OpenEHRImageUtil.EMPTY_ICON;
         }
     }

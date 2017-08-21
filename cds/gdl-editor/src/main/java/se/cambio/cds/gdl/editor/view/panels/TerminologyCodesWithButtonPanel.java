@@ -2,8 +2,6 @@
 package se.cambio.cds.gdl.editor.view.panels;
 
 import se.cambio.cds.gdl.editor.util.GDLEditorImageUtil;
-import se.cambio.cds.view.swing.CDSImageUtil;
-import se.cambio.openehr.util.OpenEHRImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +36,8 @@ public class TerminologyCodesWithButtonPanel extends JPanel {
         }
         return button;
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

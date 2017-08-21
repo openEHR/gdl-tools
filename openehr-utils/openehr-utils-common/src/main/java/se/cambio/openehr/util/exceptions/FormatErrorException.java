@@ -3,13 +3,10 @@ package se.cambio.openehr.util.exceptions;
 
 public class FormatErrorException extends ModelException {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 6458498987706936303L;
+    private static final long serialVersionUID = 6458498987706936303L;
 
-	public FormatErrorException(String value) {
-        super("Format error :"+value);
+    public FormatErrorException(String value) {
+        super("Format error :" + value);
     }
 }
 /*

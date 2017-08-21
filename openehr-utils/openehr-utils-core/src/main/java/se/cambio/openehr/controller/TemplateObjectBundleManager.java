@@ -59,13 +59,14 @@ public class TemplateObjectBundleManager {
     }
 
     private void generateTemplateData() throws Exception {
-            TEMPLATE template = getParsedTemplate(templateDTO.getSource());
-            templateDTO.setArchetypeId(template.getDefinition().getArchetypeId());
-            Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
-            templateDTO.setAom(SerializationUtils.serialize(ar));
-            GenericObjectBundleADLManager genericObjectBundleADLManager = new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap, terminologyService, userConfigurationManager);
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
-            templateDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
+        TEMPLATE template = getParsedTemplate(templateDTO.getSource());
+        templateDTO.setArchetypeId(template.getDefinition().getArchetypeId());
+        Archetype ar = new TemplateFlattener().toFlattenedArchetype(template, archetypeMap);
+        templateDTO.setAom(SerializationUtils.serialize(ar));
+        GenericObjectBundleADLManager genericObjectBundleADLManager =
+                new GenericObjectBundleADLManager(ar, templateDTO.getId(), archetypeMap, terminologyService, userConfigurationManager);
+        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
+        templateDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
     }
 
     public static TEMPLATE getParsedTemplate(String templateSrc) throws InternalErrorException {
@@ -73,8 +74,8 @@ public class TemplateObjectBundleManager {
             OETParser parser = new OETParser();
             InputStream is = IOUtils.toInputStream(templateSrc, "UTF-8");
             return parser.parseTemplate(is).getTemplate();
-        } catch (Exception e) {
-            throw new InternalErrorException(e);
+        } catch (Exception ex) {
+            throw new InternalErrorException(ex);
         }
     }
 }

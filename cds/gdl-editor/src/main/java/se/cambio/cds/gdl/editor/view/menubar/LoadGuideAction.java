@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.*;
@@ -47,7 +41,7 @@ public class LoadGuideAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         if (gdlEditor == null) {
             gdlEditor = editorManager.getActiveGDLEditor();
         }

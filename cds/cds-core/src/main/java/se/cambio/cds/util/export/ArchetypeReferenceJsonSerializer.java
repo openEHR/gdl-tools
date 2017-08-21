@@ -26,7 +26,7 @@ public class ArchetypeReferenceJsonSerializer implements JsonDeserializer<Archet
     @Override
     public ArchetypeReference deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         ArchetypeReference archetypeReference = gson.fromJson(json, ArchetypeReference.class);
-        for (ElementInstance elementInstance: archetypeReference.getElementInstancesMap().values()){
+        for (ElementInstance elementInstance : archetypeReference.getElementInstancesMap().values()) {
             elementInstance.setArchetypeReference(archetypeReference);
         }
         return archetypeReference;

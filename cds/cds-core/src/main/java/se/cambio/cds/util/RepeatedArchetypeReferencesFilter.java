@@ -1,7 +1,6 @@
 package se.cambio.cds.util;
 
 import com.google.gson.Gson;
-import org.springframework.stereotype.Component;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.util.export.CdsGsonBuilderFactory;
 

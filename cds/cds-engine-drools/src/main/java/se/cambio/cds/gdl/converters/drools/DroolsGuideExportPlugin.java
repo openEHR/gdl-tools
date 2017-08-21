@@ -3,11 +3,7 @@ package se.cambio.cds.gdl.converters.drools;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
 import se.cambio.cds.controller.guide.GuideExportPlugin;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.cds.util.exceptions.GuideCompilationException;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-
-import java.io.UnsupportedEncodingException;
 
 public class DroolsGuideExportPlugin implements GuideExportPlugin {
 

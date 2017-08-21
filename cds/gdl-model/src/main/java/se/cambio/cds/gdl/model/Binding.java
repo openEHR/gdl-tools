@@ -1,127 +1,19 @@
 package se.cambio.cds.gdl.model;
 
+import lombok.Data;
 import org.openehr.rm.datatypes.text.CodePhrase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Binding  implements Serializable{
+@Data
+public class Binding implements Serializable {
 
     private String id;
-    private List<CodePhrase> codes;
+    private List<CodePhrase> codes = new ArrayList<>();
     private String uri;
-
     private static final long serialVersionUID = 1L;
-
-	public Binding(){
-        codes = new ArrayList<CodePhrase>();
-	}
-
-	public Binding(String id, List<CodePhrase> codes) {
-		super();
-		this.id = id;
-		this.codes = codes;
-	}
-
-	public Binding(String id, List<CodePhrase> codes, String uri) {
-		super();
-		this.id = id;
-		this.codes = codes;
-		this.uri = uri;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the codes
-	 */
-	public List<CodePhrase> getCodes() {
-		return codes;
-	}
-
-	/**
-	 * @param codes
-	 *            the codes to set
-	 */
-	public void setCodes(List<CodePhrase> codes) {
-		this.codes = codes;
-	}
-
-	/**
-	 * @return the uri
-	 */
-	public String getUri() {
-		return uri;
-	}
-
-	/**
-	 * @param uri
-	 *            the uri to set
-	 */
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-		result = prime * result + ((codes == null) ? 0 : codes.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Binding other = (Binding) obj;
-		if (uri == null) {
-			if (other.uri != null)
-				return false;
-		} else if (!uri.equals(other.uri))
-			return false;
-		if (codes == null) {
-			if (other.codes != null)
-				return false;
-		} else if (!codes.equals(other.codes))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

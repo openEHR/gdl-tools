@@ -11,47 +11,47 @@ import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class ArchetypeElementInstantiationRuleLine extends RuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, GTCodeDefiner{
+public class ArchetypeElementInstantiationRuleLine extends RuleLine implements ArchetypeElementRuleLine, DefinitionsRuleLine, GTCodeDefiner {
 
-    private ArchetypeElementRuleLineDefinitionElement _archetypeElementRuleLineDefinitionElement = null;
-    private GTCodeRuleLineElement _gtCodeRuleLineElement = null;
+    private ArchetypeElementRuleLineDefinitionElement archetypeElementRuleLineDefinitionElement = null;
+    private GTCodeRuleLineElement gtCodeRuleLineElement = null;
 
 
     public ArchetypeElementInstantiationRuleLine(
             ArchetypeInstantiationRuleLine archetypeInstantiationRuleLine) {
         super(OpenEHRLanguageManager.getMessage("ArchetypeElementInstantiation"),
                 OpenEHRLanguageManager.getMessage("ArchetypeElementInstantiationDesc"));
-        if (archetypeInstantiationRuleLine!=null){
+        if (archetypeInstantiationRuleLine != null) {
             archetypeInstantiationRuleLine.addChildRuleLine(this);
         }
-        _archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
-        _gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
+        archetypeElementRuleLineDefinitionElement = new ArchetypeElementRuleLineDefinitionElement(this);
+        gtCodeRuleLineElement = new GTCodeRuleLineElement(this);
 
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"InstantiateElementRLE"));
-        getRuleLineElements().add(_archetypeElementRuleLineDefinitionElement);
-        getRuleLineElements().add(new StaticTextRuleLineElement(this,"asRLE"));
-        getRuleLineElements().add(_gtCodeRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "InstantiateElementRLE"));
+        getRuleLineElements().add(archetypeElementRuleLineDefinitionElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "asRLE"));
+        getRuleLineElements().add(gtCodeRuleLineElement);
     }
 
-    public ArchetypeReference getArchetypeReference(){
+    public ArchetypeReference getArchetypeReference() {
         ArchetypeInstantiationRuleLine airl = getArchetypeInstantiationRuleLine();
-        if (airl!=null){
+        if (airl != null) {
             return airl.getArchetypeReferenceRuleLineDefinitionElement().getValue();
-        }else{
+        } else {
             return null;
         }
     }
 
     public ArchetypeElementRuleLineDefinitionElement getArchetypeElementRuleLineDefinitionElement() {
-        return _archetypeElementRuleLineDefinitionElement;
+        return archetypeElementRuleLineDefinitionElement;
     }
 
     public GTCodeRuleLineElement getGTCodeRuleLineElement() {
-        return _gtCodeRuleLineElement;
+        return gtCodeRuleLineElement;
     }
 
     private ArchetypeInstantiationRuleLine getArchetypeInstantiationRuleLine() {
-        return (ArchetypeInstantiationRuleLine)getParentRuleLine();
+        return (ArchetypeInstantiationRuleLine) getParentRuleLine();
     }
 
     public String getGTCode() {
@@ -62,7 +62,7 @@ public class ArchetypeElementInstantiationRuleLine extends RuleLine implements A
         getGTCodeRuleLineElement().setValue(term);
     }
 
-    public void setArchetypeElementVO(ArchetypeElementVO archetypeElementVO){
+    public void setArchetypeElementVO(ArchetypeElementVO archetypeElementVO) {
         getArchetypeElementRuleLineDefinitionElement().setValue(archetypeElementVO);
     }
 
@@ -70,7 +70,8 @@ public class ArchetypeElementInstantiationRuleLine extends RuleLine implements A
     public ArchetypeElementVO getArchetypeElement() {
         return getArchetypeElementRuleLineDefinitionElement().getValue();
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

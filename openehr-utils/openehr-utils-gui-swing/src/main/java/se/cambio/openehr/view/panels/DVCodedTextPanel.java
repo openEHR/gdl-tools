@@ -2,12 +2,11 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.text.DvCodedText;
+import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.CodedTexts;
-import se.cambio.cm.model.archetype.vo.CodedTextVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.TerminologyDialogManager;
-import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
@@ -30,18 +29,18 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
             String idElement, String idTemplate,
             boolean allowNull, boolean requestFocus,
             ArchetypeManager archetypeManager,
-            TerminologyDialogManager terminologyDialogManager){
+            TerminologyDialogManager terminologyDialogManager) {
         super(idElement, idTemplate, allowNull, requestFocus);
         this.windowManager = windowManager;
         this.archetypeManager = archetypeManager;
         this.terminologyDialogManager = terminologyDialogManager;
         this.setLayout(new BorderLayout());
         this.setBackground(null);
-        this.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         Collection<CodedTextVO> codedTextsVO =
                 getCodedTexts().getCodedTextVOs(idTemplate, idElement);
-        if (!codedTextsVO.isEmpty()){
-            if (OpenEHRConst.LOCAL.equals(codedTextsVO.iterator().next().getTerminology())){
+        if (!codedTextsVO.isEmpty()) {
+            if (OpenEHRConst.LOCAL.equals(codedTextsVO.iterator().next().getTerminology())) {
                 this.add(getDVComboBoxPanel(), BorderLayout.CENTER);
                 for (CodedTextVO codedTextVO : codedTextsVO) {
                     getDVComboBoxPanel().insertOption(
@@ -49,35 +48,36 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
                             getCodedTexts().getText(codedTextVO, archetypeManager.getUserConfigurationManager().getLanguage()),
                             codedTextVO.getDescription());
                 }
-            }else{
+            } else {
                 this.add(getDvHierarchyPanel(), BorderLayout.CENTER);
             }
-        }else{
+        } else {
             this.add(getDVTextPanel(), BorderLayout.CENTER);
         }
     }
 
-    private DVComboBoxPanel getDVComboBoxPanel(){
-        if (dvComboBoxPanel==null){
+    private DVComboBoxPanel getDVComboBoxPanel() {
+        if (dvComboBoxPanel == null) {
             dvComboBoxPanel = new DVComboBoxPanel(getIdElement(), getIdTemplate(), isAllowsNull(), isRequestFocus()) {
                 private static final long serialVersionUID = 1L;
+
                 @Override
                 public void setDataValue(DataValue dataValue) {
                     String code = " ";
-                    if (dataValue instanceof DvCodedText){
-                        code =((DvCodedText)dataValue).getDefiningCode().getCodeString();
+                    if (dataValue instanceof DvCodedText) {
+                        code = ((DvCodedText) dataValue).getDefiningCode().getCodeString();
                     }
                     getComboBox().setSelectedItem(code);
                 }
 
                 @Override
                 public DataValue getDataValue() {
-                    String code = (String)getComboBox().getSelectedItem();
-                    if (!code.trim().isEmpty()){
+                    String code = (String) getComboBox().getSelectedItem();
+                    if (!code.trim().isEmpty()) {
                         CodedTextVO codedTextVO = getCodedTexts().getCodedTextVO(getIdTemplate(), getIdElement(), code);
                         String name = getCodedTexts().getText(codedTextVO, archetypeManager.getUserConfigurationManager().getLanguage());
-                        return new DvCodedText(name,codedTextVO.getTerminology(), codedTextVO.getCode());
-                    }else{
+                        return new DvCodedText(name, codedTextVO.getTerminology(), codedTextVO.getCode());
+                    } else {
                         return null;
                     }
                 }
@@ -86,8 +86,8 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
         return dvComboBoxPanel;
     }
 
-    private DVHierarchyCodedTextPanel getDvHierarchyPanel(){
-        if (dvHierarchyPanel==null){
+    private DVHierarchyCodedTextPanel getDvHierarchyPanel() {
+        if (dvHierarchyPanel == null) {
             dvHierarchyPanel =
                     new DVHierarchyCodedTextPanel(
                             getIdElement(), getIdTemplate(),
@@ -98,32 +98,32 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
         return dvHierarchyPanel;
     }
 
-    private DVTextPanel getDVTextPanel(){
-        if (dvTextPanel==null){
+    private DVTextPanel getDVTextPanel() {
+        if (dvTextPanel == null) {
             dvTextPanel = new DVTextPanel(getIdElement(), getIdTemplate(), isAllowsNull(), isRequestFocus());
         }
         return dvTextPanel;
     }
 
     public void setDataValue(DataValue dataValue) {
-        if (dvTextPanel!=null){
+        if (dvTextPanel != null) {
             dvTextPanel.setDataValue(dataValue);
-        }else if (dvComboBoxPanel!=null){
+        } else if (dvComboBoxPanel != null) {
             dvComboBoxPanel.setDataValue(dataValue);
-        }else if (dvHierarchyPanel!=null){
+        } else if (dvHierarchyPanel != null) {
             dvHierarchyPanel.setDataValue(dataValue);
         }
     }
 
 
     public DataValue getDataValue() {
-        if (dvTextPanel!=null){
+        if (dvTextPanel != null) {
             return dvTextPanel.getDataValue();
-        }else if (dvComboBoxPanel!=null){
+        } else if (dvComboBoxPanel != null) {
             return dvComboBoxPanel.getDataValue();
-        }else if (dvHierarchyPanel!=null){
+        } else if (dvHierarchyPanel != null) {
             return dvHierarchyPanel.getDataValue();
-        }else{
+        } else {
             return null;
         }
     }
@@ -131,17 +131,17 @@ public class DVCodedTextPanel extends DVGenericPanel implements DVPanelInterface
     @Override
     public Collection<JComponent> getJComponents() {
         Collection<JComponent> components = new ArrayList<>();
-        if (dvTextPanel!=null){
+        if (dvTextPanel != null) {
             components.addAll(dvTextPanel.getJComponents());
-        }else if (dvComboBoxPanel!=null){
+        } else if (dvComboBoxPanel != null) {
             components.addAll(dvComboBoxPanel.getJComponents());
-        }else if (dvHierarchyPanel!=null){
+        } else if (dvHierarchyPanel != null) {
             components.addAll(dvHierarchyPanel.getJComponents());
         }
         return components;
     }
 
-    private CodedTexts getCodedTexts(){
+    private CodedTexts getCodedTexts() {
         return archetypeManager.getCodedTexts();
     }
 

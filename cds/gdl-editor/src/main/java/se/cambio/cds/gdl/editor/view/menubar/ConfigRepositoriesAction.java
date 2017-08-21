@@ -1,20 +1,12 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.dialog.DialogRepositoriesPaths;
 import se.cambio.openehr.util.UserConfigurationManager;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public class ConfigRepositoriesAction extends AbstractAction {
 
@@ -33,7 +25,7 @@ public class ConfigRepositoriesAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("RepositoriesD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         new DialogRepositoriesPaths(editorManager, userConfigurationManager).setVisible(true);
     }
 }

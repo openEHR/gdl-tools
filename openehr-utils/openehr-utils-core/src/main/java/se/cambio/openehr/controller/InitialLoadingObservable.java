@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
 
-public class InitialLoadingObservable extends Observable{
+public class InitialLoadingObservable extends Observable {
 
     private static InitialLoadingObservable _instance = null;
 
-    public static enum LoadingStage{
+    public static enum LoadingStage {
         ARCHETYPES, TEMPLATES, TERMINOLOGIES, ONTOLOGIES, GUIDES, VIEWS, KB_INSTANCES, ORDERSETS
     }
+
     private LoadingStage _currentLoadingStage = null;
     //From 0 to 1
     private Double _currentProgress = 0.0;
@@ -20,41 +21,41 @@ public class InitialLoadingObservable extends Observable{
     private int _totalNumberToLoad = LoadingStage.values().length;
     private Collection<InternalErrorException> _loadingExeptions = null;
 
-    private InitialLoadingObservable(){
+    private InitialLoadingObservable() {
         _loadingExeptions = new ArrayList<InternalErrorException>();
     }
 
-    public static void setCurrentLoadingStage(LoadingStage loadingStage){
+    public static void setCurrentLoadingStage(LoadingStage loadingStage) {
         getDelegate()._currentLoadingStage = loadingStage;
         getDelegate()._currentProgress = 0.0;
         stageUpdated();
     }
 
-    public static void setCurrentLoadingStageFinished(){
+    public static void setCurrentLoadingStageFinished() {
         getDelegate()._currentProgress = 0.0;
         getDelegate()._numLoaded++;
         stageUpdated();
     }
 
-    public static void setCurrentProgress(Double currentProgress){
+    public static void setCurrentProgress(Double currentProgress) {
         getDelegate()._currentProgress = currentProgress;
         stageUpdated();
     }
 
-    private static void stageUpdated(){
+    private static void stageUpdated() {
         getDelegate().setChanged();
         getDelegate().notifyObservers();
     }
 
-    public static LoadingStage getCurrentLoadingStage(){
+    public static LoadingStage getCurrentLoadingStage() {
         return getDelegate()._currentLoadingStage;
     }
 
-    public static Integer getNumLoaded(){
+    public static Integer getNumLoaded() {
         return getDelegate()._numLoaded;
     }
 
-    public static Integer getTotalNumberToLoad(){
+    public static Integer getTotalNumberToLoad() {
         return getDelegate()._totalNumberToLoad;
     }
 
@@ -62,25 +63,25 @@ public class InitialLoadingObservable extends Observable{
         _totalNumberToLoad = totalNumberToLoad;
     }
 
-    public static Double getCurrentStageProgress(){
+    public static Double getCurrentStageProgress() {
         return getDelegate()._currentProgress;
     }
 
-    public static void addLoadingException(InternalErrorException e){
-        getDelegate()._loadingExeptions.add(e);
+    public static void addLoadingException(InternalErrorException ex) {
+        getDelegate()._loadingExeptions.add(ex);
     }
 
-    public static Collection<InternalErrorException> getLoadingExceptions(){
+    public static Collection<InternalErrorException> getLoadingExceptions() {
         return getDelegate()._loadingExeptions;
     }
 
-    public static Double getTotalLoadingProgress(){
-        return ((double)getNumLoaded()/getTotalNumberToLoad()) +
-                getCurrentStageProgress()/getTotalNumberToLoad();
+    public static Double getTotalLoadingProgress() {
+        return ((double) getNumLoaded() / getTotalNumberToLoad())
+                + getCurrentStageProgress() / getTotalNumberToLoad();
     }
 
-    public static InitialLoadingObservable getDelegate(){
-        if (_instance==null){
+    public static InitialLoadingObservable getDelegate() {
+        if (_instance == null) {
             _instance = new InitialLoadingObservable();
         }
         return _instance;

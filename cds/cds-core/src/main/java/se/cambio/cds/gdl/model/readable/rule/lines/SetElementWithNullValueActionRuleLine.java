@@ -13,52 +13,53 @@ import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class SetElementWithNullValueActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine{
+public class SetElementWithNullValueActionRuleLine extends AssignmentExpressionRuleLine implements ActionRuleLine {
 
     private ArchetypeElementRuleLineElement archetypeElementRuleLineElement = null;
     private NullValueRuleLineElement nullValueRuleLineElement = null;
 
 
     public SetElementWithNullValueActionRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("SetElementWithNullValue"), 
-		OpenEHRLanguageManager.getMessage("SetElementWithNullValueDesc"));
-	archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
-	nullValueRuleLineElement = new NullValueRuleLineElement(this);
+        super(OpenEHRLanguageManager.getMessage("SetElementWithNullValue"),
+                OpenEHRLanguageManager.getMessage("SetElementWithNullValueDesc"));
+        archetypeElementRuleLineElement = new ArchetypeElementRuleLineElement(this);
+        nullValueRuleLineElement = new NullValueRuleLineElement(this);
 
-	getRuleLineElements().add(new StaticTextRuleLineElement(this,"SetElementRLE"));
-	getRuleLineElements().add(archetypeElementRuleLineElement);
-	getRuleLineElements().add(new StaticTextRuleLineElement(this,"ToRLE"));
-	getRuleLineElements().add(nullValueRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "SetElementRLE"));
+        getRuleLineElements().add(archetypeElementRuleLineElement);
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "ToRLE"));
+        getRuleLineElements().add(nullValueRuleLineElement);
     }
 
-    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement(){
-	return archetypeElementRuleLineElement;
+    public ArchetypeElementRuleLineElement getArchetypeElementRuleLineElement() {
+        return archetypeElementRuleLineElement;
     }
 
-    public NullValueRuleLineElement getNullValueRuleLineElement(){
-	return nullValueRuleLineElement;
+    public NullValueRuleLineElement getNullValueRuleLineElement() {
+        return nullValueRuleLineElement;
     }
 
-    public AssignmentExpression toAssignmentExpression() throws IllegalStateException{
-	if (archetypeElementRuleLineElement.getValue()==null){
-	    throw new IllegalStateException("No variable set");
-	}
-	Variable var = new Variable(
-		archetypeElementRuleLineElement.getValue().getValue(),
-		null, 
-		null, 
-		OpenEHRConst.NULL_FLAVOR_ATTRIBUTE);
-	DvCodedText nullValue = nullValueRuleLineElement.getValue();
-	if (nullValue==null){
-	    throw new IllegalStateException("No null value set");
-	}
-	String dataValueStr = nullValue.toString();
-	LoggerFactory.getLogger(SetElementAttributeActionRuleLine.class).debug("dataValueStr: " + dataValueStr);
-	return new AssignmentExpression(
-		var, 
-		new ConstantExpression(dataValueStr));
+    public AssignmentExpression toAssignmentExpression() throws IllegalStateException {
+        if (archetypeElementRuleLineElement.getValue() == null) {
+            throw new IllegalStateException("No variable set");
+        }
+        Variable var = new Variable(
+                archetypeElementRuleLineElement.getValue().getValue(),
+                null,
+                null,
+                OpenEHRConst.NULL_FLAVOR_ATTRIBUTE);
+        DvCodedText nullValue = nullValueRuleLineElement.getValue();
+        if (nullValue == null) {
+            throw new IllegalStateException("No null value set");
+        }
+        String dataValueStr = nullValue.toString();
+        LoggerFactory.getLogger(SetElementAttributeActionRuleLine.class).debug("dataValueStr: " + dataValueStr);
+        return new AssignmentExpression(
+                var,
+                new ConstantExpression(dataValueStr));
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

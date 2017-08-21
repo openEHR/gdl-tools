@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorFileManager;
@@ -12,8 +6,6 @@ import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.model.Guide;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +33,7 @@ public class NewGuideAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         editorManager.runIfOkWithCurrentEditor(
                 () -> {
                     GDLEditor controller = gdlEditorFactory.createGdlEditor(

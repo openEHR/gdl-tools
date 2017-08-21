@@ -1,13 +1,10 @@
 package se.cambio.cds.gdl.editor.util;
 
-import se.cambio.openehr.util.BeanProvider;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.UserConfigurationManager;
 import se.cambio.openehr.util.configuration.UserConfiguration;
 import se.cambio.openehr.util.misc.UTF8Control;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 
@@ -27,33 +24,30 @@ public final class GDLEditorLanguageManager {
     }
 
     public static String getMessage(String key) {
-        try {
-            return getDelegate().resource.getString(key);
-        } catch (MissingResourceException e) {
-            ExceptionHandler.handle(e);
-            return "ERROR: Text not Found!";
-        }
+        return getDelegate().resource.getString(key);
     }
 
     public static String getMessage(String key, String data1) {
-        String s = getDelegate().resource.getString(key);
-        int i = s.indexOf("$0");
-        if (i >= 0 && i < s.length()) {
-            String s1 = s.substring(0, i);
-            String s2 = s.substring(i + 2, s.length());
+        String str = getDelegate().resource.getString(key);
+        int index = str.indexOf("$0");
+        if (index >= 0 && index < str.length()) {
+            String s1 = str.substring(0, index);
+            String s2 = str.substring(index + 2, str.length());
             return s1 + data1 + s2;
-        } else return s;
+        } else {
+            return str;
+        }
     }
 
     public static String getMessage(String key, String[] data) {
-        String s = getDelegate().resource.getString(key);
-        for (int i = 0; i < data.length && i < 10; i++) {
-            int index = s.indexOf("$" + i);
-            String s1 = s.substring(0, index);
-            String s2 = s.substring(index + 2, s.length());
-            s = s1 + data[i] + s2;
+        String str = getDelegate().resource.getString(key);
+        for (int index = 0; index < data.length && index < 10; index++) {
+            int subStr = str.indexOf("$" + index);
+            String s1 = str.substring(0, subStr);
+            String s2 = str.substring(subStr + 2, str.length());
+            str = s1 + data[index] + s2;
         }
-        return s;
+        return str;
     }
 
     private static GDLEditorLanguageManager getDelegate() {

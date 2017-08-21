@@ -5,21 +5,18 @@ import java.util.List;
 public class CreateInstanceExpression extends AssignmentExpression {
 
     public static String FUNCTION_CREATE_NAME = "create";
-
     private static final long serialVersionUID = 1L;
+
     public CreateInstanceExpression(Variable variable, List<AssignmentExpression> assignmentExpressions) {
         super(variable, new MultipleAssignmentExpression(assignmentExpressions));
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer();
-        buf.append(getVariable());
-        buf.append(getAssigment());
-        return buf.toString();
+        return String.valueOf(getVariable()) + getAssignment();
     }
 
-    public MultipleAssignmentExpression getAssigment(){
-        return (MultipleAssignmentExpression)this.getAssignment();
+    public MultipleAssignmentExpression getAssignment() {
+        return (MultipleAssignmentExpression) super.getAssignment();
     }
 }
 /*

@@ -26,7 +26,7 @@ public abstract class RuleLineElementWithValue<E> extends RuleLineElement {
     public String getLabelText(String lang) {
         if (value != null) {
             if (value instanceof RuleLineElement) {
-                return ((RuleLineElement)value).getLabelText(lang);
+                return ((RuleLineElement) value).getLabelText(lang);
             } else {
                 return value.toString();
             }
@@ -64,7 +64,8 @@ public abstract class RuleLineElementWithValue<E> extends RuleLineElement {
             return null;
         }
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

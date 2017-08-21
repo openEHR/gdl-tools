@@ -9,20 +9,21 @@ import se.cambio.cds.gdl.model.readable.rule.lines.interfaces.OperatorRuleLine;
 import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 
-public class NotOperatorRuleLine extends ExpressionRuleLine implements ConditionRuleLine, OperatorRuleLine{
+public class NotOperatorRuleLine extends ExpressionRuleLine implements ConditionRuleLine, OperatorRuleLine {
 
     public NotOperatorRuleLine() {
-	super(OpenEHRLanguageManager.getMessage("NotOperator"),
-		OpenEHRLanguageManager.getMessage("NotOperatorDesc"));
-	getRuleLineElements().add(new StaticTextRuleLineElement(this,"NotRLE"));
+        super(OpenEHRLanguageManager.getMessage("NotOperator"),
+                OpenEHRLanguageManager.getMessage("NotOperatorDesc"));
+        getRuleLineElements().add(new StaticTextRuleLineElement(this, "NotRLE"));
     }
-    
-    public ExpressionItem toExpressionItem(){
-	return new UnaryExpression(
-		    convertToExpressionItem(getChildrenRuleLines().getRuleLines(),0),
-		    OperatorKind.NOT);
+
+    public ExpressionItem toExpressionItem() {
+        return new UnaryExpression(
+                convertToExpressionItem(getChildrenRuleLines().getRuleLines(), 0),
+                OperatorKind.NOT);
     }
-}/*
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

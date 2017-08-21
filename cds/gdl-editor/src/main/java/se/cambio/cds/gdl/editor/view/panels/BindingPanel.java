@@ -9,7 +9,6 @@ import se.cambio.cds.gdl.editor.view.tables.BindingTable.BindingTableModel;
 import se.cambio.cds.gdl.model.Binding;
 import se.cambio.cds.gdl.model.TermBinding;
 import se.cambio.cds.view.swing.panel.interfaces.RefreshablePanel;
-import se.cambio.openehr.view.util.WindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,11 +82,11 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
 
         for (String gtCodeString : gtCodesList) {
             Binding bind = mapBind.get(gtCodeString);
-            Vector<String> v = new Vector<>();
-            v.add(gtCodeString);
-            v.add(getCodesCommaSeperated(bind));
-            v.add(bind.getUri() != null ? bind.getUri() : "");
-            otm.addRow(v);
+            Vector<String> vector = new Vector<>();
+            vector.add(gtCodeString);
+            vector.add(getCodesCommaSeperated(bind));
+            vector.add(bind.getUri() != null ? bind.getUri() : "");
+            otm.addRow(vector);
 
         }
     }
@@ -118,11 +117,11 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
 
     private void addTermDefinitionInModel() {
         if (validCheck(this)) {
-            Vector<String> v = new Vector<>();
-            v.add("");
-            v.add("");
-            v.add("");
-            getBindingTable().getBindingTableModel().addRow(v);
+            Vector<String> vector = new Vector<>();
+            vector.add("");
+            vector.add("");
+            vector.add("");
+            getBindingTable().getBindingTableModel().addRow(vector);
         }
     }
 
@@ -153,8 +152,7 @@ public class BindingPanel extends JPanel implements RefreshablePanel {
 
             if (selection == JOptionPane.YES_OPTION) {
                 otm = getBindingTable().getBindingTableModel();
-                int rows[] = getBindingTable()
-                        .getSelectedRows();
+                int[] rows = getBindingTable().getSelectedRows();
                 if (otm != null) {
                     if (rows.length > 0) {
                         for (int i = rows.length - 1; i >= 0; i--) {

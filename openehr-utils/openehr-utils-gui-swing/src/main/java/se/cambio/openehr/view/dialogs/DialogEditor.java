@@ -1,6 +1,3 @@
-/*
- * Creado el 04/01/2010
- */
 package se.cambio.openehr.view.dialogs;
 
 import se.cambio.openehr.util.OpenEHRImageUtil;
@@ -76,13 +73,13 @@ public abstract class DialogEditor extends JDialog {
 
     protected class CancelChangesAction extends WindowAdapter implements ActionListener {
 
-        public void windowOpened(WindowEvent e) {
+        public void windowOpened(WindowEvent ex) {
             if (componentWithFirstFocus != null) {
                 componentWithFirstFocus.requestFocus();
             }
         }
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ex) {
             exit();
         }
 
@@ -95,7 +92,7 @@ public abstract class DialogEditor extends JDialog {
 
         private static final long serialVersionUID = -8058749276509227718L;
 
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent ex) {
             accept();
         }
     }

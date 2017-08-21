@@ -11,7 +11,6 @@ import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cds.model.instance.ElementInstance;
 import se.cambio.cds.util.Domains;
 import se.cambio.cm.model.guide.dto.GuideDTO;
-import se.cambio.openehr.util.ExceptionHandler;
 
 import javax.swing.*;
 import java.util.*;
@@ -39,31 +38,26 @@ public class ExecuteRSW extends SwingWorker<Object, Object> {
 
 
     private RuleExecutionResult executeGuides(FormGeneratorController controller) {
-        try {
-            Collection<String> guideIds = controller.getGuideManager().getAllGuideIds();
-            Set<ArchetypeReference> archetypeReferences = new HashSet<>();
-            for (ElementInstance elementInstance : controller.getAllElementInstances()) {
-                ArchetypeReference ar = elementInstance.getArchetypeReference();
-                archetypeReferences.add(ar);
-                if (Domains.CDS_ID.equals(ar.getIdDomain()) && !(elementInstance instanceof PredicateGeneratedElementInstance)) {
-                    elementInstance.setDataValue(null);
-                    elementInstance.setNullFlavour(GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
-                }
+        Collection<String> guideIds = controller.getGuideManager().getAllGuideIds();
+        Set<ArchetypeReference> archetypeReferences = new HashSet<>();
+        for (ElementInstance elementInstance : controller.getAllElementInstances()) {
+            ArchetypeReference ar = elementInstance.getArchetypeReference();
+            archetypeReferences.add(ar);
+            if (Domains.CDS_ID.equals(ar.getIdDomain()) && !(elementInstance instanceof PredicateGeneratedElementInstance)) {
+                elementInstance.setDataValue(null);
+                elementInstance.setNullFlavour(GuideUtil.NULL_FLAVOUR_CODE_NO_INFO);
             }
-
-            List<GuideDTO> guideDTOs = Collections.singletonList(controller.getGuideDTO());
-            Calendar currentDateTime = controller.getCurrentDate();
-            if (currentDateTime == null) {
-                currentDateTime = Calendar.getInstance();
-            }
-            GuideManager guideManager = new GuideManager(guideDTOs, this.controller.getElementInstanceCollectionManager());
-            Collection<ArchetypeReference> ehrArchetypeReferences =
-                    cdsDataManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
-            return ruleEngineService.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
-        } catch (Throwable e) {
-            ExceptionHandler.handle(e);
-            return null;
         }
+
+        List<GuideDTO> guideDTOs = Collections.singletonList(controller.getGuideDTO());
+        Calendar currentDateTime = controller.getCurrentDate();
+        if (currentDateTime == null) {
+            currentDateTime = Calendar.getInstance();
+        }
+        GuideManager guideManager = new GuideManager(guideDTOs, this.controller.getElementInstanceCollectionManager());
+        Collection<ArchetypeReference> ehrArchetypeReferences =
+                cdsDataManager.getArchetypeReferences(null, guideIds, archetypeReferences, guideManager, currentDateTime);
+        return ruleEngineService.execute(null, guideDTOs, ehrArchetypeReferences, currentDateTime);
     }
 
     public FormGeneratorController getController() {

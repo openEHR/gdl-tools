@@ -11,7 +11,6 @@ import se.cambio.cds.util.export.DVDefSerializer;
 import se.cambio.cm.model.archetype.vo.ArchetypeElementVO;
 import se.cambio.openehr.util.OpenEHRConst;
 import se.cambio.openehr.util.OpenEHRDataValues;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.util.Map;
 import java.util.Set;
@@ -77,7 +76,7 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
         }
         String rmName = null;
         if (archetypeElementVO != null) {
-            rmName = archetypeElementVO.getRMType();
+            rmName = archetypeElementVO.getType();
         }
         stringBuffer.append("(");
         String varCall = ExpressionUtil.getVariableWithAttributeStr(rmName, var);
@@ -129,7 +128,7 @@ public class GdlDroolsBinaryComparisonExpressionProcessor {
                 String guideId = gdlDroolsConverter.getGuide().getId();
                 throw new RuntimeException(format("Element '%s' not found. (guideId='%s')", var.getCode(), guideId));
             }
-            String rmType = archetypeElementVO.getRMType();
+            String rmType = archetypeElementVO.getType();
             dv = DataValue.parseValue(rmType + "," + dvStr);
         }
         if (dv != null) {

@@ -1,223 +1,196 @@
-/*
- * component:   "openEHR Java Reference Implementation"
- * description: "Class DADLBinding"
- * keywords:    "binding"
- *
- * author:      "Rong Chen <rong.acode@gmail.com>"
- * copyright:   "Copyright (c) 2008 Cambio Healthcare Systems, Sweden"
- * license:     "See notice at bottom of class"
- *
- * file:        "$URL$"
- * revision:    "$LastChangedRevision$"
- * last_change: "$LastChangedDate$"
- */
 package se.cambio.cds.gdl.parser;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openehr.am.parser.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * Utility class that binds data in DADL format to openEHR RM
- * 
- * @author rong.chen
- */
+@Slf4j
 public class GDLBinding {
+    private static final String MODEL_PACKAGE = "se.cambio.cds.gdl.model.";
 
-	Object createModelClass(String name, Map<String, Object> valueMap)
-			throws ClassNotFoundException, SecurityException,
-			NoSuchMethodException, IllegalArgumentException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException {
+    Object createModelClass(String name, Map<String, Object> valueMap)
+            throws ClassNotFoundException, SecurityException,
+            NoSuchMethodException, IllegalArgumentException,
+            InstantiationException, IllegalAccessException,
+            InvocationTargetException {
 
-		log.debug("class: " + name + ", valueMap: " + valueMap);
+        log.debug("class: " + name + ", valueMap: " + valueMap);
 
-		String className = MODEL_PACKAGE + toCamelCase(name);
-		Class klass = Class.forName(className);
-		Constructor constructor = klass.getConstructor();
-		Object obj = constructor.newInstance();
-		Method[] methods = klass.getMethods();
-		for (Method method : methods) {
-			String methodName = method.getName();
-			if (methodName.startsWith("set")) {
-				for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
-					String attribute = entry.getKey();
-					String setter = "set" + toCamelCase(attribute);
+        String className = MODEL_PACKAGE + toCamelCase(name);
+        Class klass = Class.forName(className);
+        Constructor constructor = klass.getConstructor();
+        Object obj = constructor.newInstance();
+        Method[] methods = klass.getMethods();
+        for (Method method : methods) {
+            String methodName = method.getName();
+            if (methodName.startsWith("set")) {
+                for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
+                    String attribute = entry.getKey();
+                    String setter = "set" + toCamelCase(attribute);
 
-					if (methodName.equals(setter)) {
-						log.debug("setter: " + setter);
-						method.invoke(obj, entry.getValue());
-						break;
-					}
-				}
-			}
-		}
-		log.debug("class: " + name + " created !! ");
-		return obj;
-	}
+                    if (methodName.equals(setter)) {
+                        log.debug("setter: " + setter);
+                        method.invoke(obj, entry.getValue());
+                        break;
+                    }
+                }
+            }
+        }
+        log.debug("class: " + name + " created !! ");
+        return obj;
+    }
 
-	private String toCamelCase(String underscoreSeparated) {
-		StringTokenizer tokens = new StringTokenizer(underscoreSeparated, "_");
-		StringBuilder buf = new StringBuilder();
-		while (tokens.hasMoreTokens()) {
-			String word = tokens.nextToken();
-			buf.append(word.substring(0, 1).toUpperCase());
-			buf.append(word.substring(1).toLowerCase());
-		}
-		return buf.toString();
-	}
+    private String toCamelCase(String underscoreSeparated) {
+        StringTokenizer tokens = new StringTokenizer(underscoreSeparated, "_");
+        StringBuilder buf = new StringBuilder();
+        while (tokens.hasMoreTokens()) {
+            String word = tokens.nextToken();
+            buf.append(word.substring(0, 1).toUpperCase());
+            buf.append(word.substring(1).toLowerCase());
+        }
+        return buf.toString();
+    }
 
-	public GDLBinding() {
-	}
-	
-	/**
-	 * Binds a parsed generic DADL object model to GDL model
-	 * 
-	 * @param co
-	 * @return DADL object
-	 * @throws BindingException
-	 */
-	public Object bind(ContentObject co) throws BindingException {
-		if (co.getAttributeValues() != null) {
+    public GDLBinding() {
+    }
 
-			return bindAttributes(null, co.getAttributeValues());
+    public Object bind(ContentObject co) throws BindingException {
+        if (co.getAttributeValues() != null) {
 
-		} else {
-			ComplexObjectBlock complexObj = co.getComplexObjectBlock();
-			return bindComplexBlock(complexObj);
-		}
-	}
+            return bindAttributes(null, co.getAttributeValues());
 
-	private Object bindAttributes(String type, List<AttributeValue> attributes)
-			throws BindingException {
+        } else {
+            ComplexObjectBlock complexObj = co.getComplexObjectBlock();
+            return bindComplexBlock(complexObj);
+        }
+    }
 
-		log.debug("bind attributes for type: " + type);
+    private Object bindAttributes(String type, List<AttributeValue> attributes)
+            throws BindingException {
 
-		Map<String, Object> values = new HashMap<String, Object>();
-		for (AttributeValue attr : attributes) {
-			String id = attr.getId();
-			Object value = bindObjectBlock(attr.getValue());
-			values.put(id, value);
-		}
+        log.debug("bind attributes for type: " + type);
 
-		try {
-			return createModelClass(type, values);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BindingException("failed to create instance of " + type
-					+ ", with values: " + values);
-		}
-	}
+        Map<String, Object> values = new HashMap<String, Object>();
+        for (AttributeValue attr : attributes) {
+            String id = attr.getId();
+            Object value = bindObjectBlock(attr.getValue());
+            values.put(id, value);
+        }
 
-	private Object bindObjectBlock(ObjectBlock block) throws BindingException {
-		if (block instanceof PrimitiveObjectBlock) {
-			return bindPrimitiveBlock((PrimitiveObjectBlock) block);
-		} else {
-			return bindComplexBlock((ComplexObjectBlock) block);
-		}
-	}
+        try {
+            return createModelClass(type, values);
+        } catch (Exception ex) {
+            throw new BindingException("failed to create instance of " + type
+                    + ", with values: " + values, ex);
+        }
+    }
 
-	private Object bindPrimitiveBlock(PrimitiveObjectBlock block)
-			throws BindingException {
+    private Object bindObjectBlock(ObjectBlock block) throws BindingException {
+        if (block instanceof PrimitiveObjectBlock) {
+            return bindPrimitiveBlock((PrimitiveObjectBlock) block);
+        } else {
+            return bindComplexBlock((ComplexObjectBlock) block);
+        }
+    }
 
-		if (block.getSimpleValue() != null) {
-			return block.getSimpleValue().getValue();
-		} else if (block.getSimpleListValue() != null) {
-			List<SimpleValue> values = block.getSimpleListValue();
-			List list = new ArrayList(values.size());
-			for (SimpleValue sv : values) {
-				list.add(sv.getValue());
-			}
-			return list;
-		} else if (block.getSimpleIntervalValue() != null) {
-			block.getSimpleIntervalValue();
-			// TODO
-			return null;
-		} else if (block.getTermCode() != null) {
-			return block.getTermCode();
-		} else if (block.getTermCodeListValue() != null) {
-			return block.getTermCodeListValue();
-		} else {
-			throw new BindingException("empty block");
-		}
-	}
+    private Object bindPrimitiveBlock(PrimitiveObjectBlock block)
+            throws BindingException {
 
-	private Object bindComplexBlock(ComplexObjectBlock block) throws BindingException {
+        if (block.getSimpleValue() != null) {
+            return block.getSimpleValue().getValue();
+        } else if (block.getSimpleListValue() != null) {
+            List<SimpleValue> values = block.getSimpleListValue();
+            List list = new ArrayList(values.size());
+            for (SimpleValue sv : values) {
+                list.add(sv.getValue());
+            }
+            return list;
+        } else if (block.getSimpleIntervalValue() != null) {
+            // TODO
+            return null;
+        } else if (block.getTermCode() != null) {
+            return block.getTermCode();
+        } else if (block.getTermCodeListValue() != null) {
+            return block.getTermCodeListValue();
+        } else {
+            throw new BindingException("empty block");
+        }
+    }
 
-		if (block instanceof SingleAttributeObjectBlock) {
-			SingleAttributeObjectBlock singleBlock = (SingleAttributeObjectBlock) block;
+    private Object bindComplexBlock(ComplexObjectBlock block) throws BindingException {
 
-			// a special case to deal with empty attribute list
-			if ("LIST".equalsIgnoreCase(singleBlock.getTypeIdentifier())
-					&& singleBlock.getAttributeValues().isEmpty()) {
+        if (block instanceof SingleAttributeObjectBlock) {
+            SingleAttributeObjectBlock singleBlock = (SingleAttributeObjectBlock) block;
 
-				return new ArrayList();
-			}
+            // a special case to deal with empty attribute list
+            if ("LIST".equalsIgnoreCase(singleBlock.getTypeIdentifier())
+                    && singleBlock.getAttributeValues().isEmpty()) {
 
-			return bindAttributes(singleBlock.getTypeIdentifier(),
-					singleBlock.getAttributeValues());
+                return new ArrayList();
+            }
 
-		} else {
-			MultipleAttributeObjectBlock multiBlock = (MultipleAttributeObjectBlock) block;
-			multiBlock.getTypeIdentifier();
-			List<KeyedObject> list = multiBlock.getKeyObjects();
-			
-			// can't tell list or map
-			if (list.size() == 0) {
-				return null; 
-			}
-			// list
-			if (isNumericKey(list.get(0))) {
-				List<Object> valueList = new ArrayList<Object>();
-				for (KeyedObject ko : list) {
-					Object value = bindObjectBlock(ko.getObject());
-					valueList.add(value);
-				}
-				return valueList;
+            return bindAttributes(singleBlock.getTypeIdentifier(),
+                    singleBlock.getAttributeValues());
 
-			} else { // map
-				Map map = new HashMap();
-				for (KeyedObject ko : list) {
-					Object key = ko.getKey().getValue();
-					Object value = bindObjectBlock(ko.getObject());
-					
-					// special setId() pattern for keyed objects
-					setId(value, key);
-					map.put(key, value);
-				}
-				return map;
-			}
-		}
-	}
+        } else {
+            MultipleAttributeObjectBlock multiBlock = (MultipleAttributeObjectBlock) block;
+            List<KeyedObject> list = multiBlock.getKeyObjects();
 
-	private void setId(Object obj, Object key) {
-		if(obj instanceof String) return;
-		try {
-			Class klass = obj.getClass();
-			Method method = klass.getMethod("setId", key.getClass());
-			method.invoke(obj, key);
-		} catch(Exception e) {
-			log.warn("failed to setId for class: " + obj.getClass());
-		}
-	}
-	
-	private boolean isNumericKey(KeyedObject obj) {
-		try {
-			Integer.parseInt(obj.getKey().getValue().toString());
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}	
+            // can't tell list or map
+            if (list.size() == 0) {
+                return null;
+            }
+            // list
+            if (isNumericKey(list.get(0))) {
+                List<Object> valueList = new ArrayList<Object>();
+                for (KeyedObject ko : list) {
+                    Object value = bindObjectBlock(ko.getObject());
+                    valueList.add(value);
+                }
+                return valueList;
 
-	private static Logger log = LoggerFactory.getLogger(GDLBinding.class);
-	private static final String MODEL_PACKAGE = "se.cambio.cds.gdl.model.";	
-}/*
+            } else { // map
+                Map map = new HashMap();
+                for (KeyedObject ko : list) {
+                    Object key = ko.getKey().getValue();
+                    Object value = bindObjectBlock(ko.getObject());
+
+                    // special setId() pattern for keyed objects
+                    setId(value, key);
+                    map.put(key, value);
+                }
+                return map;
+            }
+        }
+    }
+
+    private void setId(Object obj, Object key) {
+        if (obj instanceof String) {
+            return;
+        }
+        try {
+            Class klass = obj.getClass();
+            Method method = klass.getMethod("setId", key.getClass());
+            method.invoke(obj, key);
+        } catch (Exception ex) {
+            log.warn("failed to setId for class: " + obj.getClass());
+        }
+    }
+
+    private boolean isNumericKey(KeyedObject obj) {
+        try {
+            Integer.parseInt(obj.getKey().getValue().toString());
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+}
+/*
  *  ***** BEGIN LICENSE BLOCK *****
  *  Version: MPL 2.0/GPL 2.0/LGPL 2.1
  *

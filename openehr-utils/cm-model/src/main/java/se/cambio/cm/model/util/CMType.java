@@ -7,7 +7,7 @@ public class CMType {
     private Class<? extends CMElement> cmElementClass;
     private Collection<String> fileExtensions;
 
-    public CMType(String id, Class<? extends CMElement> cmElementClass, Collection<String> fileExtensions){
+    public CMType(String id, Class<? extends CMElement> cmElementClass, Collection<String> fileExtensions) {
         this.id = id;
         this.cmElementClass = cmElementClass;
         this.fileExtensions = fileExtensions;

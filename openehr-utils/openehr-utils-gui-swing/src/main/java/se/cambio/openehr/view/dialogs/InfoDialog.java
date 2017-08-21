@@ -9,9 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.Future;
 
-/**
- * @author icorram
- */
 public class InfoDialog extends JDialog implements ProgressManager {
 
     private static final long serialVersionUID = -2310821412359230220L;

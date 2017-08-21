@@ -44,8 +44,8 @@ public class TerminologyNodeManager {
         String name = node.getValue().getValue() + " (" + code + ")";
         boolean selected = selectedCodes != null && selectedCodes.contains(code);
         SelectableNode.SelectionPropagationMode propagationMode =
-                selectionMode.equals(SelectableNode.SelectionMode.MULTIPLE) ?
-                        SelectableNode.SelectionPropagationMode.NONE : SelectableNode.SelectionPropagationMode.HIERARCHICAL;
+                selectionMode.equals(SelectableNode.SelectionMode.MULTIPLE)
+                        ? SelectableNode.SelectionPropagationMode.NONE : SelectableNode.SelectionPropagationMode.HIERARCHICAL;
         SelectableNode<Object> selectableNode =
                 new SelectableNodeBuilder<>()
                         .setName(name)
@@ -71,9 +71,9 @@ public class TerminologyNodeManager {
                 }
             }
         }
-        Enumeration<?> e = node.getAllchildren();
-        while (e.hasMoreElements()) {
-            Object nodeObj = e.nextElement();
+        Enumeration<?> list = node.getAllchildren();
+        while (list.hasMoreElements()) {
+            Object nodeObj = list.nextElement();
             if (nodeObj instanceof SelectableNode) {
                 boolean found = selectCodesWith((SelectableNode) nodeObj, object, multiple);
                 if (found && !multiple) {

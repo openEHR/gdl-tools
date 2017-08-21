@@ -59,14 +59,14 @@ public class TerminologyTable extends JTable {
         TerminologyTableCellEditor() {
             super(new JTextField());
             this.addCellEditorListener(new CellEditorListener() {
-                public void editingStopped(ChangeEvent e) {
-                    Object obj = e.getSource();
+                public void editingStopped(ChangeEvent ev) {
+                    Object obj = ev.getSource();
                     if (obj instanceof TerminologyTableCellEditor) {
                         updateResults((TerminologyTableCellEditor) obj);
                     }
                 }
 
-                public void editingCanceled(ChangeEvent e) {
+                public void editingCanceled(ChangeEvent ev) {
                 }
             });
         }

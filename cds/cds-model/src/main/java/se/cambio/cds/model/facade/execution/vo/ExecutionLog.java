@@ -1,13 +1,13 @@
 package se.cambio.cds.model.facade.execution.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 
-public class ExecutionLog implements Serializable{
+@Data
+public class ExecutionLog implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 30072012L;
     private String firedRule = null;
     private String idTemplate = null;
@@ -15,34 +15,10 @@ public class ExecutionLog implements Serializable{
     private String dataValueStr = null;
 
     public ExecutionLog(String firedRule, String idTemplate, String idElement, String dataValueStr) {
-	super();
-	this.firedRule = firedRule;
-	this.idTemplate = idTemplate;
-	this.idElement = idElement;
-	this.dataValueStr = dataValueStr;
-    }
-    public String getFiredRule() {
-        return firedRule;
-    }
-    public void setFiredRule(String firedRule) {
+        super();
         this.firedRule = firedRule;
-    }
-    public String getIdTemplate() {
-        return idTemplate;
-    }
-    public void setIdTemplate(String idTemplate) {
         this.idTemplate = idTemplate;
-    }
-    public String getIdElement() {
-        return idElement;
-    }
-    public void setIdElement(String idElement) {
         this.idElement = idElement;
-    }
-    public String getDataValueStr() {
-        return dataValueStr;
-    }
-    public void setDataValueStr(String dataValueStr) {
         this.dataValueStr = dataValueStr;
     }
 }

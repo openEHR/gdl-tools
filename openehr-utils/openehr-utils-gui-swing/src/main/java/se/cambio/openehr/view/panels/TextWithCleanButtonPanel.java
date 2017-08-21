@@ -1,6 +1,3 @@
-/*
- * Creado el 15/09/2009
- */
 package se.cambio.openehr.view.panels;
 
 import java.awt.BorderLayout;
@@ -20,64 +17,61 @@ import se.cambio.openehr.util.OpenEHRLanguageManager;
 
 public class TextWithCleanButtonPanel extends JPanel {
 
-	/**
-	 * Comentario para <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = -1100436512017425216L;
-	private JTextField _jTextField = null;
-	private JButton _jButton = null;
-	private KeyListener _keyListener = null;
-	
-	public TextWithCleanButtonPanel(){
-		super();
-		init();
-	}
-	private void init(){
-		this.setLayout(new BorderLayout());
-		this.add(getJTextField());
-		this.add(getJButton(), BorderLayout.EAST);
-		Border textBorder = getJTextField().getBorder();
-		getJTextField().setBorder(null);
-		this.setBackground(getJTextField().getBackground());
-		this.setBorder(textBorder);
-	}
+    private static final long serialVersionUID = -1100436512017425216L;
+    private JTextField _jTextField = null;
+    private JButton _jButton = null;
+    private KeyListener _keyListener = null;
 
-	public JTextField getJTextField(){
-		if (_jTextField==null){
-			_jTextField = new JTextField();
-			_jTextField.setPreferredSize(new Dimension(80,10));
-			_jTextField.setBorder(BorderFactory.createCompoundBorder(_jTextField.getBorder(),
-					BorderFactory.createEmptyBorder(0, 2, 0, 0)));
-		}
-		return _jTextField;
-	}
+    public TextWithCleanButtonPanel() {
+        super();
+        init();
+    }
 
-	public JButton getJButton(){
-		if (_jButton==null){
-			_jButton = new JButton();
-			_jButton.setIcon(OpenEHRImageUtil.CLEAR_ICON);
-			//_jButton.setBackground(getJTextField().getBackground());
-			_jButton.setBorder(BorderFactory.createEmptyBorder(2,2,2,5));
-			_jButton.setContentAreaFilled(false);
-			_jButton.setBorderPainted(false);
-			_jButton.setToolTipText(OpenEHRLanguageManager.getMessage("ClearTextField"));
-			_jButton.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					getJTextField().setText("");
-					if (_keyListener!=null){
-						_keyListener.keyReleased(null);
-					}
-					
-				}
-			});
-		}
-		return _jButton;
-	}
-	
-	public void addKeyListener(KeyListener keyListener){
-		_keyListener = keyListener;
-		getJTextField().addKeyListener(keyListener);
-	}
+    private void init() {
+        this.setLayout(new BorderLayout());
+        this.add(getJTextField());
+        this.add(getJButton(), BorderLayout.EAST);
+        Border textBorder = getJTextField().getBorder();
+        getJTextField().setBorder(null);
+        this.setBackground(getJTextField().getBackground());
+        this.setBorder(textBorder);
+    }
+
+    public JTextField getJTextField() {
+        if (_jTextField == null) {
+            _jTextField = new JTextField();
+            _jTextField.setPreferredSize(new Dimension(80, 10));
+            _jTextField.setBorder(BorderFactory.createCompoundBorder(_jTextField.getBorder(),
+                    BorderFactory.createEmptyBorder(0, 2, 0, 0)));
+        }
+        return _jTextField;
+    }
+
+    public JButton getJButton() {
+        if (_jButton == null) {
+            _jButton = new JButton();
+            _jButton.setIcon(OpenEHRImageUtil.CLEAR_ICON);
+            _jButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 5));
+            _jButton.setContentAreaFilled(false);
+            _jButton.setBorderPainted(false);
+            _jButton.setToolTipText(OpenEHRLanguageManager.getMessage("ClearTextField"));
+            _jButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ev) {
+                    getJTextField().setText("");
+                    if (_keyListener != null) {
+                        _keyListener.keyReleased(null);
+                    }
+
+                }
+            });
+        }
+        return _jButton;
+    }
+
+    public void addKeyListener(KeyListener keyListener) {
+        _keyListener = keyListener;
+        getJTextField().addKeyListener(keyListener);
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

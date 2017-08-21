@@ -1,94 +1,35 @@
 package se.cambio.cm.model.archetype.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.io.Serializable;
 
-public class PathableVO implements Serializable{
+@Data
+@AllArgsConstructor
+public class PathableVO implements Serializable {
 
     private static final long serialVersionUID = 25042012L;
-    private java.lang.String name;
-    private java.lang.String description;
-    private java.lang.String type;
-    private java.lang.String idArchetype;
-    private java.lang.String idTemplate;
-    private java.lang.String path;
-    private java.lang.Integer lowerCardinality;
-    private java.lang.Integer upperCardinality;
+    String name;
+    String description;
+    String type;
+    String idArchetype;
+    String idTemplate;
+    String path;
+    Integer lowerCardinality;
+    Integer upperCardinality;
 
-
-    public PathableVO(String name, String description, String type,
-                      String idArchetype, String idTemplate, String path) {
-        super();
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.idArchetype = idArchetype;
-        this.idTemplate = idTemplate;
-        this.path = path;
+    public String getId() {
+        return idArchetype + path;
     }
 
-    public java.lang.String getId() {
-        return idArchetype+path;
-    }
-
-    public java.lang.String getParentId() {
+    public String getParentId() {
         int indexOfLastSlash = path.lastIndexOf("/");
         String parentPath = path.substring(0, indexOfLastSlash);
         if (parentPath.isEmpty()) {
             return null;
         }
         return idArchetype + parentPath;
-    }
-
-    public java.lang.String getName() {
-        return name;
-    }
-    public void setName(java.lang.String name) {
-        this.name = name;
-    }
-    public java.lang.String getDescription() {
-        return description;
-    }
-    public void setDescription(java.lang.String description) {
-        this.description = description;
-    }
-    public java.lang.String getRMType() {
-        return type;
-    }
-    public void setType(java.lang.String type) {
-        this.type = type;
-    }
-    public java.lang.String getIdArchetype() {
-        return idArchetype;
-    }
-    public void setIdArchetype(java.lang.String idArchetype) {
-        this.idArchetype = idArchetype;
-    }
-    public java.lang.String getIdTemplate() {
-        return idTemplate;
-    }
-    public void setIdTemplate(java.lang.String idTemplate) {
-        this.idTemplate = idTemplate;
-    }
-    public java.lang.String getPath() {
-        return path;
-    }
-    public void setPath(java.lang.String path) {
-        this.path = path;
-    }
-    public java.lang.Integer getLowerCardinality() {
-        return lowerCardinality;
-    }
-    public void setLowerCardinality(java.lang.Integer lowerCardinality) {
-        this.lowerCardinality = lowerCardinality;
-    }
-    public java.lang.Integer getUpperCardinality() {
-        return upperCardinality;
-    }
-    public void setUpperCardinality(java.lang.Integer upperCardinality) {
-        this.upperCardinality = upperCardinality;
-    }
-    public java.lang.String getType() {
-        return type;
     }
 }
 /*

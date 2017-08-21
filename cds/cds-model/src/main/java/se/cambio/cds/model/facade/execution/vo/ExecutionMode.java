@@ -9,24 +9,27 @@ public enum ExecutionMode {
     private int value;
 
     private ExecutionMode(int value) {
-	this.value = value;
+        this.value = value;
     }
-    public int getValue(){
-	return value;
+
+    public int getValue() {
+        return value;
     }
+
     public String toString() {
-	return Integer.toString(value);
+        return Integer.toString(value);
     }
+
     public static ExecutionMode valueOf(int value) {
-	if (STRICT_BY_CONTEXT.getValue()==value){
-	    return STRICT_BY_CONTEXT;
-	}else if (CHAINED_BY_CONTEXT.getValue()==value){
-	    return CHAINED_BY_CONTEXT;
-	}else if (FULL.getValue()==value){
-	    return FULL;
-	}else{
-	    throw new IllegalArgumentException("unknown value");
-	}
+        if (STRICT_BY_CONTEXT.getValue() == value) {
+            return STRICT_BY_CONTEXT;
+        } else if (CHAINED_BY_CONTEXT.getValue() == value) {
+            return CHAINED_BY_CONTEXT;
+        } else if (FULL.getValue() == value) {
+            return FULL;
+        } else {
+            throw new IllegalArgumentException("unknown value");
+        }
     }
 }
 /*

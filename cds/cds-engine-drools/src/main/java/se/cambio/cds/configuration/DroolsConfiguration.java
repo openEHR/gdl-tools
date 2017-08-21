@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import se.cambio.cds.controller.execution.DroolsExecutionManager;
-import se.cambio.cds.controller.session.data.Guides;
 import se.cambio.cds.gdl.converters.drools.DroolsGuideExportPlugin;
 import se.cambio.cds.model.facade.execution.drools.DroolsRuleEngineService;
 import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;

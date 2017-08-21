@@ -2,18 +2,15 @@ package se.cambio.cds.gdl.model.expression;
 
 public class DateTimeConstant extends ConstantExpression {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
-	public DateTimeConstant(String date) {
-		super(date);
-	}
-	
-	public String toString() {
-		return "(" + getValue() + ")";
-	}
+    public DateTimeConstant(String date) {
+        super(date);
+    }
+
+    public String toString() {
+        return "(" + getValue() + ")";
+    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

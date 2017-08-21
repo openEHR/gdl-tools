@@ -7,51 +7,45 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class DVComboBoxPanel extends DVGenericPanel implements DVPanelInterface{
+public abstract class DVComboBoxPanel extends DVGenericPanel implements DVPanelInterface {
 
     private static final long serialVersionUID = 1L;
     private JComboBox comboBox;
     private Map<String, String> _itemsName = null;
     private Map<String, String> _itemsDescription = null;
 
-    public DVComboBoxPanel(String idElement, String idTemplate, boolean allowsNull, boolean requestFocus){
+    public DVComboBoxPanel(String idElement, String idTemplate, boolean allowsNull, boolean requestFocus) {
         super(idElement, idTemplate, allowsNull, requestFocus);
         this.setLayout(new BorderLayout());
-        _itemsName = new HashMap<String, String>();
-        _itemsDescription = new HashMap<String, String>();
+        _itemsName = new HashMap<>();
+        _itemsDescription = new HashMap<>();
         this.add(getComboBox(), BorderLayout.CENTER);
     }
 
-    protected JComboBox getComboBox(){
-        if (comboBox==null){
+    protected JComboBox getComboBox() {
+        if (comboBox == null) {
             comboBox = new JComboBox();
             comboBox.setRenderer(new DVComboBoxRendered());
-            if (isAllowsNull()){
+            if (isAllowsNull()) {
                 comboBox.addItem(" ");
             }
-            if (isRequestFocus()){
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        comboBox.requestFocus();
-                    }
-                });
+            if (isRequestFocus()) {
+                SwingUtilities.invokeLater(() -> comboBox.requestFocus());
             }
         }
         return comboBox;
     }
 
-    protected void insertOption(String index, String name, String description){
+    protected void insertOption(String index, String name, String description) {
         getComboBox().addItem(index);
         _itemsName.put(index, name);
         _itemsDescription.put(index, description);
     }
 
-    private class DVComboBoxRendered  extends JLabel implements ListCellRenderer{
-        /**
-         *
-         */
+    private class DVComboBoxRendered extends JLabel implements ListCellRenderer {
         private static final long serialVersionUID = 1L;
-        public DVComboBoxRendered(){
+
+        public DVComboBoxRendered() {
             setOpaque(true);
             setHorizontalAlignment(LEFT);
             setVerticalAlignment(CENTER);
@@ -67,10 +61,10 @@ public abstract class DVComboBoxPanel extends DVGenericPanel implements DVPanelI
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            if (_itemsName.containsKey(value)){
+            if (_itemsName.containsKey(value)) {
                 setText(_itemsName.get(value));
                 setToolTipText(_itemsDescription.get(value));
-            }else{
+            } else {
                 setText(" ");
                 setToolTipText("");
             }

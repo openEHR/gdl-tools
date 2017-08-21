@@ -31,17 +31,18 @@ public class RuleLineCollection {
         }
         return ruleLines;
     }
-    public void add(int index, RuleLine ruleLine){
+
+    public void add(int index, RuleLine ruleLine) {
         getRuleLinesI().add(index, ruleLine);
         ruleLine.setReadableGuide(readableGuide);
     }
 
-    public void add(RuleLine ruleLine){
+    public void add(RuleLine ruleLine) {
         getRuleLinesI().add(ruleLine);
         ruleLine.setReadableGuide(readableGuide);
     }
 
-    public void remove(RuleLine ruleLine){
+    public void remove(RuleLine ruleLine) {
         getRuleLinesI().remove(ruleLine);
         ruleLine.setReadableGuide(null);
     }

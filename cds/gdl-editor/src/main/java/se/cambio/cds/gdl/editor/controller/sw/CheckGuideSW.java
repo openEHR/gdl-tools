@@ -1,13 +1,14 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import java.io.ByteArrayInputStream;
 
+@Slf4j
 public class CheckGuideSW extends CDSSwingWorker {
     private String errorMsg = null;
     private GDLEditor controller = null;
@@ -17,25 +18,25 @@ public class CheckGuideSW extends CDSSwingWorker {
     private Runnable pendingRunnable = null;
 
     public CheckGuideSW(
-            GDLEditor controller, String guideStr, Runnable pendingRunnable){
+            GDLEditor controller, String guideStr, Runnable pendingRunnable) {
         this.controller = controller;
         this.guideStr = guideStr;
         this.pendingRunnable = pendingRunnable;
     }
 
     @Override
-    protected void executeCDSSW() throws InternalErrorException{
+    protected void executeCDSSW() throws InternalErrorException {
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(guideStr.getBytes("UTF-8"));
             guide = controller.getGuidelineEditorManager().parseGuide(bais);
-            if (guide !=null){
+            if (guide != null) {
                 controller.getGuideImporter().importGuide(guide, controller.getCurrentLanguageCode());
                 controller.getGuideExportPluginDirectory().compile(guide);
                 checkOk = true;
             }
-        }catch(Exception e){
-            ExceptionHandler.handle(e);
-            errorMsg = e.getMessage();
+        } catch (Exception ex) {
+            log.error("Error executing guideline", ex);
+            errorMsg = ex.getMessage();
         }
     }
 

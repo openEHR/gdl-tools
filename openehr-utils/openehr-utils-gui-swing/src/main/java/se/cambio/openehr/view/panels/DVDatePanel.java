@@ -6,40 +6,37 @@ import se.cambio.openehr.view.util.DVConverter;
 
 import java.util.Calendar;
 
-public class DVDatePanel extends DVGenericDateTimePanel implements DVPanelInterface{
+public class DVDatePanel extends DVGenericDateTimePanel implements DVPanelInterface {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    public DVDatePanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus){
+    public DVDatePanel(String idElement, String idTemplate, boolean allowNull, boolean requestFocus) {
         super(idElement, idTemplate, allowNull, requestFocus);
     }
 
     public void setDataValue(DataValue dataValue) {
         Calendar cal = null;
-        if (dataValue instanceof DvDate){
+        if (dataValue instanceof DvDate) {
             cal = Calendar.getInstance();
-            DvDate dv = (DvDate)dataValue;
+            DvDate dv = (DvDate) dataValue;
             cal.setTime(dv.getDateTime().toDate());
         }
         getDateChooser().setCalendar(cal);
 
     }
 
-    public DataValue getDataValue(){
+    public DataValue getDataValue() {
         Calendar cal = getDateChooser().getCalendar();
         return DVConverter.getDvDate(cal);
     }
 
 
-    public String getDateConstraints(){
+    public String getDateConstraints() {
         return "dd/MM/yyyy";
     }
 
 
-    public String getCalendarBlanks(){
+    public String getCalendarBlanks() {
         return "##/##/####";
     }
 }

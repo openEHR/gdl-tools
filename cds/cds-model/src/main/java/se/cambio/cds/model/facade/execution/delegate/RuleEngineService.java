@@ -4,8 +4,6 @@ import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.model.facade.execution.vo.RuleExecutionResult;
 import se.cambio.cds.model.instance.ArchetypeReference;
 import se.cambio.cm.model.guide.dto.GuideDTO;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
-import se.cambio.openehr.util.exceptions.PatientNotFoundException;
 
 import java.util.Calendar;
 import java.util.Collection;

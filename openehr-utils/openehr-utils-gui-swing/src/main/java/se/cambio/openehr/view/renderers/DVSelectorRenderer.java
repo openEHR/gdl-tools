@@ -5,11 +5,8 @@ import se.cambio.openehr.util.OpenEHRDataValuesUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class DVSelectorRenderer extends JLabel implements ListCellRenderer{
+public class DVSelectorRenderer extends JLabel implements ListCellRenderer {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -18,16 +15,16 @@ public class DVSelectorRenderer extends JLabel implements ListCellRenderer{
         if (isSelected) {
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
-        }else {
+        } else {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-        if (value instanceof String){
-            String idDataValue = (String)value;
+        if (value instanceof String) {
+            String idDataValue = (String) value;
             setText(OpenEHRDataValuesUI.getName(idDataValue));
             setToolTipText(OpenEHRDataValuesUI.getDescription(idDataValue));
             setIcon(OpenEHRDataValuesUI.getIcon(idDataValue));
-        }else{
+        } else {
             setText(null);
             setToolTipText(null);
             setIcon(null);

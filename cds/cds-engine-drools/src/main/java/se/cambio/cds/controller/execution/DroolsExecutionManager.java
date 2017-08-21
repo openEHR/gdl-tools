@@ -149,7 +149,7 @@ public class DroolsExecutionManager {
         for (GuideDTO guideDTO : guideDTOs) {
             KieBase kieBase = getKieBaseFormByteArray(guideDTO.getId(), guideDTO.getCompiledGuide());
             if (knowledgeBase == null) {
-                knowledgeBase = (KnowledgeBaseImpl)kieBase;
+                knowledgeBase = (KnowledgeBaseImpl) kieBase;
             } else {
                 Collection<KnowledgePackage> knowledgePackages = getKnowledgePackages(kieBase);
                 knowledgeBase.addKnowledgePackages(knowledgePackages);
@@ -159,7 +159,7 @@ public class DroolsExecutionManager {
     }
 
     private Collection<KnowledgePackage> getKnowledgePackages(KieBase kieBase) {
-        return kieBase.getKiePackages().stream().map( kiePackage -> (KnowledgePackage) kiePackage).collect(Collectors.toList());
+        return kieBase.getKiePackages().stream().map(kiePackage -> (KnowledgePackage) kiePackage).collect(Collectors.toList());
     }
 
     private KieBase getKieBaseFormByteArray(String guideId, byte[] byteArray) {
@@ -173,7 +173,7 @@ public class DroolsExecutionManager {
                     in.close();
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException ex) {
             throw new RuntimeException(format("Error converting compiled guideline '%s' to byte array", guideId));
         }
     }

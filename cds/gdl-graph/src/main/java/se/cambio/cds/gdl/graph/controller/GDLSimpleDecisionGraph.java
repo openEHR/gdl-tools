@@ -62,7 +62,7 @@ public class GDLSimpleDecisionGraph {
             ElementInstanceCollectionManager elementInstanceCollectionManager) throws GraphRenderingException {
         this.archetypeReferencesManager = archetypeReferencesManager;
         this.elementInstanceCollectionManager = elementInstanceCollectionManager;
-        if (guides == null){
+        if (guides == null) {
             throw new GraphRenderingException("Null guideline list!");
         }
         this.guides = guides;
@@ -107,8 +107,8 @@ public class GDLSimpleDecisionGraph {
         BufferedImage img = graphRenderer.generateBufferedImage();
         try {
             ImageIO.write(img, "PNG", file);
-        } catch (IOException e) {
-            throw new InternalErrorException(e);
+        } catch (IOException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
@@ -131,11 +131,11 @@ public class GDLSimpleDecisionGraph {
     }
 
     private void processGuides(String lang) throws InternalErrorException {
-        for (Guide guide: guides) {
+        for (Guide guide : guides) {
             GuideImporter guideImporter = new GuideImporter(archetypeManager, archetypeReferencesManager);
             ReadableGuide readableGuide = guideImporter.importGuide(guide, lang);
             readableGuideMap.put(guide, readableGuide);
-            if (readableGuide.getTermDefinition() == null){
+            if (readableGuide.getTermDefinition() == null) {
                 throw new GraphRenderingException("No TermDefinition for language '" + lang + "' inside the guideline");
             }
             processGuide(lang, guide);
@@ -181,7 +181,7 @@ public class GDLSimpleDecisionGraph {
     }
 
 
-    private GraphNode createRuleNode(Guide guide, Rule rule, String lang)   throws InternalErrorException {
+    private GraphNode createRuleNode(Guide guide, Rule rule, String lang) throws InternalErrorException {
         GraphNode.Alignment textAlignment;
         ReadableGuide readableGuide = readableGuideMap.get(guide);
         String guideIdLabel = guide.getId() + "<br/>";
@@ -208,13 +208,13 @@ public class GDLSimpleDecisionGraph {
     }
 
     private void processRuleLines(Guide guide, Rule rule, GraphNode graphNode) throws InternalErrorException {
-        for(ExpressionItem expressionItem : guide.getDefinition().getPreConditionExpressions()) {
+        for (ExpressionItem expressionItem : guide.getDefinition().getPreConditionExpressions()) {
             addExpressionNodes(guide.getId(), expressionItem, graphNode);
         }
-        for(ExpressionItem expressionItem : rule.getWhenStatements()) {
+        for (ExpressionItem expressionItem : rule.getWhenStatements()) {
             addExpressionNodes(guide.getId(), expressionItem, graphNode);
         }
-        for(ExpressionItem expressionItem : rule.getThenStatements()) {
+        for (ExpressionItem expressionItem : rule.getThenStatements()) {
             addExpressionNodes(guide.getId(), expressionItem, graphNode);
         }
     }
@@ -222,8 +222,8 @@ public class GDLSimpleDecisionGraph {
     private void addExpressionNodes(String guideId, ExpressionItem currentExpressionItem, GraphNode graphNode) throws InternalErrorException {
         if (currentExpressionItem instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) currentExpressionItem;
-            if (OperatorKind.OR.equals(binaryExpression.getOperator()) ||
-                    OperatorKind.AND.equals(binaryExpression.getOperator())) {
+            if (OperatorKind.OR.equals(binaryExpression.getOperator())
+                    || OperatorKind.AND.equals(binaryExpression.getOperator())) {
                 addExpressionNodes(guideId, binaryExpression.getLeft(), graphNode);
                 addExpressionNodes(guideId, binaryExpression.getRight(), graphNode);
                 return;
@@ -244,7 +244,7 @@ public class GDLSimpleDecisionGraph {
     }
 
     private void addSimpleConditionsFromComplexExpressions(String guideId, ExpressionItem expressionItem, GraphNode graphNode) throws InternalErrorException {
-        if (expressionItem instanceof  BinaryExpression) {
+        if (expressionItem instanceof BinaryExpression) {
             addExpressionNodes(guideId, expressionItem, graphNode);
         } else if (expressionItem instanceof Variable) {
             Variable variable = (Variable) expressionItem;
@@ -254,28 +254,28 @@ public class GDLSimpleDecisionGraph {
     }
 
     private boolean isArithmeticOperator(OperatorKind operator) {
-        return OperatorKind.ADDITION.equals(operator) ||
-                OperatorKind.SUBSTRATION.equals(operator) ||
-                OperatorKind.MULTIPLICATION.equals(operator) ||
-                OperatorKind.DIVISION.equals(operator);
+        return OperatorKind.ADDITION.equals(operator)
+                || OperatorKind.SUBSTRATION.equals(operator)
+                || OperatorKind.MULTIPLICATION.equals(operator)
+                || OperatorKind.DIVISION.equals(operator);
     }
 
     private void addDecisionGraphDependencies() throws InternalErrorException {
         GDLDecisionModelBuilder gdlDecisionModelBuilder = new GDLDecisionModelBuilder(this.guides, elementInstanceCollectionManager);
         Collection<Map.Entry<GraphNode, GraphNode>> dependenciesIncluded = new ArrayList<>();
-        for(ExpressionItem expressionItem: getNodesMap().keySet()){
-            if (!(expressionItem instanceof AssignmentExpression)){
+        for (ExpressionItem expressionItem : getNodesMap().keySet()) {
+            if (!(expressionItem instanceof AssignmentExpression)) {
                 String guideId = getNodesToGuideIdMap().get(expressionItem);
                 if (guideId == null) {
                     logger.warn("Unknown guide id for expression '" + expressionItem.toString() + "'");
                 }
                 Collection<GDLDecisionModelBuilder.GuideAssignmentExpression> guideAssignmentExpressions =
                         gdlDecisionModelBuilder.getAssignmentDependencies(guideId, expressionItem);
-                if (guideAssignmentExpressions != null && !guideAssignmentExpressions.isEmpty()){
-                    for(GDLDecisionModelBuilder.GuideAssignmentExpression guideAssignmentExpression: guideAssignmentExpressions){
-                        Collection<GraphNode> assignmentNodes =  getNodesMap().get(guideAssignmentExpression.getAssignmentExpression());
+                if (guideAssignmentExpressions != null && !guideAssignmentExpressions.isEmpty()) {
+                    for (GDLDecisionModelBuilder.GuideAssignmentExpression guideAssignmentExpression : guideAssignmentExpressions) {
+                        Collection<GraphNode> assignmentNodes = getNodesMap().get(guideAssignmentExpression.getAssignmentExpression());
                         if (assignmentNodes != null) {
-                            for(GraphNode assignmentNode: assignmentNodes) {
+                            for (GraphNode assignmentNode : assignmentNodes) {
                                 Collection<GraphNode> conditionNodes = getNodesMap().get(expressionItem);
                                 for (GraphNode conditionNode : conditionNodes) {
                                     Map.Entry<GraphNode, GraphNode> entry = new HashMap.SimpleEntry<>(assignmentNode, conditionNode);
@@ -362,27 +362,27 @@ public class GDLSimpleDecisionGraph {
         }
     }
 
+    private void addArchetypeDependencyNodes(Guide guide, Set<String> archetypeKeysAdded) throws InternalErrorException {
+        Map<String, String> gtCodeToArchetypeKey = generateGtCodeToArchetypeMap(guide);
+        Collection<Map.Entry<GraphNode, GraphNode>> insertedEdges = new ArrayList<>();
+        for (Rule rule : guide.getDefinition().getRules().values()) {
+            Set<String> readArchetypeKeys = getReadArchetypeKeys(guide, rule, gtCodeToArchetypeKey);
+            Set<String> writeArchetypeKeys = getWriteArchetypeKeys(rule, gtCodeToArchetypeKey);
+            readArchetypeKeys.removeAll(writeArchetypeKeys); //If write, ignore read (displays nicer graph)
+            for (String archetypeKey : readArchetypeKeys) {
+                addArchetypeNode(guide, rule, insertedEdges, archetypeKeysAdded, archetypeKey, false);
+            }
+            for (String archetypeKey : writeArchetypeKeys) {
+                addArchetypeNode(guide, rule, insertedEdges, archetypeKeysAdded, archetypeKey, true);
+            }
+        }
+    }
+
     private Map<String, GraphNode> getArchetypeNodesMap() {
         if (archetypeNodesMap == null) {
             archetypeNodesMap = new HashMap<>();
         }
         return archetypeNodesMap;
-    }
-
-    private void addArchetypeDependencyNodes(Guide guide, Set<String> archetypeKeysAdded) throws InternalErrorException {
-        Map<String, String> gtCodeToArchetypeKey = generateGtCodeToArchetypeMap(guide);
-        Collection<Map.Entry<GraphNode, GraphNode>> insertedEdges = new ArrayList<>();
-        for(Rule rule: guide.getDefinition().getRules().values()){
-            Set<String> readArchetypeKeys = getReadArchetypeKeys(guide, rule, gtCodeToArchetypeKey);
-            Set<String> writeArchetypeKeys = getWriteArchetypeKeys(rule, gtCodeToArchetypeKey);
-            readArchetypeKeys.removeAll(writeArchetypeKeys); //If write, ignore read (displays nicer graph)
-            for(String archetypeKey: readArchetypeKeys){
-                addArchetypeNode(guide, rule, insertedEdges, archetypeKeysAdded, archetypeKey, false);
-            }
-            for(String archetypeKey: writeArchetypeKeys){
-                addArchetypeNode(guide, rule, insertedEdges, archetypeKeysAdded, archetypeKey, true);
-            }
-        }
     }
 
     private Set<String> getReadArchetypeKeys(Guide guide, Rule rule, Map<String, String> gtCodeToArchetypeKey) throws InternalErrorException {
@@ -399,7 +399,7 @@ public class GDLSimpleDecisionGraph {
     }
 
     private Set<String> getArchetypeKeys(Map<String, String> gtCodeToArchetypeKey, Set<String> archetypeKeys, Set<String> gtCodes) throws InternalErrorException {
-        for (String gtCode: gtCodes) {
+        for (String gtCode : gtCodes) {
             if (OpenEHRConst.CURRENT_DATE_TIME_ID.equals(gtCode)) {
                 continue;
             }
@@ -413,7 +413,7 @@ public class GDLSimpleDecisionGraph {
 
     private Map<String, String> generateGtCodeToArchetypeMap(Guide guide) {
         Map<String, String> gtCodeToArchetypeKey = new HashMap<>();
-        for(ArchetypeBinding archetypeBinding: guide.getDefinition().getArchetypeBindings().values()) {
+        for (ArchetypeBinding archetypeBinding : guide.getDefinition().getArchetypeBindings().values()) {
             String archetypeKey = getArchetypeKey(archetypeBinding);
             for (ElementBinding elementBinding : archetypeBinding.getElements().values()) {
                 gtCodeToArchetypeKey.put(elementBinding.getId(), archetypeKey);
@@ -427,7 +427,7 @@ public class GDLSimpleDecisionGraph {
     }
 
     private void generateArchetypeNodes(Guide guide) {
-        for(ArchetypeBinding archetypeBinding: guide.getDefinition().getArchetypeBindings().values()){
+        for (ArchetypeBinding archetypeBinding : guide.getDefinition().getArchetypeBindings().values()) {
             String archetypeKey = getArchetypeKey(archetypeBinding);
             String label = archetypeBinding.getDomain() + " | " + archetypeBinding.getArchetypeId();
             Color archetypeBindingColor = getArchetypeNodeColor(archetypeBinding);
@@ -451,7 +451,8 @@ public class GDLSimpleDecisionGraph {
         }
     }
 
-    private void addArchetypeNode(Guide guide, Rule rule, Collection<Map.Entry<GraphNode, GraphNode>> insertedEdges, Set<String> archetypeKeysAdded, String archetypeKey, boolean isWriteAction) throws InternalErrorException {
+    private void addArchetypeNode(
+            Guide guide, Rule rule, Collection<Map.Entry<GraphNode, GraphNode>> insertedEdges, Set<String> archetypeKeysAdded, String archetypeKey, boolean isWriteAction) {
         GraphNode archetypeNode = getArchetypeNodesMap().get(archetypeKey);
         if (archetypeNode == null) {
             throw new InternalErrorException(new Exception("Element not found for archetypeKey " + archetypeKey));
@@ -492,8 +493,8 @@ public class GDLSimpleDecisionGraph {
         return getNodesMap().computeIfAbsent(expressionItem, k -> new ArrayList<>());
     }
 
-    private Map<ExpressionItem, Collection<GraphNode>> getNodesMap(){
-        if (_nodesMap == null){
+    private Map<ExpressionItem, Collection<GraphNode>> getNodesMap() {
+        if (_nodesMap == null) {
             _nodesMap = new HashMap<>();
         }
         return _nodesMap;
@@ -506,7 +507,7 @@ public class GDLSimpleDecisionGraph {
         return nodesToGuideIdMap;
     }
 
-    private GraphGranularity getGranularityForNodeLabel(String nodeLabel){
+    private GraphGranularity getGranularityForNodeLabel(String nodeLabel) {
         GraphGranularity localGranularity = getCustomGranularityMap().get(nodeLabel);
         if (localGranularity != null) {
             return localGranularity;

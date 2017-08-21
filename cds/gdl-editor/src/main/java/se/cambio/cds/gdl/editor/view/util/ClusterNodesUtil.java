@@ -23,9 +23,9 @@ public class ClusterNodesUtil {
         if (idCluster != null && !idCluster.endsWith("/")) {
             ClusterVO clusterVO = archetypeManager.getClusters().getClusterVO(idTemplate, idCluster);
             if (clusterVO != null) {
-                if ((simplifiedTree &&
-                        !OpenEHRConst.SECTION.equals(clusterVO.getRMType()) &&
-                        !OpenEHRConst.CLUSTER.equals(clusterVO.getRMType()))) {
+                if ((simplifiedTree
+                        && !OpenEHRConst.SECTION.equals(clusterVO.getType())
+                        && !OpenEHRConst.CLUSTER.equals(clusterVO.getType()))) {
                     return getClusterNode(idTemplate, clusterVO.getParentId(),
                             rootNode, clusters, singleSelection, true, archetypeManager);
                 }
@@ -97,7 +97,7 @@ public class ClusterNodesUtil {
                 .setName(name + upperNumOcurrences)
                 .setDescription(desc)
                 .setSelectionMode(selectionMode)
-                .setIcon(OpenEHRConstUI.getIcon(clusterVO.getRMType()))
+                .setIcon(OpenEHRConstUI.getIcon(clusterVO.getType()))
                 .setObject(null)
                 .createSelectableNode();
     }

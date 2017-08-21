@@ -2,9 +2,10 @@ package se.cambio.openehr.view.panels;
 
 import org.openehr.rm.datatypes.basic.DataValue;
 import org.openehr.rm.datatypes.quantity.DvQuantity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.controller.session.data.Units;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.OpenEHRNumberFormat;
 
 import javax.swing.*;
@@ -24,15 +25,16 @@ public class DVQuantityPanel extends DVGenericPanel {
     private static final long serialVersionUID = 1L;
     private JFormattedTextField magnitudeTextField;
     private JComboBox<String> unitsComboBox;
-    private boolean _enableUnits = false;
+    private boolean enableUnits = false;
     private ArchetypeManager archetypeManager;
+    private Logger logger = LoggerFactory.getLogger(DVQuantityPanel.class);
 
     public DVQuantityPanel(
             String idElement, String idTemplate,
             boolean allowNull, boolean enableUnits, boolean requestFocus,
             ArchetypeManager archetypeManager) {
         super(idElement, idTemplate, allowNull, requestFocus);
-        _enableUnits = enableUnits;
+        this.enableUnits = enableUnits;
         this.archetypeManager = archetypeManager;
         this.setLayout(new BorderLayout());
         this.add(getMagnitudeTextField(), BorderLayout.CENTER);
@@ -46,17 +48,17 @@ public class DVQuantityPanel extends DVGenericPanel {
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected void processFocusEvent(final FocusEvent e) {
-                    if (e.isTemporary()) {
+                protected void processFocusEvent(final FocusEvent ev) {
+                    if (ev.isTemporary()) {
                         return;
                     }
 
-                    if (e.getID() == FocusEvent.FOCUS_LOST) {
+                    if (ev.getID() == FocusEvent.FOCUS_LOST) {
                         if (getText() == null || getText().isEmpty()) {
                             setValue(null);
                         }
                     }
-                    super.processFocusEvent(e);
+                    super.processFocusEvent(ev);
                 }
             };
             magnitudeTextField.setPreferredSize(new Dimension(100, 20));
@@ -76,7 +78,7 @@ public class DVQuantityPanel extends DVGenericPanel {
             for (String unit : units.getUnits(getIdTemplate(), getIdElement())) {
                 unitsComboBox.addItem(unit);
             }
-            if (!_enableUnits) {
+            if (!enableUnits) {
                 unitsComboBox.setFocusable(false);
                 unitsComboBox.setUI(new DisabledComboUI());
                 ComboBoxEditor editor = unitsComboBox.getEditor();
@@ -141,8 +143,8 @@ public class DVQuantityPanel extends DVGenericPanel {
                         getUnitsComboBox().getSelectedItem().toString(),
                         OpenEHRNumberFormat.getDecimalFormat().parse(getMagnitudeTextField().getText()).doubleValue(),
                         getPrecision());
-            } catch (ParseException e) {
-                ExceptionHandler.handle(e);
+            } catch (ParseException ex) {
+                logger.error("Error parsing quantity: " + getMagnitudeTextField().getText(), ex);
                 return null;
             }
         }

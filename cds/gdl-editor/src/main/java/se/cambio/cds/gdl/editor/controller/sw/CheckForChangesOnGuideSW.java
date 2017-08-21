@@ -1,20 +1,19 @@
 package se.cambio.cds.gdl.editor.controller.sw;
 
+import lombok.extern.slf4j.Slf4j;
 import se.cambio.cds.controller.guide.GuideUtil;
-import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
 import se.cambio.cds.gdl.editor.view.panels.GDLPanel;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
-import se.cambio.openehr.util.ExceptionHandler;
 import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 
+@Slf4j
 public class CheckForChangesOnGuideSW extends CDSSwingWorker {
     private GDLEditor controller = null;
 
@@ -27,11 +26,7 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
         try {
             while (controller.isActive()) {
                 SwingUtilities.invokeLater(() -> {
-                    try {
-                        checkGuideConsistency();
-                    } catch (UnsupportedEncodingException e) {
-                        ExceptionHandler.handle(e);
-                    }
+                    checkGuideConsistency();
                     JButton saveButton = controller.getEditorPanel().getSaveButton();
                     saveButton.setEnabled(controller.isModified());
                     saveButton.repaint();
@@ -39,26 +34,26 @@ public class CheckForChangesOnGuideSW extends CDSSwingWorker {
                 });
                 Thread.sleep(1000);
             }
-        } catch (InterruptedException e) {
-            throw new InternalErrorException(e);
+        } catch (InterruptedException ex) {
+            throw new InternalErrorException(ex);
         }
     }
 
-    private void checkGuideConsistency() throws UnsupportedEncodingException {
+    private void checkGuideConsistency() {
         Component selectedTab = controller.getEditorPanel().getGuidePanel().getGuideEditorTabPane().getSelectedComponent();
         if (selectedTab instanceof GDLPanel) {
             GDLPanel gdlPanel = (GDLPanel) selectedTab;
-            ByteArrayInputStream bais = new ByteArrayInputStream(gdlPanel.getGuideStr().getBytes("UTF-8"));
             Guide guide = null;
             try {
+                ByteArrayInputStream bais = new ByteArrayInputStream(gdlPanel.getGuideStr().getBytes("UTF-8"));
                 guide = GuideUtil.parseGuide(bais);
                 String statusMsg = GDLEditorLanguageManager.getMessage("ParsedCorrectly");
                 gdlPanel.setStatus(GDLPanel.StatusType.CORRECT, statusMsg);
                 controller.updateGuide(guide);
-            } catch (Exception e) {
-                String statusMsg = GDLEditorLanguageManager.getMessage("ErrorParsingGuide") + ": " + e.getMessage();
+            } catch (Exception ex) {
+                String statusMsg = GDLEditorLanguageManager.getMessage("ErrorParsingGuide") + ": " + ex.getMessage();
                 gdlPanel.setStatus(GDLPanel.StatusType.ERRONEOUS, statusMsg);
-                ExceptionHandler.handle(e);
+                log.error("Error parsing guideline", ex);
             }
             controller.setOnlyGDLSourceEditing(guide == null);
         }

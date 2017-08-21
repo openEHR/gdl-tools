@@ -11,8 +11,6 @@ import se.cambio.cds.util.ElementInstanceCollectionManager;
 import se.cambio.cds.util.misc.CDSLanguageManager;
 import se.cambio.cds.view.swing.CDSImageUtil;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
-import se.cambio.openehr.util.ExceptionHandler;
-import se.cambio.openehr.util.exceptions.InternalErrorException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -108,15 +106,11 @@ public class DecisionGraphPanel extends JPanel implements NodeExploder {
     }
 
     private void refresh() {
-        try {
-            getGraphPanel().removeAll();
-            JComponent graphComponent = gdlSimpleDecisionGraph.generateGraphComponent(this.language);
-            getGraphPanel().add(graphComponent);
-            this.repaint();
-            this.revalidate();
-        } catch (InternalErrorException e) {
-            ExceptionHandler.handle(e);
-        }
+        getGraphPanel().removeAll();
+        JComponent graphComponent = gdlSimpleDecisionGraph.generateGraphComponent(this.language);
+        getGraphPanel().add(graphComponent);
+        this.repaint();
+        this.revalidate();
     }
 
     @Override
@@ -151,20 +145,16 @@ public class DecisionGraphPanel extends JPanel implements NodeExploder {
         return label.indexOf("<br/>") == label.lastIndexOf("<br/>");
     }
 
-    private JButton getExportToPNGButton(){
+    private JButton getExportToPNGButton() {
         if (exportToPNGButton == null) {
             exportToPNGButton = new JButton(CDSLanguageManager.getMessage("Export"), CDSImageUtil.EXPORT_ICON);
             exportToPNGButton.addActionListener(e -> {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileFilter(new FileNameExtensionFilter("PNG file","png"));
+                fileChooser.setFileFilter(new FileNameExtensionFilter("PNG file", "png"));
                 fileChooser.setDialogTitle(CDSLanguageManager.getMessage("Export"));
-                int answer = fileChooser.showSaveDialog((Component)e.getSource());
+                int answer = fileChooser.showSaveDialog((Component) e.getSource());
                 if (answer == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        gdlSimpleDecisionGraph.generatePngGraphImage(fileChooser.getSelectedFile(), language);
-                    } catch (InternalErrorException e1) {
-                        ExceptionHandler.handle(e1);
-                    }
+                    gdlSimpleDecisionGraph.generatePngGraphImage(fileChooser.getSelectedFile(), language);
                 }
             });
         }

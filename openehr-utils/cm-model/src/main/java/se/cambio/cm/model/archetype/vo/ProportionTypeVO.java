@@ -1,44 +1,18 @@
 package se.cambio.cm.model.archetype.vo;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.io.Serializable;
 
-public class ProportionTypeVO implements Serializable{
+@Data
+@Builder(toBuilder = true)
+public class ProportionTypeVO implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 25052012L;
     private String idTemplate = null;
     private String idElement = null;
     private Integer type = null;
-
-    public ProportionTypeVO(String idTemplate, String idElement, Integer type) {
-        super();
-        this.idTemplate = idTemplate;
-        this.idElement = idElement;
-        this.type = type;
-    }
-
-    public String getIdTemplate() {
-        return idTemplate;
-    }
-    public void setIdTemplate(String idTemplate) {
-        this.idTemplate = idTemplate;
-    }
-    public String getIdElement() {
-        return idElement;
-    }
-    public void setIdElement(String idElement) {
-        this.idElement = idElement;
-    }
-    public Integer getType() {
-        return type;
-    }
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    @Override
-    public ProportionTypeVO clone(){
-        return new ProportionTypeVO(idTemplate, idElement, type);
-    }
 }
 /*
  *  ***** BEGIN LICENSE BLOCK *****

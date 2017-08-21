@@ -1,9 +1,3 @@
-/*
- * Created on 30-ago-2006
- *
-
-
- */
 package se.cambio.cds.gdl.editor.view.menubar;
 
 import se.cambio.cds.gdl.editor.controller.EditorManager;
@@ -28,7 +22,7 @@ public class AddLanguageToGuideAction extends AbstractAction {
         putValue(LONG_DESCRIPTION, GDLEditorLanguageManager.getMessage("AddLanguageToGuideD"));
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ev) {
         boolean invalidCode = true;
         while (invalidCode) {
             String lang = JOptionPane.showInputDialog(editorManager.getActiveEditorWindow(), GDLEditorLanguageManager.getMessage("EnterNewLanguageCode"));
