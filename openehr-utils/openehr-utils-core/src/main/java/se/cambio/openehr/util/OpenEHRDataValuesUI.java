@@ -1,5 +1,6 @@
 package se.cambio.openehr.util;
 
+import org.openehr.jaxb.rm.DvParsable;
 import org.openehr.rm.datatypes.basic.DvBoolean;
 import org.openehr.rm.datatypes.quantity.DvCount;
 import org.openehr.rm.datatypes.quantity.DvOrdinal;
@@ -49,8 +50,7 @@ public class OpenEHRDataValuesUI {
         openEHRDVNames.put(OpenEHRDataValues.DV_TEXT, OpenEHRLanguageManager.getMessage("DataValueText"));
         openEHRDVDescriptions.put(OpenEHRDataValues.DV_TEXT, OpenEHRLanguageManager.getMessage("DataValueTextDesc"));
         openEHRDVIcons.put(OpenEHRDataValues.DV_TEXT, OpenEHRImageUtil.DV_TEXT_ICON);
-        openEHRDVFieldNames.put(OpenEHRDataValues.DV_TEXT,
-                new String[]{OpenEHRDataValues.VALUE_ATT});
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_TEXT, new String[]{OpenEHRDataValues.VALUE_ATT});
         openEHRDVClassName.put(OpenEHRDataValues.DV_TEXT, DvText.class.getSimpleName());
         openEHRDVIconName.put(OpenEHRDataValues.DV_TEXT, OpenEHRImageUtil.DV_TEXT_NAME);
 
@@ -174,6 +174,14 @@ public class OpenEHRDataValuesUI {
                 new String[]{OpenEHRDataValues.VALUE_ATT});
         openEHRDVClassName.put(OpenEHRDataValues.DV_URI, DvURI.class.getSimpleName());
         openEHRDVIconName.put(OpenEHRDataValues.DV_URI, OpenEHRImageUtil.DV_URI_NAME);
+
+
+        openEHRDVNames.put(OpenEHRDataValues.DV_PARSABLE, OpenEHRLanguageManager.getMessage("DataValueParsable"));
+        openEHRDVDescriptions.put(OpenEHRDataValues.DV_PARSABLE, OpenEHRLanguageManager.getMessage("DataValueParsableDesc"));
+        openEHRDVClassName.put(OpenEHRDataValues.DV_PARSABLE, DvParsable.class.getSimpleName());
+        openEHRDVIconName.put(OpenEHRDataValues.DV_PARSABLE, OpenEHRImageUtil.DV_PARSABLE_NAME);
+        openEHRDVIcons.put(OpenEHRDataValues.DV_PARSABLE, OpenEHRImageUtil.DV_PARSABLE_ICON);
+        openEHRDVFieldNames.put(OpenEHRDataValues.DV_PARSABLE, new String[]{OpenEHRDataValues.FORMALISM_ATT, OpenEHRDataValues.VALUE_ATT});
     }
 
     public static String getName(String idDataValue) {

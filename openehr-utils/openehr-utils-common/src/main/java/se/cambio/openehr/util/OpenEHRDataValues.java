@@ -44,6 +44,7 @@ public class OpenEHRDataValues {
     public static final String CODE_ATT = "code";
     public static final String DEFINING_CODE_ATT = "defining_code";
     public static final String MAPPINGS_ATT = "mappings";
+    public static final String FORMALISM_ATT = "formalism";
 
     public static final String YEAR_ATT = "year";
     public static final String MONTH_ATT = "month";
