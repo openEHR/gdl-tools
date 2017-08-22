@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import se.cambio.cm.controller.terminology.TerminologyService;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.openehr.controller.session.configuration.ClinicalModelsCacheConfiguration;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
 import se.cambio.openehr.util.TerminologyDialogManager;
@@ -32,8 +33,10 @@ public class OpenEhrSwingConfiguration {
     }
 
     @Bean
-    ImportManager importManager(ArchetypeManager archetypeManager) {
-        return new ImportManager(archetypeManager);
+    ImportManager importManager(
+            ClinicalModelsService clinicalModelsService,
+            ArchetypeManager archetypeManager) {
+        return new ImportManager(archetypeManager, clinicalModelsService);
     }
 
     @Bean

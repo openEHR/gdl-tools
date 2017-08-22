@@ -1,6 +1,7 @@
 package se.cambio.openehr.view.util;
 
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
+import se.cambio.cm.model.facade.administration.delegate.ClinicalModelsService;
 import se.cambio.cm.model.generic.dao.FileGenericCMElementDAO;
 import se.cambio.cm.model.template.dto.TemplateDTO;
 import se.cambio.openehr.controller.session.data.ArchetypeManager;
@@ -19,9 +20,12 @@ import java.util.Collections;
 public class ImportManager {
 
     private ArchetypeManager archetypeManager;
+    private ClinicalModelsService clinicalModelsService;
 
-    public ImportManager(ArchetypeManager archetypeManager) {
+    public ImportManager(ArchetypeManager archetypeManager,
+                         ClinicalModelsService clinicalModelsService) {
         this.archetypeManager = archetypeManager;
+        this.clinicalModelsService = clinicalModelsService;
     }
 
     public int showImportArchetypeDialogAndAddToRepo(Window owner, File selectedFile) throws InternalErrorException, InstanceNotFoundException {
@@ -68,7 +72,9 @@ public class ImportManager {
 
     private void addArchetype(File file) throws InstanceNotFoundException, InternalErrorException {
         ArchetypeDTO archetypeDTO = getArchetypeDTOFromFile(file);
-        archetypeManager.getArchetypes().upsert(archetypeDTO);
+        archetypeManager.getArchetypes().processArchetype(archetypeDTO);
+        clinicalModelsService.upsertCMElement(archetypeDTO);
+        archetypeManager.getArchetypes().registerCMElementsInCache(Collections.singleton(archetypeDTO));
     }
 
     private ArchetypeDTO getArchetypeDTOFromFile(File file) throws InternalErrorException, InstanceNotFoundException {
@@ -84,7 +90,9 @@ public class ImportManager {
 
     private void addTemplate(File file) throws InstanceNotFoundException, InternalErrorException {
         TemplateDTO templateDTO = getTemplateDTOFromFile(file);
-        archetypeManager.getTemplates().upsert(templateDTO);
+        archetypeManager.getTemplates().processTemplate(templateDTO);
+        clinicalModelsService.upsertCMElement(templateDTO);
+        archetypeManager.getTemplates().registerCMElementsInCache(Collections.singleton(templateDTO));
     }
 
 
