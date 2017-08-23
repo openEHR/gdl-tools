@@ -179,6 +179,7 @@ public class TerminologyServiceImpl implements TerminologyService {
     }
 
     public Collection<String> getSupportedTerminologies() {
+        checkForUpdates();
         return Collections.unmodifiableCollection(terminologyServicesMap.keySet());
     }
 
