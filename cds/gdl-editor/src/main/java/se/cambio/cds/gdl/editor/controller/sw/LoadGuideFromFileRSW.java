@@ -65,7 +65,7 @@ public class LoadGuideFromFileRSW extends CDSSwingWorker {
                     editorManager.getActiveEditorWindow(),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuideT"),
                     GDLEditorLanguageManager.getMessage("ErrorParsingGuide"),
-                    ex.getCause().getMessage(),
+                    ex.getMessage(),
                     DialogLongMessageNotice.MessageType.ERROR)
                     .setVisible(true);
             log.error("Error parsing guideline", ex);
