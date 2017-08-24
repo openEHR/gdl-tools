@@ -8,9 +8,12 @@ INSTALATION INSTRUCTIONS:
 
 BEFORE INSTALLING: 
 
-Please download and install the Java openEHR Implementation project:
+Please download and install the Java openEHR Implementation and adl2-core projects:
 
 https://github.com/openEHR/java-libs
+
+https://github.com/openEHR/adl2-core
+
 
 
 INSTALLATION:
