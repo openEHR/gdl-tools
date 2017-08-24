@@ -6,8 +6,8 @@ Guideline Definition Tools
 
 ### Requirements
 
-* Java 8
-* Maven 3
+* Java 8 or higher
+* Maven 3.0.4 or higher
 * OpenEHR java-libs (https://github.com/openEHR/java-libs)
 
 ### Installation
