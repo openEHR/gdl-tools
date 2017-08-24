@@ -140,6 +140,8 @@ public class GuideImporter {
                     Variable variable = (Variable) binaryExpression.getLeft();
                     WithElementPredicateExpressionDefinitionRuleLine wepdrl = new WithElementPredicateExpressionDefinitionRuleLine(airl);
                     String path = variable.getPath();
+                    String attribute = StringUtils.substringAfterLast(path, "/value/");
+                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setAttribute(attribute);
                     path = StringUtils.substringBeforeLast(path, "/value/");
                     ArchetypeElementVO archetypeElementVO =
                             airl.getArchetypeManager().getArchetypeElements().getArchetypeElement(
@@ -152,8 +154,6 @@ public class GuideImporter {
                                         + ")" : "") + "' not found!");
                     }
                     wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setValue(archetypeElementVO);
-                    String attribute = StringUtils.substringAfterLast(path, "/value/");
-                    wepdrl.getArchetypeElementAttributeRuleLineDefinitionElement().setAttribute(attribute);
                     ExpressionItem expressionItemAux = binaryExpression.getRight();
                     wepdrl.getExpressionRuleLineElement().setValue(expressionItemAux);
                     wepdrl.getComparisonOperatorRuleLineElement().setValue(binaryExpression.getOperator());

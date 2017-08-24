@@ -77,12 +77,25 @@ public class CodedTexts {
             if (!getCodedTextTemplateMap(templateId).containsKey(elementId)) {
                 throw new RuntimeException(format("Could not find element '%s' in template '%s'", elementId, templateId));
             }
-            return getCodedTextTemplateMap(templateId).get(elementId)
-                    .stream()
-                    .filter(c -> c.getCode().equals(code))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException(format("Could not find code '%s' in element '%s' with template '%s'", code, elementId, templateId)));
+            List<CodedTextVO> codedTextVOS = getCodedTextTemplateMap(templateId).get(elementId);
+            if (codedTextVOS.isEmpty()) {
+                throw new RuntimeException(format("Could not find coded texts for element '%s' in template '%s'", elementId, templateId));
+            }
+            CodedTextVO firstCodedText = codedTextVOS.iterator().next();
+            if (isLocalTerminology(firstCodedText)) {
+                return codedTextVOS
+                        .stream()
+                        .filter(c -> c.getCode().equals(code))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException(format("Could not find code '%s' in element '%s' with template '%s'", code, elementId, templateId)));
+            } else {
+                return null;
+            }
         }
+    }
+
+    private boolean isLocalTerminology(CodedTextVO firstCodedText) {
+        return "local".equals(firstCodedText.getTerminology());
     }
 
     public List<CodedTextVO> getCodedTextVOs(String idTemplate, String elementId) {
