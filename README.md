@@ -21,4 +21,4 @@ mvn clean install
 This will create binary files in the _target_ directories of each submodule. The GDL editor can be found at _gdl-tools/cds/gdl-editor/target_.
 
 ### Binaries
-A copy of the binaries for the gdl-editor can be found at [https://sourceforge.net/projects/gdl-editor]
+A copy of the binaries for the gdl-editor can be found at https://sourceforge.net/projects/gdl-editor
