@@ -9,7 +9,7 @@ Guideline Definition Tools
 * Java 8 or higher
 * Maven 3.0.4 or higher
 
-### Usage
+### Usage
 
 The java-libs project is available at [Maven Central](http://search.maven.org/).
 
