@@ -1,10 +1,7 @@
 package se.cambio.openehr.controller;
 
 import org.openehr.jaxb.am.*;
-import org.openehr.jaxb.rm.CodePhrase;
-import org.openehr.jaxb.rm.DvOrdinal;
-import org.openehr.jaxb.rm.StringDictionaryItem;
-import org.openehr.jaxb.rm.TranslationDetails;
+import org.openehr.jaxb.rm.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.vo.*;
@@ -379,8 +376,11 @@ public class GenericObjectBundleADLSManager {
     }
 
     private static void setCardinalities(PathableVO pathableVO, CObject constrainedObject) {
-        pathableVO.setLowerCardinality(constrainedObject.getOccurrences().getLower());
-        pathableVO.setUpperCardinality(constrainedObject.getOccurrences().getUpper());
+        MultiplicityInterval occurrences = constrainedObject.getOccurrences();
+        if (occurrences != null) {
+            pathableVO.setLowerCardinality(occurrences.getLower());
+            pathableVO.setUpperCardinality(occurrences.getUpper());
+        }
     }
 
     private void loadUnits(CObject constrainedObject, String path) throws ArchetypeProcessingException {

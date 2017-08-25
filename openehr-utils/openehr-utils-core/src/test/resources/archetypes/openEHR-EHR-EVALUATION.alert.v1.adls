@@ -109,7 +109,7 @@ definition
 		}
 	}
 
-ontology
+terminology
 	term_definitions = <
 		["de"] = <
 			items = <

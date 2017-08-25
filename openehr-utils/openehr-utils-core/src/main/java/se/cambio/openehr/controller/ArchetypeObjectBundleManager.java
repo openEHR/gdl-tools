@@ -51,38 +51,28 @@ public class ArchetypeObjectBundleManager {
     }
 
 
-    private void generateArchetype14Data()
-            throws InternalErrorException {
-        try {
-            ADLParser adlParser = new ADLParser(archetypeDTO.getSource());
-            Archetype ar = adlParser.parse();
-            archetypeDTO.setAom(SerializationUtils.serialize(ar));
-            GenericObjectBundleADLManager genericObjectBundleADLManager =
-                    new GenericObjectBundleADLManager(
-                            ar, archetypeManager.getArchetypes().getArchetypeMap(),
-                            archetypeManager.getTerminologyService(), archetypeManager.getUserConfigurationManager());
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
-            archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
-        } catch (Exception ex) {
-            throw new InternalErrorException(ex);
-        }
+    private void generateArchetype14Data() throws Exception {
+        ADLParser adlParser = new ADLParser(archetypeDTO.getSource());
+        Archetype ar = adlParser.parse();
+        archetypeDTO.setAom(SerializationUtils.serialize(ar));
+        GenericObjectBundleADLManager genericObjectBundleADLManager =
+                new GenericObjectBundleADLManager(
+                        ar, archetypeManager.getArchetypes().getArchetypeMap(),
+                        archetypeManager.getTerminologyService(), archetypeManager.getUserConfigurationManager());
+        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLManager.generateObjectBundleCustomVO();
+        archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
     }
 
-    private void generateArchetype20Data()
-            throws InternalErrorException {
-        try {
-            AdlDeserializer adlDeserializer = new AdlDeserializer();
-            org.openehr.jaxb.am.Archetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
-            org.openehr.jaxb.am.Archetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
-            byte[] flatArchetypeBytes = SerializationUtils.serialize(flatArchetype);
-            archetypeDTO.setAom(flatArchetypeBytes);
-            GenericObjectBundleADLSManager genericObjectBundleADLSManager =
-                    new GenericObjectBundleADLSManager(flatArchetype, archetypeManager);
-            ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLSManager.generateObjectBundleCustomVO();
-            archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
-        } catch (Exception ex) {
-            throw new InternalErrorException(ex);
-        }
+    private void generateArchetype20Data() {
+        AdlDeserializer adlDeserializer = new AdlDeserializer();
+        org.openehr.jaxb.am.Archetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
+        org.openehr.jaxb.am.Archetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
+        byte[] flatArchetypeBytes = SerializationUtils.serialize(flatArchetype);
+        archetypeDTO.setAom(flatArchetypeBytes);
+        GenericObjectBundleADLSManager genericObjectBundleADLSManager =
+                new GenericObjectBundleADLSManager(flatArchetype, archetypeManager);
+        ArchetypeObjectBundleCustomVO archetypeObjectBundleCustomVO = genericObjectBundleADLSManager.generateObjectBundleCustomVO();
+        archetypeDTO.setAobcVO(SerializationUtils.serialize(archetypeObjectBundleCustomVO));
     }
 
     private org.openehr.jaxb.am.Archetype parseAndFlattenArchetype(org.openehr.jaxb.am.Archetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {

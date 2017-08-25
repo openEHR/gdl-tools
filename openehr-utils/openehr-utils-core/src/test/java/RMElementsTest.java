@@ -125,21 +125,5 @@ public class RMElementsTest extends AbstractTestNGSpringContextTests {
         archetypeElementVO =
                 archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-CLUSTER.action.v1/item[id6]");
         assertEquals(OpenEHRDataValues.DV_DURATION, archetypeElementVO.getType());
-        archetypeElementVO =
-                archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.5]/item[at0.0.32]");
-        assertEquals(OpenEHRDataValues.DV_CODED_TEXT, archetypeElementVO.getType());
-        Collection<CodedTextVO> codedTextVOs =
-                archetypeManager.getCodedTexts().getCodedTextVOs(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.5]/item[at0.0.32]");
-        assertEquals(7, codedTextVOs.size());
-        archetypeElementVO =
-                archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.9]/item[at0.16.1]");
-        assertEquals(OpenEHRDataValues.DV_QUANTITY, archetypeElementVO.getType());
-        Collection<String> units =
-                archetypeManager.getUnits().getUnits(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.9]/item[at0.16.1]");
-        assertEquals(1, units.size());
-        assertEquals("beats/min", units.iterator().next());
-        archetypeElementVO =
-                archetypeManager.getArchetypeElements().getArchetypeElement(null, "CIMI-CORE-ENTRY.heartrate.v1/data[at0.9]/item[at0.16.2]");
-        assertEquals(OpenEHRDataValues.DV_BOOLEAN, archetypeElementVO.getType());
     }
 }
