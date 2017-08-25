@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>se.cambio.cds</groupId>
+        <groupId>org.gdl-lang.gdl-tools</groupId>
         <artifactId>cds</artifactId>
         <version>0-SNAPSHOT</version>
     </parent>
@@ -75,7 +75,7 @@
                             <classpathPrefix>lib/</classpathPrefix>
                             <useUniqueVersions>false</useUniqueVersions>
                             <!-- Specifies the main class of the application -->
-                            <mainClass>se.cambio.cds.gdl.editor.view.InitGDLEditor</mainClass>
+                            <mainClass>org.gdl-lang.gdl-tools.gdl.editor.view.InitGDLEditor</mainClass>
                         </manifest>
                     </archive>
                     <finalName>gdl-editor</finalName>
@@ -176,7 +176,7 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>cds-form-generator</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -186,12 +186,12 @@
             <version>1.2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.openehr.utils</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>openehr-utils-gui-swing</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.openehr.utils</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>openehr-utils-server</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -200,22 +200,22 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>cds-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>gdl-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>cds-gui-swing</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.openehr.utils</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>cm-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -246,12 +246,12 @@
             <version>1.10.19</version>
         </dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>cds-engine-drools</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>se.cambio.cds</groupId>
+            <groupId>org.gdl-lang.gdl-tools</groupId>
             <artifactId>gdl-graph</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -9,9 +9,6 @@ import se.cambio.openehr.view.util.NodeConversor;
 
 import javax.swing.plaf.TreeUI;
 
-/**
- * @author iago.corbal
- */
 public class FilterTreeRSW extends OpenEHRUtilSwingWorker {
 
     private WindowManager windowManager;

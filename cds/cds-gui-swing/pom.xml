@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>se.cambio.cds</groupId>
+		<groupId>org.gdl-lang.gdl-tools</groupId>
 		<artifactId>cds</artifactId>
 		<version>0-SNAPSHOT</version>
 	</parent>
@@ -10,52 +10,52 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>adl-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>oet-parser</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>openehr-aom</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>openehr-ap</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>openehr-rm-domain</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>se.cambio.cds</groupId>
+			<groupId>org.gdl-lang.gdl-tools</groupId>
 			<artifactId>cds-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>dadl-binding</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>xml-binding</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>adl-serializer</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr</groupId>
+			<groupId>org.openehr.java-libs</groupId>
 			<artifactId>rm-skeleton</artifactId>
 			<version>${openehr-java-libs-version}</version>
 		</dependency>
@@ -75,12 +75,12 @@
 			<version>1.7.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr.utils</groupId>
+			<groupId>org.gdl-lang.gdl-tools</groupId>
 			<artifactId>openehr-utils-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openehr.utils</groupId>
+			<groupId>org.gdl-lang.gdl-tools</groupId>
 			<artifactId>openehr-utils-gui-swing</artifactId>
 			<version>${project.version}</version>
 		</dependency>

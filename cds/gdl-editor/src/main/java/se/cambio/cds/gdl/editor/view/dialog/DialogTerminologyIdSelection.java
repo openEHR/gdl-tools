@@ -82,7 +82,8 @@ public class DialogTerminologyIdSelection extends DialogSelection {
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
-            } while (!correctName);
+            }
+            while (!correctName);
         }
     }
 }

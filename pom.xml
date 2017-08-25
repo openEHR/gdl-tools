@@ -1,11 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>se.cambio.cds</groupId>
+    <groupId>org.gdl-lang.gdl-tools</groupId>
     <artifactId>gdl-tools</artifactId>
     <packaging>pom</packaging>
     <version>0-SNAPSHOT</version>
     <name>GDL Tools</name>
+    <description>Guideline Definition Language editor and libraries</description>
+    <url>https://github.com/openEHR/gdl-tools</url>
     <organization>
         <name>Cambio Healthcare Systems</name>
     </organization>
@@ -13,12 +15,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <openehr-java-libs-version>1.0.70</openehr-java-libs-version>
+        <openehr-java-libs-version>1.0.71</openehr-java-libs-version>
         <adl2-core-version>1.0.0</adl2-core-version>
         <spring.version>4.3.7.RELEASE</spring.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <checkstyle.version>6.19</checkstyle.version>
+        <checkstyle.version>8.1</checkstyle.version>
         <checkstyle.plugin.version>2.17</checkstyle.plugin.version>
         <gson.version>2.3</gson.version>
         <commons.io.version>2.4</commons.io.version>
@@ -30,18 +32,13 @@
     </properties>
 
     <scm>
+        <connection>scm:git:git://github.com/openEHR/gdl-tools.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:openEHR/gdl-tools.git</developerConnection>
+        <url>http://github.com/openEHR/gdl-tools/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>se.cambio.cds</groupId>
-                <artifactId>checkstyle-config</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </extension>
-        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -98,6 +95,8 @@
                     <configLocation>checkstyle.xml</configLocation>
                     <violationSeverity>warning</violationSeverity>
                     <failOnViolation>true</failOnViolation>
+                    <suppressionsFileExpression>*-suppressions.xml</suppressionsFileExpression>
+                    <suppressionsFile>checkstyle-suppressions.xml</suppressionsFile>
                 </configuration>
                 <executions>
                     <execution>
@@ -334,24 +333,24 @@
         <module>openehr-utils</module>
         <module>cds</module>
     </modules>
-   <dependencies>
+    <dependencies>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.1.11</version>
         </dependency>
-       <dependency>
-           <groupId>org.hamcrest</groupId>
-           <artifactId>hamcrest-core</artifactId>
-           <version>1.3</version>
-           <scope>test</scope>
-       </dependency>
-       <dependency>
-           <groupId>org.hamcrest</groupId>
-           <artifactId>hamcrest-library</artifactId>
-           <version>1.3</version>
-           <scope>test</scope>
-       </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -379,17 +378,78 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <distributionManagement>
-        <repository>
-            <id>repo.cambio.se_releases</id>
-            <name>releases</name>
-            <url>https://nexus.cambiocds.com/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo.cambio.se_snapshots</id>
-            <name>snapshots</name>
-            <url>https://nexus.cambiocds.com/repository/maven-snapshots/</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
+    <licenses>
+        <license>
+            <name>MPL License</name>
+            <url>http://www.mozilla.org/MPL/</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Iago Corbal</name>
+            <email>iago.corbal@cambio.se</email>
+            <organization>Cambio Healthcare Systems</organization>
+            <organizationUrl>http://www.cambio.se</organizationUrl>
+        </developer>
+    </developers>
+    <profiles>
+        <profile>
+            <id>cambio</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>repo.cambio.se_releases</id>
+                    <name>releases</name>
+                    <url>https://nexus.cambiocds.com/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>repo.cambio.se_snapshots</id>
+                    <name>snapshots</name>
+                    <url>https://nexus.cambiocds.com/repository/maven-snapshots/</url>
+                    <uniqueVersion>false</uniqueVersion>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>ossrh</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
