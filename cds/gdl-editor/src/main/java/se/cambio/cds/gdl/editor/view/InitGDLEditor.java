@@ -10,6 +10,7 @@ import se.cambio.cds.gdl.editor.controller.GuidelineLoadManager;
 import se.cambio.cds.gdl.editor.controller.sw.LoadEditorSW;
 import se.cambio.cds.gdl.editor.view.dialog.DialogSplash;
 import se.cambio.cds.gdl.editor.view.frame.EditorFrame;
+import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.cds.model.facade.execution.delegate.RuleEngineService;
 import se.cambio.openehr.util.BeanProvider;
 import se.cambio.openehr.util.UserConfigurationManager;
@@ -73,7 +74,8 @@ public class InitGDLEditor {
             GuidelineLoadManager guidelineLoadManager,
             GdlEditorFactory gdlEditorFactory,
             EditorManager editorManager) {
-        new LoadEditorSW(gdlEditorFactory, editorManager).execute();
+        MainMenuBar mainMenuBar = BeanProvider.getBean(MainMenuBar.class);
+        new LoadEditorSW(gdlEditorFactory, editorManager, mainMenuBar).execute();
 
         if (args.length > 0) {
             guidelineLoadManager.loadGuide(new File(args[0]));

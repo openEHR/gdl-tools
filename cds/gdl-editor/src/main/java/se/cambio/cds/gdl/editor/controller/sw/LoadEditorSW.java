@@ -4,6 +4,7 @@ import se.cambio.cds.gdl.editor.controller.EditorManager;
 import se.cambio.cds.gdl.editor.controller.GDLEditor;
 import se.cambio.cds.gdl.editor.controller.GdlEditorFactory;
 import se.cambio.cds.gdl.editor.util.GDLEditorLanguageManager;
+import se.cambio.cds.gdl.editor.view.menubar.MainMenuBar;
 import se.cambio.cds.gdl.model.Guide;
 import se.cambio.cds.util.CDSSwingWorker;
 import se.cambio.openehr.controller.InitialLoadingObservable;
@@ -17,10 +18,15 @@ public class LoadEditorSW extends CDSSwingWorker {
 
     private GdlEditorFactory gdlEditorFactory;
     private EditorManager editorManager;
+    private MainMenuBar mainMenuBar;
 
-    public LoadEditorSW(GdlEditorFactory gdlEditorFactory, EditorManager editorManager) {
+    public LoadEditorSW(
+            GdlEditorFactory gdlEditorFactory,
+            EditorManager editorManager,
+            MainMenuBar mainMenuBar) {
         this.gdlEditorFactory = gdlEditorFactory;
         this.editorManager = editorManager;
+        this.mainMenuBar = mainMenuBar;
     }
 
     @Override
@@ -47,6 +53,7 @@ public class LoadEditorSW extends CDSSwingWorker {
                             errorsSB.toString(), MessageType.ERROR);
             dialog.setVisible(true);
         }
+        mainMenuBar.refreshLanguageMenu();
         editorManager.getActiveEditorWindow().setVisible(true);
     }
 }
