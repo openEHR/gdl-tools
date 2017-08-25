@@ -8,17 +8,28 @@ Guideline Definition Tools
 
 * Java 8 or higher
 * Maven 3.0.4 or higher
-* OpenEHR java-libs (https://github.com/openEHR/java-libs)
+
+### Usage
+
+The java-libs project is available at [Maven Central](http://search.maven.org/).
+
+For example, if you need to use the gdl-parser, add into your _pom.xml_:
+
+```xml
+<dependency>
+    <groupId>org.gdl-lang.gdl-tools</groupId>
+    <artifactId>gdl-parser</artifactId>
+    <version>1.3.19</version>
+</dependency>
+```
 
 ### Installation
 
-NOTE: gdl-tools has a dependency to openEHR java-libs, so you will need to install java-libs before running maven on this project. The java-libs version is defined in  _gdl-tools/pom.xml_, if you want to run with your compiled version of java-libs, you will need to change the _openehr-java-libs-version_ property to _0-SNAPSHOT_ (instead of the released version).
-
-To build the whole project, clone it, and once inside the project's folder (by default _gdl-tools_), run:
+To build the whole project, first clone it, and once inside the project's folder (by default _gdl-tools_), run:
 ```bash
 mvn clean install
 ```
-This will create binary files in the _target_ directories of each submodule. The GDL editor can be found at _gdl-tools/cds/gdl-editor/target_.
+This will create binary files in the _target_ directories of each submodule. The GDL editor binaries can be found in a zip file at _gdl-tools/cds/gdl-editor/target_.
 
 ### Binaries
-A copy of the binaries for the gdl-editor can be found at https://sourceforge.net/projects/gdl-editor
+A copy of the binaries for the gdl-editor can also be found at https://sourceforge.net/projects/gdl-editor
