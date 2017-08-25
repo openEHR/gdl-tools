@@ -5,8 +5,6 @@ import org.openehr.adl.flattener.ArchetypeFlattener;
 import org.openehr.adl.parser.AdlDeserializer;
 import org.openehr.adl.rm.OpenEhrRmModel;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.jaxb.am.DifferentialArchetype;
-import org.openehr.jaxb.am.FlatArchetype;
 import org.openehr.jaxb.rm.ArchetypeId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +71,9 @@ public class ArchetypeObjectBundleManager {
     private void generateArchetype20Data()
             throws InternalErrorException {
         try {
-            AdlDeserializer adlDeserializer = new AdlDeserializer(new OpenEhrRmModel());
-            DifferentialArchetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
-            FlatArchetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
+            AdlDeserializer adlDeserializer = new AdlDeserializer();
+            org.openehr.jaxb.am.Archetype differentialArchetype = adlDeserializer.parse(archetypeDTO.getSource());
+            org.openehr.jaxb.am.Archetype flatArchetype = parseAndFlattenArchetype(differentialArchetype);
             byte[] flatArchetypeBytes = SerializationUtils.serialize(flatArchetype);
             archetypeDTO.setAom(flatArchetypeBytes);
             GenericObjectBundleADLSManager genericObjectBundleADLSManager =
@@ -87,9 +85,9 @@ public class ArchetypeObjectBundleManager {
         }
     }
 
-    private FlatArchetype parseAndFlattenArchetype(DifferentialArchetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {
-        ArchetypeFlattener archetypeFlattener = new ArchetypeFlattener(new OpenEhrRmModel());
-        FlatArchetype parent;
+    private org.openehr.jaxb.am.Archetype parseAndFlattenArchetype(org.openehr.jaxb.am.Archetype differentialArchetype) throws InstanceNotFoundException, InternalErrorException {
+        ArchetypeFlattener archetypeFlattener = new ArchetypeFlattener(OpenEhrRmModel.getInstance());
+        org.openehr.jaxb.am.Archetype parent;
         ArchetypeId parentArchetypeId = differentialArchetype.getParentArchetypeId();
         if (parentArchetypeId != null) {
             parent = archetypeManager.getArchetypes().getArchetypeAOM2ById(parentArchetypeId.getValue());

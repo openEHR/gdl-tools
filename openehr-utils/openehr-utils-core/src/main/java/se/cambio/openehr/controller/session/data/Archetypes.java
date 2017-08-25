@@ -2,7 +2,6 @@ package se.cambio.openehr.controller.session.data;
 
 import org.apache.commons.lang.SerializationUtils;
 import org.openehr.am.archetype.Archetype;
-import org.openehr.jaxb.am.FlatArchetype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.cambio.cm.model.archetype.dto.ArchetypeDTO;
@@ -147,7 +146,7 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO> {
         return (Archetype) SerializationUtils.deserialize(archetypeDTO.getAom());
     }
 
-    public FlatArchetype getArchetypeAOM2ById(String archetypeId) {
+    public org.openehr.jaxb.am.Archetype getArchetypeAOM2ById(String archetypeId) {
         Collection<ArchetypeDTO> archetypeDTOs = getCMElementByIds(Collections.singleton(archetypeId));
         if (archetypeDTOs.isEmpty()) {
             throw new InstanceNotFoundException(archetypeId, ArchetypeDTO.class.getName());
@@ -156,14 +155,14 @@ public class Archetypes extends AbstractCMManager<ArchetypeDTO> {
     }
 
 
-    private FlatArchetype getArchetypeAOM2(ArchetypeDTO archetypeDTO) {
+    private org.openehr.jaxb.am.Archetype getArchetypeAOM2(ArchetypeDTO archetypeDTO) {
         if (!CMTypeFormat.ADLS_FORMAT.getFormat().equals(archetypeDTO.getFormat())) {
             throw new InternalErrorException(new Exception("Invalid call for AOM for '" + archetypeDTO.getId() + "' with format '" + archetypeDTO.getFormat() + "'"));
         }
         if (archetypeDTO.getAom() == null) {
             processArchetype(archetypeDTO);
         }
-        return (FlatArchetype) SerializationUtils.deserialize(archetypeDTO.getAom());
+        return (org.openehr.jaxb.am.Archetype) SerializationUtils.deserialize(archetypeDTO.getAom());
     }
 
     public ArchetypeObjectBundleCustomVO getArchetypeAOBCVOById(String archetypeId) {

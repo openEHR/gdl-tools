@@ -20,7 +20,7 @@ import java.util.*;
 public class GenericObjectBundleADLSManager {
     private final ArchetypeManager archetypeManager;
     private String language = null;
-    private FlatArchetype ar = null;
+    private Archetype ar = null;
     private Collection<ArchetypeElementVO> archetypeElementVOs;
     private Collection<ClusterVO> clusterVOs;
     private Collection<CodedTextVO> codedTextVOs;
@@ -31,7 +31,7 @@ public class GenericObjectBundleADLSManager {
     private Logger logger = LoggerFactory.getLogger(GenericObjectBundleADLSManager.class);
     private Map<String, List<String>> valueSetsMap;
 
-    public GenericObjectBundleADLSManager(FlatArchetype ar, ArchetypeManager archetypeManager) {
+    public GenericObjectBundleADLSManager(Archetype ar, ArchetypeManager archetypeManager) {
         this.ar = ar;
         this.archetypeManager = archetypeManager;
     }
@@ -113,7 +113,7 @@ public class GenericObjectBundleADLSManager {
         if (constrainedComplexObject.getRmTypeName().equals("ELEMENT")) {
             processElement(constrainedComplexObject, currentPath);
         } else if (constrainedComplexObject instanceof CArchetypeRoot) {
-            String usedArchetypeId = ((CArchetypeRoot) constrainedComplexObject).getArchetypeId().getValue();
+            String usedArchetypeId = ((CArchetypeRoot) constrainedComplexObject).getArchetypeRef();
             processArchetypeReference(usedArchetypeId, currentPath);
         } else {
             for (CAttribute consAttribute : consAttributes) {
@@ -523,7 +523,7 @@ public class GenericObjectBundleADLSManager {
 
     private Map<String, Map<String, String>> getTermDefinitionsArchetypeTermMap() throws ArchetypeProcessingException {
         if (termDefinitionsArchetypeTermMap == null) {
-            ArchetypeTermMapGenerator archetypeTermMapGenerator = new ArchetypeTermMapGenerator(ar.getOntology().getTermDefinitions(), language);
+            ArchetypeTermMapGenerator archetypeTermMapGenerator = new ArchetypeTermMapGenerator(ar.getTerminology().getTermDefinitions(), language);
             termDefinitionsArchetypeTermMap = archetypeTermMapGenerator.generateTermDefinitionsArchetypeTermMap();
         }
         return termDefinitionsArchetypeTermMap;
@@ -538,7 +538,7 @@ public class GenericObjectBundleADLSManager {
 
     private Map<String, List<String>> generateValueSetsMap() {
         Map valueSetMap = new HashMap<String, List<String>>();
-        for (ValueSetItem valueSetItem : ar.getOntology().getValueSets()) {
+        for (ValueSetItem valueSetItem : ar.getTerminology().getValueSets()) {
             valueSetMap.put(valueSetItem.getId(), valueSetItem.getMembers());
         }
         return valueSetMap;
@@ -582,7 +582,7 @@ public class GenericObjectBundleADLSManager {
 
     public Collection<ArchetypeTermVO> generateArchetypeTerms() {
         Collection<ArchetypeTermVO> archetypeTermVOs = new ArrayList<>();
-        ArchetypeOntology ao = ar.getOntology();
+        ArchetypeTerminology ao = ar.getTerminology();
         List<CodeDefinitionSet> termDefinitions = ao.getTermDefinitions();
         for (CodeDefinitionSet codeDefinitionSet : termDefinitions) {
             String lang = codeDefinitionSet.getLanguage();
