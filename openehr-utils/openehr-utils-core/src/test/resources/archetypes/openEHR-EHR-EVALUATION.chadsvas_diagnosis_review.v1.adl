@@ -96,7 +96,7 @@ definition
 		}
 	}
 
-terminology
+ontology
 	term_definitions = <
 		["en"] = <
 			items = <
