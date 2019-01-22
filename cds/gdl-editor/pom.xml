@@ -75,7 +75,7 @@
                             <classpathPrefix>lib/</classpathPrefix>
                             <useUniqueVersions>false</useUniqueVersions>
                             <!-- Specifies the main class of the application -->
-                            <mainClass>org.gdl-lang.gdl-tools.gdl.editor.view.InitGDLEditor</mainClass>
+                            <mainClass>se.cambio.cds.gdl.editor.view.InitGDLEditor</mainClass>
                         </manifest>
                     </archive>
                     <finalName>gdl-editor</finalName>
